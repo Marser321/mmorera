@@ -1,0 +1,208 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/*
+ * ══════════════════════════════════════════════════════
+ * SISTEMA DE DISEÑO "DEEP SPACE"
+ * Paleta OKLCH · Tailwind CSS v4 · Dark Mode Nativo
+ * ══════════════════════════════════════════════════════
+ */
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  /* ─── Tipografía ─── */
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  /* ─── Radios ─── */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+
+  /* ─── Paleta Deep Space (OKLCH) ─── */
+  /* Fondos */
+  --color-background: oklch(0.13 0.01 260);
+  --color-foreground: oklch(0.97 0.005 260);
+
+  /* Cards y superficies elevadas */
+  --color-card: oklch(0.18 0.015 260);
+  --color-card-foreground: oklch(0.97 0.005 260);
+
+  /* Popover / Dropdowns */
+  --color-popover: oklch(0.16 0.012 260);
+  --color-popover-foreground: oklch(0.97 0.005 260);
+
+  /* Primary — Neón Azul (acento principal) */
+  --color-primary: oklch(0.7 0.2 250);
+  --color-primary-foreground: oklch(0.13 0.01 260);
+
+  /* Secondary — Gris cálido elegante */
+  --color-secondary: oklch(0.25 0.015 260);
+  --color-secondary-foreground: oklch(0.9 0.01 260);
+
+  /* Muted — texto secundario */
+  --color-muted: oklch(0.22 0.012 260);
+  --color-muted-foreground: oklch(0.65 0.015 260);
+
+  /* Accent — Cyan sutil */
+  --color-accent: oklch(0.75 0.15 200);
+  --color-accent-foreground: oklch(0.13 0.01 260);
+
+  /* Destructive — Rojo profundo */
+  --color-destructive: oklch(0.55 0.2 25);
+  --color-destructive-foreground: oklch(0.97 0.005 260);
+
+  /* Bordes y anillos */
+  --color-border: oklch(0.3 0.02 260);
+  --color-ring: oklch(0.7 0.2 250);
+  --color-input: oklch(0.25 0.015 260);
+
+  /* Sidebar (futuro) */
+  --color-sidebar: oklch(0.15 0.012 260);
+  --color-sidebar-foreground: oklch(0.97 0.005 260);
+  --color-sidebar-primary: oklch(0.7 0.2 250);
+  --color-sidebar-primary-foreground: oklch(0.13 0.01 260);
+  --color-sidebar-accent: oklch(0.22 0.015 260);
+  --color-sidebar-accent-foreground: oklch(0.9 0.01 260);
+  --color-sidebar-border: oklch(0.28 0.018 260);
+  --color-sidebar-ring: oklch(0.7 0.2 250);
+
+  /* ─── Animaciones ─── */
+  --animate-shimmer: shimmer 2.5s linear infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-glow-pulse: glow-pulse 3s ease-in-out infinite;
+}
+
+/*
+ * ─── Animaciones Keyframes ───
+ */
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 15px oklch(0.7 0.2 250 / 0.15);
+  }
+  50% {
+    box-shadow: 0 0 30px oklch(0.7 0.2 250 / 0.3);
+  }
+}
+
+/*
+ * ─── Estilos Base ───
+ */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    border-color: var(--color-border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+  }
+
+  /* Selección de texto con acento */
+  ::selection {
+    background-color: oklch(0.7 0.2 250 / 0.3);
+    color: var(--color-foreground);
+  }
+
+  /* Focus visible global — accesibilidad WCAG 2.4.7 */
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* Scrollbar personalizada (Webkit) */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-background);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: oklch(0.4 0.02 260);
+  }
+}
+
+/*
+ * ─── Utilidades Reutilizables ───
+ */
+@layer utilities {
+  /* Glassmorphism: fondo translúcido con blur */
+  .glass {
+    background: oklch(0.18 0.015 260 / 0.6);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid oklch(0.3 0.02 260 / 0.3);
+  }
+
+  /* Gradiente de texto neón */
+  .text-gradient {
+    background: linear-gradient(135deg, oklch(0.7 0.2 250), oklch(0.75 0.15 200));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Glow de borde para cards interactivas */
+  .glow-border {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .glow-border::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    background: linear-gradient(
+      135deg,
+      oklch(0.7 0.2 250 / 0),
+      oklch(0.7 0.2 250 / 0.15),
+      oklch(0.75 0.15 200 / 0.1),
+      oklch(0.7 0.2 250 / 0)
+    );
+    border-radius: inherit;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .glow-border:hover::before {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,36 @@
+﻿
+C:\Users\morer\OneDrive\Desktop\MMORERASME\web\build_investigation.js
+  2:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+C:\Users\morer\OneDrive\Desktop\MMORERASME\web\src\components\sections\footer.tsx
+  46:25  error  Do not use an `<a>` element to navigate to `/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages  @next/next/no-html-link-for-pages
+
+C:\Users\morer\OneDrive\Desktop\MMORERASME\web\src\components\sections\navbar.tsx
+  32:21  error  Do not use an `<a>` element to navigate to `/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages  @next/next/no-html-link-for-pages
+
+C:\Users\morer\OneDrive\Desktop\MMORERASME\web\src\components\ui\input.tsx
+  4:18  error  An interface declaring no members is equivalent to its supertype  @typescript-eslint/no-empty-object-type
+
+C:\Users\morer\OneDrive\Desktop\MMORERASME\web\src\components\ui\mermaid-diagram.tsx
+  18:9  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\morer\OneDrive\Desktop\MMORERASME\web\src\components\ui\mermaid-diagram.tsx:18:9
+  16 |
+  17 |     useEffect(() => {
+> 18 |         setIsMounted(true);
+     |         ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  19 |     }, []);
+  20 |
+  21 |     useEffect(() => {  react-hooks/set-state-in-effect
+
+C:\Users\morer\OneDrive\Desktop\MMORERASME\web\src\components\ui\textarea.tsx
+  4:18  error  An interface declaring no members is equivalent to its supertype  @typescript-eslint/no-empty-object-type
+
+Ô£û 6 problems (6 errors, 0 warnings)
+

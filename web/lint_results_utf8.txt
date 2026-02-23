@@ -1,0 +1,23 @@
+﻿
+> web@0.1.0 lint
+> eslint
+
+
+C:\Users\morer\Downloads\Agencia Mario\web\src\components\sections\SkillColdOutbound.tsx
+  5:10  warning  'Bot' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\morer\Downloads\Agencia Mario\web\src\components\sections\SkillStrictRAG.tsx
+  80:196  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  80:209  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  85:33   error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  85:67   error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  86:33   error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  86:56   error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  87:61   error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  87:93   error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+C:\Users\morer\Downloads\Agencia Mario\web\src\components\sections\Systems.tsx
+  5:8  warning  'Link' is defined but never used  @typescript-eslint/no-unused-vars
+
+Ô£û 10 problems (8 errors, 2 warnings)
+
