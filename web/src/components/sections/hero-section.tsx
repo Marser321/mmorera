@@ -14,11 +14,7 @@ const HERO_CONTENT = {
     subtitle: 'Infraestructura de conversión B2B: automatizamos tus campañas, pruebas A/B y seguimiento de leads con un equipo extendido. Dejamos de adivinar y empezamos a escalar.',
 };
 
-const METRICAS = [
-    { valor: '+80%', label: 'Leads cualificados' },
-    { valor: '<5 min', label: 'Tiempo de respuesta' },
-    { valor: '-35%', label: 'Costos operativos' },
-] as const;
+
 
 export function HeroSection() {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -130,38 +126,7 @@ export function HeroSection() {
                             </button>
                         </motion.div>
 
-                        {/* Métricas rápidas — Glassmorphism Magnético (Premium) */}
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 1, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                            className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-20 pt-10 border-t border-white/5 w-full max-w-4xl mx-auto relative px-4"
-                        >
-                            {/* Glowing separator line central */}
-                            <div className="absolute top-[-1px] left-1/4 right-1/4 h-[1px] bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent"></div>
 
-                            {METRICAS.map((m, i) => (
-                                <motion.div
-                                    key={m.label}
-                                    whileHover={{ scale: 1.05, y: -5 }}
-                                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                                    className="relative group p-6 rounded-2xl bg-black/40 border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)] backdrop-blur-2xl flex flex-col items-center justify-center overflow-hidden cursor-default"
-                                >
-                                    {/* Hover Pulse Glow interno */}
-                                    <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
-                                    <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-                                    <div className="absolute bottom-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
-                                    <span className="relative z-10 font-mono text-3xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-emerald-200 sm:text-4xl mb-2 drop-shadow-[0_0_15px_rgba(16,185,129,0.5)] group-hover:from-white group-hover:to-emerald-200 transition-all duration-300">
-                                        {m.valor}
-                                    </span>
-                                    <span className="relative z-10 text-xs font-bold text-white/50 uppercase tracking-[0.2em] group-hover:text-white/80 transition-colors">
-                                        {m.label}
-                                    </span>
-                                </motion.div>
-                            ))}
-                        </motion.div>
                     </motion.div>
                 </div>
 
