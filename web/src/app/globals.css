@@ -411,7 +411,7 @@
 
   /* ─── Glow de texto ─── */
   .text-glow {
-    text-shadow: 0 0 30px rgba(16, 185, 129, 0.3);
+    text-shadow: 0 0 30px oklch(0.7 0.2 250 / 0.3);
   }
 }
 

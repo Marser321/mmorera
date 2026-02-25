@@ -62,8 +62,8 @@ export function ServicesCatalog() {
     return (
         <section id="servicios" className="py-24 bg-background relative overflow-hidden min-h-screen flex flex-col pt-12 z-20">
             <div className="absolute inset-0">
-                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[120px]" />
-                <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-[120px]" />
+                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px]" />
+                <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-accent/10 rounded-full blur-[120px]" />
             </div>
 
             <div className="container mx-auto px-4 mb-8 md:mb-16 relative z-10">
@@ -73,11 +73,11 @@ export function ServicesCatalog() {
                     viewport={{ once: true }}
                     className="text-center max-w-3xl mx-auto"
                 >
-                    <div className="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wider text-blue-400 uppercase bg-blue-500/10 rounded-full border border-blue-500/20">
+                    <div className="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wider text-primary uppercase bg-primary/10 rounded-full border border-primary/20">
                         Nuestras Capacidades
                     </div>
-                    <h2 className="text-4xl md:text-7xl font-black text-white mb-6 tracking-tighter uppercase relative z-10">
-                        ecosistema <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-violet-400 to-emerald-400 animate-gradient-x bg-[length:200%_auto]">digital</span>
+                    <h2 className="text-4xl md:text-7xl font-heading text-white mb-6 tracking-tighter uppercase relative z-10">
+                        ecosistema <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-accent to-primary animate-gradient-x bg-[length:200%_auto]">digital</span>
                     </h2>
                     <p className="text-xl text-white/60 font-light leading-relaxed max-w-2xl mx-auto">
                         Módulos de alto rendimiento diseñados para integrarse y escalar.
@@ -143,8 +143,8 @@ function MobileCard({ service, index: _index, isBookmarked, toggleBookmark, onSe
 }) {
     const isTech = service.pilar === 'tech';
     const isMedia = service.pilar === 'media';
-    const borderColor = isTech ? 'border-blue-500/30' : isMedia ? 'border-violet-500/30' : 'border-emerald-500/30';
-    const textColor = isTech ? 'text-blue-400' : isMedia ? 'text-violet-400' : 'text-emerald-400';
+    const borderColor = isTech ? 'border-primary/30' : isMedia ? 'border-secondary/30' : 'border-accent/30';
+    const textColor = isTech ? 'text-primary' : isMedia ? 'text-white/70' : 'text-accent';
 
     return (
         <motion.div
@@ -152,13 +152,13 @@ function MobileCard({ service, index: _index, isBookmarked, toggleBookmark, onSe
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ margin: "-20%", amount: 0.5 }}
             className={cn("relative rounded-3xl border overflow-hidden backdrop-blur-md shadow-lg", borderColor,
-                isTech ? "bg-slate-950/80" : isMedia ? "bg-fuchsia-950/80" : "bg-emerald-950/80"
+                isTech ? "bg-black/60" : isMedia ? "bg-black/40" : "bg-black/60"
             )}
         >
             <div className="p-6 relative z-10 flex flex-col gap-4">
                 <div className="flex justify-between items-start">
                     <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center border backdrop-blur-md", borderColor, textColor,
-                        isTech ? "bg-blue-500/10" : isMedia ? "bg-violet-500/10" : "bg-emerald-500/10"
+                        isTech ? "bg-primary/10" : isMedia ? "bg-secondary/20" : "bg-accent/10"
                     )}>
                         {iconMap[service.icono] || <Layers className="w-6 h-6" />}
                     </div>
@@ -180,8 +180,8 @@ function MobileCard({ service, index: _index, isBookmarked, toggleBookmark, onSe
                         <div className="text-[10px] uppercase text-white/50 tracking-wider font-bold">Inversión</div>
                         <div className="text-xl font-black text-white">${service.precio_base}</div>
                     </div>
-                    <button onClick={onSelect} className={cn("flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold text-black transition-transform active:scale-95 shadow-lg",
-                        isTech ? "bg-blue-400" : isMedia ? "bg-violet-400" : "bg-emerald-400"
+                    <button onClick={onSelect} className={cn("flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold transition-transform active:scale-95 shadow-lg",
+                        isTech ? "bg-primary text-black" : isMedia ? "bg-white text-black" : "bg-accent text-black"
                     )}>Ver Detalles</button>
                 </div>
             </div>
@@ -202,7 +202,7 @@ function ServiceCard({ service, index, toggleBookmark, isBookmarked, onSelect }:
         mouseY.set(clientY - top);
     };
 
-    const borderClass = service.pilar === 'tech' ? 'group-hover/card:border-blue-500/50' : service.pilar === 'media' ? 'group-hover/card:border-violet-500/50' : 'group-hover/card:border-emerald-500/50';
+    const borderClass = service.pilar === 'tech' ? 'group-hover/card:border-primary/50' : service.pilar === 'media' ? 'group-hover/card:border-white/20' : 'group-hover/card:border-accent/50';
 
     return (
         <motion.div
@@ -226,9 +226,9 @@ function ServiceCard({ service, index, toggleBookmark, isBookmarked, onSelect }:
                 <div className="p-8 h-full flex flex-col relative z-10">
                     <div className="flex justify-between items-start mb-8">
                         <div className={cn("w-16 h-16 rounded-2xl flex items-center justify-center text-white transition-all duration-500 group-hover/card:scale-110 shadow-lg",
-                            service.pilar === 'tech' ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' :
-                                service.pilar === 'media' ? 'bg-violet-500/10 text-violet-400 border border-violet-500/20' :
-                                    'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                            service.pilar === 'tech' ? 'bg-primary/10 text-primary border border-primary/20' :
+                                service.pilar === 'media' ? 'bg-secondary/20 text-white border border-white/20' :
+                                    'bg-accent/10 text-accent border border-accent/20'
                         )}>
                             {iconMap[service.icono] || <Layers className="w-8 h-8" />}
                         </div>
@@ -252,7 +252,7 @@ function ServiceCard({ service, index, toggleBookmark, isBookmarked, onSelect }:
                             <div className="flex flex-col gap-1">
                                 <span className="text-[10px] uppercase tracking-[0.2em] text-white/30 font-bold">Inversión desde</span>
                                 <span className={cn("text-2xl font-black tracking-tight",
-                                    service.pilar === 'tech' ? 'text-blue-400' : service.pilar === 'media' ? 'text-violet-400' : 'text-emerald-400'
+                                    service.pilar === 'tech' ? 'text-primary' : service.pilar === 'media' ? 'text-white' : 'text-accent'
                                 )}>${service.precio_base}</span>
                             </div>
                             <button onClick={onSelect} className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center border border-white/5 group-hover/card:bg-white group-hover/card:text-black transition-all duration-300">

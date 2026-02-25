@@ -2,6 +2,19 @@ import { Servicio } from '@/types';
 
 export const MOCK_SERVICES: Servicio[] = [
     {
+        id: '0',
+        nombre: 'Autopiloto Express',
+        descripcion: 'Tu primer agente IA en 48 horas. Bot de WhatsApp que responde FAQs, agenda citas y califica leads automáticamente. El primer paso para automatizar sin riesgo.',
+        descripcion_corta: 'Bot WhatsApp IA',
+        pilar: 'tech',
+        icono: 'Smartphone',
+        precio_base: 99,
+        tipo_pago: 'mensual',
+        caracteristicas: ['Bot WhatsApp 24/7', 'Respuestas FAQ Automatizadas', 'Agendamiento de Citas'],
+        tecnologias: [],
+        orden: 0
+    },
+    {
         id: '1',
         nombre: 'Infraestructura de Crecimiento',
         descripcion: 'La capa base. Landing pages orientadas a acción, tracking avanzado y elementos de confianza. Dejamos tu ecosistema listo para convertir tráfico en ventas.',

@@ -47,11 +47,11 @@ export function SkillLeadQualifier() {
         <div className="grid lg:grid-cols-2 gap-8 items-start animate-in fade-in duration-500">
             {/* Left Column: Input Form (Client Side) */}
             <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-6 md:p-8 shadow-2xl relative">
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-primary to-transparent rounded-t-2xl opacity-50"></div>
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-accent to-transparent rounded-t-2xl opacity-50"></div>
 
                 <div className="flex items-center gap-3 mb-6">
-                    <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center">
-                        <MessageSquare className="w-5 h-5 text-blue-400" />
+                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                        <MessageSquare className="w-5 h-5 text-primary" />
                     </div>
                     <div>
                         <h3 className="text-lg font-semibold">Formulario de Contacto</h3>
@@ -95,10 +95,10 @@ export function SkillLeadQualifier() {
 
                 <div className="border-b border-white/5 bg-white/5 p-4 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
-                            <Bot className="w-4 h-4 text-emerald-400" />
+                        <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center border border-accent/20">
+                            <Bot className="w-4 h-4 text-accent" />
                         </div>
-                        <span className="font-mono text-sm tracking-tight text-emerald-100">AI_Router_Engine</span>
+                        <span className="font-mono text-sm tracking-tight text-white/80">AI_Router_Engine</span>
                     </div>
                     <div className="flex gap-2">
                         <div className="w-2.5 h-2.5 rounded-full bg-red-500/50"></div>
@@ -110,7 +110,7 @@ export function SkillLeadQualifier() {
                 <div className="p-6 flex-1 font-mono text-sm overflow-y-auto relative">
                     {/* Scanning Animation overlay */}
                     {isAnalyzing && (
-                        <div className="absolute inset-0 bg-emerald-950/20 backdrop-blur-[2px] flex flex-col items-center justify-center z-10 text-emerald-400 border border-emerald-500/20 rounded-b-2xl">
+                        <div className="absolute inset-0 bg-accent/10 backdrop-blur-[2px] flex flex-col items-center justify-center z-10 text-accent border border-accent/20 rounded-b-2xl">
                             <Activity className="w-8 h-8 animate-spin mb-3" />
                             <span className="animate-pulse tracking-widest text-xs uppercase">Evaluando Variables Múltiples...</span>
                         </div>
@@ -129,7 +129,7 @@ export function SkillLeadQualifier() {
                             <div className="text-muted-foreground mb-4">{">"} Ejecutando Prompt Maestro (Clasificador)... OK</div>
 
                             <div className="bg-black/50 rounded-lg p-4 border border-white/5">
-                                <pre className="text-emerald-400 whitespace-pre-wrap word-break">
+                                <pre className="text-accent whitespace-pre-wrap word-break">
                                     {JSON.stringify(result, null, 2)}
                                 </pre>
                             </div>
@@ -155,11 +155,11 @@ export function SkillLeadQualifier() {
                                     </div>
                                 )}
                                 {result.clasificacion === "FRIO" && (
-                                    <div className="flex items-start gap-3 text-blue-400 bg-blue-500/10 p-3 rounded-lg border border-blue-500/20">
+                                    <div className="flex items-start gap-3 text-primary bg-primary/10 p-3 rounded-lg border border-primary/20">
                                         <CheckCircle2 className="w-5 h-5 shrink-0 mt-0.5" />
                                         <div>
-                                            <p className="font-semibold text-xs mb-1 uppercase tracking-widest text-blue-300">Acción Ejecutada</p>
-                                            <p className="text-xs">Consulta general. Respondido automáticamente por el Agente FAQ (Skill 3) para no gastar tiempo humano.</p>
+                                            <p className="font-semibold text-xs mb-1 uppercase tracking-widest text-primary">Acción Ejecutada</p>
+                                            <p className="text-xs text-white/70">Consulta general. Respondido automáticamente por el Agente FAQ (Skill 3) para no gastar tiempo humano.</p>
                                         </div>
                                     </div>
                                 )}

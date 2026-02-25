@@ -43,15 +43,15 @@ export function WorkflowSection() {
             <Container className="relative z-10 flex flex-col items-center">
 
                 <div className="text-center mb-16 md:mb-24 space-y-6 max-w-3xl">
-                    <div className="inline-flex items-center rounded-full border border-emerald-500/20 bg-emerald-500/10 px-4 py-1.5 text-[10px] text-emerald-500 font-mono tracking-[0.3em] uppercase mx-auto">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2" />
+                    <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-[10px] text-primary font-mono tracking-[0.3em] uppercase mx-auto">
+                        <span className="w-1.5 h-1.5 rounded-full bg-primary mr-2" />
                         Nuestro Proceso
                     </div>
                     <h2
                         id="proceso-heading"
-                        className="text-4xl md:text-5xl font-serif text-white tracking-tight"
+                        className="text-4xl md:text-5xl font-heading text-white tracking-tight"
                     >
-                        De diagnóstico a <span className="text-emerald-400 italic font-light">resultados</span> en semanas.
+                        De diagnóstico a <span className="text-accent italic font-light">resultados</span> en semanas.
                     </h2>
                     <p className="text-lg text-white/50 font-light leading-relaxed max-w-2xl mx-auto">
                         Un modelo claro y predecible: sabés exactamente qué comprás, en cuánto tiempo y qué resultados vas a recibir.
@@ -67,19 +67,19 @@ export function WorkflowSection() {
                                 className="group relative rounded-3xl p-8 transition-all duration-500 hover:-translate-y-2"
                             >
                                 {/* Fondo tarjeta 3D */}
-                                <div className="absolute inset-0 bg-white/[0.02] border border-white/5 rounded-3xl backdrop-blur-3xl transition-colors duration-500 group-hover:bg-white/[0.04] group-hover:border-emerald-500/20" />
+                                <div className="absolute inset-0 bg-white/[0.02] border border-white/5 rounded-3xl backdrop-blur-3xl transition-colors duration-500 group-hover:bg-white/[0.04] group-hover:border-primary/20" />
 
                                 <div className="relative z-10">
                                     <div className="flex items-center justify-between mb-8">
-                                        <div className="w-14 h-14 rounded-2xl bg-black border border-white/10 flex items-center justify-center text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.05)] group-hover:shadow-[0_0_30px_rgba(16,185,129,0.15)] transition-shadow duration-500">
+                                        <div className="w-14 h-14 rounded-2xl bg-black border border-white/10 flex items-center justify-center text-primary shadow-[0_0_20px_var(--color-primary)] opacity-80 group-hover:opacity-100 group-hover:shadow-[0_0_30px_var(--color-primary)] transition-all duration-500">
                                             <Icono className="w-6 h-6" />
                                         </div>
-                                        <span className="text-4xl font-black text-white/[0.03] group-hover:text-white/[0.08] transition-colors duration-500 select-none">
+                                        <span className="text-4xl font-black text-white/[0.03] group-hover:text-white/[0.08] transition-colors duration-500 select-none font-mono">
                                             {paso.numero}
                                         </span>
                                     </div>
 
-                                    <h3 className="text-2xl font-serif text-white mb-3">
+                                    <h3 className="text-2xl font-heading text-white mb-3">
                                         {paso.titulo}
                                     </h3>
                                     <p className="text-white/40 mb-8 font-light leading-relaxed text-sm">
@@ -94,7 +94,7 @@ export function WorkflowSection() {
                                                 key={item}
                                                 className="flex items-start gap-3 text-sm text-white/60 font-light"
                                             >
-                                                <div className="mt-1 flex-shrink-0 w-1.5 h-1.5 rounded-full bg-emerald-500/50" />
+                                                <div className="mt-1 flex-shrink-0 w-1.5 h-1.5 rounded-full bg-primary/50" />
                                                 <span>{item}</span>
                                             </li>
                                         ))}

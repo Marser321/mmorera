@@ -39,11 +39,11 @@ export function SkillProposalGenerator() {
         <div className="grid lg:grid-cols-2 gap-8 items-start animate-in fade-in duration-500">
             {/* Left Column: Input Form (Sales Rep Side) */}
             <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-6 md:p-8 shadow-2xl relative">
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 via-primary to-transparent rounded-t-2xl opacity-50"></div>
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-accent to-transparent rounded-t-2xl opacity-50"></div>
 
                 <div className="flex items-center gap-3 mb-6">
-                    <div className="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center">
-                        <PenTool className="w-5 h-5 text-purple-400" />
+                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                        <PenTool className="w-5 h-5 text-primary" />
                     </div>
                     <div>
                         <h3 className="text-lg font-semibold">Notas de Discovery</h3>
@@ -58,14 +58,14 @@ export function SkillProposalGenerator() {
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             placeholder="Ej: El cliente quiere automatizar ventas B2B. Dice que pierde mucho tiempo. Presupuesto max 4k. Quiere un MVP rápido."
-                            className="w-full h-32 bg-black/50 border border-white/10 rounded-xl p-4 text-sm resize-none focus:ring-1 focus:ring-purple-500 focus:border-purple-500 transition-all text-white placeholder:text-muted-foreground/50"
+                            className="w-full h-32 bg-black/50 border border-white/10 rounded-xl p-4 text-sm resize-none focus:ring-1 focus:ring-primary focus:border-primary transition-all text-white placeholder:text-muted-foreground/50"
                         />
                     </div>
 
                     <Button
                         onClick={generateProposal}
                         disabled={isGenerating || !input.trim()}
-                        className="w-full bg-purple-600 text-white hover:bg-purple-700 h-12 rounded-xl text-base font-medium transition-all shadow-[0_0_20px_rgba(147,51,234,0.3)] hover:shadow-[0_0_30px_rgba(147,51,234,0.5)]"
+                        className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-12 rounded-xl text-base font-medium transition-all shadow-[0_0_20px_rgba(var(--primary),0.3)] hover:shadow-[0_0_30px_rgba(var(--primary),0.5)]"
                     >
                         {isGenerating ? (
                             <>
@@ -87,10 +87,10 @@ export function SkillProposalGenerator() {
 
                 <div className="border-b border-white/5 bg-white/5 p-4 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center border border-purple-500/20">
-                            <Bot className="w-4 h-4 text-purple-400" />
+                        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20">
+                            <Bot className="w-4 h-4 text-primary" />
                         </div>
-                        <span className="font-mono text-sm tracking-tight text-purple-100">AI_Proposal_Builder</span>
+                        <span className="font-mono text-sm tracking-tight text-white/80">AI_Proposal_Builder</span>
                     </div>
                     <div className="flex gap-2">
                         <div className="w-2.5 h-2.5 rounded-full bg-white/20"></div>
@@ -101,7 +101,7 @@ export function SkillProposalGenerator() {
 
                 <div className="p-6 flex-1 font-mono text-sm overflow-y-auto relative">
                     {isGenerating && (
-                        <div className="absolute inset-0 bg-purple-950/20 backdrop-blur-[2px] flex flex-col items-center justify-center z-10 text-purple-400 border border-purple-500/20 rounded-b-2xl">
+                        <div className="absolute inset-0 bg-primary/10 backdrop-blur-[2px] flex flex-col items-center justify-center z-10 text-primary border border-primary/20 rounded-b-2xl">
                             <Activity className="w-8 h-8 animate-spin mb-3" />
                             <span className="animate-pulse tracking-widest text-xs uppercase">Transformando apuntes en Copy Persuasivo...</span>
                         </div>
@@ -119,14 +119,14 @@ export function SkillProposalGenerator() {
                             <div className="text-muted-foreground mb-2">{">"} Estructurando JSON y enviando vía N8N a Google Slides... OK</div>
 
                             <div className="bg-black/50 rounded-lg p-4 border border-white/5">
-                                <pre className="text-purple-300 whitespace-pre-wrap word-break">
+                                <pre className="text-primary/90 whitespace-pre-wrap word-break">
                                     {JSON.stringify(proposal, null, 2)}
                                 </pre>
                             </div>
 
                             <div className="mt-6 border-t border-white/10 pt-4 flex items-center justify-between text-xs text-muted-foreground">
                                 <span>Tiempo ahorrado: ~2.5 horas</span>
-                                <span className="flex items-center text-emerald-400">
+                                <span className="flex items-center text-accent">
                                     <CheckCircle2 className="w-4 h-4 mr-1" /> PDF Listo para Enviar
                                 </span>
                             </div>

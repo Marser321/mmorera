@@ -9,29 +9,29 @@ export function Workflow() {
             title: "Captación de Lead",
             description: "El cliente potencial entra al embudo desde LinkedIn o Ads.",
             icon: <UserPlus className="w-6 h-6" />,
-            color: "bg-blue-500/10 text-blue-500 border-blue-500/20",
-            glowColor: "from-blue-500/20 to-cyan-500/20",
+            color: "bg-white/5 text-muted-foreground border-white/10",
+            glowColor: "from-white/10 to-transparent",
         },
         {
             title: "Calificación por IA",
             description: "Nuestro agente evalúa su perfil, empresa y nivel de urgencia.",
             icon: <Filter className="w-6 h-6" />,
-            color: "bg-purple-500/10 text-purple-500 border-purple-500/20",
-            glowColor: "from-purple-500/20 to-pink-500/20",
+            color: "bg-secondary/30 text-secondary-foreground border-secondary",
+            glowColor: "from-secondary/20 to-transparent",
         },
         {
             title: "Acción Personalizada",
             description: "Se genera un recurso, email o video dinámico a medida.",
             icon: <Bot className="w-6 h-6" />,
             color: "bg-primary/10 text-primary border-primary/20",
-            glowColor: "from-primary/20 to-blue-500/20",
+            glowColor: "from-primary/20 to-transparent",
         },
         {
             title: "Cierre / Agenda",
             description: "Si el lead cumple requisitos, se bloquea espacio en calendario.",
             icon: <PlayCircle className="w-6 h-6" />,
-            color: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20",
-            glowColor: "from-emerald-500/20 to-green-500/20",
+            color: "bg-accent/10 text-accent border-accent/20",
+            glowColor: "from-accent/20 to-primary/20",
         },
     ];
 
@@ -59,10 +59,10 @@ export function Workflow() {
                     <div className="absolute top-0 left-0 w-full h-12 border-b border-white/10 bg-white/5 rounded-t-3xl flex items-center px-4 sm:px-6 gap-2.5">
                         <div className="w-3 h-3 rounded-full bg-red-500/80 shadow-[0_0_10px_rgba(239,68,68,0.5)]"></div>
                         <div className="w-3 h-3 rounded-full bg-yellow-500/80 shadow-[0_0_10px_rgba(234,179,8,0.5)]"></div>
-                        <div className="w-3 h-3 rounded-full bg-green-500/80 shadow-[0_0_10px_rgba(34,197,94,0.5)]"></div>
+                        <div className="w-3 h-3 rounded-full bg-primary/80 shadow-[0_0_10px_var(--color-primary)] opacity-80"></div>
                         <span className="ml-2 sm:ml-4 text-[10px] sm:text-xs text-muted-foreground font-mono tracking-widest uppercase flex items-center gap-2">
                             system-trace: live_pipeline
-                            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                            <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
                         </span>
                     </div>
 

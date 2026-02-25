@@ -60,11 +60,11 @@ export function SkillStrictRAG() {
         <div className="grid lg:grid-cols-2 gap-8 items-start animate-in fade-in duration-500">
             {/* Left Column: Context / Explanation */}
             <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-6 md:p-8 shadow-2xl relative h-full flex flex-col justify-center">
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 via-primary to-transparent rounded-t-2xl opacity-50"></div>
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-accent via-primary to-transparent rounded-t-2xl opacity-50"></div>
 
                 <div className="flex items-center gap-3 mb-6">
-                    <div className="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center">
-                        <ShieldCheck className="w-5 h-5 text-emerald-400" />
+                    <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center">
+                        <ShieldCheck className="w-5 h-5 text-accent" />
                     </div>
                     <div>
                         <h3 className="text-lg font-semibold">Cerebro RAG Restringido</h3>
@@ -81,7 +81,7 @@ export function SkillStrictRAG() {
                     </p>
                     <div className="bg-black/50 border border-white/5 p-4 rounded-xl mt-4">
                         <p className="text-white font-medium mb-2">Prueba preguntar:</p>
-                        <ul className="list-disc list-inside space-y-1 text-emerald-400/80">
+                        <ul className="list-disc list-inside space-y-1 text-accent/80">
                             <li>&quot;¿Qué servicios ofrece la agencia?&quot; (Dentro del dominio)</li>
                             <li>&quot;¿Cuánto demora un MVP?&quot; (Dentro del dominio)</li>
                             <li className="text-red-400/80">&quot;¿Quién ganó el mundial en 2022?&quot; (Fuera del dominio ➔ Bloqueado)</li>
@@ -95,10 +95,10 @@ export function SkillStrictRAG() {
 
                 <div className="border-b border-white/5 bg-white/5 p-4 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
-                            <Bot className="w-4 h-4 text-emerald-400" />
+                        <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center border border-accent/20">
+                            <Bot className="w-4 h-4 text-accent" />
                         </div>
-                        <span className="font-mono text-sm tracking-tight text-emerald-100">Strict_RAG_Interface</span>
+                        <span className="font-mono text-sm tracking-tight text-white/80">Strict_RAG_Interface</span>
                     </div>
                 </div>
 
@@ -121,9 +121,9 @@ export function SkillStrictRAG() {
                     {isThinking && (
                         <div className="flex justify-start">
                             <div className="bg-white/5 border border-white/10 rounded-xl p-4 flex items-center gap-2">
-                                <div className="w-2 h-2 rounded-full bg-emerald-500/50 animate-bounce"></div>
-                                <div className="w-2 h-2 rounded-full bg-emerald-500/50 animate-bounce" style={{ animationDelay: "0.2s" }}></div>
-                                <div className="w-2 h-2 rounded-full bg-emerald-500/50 animate-bounce" style={{ animationDelay: "0.4s" }}></div>
+                                <div className="w-2 h-2 rounded-full bg-accent/50 animate-bounce"></div>
+                                <div className="w-2 h-2 rounded-full bg-accent/50 animate-bounce" style={{ animationDelay: "0.2s" }}></div>
+                                <div className="w-2 h-2 rounded-full bg-accent/50 animate-bounce" style={{ animationDelay: "0.4s" }}></div>
                             </div>
                         </div>
                     )}
@@ -137,13 +137,13 @@ export function SkillStrictRAG() {
                             onChange={(e) => setInput(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && handleSend()}
                             placeholder="Hazle una pregunta al manual..."
-                            className="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-emerald-500 transition-colors"
+                            className="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-accent transition-colors"
                         />
                         <Button
                             onClick={handleSend}
                             disabled={isThinking || !input.trim()}
                             size="icon"
-                            className="bg-emerald-600 hover:bg-emerald-700 text-white shrink-0"
+                            className="bg-accent hover:bg-accent/80 text-black shrink-0"
                         >
                             <Send className="w-4 h-4" />
                         </Button>
