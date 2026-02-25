@@ -1,6 +1,5 @@
 import { Search, Rocket, RefreshCcw, ArrowRight } from "lucide-react";
 import { Container } from "@/components/ui/container";
-import { SectionHeading } from "@/components/ui/section-heading";
 
 interface PasoWorkflow {
     icono: React.ElementType;
@@ -8,7 +7,6 @@ interface PasoWorkflow {
     titulo: string;
     descripcion: string;
     items: string[];
-    color: string;
 }
 
 const pasos: PasoWorkflow[] = [
@@ -18,7 +16,6 @@ const pasos: PasoWorkflow[] = [
         titulo: "Diagnóstico",
         descripcion: "Entendemos tu operación actual y encontramos los puntos de mayor impacto.",
         items: ["Mapa de procesos", "Auditoría de datos y tracking", "Backlog priorizado"],
-        color: "from-primary/20 to-primary/5",
     },
     {
         icono: Rocket,
@@ -26,110 +23,93 @@ const pasos: PasoWorkflow[] = [
         titulo: "Sprint de Implementación",
         descripcion: "Construimos e integramos los sistemas en 2–4 semanas con entregables claros.",
         items: ["Automatizaciones + agentes", "QA + validaciones", "KPIs y dashboard"],
-        color: "from-accent/20 to-accent/5",
     },
     {
         icono: RefreshCcw,
         numero: "03",
-        titulo: "Retainer de Optimización",
+        titulo: "Retainer & Escala",
         descripcion: "Optimización continua con testing, nuevos casos de uso y reportes ejecutivos.",
-        items: ["Test y mejora continua", "Nuevos casos de uso", "Reportes ejecutivos"],
-        color: "from-primary/15 to-accent/10",
+        items: ["Test y mejora continua", "Nuevos workflows", "Reportes ejecutivos"],
     },
 ];
 
-/**
- * WorkflowSection — visualización del pipeline Diagnóstico → Sprint → Retainer.
- * CSS puro (sin Mermaid) para evitar issues SSR. Mobile: vertical, Desktop: horizontal.
- */
 export function WorkflowSection() {
     return (
         <section
             id="proceso"
-            className="py-20 sm:py-28 relative"
+            className="py-24 sm:py-32 relative bg-[#0A0A0A]"
             aria-labelledby="proceso-heading"
         >
-            {/* Glow de fondo */}
-            <div className="absolute inset-0 -z-10">
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-primary/3 blur-[150px]" />
-            </div>
+            <Container className="relative z-10 flex flex-col items-center">
 
-            <Container>
-                <SectionHeading
-                    id="proceso-heading"
-                    overline="Nuestro Proceso"
-                    title="De diagnóstico a resultados en semanas"
-                    description="Un modelo claro y predecible: sabés exactamente qué comprás, en cuánto tiempo y qué resultado esperás."
-                />
-
-                {/* Timeline */}
-                <div className="relative">
-                    {/* Línea conectora — Desktop */}
-                    <div
-                        className="hidden lg:block absolute top-24 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent"
-                        aria-hidden="true"
-                    />
-
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-6">
-                        {pasos.map((paso, index) => {
-                            const Icono = paso.icono;
-                            return (
-                                <div key={paso.titulo} className="relative group">
-                                    {/* Conector vertical — Mobile */}
-                                    {index < pasos.length - 1 && (
-                                        <div
-                                            className="lg:hidden absolute left-6 top-full w-px h-8 bg-gradient-to-b from-border to-transparent"
-                                            aria-hidden="true"
-                                        />
-                                    )}
-
-                                    <div
-                                        className={`rounded-xl border border-border/30 bg-gradient-to-br ${paso.color} p-6 transition-all duration-400 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5`}
-                                    >
-                                        {/* Número y flecha */}
-                                        <div className="flex items-center justify-between mb-4">
-                                            <div className="flex items-center gap-3">
-                                                <div className="flex items-center justify-center size-12 rounded-xl bg-card/80 border border-border/30 text-primary">
-                                                    <Icono className="size-5" />
-                                                </div>
-                                                <span className="text-xs font-mono text-muted-foreground tracking-widest">
-                                                    PASO {paso.numero}
-                                                </span>
-                                            </div>
-                                            {index < pasos.length - 1 && (
-                                                <ArrowRight
-                                                    className="hidden lg:block size-4 text-muted-foreground/50 group-hover:text-primary transition-colors"
-                                                    aria-hidden="true"
-                                                />
-                                            )}
-                                        </div>
-
-                                        <h3 className="text-lg font-semibold text-foreground mb-2">
-                                            {paso.titulo}
-                                        </h3>
-                                        <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                                            {paso.descripcion}
-                                        </p>
-
-                                        <ul className="space-y-1.5" role="list">
-                                            {paso.items.map((item) => (
-                                                <li
-                                                    key={item}
-                                                    className="flex items-center gap-2 text-sm text-muted-foreground"
-                                                >
-                                                    <span
-                                                        className="size-1 rounded-full bg-primary/60"
-                                                        aria-hidden="true"
-                                                    />
-                                                    {item}
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                </div>
-                            );
-                        })}
+                <div className="text-center mb-16 md:mb-24 space-y-6 max-w-3xl">
+                    <div className="inline-flex items-center rounded-full border border-emerald-500/20 bg-emerald-500/10 px-4 py-1.5 text-[10px] text-emerald-500 font-mono tracking-[0.3em] uppercase mx-auto">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2" />
+                        Nuestro Proceso
                     </div>
+                    <h2
+                        id="proceso-heading"
+                        className="text-4xl md:text-5xl font-serif text-white tracking-tight"
+                    >
+                        De diagnóstico a <span className="text-emerald-400 italic font-light">resultados</span> en semanas.
+                    </h2>
+                    <p className="text-lg text-white/50 font-light leading-relaxed max-w-2xl mx-auto">
+                        Un modelo claro y predecible: sabés exactamente qué comprás, en cuánto tiempo y qué resultados vas a recibir.
+                    </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 w-full max-w-6xl">
+                    {pasos.map((paso, index) => {
+                        const Icono = paso.icono;
+                        return (
+                            <div
+                                key={paso.titulo}
+                                className="group relative rounded-3xl p-8 transition-all duration-500 hover:-translate-y-2"
+                            >
+                                {/* Fondo tarjeta 3D */}
+                                <div className="absolute inset-0 bg-white/[0.02] border border-white/5 rounded-3xl backdrop-blur-3xl transition-colors duration-500 group-hover:bg-white/[0.04] group-hover:border-emerald-500/20" />
+
+                                <div className="relative z-10">
+                                    <div className="flex items-center justify-between mb-8">
+                                        <div className="w-14 h-14 rounded-2xl bg-black border border-white/10 flex items-center justify-center text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.05)] group-hover:shadow-[0_0_30px_rgba(16,185,129,0.15)] transition-shadow duration-500">
+                                            <Icono className="w-6 h-6" />
+                                        </div>
+                                        <span className="text-4xl font-black text-white/[0.03] group-hover:text-white/[0.08] transition-colors duration-500 select-none">
+                                            {paso.numero}
+                                        </span>
+                                    </div>
+
+                                    <h3 className="text-2xl font-serif text-white mb-3">
+                                        {paso.titulo}
+                                    </h3>
+                                    <p className="text-white/40 mb-8 font-light leading-relaxed text-sm">
+                                        {paso.descripcion}
+                                    </p>
+
+                                    <div className="w-full h-px bg-white/5 mb-8" />
+
+                                    <ul className="space-y-4">
+                                        {paso.items.map((item) => (
+                                            <li
+                                                key={item}
+                                                className="flex items-start gap-3 text-sm text-white/60 font-light"
+                                            >
+                                                <div className="mt-1 flex-shrink-0 w-1.5 h-1.5 rounded-full bg-emerald-500/50" />
+                                                <span>{item}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+
+                                {/* Puntero / Flecha flow (oculta en ultimo card) */}
+                                {index < pasos.length - 1 && (
+                                    <div className="hidden md:flex absolute top-1/2 -right-4 lg:-right-6 w-8 h-8 -translate-y-1/2 items-center justify-center z-20 text-white/20">
+                                        <ArrowRight className="w-5 h-5" />
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    })}
                 </div>
             </Container>
         </section>

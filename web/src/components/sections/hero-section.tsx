@@ -9,9 +9,9 @@ const loadFeatures = () =>
     import('framer-motion').then((res) => res.domAnimation);
 
 const HERO_CONTENT = {
-    badge: 'IA sin humo · Resultados medibles',
-    title: ['Aumentá tu ', 'productividad y ventas', ' sin aumentar tu plantilla'],
-    subtitle: 'Sistemas de automatización y agentes de IA + sprints de implementación + retainer de optimización. Todo conectado a métricas reales.',
+    badge: 'Resultados reales · IA sin humo',
+    title: ['Aumentá tu ', 'ROI medible', ' sin inflar tu nómina'],
+    subtitle: 'Infraestructura de conversión B2B: automatizamos tus campañas, pruebas A/B y seguimiento de leads con un equipo extendido. Dejamos de adivinar y empezamos a escalar.',
 };
 
 const METRICAS = [

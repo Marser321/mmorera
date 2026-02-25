@@ -20,7 +20,7 @@ export function ProblemSolution() {
         offset: ["start start", "end end"]
     });
 
-    // Desktop: clip-path circular reveal
+    // Desktop: clip-path circular reveal original
     const desktopClipPath = useTransform(scrollYProgress, [0, 1], ["circle(0% at 50% 50%)", "circle(250% at 50% 50%)"]);
 
     // Mobile: crossfade suave
@@ -57,14 +57,14 @@ export function ProblemSolution() {
                                 className="inline-flex items-center rounded-full border border-red-500/20 bg-red-500/10 px-4 py-1.5 text-[10px] text-red-500 font-mono tracking-[0.3em] uppercase"
                             >
                                 <span className="flex h-1.5 w-1.5 rounded-full bg-red-500 mr-3 animate-pulse" />
-                                Operación Legacy Detectada
+                                Equipo Interno Saturado
                             </motion.div>
                             <h2 className="text-5xl md:text-[6rem] font-bold tracking-tight text-white leading-tight md:leading-[0.85]">
                                 La Trampa del <br />
-                                <span className="text-red-600">Esfuerzo Manual.</span>
+                                <span className="text-red-600">Seguimiento Lento.</span>
                             </h2>
                             <p className="text-xl text-white/60 md:text-white/40 leading-relaxed max-w-lg font-light">
-                                Si tu negocio se detiene cuando vos te detenés, no construiste una empresa — construiste una jaula de oro. El crecimiento lineal es el enemigo de la libertad.
+                                Si tu departamento de ventas tarda más de 5 minutos en responder, el 78% de tus leads B2B le comprará al competidor que conteste primero. El trabajo manual quema tu presupuesto.
                             </p>
                         </div>
 
@@ -105,22 +105,22 @@ export function ProblemSolution() {
                                 className="inline-flex items-center rounded-full border border-emerald-500/20 bg-emerald-500/10 px-5 py-2 text-[10px] text-emerald-400 font-mono tracking-[0.4em] uppercase"
                             >
                                 <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-500 mr-3 shadow-[0_0_12px_#10b981]" />
-                                Infraestructura de Autoridad
+                                AI-First & Performance
                             </motion.div>
                             <motion.h2
                                 style={isMobile ? {} : { opacity: solTitleOpacity, y: solTitleY }}
                                 className="text-5xl md:text-[6rem] font-bold tracking-tight text-white leading-tight md:leading-[0.85]"
                             >
-                                Arquitectura <br />
+                                Infraestructura <br />
                                 <span className="text-transparent bg-clip-text bg-gradient-to-br from-emerald-400 via-white to-white/40">
-                                    de Dominio.
+                                    de Conversión.
                                 </span>
                             </motion.h2>
                             <motion.p
                                 style={isMobile ? {} : { opacity: solTitleOpacity, y: solTitleY }}
                                 className="text-xl text-white/70 md:text-white/50 leading-relaxed max-w-lg font-light"
                             >
-                                Ingeniería de software diseñada para reemplazar la voluntad humana por la precisión algorítmica. Escalabilidad sin límites y autoridad absoluta en tu sector.
+                                Implementamos un &quot;equipo extendido&quot; de agentes IA y automatizaciones que califican, nutren y cierran oportunidades 24/7. Reducí tu CAC y multiplicá x21 tus ventas.
                             </motion.p>
 
                             <motion.div style={isMobile ? {} : { opacity: solBtnOpacity, y: solBtnY }}>
