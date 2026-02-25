@@ -1,182 +1,166 @@
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
-import { Check, Sparkles, Zap, ShieldAlert, ChevronRight } from "lucide-react";
-import { cn } from "@/lib/utils";
+import * as React from 'react';
+import { motion } from 'framer-motion';
+import { Check } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
-const pricingPlans = [
+const SERVICES_PRICING = [
     {
-        name: "Starter Pack",
-        badge: "MVP",
-        price: "$1,500 - $3,000",
-        period: "setup",
-        description: "Validación de Vibe. Ideal para agencias que necesitan digitalizar su propuesta de valor rápidamente.",
-        features: [
-            "Landing Page de Alta Conversión",
-            "Configuración de 1 Módulo IA (ej. Chatbot NotebookLM)",
-            "Base de Datos Básica en InsForge",
-            "Diseño 'Deep Space' (Dark Mode)"
-        ],
-        icon: ShieldAlert,
-        color: "blue",
-        highlighted: false,
-        btnText: "Iniciar MVP",
+        name: 'Web & Landing',
+        description: 'Presencia digital de alto impacto y velocidad.',
+        features: ['Diseño UX/UI Premium', 'SEO Técnico Optimizado', 'Dominio y Hosting (1 año)', 'Integración de Analytics'],
+        monthly: { price: '150', label: 'Mantenimiento + SEO' },
+        oneTime: { price: '1,500', label: 'Desarrollo Completo' },
+        highlight: false
     },
     {
-        name: "Growth Pack",
-        badge: "Escala",
-        price: "$5,000 - $10,000",
-        period: "setup + retainer",
-        description: "Pipeline Omnicanal. Para agencias que buscan escalar operaciones sin contratar más personal humano.",
-        features: [
-            "Módulos interconectados (CRM + Contenido)",
-            "Servidor MCP dedicado (n8n)",
-            "Dashboard de métricas en tiempo real",
-            "Soporte prioritario y optimización continua",
-            "Capacitación del equipo interno"
-        ],
-        icon: Zap,
-        color: "indigo",
-        highlighted: true, // Destacado
-        btnText: "Acelerar Crecimiento",
+        name: 'E-commerce',
+        description: 'Tiendas online diseñadas para convertir.',
+        features: ['Catálogo Ilimitado', 'Pasarela de Pagos', 'Panel de Administración', 'Recuperación de Carritos'],
+        monthly: { price: '300', label: 'Gestión + Soporte' },
+        oneTime: { price: '3,500', label: 'Desarrollo Tienda' },
+        highlight: true
     },
     {
-        name: "Strategic Pack",
-        badge: "Empresa",
-        price: "$15k+",
-        period: "setup custom",
-        description: "IA Operating System. Transformación total con memoria institucional profunda y agentes operando el 70% de tus tareas.",
-        features: [
-            "Automatización del 70% de tareas repetitivas",
-            "Memoria institucional profunda personalizada",
-            "Sistemas multi-agente complejos",
-            "Integraciones corporativas a medida",
-            "SLA garantizado 99.9% Uptime"
-        ],
-        icon: Sparkles,
-        color: "purple",
-        highlighted: false,
-        btnText: "Agendar Consultoría",
+        name: 'Apps a Medida',
+        description: 'Soluciones nativas para iOS y Android.',
+        features: ['Desarrollo Cross-Platform', 'Notificaciones Push', 'Base de Datos Real-time', 'Panel Super Admin'],
+        monthly: { price: '800', label: 'Infraestructura' },
+        oneTime: { price: '5,000+', label: 'MVP Desarrollo' },
+        highlight: false
+    },
+    {
+        name: 'Automatización AI',
+        description: 'Optimiza flujos y ahorra horas de trabajo.',
+        features: ['Chatbots IA (GPT-4)', 'Conexión CRM', 'Email Marketing Auto', 'Dashboard de Métricas'],
+        monthly: { price: '200', label: 'Suscripción + Update' },
+        oneTime: { price: '800', label: 'Setup Inicial' },
+        highlight: false
+    },
+    {
+        name: 'Social Growth',
+        description: 'Estrategias virales y contenido de valor.',
+        features: ['Calendario de Contenidos', 'Edición de Reels/TikTok', 'Gestión de Comunidad', 'Reportes de Crecimiento'],
+        monthly: { price: '600', label: 'Gestión Mensual' },
+        oneTime: { price: '500', label: 'Auditoría + Estrategia' },
+        highlight: true
+    },
+    {
+        name: 'Producción Media',
+        description: 'Contenido audiovisual de calidad cinematográfica.',
+        features: ['Guión y Storyboard', 'Grabación 4K', 'Edición y Color Grading', 'Drones y FPV'],
+        monthly: { price: '800', label: 'Pack Recurrente' },
+        oneTime: { price: '1,200', label: 'Proyecto Único' },
+        highlight: false
     }
 ];
 
 export function PricingSection() {
-    return (
-        <section id="pricing" className="relative py-24 bg-slate-950 overflow-hidden border-t border-slate-800">
-            {/* Background Effects */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-[50%] rounded-full bg-indigo-900/10 blur-[150px] pointer-events-none" />
+    const [isMonthly, setIsMonthly] = React.useState(true);
 
-            <div className="container mx-auto px-4 relative z-10 space-y-16">
-                <div className="text-center max-w-3xl mx-auto">
+    return (
+        <section id="pricing" className="py-32 bg-background relative overflow-hidden">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[600px] bg-emerald-500/[0.03] rounded-full blur-[160px] pointer-events-none" />
+
+            <div className="container mx-auto px-4 relative z-10">
+                <div className="text-center mb-20">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-sm font-medium mb-6"
                     >
-                        <Zap size={16} />
-                        <span>Modelo de Escala</span>
+                        <h2 className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight uppercase">
+                            Servicios <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-emerald-600">Premium</span>
+                        </h2>
+                        <p className="text-xl text-white/40 max-w-2xl mx-auto font-light leading-relaxed">
+                            Desde desarrollos puntuales hasta acompañamiento continuo de alto nivel.
+                        </p>
                     </motion.div>
 
-                    <motion.h2
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.1 }}
-                        className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight"
-                    >
-                        Precios Vinculados al <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">Procesamiento</span>.
-                    </motion.h2>
-                    <motion.p
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.2 }}
-                        className="text-lg text-slate-400"
-                    >
-                        No pagas por horas, pagas por capacidad operativa. Nuestros paquetes crecen junto a los agentes que operan tu negocio.
-                    </motion.p>
+                    {/* Toggle mensual / proyecto único */}
+                    <div className="flex items-center justify-center gap-6 mt-12 bg-white/[0.02] w-fit mx-auto px-8 py-4 rounded-full border border-white/5 backdrop-blur-sm">
+                        <button
+                            onClick={() => setIsMonthly(true)}
+                            className={cn("text-sm uppercase tracking-widest cursor-pointer transition-colors font-bold", isMonthly ? "text-emerald-400" : "text-white/20")}
+                        >
+                            Suscripción
+                        </button>
+                        <div className="w-px h-6 bg-white/10" />
+                        <button
+                            onClick={() => setIsMonthly(false)}
+                            className={cn("text-sm uppercase tracking-widest cursor-pointer transition-colors font-bold", !isMonthly ? "text-white" : "text-white/20")}
+                        >
+                            Proyecto Único
+                        </button>
+                    </div>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center max-w-7xl mx-auto">
-                    {pricingPlans.map((plan, index) => (
-                        <motion.div
-                            key={plan.name}
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, margin: "-100px" }}
-                            transition={{ delay: index * 0.1, duration: 0.5 }}
-                            className={cn(
-                                "relative flex flex-col rounded-3xl bg-slate-900/40 border backdrop-blur-sm transition-all duration-300",
-                                plan.highlighted
-                                    ? "border-indigo-500/50 shadow-[0_0_40px_rgba(99,102,241,0.15)] lg:-translate-y-4"
-                                    : "border-slate-800/60 hover:border-slate-700 hover:bg-slate-900/60"
-                            )}
-                        >
-                            {/* Popular Ribbon for highlighted plan */}
-                            {plan.highlighted && (
-                                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-1 bg-gradient-to-r from-indigo-500 to-cyan-500 rounded-full text-white text-xs font-bold tracking-wider shadow-lg">
-                                    MÁS POPULAR
-                                </div>
-                            )}
-
-                            <div className="p-8 pb-0">
-                                <div className="flex justify-between items-start mb-4">
-                                    <div>
-                                        <div className={cn(
-                                            "inline-flex items-center justify-center p-2.5 rounded-xl mb-4",
-                                            plan.color === "blue" && "bg-blue-500/10 text-blue-400",
-                                            plan.color === "indigo" && "bg-indigo-500/10 text-indigo-400",
-                                            plan.color === "purple" && "bg-purple-500/10 text-purple-400"
-                                        )}>
-                                            <plan.icon size={24} />
-                                        </div>
-                                        <h3 className="text-2xl font-bold text-white mb-1">{plan.name}</h3>
-                                        <span className="text-sm font-medium text-slate-400">{plan.badge}</span>
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
+                    {SERVICES_PRICING.map((service, index) => {
+                        const priceData = isMonthly ? service.monthly : service.oneTime;
+                        return (
+                            <motion.div
+                                key={service.name}
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: index * 0.05 }}
+                                className={cn(
+                                    "relative p-10 rounded-[2.5rem] border backdrop-blur-xl transition-all duration-700 group flex flex-col hover:-translate-y-2",
+                                    service.highlight
+                                        ? "bg-white/[0.05] border-emerald-500/20 shadow-[0_40px_80px_-15px_rgba(0,0,0,0.5)] z-10"
+                                        : "bg-white/[0.02] border-white/5 hover:border-white/10"
+                                )}
+                            >
+                                {service.highlight && (
+                                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-white text-black px-5 py-1.5 rounded-full text-[10px] font-black tracking-[0.2em] shadow-2xl uppercase">
+                                        Recomendado
                                     </div>
+                                )}
+
+                                <div className="mb-8">
+                                    <h3 className="text-2xl font-bold text-white mb-3 tracking-tight">{service.name}</h3>
+                                    <p className="text-white/40 text-sm leading-relaxed min-h-[48px] font-light">{service.description}</p>
                                 </div>
 
-                                <div className="mb-6">
+                                <div className="mb-10 pb-10 border-b border-white/[0.05]">
                                     <div className="flex items-baseline gap-2">
-                                        <span className="text-4xl font-extrabold text-white tracking-tight">{plan.price}</span>
+                                        <span className="text-sm font-bold text-white/20 uppercase tracking-widest">Desde</span>
+                                        <span className="text-5xl font-bold tracking-tighter text-white transition-all duration-300">
+                                            ${priceData.price}
+                                        </span>
                                     </div>
-                                    <div className="text-sm text-slate-500 font-medium mt-1">/{plan.period}</div>
+                                    <p className="text-white/20 text-[10px] font-bold uppercase tracking-[0.2em] mt-2">
+                                        {priceData.label}
+                                    </p>
                                 </div>
 
-                                <p className="text-slate-400 text-sm leading-relaxed mb-8 h-12">
-                                    {plan.description}
-                                </p>
-
-                                <div className="h-px w-full bg-gradient-to-r from-transparent via-slate-700/50 to-transparent mb-8" />
-                            </div>
-
-                            <div className="px-8 pb-8 flex-1 flex flex-col">
-                                <ul className="space-y-4 mb-8 flex-1">
-                                    {plan.features.map((feature, i) => (
-                                        <li key={i} className="flex items-start gap-3">
-                                            <div className="mt-0.5 w-5 h-5 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
-                                                <Check size={12} className="text-emerald-400" />
+                                <div className="space-y-5 mb-10 flex-grow">
+                                    {service.features.map((feature) => (
+                                        <div key={feature} className="flex items-start gap-4">
+                                            <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 border border-white/10 text-emerald-500">
+                                                <Check className="w-3 h-3 stroke-[3]" />
                                             </div>
-                                            <span className="text-sm text-slate-300 leading-tight">{feature}</span>
-                                        </li>
+                                            <span className="text-white/60 text-sm font-light leading-relaxed">{feature}</span>
+                                        </div>
                                     ))}
-                                </ul>
+                                </div>
 
-                                <a
-                                    href="#contact"
+                                <button
+                                    onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
                                     className={cn(
-                                        "w-full flex items-center justify-center gap-2 py-4 rounded-xl font-semibold transition-all duration-300",
-                                        plan.highlighted
-                                            ? "bg-indigo-600 hover:bg-indigo-500 text-white shadow-[0_0_20px_rgba(79,70,229,0.4)]"
-                                            : "bg-slate-800 hover:bg-slate-700 text-white"
+                                        "w-full h-16 rounded-2xl text-[10px] font-black tracking-[0.3em] transition-all duration-500 uppercase",
+                                        service.highlight
+                                            ? "bg-white text-black hover:bg-white/90 shadow-2xl"
+                                            : "bg-white/[0.05] text-white hover:bg-white/10 border border-white/10"
                                     )}
                                 >
-                                    {plan.btnText}
-                                    <ChevronRight size={18} />
-                                </a>
-                            </div>
-                        </motion.div>
-                    ))}
+                                    {isMonthly ? 'Iniciar Proyecto' : 'Cotizar Proyecto'}
+                                </button>
+                            </motion.div>
+                        );
+                    })}
                 </div>
             </div>
         </section>

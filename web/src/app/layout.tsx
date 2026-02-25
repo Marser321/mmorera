@@ -1,11 +1,25 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Playfair_Display, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
     subsets: ["latin"],
     display: "swap",
     variable: "--font-sans",
+});
+
+const playfair = Playfair_Display({
+    subsets: ["latin"],
+    display: "swap",
+    variable: "--font-heading",
+    weight: ["400", "600", "700", "800"],
+});
+
+const jetbrains = JetBrains_Mono({
+    subsets: ["latin"],
+    display: "swap",
+    variable: "--font-mono",
+    weight: ["400", "500"],
 });
 
 export const metadata: Metadata = {
@@ -35,7 +49,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="es" className={`dark ${inter.variable}`}>
+        <html lang="es" className={`dark ${inter.variable} ${playfair.variable} ${jetbrains.variable}`}>
             <body className="min-h-screen font-sans antialiased bg-background text-foreground">
                 {/* Skip to content — WCAG 2.4.1 */}
                 <a
@@ -49,3 +63,4 @@ export default function RootLayout({
         </html>
     );
 }
+

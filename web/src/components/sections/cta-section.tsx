@@ -1,6 +1,9 @@
+"use client";
+
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
+import { MagneticButton } from "@/components/ui/magnetic-button";
 
 /**
  * CTASection — llamada a la acción final con fondo gradiente atmosférico.
@@ -33,7 +36,7 @@ export function CTASection() {
 
                 <h2
                     id="cta-heading"
-                    className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl"
+                    className="font-heading text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl"
                 >
                     Solicita tu{" "}
                     <span className="text-gradient">Auditoría de IA</span>{" "}
@@ -67,12 +70,14 @@ export function CTASection() {
                     ))}
                 </div>
 
-                <Button variant="shimmer" size="lg" className="mt-4" asChild>
-                    <a href="mailto:hola@mmore.agency">
-                        Agendar Auditoría
-                        <ArrowRight className="ml-1" />
-                    </a>
-                </Button>
+                <MagneticButton>
+                    <Button variant="shimmer" size="lg" className="mt-4" asChild>
+                        <a href="mailto:hola@mmore.agency">
+                            Agendar Auditoría
+                            <ArrowRight className="ml-1" />
+                        </a>
+                    </Button>
+                </MagneticButton>
 
                 <p className="text-xs text-muted-foreground">
                     Respuesta en menos de 24 horas · Sin compromiso

@@ -25,7 +25,7 @@ export function MetricsBar() {
                             key={kpi.label}
                             className="flex flex-col items-center text-center gap-1 py-2"
                         >
-                            <span className="text-3xl font-bold text-gradient sm:text-4xl">
+                            <span className="font-mono text-3xl font-bold text-gradient sm:text-4xl">
                                 {kpi.valor}
                             </span>
                             <span className="text-sm text-foreground font-medium">

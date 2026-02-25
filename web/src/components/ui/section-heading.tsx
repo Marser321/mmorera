@@ -51,7 +51,7 @@ function SectionHeading({
             )}
             <h2
                 id={id}
-                className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl text-foreground"
+                className="font-heading text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl text-foreground"
             >
                 {title}
             </h2>
