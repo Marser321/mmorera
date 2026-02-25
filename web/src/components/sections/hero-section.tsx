@@ -38,17 +38,29 @@ export function HeroSection() {
                 className="relative min-h-screen overflow-hidden flex flex-col items-center justify-center pt-20 bg-mesh noise-overlay"
                 aria-labelledby="hero-heading"
             >
-                {/* Decoración de fondo */}
-                <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+                {/* Decoración de fondo Avanzada (Vortex & Mesh) */}
+                <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10 bg-black/50">
                     <motion.div
                         animate={{
                             scale: [1, 1.2, 1],
-                            opacity: [0.3, 0.5, 0.3]
+                            opacity: [0.2, 0.4, 0.2],
+                            rotate: [0, 90, 0]
                         }}
-                        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-                        className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-emerald-500/10 rounded-full blur-[140px]"
+                        transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+                        className="absolute top-0 right-[10%] w-[800px] h-[800px] bg-[conic-gradient(at_center,transparent_20%,rgba(16,185,129,0.15)_50%,transparent_100%)] rounded-full blur-[100px]"
                     />
-                    <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-white/5 rounded-full blur-[120px]" />
+                    <motion.div
+                        animate={{
+                            scale: [1, 1.5, 1],
+                            opacity: [0.1, 0.3, 0.1],
+                            rotate: [0, -90, 0]
+                        }}
+                        transition={{ duration: 20, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+                        className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-[radial-gradient(ellipse_at_center,rgba(56,189,248,0.15)_0%,transparent_70%)] rounded-full blur-[120px]"
+                    />
+                    {/* Dark grid overlay para textura premium */}
+                    <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay"></div>
+                    <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,#000_70%,transparent_100%)] opacity-30"></div>
                 </div>
 
                 <div className="container px-4 md:px-6 relative z-10 flex flex-col items-center">
@@ -118,22 +130,36 @@ export function HeroSection() {
                             </button>
                         </motion.div>
 
-                        {/* Métricas rápidas — prueba social */}
+                        {/* Métricas rápidas — Glassmorphism Magnético (Premium) */}
                         <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 1, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                            className="grid grid-cols-3 gap-6 mt-16 pt-8 border-t border-white/5 w-full max-w-lg mx-auto"
+                            className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-20 pt-10 border-t border-white/5 w-full max-w-4xl mx-auto relative px-4"
                         >
-                            {METRICAS.map((m) => (
-                                <div key={m.label} className="flex flex-col items-center gap-1">
-                                    <span className="font-mono text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-white/60 sm:text-3xl">
+                            {/* Glowing separator line central */}
+                            <div className="absolute top-[-1px] left-1/4 right-1/4 h-[1px] bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent"></div>
+
+                            {METRICAS.map((m, i) => (
+                                <motion.div
+                                    key={m.label}
+                                    whileHover={{ scale: 1.05, y: -5 }}
+                                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                                    className="relative group p-6 rounded-2xl bg-black/40 border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)] backdrop-blur-2xl flex flex-col items-center justify-center overflow-hidden cursor-default"
+                                >
+                                    {/* Hover Pulse Glow interno */}
+                                    <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+                                    <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+                                    <div className="absolute bottom-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+                                    <span className="relative z-10 font-mono text-3xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-emerald-200 sm:text-4xl mb-2 drop-shadow-[0_0_15px_rgba(16,185,129,0.5)] group-hover:from-white group-hover:to-emerald-200 transition-all duration-300">
                                         {m.valor}
                                     </span>
-                                    <span className="text-xs text-white/30 sm:text-sm">
+                                    <span className="relative z-10 text-xs font-bold text-white/50 uppercase tracking-[0.2em] group-hover:text-white/80 transition-colors">
                                         {m.label}
                                     </span>
-                                </div>
+                                </motion.div>
                             ))}
                         </motion.div>
                     </motion.div>
