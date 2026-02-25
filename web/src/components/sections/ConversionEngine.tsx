@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import {
     UserPlus, Bot, ShieldAlert, Mail, MessageSquareText,
     Store, ShoppingCart, RefreshCw, Smartphone,
-    MapPin, CalendarClock, BellRing, CheckCircle2, Star, LineChart, TrendingUp
+    MapPin, CalendarClock, BellRing, Star, LineChart, TrendingUp
 } from "lucide-react";
 
 import { ConversionNode, VerticalBeam } from "@/components/ui/conversion-flow";

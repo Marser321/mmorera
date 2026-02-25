@@ -137,7 +137,7 @@ export function ServicesCatalog() {
     );
 }
 
-function MobileCard({ service, index, isBookmarked, toggleBookmark, onSelect }: {
+function MobileCard({ service, index: _index, isBookmarked, toggleBookmark, onSelect }: {
     service: Servicio; index: number; isBookmarked: boolean;
     toggleBookmark: (id: string) => void; onSelect: () => void;
 }) {

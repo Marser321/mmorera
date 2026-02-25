@@ -2,8 +2,8 @@
 
 import { ArrowRight, Eye } from 'lucide-react';
 import { motion, useScroll, useTransform, LazyMotion } from 'framer-motion';
-import { useRef, Fragment } from 'react';
-import { cn } from '@/lib/utils';
+import { useRef } from 'react';
+
 
 const loadFeatures = () =>
     import('framer-motion').then((res) => res.domAnimation);

@@ -119,7 +119,7 @@ export function PricingSection() {
 }
 
 // Extraemos la tarjeta a un componente para manejar estados locales como el mouseX e Y (Spotlight effect)
-function PricingCard({ service, priceData, isMonthly, index }: { service: any, priceData: any, isMonthly: boolean, index: number }) {
+function PricingCard({ service, priceData, isMonthly, index }: { service: { name: string; description: string; features: string[]; highlight: boolean }, priceData: { price: string; label: string }, isMonthly: boolean, index: number }) {
     const mouseX = useMotionValue(0);
     const mouseY = useMotionValue(0);
 

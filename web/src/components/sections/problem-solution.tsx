@@ -2,7 +2,7 @@
 
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { FileWarning, MessageCircleOff, Hourglass, AlertTriangle, Database, Zap, FileSpreadsheet, ArrowRight } from 'lucide-react';
-import { useRef, useState, useEffect, ElementType } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 export function ProblemSolution() {
     const containerRef = useRef<HTMLDivElement>(null);

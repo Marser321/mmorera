@@ -10,8 +10,8 @@ export function ContactForm() {
     const [isSubmitted, setIsSubmitted] = React.useState(false);
     const [nombre, setNombre] = React.useState('');
     const [email, setEmail] = React.useState('');
-    const [telefono, setTelefono] = React.useState('');
-    const [empresa, setEmpresa] = React.useState('');
+    const [telefono] = React.useState('');
+    const [empresa] = React.useState('');
     const [interes, setInteres] = React.useState('web');
     const [mensaje, setMensaje] = React.useState('');
     const [submitting, setSubmitting] = React.useState(false);

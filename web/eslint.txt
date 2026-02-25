@@ -1,0 +1,24 @@
+[0m[0m
+[0m[4mC:\Users\morer\OneDrive\Desktop\MMORERASME\web\src\components\sections\ConversionEngine.tsx[24m[0m
+[0m  [2m10:38[22m  [33mwarning[39m  'CheckCircle2' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4mC:\Users\morer\OneDrive\Desktop\MMORERASME\web\src\components\sections\contact-form.tsx[24m[0m
+[0m  [2m13:22[22m  [33mwarning[39m  'setTelefono' is assigned a value but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m14:21[22m  [33mwarning[39m  'setEmpresa' is assigned a value but never used   [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4mC:\Users\morer\OneDrive\Desktop\MMORERASME\web\src\components\sections\hero-section.tsx[24m[0m
+[0m  [2m5:18[22m  [33mwarning[39m  'Fragment' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m6:10[22m  [33mwarning[39m  'cn' is defined but never used        [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4mC:\Users\morer\OneDrive\Desktop\MMORERASME\web\src\components\sections\pricing-section.tsx[24m[0m
+[0m  [2m122:75[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m122:91[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4mC:\Users\morer\OneDrive\Desktop\MMORERASME\web\src\components\sections\problem-solution.tsx[24m[0m
+[0m  [2m5:39[22m  [33mwarning[39m  'ElementType' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4mC:\Users\morer\OneDrive\Desktop\MMORERASME\web\src\components\sections\services-catalog.tsx[24m[0m
+[0m  [2m140:32[22m  [33mwarning[39m  'index' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[31m[1m✖ 9 problems (2 errors, 7 warnings)[22m[39m[0m
+[0m[31m[1m[22m[39m[0m
