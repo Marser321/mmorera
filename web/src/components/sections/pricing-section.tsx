@@ -137,7 +137,7 @@ function PricingCard({ service, priceData, isMonthly, index }: { service: any, p
             transition={{ type: "spring", stiffness: 100, damping: 20, delay: index * 0.1 }}
             onMouseMove={handleMouseMove}
             className={cn(
-                "group relative p-8 sm:p-10 rounded-[2rem] sm:rounded-[2.5rem] border backdrop-blur-2xl transition-all duration-500 flex flex-col hover:-translate-y-2 overflow-hidden",
+                "group relative p-8 sm:p-10 rounded-[2rem] sm:rounded-[2.5rem] border backdrop-blur-2xl transition-all duration-500 flex flex-col hover:-translate-y-2",
                 service.highlight
                     ? "bg-black/80 border-white/20 shadow-[0_30px_60px_-15px_rgba(16,185,129,0.3)] z-10"
                     : "bg-black/40 border-white/10 hover:border-white/20 hover:bg-black/60"
