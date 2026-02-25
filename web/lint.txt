@@ -1,4 +1,4 @@
-﻿
+
 > web@0.1.0 lint
 > eslint
 
@@ -11,18 +11,13 @@ C:\Users\morer\OneDrive\Desktop\MMORERASME\web\src\components\sections\hero-sect
   5:18  warning  'Fragment' is defined but never used  @typescript-eslint/no-unused-vars
   6:10  warning  'cn' is defined but never used        @typescript-eslint/no-unused-vars
 
-C:\Users\morer\OneDrive\Desktop\MMORERASME\web\src\components\sections\notebook-cases.tsx
-   4:18   warning  'useScroll' is defined but never used                            @typescript-eslint/no-unused-vars
-   4:29   warning  'useTransform' is defined but never used                         @typescript-eslint/no-unused-vars
-   5:47   warning  'ChevronRight' is defined but never used                         @typescript-eslint/no-unused-vars
-  72:156  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
-  72:169  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
-
 C:\Users\morer\OneDrive\Desktop\MMORERASME\web\src\components\sections\problem-solution.tsx
-  5:39  warning  'ElementType' is defined but never used  @typescript-eslint/no-unused-vars
+    5:39  warning  'ElementType' is defined but never used                          @typescript-eslint/no-unused-vars
+  123:50  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  123:67  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
 
 C:\Users\morer\OneDrive\Desktop\MMORERASME\web\src\components\sections\services-catalog.tsx
   140:32  warning  'index' is defined but never used  @typescript-eslint/no-unused-vars
 
-Ô£û 11 problems (2 errors, 9 warnings)
+✖ 8 problems (2 errors, 6 warnings)
 
