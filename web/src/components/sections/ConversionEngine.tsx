@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import {
     UserPlus, Bot, ShieldAlert, Mail, MessageSquareText,
     Store, ShoppingCart, RefreshCw, Smartphone,
-    MapPin, CalendarClock, BellRing, CheckCircle2
+    MapPin, CalendarClock, BellRing, CheckCircle2, Star, LineChart, TrendingUp
 } from "lucide-react";
 
 import { ConversionNode, VerticalBeam } from "@/components/ui/conversion-flow";
@@ -50,7 +50,7 @@ export function ConversionEngine() {
                 </div>
 
                 {/* Custom Animated Tabs */}
-                <div className="flex flex-wrap justify-center gap-2 mb-12 p-1.5 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl w-full max-w-2xl mx-auto">
+                <div className="flex flex-wrap justify-center gap-2 mb-12 p-1.5 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl w-full max-w-2xl mx-auto shadow-[0_0_30px_rgba(0,0,0,0.5)]">
                     {tabs.map((tab) => (
                         <button
                             key={tab.id}
@@ -62,8 +62,8 @@ export function ConversionEngine() {
                         >
                             {activeTab === tab.id && (
                                 <motion.div
-                                    layoutId="active-tab"
-                                    className="absolute inset-0 bg-primary/20 border border-primary/50 shadow-[0_0_15px_rgba(47,88,205,0.3)] rounded-xl"
+                                    layoutId="conversion-active-tab"
+                                    className="absolute inset-0 bg-primary/20 border border-primary/50 shadow-[0_0_20px_rgba(47,88,205,0.4)] rounded-xl"
                                     transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                                 />
                             )}
@@ -75,20 +75,36 @@ export function ConversionEngine() {
                 {/* Interactive Engine Window */}
                 <div className="w-full max-w-5xl mx-auto relative group">
                     {/* Cyberpunk/Premium glow wrapper */}
-                    <div className="absolute -inset-1 bg-gradient-to-br from-primary/10 to-blue-600/10 rounded-3xl blur-xl opacity-50 transition duration-700 pointer-events-none"></div>
+                    <div className="absolute -inset-1 bg-gradient-to-br from-primary/20 via-transparent to-blue-600/20 rounded-3xl blur-2xl opacity-50 group-hover:opacity-70 transition duration-700 pointer-events-none group-hover:duration-200"></div>
 
-                    <div className="relative bg-black/80 backdrop-blur-2xl border border-white/10 rounded-3xl p-6 sm:p-10 md:p-16 shadow-2xl overflow-hidden min-h-[500px] flex items-center justify-center">
+                    <div className="relative bg-black/80 backdrop-blur-3xl border border-white/10 rounded-3xl p-6 sm:p-10 md:p-16 shadow-2xl overflow-hidden min-h-[600px] flex items-center justify-center">
+
+                        {/* Interactive floating orbs (background of the engine window) */}
+                        <motion.div
+                            className="absolute top-[20%] left-[20%] w-64 h-64 bg-primary/10 rounded-full blur-[100px] pointer-events-none"
+                            animate={{ x: [0, 50, 0], y: [0, -50, 0] }}
+                            transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+                        />
+                        <motion.div
+                            className="absolute bottom-[20%] right-[20%] w-64 h-64 bg-blue-600/10 rounded-full blur-[100px] pointer-events-none"
+                            animate={{ x: [0, -50, 0], y: [0, 50, 0] }}
+                            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                        />
 
                         {/* Ambient inner glow */}
-                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-[1px] bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent opacity-50 pointer-events-none"></div>
+                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-[1px] bg-gradient-to-r from-transparent via-primary/80 to-transparent shadow-[0_0_20px_rgba(47,88,205,0.8)]"></div>
+                        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent opacity-50 pointer-events-none"></div>
 
-                        <AnimatePresence mode="wait">
-                            {activeTab === 'b2b' && <B2BEngine key="b2b" />}
-                            {activeTab === 'ecommerce' && <EcommerceEngine key="ecommerce" />}
-                            {activeTab === 'local' && <LocalEngine key="local" />}
-                        </AnimatePresence>
+                        {/* This bottom fade ensures beams dying at the bottom look natural */}
+                        <div className="absolute bottom-0 inset-x-0 h-[100px] bg-gradient-to-t from-black to-transparent pointer-events-none z-20"></div>
 
+                        <div className="relative z-10 w-full flex justify-center pb-20 pt-10">
+                            <AnimatePresence mode="wait">
+                                {activeTab === 'b2b' && <B2BEngine key="b2b" />}
+                                {activeTab === 'ecommerce' && <EcommerceEngine key="ecommerce" />}
+                                {activeTab === 'local' && <LocalEngine key="local" />}
+                            </AnimatePresence>
+                        </div>
                     </div>
                 </div>
 
@@ -99,85 +115,118 @@ export function ConversionEngine() {
 
 // -- INDIVIDUAL ENGINES --
 
+// Custom branch line for B2B bifurcation
+function BranchCable({ className, color = "primary", left = false }: { className?: string, color?: string, left?: boolean }) {
+    const isGreen = color === "green";
+    const isAmber = color === "amber";
+
+    let glowColor = "from-transparent via-primary to-transparent";
+    if (isGreen) glowColor = "from-transparent via-green-500 to-transparent";
+    if (isAmber) glowColor = "from-transparent via-amber-500 to-transparent";
+
+    return (
+        <div className={cn("absolute top-0 w-1/2 h-full border-t-[2px] border-white/10 overflow-hidden", left ? "left-0 border-r-[2px] rounded-tr-3xl" : "right-0 border-l-[2px] rounded-tl-3xl", className)}>
+            {/* This represents the pulse moving along the L-shape */}
+            {left ? (
+                <motion.div
+                    className={cn("absolute top-[-2px] right-0 h-[3px] w-full rounded-full", glowColor)}
+                    style={{ background: `linear-gradient(to left, transparent, ${isGreen ? '#22c55e' : isAmber ? '#f59e0b' : '#3b82f6'} 50%, transparent)` }}
+                    animate={{ x: ["100%", "-100%"] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "linear", delay: isGreen ? 0 : 0.5 }}
+                />
+            ) : (
+                <motion.div
+                    className={cn("absolute top-[-2px] left-0 h-[3px] w-full rounded-full", glowColor)}
+                    style={{ background: `linear-gradient(to right, transparent, ${isGreen ? '#22c55e' : isAmber ? '#f59e0b' : '#3b82f6'} 50%, transparent)` }}
+                    animate={{ x: ["-100%", "100%"] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "linear", delay: isAmber ? 0.3 : 0.8 }}
+                />
+            )}
+
+            {/* Corner glowing highlight */}
+            <div className={cn("absolute top-0 w-8 h-8 opacity-40 blur-md rounded-full", left ? "right-[-16px] -top-4" : "left-[-16px] -top-4",
+                isGreen ? "bg-green-500" : isAmber ? "bg-amber-500" : "bg-primary"
+            )}></div>
+        </div>
+    )
+}
+
 function B2BEngine() {
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20, transition: { duration: 0.2 } }}
-            transition={{ duration: 0.5 }}
+            initial={{ opacity: 0, scale: 0.95, y: 30 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: -30, transition: { duration: 0.2 } }}
+            transition={{ type: "spring", stiffness: 100, damping: 20 }}
             className="flex flex-col items-center w-full relative"
         >
             <ConversionNode
                 icon={UserPlus}
-                title="1. Lead entra por campaña"
-                subtitle="LinkedIn Ads o Google B2B"
+                title="1. Captación y Filtrado"
+                subtitle="LinkedIn y Ads Segmentados (+80% leads cualificados)"
                 delay={0.1}
             />
 
-            <VerticalBeam delay={0.2} />
+            <VerticalBeam delay={0.2} height={40} />
 
             <ConversionNode
                 icon={Bot}
-                title="2. IA califica en tiempo real"
-                subtitle="Scoring Predictivo de Empresa/Cargo"
-                glowColor="from-purple-500/30 to-blue-500/30"
+                title="2. Scoring Predictivo IA"
+                subtitle="Califica al instante (ahorro de ~15h/semana)"
+                glowColor="from-purple-500/40 to-blue-500/40"
                 delay={0.3}
             />
 
             {/* Bifurcation */}
-            <div className="flex flex-col items-center mt-2 w-full">
-                <div className="w-[2px] h-6 bg-white/10 relative"></div>
-                <div className="flex items-start justify-center w-full max-w-2xl">
-                    {/* Left Branch (High Priority) */}
-                    <div className="flex flex-col items-center w-1/2 border-t border-white/10 pt-4 relative group">
-                        {/* Animated beam taking the left path (corner simplified) */}
-                        <div className="absolute -top-[1px] left-1/2 right-0 h-[2px] overflow-hidden flex justify-end">
-                            <div className="w-[50%] h-full animate-beam-x bg-green-500 shadow-[0_0_10px_green]" style={{ animationDirection: 'reverse' }}></div>
-                        </div>
+            <div className="flex flex-col items-center mt-0 w-full">
+                <VerticalBeam delay={0.4} height={32} />
 
-                        <div className="w-[2px] h-6 bg-white/10 relative overflow-hidden mb-2">
-                            <div className="absolute inset-x-0 w-full h-[50%] bg-green-500 shadow-[0_0_10px_green] animate-beam-y delay-300 rounded-full"></div>
-                        </div>
+                <div className="relative w-full max-w-2xl flex justify-between pt-8">
+                    {/* The physical branching lines */}
+                    <div className="absolute top-0 left-0 right-0 h-8">
+                        <BranchCable left={true} color="green" />
+                        <BranchCable left={false} color="amber" />
+                    </div>
+
+                    {/* Left Branch (High Priority) */}
+                    <div className="flex flex-col items-center w-[45%] relative pt-4">
                         <ConversionNode
                             icon={ShieldAlert}
-                            title="3a. Alta Prioridad"
-                            subtitle="Alerta a ejecutivo en Slack"
-                            glowColor="from-green-500/30 to-emerald-500/30"
-                            delay={0.4}
+                            title="3a. Ruteo Exprés a Ventas"
+                            subtitle="Alerta en < 5 min (+21x prob. de venta)"
+                            glowColor="from-green-500/40 to-emerald-500/40"
+                            delay={0.5}
                         />
 
-                        <VerticalBeam delay={0.5} className="h-8" />
+                        <VerticalBeam delay={0.6} height={40} />
+
                         <ConversionNode
-                            icon={CheckCircle2}
-                            title="4. Cierre Personalizado"
-                            subtitle="Videollamada 1 a 1"
-                            delay={0.6}
+                            icon={LineChart}
+                            title="4a. Cierre y Medición"
+                            subtitle="Dashboard de ROI 10-20% y CAC reducido"
+                            glowColor="from-green-500/40 to-emerald-500/40"
+                            delay={0.7}
                         />
                     </div>
 
                     {/* Right Branch (Nurturing) */}
-                    <div className="flex flex-col items-center w-1/2 border-t border-white/10 pt-4 relative">
-                        <div className="absolute -top-[1px] left-0 right-1/2 h-[2px] overflow-hidden justify-start">
-                            <div className="w-[50%] h-full animate-beam-x bg-amber-500 shadow-[0_0_10px_orange]"></div>
-                        </div>
-
-                        <div className="w-[2px] h-6 bg-white/10 relative overflow-hidden mb-2">
-                            <div className="absolute inset-x-0 w-full h-[50%] bg-amber-500 shadow-[0_0_10px_orange] animate-beam-y delay-300 rounded-full"></div>
-                        </div>
+                    <div className="flex flex-col items-center w-[45%] relative pt-4">
                         <ConversionNode
                             icon={Mail}
-                            title="3b. Nutrición (Nurturing)"
-                            subtitle="Email hiper-personalizado"
-                            glowColor="from-amber-500/30 to-orange-500/30"
-                            delay={0.4}
+                            title="3b. Nurturing Automatizado"
+                            subtitle="Secuencia de emails (+30% apertura)"
+                            glowColor="from-amber-500/40 to-orange-500/40"
+                            delay={0.5}
                         />
-                        <VerticalBeam delay={0.5} className="h-8" />
+
+                        <VerticalBeam delay={0.6} height={40} />
+
                         <ConversionNode
                             icon={MessageSquareText}
-                            title="4. Video Automatizado"
-                            subtitle="Clon IA (HeyGen) saluda al prospecto"
-                            delay={0.6}
+                            title="4b. Re-activación con IA"
+                            subtitle="Test A/B continuo en piloto automático"
+                            glowColor="from-amber-500/40 to-orange-500/40"
+                            delay={0.7}
                         />
                     </div>
                 </div>
@@ -189,40 +238,49 @@ function B2BEngine() {
 function EcommerceEngine() {
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20, transition: { duration: 0.2 } }}
-            transition={{ duration: 0.5 }}
+            initial={{ opacity: 0, scale: 0.95, y: 30 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: -30, transition: { duration: 0.2 } }}
+            transition={{ type: "spring", stiffness: 100, damping: 20 }}
             className="flex flex-col items-center w-full"
         >
             <ConversionNode
                 icon={Store}
-                title="1. Tráfico a Tienda"
-                subtitle="Meta Ads / TikTok Ads"
+                title="1. Tráfico Inteligente"
+                subtitle="Meta/TikTok Ads Advantage+ (Smart Bidding)"
                 delay={0.1}
             />
-            <VerticalBeam delay={0.2} />
+            <VerticalBeam delay={0.2} height={40} />
             <ConversionNode
                 icon={ShoppingCart}
-                title="2. Intención de Compra"
-                subtitle="Añade al carrito pero no compra"
-                glowColor="from-cyan-500/30 to-blue-500/30"
+                title="2. Comportamiento Predictivo"
+                subtitle="Detección de abandono de carrito en tiempo real"
+                glowColor="from-cyan-500/40 to-blue-500/40"
                 delay={0.3}
             />
-            <VerticalBeam delay={0.4} />
+            <VerticalBeam delay={0.4} height={40} />
             <ConversionNode
                 icon={Smartphone}
                 title="3. WhatsApp Recovery"
-                subtitle="Mensaje automático con descuento (5min)"
-                glowColor="from-green-500/30 to-emerald-500/30"
+                subtitle="Mensaje instantáneo (Rescata hasta 40% de carritos)"
+                glowColor="from-green-500/40 to-emerald-500/40"
                 delay={0.5}
             />
-            <VerticalBeam delay={0.6} />
+            <VerticalBeam delay={0.6} height={40} />
             <ConversionNode
                 icon={RefreshCw}
                 title="4. Retargeting Dinámico"
-                subtitle="Catálogo IA con el producto exacto"
+                subtitle="Catálogo IA con variante A/B optimizada"
+                glowColor="from-purple-500/40 to-pink-500/40"
                 delay={0.7}
+            />
+            <VerticalBeam delay={0.8} height={40} />
+            <ConversionNode
+                icon={TrendingUp}
+                title="5. Análisis y Fidelización"
+                subtitle="Dashboard LTV y Automatización Post-compra"
+                glowColor="from-yellow-500/40 to-amber-500/40"
+                delay={0.9}
             />
         </motion.div>
     )
@@ -231,40 +289,49 @@ function EcommerceEngine() {
 function LocalEngine() {
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20, transition: { duration: 0.2 } }}
-            transition={{ duration: 0.5 }}
+            initial={{ opacity: 0, scale: 0.95, y: 30 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: -30, transition: { duration: 0.2 } }}
+            transition={{ type: "spring", stiffness: 100, damping: 20 }}
             className="flex flex-col items-center w-full"
         >
             <ConversionNode
                 icon={MapPin}
                 title="1. Descubrimiento Local"
-                subtitle="Google Maps y Anuncios Geo-localizados"
+                subtitle="Google Maps y Ads Geo-localizados"
                 delay={0.1}
             />
-            <VerticalBeam delay={0.2} />
+            <VerticalBeam delay={0.2} height={40} />
             <ConversionNode
                 icon={Bot}
-                title="2. Agendamiento Inteligente"
-                subtitle="Bot en WhatsApp coordina horarios sin colisión"
-                glowColor="from-purple-500/30 to-pink-500/30"
+                title="2. Recepción IA 24/7"
+                subtitle="Chatbot califica y responde en < 1 minuto"
+                glowColor="from-purple-500/40 to-pink-500/40"
                 delay={0.3}
             />
-            <VerticalBeam delay={0.4} />
+            <VerticalBeam delay={0.4} height={40} />
             <ConversionNode
                 icon={CalendarClock}
-                title="3. Integridad de Datos"
-                subtitle="Sincronización en tiempo real con Calendario"
-                glowColor="from-cyan-500/30 to-blue-500/30"
+                title="3. Agendamiento Inteligente"
+                subtitle="Coordina citas sin riesgo de colisión"
+                glowColor="from-cyan-500/40 to-blue-500/40"
                 delay={0.5}
             />
-            <VerticalBeam delay={0.6} />
+            <VerticalBeam delay={0.6} height={40} />
             <ConversionNode
                 icon={BellRing}
                 title="4. Recordatorios Anti-Faltas"
-                subtitle="Aviso IA a 24h y 1h antes de la cita"
+                subtitle="Avisos WhatsApp (Reducen no-shows un 60%)"
+                glowColor="from-green-500/40 to-emerald-500/40"
                 delay={0.7}
+            />
+            <VerticalBeam delay={0.8} height={40} />
+            <ConversionNode
+                icon={Star}
+                title="5. Motor de Reseñas"
+                subtitle="Solicitud automática post-servicio (Sube Ranking 🚀)"
+                glowColor="from-yellow-400/40 to-orange-500/40"
+                delay={0.9}
             />
         </motion.div>
     )
