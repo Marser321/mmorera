@@ -1,5 +1,5 @@
 import { createBrowserClient } from '@supabase/ssr';
-import type { Lead } from '@/types';
+import type { ContactFormData } from '@/types';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
@@ -9,7 +9,7 @@ export const supabase = supabaseUrl && supabaseKey
     : null;
 
 // Backend helper: agregar un nuevo lead a Supabase
-export async function addLead(lead: Lead) {
+export async function addLead(lead: ContactFormData) {
     if (!supabase) {
         console.warn('Supabase no configurado. Lead no guardado.');
         return { data: null, error: null };

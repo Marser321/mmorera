@@ -39,7 +39,7 @@ export interface PortfolioItem {
     destacado: boolean;
 }
 
-export interface Lead {
+export interface ContactFormData {
     nombre: string;
     email: string;
     telefono?: string;

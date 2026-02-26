@@ -1,16 +1,67 @@
 'use server'
 
-import { addLead } from '@/lib/supabase'
-import type { Lead } from '@/types'
+import type { ContactFormData } from '@/types'
+import { Resend } from 'resend'
 
-export async function submitLead(data: Lead) {
+const resend = new Resend(process.env.RESEND_API_KEY)
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN
+const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID
+
+export async function submitLead(data: ContactFormData) {
     try {
-        const result = await addLead(data)
-        if (result.error) {
-            return { success: false, error: result.error.message }
+        // Enviar Email via Resend
+        if (process.env.RESEND_API_KEY) {
+            await resend.emails.send({
+                from: 'NEXO Leads <onboarding@resend.dev>', // Cambiar por tu dominio verificado si tienes uno, o dejar este de prueba
+                to: process.env.NOTIFICATION_EMAIL || 'nexo@example.com', // El mail donde recibirás las leads
+                subject: `Nuevo Lead: ${data.nombre} - ${data.empresa || 'Empresa no especificada'}`,
+                html: `
+                    <h2>Nuevo contacto recibido a través de NEXO</h2>
+                    <p><strong>Nombre:</strong> ${data.nombre}</p>
+                    <p><strong>Email:</strong> ${data.email}</p>
+                    <p><strong>Teléfono:</strong> ${data.telefono || 'No proporcionado'}</p>
+                    <p><strong>Empresa:</strong> ${data.empresa || 'No proporcionada'}</p>
+                    <p><strong>Servicios de Interés:</strong> ${data.servicios_interes?.join(', ') || 'No especificados'}</p>
+                    <p><strong>Plan Seleccionado:</strong> ${data.plan_seleccionado || 'Ninguno'}</p>
+                    <p><strong>Mensaje:</strong></p>
+                    <p>${data.mensaje || 'Sin mensaje'}</p>
+                `
+            })
         }
+
+        // Enviar Notificación a Telegram
+        if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) {
+            const telegramMessage = `
+🔔 *NUEVO LEAD - NEXO* 🔔
+
+👤 *Nombre:* ${data.nombre}
+✉️ *Email:* ${data.email}
+📱 *Teléfono:* ${data.telefono || 'No proporcionado'}
+🏢 *Empresa:* ${data.empresa || 'No proporcionada'}
+
+🛠 *Servicios:* ${data.servicios_interes?.join(', ') || 'No especificados'}
+💎 *Plan:* ${data.plan_seleccionado || 'Ninguno'}
+
+💬 *Mensaje:*
+${data.mensaje || 'Sin mensaje'}
+            `;
+
+            await fetch(\`https://api.telegram.org/bot\${TELEGRAM_BOT_TOKEN}/sendMessage\`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    chat_id: TELEGRAM_CHAT_ID,
+                    text: telegramMessage,
+                    parse_mode: 'Markdown',
+                }),
+            });
+        }
+
         return { success: true }
-    } catch {
-        return { success: false, error: 'Error desconocido al guardar el lead' }
+    } catch (error) {
+        console.error("Error al procesar lead:", error)
+        return { success: false, error: 'Hubo un error al procesar tu solicitud. Por favor intenta de nuevo.' }
     }
 }

@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { submitLead } from '@/actions/submit-lead';
-import type { Lead } from '@/types';
+import type { ContactFormData } from '@/types';
 import { Send, CheckCircle, Sparkles } from 'lucide-react';
 
 export function ContactForm() {
@@ -20,7 +20,7 @@ export function ContactForm() {
         e.preventDefault();
         setSubmitting(true);
 
-        const leadData: Lead = {
+        const leadData: ContactFormData = {
             nombre,
             email,
             telefono: telefono || undefined,

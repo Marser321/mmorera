@@ -4,40 +4,36 @@ import * as React from "react";
 import { MessageCircle, X, Send, Bot, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-
-interface Mensaje {
-    id: number;
-    contenido: string;
-    emisor: "bot" | "usuario";
-}
-
-const respuestasSimuladas = [
-    "¡Hola! Soy el asistente de MMORE. ¿En qué puedo ayudarte hoy?",
-    "Podemos analizar tus procesos actuales de marketing y encontrar puntos de automatización con alto impacto. ¿Te interesa saber más sobre nuestra Auditoría de IA?",
-    "Nuestra auditoría incluye: mapa de procesos, backlog priorizado, blueprint del sistema recomendado y estimación de ROI. Todo sin compromiso.",
-    "¡Genial! Podés agendar directamente desde la sección de Auditoría en esta misma página, o escribirnos a hola@mmore.agency. Respondemos en menos de 24 horas.",
-];
+import { useChat } from "@ai-sdk/react";
 
 /**
- * ChatWidget — burbuja de IA interactiva persistente.
- * Panel expandible con glassmorphism, simulación de respuestas IA.
- * Accesible: role="dialog", aria-label, focus management.
+ * ChatWidget — burbuja interactiva de IA.
+ * Usa Vercel AI SDK (useChat) para manejar el estado conversacional efímero.
  */
 export function ChatWidget() {
     const [abierto, setAbierto] = React.useState(false);
-    const [mensajes, setMensajes] = React.useState<Mensaje[]>([]);
-    const [inputValor, setInputValor] = React.useState("");
-    const [escribiendo, setEscribiendo] = React.useState(false);
-    const [respuestaIndex, setRespuestaIndex] = React.useState(0);
     const scrollRef = React.useRef<HTMLDivElement>(null);
     const inputRef = React.useRef<HTMLInputElement>(null);
+
+    // Vercel AI SDK
+    const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
+        api: '/api/chat',
+        // Mensaje inicial optimista, guardado en el cliente para dar contexto.
+        initialMessages: [
+            {
+                id: 'msg_1',
+                role: 'assistant',
+                content: "¡Hola! Soy NEXO. ¿Cómo te puedo ayudar hoy con potenciar tu negocio?",
+            }
+        ]
+    });
 
     // Auto-scroll al último mensaje
     React.useEffect(() => {
         if (scrollRef.current) {
             scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
         }
-    }, [mensajes]);
+    }, [messages, isLoading]);
 
     // Focus al input cuando se abre
     React.useEffect(() => {
@@ -46,54 +42,7 @@ export function ChatWidget() {
         }
     }, [abierto]);
 
-    // Enviar mensaje inicial cuando se abre por primera vez
-    React.useEffect(() => {
-        if (abierto && mensajes.length === 0) {
-            setEscribiendo(true);
-            const timer = setTimeout(() => {
-                setMensajes([
-                    { id: 1, contenido: respuestasSimuladas[0], emisor: "bot" },
-                ]);
-                setEscribiendo(false);
-                setRespuestaIndex(1);
-            }, 1000);
-            return () => clearTimeout(timer);
-        }
-    }, [abierto, mensajes.length]);
-
-    const enviarMensaje = () => {
-        if (!inputValor.trim() || escribiendo) return;
-
-        const nuevoMensaje: Mensaje = {
-            id: mensajes.length + 1,
-            contenido: inputValor,
-            emisor: "usuario",
-        };
-
-        setMensajes((prev) => [...prev, nuevoMensaje]);
-        setInputValor("");
-        setEscribiendo(true);
-
-        // Respuesta simulada
-        setTimeout(() => {
-            const respuesta =
-                respuestasSimuladas[respuestaIndex % respuestasSimuladas.length];
-            setMensajes((prev) => [
-                ...prev,
-                { id: prev.length + 1, contenido: respuesta, emisor: "bot" },
-            ]);
-            setEscribiendo(false);
-            setRespuestaIndex((prev) => prev + 1);
-        }, 1500);
-    };
-
-    const handleKeyDown = (e: React.KeyboardEvent) => {
-        if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault();
-            enviarMensaje();
-        }
-    };
-
+    // Usamos el id por defecto de useChat para los keys de los mensajes
     return (
         <>
             {/* Panel del Chat */}
@@ -117,17 +66,21 @@ export function ChatWidget() {
                             </div>
                             <div>
                                 <p className="text-sm font-semibold text-foreground">
-                                    Asistente IA
+                                    NEXO AI
                                 </p>
-                                <p className="text-[0.65rem] text-muted-foreground">
-                                    Respuesta inmediata
+                                <p className="text-[0.65rem] text-muted-foreground flex gap-1 items-center">
+                                    <span className="relative flex h-2 w-2">
+                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                        <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                                    </span>
+                                    En Línea
                                 </p>
                             </div>
                         </div>
                         <Button
                             variant="ghost"
                             size="icon"
-                            className="size-8"
+                            className="size-8 hover:bg-white/5"
                             onClick={() => setAbierto(false)}
                             aria-label="Cerrar chat"
                         >
@@ -138,46 +91,46 @@ export function ChatWidget() {
                     {/* Mensajes */}
                     <div
                         ref={scrollRef}
-                        className="flex-1 overflow-y-auto p-4 space-y-3 min-h-[200px]"
+                        className="flex-1 overflow-y-auto p-4 space-y-3 min-h-[250px] scroll-smooth"
                     >
-                        {mensajes.map((msg) => (
+                        {messages.map((msg) => (
                             <div
                                 key={msg.id}
                                 className={cn(
                                     "flex gap-2 items-end",
-                                    msg.emisor === "usuario" && "flex-row-reverse"
+                                    msg.role === "user" && "flex-row-reverse"
                                 )}
                             >
                                 <div
                                     className={cn(
                                         "size-6 rounded-full flex items-center justify-center shrink-0",
-                                        msg.emisor === "bot"
-                                            ? "bg-primary/15 text-primary"
-                                            : "bg-secondary text-foreground"
+                                        msg.role === "user"
+                                            ? "bg-secondary text-foreground"
+                                            : "bg-primary/15 text-primary"
                                     )}
                                     aria-hidden="true"
                                 >
-                                    {msg.emisor === "bot" ? (
-                                        <Bot className="size-3" />
-                                    ) : (
+                                    {msg.role === "user" ? (
                                         <User className="size-3" />
+                                    ) : (
+                                        <Bot className="size-3" />
                                     )}
                                 </div>
                                 <div
                                     className={cn(
-                                        "max-w-[80%] rounded-xl px-3 py-2 text-sm leading-relaxed",
-                                        msg.emisor === "bot"
-                                            ? "bg-card/60 text-foreground rounded-bl-sm"
-                                            : "bg-primary text-primary-foreground rounded-br-sm"
+                                        "max-w-[85%] rounded-xl px-3 py-2 text-sm leading-relaxed whitespace-pre-wrap",
+                                        msg.role === "user"
+                                            ? "bg-primary text-primary-foreground rounded-br-sm"
+                                            : "bg-card/60 border border-white/5 text-foreground rounded-bl-sm"
                                     )}
                                 >
-                                    {msg.contenido}
+                                    {msg.content}
                                 </div>
                             </div>
                         ))}
 
-                        {/* Indicador "escribiendo..." */}
-                        {escribiendo && (
+                        {/* Indicador "escribiendo..." si la API está respondiendo */}
+                        {isLoading && messages[messages.length - 1]?.role === "user" && (
                             <div className="flex gap-2 items-end">
                                 <div
                                     className="size-6 rounded-full bg-primary/15 flex items-center justify-center"
@@ -185,7 +138,7 @@ export function ChatWidget() {
                                 >
                                     <Bot className="size-3 text-primary" />
                                 </div>
-                                <div className="bg-card/60 rounded-xl rounded-bl-sm px-3 py-2">
+                                <div className="bg-card/60 border border-white/5 rounded-xl rounded-bl-sm px-3 py-2">
                                     <div className="flex gap-1" aria-label="Escribiendo...">
                                         <span className="size-1.5 rounded-full bg-muted-foreground animate-bounce [animation-delay:0ms]" />
                                         <span className="size-1.5 rounded-full bg-muted-foreground animate-bounce [animation-delay:150ms]" />
@@ -197,30 +150,31 @@ export function ChatWidget() {
                     </div>
 
                     {/* Input */}
-                    <div className="border-t border-border/20 p-3 bg-card/20">
-                        <div className="flex gap-2">
+                    <form onSubmit={handleSubmit} className="border-t border-border/20 p-3 bg-card/20 backdrop-blur-md">
+                        <div className="flex gap-2 relative">
                             <input
                                 ref={inputRef}
                                 type="text"
-                                value={inputValor}
-                                onChange={(e) => setInputValor(e.target.value)}
-                                onKeyDown={handleKeyDown}
+                                value={input}
+                                onChange={handleInputChange}
                                 placeholder="Escribí tu mensaje..."
-                                className="flex-1 bg-card/40 border border-border/30 rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                                className="flex-1 bg-background/50 border border-border/30 rounded-lg px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/50 transition-shadow"
                                 aria-label="Mensaje para el asistente"
-                                disabled={escribiendo}
+                                disabled={isLoading}
                             />
                             <Button
+                                type="submit"
                                 variant="default"
                                 size="icon"
-                                onClick={enviarMensaje}
-                                disabled={!inputValor.trim() || escribiendo}
+                                disabled={!input.trim() || isLoading}
                                 aria-label="Enviar mensaje"
+                                className="shrink-0 h-[42px] w-[42px] transition-all hover:scale-105 active:scale-95 disabled:hover:scale-100"
                             >
                                 <Send className="size-4" />
                             </Button>
                         </div>
-                    </div>
+                        <p className="text-[10px] text-center text-muted-foreground/60 mt-2">NEXO AI puede cometer errores.</p>
+                    </form>
                 </div>
             </div>
 
@@ -229,14 +183,14 @@ export function ChatWidget() {
                 variant="default"
                 size="icon"
                 className={cn(
-                    "fixed bottom-4 right-4 z-50 size-14 rounded-full shadow-lg shadow-primary/30 animate-glow-pulse",
-                    abierto && "shadow-none animate-none"
+                    "fixed bottom-4 right-4 z-50 size-14 rounded-full shadow-xl shadow-primary/20 transition-all duration-300 hover:scale-110",
+                    abierto ? "rotate-90 scale-100 shadow-none hover:rotate-90 hover:scale-95" : "animate-glow-pulse"
                 )}
                 onClick={() => setAbierto(!abierto)}
                 aria-label={abierto ? "Cerrar asistente IA" : "Abrir asistente IA"}
             >
                 {abierto ? (
-                    <X className="size-6" />
+                    <X className="size-6 transition-transform" />
                 ) : (
                     <MessageCircle className="size-6" />
                 )}
@@ -244,3 +198,4 @@ export function ChatWidget() {
         </>
     );
 }
+
