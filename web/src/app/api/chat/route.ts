@@ -1,5 +1,6 @@
 import { openai } from '@ai-sdk/openai';
 import { streamText } from 'ai';
+import { getInsForge } from '@/lib/insforge';
 
 // Permitir streaming de hasta 30 segundos de respuesta
 export const maxDuration = 30;
@@ -8,6 +9,22 @@ export async function POST(req: Request) {
     // Extraemos el array de mensajes que el cliente nos envía.
     // Gracias a useChat, esto contiene todo el historial de la conversación (memoria efímera).
     const { messages } = await req.json();
+
+    const insforge = getInsForge();
+
+    // 1. Fetching Dinámico (RAG)
+    let context = 'Servicios no disponibles temporalmente.';
+    if (insforge) {
+        const { data: services } = await insforge.database
+            .from('kb_assets')
+            .select('*')
+            .eq('asset_type', 'servicio')
+            .eq('is_active', true);
+
+        if (services && services.length > 0) {
+            context = services.map((s: any) => `- ${s.title}: ${s.content}`).join('\n');
+        }
+    }
 
     // Prompt del sistema para el comportamiento del bot
     const systemPrompt = `
@@ -20,11 +37,8 @@ Objetivos:
 2. Responder de manera concisa y al grano. No des respuestas exageradamente largas.
 3. Si el usuario muestra interés en contratar un servicio, redirigí la conversación a invitarlo a dejar sus datos en el formulario de contacto o pedir su email ahí mismo.
 
-Información sobre los servicios de NEXO:
-- Auditoría de IA
-- Arquitecto de Onboarding (Chatbots, automatizaciones de CRM)
-- Pipeline de Contenido (Generación masiva de contenido con IA)
-- E-commerce y Landing Pages de Alta Conversión
+Información sobre los servicios ACTUALES de NEXO (Obtenida dinámicamente de la Base de Conocimientos):
+${context}
 
 Si no sabes la respuesta a algo, simplemente ofrece tomar sus datos para que un estratega humano (Mathias) se contacte con ellos.
   `.trim();
