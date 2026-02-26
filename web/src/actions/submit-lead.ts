@@ -46,7 +46,7 @@ export async function submitLead(data: ContactFormData) {
 ${data.mensaje || 'Sin mensaje'}
             `;
 
-            await fetch(\`https://api.telegram.org/bot\${TELEGRAM_BOT_TOKEN}/sendMessage\`, {
+            await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

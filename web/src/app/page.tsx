@@ -16,6 +16,9 @@ import { TestimonialsSection } from "@/components/sections/testimonials-section"
 import { ContactForm } from "@/components/sections/contact-form";
 import { Footer } from "@/components/sections/footer";
 import { ChatWidget } from "@/components/interactive/chat-widget";
+
+// Forzar renderizado dinámico para evitar error de pre-renderizado estático
+export const dynamic = 'force-dynamic';
 /**
  * Página principal — Landing Page fusionada "Deep Space" + "Socialmedia".
  * Combina las mejores secciones de ambos sitios en un flujo de conversión óptimo.

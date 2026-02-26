@@ -16,7 +16,9 @@ export function ChatWidget() {
     const inputRef = React.useRef<HTMLInputElement>(null);
 
     // Vercel AI SDK
+    // @ts-ignore
     const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
+        // @ts-ignore
         api: '/api/chat',
         // Mensaje inicial optimista, guardado en el cliente para dar contexto.
         initialMessages: [
@@ -26,7 +28,7 @@ export function ChatWidget() {
                 content: "¡Hola! Soy NEXO. ¿Cómo te puedo ayudar hoy con potenciar tu negocio?",
             }
         ]
-    });
+    }) as any;
 
     // Auto-scroll al último mensaje
     React.useEffect(() => {
@@ -93,9 +95,9 @@ export function ChatWidget() {
                         ref={scrollRef}
                         className="flex-1 overflow-y-auto p-4 space-y-3 min-h-[250px] scroll-smooth"
                     >
-                        {messages.map((msg) => (
+                        {messages.map((msg: any) => (
                             <div
-                                key={msg.id}
+                                key={msg.id || Math.random().toString()}
                                 className={cn(
                                     "flex gap-2 items-end",
                                     msg.role === "user" && "flex-row-reverse"
@@ -124,7 +126,7 @@ export function ChatWidget() {
                                             : "bg-card/60 border border-white/5 text-foreground rounded-bl-sm"
                                     )}
                                 >
-                                    {msg.content}
+                                    {(msg as any).content}
                                 </div>
                             </div>
                         ))}

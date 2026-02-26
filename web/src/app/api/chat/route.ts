@@ -38,5 +38,5 @@ Si no sabes la respuesta a algo, simplemente ofrece tomar sus datos para que un 
     });
 
     // Retornamos la respuesta como un stream de datos hacia el frontend
-    return result.toDataStreamResponse();
+    return result.toTextStreamResponse();
 }

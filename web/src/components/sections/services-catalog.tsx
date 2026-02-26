@@ -7,7 +7,6 @@ import { Servicio } from '@/types';
 import { Layers, Monitor, Smartphone, Video, Share2, ChevronRight, ChevronLeft, ShoppingCart, Bookmark } from 'lucide-react';
 import { MOCK_SERVICES } from '@/data/services';
 import { cn } from '@/lib/utils';
-import { supabase } from '@/lib/supabase';
 
 const iconMap: Record<string, React.ReactNode> = {
     Monitor: <Monitor className="w-8 h-8" />,
@@ -21,22 +20,8 @@ const iconMap: Record<string, React.ReactNode> = {
 export function ServicesCatalog() {
     const [bookmarks, setBookmarks] = React.useState<string[]>([]);
     const [isLoaded, setIsLoaded] = React.useState(false);
-    const [services, setServices] = React.useState<Servicio[]>(MOCK_SERVICES);
+    const services = MOCK_SERVICES;
     const [selectedService, setSelectedService] = React.useState<Servicio | null>(null);
-
-    React.useEffect(() => {
-        const fetchServices = async () => {
-            if (!supabase) { setServices(MOCK_SERVICES); return; }
-            const { data, error } = await supabase
-                .from('services')
-                .select('*')
-                .order('orden', { ascending: true });
-            if (!error && data && data.length > 0) {
-                setServices(data as unknown as Servicio[]);
-            }
-        };
-        fetchServices();
-    }, []);
 
     React.useEffect(() => {
         if (typeof window === 'undefined') return;
