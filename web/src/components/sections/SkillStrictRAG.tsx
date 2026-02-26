@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Bot, Send, ShieldX, ShieldCheck } from "lucide-react";
+import { Bot, Send, ShieldX, ShieldCheck, Loader2 } from "lucide-react";
+import { startOrResumeChatSession, saveChatMessage, getChatHistory } from "@/lib/chat-api";
+
 
 type Message = {
     role: "user" | "assistant";
@@ -17,17 +19,43 @@ export function SkillStrictRAG() {
     const [messages, setMessages] = useState<Message[]>([
         { role: "assistant", content: "Hola. Soy el Agente RAG Corporativo. Solo tengo acceso a la base de datos interna de la empresa. ¿En qué puedo ayudarte?" }
     ]);
+    const [sessionId, setSessionId] = useState<string | null>(null);
+    const [isLoadingHistory, setIsLoadingHistory] = useState(true);
 
-    // Mock RAG Logic
-    const handleSend = () => {
-        if (!input.trim()) return;
+    useEffect(() => {
+        const initChat = async () => {
+            try {
+                const id = await startOrResumeChatSession('rag-strict');
+                setSessionId(id);
+                const history = await getChatHistory(id);
+                if (history && history.length > 0) {
+                    setMessages(history.map(msg => ({
+                        role: msg.role as "user" | "assistant",
+                        content: msg.content
+                    })));
+                }
+            } catch (err) {
+                console.error("No se pudo iniciar supase", err);
+            } finally {
+                setIsLoadingHistory(false);
+            }
+        };
+        initChat();
+    }, []);
+
+    // Mock RAG Logic con guardado en DB
+    const handleSend = async () => {
+        if (!input.trim() || !sessionId) return;
 
         const userMsg = input;
         setMessages(prev => [...prev, { role: "user", content: userMsg }]);
         setInput("");
         setIsThinking(true);
 
-        setTimeout(() => {
+        // Guardar mensaje del usuario
+        await saveChatMessage(sessionId, "user", userMsg);
+
+        setTimeout(async () => {
             const lowerInput = userMsg.toLowerCase();
             let response: Message;
 
@@ -52,6 +80,7 @@ export function SkillStrictRAG() {
             }
 
             setMessages(prev => [...prev, response]);
+            await saveChatMessage(sessionId, "assistant", response.content);
             setIsThinking(false);
         }, 1200);
     };
@@ -99,6 +128,7 @@ export function SkillStrictRAG() {
                             <Bot className="w-4 h-4 text-accent" />
                         </div>
                         <span className="font-mono text-sm tracking-tight text-white/80">Strict_RAG_Interface</span>
+                        {isLoadingHistory && <Loader2 className="w-3 h-3 text-muted-foreground animate-spin ml-2" />}
                     </div>
                 </div>
 

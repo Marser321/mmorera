@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Bot, Send, Activity, CheckCircle2, AlertTriangle, MessageSquare } from "lucide-react";
+import { Bot, Send, Activity, CheckCircle2, AlertTriangle, MessageSquare, Loader2 } from "lucide-react";
+import { startOrResumeChatSession, saveChatMessage, getChatHistory } from "@/lib/chat-api";
+
 
 export function SkillLeadQualifier() {
     const [input, setInput] = useState("");
@@ -13,18 +15,46 @@ export function SkillLeadQualifier() {
         clasificacion: "CALIENTE" | "MEDIO" | "FRIO" | null;
     } | null>(null);
 
+    const [sessionId, setSessionId] = useState<string | null>(null);
+    const [isLoadingHistory, setIsLoadingHistory] = useState(true);
+
+    useEffect(() => {
+        const initChat = async () => {
+            try {
+                const id = await startOrResumeChatSession('lead-qualifier');
+                setSessionId(id);
+                const history = await getChatHistory(id);
+                // Si ya había historia para esta sesión de calificador
+                if (history && history.length > 0) {
+                    const lastAssistMsg = history.reverse().find(m => m.role === 'assistant');
+                    if (lastAssistMsg) {
+                        try { setResult(JSON.parse(lastAssistMsg.content)); } catch (e) { }
+                    }
+                }
+            } catch (err) {
+                console.error("No se pudo iniciar supase", err);
+            } finally {
+                setIsLoadingHistory(false);
+            }
+        };
+        initChat();
+    }, []);
+
     // Palabras clave MVP para simular la IA
     const hotKeywords = ["urgente", "5000", "presupuesto alto", "comprar", "agencia", "automatización completa", "inmediato", "ahora"];
     const coldKeywords = ["información", "duda", "barato", "consulta", "gratis", "precio", "curiosidad"];
 
-    const analyzeLead = () => {
-        if (!input.trim()) return;
+    const analyzeLead = async () => {
+        if (!input.trim() || !sessionId) return;
 
         setIsAnalyzing(true);
         setResult(null);
 
+        // Guardar mensaje de usuario
+        await saveChatMessage(sessionId, "user", input);
+
         // Simulamos el delay de la API (LLM)
-        setTimeout(() => {
+        setTimeout(async () => {
             const lowerInput = input.toLowerCase();
             let classification: "CALIENTE" | "MEDIO" | "FRIO" = "MEDIO";
 
@@ -34,11 +64,18 @@ export function SkillLeadQualifier() {
                 classification = "FRIO";
             }
 
-            setResult({
+            const classificationResult = {
                 nombre_cliente: "Lead_Web_Demo",
                 servicio: input,
                 clasificacion: classification
-            });
+            } as {
+                nombre_cliente: string;
+                servicio: string;
+                clasificacion: "CALIENTE" | "MEDIO" | "FRIO" | null;
+            };
+
+            setResult(classificationResult);
+            await saveChatMessage(sessionId, "assistant", JSON.stringify(classificationResult));
             setIsAnalyzing(false);
         }, 1500);
     };
@@ -99,6 +136,7 @@ export function SkillLeadQualifier() {
                             <Bot className="w-4 h-4 text-accent" />
                         </div>
                         <span className="font-mono text-sm tracking-tight text-white/80">AI_Router_Engine</span>
+                        {isLoadingHistory && <Loader2 className="w-3 h-3 text-muted-foreground animate-spin ml-2" />}
                     </div>
                     <div className="flex gap-2">
                         <div className="w-2.5 h-2.5 rounded-full bg-red-500/50"></div>

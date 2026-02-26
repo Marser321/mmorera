@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Bot, FileText, Activity, PenTool, CheckCircle2 } from "lucide-react";
+import { Bot, FileText, Activity, PenTool, CheckCircle2, Loader2 } from "lucide-react";
+import { startOrResumeChatSession, saveChatMessage, getChatHistory } from "@/lib/chat-api";
+
 
 export function SkillProposalGenerator() {
     const [input, setInput] = useState("");
@@ -15,22 +17,53 @@ export function SkillProposalGenerator() {
         total: number;
     } | null>(null);
 
-    const generateProposal = () => {
-        if (!input.trim()) return;
+    const [sessionId, setSessionId] = useState<string | null>(null);
+    const [isLoadingHistory, setIsLoadingHistory] = useState(true);
+
+    useEffect(() => {
+        const initChat = async () => {
+            try {
+                const id = await startOrResumeChatSession('proposal-generator');
+                setSessionId(id);
+                const history = await getChatHistory(id);
+                // Si ya había historia para esta sesión, la restauramos (opcional según el UX que se  desee)
+                if (history && history.length > 0) {
+                    // Solo obtenemos la ultima propuesta generada si existe
+                    const lastAssistMsg = history.reverse().find(m => m.role === 'assistant');
+                    if (lastAssistMsg) {
+                        try { setProposal(JSON.parse(lastAssistMsg.content)); } catch (e) { }
+                    }
+                }
+            } catch (err) {
+                console.error("No se pudo iniciar Supabase", err);
+            } finally {
+                setIsLoadingHistory(false);
+            }
+        };
+        initChat();
+    }, []);
+
+    const generateProposal = async () => {
+        if (!input.trim() || !sessionId) return;
 
         setIsGenerating(true);
         setProposal(null);
 
+        // Guardamos el input del user
+        await saveChatMessage(sessionId, "user", input);
+
         // Simulamos el delay de generación (LLM)
-        setTimeout(() => {
+        setTimeout(async () => {
             // Simulamos parseo de la IA (Mock data)
-            setProposal({
+            const generated = {
                 objetivo_proyecto: "Desarrollar un sistema integral de captación B2B automatizado para escalar la adquisición de clientes calificados, reduciendo la carga operativa del equipo de ventas actual mediante herramientas de IA y flujos de N8N.",
                 nuestro_enfoque: "Implementaremos el Framework Medina: dividiremos el proyecto en Sprints modulares, comenzando con un Producto Mínimo Viable (MVP) enfocado en Calificación de Leads, para luego expandir al embudo completo de conversión en 4 semanas.",
                 concepto_economico_1: 2500,
                 concepto_economico_2: 1200,
                 total: 3700
-            });
+            };
+            setProposal(generated);
+            await saveChatMessage(sessionId, "assistant", JSON.stringify(generated));
             setIsGenerating(false);
         }, 2000);
     };
@@ -91,6 +124,7 @@ export function SkillProposalGenerator() {
                             <Bot className="w-4 h-4 text-primary" />
                         </div>
                         <span className="font-mono text-sm tracking-tight text-white/80">AI_Proposal_Builder</span>
+                        {isLoadingHistory && <Loader2 className="w-3 h-3 text-muted-foreground animate-spin ml-2" />}
                     </div>
                     <div className="flex gap-2">
                         <div className="w-2.5 h-2.5 rounded-full bg-white/20"></div>
