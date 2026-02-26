@@ -10,8 +10,8 @@ export function ContactForm() {
     const [isSubmitted, setIsSubmitted] = React.useState(false);
     const [nombre, setNombre] = React.useState('');
     const [email, setEmail] = React.useState('');
-    const [telefono] = React.useState('');
-    const [empresa] = React.useState('');
+    const [telefono, setTelefono] = React.useState('');
+    const [empresa, setEmpresa] = React.useState('');
     const [interes, setInteres] = React.useState('web');
     const [mensaje, setMensaje] = React.useState('');
     const [submitting, setSubmitting] = React.useState(false);
@@ -33,6 +33,8 @@ export function ContactForm() {
         const waMessage = `Hola! 👋 Quiero escalar mi negocio.\n\n` +
             `*Nombre:* ${nombre}\n` +
             `*Email:* ${email}\n` +
+            (telefono ? `*Teléfono:* ${telefono}\n` : '') +
+            (empresa ? `*Empresa:* ${empresa}\n` : '') +
             `*Prioridad:* ${interes}\n` +
             `*Detalles:* ${mensaje || 'Sin detalles adicionales'}`;
 
@@ -112,6 +114,19 @@ export function ContactForm() {
                                         </div>
                                     </div>
 
+                                    <div className="grid md:grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <label htmlFor="telefono" className="text-xs font-mono uppercase tracking-widest text-white/40 block">Teléfono / WhatsApp</label>
+                                            <input id="telefono" value={telefono} onChange={(e) => setTelefono(e.target.value)} type="tel" placeholder="+598 99 123 456"
+                                                className="w-full bg-white/5 border border-white/10 text-white focus:border-primary/50 h-12 rounded-xl px-4 outline-none transition-colors" />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label htmlFor="empresa" className="text-xs font-mono uppercase tracking-widest text-white/40 block">Empresa</label>
+                                            <input id="empresa" value={empresa} onChange={(e) => setEmpresa(e.target.value)} placeholder="Nombre de tu empresa"
+                                                className="w-full bg-white/5 border border-white/10 text-white focus:border-primary/50 h-12 rounded-xl px-4 outline-none transition-colors" />
+                                        </div>
+                                    </div>
+
                                     <div className="space-y-2">
                                         <label htmlFor="type" className="text-xs font-mono uppercase tracking-widest text-white/40 block">Tu Prioridad</label>
                                         <select id="type" value={interes} onChange={(e) => setInteres(e.target.value)}
@@ -148,3 +163,4 @@ export function ContactForm() {
         </section>
     );
 }
+

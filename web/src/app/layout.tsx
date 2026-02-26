@@ -23,7 +23,7 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-    title: "MMORE | Automatizaciones de Marketing con IA — Más ventas, menos operación",
+    title: "NEXO | Infraestructura de Conversión B2B con IA — Más ventas, menos operación",
     description:
         "Sistemas de automatización y agentes de IA para marketing B2B. Aumentá tu productividad y ventas sin aumentar tu plantilla. Auditoría de IA gratuita.",
     keywords: [
@@ -33,11 +33,11 @@ export const metadata: Metadata = {
         "lead generation",
         "CRM automatizado",
     ],
-    authors: [{ name: "MMORE Agency" }],
+    authors: [{ name: "NEXO Digital Agency" }],
     openGraph: {
-        title: "MMORE | Automatizaciones de Marketing con IA",
+        title: "NEXO | Infraestructura de Conversión B2B con IA",
         description:
-            "Sistemas de automatización y agentes de IA para marketing B2B. Auditoría gratuita.",
+            "Sistemas de automatización y agentes de IA para marketing B2B. Infraestructura de conversión + capacitación. Auditoría gratuita.",
         type: "website",
         locale: "es_UY",
     },

@@ -1,11 +1,11 @@
 import { AILab } from "@/components/sections/AILab";
-import { Workflow } from "@/components/sections/Workflow";
+import { WorkflowSection } from "@/components/sections/workflow-section";
 import Link from "next/link";
 import { ArrowLeft, Beaker } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 export const metadata = {
-    title: "Laboratorio Técnico | Agencia Mario",
+    title: "Laboratorio Técnico | NEXO",
     description: "Desglose técnico de la arquitectura de agentes, flujos, LLMs y sistemas subyacentes.",
 };
 
@@ -36,8 +36,9 @@ export default function TecnologiaPage() {
             </div>
 
             {/* Technical Sections */}
-            <Workflow />
+            <WorkflowSection />
             <AILab />
         </div>
     );
 }
+
