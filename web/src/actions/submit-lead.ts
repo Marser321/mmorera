@@ -59,6 +59,34 @@ ${data.mensaje || 'Sin mensaje'}
             });
         }
 
+        // Guardar Lead en InsForge
+        const insforgeUrl = process.env.NEXT_PUBLIC_INSFORGE_URL
+        const insforgeKey = process.env.NEXT_PUBLIC_INSFORGE_ANON_KEY
+        if (insforgeUrl && insforgeKey) {
+            try {
+                // eslint-disable-next-line @typescript-eslint/no-require-imports
+                const { createClient } = require('@insforge/sdk')
+                const insforge = createClient({ baseUrl: insforgeUrl, anonKey: insforgeKey })
+
+                const { error: dbError } = await insforge.database.from('leads').insert([{
+                    first_name: data.nombre,
+                    email: data.email,
+                    company_name: data.empresa || null,
+                    phone: data.telefono || null,
+                    interested_services: data.servicios_interes || [],
+                    selected_plan: data.plan_seleccionado || null,
+                    message: data.mensaje || null,
+                    source: 'website'
+                }])
+
+                if (dbError) {
+                    console.error("Error guardando lead en BD:", dbError)
+                }
+            } catch (err) {
+                console.error("Error de cliente InsForge:", err)
+            }
+        }
+
         return { success: true }
     } catch (error) {
         console.error("Error al procesar lead:", error)

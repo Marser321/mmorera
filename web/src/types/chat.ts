@@ -64,3 +64,17 @@ export type ChatMessage = {
     content: string;
     created_at: string;
 };
+
+// ═══════════════════════════════════════════════════
+// KNOWLEDGE BASE (RAG)
+// ═══════════════════════════════════════════════════
+
+export type KBAsset = {
+    id: string; // UUID
+    title: string;
+    asset_type: 'manual' | 'ejemplo' | 'faq' | 'servicio';
+    content: string;
+    metadata?: Record<string, unknown>;
+    is_active: boolean;
+    created_at: string;
+};

@@ -1,4 +1,4 @@
-import { getSupabase } from '@/lib/supabase';
+import { getInsForge } from '@/lib/insforge';
 import { v4 as uuidv4 } from 'uuid';
 
 /**
@@ -19,13 +19,13 @@ export const getOrCreateSessionCookie = (): string => {
  * Crea una nueva sesión de chat en Supabase o devuelve una existente (si está activa)
  */
 export const startOrResumeChatSession = async (skillOrigin: string) => {
-    const client = getSupabase();
-    if (!client) throw new Error("Supabase client not initialized.");
+    const client = getInsForge();
+    if (!client) throw new Error("InsForge client not initialized.");
 
     const sessionCookie = getOrCreateSessionCookie();
 
     // 1. Check if there's an active session for this cookie & skill
-    const { data: existingSession, error: fetchError } = await client
+    const { data: existingSession, error: fetchError } = await client.database
         .from('chat_sessions')
         .select('*')
         .eq('session_cookie', sessionCookie)
@@ -33,14 +33,14 @@ export const startOrResumeChatSession = async (skillOrigin: string) => {
         .eq('estado_conversacion', 'active')
         .order('created_at', { ascending: false })
         .limit(1)
-        .single();
+        .maybeSingle();
 
     if (existingSession && !fetchError) {
         return existingSession.id;
     }
 
     // 2. If no active session, create a new one
-    const { data: newSession, error: insertError } = await client
+    const { data: newSession, error: insertError } = await client.database
         .from('chat_sessions')
         .insert([{
             session_cookie: sessionCookie,
@@ -62,10 +62,10 @@ export const startOrResumeChatSession = async (skillOrigin: string) => {
  * Guarda un mensaje en el historial
  */
 export const saveChatMessage = async (sessionId: string, role: 'user' | 'assistant' | 'system', content: string) => {
-    const sb = getSupabase();
+    const sb = getInsForge();
     if (!sb) return null;
 
-    const { error } = await sb
+    const { error } = await sb.database
         .from('chat_messages')
         .insert([{
             session_id: sessionId,
@@ -82,10 +82,10 @@ export const saveChatMessage = async (sessionId: string, role: 'user' | 'assista
  * Recupera el historial de un chat
  */
 export const getChatHistory = async (sessionId: string) => {
-    const sb = getSupabase();
+    const sb = getInsForge();
     if (!sb) return [];
 
-    const { data, error } = await sb
+    const { data, error } = await sb.database
         .from('chat_messages')
         .select('*')
         .eq('session_id', sessionId)

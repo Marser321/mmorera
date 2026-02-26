@@ -188,5 +188,27 @@ CREATE TRIGGER trg_update_last_active
 AFTER
 INSERT ON public.chat_messages FOR EACH ROW EXECUTE FUNCTION public.update_session_last_active();
 -- ═══════════════════════════════════════════════════════════════
--- FIN DEL SCRIPT — 6 tablas, 12 índices, 12 políticas RLS, 1 trigger
+-- 7. TABLA: KB_ASSETS (Knowledge Base / Manuales y Ejemplos)
+-- ═══════════════════════════════════════════════════════════════
+CREATE TABLE public.kb_assets (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    title TEXT NOT NULL,
+    asset_type TEXT NOT NULL CHECK (
+        asset_type IN ('manual', 'ejemplo', 'faq', 'servicio')
+    ),
+    content TEXT NOT NULL,
+    metadata JSONB DEFAULT '{}'::jsonb,
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
+);
+COMMENT ON TABLE public.kb_assets IS 'Almacena manuales, ejemplos y contexto de NEXO para que los agentes IA lo consuman.';
+-- RLS
+ALTER TABLE public.kb_assets ENABLE ROW LEVEL SECURITY;
+-- Políticas
+-- El RAG (Server Action/API) necesita leer esto usando la Service/Anon Key segura.
+CREATE POLICY "anon_select_kb_assets" ON public.kb_assets FOR
+SELECT TO anon USING (is_active = true);
+CREATE POLICY "admin_full_access_kb" ON public.kb_assets FOR ALL TO authenticated USING (true) WITH CHECK (true);
+-- ═══════════════════════════════════════════════════════════════
+-- FIN DEL SCRIPT — 7 tablas, RLS, y políticas.
 -- ═══════════════════════════════════════════════════════════════
