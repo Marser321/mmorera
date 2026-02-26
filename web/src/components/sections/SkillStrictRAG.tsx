@@ -45,7 +45,7 @@ export function SkillStrictRAG() {
 
     // Mock RAG Logic con guardado en DB
     const handleSend = async () => {
-        if (!input.trim() || !sessionId) return;
+        if (!(input || "").trim() || !sessionId) return;
 
         const userMsg = input;
         setMessages(prev => [...prev, { role: "user", content: userMsg }]);
@@ -171,7 +171,7 @@ export function SkillStrictRAG() {
                         />
                         <Button
                             onClick={handleSend}
-                            disabled={isThinking || !input.trim()}
+                            disabled={isThinking || !(input || "").trim()}
                             size="icon"
                             className="bg-accent hover:bg-accent/80 text-black shrink-0"
                         >

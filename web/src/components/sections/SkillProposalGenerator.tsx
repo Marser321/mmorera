@@ -44,7 +44,7 @@ export function SkillProposalGenerator() {
     }, []);
 
     const generateProposal = async () => {
-        if (!input.trim() || !sessionId) return;
+        if (!(input || "").trim() || !sessionId) return;
 
         setIsGenerating(true);
         setProposal(null);
@@ -97,7 +97,7 @@ export function SkillProposalGenerator() {
 
                     <Button
                         onClick={generateProposal}
-                        disabled={isGenerating || !input.trim()}
+                        disabled={isGenerating || !(input || "").trim()}
                         className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-12 rounded-xl text-base font-medium transition-all shadow-[0_0_20px_rgba(var(--primary),0.3)] hover:shadow-[0_0_30px_rgba(var(--primary),0.5)]"
                     >
                         {isGenerating ? (

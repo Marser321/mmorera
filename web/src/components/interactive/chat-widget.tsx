@@ -168,7 +168,7 @@ export function ChatWidget() {
                                 type="submit"
                                 variant="default"
                                 size="icon"
-                                disabled={!input.trim() || isLoading}
+                                disabled={!(input || "").trim() || isLoading}
                                 aria-label="Enviar mensaje"
                                 className="shrink-0 h-[42px] w-[42px] transition-all hover:scale-105 active:scale-95 disabled:hover:scale-100"
                             >

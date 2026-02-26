@@ -15,7 +15,7 @@ export function ChatWidget() {
 
     const handleSend = (e: React.FormEvent) => {
         e.preventDefault();
-        if (!input.trim()) return;
+        if (!(input || "").trim()) return;
 
         // Add user message
         setMessages((prev) => [...prev, { role: "user", text: input }]);
@@ -85,7 +85,7 @@ export function ChatWidget() {
                                 placeholder="Escribe tu mensaje..."
                                 className="bg-background border-white/10 focus-visible:ring-primary/50"
                             />
-                            <Button type="submit" size="icon" className="shrink-0" disabled={!input.trim()}>
+                            <Button type="submit" size="icon" className="shrink-0" disabled={!(input || "").trim()}>
                                 <Send className="w-4 h-4" />
                             </Button>
                         </form>

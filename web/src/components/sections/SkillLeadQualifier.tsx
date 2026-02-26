@@ -45,7 +45,7 @@ export function SkillLeadQualifier() {
     const coldKeywords = ["información", "duda", "barato", "consulta", "gratis", "precio", "curiosidad"];
 
     const analyzeLead = async () => {
-        if (!input.trim() || !sessionId) return;
+        if (!(input || "").trim() || !sessionId) return;
 
         setIsAnalyzing(true);
         setResult(null);
@@ -109,7 +109,7 @@ export function SkillLeadQualifier() {
 
                     <Button
                         onClick={analyzeLead}
-                        disabled={isAnalyzing || !input.trim()}
+                        disabled={isAnalyzing || !(input || "").trim()}
                         className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-12 rounded-xl text-base font-medium transition-all shadow-[0_0_20px_rgba(var(--primary),0.3)] hover:shadow-[0_0_30px_rgba(var(--primary),0.5)]"
                     >
                         {isAnalyzing ? (
