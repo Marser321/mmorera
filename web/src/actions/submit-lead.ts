@@ -3,14 +3,14 @@
 import type { ContactFormData } from '@/types'
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN
-const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID
-
 export async function submitLead(data: ContactFormData) {
+    const RESEND_API_KEY = process.env.RESEND_API_KEY
+    const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN
+    const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID
     try {
         // Enviar Email via Resend
-        if (process.env.RESEND_API_KEY) {
+        if (RESEND_API_KEY) {
+            const resend = new Resend(RESEND_API_KEY)
             await resend.emails.send({
                 from: 'NEXO Leads <onboarding@resend.dev>', // Cambiar por tu dominio verificado si tienes uno, o dejar este de prueba
                 to: process.env.NOTIFICATION_EMAIL || 'nexo@example.com', // El mail donde recibirás las leads
