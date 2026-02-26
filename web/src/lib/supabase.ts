@@ -23,6 +23,7 @@ export function getSupabase() {
 
     try {
         // Importación dinámica síncrona — safe porque solo se llama cuando hay env vars
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const { createBrowserClient } = require('@supabase/ssr');
         _supabase = createBrowserClient(supabaseUrl, supabaseKey);
     } catch (err) {
@@ -34,10 +35,12 @@ export function getSupabase() {
 }
 
 // Mantener compatibilidad: export const supabase (getter lazy)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const supabase = new Proxy({} as any, {
     get(_, prop) {
         const client = getSupabase();
         if (!client) return undefined;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return (client as any)[prop];
     }
 });

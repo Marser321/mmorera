@@ -16,9 +16,9 @@ export function ChatWidget() {
     const inputRef = React.useRef<HTMLInputElement>(null);
 
     // Vercel AI SDK
-    // @ts-ignore
+    // @ts-expect-error Types mismatch in AI SDK
     const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
-        // @ts-ignore
+        // @ts-expect-error Internal API path
         api: '/api/chat',
         // Mensaje inicial optimista, guardado en el cliente para dar contexto.
         initialMessages: [
@@ -28,7 +28,7 @@ export function ChatWidget() {
                 content: "¡Hola! Soy NEXO. ¿Cómo te puedo ayudar hoy con potenciar tu negocio?",
             }
         ]
-    }) as any;
+    }) as { messages: { id?: string, role: string, content: string }[], input: string, handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void, handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void, isLoading: boolean };
 
     // Auto-scroll al último mensaje
     React.useEffect(() => {
@@ -95,9 +95,9 @@ export function ChatWidget() {
                         ref={scrollRef}
                         className="flex-1 overflow-y-auto p-4 space-y-3 min-h-[250px] scroll-smooth"
                     >
-                        {messages.map((msg: any) => (
+                        {messages.map((msg: { id?: string, role: string, content: string }, index: number) => (
                             <div
-                                key={msg.id || Math.random().toString()}
+                                key={msg.id || `chat-msg-${index}`}
                                 className={cn(
                                     "flex gap-2 items-end",
                                     msg.role === "user" && "flex-row-reverse"
@@ -126,7 +126,7 @@ export function ChatWidget() {
                                             : "bg-card/60 border border-white/5 text-foreground rounded-bl-sm"
                                     )}
                                 >
-                                    {(msg as any).content}
+                                    {msg.content}
                                 </div>
                             </div>
                         ))}

@@ -7,6 +7,8 @@ import { SkillProposalGenerator } from "./SkillProposalGenerator";
 import { SkillStrictRAG } from "./SkillStrictRAG";
 import { SkillColdOutbound } from "./SkillColdOutbound";
 import { SkillVoiceAgent } from "./SkillVoiceAgent";
+import { SkillOnboardingBot } from "./SkillOnboardingBot";
+import { Users } from "lucide-react";
 
 export function AILab() {
     const [activeTab, setActiveTab] = useState(0);
@@ -35,6 +37,12 @@ export function AILab() {
             title: "Prospección B2B",
             icon: <Mail className="w-4 h-4" />,
             component: <SkillColdOutbound />,
+        },
+        {
+            id: "hr-onboarding",
+            title: "HR & Onboarding",
+            icon: <Users className="w-4 h-4" />,
+            component: <SkillOnboardingBot />,
         },
         {
             id: "voice-agent",

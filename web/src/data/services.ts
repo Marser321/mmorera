@@ -78,5 +78,18 @@ export const MOCK_SERVICES: Servicio[] = [
         caracteristicas: ['Checkout Optimizado', 'Upselling Automatizado', 'Lealtad Programada'],
         tecnologias: [],
         orden: 5
+    },
+    {
+        id: '6',
+        nombre: 'HR & Onboarding Automático',
+        descripcion: 'Transforma manuales estáticos y procesos repetitivos en un agente interactivo 24/7. Resuelve tickets de RRHH, onboarding de nuevos empleados y procesos internos en segundos mediante chat y voz, reduciendo dramáticamente el tiempo perdido en soporte interno.',
+        descripcion_corta: 'Bot Onboarding & RRHH',
+        pilar: 'tech',
+        icono: 'Users',
+        precio_base: 1800,
+        tipo_pago: 'unico',
+        caracteristicas: ['Entrenamiento de Docs Corporativos', 'Soporte Multimodal (Imágenes)', 'Resolución 24/7'],
+        tecnologias: [],
+        orden: 6
     }
 ];
