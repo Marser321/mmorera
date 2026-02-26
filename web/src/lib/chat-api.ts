@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { getSupabase } from '@/lib/supabase';
 import { v4 as uuidv4 } from 'uuid';
 
 /**
@@ -19,12 +19,13 @@ export const getOrCreateSessionCookie = (): string => {
  * Crea una nueva sesión de chat en Supabase o devuelve una existente (si está activa)
  */
 export const startOrResumeChatSession = async (skillOrigin: string) => {
-    if (!supabase) throw new Error("Supabase client not initialized.");
+    const client = getSupabase();
+    if (!client) throw new Error("Supabase client not initialized.");
 
     const sessionCookie = getOrCreateSessionCookie();
 
     // 1. Check if there's an active session for this cookie & skill
-    const { data: existingSession, error: fetchError } = await supabase
+    const { data: existingSession, error: fetchError } = await client
         .from('chat_sessions')
         .select('*')
         .eq('session_cookie', sessionCookie)
@@ -39,7 +40,7 @@ export const startOrResumeChatSession = async (skillOrigin: string) => {
     }
 
     // 2. If no active session, create a new one
-    const { data: newSession, error: insertError } = await supabase
+    const { data: newSession, error: insertError } = await client
         .from('chat_sessions')
         .insert([{
             session_cookie: sessionCookie,
@@ -61,9 +62,10 @@ export const startOrResumeChatSession = async (skillOrigin: string) => {
  * Guarda un mensaje en el historial
  */
 export const saveChatMessage = async (sessionId: string, role: 'user' | 'assistant' | 'system', content: string) => {
-    if (!supabase) return null;
+    const sb = getSupabase();
+    if (!sb) return null;
 
-    const { error } = await supabase
+    const { error } = await sb
         .from('chat_messages')
         .insert([{
             session_id: sessionId,
@@ -80,9 +82,10 @@ export const saveChatMessage = async (sessionId: string, role: 'user' | 'assista
  * Recupera el historial de un chat
  */
 export const getChatHistory = async (sessionId: string) => {
-    if (!supabase) return [];
+    const sb = getSupabase();
+    if (!sb) return [];
 
-    const { data, error } = await supabase
+    const { data, error } = await sb
         .from('chat_messages')
         .select('*')
         .eq('session_id', sessionId)

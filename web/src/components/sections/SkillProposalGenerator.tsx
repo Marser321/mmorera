@@ -29,7 +29,7 @@ export function SkillProposalGenerator() {
                 // Si ya había historia para esta sesión, la restauramos (opcional según el UX que se  desee)
                 if (history && history.length > 0) {
                     // Solo obtenemos la ultima propuesta generada si existe
-                    const lastAssistMsg = history.reverse().find(m => m.role === 'assistant');
+                    const lastAssistMsg = history.reverse().find((m: any) => m.role === 'assistant');
                     if (lastAssistMsg) {
                         try { setProposal(JSON.parse(lastAssistMsg.content)); } catch (e) { }
                     }

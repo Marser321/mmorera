@@ -29,7 +29,7 @@ export function SkillStrictRAG() {
                 setSessionId(id);
                 const history = await getChatHistory(id);
                 if (history && history.length > 0) {
-                    setMessages(history.map(msg => ({
+                    setMessages(history.map((msg: any) => ({
                         role: msg.role as "user" | "assistant",
                         content: msg.content
                     })));
