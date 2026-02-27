@@ -51,7 +51,7 @@ export function Automations() {
                         <div className="max-w-4xl mx-auto p-12 rounded-[3rem] bg-white/[0.01] border border-white/5 backdrop-blur-3xl relative overflow-hidden">
                             <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-white/5 opacity-30" />
                             <p className="text-xl md:text-2xl text-white/50 font-light leading-relaxed relative z-10">
-                                La automatización no es una opción, es el estándar de la élite digital. Diseñamos infraestructuras de crecimiento que <span className="text-white font-medium">convierten</span> leads en activos de alto valor de forma 100% autónoma.
+                                Mientras vos gestionás manualmente, tus competidores automatizaron hace 6 meses. Cada día sin automatizar es dinero que <span className="text-white font-medium">no recuperás.</span> Diseñamos infraestructuras de crecimiento autónomo que convierten leads en activos de alto valor.
                             </p>
                         </div>
                     </motion.div>
@@ -71,6 +71,24 @@ export function Automations() {
                                 animate={{ strokeDashoffset: -200 }}
                                 transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
                             />
+                            {/* Data Pulses viajando por el pipeline */}
+                            {[0, 2.5, 5].map((delay, i) => (
+                                <motion.circle
+                                    key={i}
+                                    r="4"
+                                    cy="1"
+                                    fill={["#3b82f6", "#8b5cf6", "#06b6d4"][i]}
+                                    initial={{ cx: -20, opacity: 0 }}
+                                    animate={{ cx: [-20, 1220], opacity: [0, 1, 1, 1, 0] }}
+                                    transition={{
+                                        duration: 6,
+                                        delay,
+                                        repeat: Infinity,
+                                        ease: "linear",
+                                    }}
+                                    filter="url(#dataPulseGlow)"
+                                />
+                            ))}
                             <defs>
                                 <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                                     <stop offset="0%" stopColor="#3b82f6" stopOpacity="0" />
@@ -79,6 +97,13 @@ export function Automations() {
                                     <stop offset="75%" stopColor="#06b6d4" stopOpacity="1" />
                                     <stop offset="100%" stopColor="#06b6d4" stopOpacity="0" />
                                 </linearGradient>
+                                <filter id="dataPulseGlow" x="-100%" y="-100%" width="300%" height="300%">
+                                    <feGaussianBlur stdDeviation="3" result="blur" />
+                                    <feMerge>
+                                        <feMergeNode in="blur" />
+                                        <feMergeNode in="SourceGraphic" />
+                                    </feMerge>
+                                </filter>
                             </defs>
                         </svg>
                     </div>

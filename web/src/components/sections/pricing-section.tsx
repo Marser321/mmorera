@@ -757,7 +757,7 @@ function PricingCard({ plan, billing, index }: { plan: Plan; billing: BillingCyc
                         : "bg-white/5 text-white hover:bg-white/10 border border-white/10 hover:border-white/30"
                 )}
             >
-                <span className="relative z-10">Empezar Ahora</span>
+                <span className="relative z-10">Reservar mi Lugar</span>
                 <ArrowRight className="w-4 h-4 relative z-10 group-hover/btn:translate-x-1 transition-transform" />
                 <span className="absolute inset-0 -translate-x-[150%] skew-x-12 bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover/btn:animate-[shimmer_1.5s_infinite]" />
             </button>

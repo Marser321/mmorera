@@ -12,6 +12,7 @@
 | 1 | 2026-02-25 | 8.5 | 6 | 4 | — | — | Planes flex + "Enseñar a Pescar" | ✅ |
 | 2 | 2026-02-25 | 6.5 | 9 | 9 | — | — | Unificar estética Deep Space | 🔴 |
 | 3 | 2026-02-25 | 7.5 | 8.5 | 9 | 5 | 4 | Fix branding MMORE→NEXO + limpiar 9 archivos huérfanos | 🔴 |
+| 4 | 2026-02-27 | 9 | 9 | 9.5 | 7 | 5 | Copys magnéticos + SVG animations + 5 componentes nuevos | ✅ |
 
 ---
 

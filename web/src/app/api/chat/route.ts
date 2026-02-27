@@ -1,6 +1,7 @@
 import { openai } from '@ai-sdk/openai';
 import { streamText } from 'ai';
 import { getInsForge } from '@/lib/insforge';
+import { MOCK_SERVICES } from '@/data/services';
 
 // Permitir streaming de hasta 30 segundos de respuesta
 export const maxDuration = 30;
@@ -14,16 +15,25 @@ export async function POST(req: Request) {
 
     // 1. Fetching Dinámico (RAG)
     let context = 'Servicios no disponibles temporalmente.';
-    if (insforge) {
-        const { data: services } = await insforge.database
-            .from('kb_assets')
-            .select('*')
-            .eq('asset_type', 'servicio')
-            .eq('is_active', true);
+    try {
+        if (insforge) {
+            const { data: services } = await insforge.database
+                .from('kb_assets')
+                .select('*')
+                .eq('asset_type', 'servicio')
+                .eq('is_active', true);
 
-        if (services && services.length > 0) {
-            context = services.map((s: any) => `- ${s.title}: ${s.content}`).join('\n');
+            if (services && services.length > 0) {
+                context = services.map((s: { title: string, content: string }) => `- ${s.title}: ${s.content}`).join('\n');
+            }
         }
+    } catch (e) {
+        console.error("Error fetching Supabase para RAG", e);
+    }
+
+    // Fallback: Si no hay Supabase o falló la data, usamos los mock de MOCK_SERVICES
+    if (context === 'Servicios no disponibles temporalmente.' && MOCK_SERVICES) {
+        context = MOCK_SERVICES.map(s => `- ${s.nombre}: ${s.descripcion}`).join('\n');
     }
 
     // Prompt del sistema para el comportamiento del bot

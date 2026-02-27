@@ -57,14 +57,14 @@ export function ProblemSolution() {
                                 className="inline-flex items-center rounded-full border border-red-500/20 bg-red-500/10 px-4 py-1.5 text-[10px] text-red-500 font-mono tracking-[0.3em] uppercase"
                             >
                                 <span className="flex h-1.5 w-1.5 rounded-full bg-red-500 mr-3 animate-pulse" />
-                                Equipo Interno Saturado
+                                Alerta: Fuga de Ingresos
                             </motion.div>
                             <h2 className="text-5xl md:text-[6rem] font-bold tracking-tight text-white leading-tight md:leading-[0.85]">
-                                La Trampa del <br />
-                                <span className="text-red-600">Seguimiento Lento.</span>
+                                Cada 5 Minutos <br />
+                                <span className="text-red-600">Perdés un Cliente.</span>
                             </h2>
                             <p className="text-xl text-white/60 md:text-white/40 leading-relaxed max-w-lg font-light">
-                                Si tu departamento de ventas tarda más de 5 minutos en responder, el 78% de tus leads B2B le comprará al competidor que conteste primero. El trabajo manual quema tu presupuesto.
+                                El 78% de los leads B2B compra al primero que contesta. Mientras tu equipo agenda una llamada, tu competencia ya cerró la venta. ¿Cuántos clientes perdiste esta semana?
                             </p>
                         </div>
 
@@ -105,22 +105,22 @@ export function ProblemSolution() {
                                 className="inline-flex items-center rounded-full border border-emerald-500/20 bg-emerald-500/10 px-5 py-2 text-[10px] text-emerald-400 font-mono tracking-[0.4em] uppercase"
                             >
                                 <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-500 mr-3 shadow-[0_0_12px_#10b981]" />
-                                AI-First & Performance
+                                Infraestructura Autónoma Activa
                             </motion.div>
                             <motion.h2
                                 style={isMobile ? {} : { opacity: solTitleOpacity, y: solTitleY }}
                                 className="text-5xl md:text-[6rem] font-bold tracking-tight text-white leading-tight md:leading-[0.85]"
                             >
-                                Infraestructura <br />
+                                Tu Equipo de Ventas <br />
                                 <span className="text-transparent bg-clip-text bg-gradient-to-br from-emerald-400 via-white to-white/40">
-                                    de Conversión.
+                                    que Nunca Duerme.
                                 </span>
                             </motion.h2>
                             <motion.p
                                 style={isMobile ? {} : { opacity: solTitleOpacity, y: solTitleY }}
                                 className="text-xl text-white/70 md:text-white/50 leading-relaxed max-w-lg font-light"
                             >
-                                Implementamos un &quot;equipo extendido&quot; de agentes IA y automatizaciones que califican, nutren y cierran oportunidades 24/7. Reducí tu CAC y multiplicá x21 tus ventas.
+                                Desplegamos un escuadrón de agentes IA que responde en &lt;30 segundos, califica al instante y agenda citas en tu calendario. Sin romper tu nómina. Sin reuniones de alineamiento.
                             </motion.p>
 
                             <motion.div style={isMobile ? {} : { opacity: solBtnOpacity, y: solBtnY }}>
@@ -128,7 +128,7 @@ export function ProblemSolution() {
                                     onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
                                     className="bg-emerald-500 hover:bg-white text-black font-black rounded-full px-10 py-5 text-xl group transition-all duration-500 w-full md:w-auto flex items-center justify-center"
                                 >
-                                    ESCALAR AHORA
+                                    ACTIVAR MI INFRAESTRUCTURA IA
                                     <ArrowRight className="ml-3 w-6 h-6 group-hover:translate-x-2 transition-transform" />
                                 </button>
                             </motion.div>

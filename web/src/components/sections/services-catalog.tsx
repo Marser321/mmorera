@@ -66,7 +66,7 @@ export function ServicesCatalog() {
                         ecosistema <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-accent to-primary animate-gradient-x bg-[length:200%_auto]">digital</span>
                     </h2>
                     <p className="text-xl text-white/60 font-light leading-relaxed max-w-2xl mx-auto">
-                        Módulos de alto rendimiento diseñados para integrarse y escalar.
+                        No vendemos &quot;consultoría&quot;. Desplegamos módulos que generan resultados desde el día 1.
                     </p>
                 </motion.div>
             </div>

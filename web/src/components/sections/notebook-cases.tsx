@@ -59,11 +59,11 @@ export function NotebookCases() {
                         </div>
 
                         <h2 className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 tracking-tight leading-[1.1]">
-                            Abre tu mente a lo <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-400">imposible.</span>
+                            Tu empresa ya tiene los datos. <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-400">Nosotros los hacemos hablar.</span>
                         </h2>
 
                         <p className="text-lg text-muted-foreground leading-relaxed font-medium mb-10 max-w-lg">
-                            Más allá de los chatbots, utilizamos IA documental como NotebookLM para resolver fricciones estructurales. Analizamos, sintetizamos y cruzamos datos corporativos en tiempo récord para crear valor donde antes solo había procesos muertos y cuellos de botella.
+                            Cruzamos tus grabaciones de ventas, propuestas y manuales con IA documental. El resultado: insights accionables en segundos, no semanas. Sin fricciones, sin curva de aprendizaje.
                         </p>
 
                         <div className="bg-white/5 border border-white/10 p-6 rounded-2xl backdrop-blur-md relative overflow-hidden group w-full max-w-md">
@@ -76,7 +76,7 @@ export function NotebookCases() {
                                     document.getElementById('auditoria')?.scrollIntoView({ behavior: 'smooth' });
                                 }}
                             >
-                                Solicitar Asesoría a Fondo
+                                Descubrí tus &quot;Casos de Oro&quot;
                                 <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
                             </Button>
                         </div>

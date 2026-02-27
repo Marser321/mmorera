@@ -480,7 +480,7 @@ export function ROICalculator() {
                     >
                         ¿Cuánto vas a{" "}
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-400">
-                            ahorrar
+                            recuperar
                         </span>
                         ?
                     </motion.h2>
@@ -492,8 +492,8 @@ export function ROICalculator() {
                         transition={{ delay: 0.2 }}
                         className="text-base sm:text-lg text-slate-400 max-w-2xl mx-auto"
                     >
-                        Mové los controles y mirá en tiempo real cuánto dinero
-                        recuperás al automatizar tu operación con IA.
+                        Ajustá los parámetros a tu operación real y descubrí cuánto
+                        dinero estás quemando cada mes por no automatizar.
                     </motion.p>
                 </div>
 

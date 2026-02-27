@@ -31,10 +31,10 @@ export function AuditFunnel() {
                                 Paso_Cero: Diagnóstico
                             </div>
                             <h2 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-6 leading-[1.1]">
-                                Auditoría de <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-cyan-400 to-blue-500">Operaciones IA</span>
+                                Tu Radiografía de <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-cyan-400 to-blue-500">Ineficiencia</span> en 30 Min
                             </h2>
                             <p className="text-base sm:text-lg md:text-xl text-muted-foreground leading-relaxed font-medium">
-                                Antes de implementar tecnología, necesitamos entender tu negocio. Evaluamos tus cuellos de botella actuales y te entregamos un plan de acción exacto sobre qué procesos automatizar primero para obtener el mayor ROI.
+                                Mientras leés esto, tu empresa está perdiendo dinero en procesos manuales. En 30 minutos te mostramos exactamente dónde y cuánto. Sin compromiso, sin letra chica.
                             </p>
                         </div>
 
@@ -110,7 +110,10 @@ export function AuditFunnel() {
                                     </div>
                                 </div>
 
-                                <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-14 rounded-xl text-sm md:text-base font-bold shadow-[0_0_20px_rgba(var(--primary),0.3)] hover:shadow-[0_0_30px_rgba(var(--primary),0.5)] transition-all group mt-2">
+                                <Button
+                                    className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-14 rounded-xl text-sm md:text-base font-bold shadow-[0_0_20px_rgba(var(--primary),0.3)] hover:shadow-[0_0_30px_rgba(var(--primary),0.5)] transition-all group mt-2"
+                                    onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                                >
                                     Ver Calendario de Disponibilidad
                                     <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                                 </Button>

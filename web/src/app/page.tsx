@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/sections/navbar";
 import { HeroSection } from "@/components/sections/hero-section";
 import { MetricsShowcase } from "@/components/sections/metrics-showcase";
+import { TrustedByStrip } from "@/components/sections/TrustedByStrip";
 import { NotebookCases } from "@/components/sections/notebook-cases";
 import { AuditFunnel } from "@/components/sections/AuditFunnel";
 import { AILab } from "@/components/sections/AILab";
@@ -14,6 +15,8 @@ import { PortfolioSection } from "@/components/sections/portfolio-section";
 import { WorkflowSection } from "@/components/sections/workflow-section";
 import { TestimonialsSection } from "@/components/sections/testimonials-section";
 import { ContactForm } from "@/components/sections/contact-form";
+import { ComparisonTable } from "@/components/sections/ComparisonTable";
+import { FAQSection } from "@/components/sections/FAQSection";
 import { Footer } from "@/components/sections/footer";
 import { ChatWidgetLoader } from "@/components/interactive/chat-widget-loader";
 
@@ -29,6 +32,7 @@ export default function HomePage() {
             <Navbar />
             <main id="contenido-principal">
                 <HeroSection />
+                <TrustedByStrip />
                 <MetricsShowcase />
                 <NotebookCases />
                 <AuditFunnel />
@@ -42,6 +46,8 @@ export default function HomePage() {
                 <PortfolioSection />
                 <WorkflowSection />
                 <TestimonialsSection />
+                <ComparisonTable />
+                <FAQSection />
                 <ContactForm />
             </main>
             <Footer />

@@ -1,6 +1,7 @@
 'use client';
 
 import { ArrowRight, Eye } from 'lucide-react';
+import { HeroNeuralSVG } from './HeroNeuralSVG';
 import { motion, useScroll, useTransform, LazyMotion } from 'framer-motion';
 import { useRef } from 'react';
 
@@ -9,9 +10,9 @@ const loadFeatures = () =>
     import('framer-motion').then((res) => res.domAnimation);
 
 const HERO_CONTENT = {
-    badge: 'Resultados reales · IA sin humo',
-    title: ['Aumentá tu ', 'ROI medible', ' sin inflar tu nómina'],
-    subtitle: 'Infraestructura de conversión B2B: automatizamos tus campañas, pruebas A/B y seguimiento de leads con un equipo extendido. Dejamos de adivinar y empezamos a escalar.',
+    badge: 'Resultados reales · ROI comprobable',
+    title: ['Tu competencia ya ', 'automatizó.', ' ¿Seguís perdiendo?'],
+    subtitle: 'Implementamos agentes IA que califican, nutren y cierran ventas 24/7. Tu equipo deja de perseguir y empieza a cerrar.',
 };
 
 
@@ -58,6 +59,9 @@ export function HeroSection() {
                     <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay"></div>
                     <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,#000_70%,transparent_100%)] opacity-30"></div>
                 </div>
+
+                {/* Red Neuronal SVG Animada */}
+                <HeroNeuralSVG />
 
                 <div className="container px-4 md:px-6 relative z-10 flex flex-col items-center">
                     <motion.div
@@ -114,7 +118,7 @@ export function HeroSection() {
                                 className="group liquid-glass px-10 py-5 rounded-full font-black text-sm uppercase tracking-widest text-white border-white/20 hover:border-emerald-500/50 transition-all duration-500 shadow-[0_0_30px_rgba(16,185,129,0.1)] active:scale-95"
                             >
                                 <span className="relative z-10 flex items-center gap-3 justify-center">
-                                    Solicitar Auditoría de IA <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform duration-500 text-emerald-400" />
+                                    Quiero mi Diagnóstico Gratis <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform duration-500 text-emerald-400" />
                                 </span>
                             </button>
 
@@ -122,7 +126,7 @@ export function HeroSection() {
                                 onClick={() => document.getElementById('servicios')?.scrollIntoView({ behavior: 'smooth' })}
                                 className="px-10 py-5 rounded-full font-black text-sm uppercase tracking-widest border border-white/5 hover:bg-white/5 transition-all duration-500 text-white/40 hover:text-white"
                             >
-                                <Eye className="inline mr-2 w-4 h-4" /> Ver Ecosistemas
+                                <Eye className="inline mr-2 w-4 h-4" /> Mirá cómo funciona →
                             </button>
                         </motion.div>
 

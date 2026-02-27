@@ -71,7 +71,7 @@ export function Navbar() {
                             className="hidden md:flex bg-white hover:bg-gray-100 text-black border-0 rounded-full px-6 transition-all hover:scale-105 active:scale-95 font-bold shadow-[0_0_20px_rgba(255,255,255,0.2)]"
                         >
                             <Rocket className="w-4 h-4 mr-2" />
-                            Iniciar Proyecto
+                            Agendar Demo Gratis
                         </Button>
 
                         {/* Mobile Menu */}
@@ -102,7 +102,7 @@ export function Navbar() {
                                 onClick={() => { document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }); setMobileOpen(false); }}
                                 className="w-full bg-white text-black hover:bg-gray-200 rounded-full py-6 text-lg font-bold"
                             >
-                                Iniciar Proyecto
+                                Agendar Demo Gratis
                             </Button>
                         </div>
                     </div>

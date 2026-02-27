@@ -3,12 +3,12 @@
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Bot, Send, Users, FileText, Camera, Paperclip, Clock, Calendar, CheckCircle2, AlertCircle, LayoutDashboard } from "lucide-react";
+import { useChat } from "@ai-sdk/react";
 
-type Message = {
-    role: "user" | "assistant";
-    content: string;
+type CustomDataMessage = {
     isAttachment?: boolean;
     attachmentType?: "image" | "document";
+    filename?: string;
 };
 
 type AppTab = "dashboard" | "chat";
@@ -22,14 +22,18 @@ export function SkillOnboardingBot() {
     const [shiftState, setShiftState] = useState<ShiftState>("pending");
     const [clockInTime, setClockInTime] = useState<string | null>(null);
 
-    // Chat State
-    const [input, setInput] = useState("");
-    const [isThinking, setIsThinking] = useState(false);
+    // Chat State with AI SDK
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const { messages, input, handleInputChange, setInput, append, isLoading } = useChat({
+        // @ts-expect-error El SDK inferido no reconoce api, pero es válido en tiempo de ejecución
+        api: '/api/chat-hr',
+        initialMessages: [
+            { id: '1', role: 'assistant', content: '¡Hola Martín! Soy el Agente de NEXO HR. Hoy tienes el turno de 14:00 a 22:00. Recuerda fichar cuando llegues al local. ¿Qué necesitas consultar?' }
+        ]
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    }) as any;
 
-    const [messages, setMessages] = useState<Message[]>([
-        { role: "assistant", content: "¡Hola Martín! Soy el Agente de NEXO HR. Hoy tienes el turno de 14:00 a 22:00. Recuerda fichar cuando llegues al local. ¿Qué necesitas consultar?" }
-    ]);
+    const [customMessages, setCustomMessages] = useState<Record<string, CustomDataMessage>>({});
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -39,7 +43,7 @@ export function SkillOnboardingBot() {
         if (activeTab === "chat") {
             scrollToBottom();
         }
-    }, [messages, isThinking, activeTab]);
+    }, [messages, isLoading, activeTab]);
 
     const handleClockIn = () => {
         if (shiftState === "pending") {
@@ -49,61 +53,44 @@ export function SkillOnboardingBot() {
             setShiftState("clocked_in");
 
             // Background notification from the bot
-            setMessages(prev => [...prev, { role: "assistant", content: `⏱️ Marcaste entrada a las ${timeString}. Validado por geolocalización en sucursal Centro. ¡Buen turno!` }]);
+            append({ role: "assistant", content: `⏱️ Marcaste entrada a las ${timeString}. Validado por geolocalización en sucursal Centro. ¡Buen turno!` });
         } else if (shiftState === "clocked_in") {
             setShiftState("clocked_out");
-            setMessages(prev => [...prev, { role: "assistant", content: `🚪 Marcaste salida. Total del turno: 8h 05m. Tus horas extra fueron registradas automáticamente.` }]);
+            append({ role: "assistant", content: `🚪 Marcaste salida. Total del turno: 8h 05m. Tus horas extra fueron registradas automáticamente.` });
         }
     };
 
-    const handleSend = () => {
+    const handleSendAction = (e?: React.FormEvent) => {
+        e?.preventDefault();
         if (!input.trim() && !input.includes("[IMAGE]") && !input.includes("[SCHEDULE_REQ]")) return;
 
-        const userMsg = input;
+        let contentToSend = input;
+        let isAttach = false;
+        let cType: CustomDataMessage["attachmentType"] = undefined;
+        let cFile = "";
 
-        let newMessages: Message[] = [];
-
-        if (userMsg === "[IMAGE]") {
-            newMessages = [...messages, { role: "user", content: "Certificado_Medico.jpg", isAttachment: true, attachmentType: "image" }];
-        } else if (userMsg === "[SCHEDULE_REQ]") {
-            newMessages = [...messages, { role: "user", content: "¿Puedo cambiar mi turno del Viernes por el de Pedro?" }];
-        } else {
-            newMessages = [...messages, { role: "user", content: userMsg }];
+        if (input === "[IMAGE]") {
+            contentToSend = "Envío imagen adjunta: certificado_medico.jpg [IMAGE]";
+            isAttach = true;
+            cType = "image";
+            cFile = "Certificado_Medico.jpg";
+        } else if (input === "[SCHEDULE_REQ]") {
+            contentToSend = "¿Puedo cambiar mi turno del Viernes por el de Pedro? [SCHEDULE_REQ]";
         }
 
-        setMessages(newMessages);
+        const newId = Date.now().toString();
+
+        if (isAttach) {
+            setCustomMessages(prev => ({ ...prev, [newId]: { isAttachment: true, attachmentType: cType, filename: cFile } }));
+        }
+
+        append({
+            id: newId,
+            role: "user",
+            content: contentToSend
+        });
+
         setInput("");
-        setIsThinking(true);
-
-        setTimeout(() => {
-            let response: Message;
-            const lowerInput = userMsg.toLowerCase();
-
-            if (userMsg === "[IMAGE]" || lowerInput.includes("certificado") || lowerInput.includes("médico") || lowerInput.includes("justificativo")) {
-                response = {
-                    role: "assistant",
-                    content: "Analizando la imagen enviada... ✔️ Certificado médico válido detectado (Dr. Silva). He registrado tu ausencia médica para el turno de ayer. Tu liquidación se ajustará automáticamente según el artículo 14."
-                };
-            } else if (userMsg === "[SCHEDULE_REQ]" || lowerInput.includes("turno") || lowerInput.includes("horario") || lowerInput.includes("cambiar")) {
-                response = {
-                    role: "assistant",
-                    content: "He verificado el cuadrante. Pedro está disponible el Viernes en el turno mañana. He enviado una notificación a Pedro y al encargado para aprobar el cambio vía WhatsApp. Te avisaré ni bien confirmen."
-                };
-            } else if (lowerInput.includes("vacaciones") || lowerInput.includes("licencia")) {
-                response = {
-                    role: "assistant",
-                    content: "Las licencias ordinarias pendientes suman 14 días. ¿Quieres que reserve tu licencia del próximo mes coordinando con el departamento de liquidación?"
-                };
-            } else {
-                response = {
-                    role: "assistant",
-                    content: "Buscando en los manuales operativos... Encontré el protocolo para este caso puntual. ¿Quieres que te envíe un resumen rápido de los 3 pasos a seguir?"
-                };
-            }
-
-            setMessages([...newMessages, response]);
-            setIsThinking(false);
-        }, 1500);
     };
 
     return (
@@ -140,13 +127,13 @@ export function SkillOnboardingBot() {
                                 <LayoutDashboard className="w-4 h-4" /> Entra a &quot;Mi Portal&quot; y simula el fichaje de hoy.
                             </button>
                             <button
-                                onClick={() => { setActiveTab("chat"); setInput("[SCHEDULE_REQ]"); setTimeout(handleSend, 100); }}
+                                onClick={() => { setActiveTab("chat"); setInput("[SCHEDULE_REQ]"); setTimeout(() => handleSendAction(), 100); }}
                                 className={`flex items-center gap-2 px-4 py-2 hover:bg-white/10 border rounded-lg text-xs transition-colors ${activeTab === 'chat' ? 'bg-white/10 border-white/20 text-white' : 'border-white/5 text-white/50'}`}
                             >
                                 <Calendar className="w-4 h-4 text-accent" /> Negocia un cambio de turno con la IA.
                             </button>
                             <button
-                                onClick={() => { setActiveTab("chat"); setInput("[IMAGE]"); setTimeout(handleSend, 100); }}
+                                onClick={() => { setActiveTab("chat"); setInput("[IMAGE]"); setTimeout(() => handleSendAction(), 100); }}
                                 className={`flex items-center gap-2 px-4 py-2 hover:bg-white/10 border rounded-lg text-xs transition-colors ${activeTab === 'chat' ? 'bg-white/10 border-white/20 text-white' : 'border-white/5 text-white/50'}`}
                             >
                                 <Camera className="w-4 h-4 text-primary" /> Sube un justificativo médico de prueba.
@@ -290,24 +277,28 @@ export function SkillOnboardingBot() {
                         {/* TAB 2: HR CHAT BOT */}
                         <div className={`absolute inset-0 flex flex-col transition-all duration-300 ${activeTab === 'chat' ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full pointer-events-none'}`}>
                             <div className="p-4 flex-1 overflow-y-auto space-y-4 pt-6">
-                                {messages.map((msg, i) => (
-                                    <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                                        <div className={`max-w-[85%] rounded-2xl p-3.5 text-xs md:text-sm shadow-sm ${msg.role === "user"
-                                            ? "bg-primary text-black rounded-tr-sm"
-                                            : "bg-white/5 border border-white/10 text-white/80 rounded-tl-sm"
-                                            }`}>
-                                            {msg.isAttachment ? (
-                                                <div className="flex items-center gap-2 opacity-90">
-                                                    {msg.attachmentType === 'image' ? <Camera className="w-4 h-4" /> : <FileText className="w-4 h-4" />}
-                                                    <span className="font-mono text-[10px] font-bold tracking-tight">{msg.content}</span>
-                                                </div>
-                                            ) : (
-                                                <p className="leading-relaxed">{msg.content}</p>
-                                            )}
+                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                {messages.map((msg: any) => {
+                                    const cData = customMessages[msg.id];
+                                    return (
+                                        <div key={msg.id} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+                                            <div className={`max-w-[85%] rounded-2xl p-3.5 text-xs md:text-sm shadow-sm ${msg.role === "user"
+                                                ? "bg-primary text-black rounded-tr-sm"
+                                                : "bg-white/5 border border-white/10 text-white/80 rounded-tl-sm"
+                                                }`}>
+                                                {cData?.isAttachment ? (
+                                                    <div className="flex items-center gap-2 opacity-90">
+                                                        {cData.attachmentType === 'image' ? <Camera className="w-4 h-4" /> : <FileText className="w-4 h-4" />}
+                                                        <span className="font-mono text-[10px] font-bold tracking-tight">{cData.filename}</span>
+                                                    </div>
+                                                ) : (
+                                                    <p className="leading-relaxed">{msg.content}</p>
+                                                )}
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
-                                {isThinking && (
+                                    )
+                                })}
+                                {isLoading && (
                                     <div className="flex justify-start">
                                         <div className="bg-white/5 border border-white/10 rounded-2xl rounded-tl-sm p-3.5 flex items-center gap-1.5">
                                             <div className="w-1.5 h-1.5 rounded-full bg-primary/60 animate-bounce"></div>
@@ -320,32 +311,33 @@ export function SkillOnboardingBot() {
                             </div>
 
                             {/* Chat Input Area */}
-                            <div className="p-3 bg-black border-t border-white/5 backdrop-blur-md">
+                            <form onSubmit={handleSendAction} className="p-3 bg-black border-t border-white/5 backdrop-blur-md">
                                 <div className="flex gap-2 relative">
                                     <button
+                                        type="button"
                                         className="p-2.5 bg-white/5 border border-white/10 rounded-xl text-white/50 hover:text-white hover:bg-white/10 transition-colors"
-                                        onClick={() => { setInput("[IMAGE]"); setTimeout(handleSend, 100); }}
+                                        onClick={() => { setInput("[IMAGE]"); setTimeout(() => handleSendAction(), 100); }}
                                     >
                                         <Paperclip className="w-4 h-4" />
                                     </button>
                                     <input
                                         type="text"
                                         value={input}
-                                        onChange={(e) => setInput(e.target.value)}
-                                        onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                                        onChange={handleInputChange}
                                         placeholder="Pregunta o sube un justificativo..."
                                         className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-0 text-xs focus:outline-none focus:border-primary transition-colors text-white placeholder:text-white/30"
+                                        disabled={isLoading}
                                     />
                                     <Button
-                                        onClick={handleSend}
-                                        disabled={isThinking || !input.trim()}
+                                        type="submit"
+                                        disabled={isLoading || !input.trim()}
                                         size="icon"
                                         className="bg-primary hover:bg-primary/80 text-black shrink-0 rounded-xl w-10 h-10 shadow-lg"
                                     >
                                         <Send className="w-4 h-4 -ml-0.5" />
                                     </Button>
                                 </div>
-                            </div>
+                            </form>
                         </div>
 
                     </div>

@@ -32,7 +32,7 @@ export function Footer() {
                             onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
                             className="group flex items-center gap-4 bg-white text-black px-8 py-4 rounded-full font-black uppercase tracking-widest hover:bg-emerald-400 transition-colors duration-500"
                         >
-                            Agendar Llamada
+                            Empezar Hoy
                             <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform duration-300" />
                         </button>
                     </div>
