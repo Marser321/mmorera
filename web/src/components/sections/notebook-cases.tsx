@@ -2,37 +2,37 @@
 
 import { useRef } from "react";
 import { motion } from "framer-motion";
-import { BookOpen, FileSearch, GraduationCap, BrainCircuit, ArrowRight } from "lucide-react";
+import { ShoppingBag, Database, CalendarDays, BrainCircuit, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const cases = [
     {
         id: "case-1",
-        title: "Auditoría de Llamadas de Ventas",
-        category: "RAG & Análisis",
-        description: "Transformamos horas de grabaciones en insights estructurados. Extraé objeciones comunes, fricciones de compra y evalúa el SLA de tus cerradores en segundos usando NotebookLM.",
-        icon: FileSearch,
+        title: "Retail & E-commerce",
+        category: "Ventas On-Demand",
+        description: "Creación de tiendas web en días y despliegue de agentes SDR en WhatsApp que califican prospectos, responden dudas sobre stock y cierran ventas automáticamente 24/7.",
+        icon: ShoppingBag,
         color: "from-blue-500/20 to-cyan-500/5",
         iconColor: "text-blue-400",
         border: "border-blue-500/20"
     },
     {
         id: "case-2",
-        title: "Propuestas Comerciales B2B",
-        category: "Generación Documental",
-        description: "Alimentá a la IA con RFPs, briefs de clientes y tu portafolio histórico. Generá propuestas de 40 páginas, perfectamente referenciadas y alineadas al dolor exacto del cliente.",
-        icon: BookOpen,
+        title: "B2B & Servicios Corporativos",
+        category: "Modernización de CRMs",
+        description: "Modernización de CRMs legacy mediante capas API, permitiendo a los equipos de ventas acceder a análisis predictivos sin tener que migrar sus bases de datos históricas.",
+        icon: Database,
         color: "from-purple-500/20 to-fuchsia-500/5",
         iconColor: "text-purple-400",
         border: "border-purple-500/20"
     },
     {
         id: "case-3",
-        title: "Wiki Interna & Onboarding",
-        category: "Gestión del Conocimiento",
-        description: "¿Nuevos empleados? Centralizamos manuales, SOPs y procesos operativos en un asistente conversacional capaz de responder cualquier duda técnica citando la fuente exacta.",
-        icon: GraduationCap,
+        title: "Clínicas e Inmobiliarias",
+        category: "Soporte & Agendamiento",
+        description: "Empleados sintéticos que agendan citas, envían recordatorios multicanal y responden preguntas frecuentes procesando documentos PDF complejos en fracciones de segundo.",
+        icon: CalendarDays,
         color: "from-emerald-500/20 to-green-500/5",
         iconColor: "text-emerald-400",
         border: "border-emerald-500/20"
@@ -55,15 +55,15 @@ export function NotebookCases() {
                     <div className="lg:col-span-5 flex flex-col items-start">
                         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-zinc-300 text-xs font-bold uppercase tracking-widest mb-6">
                             <BrainCircuit className="w-4 h-4 text-primary" />
-                            Aplicaciones del Mundo Real
+                            Casos de Uso
                         </div>
 
                         <h2 className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 tracking-tight leading-[1.1]">
-                            Tu empresa ya tiene los datos. <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-400">Nosotros los hacemos hablar.</span>
+                            Ejemplos de <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-400">Transformación.</span>
                         </h2>
 
                         <p className="text-lg text-muted-foreground leading-relaxed font-medium mb-10 max-w-lg">
-                            Cruzamos tus grabaciones de ventas, propuestas y manuales con IA documental. El resultado: insights accionables en segundos, no semanas. Sin fricciones, sin curva de aprendizaje.
+                            Descubre cómo infraestructuras inteligentes y soluciones personalizadas están revolucionando industrias, adaptándose a las necesidades reales de cada negocio.
                         </p>
 
                         <div className="bg-white/5 border border-white/10 p-6 rounded-2xl backdrop-blur-md relative overflow-hidden group w-full max-w-md">

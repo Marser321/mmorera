@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/sections/navbar";
 import { HeroSection } from "@/components/sections/hero-section";
+import { PhilosophySection } from "@/components/sections/PhilosophySection";
 import { MetricsShowcase } from "@/components/sections/metrics-showcase";
 import { TrustedByStrip } from "@/components/sections/TrustedByStrip";
 import { NotebookCases } from "@/components/sections/notebook-cases";
@@ -9,11 +10,9 @@ import { ConversionEngine } from "@/components/sections/ConversionEngine";
 import { ProblemSolution } from "@/components/sections/problem-solution";
 import { ServicesCatalog } from "@/components/sections/services-catalog";
 import { Automations } from "@/components/sections/automations";
-import { ROICalculator } from "@/components/sections/roi-calculator";
 import { PricingSection } from "@/components/sections/pricing-section";
 import { PortfolioSection } from "@/components/sections/portfolio-section";
 import { WorkflowSection } from "@/components/sections/workflow-section";
-import { TestimonialsSection } from "@/components/sections/testimonials-section";
 import { ContactForm } from "@/components/sections/contact-form";
 import { ComparisonTable } from "@/components/sections/ComparisonTable";
 import { FAQSection } from "@/components/sections/FAQSection";
@@ -32,6 +31,7 @@ export default function HomePage() {
             <Navbar />
             <main id="contenido-principal">
                 <HeroSection />
+                <PhilosophySection />
                 <TrustedByStrip />
                 <MetricsShowcase />
                 <NotebookCases />
@@ -41,11 +41,9 @@ export default function HomePage() {
                 <ProblemSolution />
                 <ServicesCatalog />
                 <Automations />
-                <ROICalculator />
                 <PricingSection />
                 <PortfolioSection />
                 <WorkflowSection />
-                <TestimonialsSection />
                 <ComparisonTable />
                 <FAQSection />
                 <ContactForm />

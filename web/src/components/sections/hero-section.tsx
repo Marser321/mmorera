@@ -11,8 +11,8 @@ const loadFeatures = () =>
 
 const HERO_CONTENT = {
     badge: 'Resultados reales · ROI comprobable',
-    title: ['Tu competencia ya ', 'automatizó.', ' ¿Seguís perdiendo?'],
-    subtitle: 'Implementamos agentes IA que califican, nutren y cierran ventas 24/7. Tu equipo deja de perseguir y empieza a cerrar.',
+    title: ['La Empresa de Transición para tu ', 'Futuro Digital', ''],
+    subtitle: 'Fusionamos la tecnología de Inteligencia Artificial más agresiva del mundo con un enfoque profundamente humano. Transformamos operaciones lentas en sistemas de alta velocidad y rentabilidad, sin fricción, sin jerga intimidante y empoderando a tu fuerza laboral.',
 };
 
 

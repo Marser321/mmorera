@@ -4,7 +4,7 @@ import * as React from 'react';
 import { motion, useMotionValue, useMotionTemplate } from 'framer-motion';
 import { ServiceModal } from '@/components/shared/ServiceModal';
 import { Servicio } from '@/types';
-import { Layers, Monitor, Smartphone, Video, Share2, ChevronRight, ChevronLeft, ShoppingCart, Bookmark, Users } from 'lucide-react';
+import { Layers, Monitor, Smartphone, Video, Share2, ChevronRight, ChevronLeft, ShoppingCart, Bookmark, Users, Search } from 'lucide-react';
 import { MOCK_SERVICES } from '@/data/services';
 import { cn } from '@/lib/utils';
 
@@ -16,6 +16,7 @@ const iconMap: Record<string, React.ReactNode> = {
     Share2: <Share2 className="w-8 h-8" />,
     Smartphone: <Smartphone className="w-8 h-8" />,
     Users: <Users className="w-8 h-8" />,
+    Search: <Search className="w-8 h-8" />,
 };
 
 export function ServicesCatalog() {

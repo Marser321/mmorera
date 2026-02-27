@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import { Filter, FileText, BrainCircuit, Mail, Phone, Sparkles } from "lucide-react";
-import { SkillLeadQualifier } from "./SkillLeadQualifier";
-import { SkillProposalGenerator } from "./SkillProposalGenerator";
-import { SkillStrictRAG } from "./SkillStrictRAG";
-import { SkillColdOutbound } from "./SkillColdOutbound";
-import { SkillVoiceAgent } from "./SkillVoiceAgent";
-import { SkillOnboardingBot } from "./SkillOnboardingBot";
+import dynamic from "next/dynamic";
+
+const SkillLeadQualifier = dynamic(() => import("./SkillLeadQualifier").then((mod) => mod.SkillLeadQualifier));
+const SkillProposalGenerator = dynamic(() => import("./SkillProposalGenerator").then((mod) => mod.SkillProposalGenerator));
+const SkillStrictRAG = dynamic(() => import("./SkillStrictRAG").then((mod) => mod.SkillStrictRAG));
+const SkillColdOutbound = dynamic(() => import("./SkillColdOutbound").then((mod) => mod.SkillColdOutbound));
+const SkillVoiceAgent = dynamic(() => import("./SkillVoiceAgent").then((mod) => mod.SkillVoiceAgent));
+const SkillOnboardingBot = dynamic(() => import("./SkillOnboardingBot").then((mod) => mod.SkillOnboardingBot));
 import { Users } from "lucide-react";
 
 export function AILab() {

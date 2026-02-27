@@ -1,4 +1,4 @@
-import { Search, Rocket, RefreshCcw, ArrowRight } from "lucide-react";
+import { GraduationCap, ShieldCheck, HeartHandshake, ArrowRight } from "lucide-react";
 import { Container } from "@/components/ui/container";
 
 interface PasoWorkflow {
@@ -11,25 +11,25 @@ interface PasoWorkflow {
 
 const pasos: PasoWorkflow[] = [
     {
-        icono: Search,
+        icono: GraduationCap,
         numero: "01",
-        titulo: "Diagnóstico",
-        descripcion: "Entendemos tu operación actual y encontramos los puntos de mayor impacto.",
-        items: ["Mapa de procesos", "Auditoría de datos y tracking", "Backlog priorizado"],
+        titulo: "Capacitamos a tu equipo",
+        descripcion: "No reemplazamos a tu personal, le damos superpoderes.",
+        items: ["Talleres inmersivos", "Material de estudio a medida", "Adopción sin fricción"],
     },
     {
-        icono: Rocket,
+        icono: ShieldCheck,
         numero: "02",
-        titulo: "Sprint de Implementación",
-        descripcion: "Construimos e integramos los sistemas en 2–4 semanas con entregables claros.",
-        items: ["Automatizaciones + agentes", "QA + validaciones", "KPIs y dashboard"],
+        titulo: "Seguridad y Control",
+        descripcion: "Todas nuestras implementaciones cuentan con mecanismos de validación donde los humanos toman las decisiones de alto riesgo.",
+        items: ["Auditoría humana integrada", "Controles de calidad IA", "Privacidad por diseño"],
     },
     {
-        icono: RefreshCcw,
+        icono: HeartHandshake,
         numero: "03",
-        titulo: "Retainer & Escala",
-        descripcion: "Optimización continua con testing, nuevos casos de uso y reportes ejecutivos.",
-        items: ["Test y mejora continua", "Nuevos workflows", "Reportes ejecutivos"],
+        titulo: "Acompañamiento Continuo",
+        descripcion: "Te guiamos en cada etapa de la curva de aprendizaje tecnológico.",
+        items: ["Soporte dedicado", "Consultoría estratégica", "Optimización periódica"],
     },
 ];
 
@@ -45,16 +45,16 @@ export function WorkflowSection() {
                 <div className="text-center mb-16 md:mb-24 space-y-6 max-w-3xl">
                     <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-[10px] text-primary font-mono tracking-[0.3em] uppercase mx-auto">
                         <span className="w-1.5 h-1.5 rounded-full bg-primary mr-2" />
-                        Nuestro Proceso
+                        Nuestra Promesa
                     </div>
                     <h2
                         id="proceso-heading"
                         className="text-4xl md:text-5xl font-heading text-white tracking-tight"
                     >
-                        De diagnóstico a <span className="text-accent italic font-light">resultados</span> en semanas.
+                        El Enfoque <span className="text-accent italic font-light">Human-in-the-Loop</span>
                     </h2>
                     <p className="text-lg text-white/50 font-light leading-relaxed max-w-2xl mx-auto">
-                        Un modelo claro y predecible: sabés exactamente qué comprás, en cuánto tiempo y qué resultados vas a recibir.
+                        La tecnología por sí sola no salva empresas; la adopción correcta sí lo hace. En nuestra agencia, la IA acelera, pero la ingeniería y la supervisión humana mandan.
                     </p>
                 </div>
 
