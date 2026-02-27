@@ -62,7 +62,7 @@ export function SkillOnboardingBot() {
 
     const handleSendAction = (e?: React.FormEvent) => {
         e?.preventDefault();
-        if (!input.trim() && !input.includes("[IMAGE]") && !input.includes("[SCHEDULE_REQ]")) return;
+        if (!(input || "").trim() && !(input || "").includes("[IMAGE]") && !(input || "").includes("[SCHEDULE_REQ]")) return;
 
         let contentToSend = input;
         let isAttach = false;
@@ -330,7 +330,7 @@ export function SkillOnboardingBot() {
                                     />
                                     <Button
                                         type="submit"
-                                        disabled={isLoading || !input.trim()}
+                                        disabled={isLoading || !(input || "").trim()}
                                         size="icon"
                                         className="bg-primary hover:bg-primary/80 text-black shrink-0 rounded-xl w-10 h-10 shadow-lg"
                                     >
