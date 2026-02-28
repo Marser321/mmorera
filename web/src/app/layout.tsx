@@ -57,7 +57,7 @@ export default function RootLayout({
                             "image": "https://mmorera.com/og-image.png",
                             "@id": "https://mmorera.com",
                             "url": "https://mmorera.com",
-                            "telephone": "+58992323675",
+                            "telephone": "+598 092 323 675",
                             "priceRange": "$$$",
                             "address": {
                                 "@type": "PostalAddress",

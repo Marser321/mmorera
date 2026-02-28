@@ -195,10 +195,11 @@ function ProjectCard({ project }: { project: typeof PROJECTS[0] }) {
                                 </Button>
                             </DialogTrigger>
                             <DialogContent className="max-w-[95vw] w-[1400px] h-[90vh] md:h-[85vh] p-0 bg-neutral-950 border-white/10 flex flex-col overflow-hidden shadow-2xl">
-                                <div className="p-4 md:px-6 md:py-4 border-b border-white/5 bg-neutral-900/50 flex flex-col md:flex-row items-center justify-between gap-4 shrink-0">
-                                    <div>
-                                        <DialogTitle className="text-white text-lg font-bold flex items-center gap-2">
-                                            {project.title} <span className="bg-emerald-500/20 text-emerald-400 text-[10px] px-2 py-0.5 rounded border border-emerald-500/20 uppercase tracking-widest font-black">Live Demo</span>
+                                <div className="p-4 md:px-6 md:py-4 border-b border-white/5 bg-neutral-900/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shrink-0">
+                                    <div className="w-full md:w-auto overflow-hidden">
+                                        <DialogTitle className="text-white text-base md:text-lg font-bold flex flex-wrap items-center gap-2">
+                                            <span className="truncate max-w-[200px] md:max-w-none">{project.title}</span>
+                                            <span className="bg-emerald-500/20 text-emerald-400 text-[10px] px-2 py-0.5 rounded border border-emerald-500/20 uppercase tracking-widest font-black shrink-0">Live Demo</span>
                                         </DialogTitle>
                                         <DialogDescription className="text-white/40 text-xs mt-1 max-w-xl hidden md:block">
                                             Esta es una maqueta alojada en servidores de prueba. Tu sistema de producción usará infraestructura Edge de ultra baja latencia.
@@ -206,32 +207,32 @@ function ProjectCard({ project }: { project: typeof PROJECTS[0] }) {
                                     </div>
 
                                     {/* Controles de Dispositivo */}
-                                    <div className="flex items-center gap-1 bg-black/40 border border-white/10 p-1 rounded-lg">
+                                    <div className="flex items-center gap-1 bg-black/40 border border-white/10 p-1 rounded-lg self-end md:self-auto shrink-0 overflow-x-auto max-w-full">
                                         <button
                                             onClick={() => setDevice('desktop')}
-                                            className={cn("p-2 rounded-md transition-colors", device === 'desktop' ? "bg-white/10 text-white shadow-sm" : "text-white/40 hover:text-white")}
+                                            className={cn("p-2 rounded-md transition-colors shrink-0", device === 'desktop' ? "bg-white/10 text-white shadow-sm" : "text-white/40 hover:text-white")}
                                             title="Vista Escritorio"
                                         >
                                             <Monitor className="w-4 h-4" />
                                         </button>
                                         <button
                                             onClick={() => setDevice('tablet')}
-                                            className={cn("p-2 rounded-md transition-colors", device === 'tablet' ? "bg-white/10 text-white shadow-sm" : "text-white/40 hover:text-white")}
+                                            className={cn("p-2 rounded-md transition-colors shrink-0", device === 'tablet' ? "bg-white/10 text-white shadow-sm" : "text-white/40 hover:text-white")}
                                             title="Vista Tablet"
                                         >
                                             <Tablet className="w-4 h-4" />
                                         </button>
                                         <button
                                             onClick={() => setDevice('mobile')}
-                                            className={cn("p-2 rounded-md transition-colors", device === 'mobile' ? "bg-white/10 text-white shadow-sm" : "text-white/40 hover:text-white")}
+                                            className={cn("p-2 rounded-md transition-colors shrink-0", device === 'mobile' ? "bg-white/10 text-white shadow-sm" : "text-white/40 hover:text-white")}
                                             title="Vista Móvil"
                                         >
                                             <Smartphone className="w-4 h-4" />
                                         </button>
-                                        <div className="w-px h-5 bg-white/10 mx-2" />
+                                        <div className="w-px h-5 bg-white/10 mx-2 shrink-0" />
                                         <button
                                             onClick={handleFullscreen}
-                                            className="p-2 rounded-md text-white/40 hover:text-white transition-colors"
+                                            className="p-2 rounded-md text-white/40 hover:text-white transition-colors shrink-0"
                                             title="Pantalla Completa"
                                         >
                                             <Maximize2 className="w-4 h-4" />
@@ -250,10 +251,10 @@ function ProjectCard({ project }: { project: typeof PROJECTS[0] }) {
                                     <div
                                         ref={iframeContainerRef}
                                         className={cn(
-                                            "relative h-full transition-all duration-500 ease-in-out bg-white",
+                                            "relative h-full transition-all duration-500 ease-in-out bg-white mx-auto",
                                             device === 'desktop' ? "w-full" :
-                                                device === 'tablet' ? "w-[768px] border-x border-white/10 shadow-2xl" :
-                                                    "w-[375px] border-x border-white/10 shadow-2xl"
+                                                device === 'tablet' ? "w-full max-w-[768px] border-x border-white/10 shadow-2xl" :
+                                                    "w-full max-w-[375px] border-x border-white/10 shadow-2xl"
                                         )}
                                     >
                                         <iframe

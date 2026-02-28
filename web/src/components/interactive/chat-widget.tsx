@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
  * Reemplaza al antiguo widget de IA para priorizar contacto directo (Mobile-First y alta tasa de cierre).
  */
 export function ChatWidget() {
-    const waNumber = "58992323675"; // Número actualizado por el usuario
+    const waNumber = "59892323675"; // Número actualizado por el usuario
     const waMessage = "Hola! 👋 Vengo de la página web y me gustaría recibir más información.";
     const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(waMessage)}`;
 

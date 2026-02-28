@@ -38,7 +38,7 @@ export function ContactForm() {
             `*Prioridad:* ${interes}\n` +
             `*Detalles:* ${mensaje || 'Sin detalles adicionales'}`;
 
-        const waNumber = "58992323675";
+        const waNumber = "59892323675";
         const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(waMessage)}`;
 
         try {
