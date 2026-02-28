@@ -10,7 +10,6 @@ export const metadata = {
 export default async function SistemasPage() {
     // Aquí leeríamos el catálogo de sistemas desde contenido MDX si es necesario
     // o lo renderizaríamos directamente desde la BD InsForge.
-    await getMarkdownFile("brain.md");
 
     return (
         <>
