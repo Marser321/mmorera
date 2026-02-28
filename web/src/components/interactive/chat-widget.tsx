@@ -1,203 +1,38 @@
 "use client";
 
 import * as React from "react";
-import { MessageCircle, X, Send, Bot, User } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { useChat } from "@ai-sdk/react";
 
 /**
- * ChatWidget — burbuja interactiva de IA.
- * Usa Vercel AI SDK (useChat) para manejar el estado conversacional efímero.
+ * ChatWidget — Botón flotante de WhatsApp.
+ * Reemplaza al antiguo widget de IA para priorizar contacto directo (Mobile-First y alta tasa de cierre).
  */
 export function ChatWidget() {
-    const [abierto, setAbierto] = React.useState(false);
-    const scrollRef = React.useRef<HTMLDivElement>(null);
-    const inputRef = React.useRef<HTMLInputElement>(null);
+    const waNumber = "58992323675"; // Número actualizado por el usuario
+    const waMessage = "Hola! 👋 Vengo de la página web y me gustaría recibir más información.";
+    const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(waMessage)}`;
 
-    // Vercel AI SDK
-    // @ts-expect-error Types mismatch in AI SDK
-    const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
-        // @ts-expect-error Internal API path
-        api: '/api/chat',
-        // Mensaje inicial optimista, guardado en el cliente para dar contexto.
-        initialMessages: [
-            {
-                id: 'msg_1',
-                role: 'assistant',
-                content: "¡Hola! Soy NEXO. ¿Cómo te puedo ayudar hoy con potenciar tu negocio?",
-            }
-        ]
-    }) as { messages: { id?: string, role: string, content: string }[], input: string, handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void, handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void, isLoading: boolean };
-
-    // Auto-scroll al último mensaje
-    React.useEffect(() => {
-        if (scrollRef.current) {
-            scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-        }
-    }, [messages, isLoading]);
-
-    // Focus al input cuando se abre
-    React.useEffect(() => {
-        if (abierto && inputRef.current) {
-            inputRef.current.focus();
-        }
-    }, [abierto]);
-
-    // Usamos el id por defecto de useChat para los keys de los mensajes
     return (
-        <>
-            {/* Panel del Chat */}
-            <div
-                className={cn(
-                    "fixed bottom-20 right-4 z-50 w-[calc(100vw-2rem)] max-w-sm transition-all duration-300 origin-bottom-right",
-                    abierto
-                        ? "scale-100 opacity-100 pointer-events-auto"
-                        : "scale-95 opacity-0 pointer-events-none"
-                )}
-                role="dialog"
-                aria-label="Chat con asistente de IA"
-                aria-hidden={!abierto}
+        <a
+            href={waUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={cn(
+                "fixed bottom-4 right-4 z-50 size-14 rounded-full shadow-xl shadow-emerald-500/20 transition-all duration-300 hover:scale-110",
+                "bg-emerald-500 hover:bg-emerald-400 text-white flex items-center justify-center",
+                "animate-glow-pulse border border-emerald-400/50"
+            )}
+            aria-label="Contactar por WhatsApp"
+        >
+            {/* Ícono de WhatsApp (usando un SVG optimizado en lugar de lucide-react genérico para mejor reconocimiento) */}
+            <svg
+                viewBox="0 0 24 24"
+                className="w-7 h-7 fill-current"
+                xmlns="http://www.w3.org/2000/svg"
             >
-                <div className="glass rounded-2xl border border-border/30 shadow-2xl shadow-primary/10 overflow-hidden flex flex-col max-h-[70vh]">
-                    {/* Header */}
-                    <div className="flex items-center justify-between px-4 py-3 border-b border-border/20 bg-card/40">
-                        <div className="flex items-center gap-2">
-                            <div className="size-8 rounded-full bg-primary/15 flex items-center justify-center">
-                                <Bot className="size-4 text-primary" />
-                            </div>
-                            <div>
-                                <p className="text-sm font-semibold text-foreground">
-                                    NEXO AI
-                                </p>
-                                <p className="text-[0.65rem] text-muted-foreground flex gap-1 items-center">
-                                    <span className="relative flex h-2 w-2">
-                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                                        <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                                    </span>
-                                    En Línea
-                                </p>
-                            </div>
-                        </div>
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="size-8 hover:bg-white/5"
-                            onClick={() => setAbierto(false)}
-                            aria-label="Cerrar chat"
-                        >
-                            <X className="size-4" />
-                        </Button>
-                    </div>
-
-                    {/* Mensajes */}
-                    <div
-                        ref={scrollRef}
-                        className="flex-1 overflow-y-auto p-4 space-y-3 min-h-[250px] scroll-smooth"
-                    >
-                        {messages.map((msg: { id?: string, role: string, content: string }, index: number) => (
-                            <div
-                                key={msg.id || `chat-msg-${index}`}
-                                className={cn(
-                                    "flex gap-2 items-end",
-                                    msg.role === "user" && "flex-row-reverse"
-                                )}
-                            >
-                                <div
-                                    className={cn(
-                                        "size-6 rounded-full flex items-center justify-center shrink-0",
-                                        msg.role === "user"
-                                            ? "bg-secondary text-foreground"
-                                            : "bg-primary/15 text-primary"
-                                    )}
-                                    aria-hidden="true"
-                                >
-                                    {msg.role === "user" ? (
-                                        <User className="size-3" />
-                                    ) : (
-                                        <Bot className="size-3" />
-                                    )}
-                                </div>
-                                <div
-                                    className={cn(
-                                        "max-w-[85%] rounded-xl px-3 py-2 text-sm leading-relaxed whitespace-pre-wrap",
-                                        msg.role === "user"
-                                            ? "bg-primary text-primary-foreground rounded-br-sm"
-                                            : "bg-card/60 border border-white/5 text-foreground rounded-bl-sm"
-                                    )}
-                                >
-                                    {msg.content}
-                                </div>
-                            </div>
-                        ))}
-
-                        {/* Indicador "escribiendo..." si la API está respondiendo */}
-                        {isLoading && messages[messages.length - 1]?.role === "user" && (
-                            <div className="flex gap-2 items-end">
-                                <div
-                                    className="size-6 rounded-full bg-primary/15 flex items-center justify-center"
-                                    aria-hidden="true"
-                                >
-                                    <Bot className="size-3 text-primary" />
-                                </div>
-                                <div className="bg-card/60 border border-white/5 rounded-xl rounded-bl-sm px-3 py-2">
-                                    <div className="flex gap-1" aria-label="Escribiendo...">
-                                        <span className="size-1.5 rounded-full bg-muted-foreground animate-bounce [animation-delay:0ms]" />
-                                        <span className="size-1.5 rounded-full bg-muted-foreground animate-bounce [animation-delay:150ms]" />
-                                        <span className="size-1.5 rounded-full bg-muted-foreground animate-bounce [animation-delay:300ms]" />
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Input */}
-                    <form onSubmit={handleSubmit} className="border-t border-border/20 p-3 bg-card/20 backdrop-blur-md">
-                        <div className="flex gap-2 relative">
-                            <input
-                                ref={inputRef}
-                                type="text"
-                                value={input}
-                                onChange={handleInputChange}
-                                placeholder="Escribí tu mensaje..."
-                                className="flex-1 bg-background/50 border border-border/30 rounded-lg px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/50 transition-shadow"
-                                aria-label="Mensaje para el asistente"
-                                disabled={isLoading}
-                            />
-                            <Button
-                                type="submit"
-                                variant="default"
-                                size="icon"
-                                disabled={!(input || "").trim() || isLoading}
-                                aria-label="Enviar mensaje"
-                                className="shrink-0 h-[42px] w-[42px] transition-all hover:scale-105 active:scale-95 disabled:hover:scale-100"
-                            >
-                                <Send className="size-4" />
-                            </Button>
-                        </div>
-                        <p className="text-[10px] text-center text-muted-foreground/60 mt-2">NEXO AI puede cometer errores.</p>
-                    </form>
-                </div>
-            </div>
-
-            {/* Botón flotante */}
-            <Button
-                variant="default"
-                size="icon"
-                className={cn(
-                    "fixed bottom-4 right-4 z-50 size-14 rounded-full shadow-xl shadow-primary/20 transition-all duration-300 hover:scale-110",
-                    abierto ? "rotate-90 scale-100 shadow-none hover:rotate-90 hover:scale-95" : "animate-glow-pulse"
-                )}
-                onClick={() => setAbierto(!abierto)}
-                aria-label={abierto ? "Cerrar asistente IA" : "Abrir asistente IA"}
-            >
-                {abierto ? (
-                    <X className="size-6 transition-transform" />
-                ) : (
-                    <MessageCircle className="size-6" />
-                )}
-            </Button>
-        </>
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413" />
+            </svg>
+        </a>
     );
 }
 

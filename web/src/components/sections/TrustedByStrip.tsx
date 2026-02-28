@@ -97,7 +97,7 @@ const duplicatedLogos = [...techLogos, ...techLogos];
 
 export function TrustedByStrip() {
     return (
-        <section className="py-10 relative bg-black overflow-hidden border-y border-white/5">
+        <section className="py-10 relative bg-transparent overflow-hidden border-y border-white/5">
             {/* Label */}
             <div className="text-center mb-8">
                 <span className="text-[10px] font-mono uppercase tracking-[0.4em] text-white/25">

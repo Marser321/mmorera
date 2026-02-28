@@ -13,6 +13,7 @@
 | 2 | 2026-02-25 | 6.5 | 9 | 9 | — | — | Unificar estética Deep Space | 🔴 |
 | 3 | 2026-02-25 | 7.5 | 8.5 | 9 | 5 | 4 | Fix branding MMORE→NEXO + limpiar 9 archivos huérfanos | 🔴 |
 | 4 | 2026-02-27 | 9 | 9 | 9.5 | 7 | 5 | Copys magnéticos + SVG animations + 5 componentes nuevos | ✅ |
+| 5 | 2026-02-27 | 9.5 | 9 | 9.5 | 7 | 6.5 | Lazy load page.tsx + next/image (Pre-Launch Audit) | 🔴 |
 
 ---
 

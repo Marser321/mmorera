@@ -64,7 +64,7 @@ export function ProblemSolution() {
                                 <span className="text-red-600">Perdés un Cliente.</span>
                             </h2>
                             <p className="text-xl text-white/60 md:text-white/40 leading-relaxed max-w-lg font-light">
-                                El 78% de los leads B2B compra al primero que contesta. Mientras tu equipo agenda una llamada, tu competencia ya cerró la venta. ¿Cuántos clientes perdiste esta semana?
+                                El mercado digital no perdona. Tu competencia capta la atención con mejor marketing y cierra ventas con sistemas más rápidos. Mientras tu equipo agenda una llamada, ellos ya facturaron. ¿Cuántos clientes perdiste esta semana?
                             </p>
                         </div>
 
@@ -111,16 +111,16 @@ export function ProblemSolution() {
                                 style={isMobile ? {} : { opacity: solTitleOpacity, y: solTitleY }}
                                 className="text-5xl md:text-[6rem] font-bold tracking-tight text-white leading-tight md:leading-[0.85]"
                             >
-                                Tu Equipo de Ventas <br />
+                                Tu Ecosistema Digital <br />
                                 <span className="text-transparent bg-clip-text bg-gradient-to-br from-emerald-400 via-white to-white/40">
-                                    que Nunca Duerme.
+                                    que Escala tus Ventas.
                                 </span>
                             </motion.h2>
                             <motion.p
                                 style={isMobile ? {} : { opacity: solTitleOpacity, y: solTitleY }}
                                 className="text-xl text-white/70 md:text-white/50 leading-relaxed max-w-lg font-light"
                             >
-                                Desplegamos un escuadrón de agentes IA que responde en &lt;30 segundos, califica al instante y agenda citas en tu calendario. Sin romper tu nómina. Sin reuniones de alineamiento.
+                                Fusionamos campañas de marketing agresivas, desarrollo web premium y agentes IA que responden en segundos. Captamos la atención y no dejamos escapar ni un solo lead. Sin fricción.
                             </motion.p>
 
                             <motion.div style={isMobile ? {} : { opacity: solBtnOpacity, y: solBtnY }}>
@@ -128,7 +128,7 @@ export function ProblemSolution() {
                                     onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
                                     className="bg-emerald-500 hover:bg-white text-black font-black rounded-full px-10 py-5 text-xl group transition-all duration-500 w-full md:w-auto flex items-center justify-center"
                                 >
-                                    ACTIVAR MI INFRAESTRUCTURA IA
+                                    ACTIVAR MI ECOSISTEMA DIGITAL
                                     <ArrowRight className="ml-3 w-6 h-6 group-hover:translate-x-2 transition-transform" />
                                 </button>
                             </motion.div>

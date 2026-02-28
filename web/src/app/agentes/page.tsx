@@ -3,7 +3,7 @@ import { Footer } from "@/components/sections/footer";
 import { WorkflowDiagram } from "@/components/interactive/workflow-diagram";
 
 export const metadata = {
-    title: "Agentes y Demos | NEXO AI",
+    title: "Agentes y Demos | MMorera SME",
     description: "Demos interactivas y flujos de trabajo de nuestros agentes IA.",
 };
 

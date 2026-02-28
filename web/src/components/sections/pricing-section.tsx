@@ -236,7 +236,7 @@ export function PricingSection() {
     const maxSavings = Math.round(PLANS[2].basePrice * DISCOUNTS[billing] * BILLING_LABELS[billing].months);
 
     return (
-        <section id="pricing" className="py-32 bg-background relative overflow-hidden">
+        <section id="pricing" className="py-32 bg-transparent relative overflow-hidden">
             {/* Background Effects Premium */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[600px] bg-blue-500/[0.03] rounded-full blur-[160px] pointer-events-none" />
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-violet-500/[0.02] rounded-full blur-[120px] pointer-events-none" />

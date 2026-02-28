@@ -10,9 +10,9 @@ const loadFeatures = () =>
     import('framer-motion').then((res) => res.domAnimation);
 
 const HERO_CONTENT = {
-    badge: 'Resultados reales · ROI comprobable',
-    title: ['La Empresa de Transición para tu ', 'Futuro Digital', ''],
-    subtitle: 'Fusionamos la tecnología de Inteligencia Artificial más agresiva del mundo con un enfoque profundamente humano. Transformamos operaciones lentas en sistemas de alta velocidad y rentabilidad, sin fricción, sin jerga intimidante y empoderando a tu fuerza laboral.',
+    badge: 'Marketing Digital · Desarrollo · Automatización IA',
+    title: ['Tu Agencia Integral de ', 'Crecimiento & IA', ''],
+    subtitle: 'Potenciamos tu captación de clientes fusionando marketing digital de alto nivel, desarrollo web y automatizaciones con Inteligencia Artificial. Transformamos operaciones lentas en máquinas de ventas y rentabilidad, sin fricción.',
 };
 
 

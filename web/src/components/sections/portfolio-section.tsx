@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { AnimatedCard } from '@/components/shared/AnimatedCard';
@@ -50,11 +51,11 @@ const PROJECTS = [
     },
     {
         id: 5,
-        title: 'Booking Clínico',
-        category: 'Clínicas',
-        desc: 'Sistema de reservas con validación de conflictos. Evita sobreturnos y automatiza recordatorios.',
+        title: 'Booking Barbería',
+        category: 'Estética',
+        desc: 'Sistema de agendamiento visual para salones y barberías con cobro de señas y recordatorios automáticos.',
         metric: '100% Aut.',
-        color: 'from-emerald-500/20',
+        color: 'from-orange-500/20',
         iframeUrl: 'https://nb-oa7mhumgz-marios-projects-4a53e443.vercel.app/reservar',
         imageUrls: ['/portfolio/booking-clinico.png']
     },
@@ -290,10 +291,13 @@ function ProjectCard({ project }: { project: typeof PROJECTS[0] }) {
                                 <div className="flex-1 w-full overflow-y-auto p-4 md:p-12 pb-32 space-y-8 md:space-y-16">
                                     {project.imageUrls?.map((img, idx) => (
                                         <div key={idx} className="w-full flex justify-center">
-                                            <img
+                                            <Image
                                                 src={img}
                                                 alt={`${project.title} screenshot ${idx + 1}`}
-                                                className="max-w-full h-auto object-contain rounded-xl shadow-[0_0_80px_rgba(0,0,0,0.6)] border border-white/10"
+                                                width={1200}
+                                                height={800}
+                                                sizes="(max-width: 768px) 100vw, 1200px"
+                                                className="w-full h-auto object-contain rounded-xl shadow-[0_0_80px_rgba(0,0,0,0.6)] border border-white/10"
                                             />
                                         </div>
                                     ))}
@@ -325,7 +329,7 @@ export function PortfolioSection() {
         : PROJECTS.filter(p => p.category === activeCategory);
 
     return (
-        <section id="portfolio" className="py-24 md:py-32 bg-background relative overflow-hidden">
+        <section id="portfolio" className="py-24 md:py-32 bg-transparent relative overflow-hidden">
             {/* Background Glows */}
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-600/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
             <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-600/5 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/2 pointer-events-none" />

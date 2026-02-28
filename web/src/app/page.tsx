@@ -1,25 +1,23 @@
 import { Navbar } from "@/components/sections/navbar";
 import { HeroSection } from "@/components/sections/hero-section";
-import { PhilosophySection } from "@/components/sections/PhilosophySection";
-import { MetricsShowcase } from "@/components/sections/metrics-showcase";
-import { TrustedByStrip } from "@/components/sections/TrustedByStrip";
-import { NotebookCases } from "@/components/sections/notebook-cases";
-import { AuditFunnel } from "@/components/sections/AuditFunnel";
-import { AILab } from "@/components/sections/AILab";
-import { ConversionEngine } from "@/components/sections/ConversionEngine";
-import { ProblemSolution } from "@/components/sections/problem-solution";
-import { ServicesCatalog } from "@/components/sections/services-catalog";
-import { Automations } from "@/components/sections/automations";
-import { PricingSection } from "@/components/sections/pricing-section";
-import { PortfolioSection } from "@/components/sections/portfolio-section";
-import { WorkflowSection } from "@/components/sections/workflow-section";
-import { ContactForm } from "@/components/sections/contact-form";
-import { ComparisonTable } from "@/components/sections/ComparisonTable";
-import { FAQSection } from "@/components/sections/FAQSection";
-import { Footer } from "@/components/sections/footer";
-import { ChatWidgetLoader } from "@/components/interactive/chat-widget-loader";
+import dynamic from 'next/dynamic';
 
-
+const PhilosophySection = dynamic(() => import('@/components/sections/PhilosophySection').then(mod => mod.PhilosophySection));
+const MetricsShowcase = dynamic(() => import('@/components/sections/metrics-showcase').then(mod => mod.MetricsShowcase));
+const TrustedByStrip = dynamic(() => import('@/components/sections/TrustedByStrip').then(mod => mod.TrustedByStrip));
+const NotebookCases = dynamic(() => import('@/components/sections/notebook-cases').then(mod => mod.NotebookCases));
+const AuditFunnel = dynamic(() => import('@/components/sections/AuditFunnel').then(mod => mod.AuditFunnel));
+const AutonomousEcosystemBanner = dynamic(() => import('@/components/sections/AutonomousEcosystemBanner').then(mod => mod.AutonomousEcosystemBanner));
+const ProblemSolution = dynamic(() => import('@/components/sections/problem-solution').then(mod => mod.ProblemSolution));
+const ServicesCatalog = dynamic(() => import('@/components/sections/services-catalog').then(mod => mod.ServicesCatalog));
+const PricingSection = dynamic(() => import('@/components/sections/pricing-section').then(mod => mod.PricingSection));
+const PortfolioSection = dynamic(() => import('@/components/sections/portfolio-section').then(mod => mod.PortfolioSection));
+const WorkflowSection = dynamic(() => import('@/components/sections/workflow-section').then(mod => mod.WorkflowSection));
+const ContactForm = dynamic(() => import('@/components/sections/contact-form').then(mod => mod.ContactForm));
+const FAQSection = dynamic(() => import('@/components/sections/FAQSection').then(mod => mod.FAQSection));
+const Footer = dynamic(() => import('@/components/sections/footer').then(mod => mod.Footer));
+const ChatWidgetLoader = dynamic(() => import('@/components/interactive/chat-widget-loader').then(mod => mod.ChatWidgetLoader));
+const KnowledgeCenter = dynamic(() => import('@/components/sections/knowledge-center').then(mod => mod.KnowledgeCenter));
 /**
  * Página principal — Landing Page fusionada "Deep Space" + "Socialmedia".
  * Combina las mejores secciones de ambos sitios en un flujo de conversión óptimo.
@@ -36,15 +34,13 @@ export default function HomePage() {
                 <MetricsShowcase />
                 <NotebookCases />
                 <AuditFunnel />
-                <AILab />
-                <ConversionEngine />
+                <AutonomousEcosystemBanner />
                 <ProblemSolution />
                 <ServicesCatalog />
-                <Automations />
                 <PricingSection />
                 <PortfolioSection />
                 <WorkflowSection />
-                <ComparisonTable />
+                <KnowledgeCenter />
                 <FAQSection />
                 <ContactForm />
             </main>

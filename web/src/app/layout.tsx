@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { GlobalBackground } from "@/components/shared/GlobalBackground";
 
 const inter = Inter({
     subsets: ["latin"],
@@ -23,23 +24,18 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-    title: "NEXO | Infraestructura de Conversión B2B con IA — Más ventas, menos operación",
-    description:
-        "Sistemas de automatización y agentes de IA para marketing B2B. Aumentá tu productividad y ventas sin aumentar tu plantilla. Auditoría de IA gratuita.",
-    keywords: [
-        "automatización marketing",
-        "IA marketing B2B",
-        "agencia automatizaciones",
-        "lead generation",
-        "CRM automatizado",
-    ],
-    authors: [{ name: "NEXO Digital Agency" }],
+    title: "MMorera SME | Infraestructura de Conversión B2B con IA — Más ventas, menos operación",
+    description: "La agencia de Mario Morera especializada en transformar operaciones lentas en sistemas de alta velocidad mediante Inteligencia Artificial agresiva y humana.",
+    keywords: ["IA", "Automatización", "Next.js", "B2B", "Conversión", "Mario Morera", "MMorera SME"],
+    authors: [{ name: "Mario Morera", url: "https://mmorera.com" }],
+    creator: "Mario Morera",
     openGraph: {
-        title: "NEXO | Infraestructura de Conversión B2B con IA",
-        description:
-            "Sistemas de automatización y agentes de IA para marketing B2B. Infraestructura de conversión + capacitación. Auditoría gratuita.",
         type: "website",
         locale: "es_UY",
+        url: "https://mmorera.com",
+        title: "MMorera SME | Infraestructura de Conversión B2B con IA",
+        description: "Construimos Sistemas Operativos Inteligentes que se adaptan a tu empresa.",
+        siteName: "MMorera SME",
     },
 };
 
@@ -50,6 +46,28 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="es" className={`dark ${inter.variable} ${playfair.variable} ${jetbrains.variable}`}>
+            <head>
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{
+                        __html: JSON.stringify({
+                            "@context": "https://schema.org",
+                            "@type": "ProfessionalService",
+                            "name": "MMorera SME",
+                            "image": "https://mmorera.com/og-image.png",
+                            "@id": "https://mmorera.com",
+                            "url": "https://mmorera.com",
+                            "telephone": "+58992323675",
+                            "priceRange": "$$$",
+                            "address": {
+                                "@type": "PostalAddress",
+                                "addressCountry": "UY"
+                            },
+                            "description": "Tu Agencia Integral de Crecimiento & IA. Transformamos operaciones lentas en máquinas de ventas."
+                        })
+                    }}
+                />
+            </head>
             <body className="min-h-screen font-sans antialiased bg-background text-foreground">
                 {/* Skip to content — WCAG 2.4.1 */}
                 <a
@@ -58,7 +76,10 @@ export default function RootLayout({
                 >
                     Saltar al contenido principal
                 </a>
-                {children}
+                <GlobalBackground />
+                <div className="relative z-10 flex flex-col min-h-screen">
+                    {children}
+                </div>
             </body>
         </html>
     );

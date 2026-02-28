@@ -3,7 +3,7 @@ import { Navbar } from "@/components/sections/navbar";
 import { Footer } from "@/components/sections/footer";
 
 export const metadata = {
-    title: "Sistemas | NEXO AI",
+    title: "Sistemas | MMorera SME",
     description: "Catálogo de sistemas operativos impulsados por IA.",
 };
 

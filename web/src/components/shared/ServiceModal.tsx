@@ -123,6 +123,12 @@ export function ServiceModal({ isOpen, onClose, service }: ServiceModalProps) {
                             Cerrar
                         </Button>
                         <Button
+                            onClick={() => {
+                                onClose();
+                                setTimeout(() => {
+                                    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+                                }, 300);
+                            }}
                             className={cn(
                                 "w-full md:w-auto px-8 py-6 text-lg font-bold bg-gradient-to-r text-white border-0 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl relative overflow-hidden group",
                                 theme.gradient,

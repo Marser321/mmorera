@@ -3,8 +3,11 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Menu, Rocket, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+
+import { LogoMM } from '@/components/shared/LogoMM';
 
 const navItems = [
     { name: 'Soluciones', href: '#servicios' },
@@ -16,6 +19,28 @@ const navItems = [
 export function Navbar() {
     const [isScrolled, setIsScrolled] = React.useState(false);
     const [mobileOpen, setMobileOpen] = React.useState(false);
+    const [textIndex, setTextIndex] = React.useState(0);
+    const subtitleTexts = [
+        "SME AGENCY",
+        "SOCIAL MEDIA EXPERT",
+        "MARKETING DIGITAL",
+        "DESARROLLO WEB",
+        "FOTOGRAFÍA",
+        "EDICIÓN DE VIDEO",
+        "INTELIGENCIA ARTIFICIAL",
+        "AUDITORÍA B2B",
+        "FRONTEND",
+        "CRM & AUTOMATIZACIONES",
+        "ECOSISTEMAS E-COMMERCE",
+        "GROWTH PARTNER"
+    ];
+
+    React.useEffect(() => {
+        const interval = setInterval(() => {
+            setTextIndex((prev) => (prev + 1) % subtitleTexts.length);
+        }, 3500);
+        return () => clearInterval(interval);
+    }, []);
 
     React.useEffect(() => {
         const observer = new IntersectionObserver(([entry]) => {
@@ -39,14 +64,30 @@ export function Navbar() {
                 )}
             >
                 <div className="container mx-auto px-4 flex items-center justify-between">
-                    {/* Logo */}
-                    <Link href="/" className="flex items-center gap-2 group">
+                    {/* Logo MMorera SME */}
+                    <Link href="/" className="flex items-center gap-3 group">
                         <div className="relative flex items-center justify-center">
-                            <div className="absolute inset-0 bg-gradient-to-tr from-violet-600 to-blue-500 blur-lg opacity-40 group-hover:opacity-60 transition-opacity" />
-                            <span className="relative text-2xl font-black tracking-tighter text-white">
-                                NEXO
-                                <span className="text-violet-500">.</span>
+                            <div className="absolute inset-0 bg-primary/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <LogoMM className="w-10 h-10 text-white" />
+                        </div>
+                        <div className="flex flex-col -space-y-1">
+                            <span className="text-xl font-black tracking-tighter text-white">
+                                MMorera
                             </span>
+                            <div className="h-[14px] relative overflow-hidden min-w-[180px] mt-0.5">
+                                <AnimatePresence mode="popLayout">
+                                    <motion.span
+                                        key={textIndex}
+                                        initial={{ y: 15, opacity: 0 }}
+                                        animate={{ y: 0, opacity: 1 }}
+                                        exit={{ y: -15, opacity: 0 }}
+                                        transition={{ duration: 0.5, ease: "backOut" }}
+                                        className="text-[9px] font-bold tracking-[0.2em] text-primary uppercase absolute left-0 whitespace-nowrap"
+                                    >
+                                        {subtitleTexts[textIndex]}
+                                    </motion.span>
+                                </AnimatePresence>
+                            </div>
                         </div>
                     </Link>
 

@@ -28,7 +28,7 @@ export function SkillOnboardingBot() {
         // @ts-expect-error El SDK inferido no reconoce api, pero es válido en tiempo de ejecución
         api: '/api/chat-hr',
         initialMessages: [
-            { id: '1', role: 'assistant', content: '¡Hola Martín! Soy el Agente de NEXO HR. Hoy tienes el turno de 14:00 a 22:00. Recuerda fichar cuando llegues al local. ¿Qué necesitas consultar?' }
+            { id: '1', role: 'assistant', content: '¡Hola Martín! Soy el Agente de MMorera HR. Hoy tienes el turno de 14:00 a 22:00. Recuerda fichar cuando llegues al local. ¿Qué necesitas consultar?' }
         ]
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }) as any;

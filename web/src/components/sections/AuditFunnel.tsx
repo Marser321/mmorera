@@ -5,7 +5,7 @@ import { ArrowRight, BarChart3, Clock, CheckCircle2, Activity } from "lucide-rea
 
 export function AuditFunnel() {
     return (
-        <section id="auditoria" className="py-20 md:py-32 relative overflow-hidden bg-background border-t border-white/5">
+        <section id="auditoria" className="py-20 md:py-32 relative overflow-hidden bg-transparent border-t border-white/5">
             {/* Background elements */}
             <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay pointer-events-none z-0"></div>
 

@@ -3,7 +3,7 @@ import { Navbar } from "@/components/sections/navbar";
 import { Footer } from "@/components/sections/footer";
 
 export const metadata = {
-    title: "Auditoría de IA | NEXO AI",
+    title: "Auditoría de IA | MMorera SME",
     description: "Agenda tu auditoría de IA y obtén un blueprint de sistema recomendado.",
 };
 

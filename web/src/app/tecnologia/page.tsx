@@ -5,7 +5,7 @@ import { ArrowLeft, Beaker } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 export const metadata = {
-    title: "Laboratorio Técnico | NEXO",
+    title: "Laboratorio Técnico | MMorera SME",
     description: "Desglose técnico de la arquitectura de agentes, flujos, LLMs y sistemas subyacentes.",
 };
 

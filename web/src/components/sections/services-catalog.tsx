@@ -47,7 +47,7 @@ export function ServicesCatalog() {
     const scrollRight = () => { scrollRef.current?.scrollBy({ left: 400, behavior: 'smooth' }); };
 
     return (
-        <section id="servicios" className="py-24 bg-background relative overflow-hidden min-h-screen flex flex-col pt-12 z-20">
+        <section id="servicios" className="py-24 bg-transparent relative overflow-hidden min-h-screen flex flex-col pt-12 z-20">
             <div className="absolute inset-0">
                 <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px]" />
                 <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-accent/10 rounded-full blur-[120px]" />
@@ -61,13 +61,13 @@ export function ServicesCatalog() {
                     className="text-center max-w-3xl mx-auto"
                 >
                     <div className="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wider text-primary uppercase bg-primary/10 rounded-full border border-primary/20">
-                        Nuestras Capacidades
+                        Nuestros Pilares
                     </div>
                     <h2 className="text-4xl md:text-7xl font-heading text-white mb-6 tracking-tighter uppercase relative z-10">
-                        ecosistema <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-accent to-primary animate-gradient-x bg-[length:200%_auto]">digital</span>
+                        soluciones <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-accent to-primary animate-gradient-x bg-[length:200%_auto]">integrales</span>
                     </h2>
                     <p className="text-xl text-white/60 font-light leading-relaxed max-w-2xl mx-auto">
-                        No vendemos &quot;consultoría&quot;. Desplegamos módulos que generan resultados desde el día 1.
+                        Agencia Full-Stack: Marketing, Desarrollo y Sistemas de IA que generan ROI desde el día 1.
                     </p>
                 </motion.div>
             </div>

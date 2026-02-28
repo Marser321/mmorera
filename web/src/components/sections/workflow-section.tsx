@@ -37,7 +37,7 @@ export function WorkflowSection() {
     return (
         <section
             id="proceso"
-            className="py-24 sm:py-32 relative bg-[#0A0A0A]"
+            className="py-24 sm:py-32 relative bg-transparent"
             aria-labelledby="proceso-heading"
         >
             <Container className="relative z-10 flex flex-col items-center">
@@ -54,7 +54,7 @@ export function WorkflowSection() {
                         El Enfoque <span className="text-accent italic font-light">Human-in-the-Loop</span>
                     </h2>
                     <p className="text-lg text-white/50 font-light leading-relaxed max-w-2xl mx-auto">
-                        La tecnología por sí sola no salva empresas; la adopción correcta sí lo hace. En nuestra agencia, la IA acelera, pero la ingeniería y la supervisión humana mandan.
+                        El marketing atrae, la web convierte y la IA escala. En nuestra agencia fusionamos creatividad humana e ingeniería tecnológica para un crecimiento sin límites.
                     </p>
                 </div>
 
