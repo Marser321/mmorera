@@ -40,12 +40,12 @@ const PROJECTS = [
     },
     {
         id: 4,
-        title: 'Real Estate Brown',
+        title: 'Directorio Inmobiliario',
         category: 'Real Estate',
-        desc: 'Sistema avanzado de bienes raíces con cotizador integrado y recorridos virtuales.',
+        desc: 'Directorio avanzado de bienes raíces con cotizador integrado y listados de propiedades.',
         metric: '10k+ Visitas',
         color: 'from-amber-500/20',
-        iframeUrl: 'https://realstate2-brown.vercel.app/',
+        iframeUrl: 'https://directorio-inmobiliarias-ten.vercel.app/',
         imageUrls: ['/portfolio/realstate-brown.png']
     },
     {
@@ -60,12 +60,12 @@ const PROJECTS = [
     },
     {
         id: 6,
-        title: 'Henry Lasa',
+        title: 'Carpintería Lasa',
         category: 'Agencias',
-        desc: 'Portfolio personal y servicios de consultoría digital de alto nivel.',
+        desc: 'Portfolio personal e inmersivo para presentación de trabajos de carpintería de alto nivel.',
         metric: 'Lead Magnet',
         color: 'from-zinc-500/20',
-        iframeUrl: 'https://henrylasa-n4sx.vercel.app/',
+        iframeUrl: 'https://jenrylasa.vercel.app/',
         imageUrls: ['/portfolio/henrylasa.png']
     },
     {
