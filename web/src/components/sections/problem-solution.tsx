@@ -41,15 +41,15 @@ export function ProblemSolution() {
     const solBtnOpacity = useTransform(scrollYProgress, [0.4, 0.6, 0.9], [0, 1, 1]);
 
     return (
-        <div ref={containerRef} className="relative w-full h-[160dvh] bg-[#022c22] mb-[-1px]">
-            <div className="sticky top-0 h-[100dvh] w-full overflow-hidden">
+        <div ref={containerRef} className="relative w-full md:h-[160dvh] bg-[#022c22] mb-[-1px]">
+            <div className="relative md:sticky md:top-0 md:h-[100dvh] w-full overflow-hidden flex flex-col md:block">
 
                 {/* CAPA A: PROBLEMA (Rojo) */}
                 <motion.div
-                    style={isMobile ? { opacity: mobileOpacityRed } : {}}
-                    className="absolute inset-0 z-0 bg-gradient-to-b from-[#1a0505] to-[#0A0000] flex items-center justify-center p-4 md:p-8 min-h-[100dvh] md:min-h-0"
+                    style={isMobile ? {} : {}}
+                    className="relative md:absolute inset-0 z-0 bg-gradient-to-b from-[#1a0505] to-[#0A0000] flex items-center justify-center p-4 md:p-8 min-h-[100dvh] md:min-h-0"
                 >
-                    <div className="container mx-auto grid lg:grid-cols-2 gap-8 md:gap-12 items-center relative z-10 w-full overflow-hidden pt-10 md:pt-0">
+                    <div className="container mx-auto grid lg:grid-cols-2 gap-8 md:gap-12 items-center relative z-10 w-full pt-10 md:pt-0">
                         <div className="space-y-6 md:space-y-8 flex flex-col justify-center max-w-full">
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
@@ -78,10 +78,7 @@ export function ProblemSolution() {
                 <motion.div
                     style={isMobile ? {
                         clipPath: 'none',
-                        opacity: mobileOpacityGreen,
-                        scale: mobileScaleGreen,
-                        position: 'absolute' as const,
-                        top: 0, left: 0, right: 0, bottom: 0,
+                        position: 'relative' as const,
                     } : {
                         clipPath: revealClipPath,
                         position: 'absolute' as const,
@@ -99,7 +96,7 @@ export function ProblemSolution() {
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#064e3b_0%,#022c22_100%)]" />
                     <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent" />
 
-                    <div className="container mx-auto grid lg:grid-cols-2 gap-6 md:gap-12 items-center relative z-20 w-full overflow-hidden">
+                    <div className="container mx-auto grid lg:grid-cols-2 gap-6 md:gap-12 items-center relative z-20 w-full">
                         <div className="space-y-5 md:space-y-8 flex flex-col justify-center h-full">
                             <motion.div
                                 style={isMobile ? {} : { opacity: solTitleOpacity, y: solTitleY }}
