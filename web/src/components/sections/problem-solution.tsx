@@ -133,7 +133,7 @@ export function ProblemSolution() {
                         </div>
 
                         {/* System Pulse Card */}
-                        <div className="relative mt-8 lg:mt-0 w-full max-w-[340px] sm:max-w-md mx-auto hidden sm:block">
+                        <div className="relative mt-8 lg:mt-0 w-full max-w-[340px] sm:max-w-md mx-auto block">
                             <div className="absolute -inset-10 bg-emerald-500/20 blur-[120px] rounded-full animate-pulse" />
                             <SystemPulseCard />
                         </div>
@@ -174,7 +174,7 @@ function ChaosGroup({ isMobile }: { isMobile: boolean }) {
 
 function SystemPulseCard() {
     return (
-        <div className="relative w-full max-w-md bg-[#0A0A0A]/80 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] p-10 shadow-2xl overflow-hidden group mx-auto">
+        <div className="relative w-full max-w-md bg-[#0A0A0A]/80 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] p-6 md:p-10 shadow-2xl overflow-hidden group mx-auto">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent opacity-50" />
 
             <div className="flex items-center justify-between mb-10 pb-6 border-b border-white/5">
