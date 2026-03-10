@@ -199,7 +199,7 @@ function ProjectCard({ project }: { project: typeof PROJECTS[0] }) {
                         {project.desc}
                     </p>
 
-                    <div className="flex flex-wrap items-center gap-3 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0 relative z-20">
+                    <div className="flex flex-wrap items-center gap-3 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all duration-500 lg:translate-y-4 lg:group-hover:translate-y-0 relative z-20">
 
                         {/* Modal Demo Interactiva */}
                         <Dialog>

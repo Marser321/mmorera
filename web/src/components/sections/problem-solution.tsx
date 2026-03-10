@@ -41,34 +41,34 @@ export function ProblemSolution() {
     const solBtnOpacity = useTransform(scrollYProgress, [0.4, 0.6, 0.9], [0, 1, 1]);
 
     return (
-        <div ref={containerRef} className="relative w-full md:h-[160dvh] bg-[#022c22] mb-[-1px]">
-            <div className="relative md:sticky md:top-0 md:h-[100dvh] w-full overflow-hidden">
+        <div ref={containerRef} className="relative w-full h-[160dvh] bg-[#022c22] mb-[-1px]">
+            <div className="sticky top-0 h-[100dvh] w-full overflow-hidden">
 
                 {/* CAPA A: PROBLEMA (Rojo) */}
                 <motion.div
                     style={isMobile ? { opacity: mobileOpacityRed } : {}}
-                    className="relative md:absolute inset-0 z-0 bg-gradient-to-b from-[#1a0505] to-[#0A0000] flex items-center justify-center p-4 md:p-8 min-h-[90vh] md:min-h-0"
+                    className="absolute inset-0 z-0 bg-gradient-to-b from-[#1a0505] to-[#0A0000] flex items-center justify-center p-4 md:p-8 min-h-[100dvh] md:min-h-0"
                 >
-                    <div className="container mx-auto grid lg:grid-cols-2 gap-12 items-center relative z-10">
-                        <div className="space-y-8">
+                    <div className="container mx-auto grid lg:grid-cols-2 gap-8 md:gap-12 items-center relative z-10 w-full overflow-hidden pt-10 md:pt-0">
+                        <div className="space-y-6 md:space-y-8 flex flex-col justify-center max-w-full">
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
-                                className="inline-flex items-center rounded-full border border-red-500/20 bg-red-500/10 px-4 py-1.5 text-[10px] text-red-500 font-mono tracking-[0.3em] uppercase"
+                                className="inline-flex items-center rounded-full border border-red-500/20 bg-red-500/10 px-4 py-1.5 text-[10px] text-red-500 font-mono tracking-[0.3em] uppercase self-start"
                             >
-                                <span className="flex h-1.5 w-1.5 rounded-full bg-red-500 mr-3 animate-pulse" />
+                                <span className="flex h-1.5 w-1.5 rounded-full bg-red-500 mr-2 md:mr-3 animate-pulse" />
                                 Alerta: Fuga de Ingresos
                             </motion.div>
-                            <h2 className="text-5xl md:text-[6rem] font-bold tracking-tight text-white leading-tight md:leading-[0.85]">
+                            <h2 className="text-4xl sm:text-5xl md:text-[6rem] font-bold tracking-tight text-white leading-tight md:leading-[0.85] break-words">
                                 Cada 5 Minutos <br />
-                                <span className="text-red-600">Perdés un Cliente.</span>
+                                <span className="text-red-600 space-x-2">Perdés un Cliente.</span>
                             </h2>
-                            <p className="text-xl text-white/60 md:text-white/40 leading-relaxed max-w-lg font-light">
+                            <p className="text-base sm:text-lg md:text-xl text-white/60 md:text-white/40 leading-relaxed max-w-lg font-light">
                                 El mercado digital no perdona. Tu competencia capta la atención con mejor marketing y cierra ventas con sistemas más rápidos. Mientras tu equipo agenda una llamada, ellos ya facturaron. ¿Cuántos clientes perdiste esta semana?
                             </p>
                         </div>
 
-                        <div className="relative aspect-square max-w-[300px] md:max-w-none mx-auto md:mx-0">
+                        <div className="relative aspect-square w-full max-w-[280px] sm:max-w-[320px] md:max-w-none mx-auto lg:mx-0 mt-4 md:mt-0">
                             <ChaosGroup isMobile={isMobile} />
                         </div>
                     </div>
@@ -80,14 +80,15 @@ export function ProblemSolution() {
                         clipPath: 'none',
                         opacity: mobileOpacityGreen,
                         scale: mobileScaleGreen,
-                        position: 'relative' as const
+                        position: 'absolute' as const,
+                        top: 0, left: 0, right: 0, bottom: 0,
                     } : {
                         clipPath: revealClipPath,
                         position: 'absolute' as const,
                         top: 0, left: 0, right: 0, bottom: 0,
                         willChange: "clip-path"
                     }}
-                    className="relative md:absolute z-10 bg-[#022c22] flex items-center justify-center border-t border-emerald-500/10 shadow-[0_-50px_100px_rgba(16,185,129,0.1)] min-h-[100vh] md:min-h-0 py-20 md:py-0"
+                    className="z-10 bg-[#022c22] flex items-center justify-center border-t border-emerald-500/10 shadow-[0_-50px_100px_rgba(16,185,129,0.1)] min-h-[100dvh] md:min-h-0 py-10 md:py-0 px-2 sm:px-4"
                 >
                     {/* Light Sweep */}
                     <motion.div
@@ -98,44 +99,44 @@ export function ProblemSolution() {
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#064e3b_0%,#022c22_100%)]" />
                     <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent" />
 
-                    <div className="container mx-auto px-4 grid lg:grid-cols-2 gap-8 md:gap-12 items-center relative z-20">
-                        <div className="space-y-6 md:space-y-8">
+                    <div className="container mx-auto grid lg:grid-cols-2 gap-6 md:gap-12 items-center relative z-20 w-full overflow-hidden">
+                        <div className="space-y-5 md:space-y-8 flex flex-col justify-center h-full">
                             <motion.div
                                 style={isMobile ? {} : { opacity: solTitleOpacity, y: solTitleY }}
-                                className="inline-flex items-center rounded-full border border-emerald-500/20 bg-emerald-500/10 px-5 py-2 text-[10px] text-emerald-400 font-mono tracking-[0.4em] uppercase"
+                                className="inline-flex items-center rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 md:px-5 py-2 text-[8px] sm:text-[10px] text-emerald-400 font-mono tracking-[0.2em] sm:tracking-[0.4em] uppercase self-start"
                             >
-                                <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-500 mr-3 shadow-[0_0_12px_#10b981]" />
-                                Infraestructura Autónoma Activa
+                                <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-500 mr-2 md:mr-3 shadow-[0_0_12px_#10b981]" />
+                                Infraestructura Autónoma
                             </motion.div>
                             <motion.h2
                                 style={isMobile ? {} : { opacity: solTitleOpacity, y: solTitleY }}
-                                className="text-5xl md:text-[6rem] font-bold tracking-tight text-white leading-tight md:leading-[0.85]"
+                                className="text-4xl sm:text-5xl md:text-[6rem] font-bold tracking-tight text-white leading-[1.1] md:leading-[0.85] break-words"
                             >
-                                Tu Ecosistema Digital <br />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-br from-emerald-400 via-white to-white/40">
-                                    que Escala tus Ventas.
+                                Tu Ecosistema <br className="hidden sm:block" />Digital <br />
+                                <span className="text-transparent bg-clip-text bg-gradient-to-br from-emerald-400 via-white to-white/40 block mt-1 sm:mt-0">
+                                    que Escala Ventas.
                                 </span>
                             </motion.h2>
                             <motion.p
                                 style={isMobile ? {} : { opacity: solTitleOpacity, y: solTitleY }}
-                                className="text-xl text-white/70 md:text-white/50 leading-relaxed max-w-lg font-light"
+                                className="text-base sm:text-lg md:text-xl text-white/70 md:text-white/50 leading-relaxed max-w-lg font-light"
                             >
                                 Fusionamos campañas de marketing agresivas, desarrollo web premium y agentes IA que responden en segundos. Captamos la atención y no dejamos escapar ni un solo lead. Sin fricción.
                             </motion.p>
 
-                            <motion.div style={isMobile ? {} : { opacity: solBtnOpacity, y: solBtnY }}>
+                            <motion.div style={isMobile ? {} : { opacity: solBtnOpacity, y: solBtnY }} className="w-full">
                                 <button
                                     onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-                                    className="bg-emerald-500 hover:bg-white text-black font-black rounded-full px-10 py-5 text-xl group transition-all duration-500 w-full md:w-auto flex items-center justify-center"
+                                    className="bg-emerald-500 hover:bg-white text-black font-black rounded-full px-6 sm:px-10 py-4 sm:py-5 text-base sm:text-xl group transition-all duration-500 w-full lg:w-auto flex items-center justify-center active:scale-95"
                                 >
-                                    ACTIVAR MI ECOSISTEMA DIGITAL
-                                    <ArrowRight className="ml-3 w-6 h-6 group-hover:translate-x-2 transition-transform" />
+                                    ACTIVAR ECOSISTEMA
+                                    <ArrowRight className="ml-2 sm:ml-3 w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-2 transition-transform" />
                                 </button>
                             </motion.div>
                         </div>
 
                         {/* System Pulse Card */}
-                        <div className="relative mt-8 md:mt-0">
+                        <div className="relative mt-8 lg:mt-0 w-full max-w-[340px] sm:max-w-md mx-auto hidden sm:block">
                             <div className="absolute -inset-10 bg-emerald-500/20 blur-[120px] rounded-full animate-pulse" />
                             <SystemPulseCard />
                         </div>
