@@ -15,24 +15,25 @@ const navItems = [
     { name: 'Portafolio', href: '#portfolio' },
 ];
 
+const subtitleTexts = [
+    "SME AGENCY",
+    "SOCIAL MEDIA EXPERT",
+    "MARKETING DIGITAL",
+    "DESARROLLO WEB",
+    "FOTOGRAFÍA",
+    "EDICIÓN DE VIDEO",
+    "INTELIGENCIA ARTIFICIAL",
+    "AUDITORÍA B2B",
+    "FRONTEND",
+    "CRM & AUTOMATIZACIONES",
+    "ECOSISTEMAS E-COMMERCE",
+    "GROWTH PARTNER"
+];
+
 export function Navbar() {
     const [isScrolled, setIsScrolled] = React.useState(false);
     const [mobileOpen, setMobileOpen] = React.useState(false);
     const [textIndex, setTextIndex] = React.useState(0);
-    const subtitleTexts = [
-        "SME AGENCY",
-        "SOCIAL MEDIA EXPERT",
-        "MARKETING DIGITAL",
-        "DESARROLLO WEB",
-        "FOTOGRAFÍA",
-        "EDICIÓN DE VIDEO",
-        "INTELIGENCIA ARTIFICIAL",
-        "AUDITORÍA B2B",
-        "FRONTEND",
-        "CRM & AUTOMATIZACIONES",
-        "ECOSISTEMAS E-COMMERCE",
-        "GROWTH PARTNER"
-    ];
 
     React.useEffect(() => {
         const interval = setInterval(() => {

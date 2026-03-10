@@ -5,13 +5,12 @@ import Image from 'next/image';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { AnimatedCard } from '@/components/shared/AnimatedCard';
-import { ArrowUpRight, Zap, PlayCircle, Image as ImageIcon, Monitor, Tablet, Smartphone, Maximize2 } from 'lucide-react';
+import { Zap, PlayCircle, Image as ImageIcon, Monitor, Tablet, Smartphone, Maximize2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
     Dialog,
     DialogContent,
     DialogTrigger,
-    DialogHeader,
     DialogTitle,
     DialogDescription
 } from '@/components/ui/dialog';

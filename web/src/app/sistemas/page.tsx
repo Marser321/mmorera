@@ -1,4 +1,4 @@
-import { getMarkdownFile } from "@/lib/mdx";
+
 import { Navbar } from "@/components/sections/navbar";
 import { Footer } from "@/components/sections/footer";
 

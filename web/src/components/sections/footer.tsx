@@ -8,12 +8,6 @@ import { LogoMM } from '@/components/shared/LogoMM';
 
 export function Footer() {
     const containerRef = useRef<HTMLDivElement>(null);
-    const { scrollYProgress } = useScroll({
-        target: containerRef,
-        offset: ["start end", "end end"]
-    });
-
-    const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [0, 0.5, 1]);
 
     return (
         <footer ref={containerRef} className="relative bg-transparent pt-32 pb-12 overflow-hidden border-t border-white/5">
