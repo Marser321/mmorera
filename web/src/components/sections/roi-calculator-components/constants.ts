@@ -1,0 +1,51 @@
+import { Clock, DollarSign, Calculator, Percent } from "lucide-react";
+import { SliderConfig } from "./types";
+
+export const sliderConfigs: SliderConfig[] = [
+    {
+        id: "horasManuales",
+        label: "Horas manuales / semana",
+        icon: Clock,
+        min: 5,
+        max: 80,
+        step: 1,
+        defaultValue: 20,
+        suffix: " hs",
+        color: "cyan",
+    },
+    {
+        id: "salarioEmpleado",
+        label: "Salario promedio empleado",
+        icon: DollarSign,
+        min: 500,
+        max: 8000,
+        step: 100,
+        defaultValue: 2000,
+        suffix: "/mes",
+        prefix: "$",
+        color: "green",
+    },
+    {
+        id: "costoSoftware",
+        label: "Costo actual de software",
+        icon: Calculator,
+        min: 0,
+        max: 5000,
+        step: 50,
+        defaultValue: 500,
+        suffix: "/mes",
+        prefix: "$",
+        color: "indigo",
+    },
+    {
+        id: "tasaError",
+        label: "Tasa de error manual",
+        icon: Percent,
+        min: 1,
+        max: 40,
+        step: 1,
+        defaultValue: 10,
+        suffix: "%",
+        color: "rose",
+    },
+];
