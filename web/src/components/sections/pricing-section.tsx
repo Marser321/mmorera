@@ -1,239 +1,25 @@
 'use client';
 
 import * as React from 'react';
-import { motion, useMotionTemplate, useMotionValue } from 'framer-motion';
-import { Check, Zap, Rocket, Crown, GraduationCap, ArrowRight, PenTool, Share2, Monitor, ShoppingCart, Video, BarChart3, Gift, Bot, Globe, Sparkles, Play, MessageCircle } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { GraduationCap } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
-/* ═══════════════════════════════════════════════════
- * PLANES ESTRATÉGICOS — Modelo "Enseñar a Pescar"
- * Trimestral / Semestral / Anual con descuentos
- * ═══════════════════════════════════════════════════ */
-
-type BillingCycle = 'trimestral' | 'semestral' | 'anual';
-
-// Descuentos progresivos por compromiso
-const DISCOUNTS: Record<BillingCycle, number> = {
-    trimestral: 0,
-    semestral: 0.10,
-    anual: 0.20,
-};
-
-const BILLING_LABELS: Record<BillingCycle, { label: string; badge?: string; months: number }> = {
-    trimestral: { label: 'Trimestral', months: 3 },
-    semestral: { label: 'Semestral', badge: '-10%', months: 6 },
-    anual: { label: 'Anual', badge: '-20%', months: 12 },
-};
-
-interface Plan {
-    name: string;
-    subtitle: string;
-    description: string;
-    basePrice: number; // precio base mensual (sin descuento)
-    icon: React.ElementType;
-    features: string[];
-    capacitacion: string;
-    highlight: boolean;
-    badge?: string;
-    accentColor: string;
-    accentGlow: string;
-}
-
-const PLANS: Plan[] = [
-    {
-        name: 'Piloto Automático',
-        subtitle: 'Starter',
-        description: 'Tu primer agente IA operativo en 48 horas. Ideal para validar el impacto de la automatización sin riesgo.',
-        basePrice: 149,
-        icon: Zap,
-        features: [
-            'Bot WhatsApp FAQ 24/7',
-            '1 Automatización Core (n8n)',
-            'Dashboard de Métricas Básico',
-            'Soporte por Email',
-        ],
-        capacitacion: 'Onboarding de 1 mes para tu equipo',
-        highlight: false,
-        accentColor: 'text-emerald-400',
-        accentGlow: 'rgba(16, 185, 129, 0.15)',
-    },
-    {
-        name: 'Crecimiento Acelerado',
-        subtitle: 'Growth',
-        description: 'El motor completo de conversión B2B. CRM inteligente + automatizaciones multicapa + capacitación real.',
-        basePrice: 399,
-        icon: Rocket,
-        features: [
-            'CRM Autopilot + Lead Scoring',
-            '3 Automatizaciones Avanzadas',
-            'Testing A/B Continuo',
-            'Reporting ROI en Tiempo Real',
-            'Capacitación Equipo (3 meses)',
-            'Soporte Prioritario WhatsApp',
-        ],
-        capacitacion: '3 meses de capacitación intensiva',
-        highlight: true,
-        badge: 'MÁS POPULAR',
-        accentColor: 'text-blue-400',
-        accentGlow: 'rgba(59, 130, 246, 0.15)',
-    },
-    {
-        name: 'Autonomía Total',
-        subtitle: 'Enterprise',
-        description: 'Infraestructura completa de IA + transferencia total de conocimiento. Tu equipo vuela solo en 6 meses.',
-        basePrice: 749,
-        icon: Crown,
-        features: [
-            'RAG Corporativo Auto-actualizable',
-            '5+ Automatizaciones Full-Stack',
-            'Agentes IA Personalizados',
-            'Integración ERP / CRM Legacy',
-            'Capacitación Completa (6 meses)',
-            'Transferencia Total de Conocimiento',
-            'Acceso Directo a Ingeniería',
-        ],
-        capacitacion: '6 meses de capacitación + transferencia total',
-        highlight: false,
-        accentColor: 'text-violet-400',
-        accentGlow: 'rgba(139, 92, 246, 0.15)',
-    }
-];
-
-/* ═══════════════════════════════════════════════════
- * CABALLOS DE TROYA — Servicios gancho de entrada
- * Gratuitos o ultra-baratos para generar engagement
- * ═══════════════════════════════════════════════════ */
-interface TrojanHorse {
-    name: string;
-    description: string;
-    icon: React.ElementType;
-    price: string;
-    priceBadgeColor: string;
-    borderColor: string;
-    glowColor: string;
-    cta: string;
-    features: string[];
-}
-
-const TROJAN_HORSES: TrojanHorse[] = [
-    {
-        name: 'Auditoría IA',
-        description: 'Diagnóstico completo de tus procesos en 30 minutos. Te mostramos exactamente dónde estás perdiendo dinero.',
-        icon: Sparkles,
-        price: 'GRATIS',
-        priceBadgeColor: 'from-emerald-400 to-green-500',
-        borderColor: 'border-emerald-500/30 hover:border-emerald-500/60',
-        glowColor: 'bg-emerald-500/5',
-        cta: 'Agendar Ahora',
-        features: ['Mapa de procesos', 'Blueprint técnico', 'Estimación ROI'],
-    },
-    {
-        name: 'Bot WhatsApp Demo',
-        description: 'Tu propio agente IA respondiendo clientes 24/7. Probalo 7 días sin compromiso.',
-        icon: Bot,
-        price: '7 DÍAS GRATIS',
-        priceBadgeColor: 'from-blue-400 to-cyan-500',
-        borderColor: 'border-blue-500/30 hover:border-blue-500/60',
-        glowColor: 'bg-blue-500/5',
-        cta: 'Activar Demo',
-        features: ['Bot activo 24/7', 'FAQs + Agendamiento', 'Sin tarjeta de crédito'],
-    },
-    {
-        name: 'Mini-Landing IA',
-        description: 'Landing page profesional generada con IA en 24 horas. Comprobá nuestra calidad.',
-        icon: Globe,
-        price: '$49',
-        priceBadgeColor: 'from-violet-400 to-purple-500',
-        borderColor: 'border-violet-500/30 hover:border-violet-500/60',
-        glowColor: 'bg-violet-500/5',
-        cta: 'Solicitar Landing',
-        features: ['Diseño premium', 'SEO incluido', 'Entrega en 24hs'],
-    },
-];
-
-/* ═══════════════════════════════════════════════════
- * PAQUETES DE SERVICIOS INDIVIDUALES
- * Precios provisorios — se actualizan con los reales
- * ═══════════════════════════════════════════════════ */
-interface ServicePack {
-    name: string;
-    description: string;
-    icon: React.ElementType;
-    iconColor: string;
-    iconBg: string;
-    includes: string[];
-    price: string;
-    period: string;
-}
-
-const SERVICE_PACKS: ServicePack[] = [
-    {
-        name: 'Creación de Contenido',
-        description: 'Copywriting, guiones, carruseles y newsletters listas para publicar.',
-        icon: PenTool,
-        iconColor: 'text-orange-400',
-        iconBg: 'bg-orange-500/10 border-orange-500/20',
-        includes: ['8 Posts/mes', 'Copys SEO', 'Carruseles', 'Newsletter'],
-        price: '200',
-        period: 'mes',
-    },
-    {
-        name: 'Social Media Manager',
-        description: 'Gestión integral de tus redes sociales con estrategia y reportes.',
-        icon: Share2,
-        iconColor: 'text-pink-400',
-        iconBg: 'bg-pink-500/10 border-pink-500/20',
-        includes: ['Calendario Editorial', 'Publicación Diaria', 'Community Manager', 'Reporte Mensual'],
-        price: '300',
-        period: 'mes',
-    },
-    {
-        name: 'Web & Landing Page',
-        description: 'Diseño y desarrollo de presencia digital de alto impacto.',
-        icon: Monitor,
-        iconColor: 'text-blue-400',
-        iconBg: 'bg-blue-500/10 border-blue-500/20',
-        includes: ['Diseño UX/UI', 'SEO Técnico', 'Hosting 1 Año', 'Analytics'],
-        price: '700',
-        period: 'proyecto',
-    },
-    {
-        name: 'E-commerce',
-        description: 'Tiendas online construidas para convertir y escalar.',
-        icon: ShoppingCart,
-        iconColor: 'text-emerald-400',
-        iconBg: 'bg-emerald-500/10 border-emerald-500/20',
-        includes: ['Catálogo Ilimitado', 'Pasarela de Pagos', 'Checkout 1-Clic', 'Recuperación Carritos'],
-        price: '1,500',
-        period: 'proyecto',
-    },
-    {
-        name: 'Producción Audiovisual',
-        description: 'Contenido de video profesional: reels, spots y UGC.',
-        icon: Video,
-        iconColor: 'text-violet-400',
-        iconBg: 'bg-violet-500/10 border-violet-500/20',
-        includes: ['Guión', 'Grabación 4K', 'Edición Pro', 'Reels & Shorts'],
-        price: '400',
-        period: 'proyecto',
-    },
-    {
-        name: 'Ads & Performance',
-        description: 'Campañas pagadas en Meta y Google con optimización continua.',
-        icon: BarChart3,
-        iconColor: 'text-cyan-400',
-        iconBg: 'bg-cyan-500/10 border-cyan-500/20',
-        includes: ['Meta Ads', 'Google Ads', 'A/B Testing', 'Reporting ROI'],
-        price: '250',
-        period: 'mes',
-    },
-];
+import {
+    BillingCycle,
+    BILLING_LABELS,
+    DISCOUNTS,
+    PLANS
+} from './pricing/constants';
+import { PricingCard } from './pricing/pricing-card';
+import { TrojanHorses } from './pricing/trojan-horses';
+import { ServicePacks } from './pricing/service-packs';
+import { FreeDemos } from './pricing/free-demos';
 
 export function PricingSection() {
-    const [billing, setBilling] = React.useState<BillingCycle>('semestral');
+    const [billingCycle, setBillingCycle] = React.useState<BillingCycle>('trimestral');
 
     // Calcular el ahorro máximo dinámicamente (plan Enterprise anual)
-    const maxSavings = Math.round(PLANS[2].basePrice * DISCOUNTS[billing] * BILLING_LABELS[billing].months);
+    const maxSavings = Math.round(PLANS[2].basePrice * DISCOUNTS[billingCycle] * BILLING_LABELS[billingCycle].months);
 
     return (
         <section id="pricing" className="py-32 bg-transparent relative overflow-hidden">
@@ -242,84 +28,10 @@ export function PricingSection() {
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-violet-500/[0.02] rounded-full blur-[120px] pointer-events-none" />
 
             <div className="container mx-auto px-4 relative z-10">
-
                 {/* ═══════════════════════════════════════
                  * CABALLOS DE TROYA — Servicios Gancho
                  * ═══════════════════════════════════════ */}
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    className="mb-24 max-w-5xl mx-auto"
-                >
-                    <div className="text-center mb-12">
-                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-bold uppercase tracking-widest mb-6">
-                            <Gift className="w-3.5 h-3.5" />
-                            Sin Riesgo
-                        </div>
-                        <h2 className="text-4xl md:text-6xl font-black text-white tracking-tight mb-4">
-                            Probá{' '}
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-400 to-red-400">Gratis</span>
-                        </h2>
-                        <p className="text-lg text-white/40 max-w-xl mx-auto font-light">
-                            Empezá sin compromiso. Demostramos valor antes de pedir un peso.
-                        </p>
-                    </div>
-
-                    <div className="grid sm:grid-cols-3 gap-4 lg:gap-6">
-                        {TROJAN_HORSES.map((th, i) => {
-                            const Icon = th.icon;
-                            return (
-                                <motion.div
-                                    key={th.name}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ delay: i * 0.1 }}
-                                    className={cn(
-                                        "group relative bg-black/60 border rounded-2xl p-6 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl overflow-hidden",
-                                        th.borderColor
-                                    )}
-                                >
-                                    {/* Glow bg */}
-                                    <div className={cn("absolute -top-20 -right-20 w-40 h-40 rounded-full blur-[60px] opacity-40 pointer-events-none transition-opacity group-hover:opacity-80", th.glowColor)} />
-
-                                    {/* Price badge */}
-                                    <div className="relative z-10">
-                                        <div className={cn("inline-block px-3 py-1 rounded-full text-[11px] font-black tracking-wider text-white bg-gradient-to-r mb-4 shadow-lg", th.priceBadgeColor)}>
-                                            🔥 {th.price}
-                                        </div>
-
-                                        <div className="flex items-start gap-3 mb-3">
-                                            <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
-                                                <Icon className="w-5 h-5 text-white/80" />
-                                            </div>
-                                            <div>
-                                                <h4 className="text-lg font-black text-white">{th.name}</h4>
-                                                <p className="text-xs text-white/40 mt-1 leading-relaxed">{th.description}</p>
-                                            </div>
-                                        </div>
-
-                                        <div className="flex flex-wrap gap-1.5 mb-5">
-                                            {th.features.map((f, j) => (
-                                                <span key={j} className="text-[9px] font-bold uppercase tracking-wider px-2 py-1 rounded-md bg-white/5 border border-white/5 text-white/50">
-                                                    {f}
-                                                </span>
-                                            ))}
-                                        </div>
-
-                                        <button
-                                            onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-                                            className="w-full py-3 rounded-xl bg-white/5 border border-white/10 text-xs font-bold uppercase tracking-widest text-white/70 hover:bg-white hover:text-black transition-all duration-300 group-hover:shadow-lg"
-                                        >
-                                            {th.cta} →
-                                        </button>
-                                    </div>
-                                </motion.div>
-                            );
-                        })}
-                    </div>
-                </motion.div>
+                <TrojanHorses />
 
                 {/* ═══════════════════════════════════════
                  * PLANES ESTRATÉGICOS
@@ -372,10 +84,10 @@ export function PricingSection() {
                         {(Object.keys(BILLING_LABELS) as BillingCycle[]).map((cycle) => (
                             <button
                                 key={cycle}
-                                onClick={() => setBilling(cycle)}
+                                onClick={() => setBillingCycle(cycle)}
                                 className={cn(
                                     "relative text-xs uppercase tracking-widest cursor-pointer transition-all duration-300 font-bold px-5 py-2.5 rounded-full",
-                                    billing === cycle
+                                    billingCycle === cycle
                                         ? "bg-white/10 text-white shadow-lg"
                                         : "text-white/30 hover:text-white/60"
                                 )}
@@ -393,14 +105,14 @@ export function PricingSection() {
                     {/* Banner de Ahorro Dinámico */}
                     {maxSavings > 0 && (
                         <motion.div
-                            key={billing}
+                            key={billingCycle}
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             className="mt-6"
                         >
                             <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-emerald-500/10 to-emerald-500/5 border border-emerald-500/20 backdrop-blur-xl">
                                 <span className="text-sm text-emerald-300 font-bold">
-                                    💰 Ahorrás hasta <span className="text-emerald-400 text-base font-black">${maxSavings.toLocaleString()}</span> con el plan {billing}
+                                    💰 Ahorrás hasta <span className="text-emerald-400 text-base font-black">${maxSavings.toLocaleString()}</span> con el plan {billingCycle}
                                 </span>
                             </div>
                         </motion.div>
@@ -412,7 +124,7 @@ export function PricingSection() {
                         <PricingCard
                             key={plan.name}
                             plan={plan}
-                            billing={billing}
+                            billing={billingCycle}
                             index={index}
                         />
                     ))}
@@ -421,158 +133,12 @@ export function PricingSection() {
                 {/* ═══════════════════════════════════════
                  * PAQUETES DE SERVICIOS INDIVIDUALES
                  * ═══════════════════════════════════════ */}
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    className="mt-24 max-w-6xl mx-auto"
-                >
-                    <div className="text-center mb-12">
-                        <p className="text-[10px] uppercase tracking-[0.3em] text-white/30 font-bold mb-3">¿Necesitás algo puntual?</p>
-                        <h3 className="text-3xl md:text-4xl font-black text-white tracking-tight">
-                            Servicios{' '}
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">Individuales</span>
-                        </h3>
-                        <p className="text-sm text-white/40 mt-3 max-w-lg mx-auto font-light">
-                            Contratá solo lo que necesitás. Todos combinables con cualquier plan.
-                        </p>
-
-                        <div className="mt-4 max-w-lg mx-auto">
-                            <span className="text-xs text-orange-400/80 font-medium">
-                                * Valores base aproximados. Varían según escala, requerimientos técnicos y urgencia del proyecto.
-                            </span>
-                        </div>
-                    </div>
-
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {SERVICE_PACKS.map((pack, i) => {
-                            const Icon = pack.icon;
-                            return (
-                                <motion.div
-                                    key={pack.name}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ delay: i * 0.08 }}
-                                    className="group relative bg-black/40 border border-white/10 rounded-2xl p-6 hover:border-white/20 hover:bg-black/60 transition-all duration-500 hover:-translate-y-1"
-                                >
-                                    <div className="flex items-start gap-4 mb-4">
-                                        <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center border shrink-0", pack.iconBg)}>
-                                            <Icon className={cn("w-5 h-5", pack.iconColor)} />
-                                        </div>
-                                        <div className="min-w-0">
-                                            <h4 className="text-base font-bold text-white truncate">{pack.name}</h4>
-                                            <p className="text-xs text-white/40 mt-0.5 line-clamp-2">{pack.description}</p>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex flex-wrap gap-1.5 mb-4">
-                                        {pack.includes.map((item, j) => (
-                                            <span key={j} className="text-[9px] font-bold uppercase tracking-wider px-2 py-1 rounded-md bg-white/5 border border-white/5 text-white/50">
-                                                {item}
-                                            </span>
-                                        ))}
-                                    </div>
-
-                                    <div className="flex items-end justify-between pt-4 border-t border-white/5">
-                                        <div>
-                                            <span className="text-[9px] uppercase tracking-[0.2em] text-white/25 font-bold block">Desde</span>
-                                            <span className="text-2xl font-black text-white">${pack.price}</span>
-                                            <span className="text-xs text-white/30 font-medium">/{pack.period}</span>
-                                        </div>
-                                        <button
-                                            onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-                                            className="text-[9px] font-bold uppercase tracking-widest text-white/40 hover:text-white transition-colors px-3 py-2 rounded-lg hover:bg-white/5"
-                                        >
-                                            Cotizar →
-                                        </button>
-                                    </div>
-                                </motion.div>
-                            );
-                        })}
-                    </div>
-                </motion.div>
+                <ServicePacks />
 
                 {/* ═══════════════════════════════════════
                  * DEMOS GRATIS — "Probá Antes de Pagar"
                  * ═══════════════════════════════════════ */}
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    className="mt-24 max-w-5xl mx-auto"
-                >
-                    <div className="text-center mb-12">
-                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-bold uppercase tracking-widest mb-6">
-                            <Play className="w-3.5 h-3.5" />
-                            Experiencia En Vivo
-                        </div>
-                        <h3 className="text-3xl md:text-4xl font-black text-white tracking-tight mb-3">
-                            Probá{' '}
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">Antes de Pagar</span>
-                        </h3>
-                        <p className="text-sm text-white/40 max-w-lg mx-auto font-light">
-                            No te pedimos que confíes ciegamente. Tocá, interactuá, comprobá.
-                        </p>
-                    </div>
-
-                    <div className="grid sm:grid-cols-3 gap-4">
-                        {[
-                            {
-                                icon: MessageCircle,
-                                title: 'Chat IA Vivo',
-                                description: 'Probá nuestro asistente ahora mismo. Hacé click en la burbuja de chat abajo a la derecha.',
-                                cta: 'Abrir Chat →',
-                                color: 'text-blue-400',
-                                border: 'border-blue-500/20 hover:border-blue-500/40',
-                            },
-                            {
-                                icon: BarChart3,
-                                title: 'Calculadora ROI',
-                                description: 'Calculá cuánto ahorrás automatizando. Probala más arriba en esta misma página.',
-                                cta: 'Ver Calculadora →',
-                                color: 'text-emerald-400',
-                                border: 'border-emerald-500/20 hover:border-emerald-500/40',
-                            },
-                            {
-                                icon: Sparkles,
-                                title: 'Auditoría Express',
-                                description: 'Diagnóstico gratuito en 30 minutos. Sin compromiso, sin surprises.',
-                                cta: 'Agendar Gratis →',
-                                color: 'text-amber-400',
-                                border: 'border-amber-500/20 hover:border-amber-500/40',
-                            },
-                        ].map((demo, i) => {
-                            const DIcon = demo.icon;
-                            return (
-                                <motion.div
-                                    key={demo.title}
-                                    initial={{ opacity: 0, y: 15 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ delay: i * 0.1 }}
-                                    className={cn("group bg-black/40 border rounded-2xl p-6 hover:bg-black/60 transition-all duration-500 hover:-translate-y-1", demo.border)}
-                                >
-                                    <DIcon className={cn("w-8 h-8 mb-4", demo.color)} />
-                                    <h4 className="text-base font-bold text-white mb-2">{demo.title}</h4>
-                                    <p className="text-xs text-white/40 leading-relaxed mb-4">{demo.description}</p>
-                                    <button
-                                        onClick={() => {
-                                            if (demo.title === 'Calculadora ROI') {
-                                                document.getElementById('roi')?.scrollIntoView({ behavior: 'smooth' });
-                                            } else {
-                                                document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-                                            }
-                                        }}
-                                        className="text-[10px] font-bold uppercase tracking-widest text-white/50 hover:text-white transition-colors"
-                                    >
-                                        {demo.cta}
-                                    </button>
-                                </motion.div>
-                            );
-                        })}
-                    </div>
-                </motion.div>
+                <FreeDemos />
 
                 {/* Sección "Enseñar a Pescar" explicativa */}
                 <motion.div
@@ -616,164 +182,6 @@ export function PricingSection() {
                 </motion.div>
             </div>
         </section>
-    );
-}
-
-/* ═══════════════════════════════════
- * COMPONENTE: PricingCard
- * ═══════════════════════════════════ */
-function PricingCard({ plan, billing, index }: { plan: Plan; billing: BillingCycle; index: number }) {
-    const mouseX = useMotionValue(0);
-    const mouseY = useMotionValue(0);
-
-    function handleMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
-        const { left, top } = currentTarget.getBoundingClientRect();
-        mouseX.set(clientX - left);
-        mouseY.set(clientY - top);
-    }
-
-    const discount = DISCOUNTS[billing];
-    const monthlyPrice = Math.round(plan.basePrice * (1 - discount));
-    const totalMonths = BILLING_LABELS[billing].months;
-    const totalPrice = monthlyPrice * totalMonths;
-    const Icon = plan.icon;
-
-    return (
-        <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 30 }}
-            whileInView={{ opacity: 1, scale: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ type: "spring", stiffness: 100, damping: 20, delay: index * 0.15 }}
-            onMouseMove={handleMouseMove}
-            className={cn(
-                "group relative p-8 sm:p-10 rounded-[2rem] sm:rounded-[2.5rem] border backdrop-blur-2xl transition-all duration-500 flex flex-col hover:-translate-y-2",
-                plan.highlight
-                    ? "bg-black/80 border-blue-500/30 shadow-[0_30px_60px_-15px_rgba(59,130,246,0.2)] z-10 scale-[1.02]"
-                    : "bg-black/40 border-white/10 hover:border-white/20 hover:bg-black/60"
-            )}
-        >
-            {/* Hover Spotlight Effect */}
-            <motion.div
-                className={cn(
-                    "pointer-events-none absolute -inset-px rounded-[inherit] opacity-0 transition duration-300 group-hover:opacity-100",
-                    plan.highlight ? "duration-500 opacity-40" : ""
-                )}
-                style={{
-                    background: useMotionTemplate`
-                        radial-gradient(
-                            600px circle at ${mouseX}px ${mouseY}px,
-                            ${plan.accentGlow},
-                            transparent 80%
-                        )
-                    `,
-                }}
-            />
-
-            {/* Glowing border for Highlighted */}
-            {plan.highlight && (
-                <div className="absolute inset-0 rounded-[inherit] p-[1px] bg-gradient-to-b from-blue-500/50 via-transparent to-transparent opacity-50 pointer-events-none animate-pulse" />
-            )}
-
-            {plan.badge && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-400 to-blue-600 text-white px-5 py-1.5 rounded-full text-[10px] font-black tracking-[0.2em] shadow-[0_0_20px_rgba(59,130,246,0.5)] uppercase">
-                    {plan.badge}
-                </div>
-            )}
-
-            {/* Header */}
-            <div className="mb-6 relative z-10">
-                <div className="flex items-center gap-3 mb-4">
-                    <div className={cn(
-                        "w-12 h-12 rounded-2xl flex items-center justify-center border",
-                        plan.highlight
-                            ? "bg-blue-500/10 border-blue-500/30 text-blue-400"
-                            : "bg-white/5 border-white/10 text-white/60"
-                    )}>
-                        <Icon className="w-6 h-6" />
-                    </div>
-                    <div>
-                        <p className="text-[10px] uppercase tracking-[0.2em] text-white/30 font-bold">{plan.subtitle}</p>
-                        <h3 className={cn("text-xl font-black tracking-tight", plan.highlight ? "text-white" : "text-white/90")}>
-                            {plan.name}
-                        </h3>
-                    </div>
-                </div>
-                <p className="text-white/40 text-sm leading-relaxed font-light">{plan.description}</p>
-            </div>
-
-            {/* Pricing */}
-            <div className="mb-8 pb-8 border-b border-white/10 relative z-10">
-                <div className="flex items-baseline gap-2">
-                    <span className={cn(
-                        "text-5xl font-black tracking-tighter transition-all duration-300",
-                        plan.highlight ? "text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-blue-500" : "text-white"
-                    )}>
-                        ${monthlyPrice}
-                    </span>
-                    <span className="text-sm text-white/30 font-medium">/mes</span>
-                </div>
-                {discount > 0 && (
-                    <div className="flex items-center gap-2 mt-2">
-                        <span className="text-sm text-white/20 line-through">${plan.basePrice}/mes</span>
-                        <span className="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
-                            Ahorrás ${(plan.basePrice - monthlyPrice) * totalMonths}
-                        </span>
-                    </div>
-                )}
-                <p className="text-white/30 text-[10px] font-bold uppercase tracking-[0.2em] mt-3">
-                    ${totalPrice.toLocaleString()} total · {totalMonths} meses
-                </p>
-            </div>
-
-            {/* Features */}
-            <div className="space-y-3.5 mb-8 flex-grow relative z-10">
-                {plan.features.map((feature, i) => (
-                    <motion.div
-                        key={feature}
-                        initial={{ opacity: 0, x: -10 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: index * 0.1 + (i * 0.05) }}
-                        className="flex items-start gap-3"
-                    >
-                        <div className={cn(
-                            "w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 border",
-                            plan.highlight
-                                ? "border-blue-500/50 bg-blue-500/10 text-blue-400"
-                                : "border-white/10 bg-white/5 text-white/40 group-hover:text-white/60 group-hover:border-white/20 transition-colors"
-                        )}>
-                            <Check className="w-3 h-3 stroke-[3]" />
-                        </div>
-                        <span className={cn("text-sm font-medium leading-relaxed", plan.highlight ? "text-white/80" : "text-white/50 group-hover:text-white/70 transition-colors")}>
-                            {feature}
-                        </span>
-                    </motion.div>
-                ))}
-            </div>
-
-            {/* Capacitación badge */}
-            <div className="mb-6 relative z-10">
-                <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-500/5 border border-emerald-500/15">
-                    <GraduationCap className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span className="text-xs font-bold text-emerald-300/80">{plan.capacitacion}</span>
-                </div>
-            </div>
-
-            {/* CTA */}
-            <button
-                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-                className={cn(
-                    "w-full h-16 rounded-2xl text-xs font-black tracking-[0.2em] transition-all duration-500 uppercase relative z-10 overflow-hidden group/btn flex items-center justify-center gap-3",
-                    plan.highlight
-                        ? "bg-blue-500 text-white shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_30px_rgba(59,130,246,0.6)] hover:bg-blue-400"
-                        : "bg-white/5 text-white hover:bg-white/10 border border-white/10 hover:border-white/30"
-                )}
-            >
-                <span className="relative z-10">Reservar mi Lugar</span>
-                <ArrowRight className="w-4 h-4 relative z-10 group-hover/btn:translate-x-1 transition-transform" />
-                <span className="absolute inset-0 -translate-x-[150%] skew-x-12 bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover/btn:animate-[shimmer_1.5s_infinite]" />
-            </button>
-        </motion.div>
     );
 }
 
