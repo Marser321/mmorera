@@ -142,9 +142,13 @@ export default function StudioPage() {
         }
       });
 
+      // Exponential backoff for polling video generation status
+      let pollDelay = 10000;
+      const MAX_POLL_DELAY = 30000;
       while (!operation.done) {
-        await new Promise(resolve => setTimeout(resolve, 10000));
+        await new Promise(resolve => setTimeout(resolve, pollDelay));
         operation = await ai.operations.getVideosOperation({ operation });
+        pollDelay = Math.min(pollDelay * 1.5, MAX_POLL_DELAY);
       }
 
       const downloadLink = operation.response?.generatedVideos?.[0]?.video?.uri;
