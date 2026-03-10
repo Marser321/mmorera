@@ -198,14 +198,14 @@ function ServiceCard({ service, index, toggleBookmark, isBookmarked, onSelect }:
 
     return (
         <motion.div
-            className="snap-start shrink-0 w-[300px] md:w-[400px] h-full"
+            className="snap-start shrink-0 w-[300px] md:w-[400px] flex flex-col h-auto stretch"
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.1, duration: 0.5 }}
             viewport={{ once: true }}
         >
             <div
-                className={cn("group/card relative min-h-[520px] h-full bg-[#0A0A0A] border border-white/5 rounded-[2rem] overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl flex flex-col", borderClass)}
+                className={cn("group/card relative min-h-[520px] flex-1 bg-[#0A0A0A] border border-white/5 rounded-[2rem] overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl flex flex-col", borderClass)}
                 onMouseMove={handleMouseMove}
             >
                 <motion.div
