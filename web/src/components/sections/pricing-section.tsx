@@ -44,7 +44,7 @@ const PLANS: Plan[] = [
         name: 'Piloto Automático',
         subtitle: 'Starter',
         description: 'Tu primer agente IA operativo en 48 horas. Ideal para validar el impacto de la automatización sin riesgo.',
-        basePrice: 299,
+        basePrice: 149,
         icon: Zap,
         features: [
             'Bot WhatsApp FAQ 24/7',
@@ -61,7 +61,7 @@ const PLANS: Plan[] = [
         name: 'Crecimiento Acelerado',
         subtitle: 'Growth',
         description: 'El motor completo de conversión B2B. CRM inteligente + automatizaciones multicapa + capacitación real.',
-        basePrice: 799,
+        basePrice: 399,
         icon: Rocket,
         features: [
             'CRM Autopilot + Lead Scoring',
@@ -81,7 +81,7 @@ const PLANS: Plan[] = [
         name: 'Autonomía Total',
         subtitle: 'Enterprise',
         description: 'Infraestructura completa de IA + transferencia total de conocimiento. Tu equipo vuela solo en 6 meses.',
-        basePrice: 1499,
+        basePrice: 749,
         icon: Crown,
         features: [
             'RAG Corporativo Auto-actualizable',
@@ -174,7 +174,7 @@ const SERVICE_PACKS: ServicePack[] = [
         iconColor: 'text-orange-400',
         iconBg: 'bg-orange-500/10 border-orange-500/20',
         includes: ['8 Posts/mes', 'Copys SEO', 'Carruseles', 'Newsletter'],
-        price: '450',
+        price: '200',
         period: 'mes',
     },
     {
@@ -184,7 +184,7 @@ const SERVICE_PACKS: ServicePack[] = [
         iconColor: 'text-pink-400',
         iconBg: 'bg-pink-500/10 border-pink-500/20',
         includes: ['Calendario Editorial', 'Publicación Diaria', 'Community Manager', 'Reporte Mensual'],
-        price: '600',
+        price: '300',
         period: 'mes',
     },
     {
@@ -194,7 +194,7 @@ const SERVICE_PACKS: ServicePack[] = [
         iconColor: 'text-blue-400',
         iconBg: 'bg-blue-500/10 border-blue-500/20',
         includes: ['Diseño UX/UI', 'SEO Técnico', 'Hosting 1 Año', 'Analytics'],
-        price: '1,500',
+        price: '700',
         period: 'proyecto',
     },
     {
@@ -204,7 +204,7 @@ const SERVICE_PACKS: ServicePack[] = [
         iconColor: 'text-emerald-400',
         iconBg: 'bg-emerald-500/10 border-emerald-500/20',
         includes: ['Catálogo Ilimitado', 'Pasarela de Pagos', 'Checkout 1-Clic', 'Recuperación Carritos'],
-        price: '3,500',
+        price: '1,500',
         period: 'proyecto',
     },
     {
@@ -214,7 +214,7 @@ const SERVICE_PACKS: ServicePack[] = [
         iconColor: 'text-violet-400',
         iconBg: 'bg-violet-500/10 border-violet-500/20',
         includes: ['Guión', 'Grabación 4K', 'Edición Pro', 'Reels & Shorts'],
-        price: '800',
+        price: '400',
         period: 'proyecto',
     },
     {
@@ -224,7 +224,7 @@ const SERVICE_PACKS: ServicePack[] = [
         iconColor: 'text-cyan-400',
         iconBg: 'bg-cyan-500/10 border-cyan-500/20',
         includes: ['Meta Ads', 'Google Ads', 'A/B Testing', 'Reporting ROI'],
-        price: '500',
+        price: '250',
         period: 'mes',
     },
 ];
@@ -339,8 +339,14 @@ export function PricingSection() {
                         <p className="text-xl text-white/40 max-w-2xl mx-auto font-light leading-relaxed">
                             No te vendemos una caja negra. Te enseñamos a manejar el motor.
                             <br />
-                            <span className="text-white/60 font-medium">Tu equipo se queda con las herramientas Y el conocimiento.</span>
+                            <span className="text-white/60 font-medium">Tu equipo se queda con las herramientas y el conocimiento. Además, somos 100% transparentes: <strong className="text-emerald-400 uppercase tracking-widest text-sm ml-1">cobramos solo lo que vas a usar</strong>.</span>
                         </p>
+
+                        <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-orange-500/10 border border-orange-500/20">
+                            <span className="text-xs text-orange-400 font-medium">
+                                * Los precios son referenciales y pueden variar según el alcance del proyecto, tiempo requerido y disponibilidad.
+                            </span>
+                        </div>
                     </motion.div>
 
                     {/* Filosofía badge */}
@@ -430,6 +436,12 @@ export function PricingSection() {
                         <p className="text-sm text-white/40 mt-3 max-w-lg mx-auto font-light">
                             Contratá solo lo que necesitás. Todos combinables con cualquier plan.
                         </p>
+
+                        <div className="mt-4 max-w-lg mx-auto">
+                            <span className="text-xs text-orange-400/80 font-medium">
+                                * Valores base aproximados. Varían según escala, requerimientos técnicos y urgencia del proyecto.
+                            </span>
+                        </div>
                     </div>
 
                     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">

@@ -53,6 +53,9 @@ export function PhilosophySection() {
                             <p className="text-base md:text-lg text-white/60 font-light leading-relaxed">
                                 Sin embargo, para nuestras empresas locales, ofrecemos un diferencial absoluto e irreemplazable: <strong className="text-white font-medium">el servicio presencial</strong>. Entendemos que la transformación digital requiere confianza. Si tu negocio en Uruguay lo demanda, nuestro equipo se sienta en tu mesa directiva, recorre tus instalaciones, audita tus operaciones en persona y capacita a tus trabajadores cara a cara. Brindamos la sofisticación de una agencia global con el apretón de manos y el respaldo humano de un socio local.
                             </p>
+                            <p className="text-base md:text-lg text-white/60 font-light leading-relaxed mt-4 border-l-2 border-primary/50 pl-4">
+                                <strong className="text-white font-medium">Transparencia Radical:</strong> Te educamos para que sepas qué perdés y qué ganás al elegir cada tecnología. Nuestro principio es simple: <span className="text-primary font-medium">te cobramos solamente por lo que realmente vas a usar</span>. Creamos proyectos hiper-personalizados donde tu inversión va exactamente a la herramienta que te genera retorno, sin inflar presupuestos.
+                            </p>
                         </div>
                     </div>
                 </div>

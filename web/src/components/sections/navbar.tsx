@@ -11,7 +11,6 @@ import { LogoMM } from '@/components/shared/LogoMM';
 
 const navItems = [
     { name: 'Soluciones', href: '#servicios' },
-    { name: 'Automatización', href: '#automatizacion' },
     { name: 'Inversión', href: '#pricing' },
     { name: 'Portafolio', href: '#portfolio' },
 ];

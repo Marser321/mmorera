@@ -69,6 +69,11 @@ export function ServicesCatalog() {
                     <p className="text-xl text-white/60 font-light leading-relaxed max-w-2xl mx-auto">
                         Agencia Full-Stack: Marketing, Desarrollo y Sistemas de IA que generan ROI desde el día 1.
                     </p>
+                    <div className="mt-6 inline-flex items-center gap-3 px-5 py-3 rounded-2xl bg-primary/5 border border-primary/20 max-w-xl mx-auto text-left shadow-[0_0_20px_rgba(16,185,129,0.05)]">
+                        <span className="text-sm text-primary/80 font-medium leading-relaxed">
+                            <strong className="text-primary font-bold">Nuestra Promesa:</strong> Proyectos hiper-personalizados. Te explicamos qué hace cada herramienta para que <span className="text-primary/90 underline decoration-primary/30 underline-offset-2">no pagues por tecnología que no vas a usar</span>. Tu inversión, 100% optimizada para tu caso.
+                        </span>
+                    </div>
                 </motion.div>
             </div>
 

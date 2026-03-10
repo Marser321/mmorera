@@ -17,7 +17,6 @@ const ContactForm = dynamic(() => import('@/components/sections/contact-form').t
 const FAQSection = dynamic(() => import('@/components/sections/FAQSection').then(mod => mod.FAQSection));
 const Footer = dynamic(() => import('@/components/sections/footer').then(mod => mod.Footer));
 const ChatWidgetLoader = dynamic(() => import('@/components/interactive/chat-widget-loader').then(mod => mod.ChatWidgetLoader));
-const KnowledgeCenter = dynamic(() => import('@/components/sections/knowledge-center').then(mod => mod.KnowledgeCenter));
 /**
  * Página principal — Landing Page fusionada "Deep Space" + "Socialmedia".
  * Combina las mejores secciones de ambos sitios en un flujo de conversión óptimo.
@@ -40,7 +39,6 @@ export default function HomePage() {
                 <PricingSection />
                 <PortfolioSection />
                 <WorkflowSection />
-                <KnowledgeCenter />
                 <FAQSection />
                 <ContactForm />
             </main>

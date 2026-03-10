@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { submitLead } from '@/actions/submit-lead';
 import type { ContactFormData } from '@/types';
-import { Send, CheckCircle, Sparkles } from 'lucide-react';
+import { Send, CheckCircle, Sparkles, ChevronDown } from 'lucide-react';
 
 export function ContactForm() {
     const [isSubmitted, setIsSubmitted] = React.useState(false);
@@ -127,15 +127,18 @@ export function ContactForm() {
                                         </div>
                                     </div>
 
-                                    <div className="space-y-2">
+                                    <div className="space-y-2 relative">
                                         <label htmlFor="type" className="text-xs font-mono uppercase tracking-widest text-white/40 block">Tu Prioridad</label>
-                                        <select id="type" value={interes} onChange={(e) => setInteres(e.target.value)}
-                                            className="w-full h-12 px-4 rounded-xl bg-white/5 border border-white/10 text-white focus:border-primary/50 outline-none transition-colors">
-                                            <option value="web">Automatización de Ventas</option>
-                                            <option value="media">Desarrollo Web High-Ticket</option>
-                                            <option value="auto">IA & Chatbots</option>
-                                            <option value="full">Solución Full Infrastructure</option>
-                                        </select>
+                                        <div className="relative w-full">
+                                            <select id="type" value={interes} onChange={(e) => setInteres(e.target.value)}
+                                                className="w-full h-12 px-4 rounded-xl bg-white/5 border border-white/10 text-white focus:border-primary/50 outline-none transition-colors appearance-none cursor-pointer pr-10">
+                                                <option value="web" className="bg-[#0A0A0A] text-white">Automatización de Ventas</option>
+                                                <option value="media" className="bg-[#0A0A0A] text-white">Desarrollo Web High-Ticket</option>
+                                                <option value="auto" className="bg-[#0A0A0A] text-white">IA & Chatbots</option>
+                                                <option value="full" className="bg-[#0A0A0A] text-white">Solución Full Infrastructure</option>
+                                            </select>
+                                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40 pointer-events-none" />
+                                        </div>
                                     </div>
 
                                     <div className="space-y-2">

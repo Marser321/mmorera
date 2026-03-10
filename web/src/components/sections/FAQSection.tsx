@@ -42,7 +42,7 @@ const faqs: FAQ[] = [
     },
     {
         question: "¿Trabajan con empresas de cualquier tamaño?",
-        answer: "Trabajamos con PYMEs, startups y empresas medianas que facturan entre $100K y $10M anuales. Nuestros planes se adaptan: desde Piloto Automático ($499/mes) hasta Autonomía Total con infraestructura completa.",
+        answer: "Trabajo principalmente con emprendedores, startups y PYMEs. Al ser una agencia boutique, ofrezco atención hiper-personalizada. Los proyectos suelen ir desde $500 a $2,000 USD dependiendo de la complejidad. También ofrezco la posibilidad de integrarme temporalmente a tu equipo para asegurar que el sistema se levante y quede totalmente desplegado, garantizando seguridad y exclusividad.",
     },
 ];
 

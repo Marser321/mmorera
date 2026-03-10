@@ -98,6 +98,26 @@ const PROJECTS = [
         color: 'from-blue-500/20',
         iframeUrl: 'https://n95-gloves-boutique.vercel.app/',
         imageUrls: ['/portfolio/n95-gloves.png']
+    },
+    {
+        id: 10,
+        title: 'Clínica Estética Advanced',
+        category: 'Clínicas',
+        desc: 'Plataforma inmersiva para servicios de medicina estética y tratamientos corporales.',
+        metric: 'Agendamiento',
+        color: 'from-rose-400/20',
+        iframeUrl: 'https://clinicaest-tica.vercel.app/',
+        imageUrls: ['/portfolio/clinica-estetica.png']
+    },
+    {
+        id: 11,
+        title: 'Clínica Dental Pro',
+        category: 'Clínicas',
+        desc: 'Web profesional para consultorio odontológico con presentación de servicios y equipo médico.',
+        metric: 'Confianza',
+        color: 'from-cyan-400/20',
+        iframeUrl: 'https://clinica-dental-d41q.vercel.app/',
+        imageUrls: ['/portfolio/clinica-dental.png']
     }
 ];
 
@@ -375,7 +395,9 @@ export function PortfolioSection() {
                         <div className="mt-8 p-6 bg-white/[0.02] border border-white/5 rounded-2xl">
                             <p className="text-xs text-white/50 leading-relaxed">
                                 <strong className="text-white/80">Aviso sobre nuestras Demos:</strong> A diferencia de las plantillas genéricas, el núcleo de nuestros sistemas se adapta a la lógica y volumen de <em>tu propio negocio</em>. No tiene sentido mostrarte el backend privado de un cliente.
-                                Por eso, los demos de abajo representan la estética y velocidad de respuesta (Frontend). Tu arquitectura tecnológica (Backend) será dimensionada desde lo más simple hasta operaciones escalables, <strong>garanteando que no pagues licencias ni servidores extra por lo que no usás</strong>.
+                                Por eso, los demos de abajo representan la estética y velocidad de respuesta (Frontend). Tu arquitectura tecnológica (Backend) será dimensionada desde lo más simple hasta operaciones escalables, <strong>garantizando que no pagues licencias ni servidores extra por lo que no usás</strong>.
+                                <br /><br />
+                                <strong className="text-emerald-400/80">Nota para Clínicas y Estéticas:</strong> Sabemos que las necesidades varían enormemente. Adaptamos las soluciones personalmente al tamaño de cada clínica. No todos necesitan un sistema súper complejo; armamos exactamente lo que precisa tu operativa diaria.
                             </p>
                         </div>
                     </div>
