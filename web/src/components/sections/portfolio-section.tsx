@@ -19,6 +19,16 @@ const CATEGORIES = ['Todos', 'E-commerce', 'Sistemas', 'Agencias', 'Real Estate'
 
 const PROJECTS = [
     {
+        id: 0,
+        title: 'AutoHub',
+        category: 'Agencias',
+        desc: 'Plataforma e-commerce inmersiva para automotoras. Catálogo avanzado, vistas 360° y gestión web premium.',
+        metric: 'Alto Impacto',
+        color: 'from-blue-600/20',
+        iframeUrl: 'https://auto-indol-five.vercel.app/',
+        imageUrls: ['/portfolio/auto-hub.png']
+    },
+    {
         id: 1,
         title: 'LNB SaaS',
         category: 'Sistemas',
