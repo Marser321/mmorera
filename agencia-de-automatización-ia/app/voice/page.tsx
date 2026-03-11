@@ -37,7 +37,12 @@ export default function VoicePage() {
     setIsConnecting(true);
     setError(null);
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY as string });
+      const ai = new GoogleGenAI({
+        apiKey: 'proxy-key',
+        httpOptions: {
+          baseUrl: (typeof window !== 'undefined' ? window.location.origin : '') + '/api/gemini-live'
+        }
+      });
       
       // Initialize Audio Context for playback
       audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 24000 });
@@ -60,19 +65,12 @@ export default function VoicePage() {
             try {
               const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
               mediaStreamRef.current = stream;
-              
-              // In a real implementation, we would set up an AudioWorklet or ScriptProcessor
-              // to capture PCM data and send it via session.sendRealtimeInput
-              // For this demo, we'll just show the UI state.
-              
             } catch (err) {
               console.error("Error accessing microphone:", err);
               setError("No se pudo acceder al micrófono.");
             }
           },
           onmessage: (message: LiveServerMessage) => {
-            // Handle incoming audio and transcriptions
-            // In a real implementation, we decode base64 PCM and play it
             if (message.serverContent?.modelTurn) {
               // Simulated transcript update
             }
