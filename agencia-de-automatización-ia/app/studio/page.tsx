@@ -6,7 +6,6 @@ import {
   Video, Sparkles, Wand2, Upload, Loader2, Download, Zap, ChevronLeft, ChevronRight
 } from 'lucide-react';
 import Link from 'next/link';
-import { GoogleGenAI } from '@google/genai';
 
 const sidebarItems = [
   { icon: LayoutDashboard, label: 'Dashboard', href: '/dashboard', active: false },
@@ -49,23 +48,21 @@ export default function StudioPage() {
         await window.aistudio.openSelectKey();
       }
       
-      const ai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY as string });
-      const response = await ai.models.generateContent({
-        model: 'gemini-3-pro-image-preview',
-        contents: { parts: [{ text: prompt }] },
-        config: {
-          imageConfig: {
-            aspectRatio: "16:9",
-            imageSize: size
-          }
-        }
+      const response = await fetch('/api/generate-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt, size })
       });
       
-      for (const part of response.candidates?.[0]?.content?.parts || []) {
-        if (part.inlineData) {
-          setGeneratedImage(`data:image/png;base64,${part.inlineData.data}`);
-          break;
-        }
+      if (!response.ok) {
+        throw new Error('Failed to generate image');
+      }
+
+      const data = await response.json();
+      if (data.image) {
+        setGeneratedImage(`data:image/png;base64,${data.image}`);
+      } else if (data.error) {
+        throw new Error(data.error);
       }
     } catch (error) {
       console.error('Error generating image:', error);
@@ -89,25 +86,24 @@ export default function StudioPage() {
     if (!editPrompt || !sourceImage) return;
     setIsEditing(true);
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY as string });
       const base64Data = sourceImage.split(',')[1];
       const mimeType = sourceImage.split(';')[0].split(':')[1];
 
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash-image',
-        contents: {
-          parts: [
-            { inlineData: { data: base64Data, mimeType } },
-            { text: editPrompt }
-          ]
-        }
+      const response = await fetch('/api/edit-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ base64Data, mimeType, editPrompt })
       });
 
-      for (const part of response.candidates?.[0]?.content?.parts || []) {
-        if (part.inlineData) {
-          setEditedImage(`data:image/png;base64,${part.inlineData.data}`);
-          break;
-        }
+      if (!response.ok) {
+        throw new Error('Failed to edit image');
+      }
+
+      const data = await response.json();
+      if (data.image) {
+        setEditedImage(`data:image/png;base64,${data.image}`);
+      } else if (data.error) {
+        throw new Error(data.error);
       }
     } catch (error) {
       console.error('Error editing image:', error);
@@ -124,37 +120,21 @@ export default function StudioPage() {
         await window.aistudio.openSelectKey();
       }
 
-      const ai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY as string });
       const base64Data = videoSourceImage.split(',')[1];
       const mimeType = videoSourceImage.split(';')[0].split(':')[1];
 
-      let operation = await ai.models.generateVideos({
-        model: 'veo-3.1-fast-generate-preview',
-        prompt: videoPrompt || undefined,
-        image: {
-          imageBytes: base64Data,
-          mimeType: mimeType,
-        },
-        config: {
-          numberOfVideos: 1,
-          resolution: '720p',
-          aspectRatio: '16:9'
-        }
+      const response = await fetch('/api/generate-video', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ base64Data, mimeType, videoPrompt })
       });
 
-      while (!operation.done) {
-        await new Promise(resolve => setTimeout(resolve, 10000));
-        operation = await ai.operations.getVideosOperation({ operation });
+      if (!response.ok) {
+        throw new Error('Failed to generate video');
       }
 
-      const downloadLink = operation.response?.generatedVideos?.[0]?.video?.uri;
-      if (downloadLink) {
-        const videoResponse = await fetch(downloadLink, {
-          headers: { 'x-goog-api-key': process.env.NEXT_PUBLIC_GEMINI_API_KEY as string }
-        });
-        const blob = await videoResponse.blob();
-        setGeneratedVideo(URL.createObjectURL(blob));
-      }
+      const blob = await response.blob();
+      setGeneratedVideo(URL.createObjectURL(blob));
     } catch (error) {
       console.error('Error generating video:', error);
     } finally {
