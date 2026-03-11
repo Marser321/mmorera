@@ -26,7 +26,7 @@ const PROJECTS = [
         metric: 'Alto Impacto',
         color: 'from-blue-600/20',
         iframeUrl: 'https://auto-indol-five.vercel.app/',
-        imageUrls: ['/portfolio/auto-hub.png']
+        imageUrls: ['/portfolio/autohub-transparent.png', '/portfolio/auto-hub.png']
     },
     {
         id: 1,
