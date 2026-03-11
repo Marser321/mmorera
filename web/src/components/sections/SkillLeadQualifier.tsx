@@ -26,7 +26,7 @@ export function SkillLeadQualifier() {
                 const history = await getChatHistory(id);
                 // Si ya había historia para esta sesión de calificador
                 if (history && history.length > 0) {
-                    const lastAssistMsg = history.reverse().find((m: { role: string; content: string }) => m.role === 'assistant');
+                    const lastAssistMsg = history.findLast((m: { role: string; content: string }) => m.role === 'assistant');
                     if (lastAssistMsg) {
                         try { setResult(JSON.parse(lastAssistMsg.content)); } catch { }
                     }
