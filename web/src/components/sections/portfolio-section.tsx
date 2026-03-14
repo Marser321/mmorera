@@ -127,6 +127,16 @@ const PROJECTS = [
         color: 'from-cyan-400/20',
         iframeUrl: 'https://clinica-dental-d41q.vercel.app/',
         imageUrls: ['/portfolio/clinica-dental.png']
+    },
+    {
+        id: 12,
+        title: 'Profesional Elite CV',
+        category: 'Sistemas',
+        desc: 'Ecosistema de plantillas para perfiles profesionales de alto impacto. Diseño minimalista, optimizado para conversión y marca personal.',
+        metric: '+100% Impacto',
+        color: 'from-emerald-500/20',
+        iframeUrl: 'https://profecionalcv.vercel.app/',
+        imageUrls: ['/portfolio/profesional-cv.png']
     }
 ];
 

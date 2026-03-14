@@ -15,7 +15,8 @@ const urls = [
     { name: 'henrylasa', url: 'https://henrylasa-n4sx.vercel.app/' },
     { name: 'gym-beta', url: 'https://gym-beta-sable.vercel.app/' },
     { name: 'smartpoint', url: 'https://smartpoint-rho.vercel.app/' },
-    { name: 'n95-gloves', url: 'https://n95-gloves-boutique.vercel.app/' }
+    { name: 'n95-gloves', url: 'https://n95-gloves-boutique.vercel.app/' },
+    { name: 'profesional-cv', url: 'https://profecionalcv.vercel.app/' }
 ];
 
 const outputDir = path.join(__dirname, 'public', 'portfolio');
