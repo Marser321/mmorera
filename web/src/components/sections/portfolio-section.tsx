@@ -39,6 +39,16 @@ const PROJECTS = [
         imageUrls: ['/portfolio/lnb-saass.png']
     },
     {
+        id: 3,
+        title: 'Hub Profesional',
+        category: 'Sistemas',
+        desc: 'Ecosistema inteligente para la gestión de perfiles profesionales. Optimización de CVs con IA y métricas de impacto real.',
+        metric: 'AI Optimized',
+        color: 'from-indigo-600/20',
+        iframeUrl: 'https://profecionalcv.vercel.app/',
+        imageUrls: ['/portfolio/profesional-cv.png']
+    },
+    {
         id: 2,
         title: 'EvoWrap Custom',
         category: 'Agencias',
