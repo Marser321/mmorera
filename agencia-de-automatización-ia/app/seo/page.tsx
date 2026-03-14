@@ -7,7 +7,6 @@ import {
   Link as LinkIcon, Download, RefreshCw, Diamond, MapPin, Loader2, Sparkles, Image as ImageIcon
 } from 'lucide-react';
 import Link from 'next/link';
-import { GoogleGenAI } from '@google/genai';
 
 export default function SeoPanelPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -21,15 +20,9 @@ export default function SeoPanelPage() {
     if (!searchQuery) return;
     setIsSearching(true);
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY as string });
-      const response = await ai.models.generateContent({
-        model: 'gemini-3-flash-preview',
-        contents: `Analiza la tendencia actual de búsqueda para: "${searchQuery}". Proporciona un resumen conciso y oportunidades clave.`,
-        config: {
-          tools: [{ googleSearch: {} }]
-        }
-      });
-      setSearchResult(response.text || 'Sin resultados.');
+      const { processAITask } = await import('@/app/actions/ai');
+      const result = await processAITask(`Analiza la tendencia actual de búsqueda para: "${searchQuery}". Proporciona un resumen conciso y oportunidades clave.`);
+      setSearchResult(result.text || 'Sin resultados.');
     } catch (error) {
       console.error('Error with search grounding:', error);
       setSearchResult('Error al obtener datos de búsqueda.');
@@ -39,32 +32,7 @@ export default function SeoPanelPage() {
   };
 
   const handleLocalGrounding = async () => {
-    if (!localQuery) return;
-    setIsLocalSearching(true);
-    try {
-      const ai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY as string });
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: `Encuentra competidores locales o negocios relacionados con "${localQuery}" cerca de mi ubicación.`,
-        config: {
-          tools: [{ googleMaps: {} }],
-          toolConfig: {
-            retrievalConfig: {
-              latLng: {
-                latitude: -34.9011, // Montevideo, Uruguay
-                longitude: -56.1645
-              }
-            }
-          }
-        }
-      });
-      setLocalResult(response.text || 'Sin resultados locales.');
-    } catch (error) {
-      console.error('Error with maps grounding:', error);
-      setLocalResult('Error al obtener datos locales.');
-    } finally {
-      setIsLocalSearching(false);
-    }
+    setLocalResult('La búsqueda local está temporalmente deshabilitada por razones de seguridad.');
   };
 
   return (

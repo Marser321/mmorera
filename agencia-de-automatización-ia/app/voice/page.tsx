@@ -6,16 +6,8 @@ import {
   Mic, Zap, ChevronLeft, ChevronRight, Loader2, StopCircle, Play
 } from 'lucide-react';
 import Link from 'next/link';
-import { GoogleGenAI, LiveServerMessage, Modality } from '@google/genai';
-
-const sidebarItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', href: '/dashboard', active: false },
-  { icon: Search, label: 'SEO Panel', href: '/seo', active: false },
-  { icon: FileText, label: 'Content', href: '/portal', active: false },
-  { icon: ImageIcon, label: 'AI Studio', href: '/studio', active: false },
-  { icon: Mic, label: 'Voice Assistant', href: '/voice', active: true },
-  { icon: Settings, label: 'Settings', href: '/settings', active: false },
-];
+// La funcionalidad de voz ha sido desactivada para mejorar la seguridad y evitar dependencias expuestas.
+// Para reactivar, se debe implementar un proxy de servidor para el WebSocket de Gemini Live.
 
 export default function VoicePage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -27,76 +19,9 @@ export default function VoicePage() {
   const sessionRef = useRef<any>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
-  const audioQueueRef = useRef<Float32Array[]>([]);
-  const isPlayingRef = useRef(false);
-
-  // Note: A full implementation of the Live API requires complex Web Audio API logic
-  // for encoding/decoding PCM audio. This is a simplified frontend structure.
   
   const connectToLiveAPI = async () => {
-    setIsConnecting(true);
-    setError(null);
-    try {
-      const ai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY as string });
-      
-      // Initialize Audio Context for playback
-      audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 24000 });
-      
-      const sessionPromise = ai.live.connect({
-        model: "gemini-2.5-flash-native-audio-preview-09-2025",
-        config: {
-          responseModalities: [Modality.AUDIO],
-          speechConfig: {
-            voiceConfig: { prebuiltVoiceConfig: { voiceName: "Zephyr" } },
-          },
-          systemInstruction: "Eres un asistente de voz experto para la plataforma Nexus.AI. Responde de manera concisa y profesional.",
-        },
-        callbacks: {
-          onopen: async () => {
-            setIsConnected(true);
-            setIsConnecting(false);
-            
-            // Request microphone access
-            try {
-              const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-              mediaStreamRef.current = stream;
-              
-              // In a real implementation, we would set up an AudioWorklet or ScriptProcessor
-              // to capture PCM data and send it via session.sendRealtimeInput
-              // For this demo, we'll just show the UI state.
-              
-            } catch (err) {
-              console.error("Error accessing microphone:", err);
-              setError("No se pudo acceder al micrófono.");
-            }
-          },
-          onmessage: (message: LiveServerMessage) => {
-            // Handle incoming audio and transcriptions
-            // In a real implementation, we decode base64 PCM and play it
-            if (message.serverContent?.modelTurn) {
-              // Simulated transcript update
-            }
-          },
-          onclose: () => {
-            setIsConnected(false);
-            cleanup();
-          },
-          onerror: (err) => {
-            console.error("Live API Error:", err);
-            setError("Error de conexión con el servidor de voz.");
-            setIsConnected(false);
-            cleanup();
-          }
-        }
-      });
-      
-      sessionRef.current = sessionPromise;
-      
-    } catch (err) {
-      console.error("Failed to connect:", err);
-      setError("Fallo al iniciar la sesión de voz.");
-      setIsConnecting(false);
-    }
+    setError("El asistente de voz está temporalmente deshabilitado por razones de seguridad.");
   };
 
   const disconnect = () => {

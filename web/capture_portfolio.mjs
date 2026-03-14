@@ -9,14 +9,16 @@ const __dirname = path.dirname(__filename);
 const urls = [
     { name: 'lnb-saass', url: 'https://lnb-saass.vercel.app/' },
     { name: 'evowrap', url: 'https://evowrap.vercel.app/' },
-    { name: 'punta-360', url: 'https://punta-360-git-main-marios-projects-4a53e443.vercel.app/' },
+    { name: 'punta-360', url: 'https://punta-360.vercel.app/' },
     { name: 'realstate-brown', url: 'https://realstate2-brown.vercel.app/' },
     { name: 'booking-clinico', url: 'https://nb-oa7mhumgz-marios-projects-4a53e443.vercel.app/reservar' },
-    { name: 'henrylasa', url: 'https://henrylasa-n4sx.vercel.app/' },
+    { name: 'henrylasa', url: 'https://jenrylasaweb.vercel.app/' },
     { name: 'gym-beta', url: 'https://gym-beta-sable.vercel.app/' },
     { name: 'smartpoint', url: 'https://smartpoint-rho.vercel.app/' },
     { name: 'n95-gloves', url: 'https://n95-gloves-boutique.vercel.app/' },
-    { name: 'profesional-cv', url: 'https://profecionalcv.vercel.app/' }
+    { name: 'profesional-cv', url: 'https://profecionalcv.vercel.app/' },
+    { name: 'fede-motos', url: 'https://fede-motos.vercel.app/' },
+    { name: 'gym-crm', url: 'https://gymcrm-mvp.vercel.app/' }
 ];
 
 const outputDir = path.join(__dirname, 'public', 'portfolio');

@@ -6,7 +6,6 @@ import {
   Video, Sparkles, Wand2, Upload, Loader2, Download, Zap, ChevronLeft, ChevronRight
 } from 'lucide-react';
 import Link from 'next/link';
-import { GoogleGenAI } from '@google/genai';
 
 const sidebarItems = [
   { icon: LayoutDashboard, label: 'Dashboard', href: '/dashboard', active: false },
@@ -44,28 +43,12 @@ export default function StudioPage() {
     if (!prompt) return;
     setIsGenerating(true);
     try {
-      // Check for API key selection for Pro Image
-      if (window.aistudio && await window.aistudio.hasSelectedApiKey() === false) {
-        await window.aistudio.openSelectKey();
-      }
+      const { processAITask } = await import('@/app/actions/ai');
+      const result = await processAITask(`Genera una imagen basada en este prompt: ${prompt}. Formato esperado: base64.`);
       
-      const ai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY as string });
-      const response = await ai.models.generateContent({
-        model: 'gemini-3-pro-image-preview',
-        contents: { parts: [{ text: prompt }] },
-        config: {
-          imageConfig: {
-            aspectRatio: "16:9",
-            imageSize: size
-          }
-        }
-      });
-      
-      for (const part of response.candidates?.[0]?.content?.parts || []) {
-        if (part.inlineData) {
-          setGeneratedImage(`data:image/png;base64,${part.inlineData.data}`);
-          break;
-        }
+      if (result.text) {
+        // Nota: En una implementación real con Veo/Imagen, la Server Action devolvería la URL o base64
+        setGeneratedImage(result.text); 
       }
     } catch (error) {
       console.error('Error generating image:', error);
@@ -86,80 +69,11 @@ export default function StudioPage() {
   };
 
   const handleEditImage = async () => {
-    if (!editPrompt || !sourceImage) return;
-    setIsEditing(true);
-    try {
-      const ai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY as string });
-      const base64Data = sourceImage.split(',')[1];
-      const mimeType = sourceImage.split(';')[0].split(':')[1];
-
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash-image',
-        contents: {
-          parts: [
-            { inlineData: { data: base64Data, mimeType } },
-            { text: editPrompt }
-          ]
-        }
-      });
-
-      for (const part of response.candidates?.[0]?.content?.parts || []) {
-        if (part.inlineData) {
-          setEditedImage(`data:image/png;base64,${part.inlineData.data}`);
-          break;
-        }
-      }
-    } catch (error) {
-      console.error('Error editing image:', error);
-    } finally {
-      setIsEditing(false);
-    }
+    setError("El editor mágico está temporalmente deshabilitado por razones de seguridad.");
   };
 
   const handleGenerateVideo = async () => {
-    if (!videoSourceImage) return;
-    setIsGeneratingVideo(true);
-    try {
-      if (window.aistudio && await window.aistudio.hasSelectedApiKey() === false) {
-        await window.aistudio.openSelectKey();
-      }
-
-      const ai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY as string });
-      const base64Data = videoSourceImage.split(',')[1];
-      const mimeType = videoSourceImage.split(';')[0].split(':')[1];
-
-      let operation = await ai.models.generateVideos({
-        model: 'veo-3.1-fast-generate-preview',
-        prompt: videoPrompt || undefined,
-        image: {
-          imageBytes: base64Data,
-          mimeType: mimeType,
-        },
-        config: {
-          numberOfVideos: 1,
-          resolution: '720p',
-          aspectRatio: '16:9'
-        }
-      });
-
-      while (!operation.done) {
-        await new Promise(resolve => setTimeout(resolve, 10000));
-        operation = await ai.operations.getVideosOperation({ operation });
-      }
-
-      const downloadLink = operation.response?.generatedVideos?.[0]?.video?.uri;
-      if (downloadLink) {
-        const videoResponse = await fetch(downloadLink, {
-          headers: { 'x-goog-api-key': process.env.NEXT_PUBLIC_GEMINI_API_KEY as string }
-        });
-        const blob = await videoResponse.blob();
-        setGeneratedVideo(URL.createObjectURL(blob));
-      }
-    } catch (error) {
-      console.error('Error generating video:', error);
-    } finally {
-      setIsGeneratingVideo(false);
-    }
+    setError("La animación de video está temporalmente deshabilitada por razones de seguridad.");
   };
 
   return (

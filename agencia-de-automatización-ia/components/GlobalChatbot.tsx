@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { MessageSquare, X, Send, Sparkles, Loader2, Bot } from 'lucide-react';
-import { GoogleGenAI, GenerateContentResponse } from '@google/genai';
 
 export default function GlobalChatbot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,7 +11,6 @@ export default function GlobalChatbot() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const [chatSession, setChatSession] = useState<any>(null);
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -20,20 +18,8 @@ export default function GlobalChatbot() {
     }
   }, [messages]);
 
-  useEffect(() => {
-    // Initialize chat session
-    const ai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY as string });
-    const chat = ai.chats.create({
-      model: 'gemini-3.1-pro-preview',
-      config: {
-        systemInstruction: 'Eres un asistente experto en negocios, marketing y automatización con IA para la agencia Nexus.AI. Responde de manera profesional, concisa y en español.',
-      },
-    });
-    setChatSession(chat);
-  }, []);
-
   const handleSend = async () => {
-    if (!input.trim() || !chatSession) return;
+    if (!input.trim()) return;
 
     const userMessage = input.trim();
     setInput('');
@@ -41,8 +27,24 @@ export default function GlobalChatbot() {
     setIsLoading(true);
 
     try {
-      const response: GenerateContentResponse = await chatSession.sendMessage({ message: userMessage });
-      setMessages(prev => [...prev, { role: 'model', text: response.text || 'Sin respuesta.' }]);
+      const response = await fetch('/api/gemini', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: userMessage,
+          history: messages.map(m => ({
+            role: m.role,
+            parts: [{ text: m.text }]
+          }))
+        }),
+      });
+
+      if (!response.ok) throw new Error('Error en la API');
+      
+      const data = await response.json();
+      setMessages(prev => [...prev, { role: 'model', text: data.text || 'Sin respuesta.' }]);
     } catch (error) {
       console.error('Error sending message:', error);
       setMessages(prev => [...prev, { role: 'model', text: 'Lo siento, ha ocurrido un error al procesar tu solicitud.' }]);

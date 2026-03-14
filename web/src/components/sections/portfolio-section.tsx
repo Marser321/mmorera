@@ -36,7 +36,7 @@ const PROJECTS = [
         metric: '+40% Efi.',
         color: 'from-violet-500/20',
         iframeUrl: 'https://lnb-saass.vercel.app/',
-        imageUrls: ['/portfolio/lnb-saass.png'] // Array listo para compendio
+        imageUrls: ['/portfolio/lnb-saass.png']
     },
     {
         id: 2,
@@ -59,6 +59,16 @@ const PROJECTS = [
         imageUrls: ['/portfolio/realstate-brown.png']
     },
     {
+        id: 13,
+        title: 'Punta 360',
+        category: 'Real Estate',
+        desc: 'Plataforma inmersiva de turismo y Real Estate para Punta del Este. Experiencia visual completa.',
+        metric: 'Premium',
+        color: 'from-blue-400/20',
+        iframeUrl: 'https://punta-360.vercel.app/',
+        imageUrls: ['/portfolio/punta-360.png']
+    },
+    {
         id: 5,
         title: 'Booking Barbería',
         category: 'Estética',
@@ -70,13 +80,23 @@ const PROJECTS = [
     },
     {
         id: 6,
-        title: 'Carpintería Lasa',
+        title: 'Carpintería Lasa v2',
         category: 'Agencias',
-        desc: 'Portfolio personal e inmersivo para presentación de trabajos de carpintería de alto nivel.',
-        metric: 'Lead Magnet',
+        desc: 'Sistema de presentación premium para carpintería fina. Versión mejorada con mayor velocidad y UX.',
+        metric: 'Conversion++',
         color: 'from-zinc-500/20',
-        iframeUrl: 'https://jenrylasa.vercel.app/',
+        iframeUrl: 'https://jenrylasaweb.vercel.app/',
         imageUrls: ['/portfolio/henrylasa.png']
+    },
+    {
+        id: 14,
+        title: 'Fede Motos',
+        category: 'E-commerce',
+        desc: 'E-commerce de alto rendimiento para concesionarias de motos. Gestión de inventario y ventas online.',
+        metric: '+180% Sales',
+        color: 'from-red-600/20',
+        iframeUrl: 'https://fede-motos.vercel.app/',
+        imageUrls: ['/portfolio/fede-motos.png']
     },
     {
         id: 7,
@@ -99,14 +119,14 @@ const PROJECTS = [
         imageUrls: ['/portfolio/gym-beta.png']
     },
     {
-        id: 9,
-        title: 'N95 Gloves Boutique',
-        category: 'E-commerce',
-        desc: 'Tienda transaccional de extrema velocidad. Optimizada para no perder ventas.',
-        metric: '+240% Conv.',
-        color: 'from-blue-500/20',
-        iframeUrl: 'https://n95-gloves-boutique.vercel.app/',
-        imageUrls: ['/portfolio/n95-gloves.png']
+        id: 15,
+        title: 'Gym CRM MVP',
+        category: 'Sistemas',
+        desc: 'Dashboard inteligente para la gestión integral de gimnasios y centros deportivos.',
+        metric: 'MVP Ready',
+        color: 'from-emerald-500/20',
+        iframeUrl: 'https://gymcrm-mvp.vercel.app/',
+        imageUrls: ['/portfolio/gym-crm.png']
     },
     {
         id: 10,
@@ -117,26 +137,6 @@ const PROJECTS = [
         color: 'from-rose-400/20',
         iframeUrl: 'https://clinicaest-tica.vercel.app/',
         imageUrls: ['/portfolio/clinica-estetica.png']
-    },
-    {
-        id: 11,
-        title: 'Clínica Dental Pro',
-        category: 'Clínicas',
-        desc: 'Web profesional para consultorio odontológico con presentación de servicios y equipo médico.',
-        metric: 'Confianza',
-        color: 'from-cyan-400/20',
-        iframeUrl: 'https://clinica-dental-d41q.vercel.app/',
-        imageUrls: ['/portfolio/clinica-dental.png']
-    },
-    {
-        id: 12,
-        title: 'Profesional Elite CV',
-        category: 'Sistemas',
-        desc: 'Ecosistema de plantillas para perfiles profesionales de alto impacto. Diseño minimalista, optimizado para conversión y marca personal.',
-        metric: '+100% Impacto',
-        color: 'from-emerald-500/20',
-        iframeUrl: 'https://profecionalcv.vercel.app/',
-        imageUrls: ['/portfolio/profesional-cv.png']
     }
 ];
 
@@ -192,8 +192,8 @@ function ProjectCard({ project }: { project: typeof PROJECTS[0] }) {
                 />
 
                 {/* Gradientes Oscuros para legibilidad (Fondo Oscuro -> Arriba Transparente) */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent z-0" />
-                <div className={cn("absolute inset-0 bg-gradient-to-tr mix-blend-overlay z-0", project.color)} />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/90 to-transparent z-0 transition-opacity duration-500 group-hover:opacity-95" />
+                <div className={cn("absolute inset-0 bg-gradient-to-tr mix-blend-overlay z-0 opacity-50", project.color)} />
 
                 {/* Patrón de fondo sutil que simula estructura de datos */}
                 <div className="absolute inset-0 opacity-[0.03] z-0 mix-blend-overlay" style={{
@@ -203,8 +203,8 @@ function ProjectCard({ project }: { project: typeof PROJECTS[0] }) {
 
                 <div className="absolute inset-0 flex flex-col justify-end p-6 md:p-8 z-10">
                     <div className="flex justify-between items-start mb-4">
-                        <div className="bg-white/10 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full">
-                            <span className="text-white/80 text-xs font-bold uppercase tracking-widest">{project.category}</span>
+                        <div className="bg-white/5 backdrop-blur-xl border border-white/10 px-3 py-1 rounded-full shadow-inner">
+                            <span className="text-zinc-300 text-[10px] font-bold uppercase tracking-widest">{project.category}</span>
                         </div>
                         <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-black px-3 py-1 rounded-full flex items-center gap-1.5">
                             <Zap className="w-3 h-3" />
@@ -215,7 +215,7 @@ function ProjectCard({ project }: { project: typeof PROJECTS[0] }) {
                     <h3 className="text-2xl md:text-3xl font-black text-white mb-2 tracking-tighter group-hover:translate-x-2 transition-transform duration-500">
                         {project.title}
                     </h3>
-                    <p className="text-white/50 text-sm leading-relaxed mb-6 max-w-sm group-hover:text-white/80 transition-colors duration-500">
+                    <p className="text-zinc-400 text-sm leading-relaxed mb-6 max-w-sm group-hover:text-zinc-100 transition-colors duration-500 font-medium">
                         {project.desc}
                     </p>
 
