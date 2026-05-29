@@ -11,34 +11,42 @@ export async function submitLead(data: ContactFormData) {
         // Enviar Email via Resend
         if (RESEND_API_KEY) {
             const resend = new Resend(RESEND_API_KEY)
+            const htmlContent = `
+                <h2>Nuevo contacto recibido a través de la Web</h2>
+                <p><strong>Nombre:</strong> ${data.nombre}</p>
+                <p><strong>Email:</strong> ${data.email}</p>
+                <p><strong>Teléfono:</strong> ${data.telefono || 'No proporcionado'}</p>
+                <p><strong>Empresa:</strong> ${data.empresa || 'No proporcionada'}</p>
+                ${data.revenue ? `<p><strong>Facturación Mensual (Revenue):</strong> ${data.revenue}</p>` : ''}
+                ${data.timeline ? `<p><strong>Timeline de Despliegue:</strong> ${data.timeline}</p>` : ''}
+                <p><strong>Servicios de Interés:</strong> ${data.servicios_interes?.join(', ') || 'No especificados'}</p>
+                <p><strong>Plan Seleccionado:</strong> ${data.plan_seleccionado || 'Ninguno'}</p>
+                <p><strong>Mensaje:</strong></p>
+                <p>${data.mensaje || 'Sin mensaje'}</p>
+            `;
+
             await resend.emails.send({
-                from: 'NEXO Leads <onboarding@resend.dev>', // Cambiar por tu dominio verificado si tienes uno, o dejar este de prueba
-                to: process.env.NOTIFICATION_EMAIL || 'nexo@example.com', // El mail donde recibirás las leads
+                from: 'MMorera Web Leads <onboarding@resend.dev>',
+                to: process.env.NOTIFICATION_EMAIL || 'moreraescobar@gmail.com',
                 subject: `Nuevo Lead: ${data.nombre} - ${data.empresa || 'Empresa no especificada'}`,
-                html: `
-                    <h2>Nuevo contacto recibido a través de NEXO</h2>
-                    <p><strong>Nombre:</strong> ${data.nombre}</p>
-                    <p><strong>Email:</strong> ${data.email}</p>
-                    <p><strong>Teléfono:</strong> ${data.telefono || 'No proporcionado'}</p>
-                    <p><strong>Empresa:</strong> ${data.empresa || 'No proporcionada'}</p>
-                    <p><strong>Servicios de Interés:</strong> ${data.servicios_interes?.join(', ') || 'No especificados'}</p>
-                    <p><strong>Plan Seleccionado:</strong> ${data.plan_seleccionado || 'Ninguno'}</p>
-                    <p><strong>Mensaje:</strong></p>
-                    <p>${data.mensaje || 'Sin mensaje'}</p>
-                `
+                html: htmlContent
             })
         }
 
         // Enviar Notificación a Telegram
         if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) {
-            const telegramMessage = `
-🔔 *NUEVO LEAD - NEXO* 🔔
+            let telegramMessage = `
+🔔 *NUEVO LEAD - WEB* 🔔
 
 👤 *Nombre:* ${data.nombre}
 ✉️ *Email:* ${data.email}
 📱 *Teléfono:* ${data.telefono || 'No proporcionado'}
 🏢 *Empresa:* ${data.empresa || 'No proporcionada'}
+`;
+            if (data.revenue) telegramMessage += `💰 *Revenue:* ${data.revenue}\n`;
+            if (data.timeline) telegramMessage += `📅 *Timeline:* ${data.timeline}\n`;
 
+            telegramMessage += `
 🛠 *Servicios:* ${data.servicios_interes?.join(', ') || 'No especificados'}
 💎 *Plan:* ${data.plan_seleccionado || 'Ninguno'}
 
@@ -68,6 +76,11 @@ ${data.mensaje || 'Sin mensaje'}
                 const { createClient } = require('@insforge/sdk')
                 const insforge = createClient({ baseUrl: insforgeUrl, anonKey: insforgeKey })
 
+                let finalMessage = data.mensaje || null;
+                if (data.revenue || data.timeline) {
+                    finalMessage = `[Brief Info]\nRevenue: ${data.revenue || 'N/A'}\nTimeline: ${data.timeline || 'N/A'}\n\nChallenge:\n${data.mensaje || 'Sin mensaje'}`;
+                }
+
                 const { error: dbError } = await insforge.database.from('leads').insert([{
                     first_name: data.nombre,
                     email: data.email,
@@ -75,7 +88,7 @@ ${data.mensaje || 'Sin mensaje'}
                     phone: data.telefono || null,
                     interested_services: data.servicios_interes || [],
                     selected_plan: data.plan_seleccionado || null,
-                    message: data.mensaje || null,
+                    message: finalMessage,
                     source: 'website'
                 }])
 

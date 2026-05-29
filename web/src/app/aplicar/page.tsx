@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, ArrowRight, ArrowLeft, CheckCircle2, Building2, DollarSign, Cpu, User } from 'lucide-react';
+import { submitLead } from '@/actions/submit-lead';
 
 /**
  * Application Funnel — Formulario de Calificación B2B.
@@ -46,6 +47,7 @@ const TIMELINE_OPTIONS = [
 export default function ApplicationPage() {
     const [step, setStep] = useState(0);
     const [submitted, setSubmitted] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
     const formRef = useRef<HTMLFormElement>(null);
     const [formData, setFormData] = useState<FormData>({
         name: '',
@@ -70,11 +72,40 @@ export default function ApplicationPage() {
         }
     };
 
-    const handleSubmit = () => {
-        // TODO: Conectar con CRM (GoHighLevel / Salesforce) vía webhook
-        console.log('📋 Application Funnel Submission:', formData);
-        setSubmitted(true);
+    const handleSubmit = async () => {
+        setSubmitting(true);
+        const leadData = {
+            nombre: formData.name,
+            email: formData.email,
+            empresa: formData.company,
+            servicios_interes: ['brief_aplicar'],
+            mensaje: formData.challenge,
+            revenue: formData.revenue,
+            timeline: formData.timeline
+        };
+
+        // Formato del mensaje para WhatsApp
+        const waMessage = `Hola Mario! 👋 Acabo de completar el brief para mi proyecto.\n\n` +
+            `*Nombre:* ${formData.name}\n` +
+            `*Email:* ${formData.email}\n` +
+            `*Empresa:* ${formData.company}\n` +
+            `*Facturación Mensual:* ${formData.revenue}\n` +
+            `*Timeline de Despliegue:* ${formData.timeline}\n\n` +
+            `*Desafío/Bottleneck:* ${formData.challenge}`;
+
+        const waUrl = `https://wa.me/59892323675?text=${encodeURIComponent(waMessage)}`;
+
+        try {
+            window.open(waUrl, '_blank');
+            await submitLead(leadData);
+            setSubmitted(true);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setSubmitting(false);
+        }
     };
+
 
     if (submitted) {
         return (
@@ -316,12 +347,13 @@ export default function ApplicationPage() {
                             <button
                                 type="button"
                                 onClick={handleSubmit}
-                                disabled={!canAdvance()}
+                                disabled={!canAdvance() || submitting}
                                 className="flex items-center gap-2 px-8 py-3 rounded-full bg-emerald-500/25 border border-emerald-400/40 text-emerald-300 font-black text-sm uppercase tracking-wider hover:bg-emerald-500/35 hover:shadow-[0_0_30px_rgba(16,185,129,0.2)] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
                             >
-                                <Send className="w-4 h-4" /> Submit Application
+                                <Send className="w-4 h-4" /> {submitting ? 'Submitting...' : 'Submit Application'}
                             </button>
                         )}
+
                     </div>
                 </form>
             </div>

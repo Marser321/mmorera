@@ -47,4 +47,7 @@ export interface ContactFormData {
     servicios_interes: string[];
     plan_seleccionado?: string;
     mensaje?: string;
+    revenue?: string;
+    timeline?: string;
 }
+
