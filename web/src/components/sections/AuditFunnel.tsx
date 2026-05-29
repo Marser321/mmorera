@@ -7,7 +7,7 @@ export function AuditFunnel() {
     return (
         <section id="auditoria" className="py-20 md:py-32 relative overflow-hidden bg-transparent border-t border-white/5">
             {/* Background elements */}
-            <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay pointer-events-none z-0"></div>
+            <div className="absolute inset-0 local-noise opacity-[0.03] mix-blend-overlay pointer-events-none z-0"></div>
 
             {/* Subtle glow for depth */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl h-[300px] bg-primary/5 blur-[120px] rounded-full pointer-events-none z-0"></div>

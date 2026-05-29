@@ -73,7 +73,7 @@ export function ComparisonTable() {
     return (
         <section className="py-20 sm:py-28 relative bg-transparent overflow-hidden" id="comparador">
             {/* Background */}
-            <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay pointer-events-none" />
+            <div className="absolute inset-0 local-noise opacity-[0.03] mix-blend-overlay pointer-events-none" />
 
             <Container className="relative z-10">
                 <div className="text-center mb-16 md:mb-20">

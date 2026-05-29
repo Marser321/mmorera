@@ -1,7 +1,7 @@
 'use client';
 
 import { Instagram, Linkedin, Twitter, Mail } from 'lucide-react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useRef } from 'react';
 
 import { LogoMM } from '@/components/shared/LogoMM';
@@ -30,7 +30,7 @@ export function Footer() {
                             </div>
                         </div>
                         <p className="text-white/40 max-w-sm font-light leading-relaxed">
-                            No somos una agencia más. Somos el <span className="text-white font-medium italic">puente técnico</span> entre tu negocio tradicional y la vanguardia de la IA en 2026.
+                            Not just another agency. I&apos;m the <span className="text-white font-medium italic">technical bridge</span> between your business reality and what AI can actually do for it in 2026.
                         </p>
                         <div className="flex gap-4">
                             {[Twitter, Instagram, Linkedin, Mail].map((Icon, i) => (
@@ -50,9 +50,14 @@ export function Footer() {
                     <div className="space-y-6">
                         <h4 className="text-white font-bold tracking-tight">Ecosistema</h4>
                         <ul className="space-y-4">
-                            {['Servicios', 'Agentes', 'Filosofía', 'Precios'].map((item) => (
-                                <li key={item}>
-                                    <a href="#" className="text-white/40 hover:text-white transition-colors text-sm font-light">{item}</a>
+                            {[
+                                { name: 'Home', href: '/' },
+                                { name: 'Systems', href: '/sistemas' },
+                                { name: 'Case Studies', href: '/casos-de-exito' },
+                                { name: 'Apply', href: '/aplicar' }
+                            ].map((item) => (
+                                <li key={item.name}>
+                                    <a href={item.href} className="text-white/40 hover:text-white transition-colors text-sm font-light">{item.name}</a>
                                 </li>
                             ))}
                         </ul>
@@ -76,7 +81,7 @@ export function Footer() {
                         <span>® {new Date().getFullYear()} MMORERA SME AGENCY</span>
                     </div>
                     <div className="flex items-center gap-8">
-                        <span className="text-white/20 text-[10px] font-mono">FLOW: URUGUAY / GLOBAL</span>
+                        <span className="text-white/20 text-[10px] font-mono">FLOW: REMOTE / WORLDWIDE</span>
                         <div className="flex items-center gap-2">
                             <span className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />
                             <span className="text-emerald-500/40 text-[10px] uppercase font-bold tracking-tighter">System Active</span>

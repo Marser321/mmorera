@@ -181,7 +181,7 @@ export function TestimonialsSection() {
             aria-labelledby="testimonios-heading"
         >
             {/* Background */}
-            <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay pointer-events-none" />
+            <div className="absolute inset-0 local-noise opacity-[0.03] mix-blend-overlay pointer-events-none" />
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-3xl h-[200px] bg-primary/5 blur-[100px] rounded-[100%] pointer-events-none" />
 
             <div className="container mx-auto px-4 relative z-10">

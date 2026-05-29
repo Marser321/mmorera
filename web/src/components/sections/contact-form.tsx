@@ -4,15 +4,12 @@ import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { submitLead } from '@/actions/submit-lead';
 import type { ContactFormData } from '@/types';
-import { Send, CheckCircle, Sparkles, ChevronDown } from 'lucide-react';
+import { Send, CheckCircle2, Sparkles, Mail, Linkedin, Github, MessageSquare } from 'lucide-react';
 
 export function ContactForm() {
     const [isSubmitted, setIsSubmitted] = React.useState(false);
     const [nombre, setNombre] = React.useState('');
     const [email, setEmail] = React.useState('');
-    const [telefono, setTelefono] = React.useState('');
-    const [empresa, setEmpresa] = React.useState('');
-    const [interes, setInteres] = React.useState('web');
     const [mensaje, setMensaje] = React.useState('');
     const [submitting, setSubmitting] = React.useState(false);
 
@@ -23,20 +20,15 @@ export function ContactForm() {
         const leadData: ContactFormData = {
             nombre,
             email,
-            telefono: telefono || undefined,
-            empresa: empresa || undefined,
-            servicios_interes: [interes],
+            servicios_interes: ['contacto_directo'],
             mensaje: mensaje || undefined
         };
 
         // Formato del mensaje para WhatsApp
-        const waMessage = `Hola! 👋 Quiero escalar mi negocio.\n\n` +
+        const waMessage = `Hola Mario! 👋 Vi tu portfolio y quiero charlar contigo sobre un proyecto.\n\n` +
             `*Nombre:* ${nombre}\n` +
             `*Email:* ${email}\n` +
-            (telefono ? `*Teléfono:* ${telefono}\n` : '') +
-            (empresa ? `*Empresa:* ${empresa}\n` : '') +
-            `*Prioridad:* ${interes}\n` +
-            `*Detalles:* ${mensaje || 'Sin detalles adicionales'}`;
+            `*Mensaje:* ${mensaje || 'Sin detalles adicionales'}`;
 
         const waNumber = "59892323675";
         const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(waMessage)}`;
@@ -57,106 +49,125 @@ export function ContactForm() {
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[120px] -z-10" />
 
             <div className="container mx-auto px-4 max-w-4xl relative z-10">
-                <div className="bg-[#0A0A0A]/60 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] p-8 md:p-16 shadow-2xl relative overflow-hidden">
-                    <div className="absolute top-0 right-0 p-8 text-primary/10">
-                        <Sparkles className="w-24 h-24" />
+                <div className="bg-[#0A0A0A]/60 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] p-8 md:p-14 shadow-2xl relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-8 text-primary/10 pointer-events-none">
+                        <Sparkles className="w-20 h-20" />
                     </div>
 
-                    <div className="grid lg:grid-cols-5 gap-16 items-start">
-                        <div className="lg:col-span-2 space-y-8">
+                    <div className="grid lg:grid-cols-5 gap-12 lg:gap-16 items-start">
+                        {/* Columna Izquierda: Mensaje & Redes */}
+                        <div className="lg:col-span-2 space-y-8 text-left">
                             <div>
-                                <h2 className="text-4xl md:text-6xl font-heading tracking-tight text-white mb-10 leading-[1.1] md:leading-[0.9]">
-                                    Diseñemos el <br /><span className="text-primary text-glow">Próximo Nivel.</span>
+                                <h2 className="text-3xl md:text-4xl font-black tracking-tight text-white mb-6 leading-none uppercase">
+                                    ¿Tienes un <br /><span className="text-primary text-glow">desafío en mente?</span>
                                 </h2>
-                                <p className="text-xl text-white/50 leading-relaxed font-light">
-                                    Buscamos proyectos con visión de futuro y empresas listas para expandir su impacto.
-                                    <br /><br />
-                                    <span className="text-white/80 font-medium italic">&ldquo;La mediocridad es cara; la excelencia es una inversión en tu futuro.&rdquo;</span>
+                                <p className="text-sm md:text-base text-zinc-400 leading-relaxed font-light">
+                                    Ya sea que necesites un producto digital desarrollado con agilidad, una pieza audiovisual de alta gama, o unificar los sistemas de tu negocio, busquemos la mejor ruta juntos.
                                 </p>
                             </div>
 
-                            <div className="space-y-6 pt-4">
-                                <div className="flex items-center gap-5 text-white/30">
-                                    <div className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_12px_var(--color-primary)]" />
-                                    <span className="text-[10px] font-mono uppercase tracking-[0.3em]">Acceso Directo a Ingeniería</span>
-                                </div>
-                                <div className="flex items-center gap-5 text-white/30">
-                                    <div className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_12px_var(--color-primary)]" />
-                                    <span className="text-[10px] font-mono uppercase tracking-[0.3em]">Auditoría de Dominio Digital</span>
+                            {/* Canales Directos */}
+                            <div className="space-y-4">
+                                <h4 className="text-xs font-mono uppercase tracking-[0.2em] text-zinc-500">Canales Directos</h4>
+                                <div className="flex flex-wrap gap-3">
+                                    <a
+                                        href="https://www.linkedin.com/in/mariomorera"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        title="LinkedIn"
+                                        className="w-11 h-11 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:border-white/20 transition-all hover:scale-105"
+                                    >
+                                        <Linkedin className="w-5 h-5" />
+                                    </a>
+                                    <a
+                                        href="https://github.com/mariomorera"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        title="GitHub"
+                                        className="w-11 h-11 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:border-white/20 transition-all hover:scale-105"
+                                    >
+                                        <Github className="w-5 h-5" />
+                                    </a>
+                                    <a
+                                        href="mailto:mario@mmorera.com"
+                                        title="Enviar correo electrónico"
+                                        className="w-11 h-11 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:border-white/20 transition-all hover:scale-105"
+                                    >
+                                        <Mail className="w-5 h-5" />
+                                    </a>
+                                    <a
+                                        href={`https://wa.me/59892323675?text=${encodeURIComponent('Hola Mario! 👋 Vi tu portfolio y quiero charlar contigo sobre un proyecto.')}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        title="WhatsApp Directo"
+                                        className="w-11 h-11 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 hover:text-emerald-300 hover:border-emerald-500/40 transition-all hover:scale-105"
+                                    >
+                                        <MessageSquare className="w-5 h-5" />
+                                    </a>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="lg:col-span-3">
+                        {/* Columna Derecha: Formulario Simplificado */}
+                        <div className="lg:col-span-3 w-full">
                             {isSubmitted ? (
                                 <div className="text-center py-12">
                                     <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                                        <CheckCircle className="w-10 h-10 text-primary" />
+                                        <CheckCircle2 className="w-10 h-10 text-primary" />
                                     </div>
                                     <h3 className="text-2xl font-bold text-white mb-2">¡Mensaje Recibido!</h3>
-                                    <p className="text-white/60">Nuestro equipo analizará tu caso y te contactará pronto.</p>
+                                    <p className="text-white/60">Te responderé a la brevedad para que busquemos la mejor ruta juntos.</p>
                                     <Button onClick={() => setIsSubmitted(false)} variant="link" className="mt-6 text-accent">
                                         Enviar otro mensaje
                                     </Button>
                                 </div>
                             ) : (
-                                <form onSubmit={handleSubmit} className="space-y-6">
-                                    <div className="grid md:grid-cols-2 gap-4">
-                                        <div className="space-y-2">
-                                            <label htmlFor="name" className="text-xs font-mono uppercase tracking-widest text-white/40 block">Nombre</label>
-                                            <input id="name" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Ej. Mario"
-                                                className="w-full bg-white/5 border border-white/10 text-white focus:border-primary/50 h-12 rounded-xl px-4 outline-none transition-colors" required />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <label htmlFor="email" className="text-xs font-mono uppercase tracking-widest text-white/40 block">Email Corporativo</label>
-                                            <input id="email" value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="mario@empresa.com"
-                                                className="w-full bg-white/5 border border-white/10 text-white focus:border-primary/50 h-12 rounded-xl px-4 outline-none transition-colors" required />
-                                        </div>
-                                    </div>
-
-                                    <div className="grid md:grid-cols-2 gap-4">
-                                        <div className="space-y-2">
-                                            <label htmlFor="telefono" className="text-xs font-mono uppercase tracking-widest text-white/40 block">Teléfono / WhatsApp</label>
-                                            <input id="telefono" value={telefono} onChange={(e) => setTelefono(e.target.value)} type="tel" placeholder="+598 99 123 456"
-                                                className="w-full bg-white/5 border border-white/10 text-white focus:border-primary/50 h-12 rounded-xl px-4 outline-none transition-colors" />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <label htmlFor="empresa" className="text-xs font-mono uppercase tracking-widest text-white/40 block">Empresa</label>
-                                            <input id="empresa" value={empresa} onChange={(e) => setEmpresa(e.target.value)} placeholder="Nombre de tu empresa"
-                                                className="w-full bg-white/5 border border-white/10 text-white focus:border-primary/50 h-12 rounded-xl px-4 outline-none transition-colors" />
-                                        </div>
-                                    </div>
-
-                                    <div className="space-y-2 relative">
-                                        <label htmlFor="type" className="text-xs font-mono uppercase tracking-widest text-white/40 block">Tu Prioridad</label>
-                                        <div className="relative w-full">
-                                            <select id="type" value={interes} onChange={(e) => setInteres(e.target.value)}
-                                                className="w-full h-12 px-4 rounded-xl bg-white/5 border border-white/10 text-white focus:border-primary/50 outline-none transition-colors appearance-none cursor-pointer pr-10">
-                                                <option value="web" className="bg-[#0A0A0A] text-white">Automatización de Ventas</option>
-                                                <option value="media" className="bg-[#0A0A0A] text-white">Desarrollo Web High-Ticket</option>
-                                                <option value="auto" className="bg-[#0A0A0A] text-white">IA & Chatbots</option>
-                                                <option value="full" className="bg-[#0A0A0A] text-white">Solución Full Infrastructure</option>
-                                            </select>
-                                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40 pointer-events-none" />
-                                        </div>
+                                <form onSubmit={handleSubmit} className="space-y-5 text-left">
+                                    <div className="space-y-2">
+                                        <label htmlFor="name" className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 block">Nombre</label>
+                                        <input
+                                            id="name"
+                                            value={nombre}
+                                            onChange={(e) => setNombre(e.target.value)}
+                                            placeholder="Tu nombre"
+                                            className="w-full bg-white/[0.04] border border-white/10 text-white focus:border-emerald-500/50 h-12 rounded-xl px-4 outline-none transition-colors"
+                                            required
+                                        />
                                     </div>
 
                                     <div className="space-y-2">
-                                        <label htmlFor="message" className="text-xs font-mono uppercase tracking-widest text-white/40 block">¿Cómo podemos ayudarte?</label>
-                                        <textarea id="message" value={mensaje} onChange={(e) => setMensaje(e.target.value)}
-                                            placeholder="Breve descripción de tu negocio y objetivos..."
-                                            className="w-full min-h-[120px] bg-white/5 border border-white/10 text-white focus:border-primary/50 rounded-xl py-4 px-4 outline-none transition-colors resize-none" />
+                                        <label htmlFor="email" className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 block">Email</label>
+                                        <input
+                                            id="email"
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            type="email"
+                                            placeholder="tu@email.com"
+                                            className="w-full bg-white/[0.04] border border-white/10 text-white focus:border-emerald-500/50 h-12 rounded-xl px-4 outline-none transition-colors"
+                                            required
+                                        />
                                     </div>
 
-                                    <button type="submit"
-                                        className="w-full h-16 bg-white text-black hover:bg-primary hover:text-white font-bold text-xl rounded-2xl transition-all duration-500 shadow-2xl group flex items-center justify-center disabled:opacity-50 glass-card"
-                                        disabled={submitting}>
-                                        {submitting ? 'Enviando...' : 'Empezar Ahora'}
-                                        <Send className="w-5 h-5 ml-3 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                                    <div className="space-y-2">
+                                        <label htmlFor="message" className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 block">¿En qué puedo ayudarte?</label>
+                                        <textarea
+                                            id="message"
+                                            value={mensaje}
+                                            onChange={(e) => setMensaje(e.target.value)}
+                                            placeholder="Cuéntame brevemente sobre tu proyecto, objetivos o bottleneck actual..."
+                                            className="w-full min-h-[140px] bg-white/[0.04] border border-white/10 text-white focus:border-emerald-500/50 rounded-xl py-3 px-4 outline-none transition-colors resize-none"
+                                            required
+                                        />
+                                    </div>
+
+                                    <button
+                                        type="submit"
+                                        className="w-full h-14 bg-white text-black hover:bg-emerald-500 hover:text-white font-bold text-sm uppercase tracking-widest rounded-xl transition-all duration-300 shadow-xl group flex items-center justify-center disabled:opacity-50 cursor-pointer"
+                                        disabled={submitting}
+                                    >
+                                        {submitting ? 'Enviando...' : 'Iniciar conversación'}
+                                        <Send className="w-4 h-4 ml-3 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                                     </button>
-                                    <p className="text-[10px] text-center text-white/10 uppercase tracking-[0.3em] mt-4">
-                                        *Cupos limitados para garantizar la excelencia en cada despliegue.
-                                    </p>
                                 </form>
                             )}
                         </div>
@@ -166,4 +177,3 @@ export function ContactForm() {
         </section>
     );
 }
-

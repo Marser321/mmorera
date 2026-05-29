@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { AnimatedCard } from '@/components/shared/AnimatedCard';
-import { Zap, PlayCircle, Image as ImageIcon, Monitor, Tablet, Smartphone, Maximize2 } from 'lucide-react';
+import { Zap, PlayCircle, Image as ImageIcon, Monitor, Tablet, Smartphone, Maximize2, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
     Dialog,
@@ -15,138 +15,162 @@ import {
     DialogDescription
 } from '@/components/ui/dialog';
 
-const CATEGORIES = ['Todos', 'E-commerce', 'Sistemas', 'Agencias', 'Real Estate', 'Clínicas'];
-
 const PROJECTS = [
     {
         id: 0,
         title: 'AutoHub',
-        category: 'Agencias',
-        desc: 'Plataforma e-commerce inmersiva para automotoras. Catálogo avanzado, vistas 360° y gestión web premium.',
-        metric: 'Alto Impacto',
+        category: ['Creative Tech', 'UX Design', 'Optimization'],
+        desafio: 'Concesionarias con carga lenta de imágenes 360° y catálogos de vehículos rígidos.',
+        orquestacion: 'Compresión inteligente de assets y visor interactivo WebGL de ultra-bajo consumo de memoria.',
+        impacto: 'Navegación automotriz inmersiva y fluida en cualquier dispositivo móvil sin demoras.',
+        metric: 'UX Inmersiva',
         color: 'from-blue-600/20',
         iframeUrl: 'https://auto-indol-five.vercel.app/',
-        imageUrls: ['/portfolio/autohub-transparent.png', '/portfolio/auto-hub.png']
+        imageUrls: ['/portfolio/autohub-cover-v2.png', '/portfolio/auto-hub.png', '/portfolio/autohub-transparent.png'],
+        stack: ['Next.js', 'Framer Motion', 'WebGL', 'Tailwind']
     },
     {
         id: 1,
         title: 'LNB SaaS',
-        category: 'Sistemas',
-        desc: 'Panel de administración en la nube para gestión interna de métricas empresariales.',
-        metric: '+40% Efi.',
+        category: ['SaaS Dashboard', 'Data Systems', 'Admin Panel'],
+        desafio: 'Panel administrativo lento que dificultaba la toma de decisiones financieras en tiempo real.',
+        orquestacion: 'Tablero modular optimizado con caché local y flujos reactivos de datos en tiempo real.',
+        impacto: 'Control de inventario integrado y lectura instantánea de métricas clave del negocio.',
+        metric: 'SaaS Panel',
         color: 'from-violet-500/20',
         iframeUrl: 'https://lnb-saass.vercel.app/',
-        imageUrls: ['/portfolio/lnb-saass.png']
+        imageUrls: ['/portfolio/lnb-saass.png'],
+        stack: ['React', 'Tailwind CSS', 'ChartJS', 'REST APIs']
     },
     {
         id: 3,
         title: 'Hub Profesional',
-        category: 'Sistemas',
-        desc: 'Ecosistema inteligente para la gestión de perfiles profesionales. Optimización de CVs con IA y métricas de impacto real.',
-        metric: 'AI Optimized',
+        category: ['AI & Automation', 'UX Optimization', 'LinkedIn Tools'],
+        desafio: 'Revisión y análisis manual lento de CVs de candidatos por parte de consultores de RRHH.',
+        orquestacion: 'Conexión automatizada con modelos de OpenAI para extracción y evaluación veloz de aptitudes.',
+        impacto: 'Sugerencias de optimización generadas al instante con cálculo de métricas de impacto real.',
+        metric: 'AI-Optimized',
         color: 'from-indigo-600/20',
         iframeUrl: 'https://profecionalcv.vercel.app/',
-        imageUrls: ['/portfolio/profesional-cv.png']
+        imageUrls: ['/portfolio/profesional-cv.png'],
+        stack: ['Next.js', 'OpenAI API', 'Tailwind', 'PostgreSQL']
     },
     {
         id: 2,
         title: 'EvoWrap Custom',
-        category: 'Agencias',
-        desc: 'Landing page inmersiva de alta conversión para servicios automotrices premium.',
-        metric: '+150% Leads',
+        category: ['Creative Tech', 'Conversion Design', 'SEO Technical'],
+        desafio: 'Captación ineficiente de prospectos de alto valor para servicios automotrices personalizados.',
+        orquestacion: 'Landing page interactiva con micro-animaciones diseñadas para guiar la intención de compra.',
+        impacto: 'Conversión orgánica mejorada y presentación premium de la calidad de los acabados.',
+        metric: 'Conversion++',
         color: 'from-orange-500/20',
         iframeUrl: 'https://evowrap.vercel.app/',
-        imageUrls: ['/portfolio/evowrap.png']
+        imageUrls: ['/portfolio/evowrap.png'],
+        stack: ['HTML5/JS', 'Tailwind CSS', 'Framer Motion', 'SEO']
     },
     {
         id: 4,
         title: 'Directorio Inmobiliario',
-        category: 'Real Estate',
-        desc: 'Directorio avanzado de bienes raíces con cotizador integrado y listados de propiedades.',
-        metric: '10k+ Visitas',
+        category: ['Web Platforms', 'Real Estate', 'Dynamic Filters'],
+        desafio: 'Búsqueda de propiedades de forma compleja en portales inmobiliarios lentos o desactualizados.',
+        orquestacion: 'Buscador reactivo con filtros avanzados y consultas optimizadas para evitar retrasos en red.',
+        impacto: 'Localización veloz de listados de inmobiliarias con cotizador inteligente integrado.',
+        metric: 'Dynamic Search',
         color: 'from-amber-500/20',
         iframeUrl: 'https://directorio-inmobiliarias-ten.vercel.app/',
-        imageUrls: ['/portfolio/realstate-brown.png']
+        imageUrls: ['/portfolio/realstate-cover-v2.png', '/portfolio/realstate-brown.png'],
+        stack: ['Next.js', 'React Context', 'Tailwind CSS', 'PostgreSQL']
     },
     {
         id: 13,
         title: 'Punta 360',
-        category: 'Real Estate',
-        desc: 'Plataforma inmersiva de turismo y Real Estate para Punta del Este. Experiencia visual completa.',
-        metric: 'Premium',
+        category: ['Motion Design', 'Interactive Web', 'Real Estate'],
+        desafio: 'Imposibilidad de exhibir desarrollos urbanísticos premium y propiedades costeras de forma remota.',
+        orquestacion: 'Integración fluida de entornos y vistas 360° optimizadas para carga progresiva móvil.',
+        impacto: 'Experiencia inmersiva fluida que eleva la percepción de valor de cada desarrollo costero.',
+        metric: 'Virtual Tour',
         color: 'from-blue-400/20',
         iframeUrl: 'https://punta-360.vercel.app/',
-        imageUrls: ['/portfolio/punta-360.png']
+        imageUrls: ['/portfolio/punta-360.png'],
+        stack: ['HTML5/JS', 'Three.js', 'Tailwind CSS', 'DaVinci Resolve']
     },
     {
         id: 5,
         title: 'Booking Barbería',
-        category: 'Estética',
-        desc: 'Sistema de agendamiento visual para salones y barberías con cobro de señas y recordatorios automáticos.',
-        metric: '100% Aut.',
+        category: ['WhatsApp Automation', 'Operations', 'Stripe Payment'],
+        desafio: 'Alta tasa de ausentismo en reservas de turnos que provocaba tiempos muertos operativos.',
+        orquestacion: 'Flujo automático de recordatorios por WhatsApp con cobro previo de seña de seguridad.',
+        impacto: 'Fidelización de la agenda diaria de clientes y reducción inmediata de ausencias no avisadas.',
+        metric: 'Booking System',
         color: 'from-orange-500/20',
         iframeUrl: 'https://nb-oa7mhumgz-marios-projects-4a53e443.vercel.app/reservar',
-        imageUrls: ['/portfolio/booking-clinico.png']
+        imageUrls: ['/portfolio/booking-clinico.png'],
+        stack: ['React', 'Node.js', 'Stripe API', 'WhatsApp API']
     },
     {
         id: 6,
         title: 'Carpintería Lasa v2',
-        category: 'Agencias',
-        desc: 'Sistema de presentación premium para carpintería fina. Versión mejorada con mayor velocidad y UX.',
-        metric: 'Conversion++',
+        category: ['Showcase Web', 'UX/UI Design', 'Asset Optimization'],
+        desafio: 'Portafolio digital de carpintería fina que demoraba en cargar imágenes de alta definición.',
+        orquestacion: 'Optimización de pesos mediante formatos modernos de compresión automatizada.',
+        impacto: 'Carga instantánea de trabajos a alta resolución, ideal para ventas frente a clientes en tablet.',
+        metric: 'Fast Loading',
         color: 'from-zinc-500/20',
         iframeUrl: 'https://jenrylasaweb.vercel.app/',
-        imageUrls: ['/portfolio/henrylasa.png']
+        imageUrls: ['/portfolio/henrylasa.png'],
+        stack: ['HTML5', 'Tailwind CSS', 'Vercel Deploy']
     },
     {
         id: 14,
         title: 'Fede Motos',
-        category: 'E-commerce',
-        desc: 'E-commerce de alto rendimiento para concesionarias de motos. Gestión de inventario y ventas online.',
-        metric: '+180% Sales',
+        category: ['E-commerce', 'Operations', 'Inventory Control'],
+        desafio: 'Desconexión entre el catálogo público de motos y el control real de stock en la concesionaria.',
+        orquestacion: 'Sincronización ágil de base de datos local y panel simplificado de cotización de crédito.',
+        impacto: 'Checkout y simulación financiera rápidos directamente desde smartphones de clientes.',
+        metric: 'Inventory Flow',
         color: 'from-red-600/20',
         iframeUrl: 'https://fede-motos.vercel.app/',
-        imageUrls: ['/portfolio/fede-motos.png']
+        imageUrls: ['/portfolio/fede-motos.png'],
+        stack: ['Next.js', 'SQLite', 'Tailwind CSS', 'REST API']
     },
     {
         id: 7,
         title: 'Smartpoint Pro',
-        category: 'Sistemas',
-        desc: 'Sistema administrativo modular y escalable. Sin fricción, pagás por lo que usás.',
-        metric: 'Cero Fricción',
+        category: ['Operations', 'SaaS App', 'Automation'],
+        desafio: 'Sistemas de facturación empresarial complicados con exceso de funciones no deseadas.',
+        orquestacion: 'Estructura modular donde el usuario habilita solo lo que su operativa necesita en el día.',
+        impacto: 'Simplificación administrativa y ahorro de costos al evitar sistemas sobredimensionados.',
+        metric: 'Modular App',
         color: 'from-indigo-500/20',
         iframeUrl: 'https://smartpoint-rho.vercel.app/',
-        imageUrls: ['/portfolio/smartpoint.png']
+        imageUrls: ['/portfolio/smartpoint.png'],
+        stack: ['React', 'Supabase', 'Tailwind CSS', 'PostgreSQL']
     },
     {
         id: 8,
         title: 'Gym Beta Sable',
-        category: 'E-commerce',
-        desc: 'Plataforma para gimnasios con planes de suscripción y reservas de clases.',
-        metric: '+200% Subs',
+        category: ['Operations', 'Client Portal', 'Stripe Integration'],
+        desafio: 'Proceso complejo para agendar clases y pagar membresías mensuales de forma presencial.',
+        orquestacion: 'Portal mobile-first diseñado para que los socios reserven y paguen en menos de 10 segundos.',
+        impacto: 'Gestión administrativa autogestionable y reducción del tiempo empleado en recepción.',
+        metric: 'Client Portal',
         color: 'from-rose-500/20',
         iframeUrl: 'https://gym-beta-sable.vercel.app/',
-        imageUrls: ['/portfolio/gym-beta.png']
-    },
-    {
-        id: 15,
-        title: 'Gym CRM MVP',
-        category: 'Sistemas',
-        desc: 'Dashboard inteligente para la gestión integral de gimnasios y centros deportivos.',
-        metric: 'MVP Ready',
-        color: 'from-emerald-500/20',
-        iframeUrl: 'https://gymcrm-mvp.vercel.app/',
-        imageUrls: ['/portfolio/gym-crm.png']
+        imageUrls: ['/portfolio/gym-beta.png'],
+        stack: ['Next.js', 'Stripe Subscriptions', 'Tailwind CSS']
     },
     {
         id: 10,
         title: 'Clínica Estética Advanced',
-        category: 'Clínicas',
-        desc: 'Plataforma inmersiva para servicios de medicina estética y tratamientos corporales.',
-        metric: 'Agendamiento',
+        category: ['Showcase Web', 'UX/UI Design', 'Visual Hierarchy'],
+        desafio: 'Confusión de pacientes por la falta de estructura visual en la oferta de tratamientos estéticos.',
+        orquestacion: 'Landing inmersiva estructurada por capas con cotizador estimativo para tratamientos complejos.',
+        impacto: 'Comprensión inmediata de la propuesta de la clínica y precalificación de reservas.',
+        metric: 'UI Showcase',
         color: 'from-rose-400/20',
         iframeUrl: 'https://clinicaest-tica.vercel.app/',
-        imageUrls: ['/portfolio/clinica-estetica.png']
+        imageUrls: ['/portfolio/clinica-estetica.png'],
+        stack: ['React', 'Framer Motion', 'Tailwind CSS']
     }
 ];
 
@@ -194,177 +218,207 @@ function ProjectCard({ project }: { project: typeof PROJECTS[0] }) {
             style={{ rotateX, rotateY, perspective: 1000 }}
             className="group relative"
         >
-            <AnimatedCard className="aspect-[16/10] overflow-hidden bg-black/80 border-white/5 group-hover:border-white/20 transition-all duration-500 shadow-2xl">
+            <AnimatedCard className="aspect-[16/11] md:aspect-[16/10] overflow-hidden bg-black/85 border-white/5 group-hover:border-white/20 transition-all duration-500 shadow-2xl flex flex-col justify-end">
                 {/* Imagen de Fondo (Mockup Original) */}
                 <div
-                    className="absolute inset-0 z-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105 opacity-80"
+                    className="absolute inset-0 z-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105 opacity-60 group-hover:opacity-40"
                     style={{ backgroundImage: `url(${project.imageUrls?.[0] || ''})` }}
                 />
 
                 {/* Gradientes Oscuros para legibilidad (Fondo Oscuro -> Arriba Transparente) */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/90 to-transparent z-0 transition-opacity duration-500 group-hover:opacity-95" />
-                <div className={cn("absolute inset-0 bg-gradient-to-tr mix-blend-overlay z-0 opacity-50", project.color)} />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/95 to-black/30 z-0" />
+                <div className={cn("absolute inset-0 bg-gradient-to-tr mix-blend-overlay z-0 opacity-40", project.color)} />
 
                 {/* Patrón de fondo sutil que simula estructura de datos */}
-                <div className="absolute inset-0 opacity-[0.03] z-0 mix-blend-overlay" style={{
+                <div className="absolute inset-0 opacity-[0.02] z-0 mix-blend-overlay" style={{
                     backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)',
                     backgroundSize: '24px 24px'
                 }} />
 
-                <div className="absolute inset-0 flex flex-col justify-end p-6 md:p-8 z-10">
-                    <div className="flex justify-between items-start mb-4">
-                        <div className="bg-white/5 backdrop-blur-xl border border-white/10 px-3 py-1 rounded-full shadow-inner">
-                            <span className="text-zinc-300 text-[10px] font-bold uppercase tracking-widest">{project.category}</span>
+                <div className="absolute inset-0 flex flex-col justify-end p-5 md:p-7 z-10">
+                    {/* Etiquetas de Sinergia (Top Badges) */}
+                    <div className="flex flex-wrap justify-between items-start gap-2 mb-3">
+                        <div className="flex flex-wrap gap-1">
+                            {project.category.map((tag) => (
+                                <span
+                                    key={tag}
+                                    className="bg-white/[0.04] backdrop-blur-md border border-white/[0.08] px-2 py-0.5 rounded text-zinc-300 text-[9px] font-bold uppercase tracking-wider"
+                                >
+                                    {tag}
+                                </span>
+                            ))}
                         </div>
-                        <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-black px-3 py-1 rounded-full flex items-center gap-1.5">
-                            <Zap className="w-3 h-3" />
+                        <div className="bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-[9px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1 shrink-0">
+                            <Zap className="w-2.5 h-2.5" />
                             {project.metric}
                         </div>
                     </div>
 
-                    <h3 className="text-2xl md:text-3xl font-black text-white mb-2 tracking-tighter group-hover:translate-x-2 transition-transform duration-500">
+                    {/* Título del Proyecto */}
+                    <h3 className="text-xl md:text-2xl font-black text-white mb-2 tracking-tighter group-hover:translate-x-1.5 transition-transform duration-500">
                         {project.title}
                     </h3>
-                    <p className="text-zinc-400 text-sm leading-relaxed mb-6 max-w-sm group-hover:text-zinc-100 transition-colors duration-500 font-medium">
-                        {project.desc}
-                    </p>
 
-                    <div className="flex flex-wrap items-center gap-3 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all duration-500 lg:translate-y-4 lg:group-hover:translate-y-0 relative z-20">
+                    {/* Desglose en 3 Líneas (Problema -> Herramientas -> Resultado) */}
+                    <div className="space-y-1.5 mb-4 text-left max-w-lg">
+                        <div className="text-[11px] md:text-xs text-zinc-400 font-light leading-relaxed group-hover:text-zinc-200 transition-colors duration-500">
+                            <span className="text-emerald-500 font-bold mr-1">Desafío:</span> {project.desafio}
+                        </div>
+                        <div className="text-[11px] md:text-xs text-zinc-400 font-light leading-relaxed group-hover:text-zinc-200 transition-colors duration-500">
+                            <span className="text-blue-400 font-bold mr-1">Orquestación:</span> {project.orquestacion}
+                        </div>
+                        <div className="text-[11px] md:text-xs text-zinc-400 font-light leading-relaxed group-hover:text-zinc-200 transition-colors duration-500">
+                            <span className="text-violet-400 font-bold mr-1">Impacto:</span> {project.impacto}
+                        </div>
+                    </div>
 
-                        {/* Modal Demo Interactiva */}
-                        <Dialog>
-                            <DialogTrigger asChild>
-                                <Button
-                                    variant="default"
-                                    size="sm"
-                                    className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-full group/btn border border-emerald-400/20 shadow-[0_0_15px_rgba(16,185,129,0.2)] hover:shadow-[0_0_20px_rgba(16,185,129,0.4)] transition-all cursor-pointer"
+                    {/* Fila de Herramientas + CTA */}
+                    <div className="flex justify-between items-center mt-2 pt-2 border-t border-white/[0.05]">
+                        {/* Stack tecnológico */}
+                        <div className="flex flex-wrap gap-1">
+                            {project.stack.map((tech) => (
+                                <span
+                                    key={tech}
+                                    className="text-[9px] font-mono px-2 py-0.5 rounded bg-white/[0.03] border border-white/[0.06] text-zinc-500 group-hover:text-zinc-300 transition-colors"
                                 >
-                                    <PlayCircle className="mr-2 w-4 h-4 text-emerald-100" />
-                                    Demo Interactiva
-                                </Button>
-                            </DialogTrigger>
-                            <DialogContent className="max-w-[95vw] w-[1400px] h-[90vh] md:h-[85vh] p-0 bg-neutral-950 border-white/10 flex flex-col overflow-hidden shadow-2xl">
-                                <div className="p-4 md:px-6 md:py-4 border-b border-white/5 bg-neutral-900/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shrink-0">
-                                    <div className="w-full md:w-auto overflow-hidden">
-                                        <DialogTitle className="text-white text-base md:text-lg font-bold flex flex-wrap items-center gap-2">
-                                            <span className="truncate max-w-[200px] md:max-w-none">{project.title}</span>
-                                            <span className="bg-emerald-500/20 text-emerald-400 text-[10px] px-2 py-0.5 rounded border border-emerald-500/20 uppercase tracking-widest font-black shrink-0">Live Demo</span>
-                                        </DialogTitle>
-                                        <DialogDescription className="text-white/40 text-xs mt-1 max-w-xl hidden md:block">
-                                            Esta es una maqueta alojada en servidores de prueba. Tu sistema de producción usará infraestructura Edge de ultra baja latencia.
-                                        </DialogDescription>
-                                    </div>
+                                    {tech}
+                                </span>
+                            ))}
+                        </div>
 
-                                    {/* Controles de Dispositivo */}
-                                    <div className="flex items-center gap-1 bg-black/40 border border-white/10 p-1 rounded-lg self-end md:self-auto shrink-0 overflow-x-auto max-w-full">
-                                        <button
-                                            onClick={() => setDevice('desktop')}
-                                            className={cn("p-2 rounded-md transition-colors shrink-0", device === 'desktop' ? "bg-white/10 text-white shadow-sm" : "text-white/40 hover:text-white")}
-                                            title="Vista Escritorio"
-                                        >
-                                            <Monitor className="w-4 h-4" />
-                                        </button>
-                                        <button
-                                            onClick={() => setDevice('tablet')}
-                                            className={cn("p-2 rounded-md transition-colors shrink-0", device === 'tablet' ? "bg-white/10 text-white shadow-sm" : "text-white/40 hover:text-white")}
-                                            title="Vista Tablet"
-                                        >
-                                            <Tablet className="w-4 h-4" />
-                                        </button>
-                                        <button
-                                            onClick={() => setDevice('mobile')}
-                                            className={cn("p-2 rounded-md transition-colors shrink-0", device === 'mobile' ? "bg-white/10 text-white shadow-sm" : "text-white/40 hover:text-white")}
-                                            title="Vista Móvil"
-                                        >
-                                            <Smartphone className="w-4 h-4" />
-                                        </button>
-                                        <div className="w-px h-5 bg-white/10 mx-2 shrink-0" />
-                                        <button
-                                            onClick={handleFullscreen}
-                                            className="p-2 rounded-md text-white/40 hover:text-white transition-colors shrink-0"
-                                            title="Pantalla Completa"
-                                        >
-                                            <Maximize2 className="w-4 h-4" />
-                                        </button>
-                                    </div>
-                                </div>
+                        {/* CTA Discreto pero Claro */}
+                        <div className="flex items-center gap-3 relative z-20">
+                            {/* Modal Demo Interactiva */}
+                            <Dialog>
+                                <DialogTrigger asChild>
+                                    <button
+                                        className="text-xs font-bold text-white hover:text-emerald-400 flex items-center gap-1 group/link transition-colors cursor-pointer bg-transparent border-0 p-0"
+                                    >
+                                        Ver solución
+                                        <PlayCircle className="w-3.5 h-3.5 text-zinc-400 group-hover/link:text-emerald-400 transition-colors" />
+                                    </button>
+                                </DialogTrigger>
+                                <DialogContent className="max-w-[95vw] w-[1400px] h-[90vh] md:h-[85vh] p-0 bg-neutral-950 border-white/10 flex flex-col overflow-hidden shadow-2xl">
+                                    <div className="p-4 md:px-6 md:py-4 border-b border-white/5 bg-neutral-900/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shrink-0">
+                                        <div className="w-full md:w-auto overflow-hidden">
+                                            <DialogTitle className="text-white text-base md:text-lg font-bold flex flex-wrap items-center gap-2">
+                                                <span className="truncate max-w-[200px] md:max-w-none">{project.title}</span>
+                                                <span className="bg-emerald-500/20 text-emerald-400 text-[10px] px-2 py-0.5 rounded border border-emerald-500/20 uppercase tracking-widest font-black shrink-0">Live Demo</span>
+                                            </DialogTitle>
+                                            <DialogDescription className="text-white/40 text-xs mt-1 max-w-xl hidden md:block">
+                                                Esta es una maqueta alojada en servidores de prueba. Tu sistema de producción usará infraestructura Edge de ultra baja latencia.
+                                            </DialogDescription>
+                                        </div>
 
-                                {/* Contenedor Iframe */}
-                                <div className="flex-1 w-full bg-neutral-950 flex justify-center overflow-hidden relative">
-                                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-                                        <div className="flex flex-col items-center gap-4 opacity-50">
-                                            <div className="w-8 h-8 rounded-full border-2 border-emerald-500/30 border-t-emerald-500 animate-spin" />
-                                            <span className="text-white/30 text-xs tracking-widest uppercase">Cargando Entorno</span>
+                                        {/* Controles de Dispositivo */}
+                                        <div className="flex items-center gap-1 bg-black/40 border border-white/10 p-1 rounded-lg self-end md:self-auto shrink-0 overflow-x-auto max-w-full">
+                                            <button
+                                                onClick={() => setDevice('desktop')}
+                                                className={cn("p-2 rounded-md transition-colors shrink-0", device === 'desktop' ? "bg-white/10 text-white shadow-sm" : "text-white/40 hover:text-white")}
+                                                title="Vista Escritorio"
+                                            >
+                                                <Monitor className="w-4 h-4" />
+                                            </button>
+                                            <button
+                                                onClick={() => setDevice('tablet')}
+                                                className={cn("p-2 rounded-md transition-colors shrink-0", device === 'tablet' ? "bg-white/10 text-white shadow-sm" : "text-white/40 hover:text-white")}
+                                                title="Vista Tablet"
+                                            >
+                                                <Tablet className="w-4 h-4" />
+                                            </button>
+                                            <button
+                                                onClick={() => setDevice('mobile')}
+                                                className={cn("p-2 rounded-md transition-colors shrink-0", device === 'mobile' ? "bg-white/10 text-white shadow-sm" : "text-white/40 hover:text-white")}
+                                                title="Vista Móvil"
+                                            >
+                                                <Smartphone className="w-4 h-4" />
+                                            </button>
+                                            <div className="w-px h-5 bg-white/10 mx-2 shrink-0" />
+                                            <button
+                                                onClick={handleFullscreen}
+                                                className="p-2 rounded-md text-white/40 hover:text-white transition-colors shrink-0"
+                                                title="Pantalla Completa"
+                                            >
+                                                <Maximize2 className="w-4 h-4" />
+                                            </button>
                                         </div>
                                     </div>
-                                    <div
-                                        ref={iframeContainerRef}
-                                        className={cn(
-                                            "relative h-full transition-all duration-500 ease-in-out bg-white mx-auto",
-                                            device === 'desktop' ? "w-full" :
-                                                device === 'tablet' ? "w-full max-w-[768px] border-x border-white/10 shadow-2xl" :
-                                                    "w-full max-w-[375px] border-x border-white/10 shadow-2xl"
-                                        )}
-                                    >
-                                        <iframe
-                                            src={project.iframeUrl}
-                                            className="absolute inset-0 w-full h-full border-0 z-10"
-                                            title={`Demo de ${project.title}`}
-                                            loading="lazy"
-                                            sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-                                        />
-                                    </div>
-                                </div>
-                            </DialogContent>
-                        </Dialog>
 
-                        {/* Modal Diseño Visual (Compendio de Imágenes) */}
-                        <Dialog>
-                            <DialogTrigger asChild>
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="bg-black/50 backdrop-blur-md border-white/10 hover:bg-white/10 text-white/80 hover:text-white rounded-full group/btn transition-colors cursor-pointer"
-                                >
-                                    <ImageIcon className="mr-2 w-4 h-4 opacity-70" />
-                                    UX/UI Compendio
-                                </Button>
-                            </DialogTrigger>
-                            <DialogContent className="max-w-[95vw] w-[1400px] h-[90vh] p-0 bg-neutral-950/90 backdrop-blur-3xl border-white/10 flex flex-col overflow-hidden shadow-2xl">
-                                <div className="p-4 md:px-6 md:py-4 border-b border-white/5 bg-neutral-900/80 flex justify-between items-center z-10 sticky top-0">
-                                    <DialogTitle className="text-white text-lg font-bold flex items-center gap-2">
-                                        Exploración Visual <span className="text-white/40 text-sm font-normal">— {project.title}</span>
-                                    </DialogTitle>
-                                </div>
-
-                                {/* Contenedor Scrollable para la Galería */}
-                                <div className="flex-1 w-full overflow-y-auto p-4 md:p-12 pb-32 space-y-8 md:space-y-16">
-                                    {project.imageUrls?.map((img, idx) => (
-                                        <div key={idx} className="w-full flex justify-center">
-                                            <Image
-                                                src={img}
-                                                alt={`${project.title} screenshot ${idx + 1}`}
-                                                width={1200}
-                                                height={800}
-                                                sizes="(max-width: 768px) 100vw, 1200px"
-                                                className="w-full h-auto object-contain rounded-xl shadow-[0_0_80px_rgba(0,0,0,0.6)] border border-white/10"
+                                    {/* Contenedor Iframe */}
+                                    <div className="flex-1 w-full bg-neutral-950 flex justify-center overflow-hidden relative">
+                                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+                                            <div className="flex flex-col items-center gap-4 opacity-50">
+                                                <div className="w-8 h-8 rounded-full border-2 border-emerald-500/30 border-t-emerald-500 animate-spin" />
+                                                <span className="text-white/30 text-xs tracking-widest uppercase">Cargando Entorno</span>
+                                            </div>
+                                        </div>
+                                        <div
+                                            ref={iframeContainerRef}
+                                            className={cn(
+                                                "relative h-full transition-all duration-500 ease-in-out bg-white mx-auto",
+                                                device === 'desktop' ? "w-full" :
+                                                    device === 'tablet' ? "w-full max-w-[768px] border-x border-white/10 shadow-2xl" :
+                                                        "w-full max-w-[375px] border-x border-white/10 shadow-2xl"
+                                            )}
+                                        >
+                                            <iframe
+                                                src={project.iframeUrl}
+                                                className="absolute inset-0 w-full h-full border-0 z-10"
+                                                title={`Demo de ${project.title}`}
+                                                loading="lazy"
+                                                sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
                                             />
                                         </div>
-                                    ))}
+                                    </div>
+                                </DialogContent>
+                            </Dialog>
 
-                                    {/* Mensaje por si no hay compendio completo aún */}
-                                    {project.imageUrls?.length === 1 && (
-                                        <div className="text-center py-20 px-4">
-                                            <p className="text-white/40 text-sm max-w-md mx-auto">
-                                                *Estamos renderizando el compendio completo de alta resolución para este proyecto mediante nuestros agentes IA. Pronto verás el desglose completo de la interfaz aquí.
-                                            </p>
-                                        </div>
-                                    )}
-                                </div>
-                            </DialogContent>
-                        </Dialog>
+                            {/* Modal Diseño Visual (Compendio de Imágenes) */}
+                            <Dialog>
+                                <DialogTrigger asChild>
+                                    <button
+                                        className="text-xs font-bold text-zinc-500 hover:text-zinc-300 flex items-center gap-1 group/link transition-colors cursor-pointer bg-transparent border-0 p-0"
+                                    >
+                                        Explorar caso
+                                        <ImageIcon className="w-3.5 h-3.5 opacity-70 group-hover/link:opacity-100 transition-opacity" />
+                                    </button>
+                                </DialogTrigger>
+                                <DialogContent className="max-w-[95vw] w-[1400px] h-[90vh] p-0 bg-neutral-950/90 backdrop-blur-3xl border-white/10 flex flex-col overflow-hidden shadow-2xl">
+                                    <div className="p-4 md:px-6 md:py-4 border-b border-white/5 bg-neutral-900/80 flex justify-between items-center z-10 sticky top-0">
+                                        <DialogTitle className="text-white text-lg font-bold flex items-center gap-2">
+                                            Exploración Visual <span className="text-white/40 text-sm font-normal">— {project.title}</span>
+                                        </DialogTitle>
+                                    </div>
 
+                                    {/* Contenedor Scrollable para la Galería */}
+                                    <div className="flex-1 w-full overflow-y-auto p-4 md:p-12 pb-32 space-y-8 md:space-y-16">
+                                        {project.imageUrls?.map((img, idx) => (
+                                            <div key={idx} className="w-full flex justify-center">
+                                                <Image
+                                                    src={img}
+                                                    alt={`${project.title} screenshot ${idx + 1}`}
+                                                    width={1200}
+                                                    height={800}
+                                                    sizes="(max-width: 768px) 100vw, 1200px"
+                                                    className="w-full h-auto object-contain rounded-xl shadow-[0_0_80px_rgba(0,0,0,0.6)] border border-white/10"
+                                                />
+                                            </div>
+                                        ))}
+
+                                        {/* Mensaje por si no hay compendio completo aún */}
+                                        {project.imageUrls?.length === 1 && (
+                                            <div className="text-center py-20 px-4">
+                                                <p className="text-white/40 text-sm max-w-md mx-auto">
+                                                    *Estamos renderizando el compendio completo de alta resolución para este proyecto mediante nuestros agentes IA. Pronto verás el desglose completo de la interfaz aquí.
+                                                </p>
+                                            </div>
+                                        )}
+                                    </div>
+                                </DialogContent>
+                            </Dialog>
+                        </div>
                     </div>
+
                 </div>
             </AnimatedCard>
         </motion.div>
@@ -372,12 +426,6 @@ function ProjectCard({ project }: { project: typeof PROJECTS[0] }) {
 }
 
 export function PortfolioSection() {
-    const [activeCategory, setActiveCategory] = React.useState('Todos');
-
-    const filteredProjects = activeCategory === 'Todos'
-        ? PROJECTS
-        : PROJECTS.filter(p => p.category === activeCategory);
-
     return (
         <section id="portfolio" className="py-24 md:py-32 bg-transparent relative overflow-hidden">
             {/* Background Glows */}
@@ -385,7 +433,7 @@ export function PortfolioSection() {
             <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-600/5 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/2 pointer-events-none" />
 
             <div className="container mx-auto px-4 relative z-10">
-                <div className="flex flex-col mb-16 gap-8">
+                <div className="flex flex-col mb-14 gap-8">
                     {/* Header y Filosofía */}
                     <div className="max-w-4xl">
                         <motion.span
@@ -394,68 +442,49 @@ export function PortfolioSection() {
                             viewport={{ once: true }}
                             className="text-emerald-500 font-bold tracking-[0.4em] uppercase text-[10px] mb-6 block"
                         >
-                            Casos de Uso & Filosofía
+                            Casos de Uso & Soluciones
                         </motion.span>
                         <h2 className="text-4xl md:text-6xl font-black text-white mb-6 uppercase tracking-tighter leading-[0.9]">
-                            Software <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-emerald-700">Sin Esperas</span>
+                            Proyectos en <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-emerald-700">Acción</span>
                         </h2>
+
+                        <p className="text-white/60 font-medium text-lg leading-relaxed max-w-3xl mt-4">
+                            Una muestra de cómo combino diseño, código y automatizaciones para resolver problemas específicos. No me ato a una sola tecnología; uso la herramienta exacta que el proyecto requiere para ser eficiente.
+                        </p>
 
                         <div className="grid md:grid-cols-2 gap-8 md:gap-12 mt-10">
                             <div>
                                 <h4 className="text-white font-bold mb-3 flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
-                                    El Método Tradicional
+                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                                    Capacidad de Resolución
                                 </h4>
                                 <p className="text-white/40 font-light text-sm leading-relaxed mb-4">
-                                    Las agencias te piden <strong>60 a 90 días de desarrollo</strong> y pagos inmensos por adelantado, bloqueando tu liquidez en proyectos que ni siquiera has podido validar en el mercado.
+                                    Entiendo que el código es solo una herramienta para resolver problemas reales de negocio. Mi enfoque está en simplificar procesos, acortar los tiempos de desarrollo y entregar valor tangible con soluciones directas.
                                 </p>
                             </div>
                             <div>
                                 <h4 className="text-white font-bold mb-3 flex items-center gap-2">
                                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                                    Nuestra Vía Rápida
+                                    Elección Inteligente del Stack
                                 </h4>
-                                <p className="text-white/60 font-light text-sm leading-relaxed mb-4">
-                                    <strong>Bajamos la barrera de entrada drásticamente.</strong> Podés acceder a un trial rápido, testear la plataforma por meses y validar tu ROI. Te entrenamos a tu equipo gratis, o te conseguimos al operador ideal.
+                                <p className="text-white/40 font-light text-sm leading-relaxed mb-4">
+                                    No implemento arquitecturas sobredimensionadas que encarezcan el mantenimiento o compliquen la operativa. Selecciono tecnologías estables, rápidas y adecuadas para cada escenario.
                                 </p>
                             </div>
                         </div>
 
                         <div className="mt-8 p-6 bg-white/[0.02] border border-white/5 rounded-2xl">
                             <p className="text-xs text-white/50 leading-relaxed">
-                                <strong className="text-white/80">Aviso sobre nuestras Demos:</strong> A diferencia de las plantillas genéricas, el núcleo de nuestros sistemas se adapta a la lógica y volumen de <em>tu propio negocio</em>. No tiene sentido mostrarte el backend privado de un cliente.
-                                Por eso, los demos de abajo representan la estética y velocidad de respuesta (Frontend). Tu arquitectura tecnológica (Backend) será dimensionada desde lo más simple hasta operaciones escalables, <strong>garantizando que no pagues licencias ni servidores extra por lo que no usás</strong>.
-                                <br /><br />
-                                <strong className="text-emerald-400/80">Nota para Clínicas y Estéticas:</strong> Sabemos que las necesidades varían enormemente. Adaptamos las soluciones personalmente al tamaño de cada clínica. No todos necesitan un sistema súper complejo; armamos exactamente lo que precisa tu operativa diaria.
+                                <strong className="text-white/80">Nota sobre la exploración de demos:</strong> Las demos a continuación representan implementaciones interactivas de frontend y flujos de usuario funcionales. Para cada proyecto, la arquitectura de backend y la lógica de base de datos se adaptan a las necesidades operativas reales, garantizando eficiencia y evitando costos de infraestructura innecesarios.
                             </p>
                         </div>
-                    </div>
-
-                    {/* Filtros */}
-                    <div className="flex flex-wrap gap-2 md:gap-3 bg-white/[0.02] p-2 rounded-2xl backdrop-blur-xl border border-white/5 self-start">
-                        {CATEGORIES.map((cat) => (
-                            <Button
-                                key={cat}
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => setActiveCategory(cat)}
-                                className={cn(
-                                    "rounded-xl transition-all duration-300 px-4 md:px-6",
-                                    activeCategory === cat
-                                        ? 'bg-white text-black shadow-lg hover:bg-white/90 scale-105'
-                                        : 'text-white/40 hover:text-white hover:bg-white/5'
-                                )}
-                            >
-                                <span className="text-[10px] md:text-xs uppercase tracking-widest font-black">{cat}</span>
-                            </Button>
-                        ))}
                     </div>
                 </div>
 
                 {/* Grid de Proyectos */}
                 <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
                     <AnimatePresence mode='popLayout'>
-                        {filteredProjects.map((project) => (
+                        {PROJECTS.map((project) => (
                             <ProjectCard key={project.id} project={project} />
                         ))}
                     </AnimatePresence>

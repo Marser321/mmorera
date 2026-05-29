@@ -2,6 +2,12 @@ import type { Metadata } from "next";
 import { Inter, Playfair_Display, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { GlobalBackground } from "@/components/shared/GlobalBackground";
+import { Navbar } from "@/components/sections/navbar";
+import { Footer } from "@/components/sections/footer";
+import dynamic from 'next/dynamic';
+import CustomCursor from "@/components/ui/CustomCursor";
+
+const ChatWidgetLoader = dynamic(() => import('@/components/interactive/chat-widget-loader').then(mod => mod.ChatWidgetLoader));
 
 const inter = Inter({
     subsets: ["latin"],
@@ -24,18 +30,18 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-    title: "MMorera SME | Infraestructura de Conversión B2B con IA — Más ventas, menos operación",
-    description: "La agencia de Mario Morera especializada en transformar operaciones lentas en sistemas de alta velocidad mediante Inteligencia Artificial agresiva y humana.",
-    keywords: ["IA", "Automatización", "Next.js", "B2B", "Conversión", "Mario Morera", "MMorera SME"],
+    title: "Mario Morera | Multipotential Tech Architect — Creative Development, Video & Automation",
+    description: "I orchestrate AI-powered development, high-end video production, modern marketing and analog-to-digital operations for global brands. Remote worldwide, based in Miami, FL.",
+    keywords: ["AI Development", "Vibe Coding", "Motion Design", "Marketing Automation", "Process Orchestration", "Miami Tech", "Mario Morera"],
     authors: [{ name: "Mario Morera", url: "https://mmorera.com" }],
     creator: "Mario Morera",
     openGraph: {
         type: "website",
-        locale: "es_UY",
+        locale: "en_US",
         url: "https://mmorera.com",
-        title: "MMorera SME | Infraestructura de Conversión B2B con IA",
-        description: "Construimos Sistemas Operativos Inteligentes que se adaptan a tu empresa.",
-        siteName: "MMorera SME",
+        title: "Mario Morera | Multipotential Tech Architect",
+        description: "AI-powered development, high-end video, modern marketing and operational orchestration. Remote worldwide, based in Miami, FL.",
+        siteName: "Mario Morera",
     },
 };
 
@@ -45,7 +51,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="es" className={`dark ${inter.variable} ${playfair.variable} ${jetbrains.variable}`}>
+        <html lang="en" className={`dark ${inter.variable} ${playfair.variable} ${jetbrains.variable}`}>
             <head>
                 <script
                     type="application/ld+json"
@@ -53,17 +59,22 @@ export default function RootLayout({
                         __html: JSON.stringify({
                             "@context": "https://schema.org",
                             "@type": "ProfessionalService",
-                            "name": "MMorera SME",
+                            "name": "Mario Morera — AI-Powered Growth Partner",
                             "image": "https://mmorera.com/og-image.png",
                             "@id": "https://mmorera.com",
                             "url": "https://mmorera.com",
-                            "telephone": "+598 092 323 675",
                             "priceRange": "$$$",
                             "address": {
                                 "@type": "PostalAddress",
-                                "addressCountry": "UY"
+                                "addressLocality": "Miami",
+                                "addressRegion": "FL",
+                                "addressCountry": "US"
                             },
-                            "description": "Tu Agencia Integral de Crecimiento & IA. Transformamos operaciones lentas en máquinas de ventas."
+                            "areaServed": {
+                                "@type": "Country",
+                                "name": "United States"
+                            },
+                            "description": "Multipotential tech architect: AI-powered creative development, high-end video production, modern marketing integrations and analog-to-digital operations orchestration."
                         })
                     }}
                 />
@@ -77,9 +88,13 @@ export default function RootLayout({
                     Saltar al contenido principal
                 </a>
                 <GlobalBackground />
+                <CustomCursor />
+                <Navbar />
                 <div className="relative z-10 flex flex-col min-h-screen">
                     {children}
                 </div>
+                <Footer />
+                <ChatWidgetLoader />
             </body>
         </html>
     );

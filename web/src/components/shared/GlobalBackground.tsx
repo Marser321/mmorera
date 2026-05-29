@@ -1,8 +1,8 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Mail, Database, MessageSquare, Calendar, DollarSign, Sparkles, Share2, Zap, BrainCircuit, LineChart, Code } from 'lucide-react';
-import { SiAdobephotoshop, SiAdobeillustrator, SiAdobepremierepro, SiAdobeaftereffects, SiDavinciresolve, SiWordpress, SiGoogleads, SiShopify, SiFigma, SiSupabase, SiVercel, SiZapier } from 'react-icons/si';
+import { Mail, Database, MessageSquare, Calendar, DollarSign, Sparkles, Share2, Zap, BrainCircuit, LineChart, Code, Image as ImageIcon, PenTool, Video, Film } from 'lucide-react';
+import { SiDavinciresolve, SiWordpress, SiGoogleads, SiShopify, SiFigma, SiSupabase, SiVercel, SiZapier } from 'react-icons/si';
 import { FaMeta, FaFacebook, FaInstagram, FaTiktok } from 'react-icons/fa6';
 import { useEffect, useState } from 'react';
 
@@ -27,10 +27,10 @@ const FLOATING_ICONS = [
     { icon: FaTiktok, color: 'text-white/20' },
 
     // Edición Audiovisual (Adobe & DaVinci)
-    { icon: SiAdobephotoshop, color: 'text-blue-400/25' },
-    { icon: SiAdobeillustrator, color: 'text-orange-400/25' },
-    { icon: SiAdobepremierepro, color: 'text-purple-400/25' },
-    { icon: SiAdobeaftereffects, color: 'text-violet-500/25' },
+    { icon: ImageIcon, color: 'text-blue-400/25' },
+    { icon: PenTool, color: 'text-orange-400/25' },
+    { icon: Video, color: 'text-purple-400/25' },
+    { icon: Film, color: 'text-violet-500/25' },
     { icon: SiDavinciresolve, color: 'text-red-500/25' },
 
     // E-commerce, Web & Plataformas

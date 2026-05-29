@@ -1,4 +1,4 @@
-export type Pilar = 'tech' | 'media' | 'growth';
+export type Pilar = 'tech' | 'media' | 'growth' | 'ops';
 export type TipoPago = 'mensual' | 'unico' | 'ambos';
 export type CategoriaPortfolio = 'web' | 'app' | 'foto' | 'video' | 'redes' | 'automatizacion';
 

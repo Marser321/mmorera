@@ -31,7 +31,7 @@ export function ConversionEngine() {
     return (
         <section id="conversion-engine" className="py-20 md:py-32 bg-background relative overflow-hidden border-y border-white/5">
             {/* Background noise and glow effects (matching website premium style) */}
-            <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay pointer-events-none"></div>
+            <div className="absolute inset-0 local-noise opacity-[0.03] mix-blend-overlay pointer-events-none"></div>
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] md:w-[800px] h-[400px] md:h-[800px] bg-primary/10 rounded-full blur-[80px] md:blur-[120px] pointer-events-none"></div>
 
             <div className="container mx-auto px-4 sm:px-6 md:px-8 relative z-10 flex flex-col items-center">

@@ -45,6 +45,13 @@ export function ServiceModal({ isOpen, onClose, service }: ServiceModalProps) {
             text: "text-emerald-400",
             gradient: "from-emerald-600 to-teal-500",
             shadow: "shadow-[0_0_30px_rgba(16,185,129,0.2)]"
+        },
+        ops: {
+            glow: "bg-amber-500/20",
+            border: "border-amber-500/30",
+            text: "text-amber-400",
+            gradient: "from-amber-600 to-orange-500",
+            shadow: "shadow-[0_0_30px_rgba(245,158,11,0.2)]"
         }
     };
 
@@ -57,7 +64,7 @@ export function ServiceModal({ isOpen, onClose, service }: ServiceModalProps) {
                 theme.border
             )}>
                 {/* Glow ambiental de fondo */}
-                <div className={cn("absolute top-0 right-0 w-[500px] h-[500px] rounded-full blur-[120px] -z-10 opacity-20 pointer-events-none", service.pilar === 'media' ? 'bg-violet-600' : service.pilar === 'growth' ? 'bg-emerald-600' : 'bg-blue-600')} />
+                <div className={cn("absolute top-0 right-0 w-[500px] h-[500px] rounded-full blur-[120px] -z-10 opacity-20 pointer-events-none", service.pilar === 'media' ? 'bg-violet-600' : service.pilar === 'growth' ? 'bg-emerald-600' : service.pilar === 'ops' ? 'bg-amber-600' : 'bg-blue-600')} />
 
                 <motion.div
                     initial={{ opacity: 0, y: 10 }}

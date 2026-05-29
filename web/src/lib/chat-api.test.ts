@@ -1,6 +1,8 @@
 import { test, describe, mock, afterEach } from 'node:test';
 import assert from 'node:assert';
 
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-require-imports, @next/next/no-assign-module-variable */
+
 describe('chat-api: saveChatMessage', () => {
     let getInsForgeMock: any;
     let saveChatMessage: any;

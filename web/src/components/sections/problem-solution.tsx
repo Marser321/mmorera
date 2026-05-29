@@ -1,218 +1,174 @@
 'use client';
 
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { FileWarning, MessageCircleOff, Hourglass, AlertTriangle, Database, Zap, FileSpreadsheet, ArrowRight } from 'lucide-react';
-import { useRef, useState, useEffect } from 'react';
+import Link from 'next/link';
+import { motion } from 'framer-motion';
+import {
+    AlertTriangle,
+    ArrowRight,
+    Bot,
+    Clock3,
+    FileWarning,
+    MessageCircleOff,
+    Radar,
+    Sparkles,
+    Zap,
+} from 'lucide-react';
+
+const PAIN_POINTS = [
+    { label: 'Respuesta lenta', detail: 'Leads enfriándose antes del primer contacto.', icon: Clock3 },
+    { label: 'Operación manual', detail: 'Tareas repetidas que consumen foco comercial.', icon: FileWarning },
+    { label: 'Seguimiento débil', detail: 'Oportunidades que se pierden entre canales.', icon: MessageCircleOff },
+];
+
+const SYSTEM_STEPS = ['Captación', 'Calificación', 'Seguimiento'];
 
 export function ProblemSolution() {
-    const containerRef = useRef<HTMLDivElement>(null);
-    const [isMobile, setIsMobile] = useState(false);
-
-    useEffect(() => {
-        const checkMobile = () => setIsMobile(window.innerWidth < 768);
-        checkMobile();
-        window.addEventListener('resize', checkMobile);
-        return () => window.removeEventListener('resize', checkMobile);
-    }, []);
-
-    const { scrollYProgress } = useScroll({
-        target: containerRef,
-        offset: ["start start", "end end"]
-    });
-
-    // Desktop: clip-path circular reveal original
-    const desktopClipPath = useTransform(scrollYProgress, [0, 1], ["circle(0% at 50% 50%)", "circle(250% at 50% 50%)"]);
-
-    // Mobile: crossfade suave
-    const mobileOpacityRed = useTransform(scrollYProgress, [0.3, 0.5], [1, 0]);
-    const mobileOpacityGreen = useTransform(scrollYProgress, [0.3, 0.5], [0, 1]);
-    const mobileScaleGreen = useTransform(scrollYProgress, [0.3, 1], [1.1, 1]);
-
-    const revealClipPath = isMobile ? undefined : desktopClipPath;
-
-    // Light sweep durante reveal
-    const sweepX = useTransform(scrollYProgress, [0.1, 0.5], ["-100%", "200%"]);
-    const sweepOpacity = useTransform(scrollYProgress, [0.1, 0.3, 0.4, 0.6], [0, 1, 1, 0]);
-
-    // Timings de contenido solución
-    const solTitleY = useTransform(scrollYProgress, [0.2, 0.5, 0.9], [150, 0, 0]);
-    const solTitleOpacity = useTransform(scrollYProgress, [0.2, 0.4, 0.9], [0, 1, 1]);
-    const solBtnY = useTransform(scrollYProgress, [0.4, 0.7, 0.9], [100, 0, 0]);
-    const solBtnOpacity = useTransform(scrollYProgress, [0.4, 0.6, 0.9], [0, 1, 1]);
-
     return (
-        <div ref={containerRef} className="relative w-full md:h-[160dvh] bg-[#022c22] mb-[-1px]">
-            <div className="relative md:sticky md:top-0 md:h-[100dvh] w-full overflow-hidden flex flex-col md:block">
+        <section className="relative overflow-hidden border-y border-white/5 bg-[#030807] px-4 py-14 pb-28 sm:px-6 md:py-24">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(239,68,68,0.13),transparent_34%),radial-gradient(circle_at_82%_58%,rgba(16,185,129,0.16),transparent_38%)]" />
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:72px_72px] opacity-25" />
 
-                {/* CAPA A: PROBLEMA (Rojo) */}
-                <motion.div
-                    style={isMobile ? {} : {}}
-                    className="relative md:absolute inset-0 z-0 bg-gradient-to-b from-[#1a0505] to-[#0A0000] flex items-center justify-center p-4 md:p-8 min-h-[100dvh] md:min-h-0"
-                >
-                    <div className="container mx-auto grid lg:grid-cols-2 gap-8 md:gap-12 items-center relative z-10 w-full pt-10 md:pt-0">
-                        <div className="space-y-6 md:space-y-8 flex flex-col justify-center max-w-full">
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                className="inline-flex items-center rounded-full border border-red-500/20 bg-red-500/10 px-4 py-1.5 text-[10px] text-red-500 font-mono tracking-[0.3em] uppercase self-start"
-                            >
-                                <span className="flex h-1.5 w-1.5 rounded-full bg-red-500 mr-2 md:mr-3 animate-pulse" />
-                                Alerta: Fuga de Ingresos
-                            </motion.div>
-                            <h2 className="text-4xl sm:text-5xl md:text-[6rem] font-bold tracking-tight text-white leading-tight md:leading-[0.85] break-words">
-                                Cada 5 Minutos <br />
-                                <span className="text-red-600 space-x-2">Perdés un Cliente.</span>
-                            </h2>
-                            <p className="text-base sm:text-lg md:text-xl text-white/60 md:text-white/40 leading-relaxed max-w-lg font-light">
-                                El mercado digital no perdona. Tu competencia capta la atención con mejor marketing y cierra ventas con sistemas más rápidos. Mientras tu equipo agenda una llamada, ellos ya facturaron. ¿Cuántos clientes perdiste esta semana?
-                            </p>
-                        </div>
-
-                        <div className="relative aspect-square w-full max-w-[280px] sm:max-w-[320px] md:max-w-none mx-auto lg:mx-0 mt-4 md:mt-0">
-                            <ChaosGroup isMobile={isMobile} />
-                        </div>
+            <div className="container relative z-10 mx-auto max-w-7xl">
+                <div className="mx-auto mb-12 max-w-3xl text-center md:mb-16">
+                    <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.28em] text-white/60">
+                        <Radar className="h-4 w-4 text-emerald-400" />
+                        Diagnóstico operativo
                     </div>
-                </motion.div>
+                    <h2 className="mx-auto max-w-4xl text-3xl font-black leading-[1.02] tracking-normal text-white sm:text-5xl md:text-6xl text-balance">
+                        De fuga comercial a{' '}
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-white to-emerald-500">
+                            sistema activo.
+                        </span>
+                    </h2>
+                    <p className="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-white/55 sm:text-lg">
+                        Detectamos dónde se pierden oportunidades y armamos la infraestructura CRM para responder, nutrir y convertir más rápido.
+                    </p>
+                </div>
 
-                {/* CAPA B: SOLUCIÓN (Verde) — Reveal */}
-                <motion.div
-                    style={isMobile ? {
-                        clipPath: 'none',
-                        position: 'relative' as const,
-                    } : {
-                        clipPath: revealClipPath,
-                        position: 'absolute' as const,
-                        top: 0, left: 0, right: 0, bottom: 0,
-                        willChange: "clip-path"
-                    }}
-                    className="z-10 bg-[#022c22] flex items-center justify-center border-t border-emerald-500/10 shadow-[0_-50px_100px_rgba(16,185,129,0.1)] min-h-[100dvh] md:min-h-0 py-10 md:py-0 px-2 sm:px-4"
-                >
-                    {/* Light Sweep */}
-                    <motion.div
-                        style={{ x: sweepX, opacity: sweepOpacity }}
-                        className="absolute inset-0 pointer-events-none z-50 bg-gradient-to-r from-transparent via-emerald-400/20 to-transparent skew-x-12"
-                    />
+                <div className="grid gap-5 lg:grid-cols-[1fr_auto_1fr] lg:items-stretch">
+                    <ProblemPanel />
+                    <Bridge />
+                    <SolutionPanel />
+                </div>
+            </div>
+        </section>
+    );
+}
 
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#064e3b_0%,#022c22_100%)]" />
-                    <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent" />
+function ProblemPanel() {
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-10%' }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="relative overflow-hidden rounded-3xl border border-red-500/20 bg-red-950/[0.18] p-6 shadow-2xl md:p-8"
+        >
+            <div className="absolute -left-20 top-8 h-56 w-56 rounded-full bg-red-500/15 blur-[90px]" />
+            <div className="relative z-10">
+                <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-red-500/20 bg-red-500/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.22em] text-red-300">
+                    <AlertTriangle className="h-4 w-4" />
+                    Fuga de ingresos
+                </div>
 
-                    <div className="container mx-auto grid lg:grid-cols-2 gap-6 md:gap-12 items-center relative z-20 w-full">
-                        <div className="space-y-5 md:space-y-8 flex flex-col justify-center h-full">
-                            <motion.div
-                                style={isMobile ? {} : { opacity: solTitleOpacity, y: solTitleY }}
-                                className="inline-flex items-center rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 md:px-5 py-2 text-[8px] sm:text-[10px] text-emerald-400 font-mono tracking-[0.2em] sm:tracking-[0.4em] uppercase self-start"
-                            >
-                                <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-500 mr-2 md:mr-3 shadow-[0_0_12px_#10b981]" />
-                                Infraestructura Autónoma
-                            </motion.div>
-                            <motion.h2
-                                style={isMobile ? {} : { opacity: solTitleOpacity, y: solTitleY }}
-                                className="text-4xl sm:text-5xl md:text-[6rem] font-bold tracking-tight text-white leading-[1.1] md:leading-[0.85] break-words"
-                            >
-                                Tu Ecosistema <br className="hidden sm:block" />Digital <br />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-br from-emerald-400 via-white to-white/40 block mt-1 sm:mt-0">
-                                    que Escala Ventas.
-                                </span>
-                            </motion.h2>
-                            <motion.p
-                                style={isMobile ? {} : { opacity: solTitleOpacity, y: solTitleY }}
-                                className="text-base sm:text-lg md:text-xl text-white/70 md:text-white/50 leading-relaxed max-w-lg font-light"
-                            >
-                                Fusionamos campañas de marketing agresivas, desarrollo web premium y agentes IA que responden en segundos. Captamos la atención y no dejamos escapar ni un solo lead. Sin fricción.
-                            </motion.p>
+                <h3 className="max-w-lg text-2xl font-black leading-tight text-white sm:text-4xl">
+                    Cada minuto sin sistema deja oportunidades abiertas.
+                </h3>
+                <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/55 sm:text-base">
+                    Cuando marketing, atención y ventas trabajan desconectados, el lead espera, compara y se va.
+                </p>
 
-                            <motion.div style={isMobile ? {} : { opacity: solBtnOpacity, y: solBtnY }} className="w-full">
-                                <button
-                                    onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-                                    className="bg-emerald-500 hover:bg-white text-black font-black rounded-full px-6 sm:px-10 py-4 sm:py-5 text-base sm:text-xl group transition-all duration-500 w-full lg:w-auto flex items-center justify-center active:scale-95"
-                                >
-                                    ACTIVAR ECOSISTEMA
-                                    <ArrowRight className="ml-2 sm:ml-3 w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-2 transition-transform" />
-                                </button>
-                            </motion.div>
+                <div className="mt-8 grid gap-3">
+                    {PAIN_POINTS.map((item) => (
+                        <div key={item.label} className="flex gap-3 rounded-2xl border border-white/8 bg-black/25 p-4">
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-red-500/20 bg-red-500/10">
+                                <item.icon className="h-5 w-5 text-red-300" />
+                            </div>
+                            <div>
+                                <p className="font-bold text-white">{item.label}</p>
+                                <p className="mt-1 text-sm leading-relaxed text-white/45">{item.detail}</p>
+                            </div>
                         </div>
+                    ))}
+                </div>
+            </div>
+        </motion.div>
+    );
+}
 
-                        {/* System Pulse Card */}
-                        <div className="relative mt-8 lg:mt-0 w-full max-w-[340px] sm:max-w-md mx-auto block">
-                            <div className="absolute -inset-10 bg-emerald-500/20 blur-[120px] rounded-full animate-pulse" />
-                            <SystemPulseCard />
-                        </div>
-                    </div>
-                </motion.div>
+function Bridge() {
+    return (
+        <div className="flex items-center justify-center py-1 lg:px-1 lg:py-0">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/60 shadow-[0_0_40px_rgba(16,185,129,0.18)] lg:h-14 lg:w-14">
+                <ArrowRight className="h-5 w-5 rotate-90 lg:rotate-0" />
             </div>
         </div>
     );
 }
 
-function ChaosGroup({ isMobile }: { isMobile: boolean }) {
-    const icons = [FileWarning, MessageCircleOff, Hourglass, AlertTriangle, Database, Zap, FileSpreadsheet];
-    const count = isMobile ? 4 : 7;
-
+function SolutionPanel() {
     return (
-        <div className="relative w-full h-full flex items-center justify-center pointer-events-none">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-red-600/10 blur-[120px] rounded-full animate-pulse" />
-            {icons.slice(0, count).map((Icon, i) => (
-                <motion.div
-                    key={i}
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: i * 0.1, type: "spring" }}
-                    className="absolute"
-                    style={{
-                        top: `${20 + (i * 12) % 60}%`,
-                        left: `${10 + (i * 18) % 80}%`,
-                    }}
-                >
-                    <div className={`${i % 3 === 0 ? 'w-20 h-20' : 'w-12 h-12'} bg-red-950/40 border border-red-500/30 backdrop-blur-md rounded-2xl flex items-center justify-center shadow-2xl`}>
-                        <Icon className="text-red-500/80 w-1/2 h-1/2" />
-                    </div>
-                </motion.div>
-            ))}
-        </div>
-    );
-}
-
-function SystemPulseCard() {
-    return (
-        <div className="relative w-full max-w-md bg-[#0A0A0A]/80 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] p-6 md:p-10 shadow-2xl overflow-hidden group mx-auto">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent opacity-50" />
-
-            <div className="flex items-center justify-between mb-10 pb-6 border-b border-white/5">
-                <div className="space-y-1">
-                    <div className="text-[10px] font-mono text-emerald-500/60 uppercase tracking-widest">Estado del Sistema</div>
-                    <div className="text-white font-bold tracking-tight">Sistema Optimizado</div>
+        <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-10%' }}
+            transition={{ duration: 0.6, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+            className="relative overflow-hidden rounded-3xl border border-emerald-500/20 bg-emerald-950/[0.18] p-6 shadow-2xl md:p-8"
+        >
+            <div className="absolute -right-16 top-0 h-64 w-64 rounded-full bg-emerald-500/18 blur-[100px]" />
+            <div className="relative z-10">
+                <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.22em] text-emerald-300">
+                    <Bot className="h-4 w-4" />
+                    Infraestructura activa
                 </div>
-                <div className="h-4 w-4 rounded-full bg-emerald-500 shadow-[0_0_15px_#10b981]" />
-            </div>
 
-            <div className="space-y-6">
-                {['Captación', 'Nutrición', 'Conversión'].map((label, i) => (
-                    <div key={i} className="space-y-2">
-                        <div className="flex justify-between text-[10px] text-white/40 uppercase font-mono">
-                            <span>{label}</span>
-                            <span>100%</span>
+                <h3 className="max-w-lg text-2xl font-black leading-tight text-white sm:text-4xl">
+                    Un ecosistema que responde, ordena y convierte.
+                </h3>
+                <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/60 sm:text-base">
+                    Conectamos campañas, web, GoHighLevel e IA para que cada contacto tenga dueño, contexto y siguiente paso.
+                </p>
+
+                <div className="mt-8 rounded-3xl border border-white/10 bg-black/35 p-5">
+                    <div className="mb-6 flex items-center justify-between border-b border-white/10 pb-4">
+                        <div>
+                            <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-emerald-300/70">Estado</p>
+                            <p className="mt-1 font-bold text-white">Sistema listo para operar</p>
                         </div>
-                        <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
-                            <motion.div
-                                initial={{ width: 0 }}
-                                whileInView={{ width: "100%" }}
-                                transition={{ duration: 1.5, delay: i * 0.2, repeat: Infinity, repeatDelay: 3 }}
-                                className="h-full bg-emerald-500 shadow-[0_0_10px_#10b981]"
-                            />
+                        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-400 text-black shadow-[0_0_24px_rgba(52,211,153,0.35)]">
+                            <Sparkles className="h-5 w-5" />
                         </div>
                     </div>
-                ))}
-            </div>
 
-            <div className="mt-12 flex items-end justify-between">
-                <div>
-                    <p className="text-[10px] text-white/30 uppercase tracking-[0.2em] mb-1">Ganancia de Eficiencia</p>
-                    <p className="text-4xl font-black text-white">+84%</p>
-                </div>
-                <div className="text-emerald-400 bg-emerald-400/10 px-3 py-1.5 rounded-xl border border-emerald-500/20 text-xs font-mono">
-                    LISTO PARA ESCALAR
+                    <div className="space-y-4">
+                        {SYSTEM_STEPS.map((label, index) => (
+                            <div key={label}>
+                                <div className="mb-2 flex justify-between text-[10px] font-bold uppercase tracking-[0.18em] text-white/45">
+                                    <span>{label}</span>
+                                    <span>Activo</span>
+                                </div>
+                                <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
+                                    <motion.div
+                                        initial={{ width: '16%' }}
+                                        whileInView={{ width: '100%' }}
+                                        viewport={{ once: true }}
+                                        transition={{ duration: 1.1, delay: index * 0.16 }}
+                                        className="h-full rounded-full bg-emerald-400 shadow-[0_0_14px_rgba(52,211,153,0.7)]"
+                                    />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    <Link
+                        href="/aplicar"
+                        className="mt-7 inline-flex w-full items-center justify-center rounded-full bg-emerald-400 px-6 py-4 text-sm font-black uppercase text-black transition hover:bg-white active:scale-[0.98] sm:w-auto"
+                    >
+                        Activar ecosistema
+                        <Zap className="ml-2 h-4 w-4" />
+                    </Link>
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 }
