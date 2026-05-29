@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, Cpu, Trophy, Send } from "lucide-react";
 import { LogoMM } from '@/components/shared/LogoMM';
+import { useLanguage } from '@/context/LanguageContext';
 
 const NAV_ITEMS = [
     { href: "/", icon: Home, label: "Home" },
@@ -20,11 +21,20 @@ const SCROLL_DELTA_THRESHOLD = 18;
 const EXPAND_COLLAPSE_COOLDOWN = 420;
 
 export function Navbar() {
+    const { t } = useLanguage();
     const [expanded, setExpanded] = useState(true);
     const pathname = usePathname();
     const expandedRef = useRef(expanded);
     const lastScrollYRef = useRef(0);
     const lastToggleAtRef = useRef(0);
+
+    const getTranslationKey = (label: string) => {
+        if (label === "Home") return "home";
+        if (label === "Systems") return "systems";
+        if (label === "Case Studies") return "cases";
+        if (label === "Apply") return "apply";
+        return label.toLowerCase();
+    };
 
     const { scrollY } = useScroll();
 
@@ -130,7 +140,7 @@ export function Navbar() {
                                         ${expanded ? "max-w-24 opacity-100 translate-x-0" : "max-w-0 opacity-0 -translate-x-1"}
                                     `}
                                 >
-                                    {item.label}
+                                    {t('navbar', getTranslationKey(item.label))}
                                 </span>
                                 
                                 {/* Mobile Label — Solo el activo para ahorrar espacio */}
@@ -141,7 +151,7 @@ export function Navbar() {
                                         ${expanded && isActive ? "max-w-16 opacity-100 translate-x-0 ml-1" : "max-w-0 opacity-0 -translate-x-1 ml-0"}
                                     `}
                                 >
-                                    {item.label}
+                                    {t('navbar', getTranslationKey(item.label))}
                                 </span>
                             </motion.button>
                         </Link>
@@ -157,7 +167,7 @@ export function Navbar() {
                 {/* CTA — Embudo de Aplicación */}
                 <Link href={CTA_ITEM.href} passHref>
                     <motion.button
-                        aria-label={CTA_ITEM.label}
+                        aria-label={t('navbar', getTranslationKey(CTA_ITEM.label))}
                         whileTap={{ scale: 0.9 }}
                         className={`
                             relative flex items-center py-2 rounded-full h-9 sm:h-10
@@ -181,7 +191,7 @@ export function Navbar() {
                                 ${expanded ? "max-w-20 opacity-100 translate-x-0" : "max-w-0 opacity-0 -translate-x-1"}
                             `}
                         >
-                            {CTA_ITEM.label}
+                            {t('navbar', getTranslationKey(CTA_ITEM.label))}
                         </span>
                     </motion.button>
                 </Link>

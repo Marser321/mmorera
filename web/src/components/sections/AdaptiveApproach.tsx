@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/context/LanguageContext";
 
 const PERFORMANCE_MODULES = [
     {
@@ -82,6 +83,24 @@ const REFINEMENT_STEPS = [
 ] as const;
 
 export function AdaptiveApproach() {
+    const { t } = useLanguage();
+
+    const getStepTranslation = (idx: number) => {
+        if (idx === 0) return { label: t('adaptive', 'badge_diagnose'), detail: t('adaptive', 'detail_diagnose') };
+        if (idx === 1) return { label: t('adaptive', 'badge_match'), detail: t('adaptive', 'detail_match') };
+        if (idx === 2) return { label: t('adaptive', 'badge_refine'), detail: t('adaptive', 'detail_refine') };
+        if (idx === 3) return { label: t('adaptive', 'badge_integrate'), detail: t('adaptive', 'detail_integrate') };
+        return { label: '', detail: '' };
+    };
+
+    const getModuleTranslation = (idx: number) => {
+        return {
+            title: t('adaptive', `module${idx}_title`),
+            tool: t('adaptive', `module${idx}_tool`),
+            desc: t('adaptive', `module${idx}_desc`),
+        };
+    };
+
     return (
         <section
             id="enfoque"
@@ -99,7 +118,7 @@ export function AdaptiveApproach() {
                         viewport={{ once: true }}
                         className="mb-4 inline-block text-[11px] font-bold uppercase tracking-[0.3em] text-emerald-400"
                     >
-                        Adaptive Approach
+                        {t('adaptive', 'eyebrow')}
                     </motion.span>
                     <motion.h2
                         id="enfoque-heading"
@@ -109,9 +128,9 @@ export function AdaptiveApproach() {
                         transition={{ delay: 0.05 }}
                         className="mb-6 text-3xl font-black leading-[1.1] tracking-tight text-white md:text-4xl lg:text-5xl"
                     >
-                        Tools change daily.{" "}
+                        {t('adaptive', 'title_part1')}{" "}
                         <span className="bg-gradient-to-r from-emerald-400 to-cyan-300 bg-clip-text text-transparent">
-                            Criteria doesn&apos;t.
+                            {t('adaptive', 'title_part2')}
                         </span>
                     </motion.h2>
                     <motion.p
@@ -121,7 +140,7 @@ export function AdaptiveApproach() {
                         transition={{ delay: 0.1 }}
                         className="mx-auto max-w-2xl text-base font-light leading-relaxed text-white/55 md:text-lg"
                     >
-                        I don&apos;t choose tools because they are new. I study where each one performs best, where it breaks, and how it can attack a specific layer of the problem. The goal is modular execution: solve the big system, then refine the small details that make it feel intentional.
+                        {t('adaptive', 'subtitle')}
                     </motion.p>
                 </div>
 
@@ -137,19 +156,20 @@ export function AdaptiveApproach() {
                         <div className="relative z-10">
                             <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.24em] text-emerald-300">
                                 <Workflow className="h-4 w-4" />
-                                Modular diagnosis
+                                {t('adaptive', 'card_badge')}
                             </div>
 
                             <h3 className="text-2xl font-black leading-tight text-white md:text-3xl">
-                                The stack is built around the problem, not the other way around.
+                                {t('adaptive', 'card_title')}
                             </h3>
                             <p className="mt-4 text-sm leading-relaxed text-white/55 md:text-base">
-                                A landing page, CRM, video edit or AI flow are only useful when they have a clear job. I separate the system into modules, assign the right tool to each layer, and keep refining until the invisible details stop leaking value.
+                                {t('adaptive', 'card_desc')}
                             </p>
 
                             <div className="mt-8 space-y-4">
                                 {REFINEMENT_STEPS.map((step, index) => {
                                     const Icon = step.icon;
+                                    const { label, detail } = getStepTranslation(index);
                                     return (
                                         <motion.div
                                             key={step.label}
@@ -169,10 +189,10 @@ export function AdaptiveApproach() {
                                             </div>
                                             <div>
                                                 <p className="text-sm font-black uppercase tracking-[0.16em] text-white">
-                                                    {step.label}
+                                                    {label}
                                                 </p>
                                                 <p className="mt-1 text-sm leading-relaxed text-white/45">
-                                                    {step.detail}
+                                                    {detail}
                                                 </p>
                                             </div>
                                         </motion.div>
@@ -184,7 +204,7 @@ export function AdaptiveApproach() {
                                 href="/aplicar"
                                 className="mt-8 inline-flex items-center gap-2 text-sm font-bold text-emerald-300 transition-colors hover:text-white"
                             >
-                                Let&apos;s discuss your project
+                                {t('adaptive', 'card_cta')}
                                 <ArrowRight className="h-4 w-4" />
                             </a>
                         </div>
@@ -193,6 +213,7 @@ export function AdaptiveApproach() {
                     <div className="grid gap-3 sm:grid-cols-2">
                         {PERFORMANCE_MODULES.map((module, index) => {
                             const Icon = module.icon;
+                            const { title, tool, desc } = getModuleTranslation(index);
                             return (
                                 <motion.article
                                     key={module.title}
@@ -212,13 +233,13 @@ export function AdaptiveApproach() {
                                         </div>
                                         <div className="min-w-0">
                                             <p className={cn("text-[10px] font-black uppercase tracking-[0.2em]", module.tone)}>
-                                                {module.tool}
+                                                {tool}
                                             </p>
                                             <h3 className="mt-2 text-base font-black text-white">
-                                                {module.title}
+                                                {title}
                                             </h3>
                                             <p className="mt-2 text-sm leading-relaxed text-white/48">
-                                                {module.role}
+                                                {desc}
                                             </p>
                                         </div>
                                     </div>

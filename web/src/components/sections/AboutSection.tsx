@@ -4,8 +4,10 @@ import * as React from 'react';
 import { motion } from 'framer-motion';
 import { Container } from '@/components/ui/container';
 import { Briefcase, GraduationCap, Compass, CheckCircle2 } from 'lucide-react';
+import { useLanguage } from '@/context/LanguageContext';
 
 export function AboutSection() {
+    const { t } = useLanguage();
     return (
         <section
             id="sobre-mi"
@@ -26,7 +28,7 @@ export function AboutSection() {
                             transition={{ duration: 0.5 }}
                             className="text-emerald-500 font-bold tracking-[0.4em] uppercase text-[10px] block"
                         >
-                            Sobre Mí · Trayectoria
+                            {t('about', 'eyebrow')}
                         </motion.span>
 
                         <motion.h2
@@ -37,7 +39,7 @@ export function AboutSection() {
                             transition={{ duration: 0.6, delay: 0.1 }}
                             className="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter leading-none"
                         >
-                            Detrás de las <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-500">herramientas</span>
+                            {t('about', 'title_part1')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-500">{t('about', 'title_part2')}</span>
                         </motion.h2>
 
                         <motion.div
@@ -48,13 +50,13 @@ export function AboutSection() {
                             className="space-y-6 text-zinc-300 font-light text-base md:text-lg leading-relaxed"
                         >
                             <p>
-                                Empecé en el mundo de las operaciones y la logística, gestionando entornos complejos donde cada segundo cuenta y los imprevistos se resuelven en el acto. Esa experiencia en el mundo físico me enseñó a estructurar procesos, ser disciplinado y mantener la cabeza fría ante problemas grandes.
+                                {t('about', 'p1')}
                             </p>
                             <p>
-                                Hoy, fusiono ese bagaje analógico con mis pasiones digitales: el desarrollo frontend ágil (Vibe Coding), la postproducción audiovisual premium y el marketing moderno. No pretendo saberlo todo. La tecnología cambia cada día, y lo que realmente me define es una curiosidad obsesiva por testear cada nueva herramienta que sale al mercado, evaluar su viabilidad y aprender a dominarla para ponerla al servicio de un proyecto.
+                                {t('about', 'p2')}
                             </p>
                             <p className="text-white font-normal border-l-2 border-emerald-500/40 pl-4 italic">
-                                No me asustan los presupuestos ajustados ni los desafíos técnicos abiertos; me adapto a lo que la realidad exige para entregar algo funcional, limpio y de alto impacto.
+                                {t('about', 'p3')}
                             </p>
                         </motion.div>
                     </div>
@@ -72,7 +74,7 @@ export function AboutSection() {
 
                         <h3 className="text-white font-bold text-lg tracking-tight mb-6 flex items-center gap-2">
                             <Compass className="w-5 h-5 text-emerald-400" />
-                            Ficha de Enfoque
+                            {t('about', 'card_title')}
                         </h3>
 
                         <div className="space-y-6">
@@ -82,9 +84,9 @@ export function AboutSection() {
                                     <Briefcase className="w-5 h-5" />
                                 </div>
                                 <div>
-                                    <h4 className="text-xs font-mono uppercase tracking-widest text-zinc-500">Filosofía de Trabajo</h4>
-                                    <p className="text-sm text-zinc-300 font-medium mt-1">Pragmatismo & Adaptabilidad</p>
-                                    <p className="text-xs text-zinc-500 mt-0.5">Soluciones directas alineadas a necesidades reales de negocio.</p>
+                                    <h4 className="text-xs font-mono uppercase tracking-widest text-zinc-500">{t('about', 'item1_label')}</h4>
+                                    <p className="text-sm text-zinc-300 font-medium mt-1">{t('about', 'item1_val')}</p>
+                                    <p className="text-xs text-zinc-500 mt-0.5">{t('about', 'item1_desc')}</p>
                                 </div>
                             </div>
 
@@ -94,9 +96,9 @@ export function AboutSection() {
                                     <GraduationCap className="w-5 h-5" />
                                 </div>
                                 <div>
-                                    <h4 className="text-xs font-mono uppercase tracking-widest text-zinc-500">Curiosidad Activa</h4>
-                                    <p className="text-sm text-zinc-300 font-medium mt-1">Aprendizaje e Iteración Continua</p>
-                                    <p className="text-xs text-zinc-500 mt-0.5">Evaluación diaria de tecnologías para descartar humo y adoptar valor.</p>
+                                    <h4 className="text-xs font-mono uppercase tracking-widest text-zinc-500">{t('about', 'item2_label')}</h4>
+                                    <p className="text-sm text-zinc-300 font-medium mt-1">{t('about', 'item2_val')}</p>
+                                    <p className="text-xs text-zinc-500 mt-0.5">{t('about', 'item2_desc')}</p>
                                 </div>
                             </div>
 
@@ -105,13 +107,13 @@ export function AboutSection() {
 
                             {/* Checklist de Capacidades */}
                             <div className="space-y-3">
-                                <h4 className="text-xs font-mono uppercase tracking-widest text-zinc-500">Sinergia de Habilidades</h4>
+                                <h4 className="text-xs font-mono uppercase tracking-widest text-zinc-500">{t('about', 'skills_label')}</h4>
                                 <ul className="space-y-2">
                                     {[
-                                        'Despliegue ágil de Frontends en Next.js/React',
-                                        'Orquestación de operaciones y automatizaciones',
-                                        'Video de alto impacto e identidad visual',
-                                        'Enfoque de resolución bajo presupuestos óptimos'
+                                        t('about', 'skill1'),
+                                        t('about', 'skill2'),
+                                        t('about', 'skill3'),
+                                        t('about', 'skill4')
                                     ].map((skill, i) => (
                                         <li key={i} className="flex items-center gap-2 text-xs text-zinc-300 font-light">
                                             <CheckCircle2 className="w-4 h-4 text-emerald-400/80 shrink-0" />

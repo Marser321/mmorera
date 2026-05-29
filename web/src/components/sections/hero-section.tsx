@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { motion, LazyMotion, AnimatePresence, useReducedMotion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { ArrowRight, Eye, Gauge, Network, Route, Sparkles, Wrench } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 import {
     SiAnthropic,
     SiAstro,
@@ -134,7 +135,17 @@ function PlanNode({
     index: number;
     reduceMotion: boolean;
 }) {
+    const { t } = useLanguage();
     const Icon = plan.Icon;
+
+    const getPlanTranslation = (idx: number) => {
+        if (idx === 0) return { title: t('hero', 'plan01_title'), detail: t('hero', 'plan01_detail') };
+        if (idx === 1) return { title: t('hero', 'plan02_title'), detail: t('hero', 'plan02_detail') };
+        if (idx === 2) return { title: t('hero', 'plan03_title'), detail: t('hero', 'plan03_detail') };
+        return { title: '', detail: '' };
+    };
+
+    const { title, detail } = getPlanTranslation(index);
 
     return (
         <motion.div
@@ -157,10 +168,10 @@ function PlanNode({
                         Plan {String(index + 1).padStart(2, "0")}
                     </p>
                     <h3 className="mt-1 text-sm font-black uppercase tracking-[0.1em] text-white">
-                        {plan.title}
+                        {title}
                     </h3>
                     <p className="mt-1 text-xs leading-relaxed text-white/45">
-                        {plan.detail}
+                        {detail}
                     </p>
                 </div>
             </div>
@@ -169,6 +180,7 @@ function PlanNode({
 }
 
 function SpiralTechHeroScene() {
+    const { t } = useLanguage();
     const prefersReducedMotion = useReducedMotion();
     const reduceMotion = Boolean(prefersReducedMotion);
 
@@ -364,11 +376,11 @@ function SpiralTechHeroScene() {
                 >
                     <div className="absolute inset-1.5 rounded-full border border-dashed border-emerald-500/15 animate-spin [animation-duration:24s]" />
                     <span className="relative z-10 font-mono text-[9px] font-black uppercase tracking-[0.24em] text-emerald-400 sm:text-[10px]">
-                        Resultados
+                        {t('hero', 'results')}
                     </span>
                     <Sparkles className="mt-1.5 h-4.5 w-4.5 text-emerald-300 animate-pulse sm:h-5 sm:w-5" />
                     <span className="mt-1 font-mono text-[7px] text-white/30 uppercase tracking-[0.16em]">
-                        Sistemas Activos
+                        {t('hero', 'active_systems')}
                     </span>
                 </motion.div>
 
@@ -428,6 +440,7 @@ function MobileTechRail() {
 }
 
 function MobilePlanRail() {
+    const { t } = useLanguage();
     return (
         <motion.div
             className="mx-auto mb-5 grid max-w-[24rem] gap-1.5 sm:grid-cols-3 md:hidden"
@@ -437,6 +450,12 @@ function MobilePlanRail() {
         >
             {IMPLEMENTATION_PLANS.map((plan, index) => {
                 const Icon = plan.Icon;
+                const getPlanTranslation = (idx: number) => {
+                    if (idx === 0) return t('hero', 'plan01_title');
+                    if (idx === 1) return t('hero', 'plan02_title');
+                    if (idx === 2) return t('hero', 'plan03_title');
+                    return '';
+                };
                 return (
                     <div
                         key={plan.title}
@@ -450,7 +469,7 @@ function MobilePlanRail() {
                                 Plan {String(index + 1).padStart(2, "0")}
                             </p>
                             <p className="text-[11px] font-black uppercase tracking-[0.08em] text-white">
-                                {plan.title}
+                                {getPlanTranslation(index)}
                             </p>
                         </div>
                     </div>
@@ -461,6 +480,7 @@ function MobilePlanRail() {
 }
 
 export function HeroSection() {
+    const { t } = useLanguage();
     const [roleIndex, setRoleIndex] = useState(0);
 
     useEffect(() => {
@@ -498,7 +518,7 @@ export function HeroSection() {
                                         transition={{ duration: 0.35, ease: "easeOut" }}
                                         className={`whitespace-nowrap text-[10px] font-bold uppercase tracking-[0.16em] sm:text-[11px] sm:tracking-[0.18em] ${activeRole.color}`}
                                     >
-                                        {activeRole.label}
+                                        {t('hero', 'role_' + roleIndex)}
                                     </motion.span>
                                 </AnimatePresence>
                             </div>
@@ -511,10 +531,10 @@ export function HeroSection() {
                             transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
                             className="mx-auto mb-4 max-w-5xl text-balance text-4xl font-black uppercase leading-[0.94] tracking-normal text-white sm:mb-5 sm:text-6xl sm:leading-[0.92] md:text-7xl xl:text-8xl"
                         >
-                            {HERO_CONTENT.title[0]}
+                            {t('hero', 'title1')}
                             <br />
                             <span className="bg-gradient-to-r from-emerald-400 via-cyan-300 to-white/45 bg-clip-text text-transparent">
-                                {HERO_CONTENT.title[1]}
+                                {t('hero', 'title2')}
                             </span>
                         </motion.h1>
 
@@ -524,7 +544,7 @@ export function HeroSection() {
                             transition={{ duration: 0.9, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
                             className="mx-auto mb-3 hidden max-w-2xl text-sm font-medium uppercase tracking-wide text-white/40 sm:block sm:text-base"
                         >
-                            Technologies, content and operations working as one system
+                            {t('hero', 'tagline')}
                         </motion.p>
 
                         <motion.p
@@ -533,7 +553,7 @@ export function HeroSection() {
                             transition={{ duration: 1, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
                             className="mx-auto mb-5 max-w-[22rem] text-pretty text-sm font-light leading-relaxed text-white/60 sm:mb-9 sm:max-w-[720px] sm:text-lg md:text-xl"
                         >
-                            {HERO_CONTENT.subtitle}
+                            {t('hero', 'subtitle')}
                         </motion.p>
 
                         <MobileTechRail />
@@ -554,7 +574,7 @@ export function HeroSection() {
                                 <span className="absolute inset-0 rounded-full bg-gradient-to-r from-emerald-500/25 to-cyan-500/15 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                                 <span className="relative z-10 flex items-center justify-center gap-3">
                                     <Sparkles className="h-4 w-4 text-emerald-300" />
-                                    Let&apos;s Build Together
+                                    {t('hero', 'cta_build')}
                                     <ArrowRight className="h-4 w-4 text-emerald-400 transition-transform duration-500 group-hover:translate-x-2" />
                                 </span>
                             </motion.a>
@@ -564,7 +584,7 @@ export function HeroSection() {
                                 whileTap={{ scale: 0.98 }}
                                 className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/10 px-7 py-3 text-xs font-black uppercase text-white/55 transition-all duration-500 hover:border-white/20 hover:bg-white/5 hover:text-white/85 sm:min-h-14 sm:px-8 sm:py-4 sm:text-sm"
                             >
-                                <Eye className="mr-2 inline h-4 w-4" /> View Case Studies →
+                                <Eye className="mr-2 inline h-4 w-4" /> {t('hero', 'cta_cases')} →
                             </motion.a>
                         </motion.div>
 

@@ -6,6 +6,8 @@ import { Navbar } from "@/components/sections/navbar";
 import { Footer } from "@/components/sections/footer";
 import dynamic from 'next/dynamic';
 import CustomCursor from "@/components/ui/CustomCursor";
+import { LanguageProvider } from "@/context/LanguageContext";
+import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
 
 const ChatWidgetLoader = dynamic(() => import('@/components/interactive/chat-widget-loader').then(mod => mod.ChatWidgetLoader));
 
@@ -80,21 +82,24 @@ export default function RootLayout({
                 />
             </head>
             <body className="min-h-screen font-sans antialiased bg-background text-foreground">
-                {/* Skip to content — WCAG 2.4.1 */}
-                <a
-                    href="#contenido-principal"
-                    className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground focus:shadow-lg"
-                >
-                    Saltar al contenido principal
-                </a>
-                <GlobalBackground />
-                <CustomCursor />
-                <Navbar />
-                <div className="relative z-10 flex flex-col min-h-screen">
-                    {children}
-                </div>
-                <Footer />
-                <ChatWidgetLoader />
+                <LanguageProvider>
+                    {/* Skip to content — WCAG 2.4.1 */}
+                    <a
+                        href="#contenido-principal"
+                        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground focus:shadow-lg"
+                    >
+                        Saltar al contenido principal
+                    </a>
+                    <GlobalBackground />
+                    <CustomCursor />
+                    <LanguageSwitcher />
+                    <Navbar />
+                    <div className="relative z-10 flex flex-col min-h-screen">
+                        {children}
+                    </div>
+                    <Footer />
+                    <ChatWidgetLoader />
+                </LanguageProvider>
             </body>
         </html>
     );
