@@ -16,22 +16,23 @@ import {
     Zap,
 } from "lucide-react";
 import { Container } from "@/components/ui/container";
+import { useLanguage } from "@/context/LanguageContext";
 
 /* ─── Datos ─── */
 const BEFORE_ITEMS = [
-    { icon: FileSpreadsheet, text: "Leads en hojas de cálculo o peor, en la cabeza" },
-    { icon: MessageSquareOff, text: "Seguimiento por memoria — se pierde el hilo" },
-    { icon: MailX, text: "Emails manuales sin personalización ni timing" },
-    { icon: Timer, text: "Respuesta promedio: horas o días" },
-    { icon: AlertTriangle, text: "Cero visibilidad de pipeline o conversión" },
+    { icon: FileSpreadsheet, key: "before_1" },
+    { icon: MessageSquareOff, key: "before_2" },
+    { icon: MailX, key: "before_3" },
+    { icon: Timer, key: "before_4" },
+    { icon: AlertTriangle, key: "before_5" },
 ] as const;
 
 const AFTER_ITEMS = [
-    { icon: Gauge, text: "Leads capturados y calificados automáticamente" },
-    { icon: BotMessageSquare, text: "Secuencias inteligentes activas 24/7" },
-    { icon: PieChart, text: "Pipeline en tiempo real con dueños y etapas" },
-    { icon: Zap, text: "IA responde en menos de 60 segundos" },
-    { icon: CalendarCheck, text: "Agenda sin fricción integrada al flujo" },
+    { icon: Gauge, key: "after_1" },
+    { icon: BotMessageSquare, key: "after_2" },
+    { icon: PieChart, key: "after_3" },
+    { icon: Zap, key: "after_4" },
+    { icon: CalendarCheck, key: "after_5" },
 ] as const;
 
 /* Variantes */
@@ -55,6 +56,7 @@ const itemVariants = {
 
 /* ─── Componente principal ─── */
 export function CRMBeforeAfter() {
+    const { t } = useLanguage();
     return (
         <section
             id="antes-despues-crm"
@@ -75,19 +77,19 @@ export function CRMBeforeAfter() {
                     transition={{ duration: 0.7 }}
                 >
                     <div className="mb-5 inline-flex items-center rounded-full border border-white/10 bg-white/5 px-4 py-1.5 font-mono text-[10px] uppercase tracking-[0.3em] text-white/60">
-                        Transformación real
+                        {t('crm_beforeafter', 'eyebrow')}
                     </div>
                     <h2
                         id="antes-despues-heading"
                         className="font-heading text-3xl tracking-tight text-white sm:text-5xl md:text-6xl"
                     >
-                        De operación manual a{" "}
+                        {t('crm_beforeafter', 'title_pre')}{" "}
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-white/90 to-primary">
-                            sistema activo
+                            {t('crm_beforeafter', 'title_accent')}
                         </span>
                     </h2>
                     <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-white/55 md:text-lg">
-                        Así se ve la diferencia entre gestionar clientes "a mano" y tener un CRM operativo con automatizaciones e IA.
+                        {t('crm_beforeafter', 'intro')}
                     </p>
                 </motion.div>
 
@@ -105,13 +107,13 @@ export function CRMBeforeAfter() {
                         <div className="relative z-10">
                             <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-red-500/20 bg-red-500/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.24em] text-red-300">
                                 <AlertTriangle className="h-3.5 w-3.5" />
-                                Sin CRM
+                                {t('crm_beforeafter', 'before_badge')}
                             </div>
                             <h3 className="text-2xl font-black text-white sm:text-3xl">
-                                Operación desconectada
+                                {t('crm_beforeafter', 'before_title')}
                             </h3>
                             <p className="mt-3 text-sm leading-relaxed text-white/50">
-                                Información dispersa, sin procesos claros ni visibilidad de la operación comercial.
+                                {t('crm_beforeafter', 'before_desc')}
                             </p>
 
                             <div className="mt-8 space-y-3">
@@ -119,7 +121,7 @@ export function CRMBeforeAfter() {
                                     const Icon = item.icon;
                                     return (
                                         <motion.div
-                                            key={item.text}
+                                            key={item.key}
                                             custom={i}
                                             variants={itemVariants}
                                             initial="hidden"
@@ -130,7 +132,7 @@ export function CRMBeforeAfter() {
                                             <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-red-500/20 bg-red-500/10">
                                                 <Icon className="h-4 w-4 text-red-300" />
                                             </span>
-                                            <span className="text-sm leading-snug text-white/60">{item.text}</span>
+                                            <span className="text-sm leading-snug text-white/60">{t('crm_beforeafter', item.key)}</span>
                                         </motion.div>
                                     );
                                 })}
@@ -139,7 +141,7 @@ export function CRMBeforeAfter() {
                             {/* Barra de "performance" baja */}
                             <div className="mt-8 rounded-xl border border-white/8 bg-black/30 p-3">
                                 <div className="flex items-center justify-between text-xs">
-                                    <span className="text-white/40">Conversión estimada</span>
+                                    <span className="text-white/40">{t('crm_beforeafter', 'conv_label')}</span>
                                     <span className="font-mono font-bold text-red-300">~3%</span>
                                 </div>
                                 <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/10">
@@ -180,13 +182,13 @@ export function CRMBeforeAfter() {
                         <div className="relative z-10">
                             <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.24em] text-primary">
                                 <CheckCircle2 className="h-3.5 w-3.5" />
-                                Con CRM + IA
+                                {t('crm_beforeafter', 'after_badge')}
                             </div>
                             <h3 className="text-2xl font-black text-white sm:text-3xl">
-                                Sistema que convierte
+                                {t('crm_beforeafter', 'after_title')}
                             </h3>
                             <p className="mt-3 text-sm leading-relaxed text-white/55">
-                                Cada lead tiene dueño, contexto y siguiente paso automatizado desde el primer contacto.
+                                {t('crm_beforeafter', 'after_desc')}
                             </p>
 
                             <div className="mt-8 space-y-3">
@@ -194,7 +196,7 @@ export function CRMBeforeAfter() {
                                     const Icon = item.icon;
                                     return (
                                         <motion.div
-                                            key={item.text}
+                                            key={item.key}
                                             custom={i}
                                             variants={itemVariants}
                                             initial="hidden"
@@ -205,7 +207,7 @@ export function CRMBeforeAfter() {
                                             <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-primary/20 bg-primary/10">
                                                 <Icon className="h-4 w-4 text-primary" />
                                             </span>
-                                            <span className="text-sm leading-snug text-white/65">{item.text}</span>
+                                            <span className="text-sm leading-snug text-white/65">{t('crm_beforeafter', item.key)}</span>
                                         </motion.div>
                                     );
                                 })}
@@ -214,7 +216,7 @@ export function CRMBeforeAfter() {
                             {/* Barra de "performance" alta */}
                             <div className="mt-8 rounded-xl border border-primary/20 bg-primary/[0.06] p-3">
                                 <div className="flex items-center justify-between text-xs">
-                                    <span className="font-bold text-primary">Conversión estimada</span>
+                                    <span className="font-bold text-primary">{t('crm_beforeafter', 'conv_label')}</span>
                                     <span className="font-mono font-bold text-primary">+34%</span>
                                 </div>
                                 <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/10">

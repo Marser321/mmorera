@@ -3,32 +3,12 @@
 import { motion } from "framer-motion";
 import { BriefcaseBusiness, Building2, UserRoundCheck } from "lucide-react";
 import { Container } from "@/components/ui/container";
+import { useLanguage } from "@/context/LanguageContext";
 
 const CRM_SCALES = [
-    {
-        title: "Freelancer",
-        subtitle: "Nunca más depender de memoria",
-        description: "Capturás consultas, respondés más rápido, agendás reuniones y sabés qué oportunidad necesita seguimiento.",
-        points: ["Inbox centralizado", "Agenda automática", "Recordatorios simples"],
-        metrics: ["1 usuario", "3 canales", "Agenda"],
-        icon: UserRoundCheck,
-    },
-    {
-        title: "Equipo comercial",
-        subtitle: "Todos venden desde el mismo mapa",
-        description: "Cada vendedor ve pipeline, tareas, conversaciones y próximos pasos sin duplicar planillas ni perseguir información.",
-        points: ["Pipeline por etapa", "Tareas y handoff", "WhatsApp + email"],
-        metrics: ["Roles", "Pipeline", "Tareas"],
-        icon: BriefcaseBusiness,
-    },
-    {
-        title: "Operación grande",
-        subtitle: "Escalar sin perder control",
-        description: "GHL se conecta con reporting, campañas, IA y procesos humanos para medir conversión y ordenar decisiones.",
-        points: ["Dashboards ejecutivos", "Automatizaciones por segmento", "Control de performance"],
-        metrics: ["Reporting", "IA", "SLA"],
-        icon: Building2,
-    },
+    { key: "scale1", icon: UserRoundCheck },
+    { key: "scale2", icon: BriefcaseBusiness },
+    { key: "scale3", icon: Building2 },
 ] as const;
 
 /* Variantes de entrada para las cards */
@@ -55,6 +35,7 @@ const bulletVariants = {
 };
 
 export function CRMScaleSection() {
+    const { t } = useLanguage();
     return (
         <section className="relative py-20 md:py-28" aria-labelledby="crm-scale-heading">
             <Container className="relative z-10">
@@ -66,16 +47,16 @@ export function CRMScaleSection() {
                     transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                 >
                     <div className="mx-auto mb-4 inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 font-mono text-[10px] uppercase tracking-[0.3em] text-primary">
-                        CRM segun escala
+                        {t('crm_scale', 'eyebrow')}
                     </div>
                     <h2
                         id="crm-scale-heading"
                         className="font-heading text-4xl tracking-tight text-white md:text-6xl"
                     >
-                        El mismo sistema, distinto nivel de operación
+                        {t('crm_scale', 'title')}
                     </h2>
                     <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-white/55 md:text-lg">
-                        Un CRM bien armado no es solo para corporaciones. Sirve para ordenar tu primer flujo de clientes o coordinar equipos grandes con reglas claras.
+                        {t('crm_scale', 'intro')}
                     </p>
                 </motion.div>
 
@@ -93,7 +74,7 @@ export function CRMScaleSection() {
                         const Icon = scale.icon;
                         return (
                             <motion.article
-                                key={scale.title}
+                                key={scale.key}
                                 custom={index}
                                 variants={cardVariants}
                                 initial="hidden"
@@ -111,25 +92,25 @@ export function CRMScaleSection() {
                                             <Icon className="h-6 w-6" />
                                         </span>
                                         <span className="rounded-full border border-white/10 bg-white/[0.035] px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-white/45">
-                                            módulo {index + 1}
+                                            {t('crm_scale', 'module')} {index + 1}
                                         </span>
                                     </div>
-                                    <h3 className="text-2xl font-black text-white">{scale.title}</h3>
+                                    <h3 className="text-2xl font-black text-white">{t('crm_scale', `${scale.key}_title`)}</h3>
                                     <p className="mt-2 text-sm font-bold uppercase tracking-[0.16em] text-primary/80">
-                                        {scale.subtitle}
+                                        {t('crm_scale', `${scale.key}_subtitle`)}
                                     </p>
                                     <p className="mt-4 min-h-20 text-sm leading-relaxed text-white/55 md:min-h-24">
-                                        {scale.description}
+                                        {t('crm_scale', `${scale.key}_desc`)}
                                     </p>
 
                                     <div className="mt-6 grid grid-cols-3 gap-2">
-                                        {scale.metrics.map((metric) => (
+                                        {[1, 2, 3].map((n) => (
                                             <div
-                                                key={metric}
+                                                key={n}
                                                 className="rounded-xl border border-white/8 bg-white/[0.035] px-2 py-2 text-center"
                                             >
                                                 <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-white/55">
-                                                    {metric}
+                                                    {t('crm_scale', `${scale.key}_metric${n}`)}
                                                 </span>
                                             </div>
                                         ))}
@@ -137,9 +118,9 @@ export function CRMScaleSection() {
 
                                     <div className="mt-6 h-px bg-white/10" />
                                     <ul className="mt-5 space-y-3">
-                                        {scale.points.map((point, pIdx) => (
+                                        {[1, 2, 3].map((n, pIdx) => (
                                             <motion.li
-                                                key={point}
+                                                key={n}
                                                 custom={pIdx}
                                                 variants={bulletVariants}
                                                 initial="hidden"
@@ -148,7 +129,7 @@ export function CRMScaleSection() {
                                                 className="flex items-center gap-3 text-sm text-white/60"
                                             >
                                                 <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-                                                {point}
+                                                {t('crm_scale', `${scale.key}_point${n}`)}
                                             </motion.li>
                                         ))}
                                     </ul>

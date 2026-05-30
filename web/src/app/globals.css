@@ -168,8 +168,9 @@
     border-color: var(--color-border);
   }
 
+  /* El scroll suave lo maneja Lenis (SmoothScrollProvider). No se define
+     scroll-behavior: smooth aquí para evitar el doble-suavizado/jank. */
   html {
-    scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -427,6 +428,16 @@
   .text-glow {
     text-shadow: 0 0 30px oklch(0.7 0.2 250 / 0.3);
   }
+
+  /* ─── Ocultar scrollbar (carrusel mobile) ─── */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 /* Keyframe neón (fuera de @layer para evitar conflictos de prioridad) */
@@ -439,5 +450,52 @@
 
   50% {
     box-shadow: 0 0 16px rgba(34, 211, 238, 0.6), 0 0 32px rgba(99, 102, 241, 0.3), 0 0 48px rgba(34, 211, 238, 0.15);
+  }
+}
+
+/* Marquesina infinita (componente Marquee). El track duplica su contenido,
+   por eso el loop va de 0 a -50%. */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Animación para impulsos de luz en cables SVG */
+@keyframes dash {
+  to {
+    stroke-dashoffset: -1000;
+  }
+}
+
+/* Animación para barrido CRT en monitores */
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+/*
+ * ─── Accesibilidad: prefers-reduced-motion ───
+ * Neutraliza los keyframes globales (float, glow-pulse, shimmer, conic-spin,
+ * liquid-warp, neon-pulse) y las transiciones para quienes piden menos
+ * movimiento. Lenis además se desactiva en SmoothScrollProvider.
+ */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

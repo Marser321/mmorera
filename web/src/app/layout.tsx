@@ -6,8 +6,10 @@ import { Navbar } from "@/components/sections/navbar";
 import { Footer } from "@/components/sections/footer";
 import dynamic from 'next/dynamic';
 import CustomCursor from "@/components/ui/CustomCursor";
-import { LanguageProvider } from "@/context/LanguageContext";
+import { AppProviders } from "@/components/providers/AppProviders";
 import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
+import { TrackSwitcher } from "@/components/track/TrackSwitcher";
+import { ScrollProgressBar } from "@/components/scroll/ScrollProgressBar";
 
 const ChatWidgetLoader = dynamic(() => import('@/components/interactive/chat-widget-loader').then(mod => mod.ChatWidgetLoader));
 
@@ -82,7 +84,7 @@ export default function RootLayout({
                 />
             </head>
             <body className="min-h-screen font-sans antialiased bg-background text-foreground">
-                <LanguageProvider>
+                <AppProviders>
                     {/* Skip to content — WCAG 2.4.1 */}
                     <a
                         href="#contenido-principal"
@@ -90,16 +92,18 @@ export default function RootLayout({
                     >
                         Saltar al contenido principal
                     </a>
+                    <ScrollProgressBar />
                     <GlobalBackground />
                     <CustomCursor />
                     <LanguageSwitcher />
+                    <TrackSwitcher />
                     <Navbar />
                     <div className="relative z-10 flex flex-col min-h-screen">
                         {children}
                     </div>
                     <Footer />
                     <ChatWidgetLoader />
-                </LanguageProvider>
+                </AppProviders>
             </body>
         </html>
     );

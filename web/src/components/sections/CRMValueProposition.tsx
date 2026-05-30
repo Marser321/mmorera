@@ -10,35 +10,21 @@ import {
     Workflow,
 } from "lucide-react";
 import { Container } from "@/components/ui/container";
+import { useLanguage } from "@/context/LanguageContext";
 
 /* ─── Datos ─── */
 const VALUE_BLOCKS = [
-    {
-        icon: Database,
-        title: "Todo en un solo lugar",
-        description:
-            "Contactos, conversaciones, historial y tareas unificados. Sin saltar entre 5 apps ni duplicar datos.",
-    },
-    {
-        icon: History,
-        title: "Cada interacción queda registrada",
-        description:
-            "Llamadas, emails, WhatsApp, formularios: todo alimenta el perfil del contacto automáticamente.",
-    },
-    {
-        icon: LineChart,
-        title: "Decisiones con datos, no intuición",
-        description:
-            "Pipeline visual, métricas de conversión y reportes que te dicen dónde invertir foco y dónde ajustar.",
-    },
+    { icon: Database, key: "block1" },
+    { icon: History, key: "block2" },
+    { icon: LineChart, key: "block3" },
 ] as const;
 
 const ORBIT_NODES = [
-    { icon: Users, label: "Contactos", angle: 0 },
-    { icon: Workflow, label: "Workflows", angle: 72 },
-    { icon: Eye, label: "Pipeline", angle: 144 },
-    { icon: LineChart, label: "Reporting", angle: 216 },
-    { icon: History, label: "Historial", angle: 288 },
+    { icon: Users, key: "orbit_contactos", angle: 0 },
+    { icon: Workflow, key: "orbit_workflows", angle: 72 },
+    { icon: Eye, key: "orbit_pipeline", angle: 144 },
+    { icon: LineChart, key: "orbit_reporting", angle: 216 },
+    { icon: History, key: "orbit_historial", angle: 288 },
 ];
 
 /* Variantes de animación */
@@ -57,6 +43,7 @@ const blockVariants = {
 
 /* ─── Componente principal ─── */
 export function CRMValueProposition() {
+    const { t } = useLanguage();
     return (
         <section
             id="valor-crm"
@@ -77,16 +64,16 @@ export function CRMValueProposition() {
                             transition={{ duration: 0.6 }}
                         >
                             <div className="mb-5 inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 font-mono text-[10px] uppercase tracking-[0.3em] text-primary">
-                                ¿Qué es un CRM?
+                                {t('crm_value', 'eyebrow')}
                             </div>
                             <h2
                                 id="valor-crm-heading"
                                 className="max-w-2xl font-heading text-3xl tracking-tight text-white md:text-5xl lg:text-6xl"
                             >
-                                El centro de mando que tu operación necesita
+                                {t('crm_value', 'title')}
                             </h2>
                             <p className="mt-5 max-w-xl text-base leading-relaxed text-white/55 md:text-lg">
-                                Un CRM no es &ldquo;más software&rdquo;. Es el sistema que conecta marketing, ventas y atención para que nada se pierda y cada oportunidad tenga dueño.
+                                {t('crm_value', 'intro')}
                             </p>
                         </motion.div>
 
@@ -95,7 +82,7 @@ export function CRMValueProposition() {
                                 const Icon = block.icon;
                                 return (
                                     <motion.div
-                                        key={block.title}
+                                        key={block.key}
                                         custom={i}
                                         variants={blockVariants}
                                         initial="hidden"
@@ -108,10 +95,10 @@ export function CRMValueProposition() {
                                         </span>
                                         <div>
                                             <h3 className="text-sm font-black uppercase tracking-[0.14em] text-white">
-                                                {block.title}
+                                                {t('crm_value', `${block.key}_title`)}
                                             </h3>
                                             <p className="mt-2 text-sm leading-relaxed text-white/52">
-                                                {block.description}
+                                                {t('crm_value', `${block.key}_desc`)}
                                             </p>
                                         </div>
                                     </motion.div>
@@ -130,7 +117,7 @@ export function CRMValueProposition() {
                                 href="#flujo-ghl"
                                 className="inline-flex items-center gap-2 text-sm font-bold text-primary transition-colors hover:text-white"
                             >
-                                Conocé cómo se ve tu operación con sistema →
+                                {t('crm_value', 'cta')}
                             </a>
                         </motion.div>
                     </div>
@@ -214,27 +201,30 @@ export function CRMValueProposition() {
                             const topPct = (cy / 380) * 100;
 
                             return (
-                                <motion.div
-                                    key={node.label}
-                                    data-orbit-node
+                                <div
+                                    key={node.key}
                                     className="absolute z-10"
                                     style={{
                                         left: `${leftPct}%`,
                                         top: `${topPct}%`,
                                         transform: "translate(-50%, -50%)",
                                     }}
-                                    initial={{ opacity: 0, scale: 0 }}
-                                    whileInView={{ opacity: 1, scale: 1 }}
-                                    viewport={{ once: true }}
-                                    transition={{ duration: 0.5, delay: 0.3 + i * 0.1 }}
                                 >
-                                    <div data-orbit-dot className="flex h-11 w-11 items-center justify-center rounded-full border border-primary/30 bg-black/50 text-primary shadow-[0_0_18px_rgba(16,245,178,0.2)] backdrop-blur-xl">
-                                        <Icon className="h-4 w-4" />
-                                    </div>
-                                    <span data-orbit-label className="absolute left-1/2 top-full mt-1.5 w-24 -translate-x-1/2 text-center font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-white/50">
-                                        {node.label}
-                                    </span>
-                                </motion.div>
+                                    <motion.div
+                                        data-orbit-node
+                                        initial={{ opacity: 0, scale: 0 }}
+                                        whileInView={{ opacity: 1, scale: 1 }}
+                                        viewport={{ once: true }}
+                                        transition={{ duration: 0.5, delay: 0.3 + i * 0.1 }}
+                                    >
+                                        <div data-orbit-dot className="flex h-11 w-11 items-center justify-center rounded-full border border-primary/30 bg-black/50 text-primary shadow-[0_0_18px_rgba(16,245,178,0.2)] backdrop-blur-xl">
+                                            <Icon className="h-4 w-4" />
+                                        </div>
+                                        <span data-orbit-label className="absolute left-1/2 top-full mt-1.5 w-24 -translate-x-1/2 text-center font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-white/50">
+                                            {t('crm_value', node.key)}
+                                        </span>
+                                    </motion.div>
+                                </div>
                             );
                         })}
 

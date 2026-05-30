@@ -14,6 +14,8 @@ import { Check, ArrowRight, Sparkles, Zap, Trophy } from "lucide-react";
 import { Servicio } from "@/types";
 import { motion } from 'framer-motion';
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/context/LanguageContext";
+import { localizeServicio } from "@/data/services";
 
 interface ServiceModalProps {
     isOpen: boolean;
@@ -22,7 +24,9 @@ interface ServiceModalProps {
 }
 
 export function ServiceModal({ isOpen, onClose, service }: ServiceModalProps) {
+    const { t, language } = useLanguage();
     if (!service) return null;
+    const s = localizeServicio(service, language);
 
     const pilarColors = {
         tech: {
@@ -76,26 +80,26 @@ export function ServiceModal({ isOpen, onClose, service }: ServiceModalProps) {
                         <div className="flex items-center justify-between mb-6">
                             <Badge variant="outline" className={cn("capitalize px-3 py-1 text-sm tracking-wider border bg-black/50 backdrop-blur-md", theme.border, theme.text)}>
                                 {service.pilar === 'tech' ? <Zap className="w-3 h-3 mr-2" /> : service.pilar === 'media' ? <Sparkles className="w-3 h-3 mr-2" /> : <Trophy className="w-3 h-3 mr-2" />}
-                                {service.pilar} Ecosystem
+                                {service.pilar} {t('services', 'modal_ecosystem')}
                             </Badge>
 
                             {service.precio_base && (
                                 <div className="text-right">
-                                    <span className="block text-[10px] uppercase tracking-widest text-white/40 font-bold mb-1">Inversión Estratégica</span>
+                                    <span className="block text-[10px] uppercase tracking-widest text-white/40 font-bold mb-1">{t('services', 'modal_investment')}</span>
                                     <span className={cn("text-xl font-black font-mono tracking-tight", theme.text)}>
                                         ${service.precio_base}
-                                        <span className="text-xs text-white/40 ml-1 font-sans font-normal">/ proyecto</span>
+                                        <span className="text-xs text-white/40 ml-1 font-sans font-normal">{t('services', 'modal_per_project')}</span>
                                     </span>
                                 </div>
                             )}
                         </div>
 
                         <DialogTitle className="text-4xl md:text-5xl font-black text-white leading-[0.95] tracking-tighter mb-4">
-                            {service.nombre}
+                            {s.nombre}
                         </DialogTitle>
 
                         <DialogDescription className="text-lg text-white/70 font-light leading-relaxed max-w-lg">
-                            {service.descripcion}
+                            {s.descripcion}
                         </DialogDescription>
                     </DialogHeader>
 
@@ -103,12 +107,12 @@ export function ServiceModal({ isOpen, onClose, service }: ServiceModalProps) {
                     <div className="space-y-6 mb-10">
                         <div className="flex items-center gap-4">
                             <div className="h-px flex-1 bg-gradient-to-r from-transparent to-transparent via-white/20" />
-                            <span className="text-xs font-bold uppercase tracking-[0.2em] text-white/30">Lo que incluye tu Ecosistema</span>
+                            <span className="text-xs font-bold uppercase tracking-[0.2em] text-white/30">{t('services', 'modal_includes')}</span>
                             <div className="h-px flex-1 bg-gradient-to-r from-transparent to-transparent via-white/20" />
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            {service.caracteristicas.map((feature, idx) => (
+                            {s.caracteristicas.map((feature, idx) => (
                                 <motion.div
                                     key={idx}
                                     initial={{ opacity: 0, x: -10 }}
@@ -127,7 +131,7 @@ export function ServiceModal({ isOpen, onClose, service }: ServiceModalProps) {
 
                     <DialogFooter className="md:justify-between items-center gap-4 pt-6 border-t border-white/10">
                         <Button variant="ghost" onClick={onClose} className="text-white/40 hover:text-white hover:bg-white/5">
-                            Cerrar
+                            {t('services', 'modal_close')}
                         </Button>
                         <Button
                             onClick={() => {
@@ -143,7 +147,7 @@ export function ServiceModal({ isOpen, onClose, service }: ServiceModalProps) {
                             )}
                         >
                             <span className="relative z-10 flex items-center">
-                                Iniciar Transformación
+                                {t('services', 'modal_cta')}
                                 <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                             </span>
                             <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />

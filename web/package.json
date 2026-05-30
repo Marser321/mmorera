@@ -14,6 +14,7 @@
     "@ai-sdk/react": "^3.0.105",
     "@insforge/sdk": "^1.2.9",
     "@insforge/shared-schemas": "^1.1.52",
+    "@remotion/player": "^4.0.469",
     "@types/uuid": "^10.0.0",
     "@xyflow/react": "^12.10.1",
     "ai": "^6.0.103",
@@ -30,6 +31,7 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-icons": "^5.5.0",
+    "remotion": "^4.0.469",
     "resend": "^6.9.2",
     "tailwind-merge": "^3.5.0",
     "uuid": "^13.0.0"

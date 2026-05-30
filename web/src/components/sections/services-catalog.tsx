@@ -5,7 +5,8 @@ import { motion, useMotionValue, useMotionTemplate } from 'framer-motion';
 import { ServiceModal } from '@/components/shared/ServiceModal';
 import { Servicio } from '@/types';
 import { Layers, Monitor, Video, Share2, ChevronRight, Bookmark } from 'lucide-react';
-import { MOCK_SERVICES } from '@/data/services';
+import { MOCK_SERVICES, localizeServicio } from '@/data/services';
+import { useLanguage } from '@/context/LanguageContext';
 import { cn } from '@/lib/utils';
 
 const iconMap: Record<string, React.ReactNode> = {
@@ -27,9 +28,10 @@ function getPillarStyle(pilar: string) {
 }
 
 export function ServicesCatalog() {
+    const { t, language } = useLanguage();
     const [bookmarks, setBookmarks] = React.useState<string[]>([]);
     const [isLoaded, setIsLoaded] = React.useState(false);
-    const services = MOCK_SERVICES;
+    const services = MOCK_SERVICES.map((s) => localizeServicio(s, language));
     const [selectedService, setSelectedService] = React.useState<Servicio | null>(null);
 
     React.useEffect(() => {
@@ -77,13 +79,13 @@ export function ServicesCatalog() {
                     className="text-center max-w-3xl mx-auto"
                 >
                     <div className="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wider text-primary uppercase bg-primary/10 rounded-full border border-primary/20">
-                        Soluciones Remotas
+                        {t('services', 'catalog_eyebrow')}
                     </div>
                     <h2 className="text-4xl md:text-7xl font-heading text-white mb-6 tracking-tighter uppercase relative z-10">
-                        Servicios <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-accent to-primary animate-gradient-x bg-[length:200%_auto]">Digitales</span>
+                        {t('services', 'catalog_title_pre')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-accent to-primary animate-gradient-x bg-[length:200%_auto]">{t('services', 'catalog_title_accent')}</span>
                     </h2>
                     <p className="text-xl text-white/60 font-light leading-relaxed max-w-2xl mx-auto">
-                        Tres soluciones ágiles y ejecutables a distancia enfocadas en el rendimiento visual, el desarrollo rápido y la automatización operativa.
+                        {t('services', 'catalog_subtitle')}
                     </p>
                 </motion.div>
             </div>
@@ -131,6 +133,7 @@ function MobileCard({ service, isBookmarked, toggleBookmark, onSelect }: {
     service: Servicio; index: number; isBookmarked: boolean;
     toggleBookmark: (id: string) => void; onSelect: () => void;
 }) {
+    const { t } = useLanguage();
     const style = getPillarStyle(service.pilar);
 
     return (
@@ -167,7 +170,7 @@ function MobileCard({ service, isBookmarked, toggleBookmark, onSelect }: {
                         service.pilar === 'media' ? "bg-white text-black" :
                         service.pilar === 'ops' ? "bg-amber-400 text-black" :
                         "bg-accent text-black"
-                    )}>Saber más →</button>
+                    )}>{t('services', 'card_more')} →</button>
                 </div>
             </div>
         </motion.div>
@@ -178,6 +181,7 @@ function ServiceCard({ service, index, toggleBookmark, isBookmarked, onSelect }:
     service: Servicio; index: number; toggleBookmark: (id: string) => void;
     isBookmarked: boolean; onSelect: () => void;
 }) {
+    const { t } = useLanguage();
     const mouseX = useMotionValue(0);
     const mouseY = useMotionValue(0);
     const style = getPillarStyle(service.pilar);
@@ -232,7 +236,7 @@ function ServiceCard({ service, index, toggleBookmark, isBookmarked, onSelect }:
                         </div>
                         <div className="pt-6 border-t border-white/5 flex items-end justify-between">
                             <div className="flex flex-col gap-1">
-                                <span className="text-[10px] uppercase tracking-[0.2em] text-white/30 font-bold">Concepto</span>
+                                <span className="text-[10px] uppercase tracking-[0.2em] text-white/30 font-bold">{t('services', 'card_concept')}</span>
                                 <span className={cn("text-lg font-black tracking-tight", style.text)}>{service.descripcion_corta}</span>
                             </div>
                             <button onClick={onSelect} className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center border border-white/5 group-hover/card:bg-white group-hover/card:text-black transition-all duration-300 cursor-pointer">

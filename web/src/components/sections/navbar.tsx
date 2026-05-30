@@ -4,15 +4,15 @@ import { useState, useRef } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Cpu, Trophy, Send } from "lucide-react";
+import { Home, Cpu, Trophy, Send, Palette } from "lucide-react";
 import { LogoMM } from '@/components/shared/LogoMM';
 import { useLanguage } from '@/context/LanguageContext';
+import { useTrack } from '@/context/TrackContext';
 
-const NAV_ITEMS = [
-    { href: "/", icon: Home, label: "Home" },
-    { href: "/sistemas", icon: Cpu, label: "Systems" },
-    { href: "/casos-de-exito", icon: Trophy, label: "Case Studies" },
-];
+const HOME_ITEM = { href: "/", icon: Home, label: "Home" };
+const STUDIO_ITEM = { href: "/estudio", icon: Palette, label: "Studio" };
+const SYSTEMS_ITEM = { href: "/sistemas", icon: Cpu, label: "Systems" };
+const CASES_ITEM = { href: "/casos-de-exito", icon: Trophy, label: "Case Studies" };
 
 /** CTA del embudo de aplicación */
 const CTA_ITEM = { href: "/aplicar", icon: Send, label: "Apply" };
@@ -22,14 +22,22 @@ const EXPAND_COLLAPSE_COOLDOWN = 420;
 
 export function Navbar() {
     const { t } = useLanguage();
+    const { track, mounted } = useTrack();
     const [expanded, setExpanded] = useState(true);
     const pathname = usePathname();
+
+    // Orden consciente del track: el track elegido va primero entre las dos rutas.
+    const trackItems = mounted && track === 'software'
+        ? [SYSTEMS_ITEM, STUDIO_ITEM]
+        : [STUDIO_ITEM, SYSTEMS_ITEM];
+    const navItems = [HOME_ITEM, ...trackItems, CASES_ITEM];
     const expandedRef = useRef(expanded);
     const lastScrollYRef = useRef(0);
     const lastToggleAtRef = useRef(0);
 
     const getTranslationKey = (label: string) => {
         if (label === "Home") return "home";
+        if (label === "Studio") return "studio";
         if (label === "Systems") return "systems";
         if (label === "Case Studies") return "cases";
         if (label === "Apply") return "apply";
@@ -100,7 +108,7 @@ export function Navbar() {
                      ${expanded ? "opacity-100 mr-1" : "opacity-0 mr-0 w-0"}
                 `} />
 
-                {NAV_ITEMS.map((item) => {
+                {navItems.map((item) => {
                     const isActive = pathname === item.href || (item.href !== "/" && pathname?.startsWith(item.href));
                     const Icon = item.icon;
 

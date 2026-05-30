@@ -101,28 +101,34 @@ function TechChip({
     index: number;
 }) {
     return (
-        <motion.div
-            className="absolute z-10 hidden md:block transform-gpu"
+        <div
+            className="absolute z-10 hidden md:block"
             style={{
-                left: `${x}%`,
-                top: `${y}%`,
+                // Redondeo determinista: Math.cos/sin no son bit-idénticos entre
+                // Node (SSR) y el navegador, lo que causa mismatch de hidratación.
+                left: `${x.toFixed(3)}%`,
+                top: `${y.toFixed(3)}%`,
                 transform: "translate(-50%, -50%)",
             }}
-            initial={{ opacity: 0, scale: 0.6 }}
-            animate={{
-                opacity: opacity,
-                scale: scale,
-            }}
-            transition={{
-                opacity: { duration: 0.6, delay: index * 0.04 },
-                scale: { duration: 0.6, delay: index * 0.04 },
-            }}
         >
-            <div className="group flex items-center gap-1.5 rounded-full border border-white/5 bg-black/45 px-2.5 py-1.5 text-white/40 shadow-[0_4px_12px_rgba(0,0,0,0.4)] backdrop-blur-md transition-all duration-300 hover:border-emerald-500/25 hover:bg-emerald-950/15 hover:text-white hover:shadow-[0_0_15px_rgba(16,245,178,0.12)]">
-                <Icon className="h-3.5 w-3.5 shrink-0 text-white/50 group-hover:text-emerald-400 transition-colors" />
-                <span className="text-[10.5px] font-bold text-white/70 group-hover:text-white transition-colors">{name}</span>
-            </div>
-        </motion.div>
+            <motion.div
+                className="transform-gpu"
+                initial={{ opacity: 0, scale: 0.6 }}
+                animate={{
+                    opacity: opacity,
+                    scale: scale,
+                }}
+                transition={{
+                    opacity: { duration: 0.6, delay: index * 0.04 },
+                    scale: { duration: 0.6, delay: index * 0.04 },
+                }}
+            >
+                <div className="group flex items-center gap-1.5 rounded-full border border-white/5 bg-black/45 px-2.5 py-1.5 text-white/40 shadow-[0_4px_12px_rgba(0,0,0,0.4)] backdrop-blur-md transition-all duration-300 hover:border-emerald-500/25 hover:bg-emerald-950/15 hover:text-white hover:shadow-[0_0_15px_rgba(16,245,178,0.12)]">
+                    <Icon className="h-3.5 w-3.5 shrink-0 text-white/50 group-hover:text-emerald-400 transition-colors" />
+                    <span className="text-[10.5px] font-bold text-white/70 group-hover:text-white transition-colors">{name}</span>
+                </div>
+            </motion.div>
+        </div>
     );
 }
 
@@ -179,7 +185,7 @@ function PlanNode({
     );
 }
 
-function SpiralTechHeroScene() {
+export function SpiralTechHeroScene() {
     const { t } = useLanguage();
     const prefersReducedMotion = useReducedMotion();
     const reduceMotion = Boolean(prefersReducedMotion);
@@ -352,37 +358,43 @@ function SpiralTechHeroScene() {
                 </svg>
 
                 {/* Núcleo central - Resultados */}
-                <motion.div
-                    className="absolute z-20 flex flex-col items-center justify-center rounded-full border border-emerald-500/25 bg-black/80 shadow-[0_0_60px_rgba(16,245,178,0.22)] backdrop-blur-2xl w-28 h-28 sm:w-36 sm:h-36"
+                <div
+                    className="absolute z-20"
                     style={{
                         left: `${centerX}%`,
                         top: `${centerY}%`,
                         transform: "translate(-50%, -50%)",
-                        transformStyle: "preserve-3d",
-                    }}
-                    animate={{
-                        scale: [1, 1.04, 1],
-                        boxShadow: [
-                            "0 0 50px rgba(16,245,178,0.18)",
-                            "0 0 75px rgba(16,245,178,0.35)",
-                            "0 0 50px rgba(16,245,178,0.18)"
-                        ]
-                    }}
-                    transition={{
-                        duration: 5.5,
-                        repeat: Infinity,
-                        ease: "easeInOut"
                     }}
                 >
-                    <div className="absolute inset-1.5 rounded-full border border-dashed border-emerald-500/15 animate-spin [animation-duration:24s]" />
-                    <span className="relative z-10 font-mono text-[9px] font-black uppercase tracking-[0.24em] text-emerald-400 sm:text-[10px]">
-                        {t('hero', 'results')}
-                    </span>
-                    <Sparkles className="mt-1.5 h-4.5 w-4.5 text-emerald-300 animate-pulse sm:h-5 sm:w-5" />
-                    <span className="mt-1 font-mono text-[7px] text-white/30 uppercase tracking-[0.16em]">
-                        {t('hero', 'active_systems')}
-                    </span>
-                </motion.div>
+                    <motion.div
+                        className="flex flex-col items-center justify-center rounded-full border border-emerald-500/25 bg-black/80 shadow-[0_0_60px_rgba(16,245,178,0.22)] backdrop-blur-2xl w-28 h-28 sm:w-36 sm:h-36"
+                        style={{
+                            transformStyle: "preserve-3d",
+                        }}
+                        animate={{
+                            scale: [1, 1.04, 1],
+                            boxShadow: [
+                                "0 0 50px rgba(16,245,178,0.18)",
+                                "0 0 75px rgba(16,245,178,0.35)",
+                                "0 0 50px rgba(16,245,178,0.18)"
+                            ]
+                        }}
+                        transition={{
+                            duration: 5.5,
+                            repeat: Infinity,
+                            ease: "easeInOut"
+                        }}
+                    >
+                        <div className="absolute inset-1.5 rounded-full border border-dashed border-emerald-500/15 animate-spin [animation-duration:24s]" />
+                        <span className="relative z-10 font-mono text-[9px] font-black uppercase tracking-[0.24em] text-emerald-400 sm:text-[10px]">
+                            {t('hero', 'results')}
+                        </span>
+                        <Sparkles className="mt-1.5 h-4.5 w-4.5 text-emerald-300 animate-pulse sm:h-5 sm:w-5" />
+                        <span className="mt-1 font-mono text-[7px] text-white/30 uppercase tracking-[0.16em]">
+                            {t('hero', 'active_systems')}
+                        </span>
+                    </motion.div>
+                </div>
 
                 {/* Renderizar los chips de tecnología distribuidos en la espiral */}
                 {spiralNodes.map((node, index) => (

@@ -10,6 +10,7 @@ import {
     MessageSquareText,
     Send,
 } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 /* Variantes para stagger en mobile */
 const mobileCardVariants = {
@@ -22,16 +23,17 @@ const mobileCardVariants = {
 };
 
 const FLOW_STEPS = [
-    { title: "Lead entra", detail: "Ads, landing o referido.", icon: Inbox },
-    { title: "GHL captura", detail: "Fuente, etiqueta y contacto.", icon: Gauge },
-    { title: "IA califica", detail: "Fit, urgencia e intención.", icon: Bot },
-    { title: "Nurturing", detail: "WhatsApp + email contextual.", icon: MessageSquareText },
-    { title: "Agenda", detail: "Reunión sin fricción.", icon: CalendarDays },
-    { title: "Pipeline", detail: "Tarea, dueño y etapa.", icon: Send },
-    { title: "Dashboard", detail: "Medición para ajustar.", icon: BarChart2 },
+    { key: "step1", icon: Inbox },
+    { key: "step2", icon: Gauge },
+    { key: "step3", icon: Bot },
+    { key: "step4", icon: MessageSquareText },
+    { key: "step5", icon: CalendarDays },
+    { key: "step6", icon: Send },
+    { key: "step7", icon: BarChart2 },
 ] as const;
 
 export function CRMFlowMap() {
+    const { t } = useLanguage();
     return (
         <section
             id="flujo-ghl"
@@ -41,16 +43,16 @@ export function CRMFlowMap() {
             <div className="container mx-auto px-4">
                 <div className="mx-auto mb-12 max-w-3xl text-center">
                     <div className="mx-auto mb-4 inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 font-mono text-[10px] uppercase tracking-[0.3em] text-primary">
-                        Flujo conectado
+                        {t('crm_flow', 'eyebrow')}
                     </div>
                     <h2
                         id="flujo-ghl-heading"
                         className="font-heading text-4xl tracking-tight text-white md:text-6xl"
                     >
-                        Del primer contacto al cierre, sin perder señales
+                        {t('crm_flow', 'title')}
                     </h2>
                     <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-white/55 md:text-lg">
-                        GoHighLevel funciona como centro de mando: cada interacción alimenta el CRM, activa el siguiente paso y deja evidencia para decidir mejor.
+                        {t('crm_flow', 'intro')}
                     </p>
                 </div>
 
@@ -93,7 +95,7 @@ export function CRMFlowMap() {
                             const Icon = step.icon;
                             return (
                                 <motion.article
-                                    key={step.title}
+                                    key={step.key}
                                     className="relative min-h-56 rounded-2xl border border-white/10 bg-black/55 p-4 text-left shadow-[0_16px_45px_rgba(0,0,0,0.32)]"
                                     initial={{ opacity: 0, y: 14 }}
                                     whileInView={{ opacity: 1, y: 0 }}
@@ -109,9 +111,9 @@ export function CRMFlowMap() {
                                         </span>
                                     </div>
                                     <h3 className="text-sm font-black uppercase tracking-[0.13em] text-white">
-                                        {step.title}
+                                        {t('crm_flow', `${step.key}_title`)}
                                     </h3>
-                                    <p className="mt-3 text-xs leading-relaxed text-white/50">{step.detail}</p>
+                                    <p className="mt-3 text-xs leading-relaxed text-white/50">{t('crm_flow', `${step.key}_detail`)}</p>
                                     <div className="absolute bottom-4 left-4 right-4 h-1 overflow-hidden rounded-full bg-white/8">
                                         <motion.div
                                             className="h-full rounded-full bg-primary shadow-[0_0_8px_rgba(16,245,178,0.6)]"
@@ -140,7 +142,7 @@ export function CRMFlowMap() {
                         const Icon = step.icon;
                         return (
                             <motion.article
-                                key={step.title}
+                                key={step.key}
                                 className="relative pb-4"
                                 custom={index}
                                 variants={mobileCardVariants}
@@ -161,9 +163,9 @@ export function CRMFlowMap() {
                                                 0{index + 1}
                                             </div>
                                             <h3 className="mt-1 text-sm font-black uppercase tracking-[0.13em] text-white">
-                                                {step.title}
+                                                {t('crm_flow', `${step.key}_title`)}
                                             </h3>
-                                            <p className="mt-1 text-sm leading-relaxed text-white/52">{step.detail}</p>
+                                            <p className="mt-1 text-sm leading-relaxed text-white/52">{t('crm_flow', `${step.key}_detail`)}</p>
                                         </div>
                                     </div>
                                 </div>

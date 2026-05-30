@@ -14,6 +14,11 @@ export interface Servicio {
     caracteristicas: string[];
     tecnologias: string[];
     orden: number;
+    // Variantes EN (opcionales). Resolver con localizeServicio(s, language).
+    nombreEn?: string;
+    descripcionEn?: string;
+    descripcionCortaEn?: string;
+    caracteristicasEn?: string[];
 }
 
 export interface PlanPrecio {
