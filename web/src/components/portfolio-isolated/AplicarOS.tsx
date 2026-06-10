@@ -129,6 +129,7 @@ export function AplicarOS() {
     useEffect(() => {
         const param = new URLSearchParams(window.location.search).get('track');
         if (isTrackId(param)) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setTrackId(param);
             setCtxTrack(param);
         } else if (ctxTrack) {

@@ -34,7 +34,7 @@ export function Reveal({
     const reduced = useReducedMotion();
 
     if (reduced) {
-        const Tag = as as ElementType;
+        const Tag = as as ElementType<{ className?: string; children?: ReactNode }>;
         return <Tag className={className}>{children}</Tag>;
     }
 

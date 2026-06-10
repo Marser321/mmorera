@@ -2,7 +2,7 @@ import { GraduationCap, ShieldCheck, HeartHandshake, ArrowRight } from "lucide-r
 import { Container } from "@/components/ui/container";
 
 interface PasoWorkflow {
-    icono: React.ElementType;
+    icono: React.ElementType<{ className?: string }>;
     numero: string;
     titulo: string;
     descripcion: string;

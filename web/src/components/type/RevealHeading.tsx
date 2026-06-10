@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, useReducedMotion } from 'framer-motion';
-import type { ElementType } from 'react';
+import type { ElementType, ReactNode } from 'react';
 import { SplitText } from './SplitText';
 import { EASE_OUT } from '@/lib/motion';
 import { cn } from '@/lib/utils';
@@ -36,7 +36,7 @@ export function RevealHeading({
     trigger = 'inView',
 }: RevealHeadingProps) {
     const reduced = useReducedMotion();
-    const Tag = as as ElementType;
+    const Tag = as as ElementType<{ className?: string; children?: ReactNode }>;
 
     if (reduced) {
         return <Tag className={cn(gradient && 'text-gradient', className)}>{text}</Tag>;

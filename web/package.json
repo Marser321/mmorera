@@ -7,13 +7,16 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "tsx --test src/**/*.test.ts"
+    "test": "tsx --test src/**/*.test.ts",
+    "audit:multiagent": "node scripts/multiagent-static-audit.mjs"
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.36",
     "@ai-sdk/react": "^3.0.105",
     "@insforge/sdk": "^1.2.9",
     "@insforge/shared-schemas": "^1.1.52",
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.6.1",
     "@remotion/player": "^4.0.469",
     "@types/uuid": "^10.0.0",
     "@xyflow/react": "^12.10.1",
@@ -34,6 +37,7 @@
     "remotion": "^4.0.469",
     "resend": "^6.9.2",
     "tailwind-merge": "^3.5.0",
+    "three": "^0.184.0",
     "uuid": "^13.0.0"
   },
   "devDependencies": {
@@ -41,6 +45,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/three": "^0.184.1",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "proxyquire": "^2.1.3",

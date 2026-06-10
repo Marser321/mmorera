@@ -11,10 +11,12 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  /* ─── Tipografía ─── */
-  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-heading: "Playfair Display", "Georgia", "Times New Roman", serif;
-  --font-mono: "JetBrains Mono", "Fira Code", ui-monospace, monospace;
+  /* ─── Tipografía — "Orquestador máximo" ───
+     next/font inyecta las familias reales como --ff-display / --ff-body /
+     --ff-mono (ver layout.tsx). Acá sólo las referenciamos con fallbacks. */
+  --font-sans: var(--ff-body), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-heading: var(--ff-display), var(--ff-body), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--ff-mono), "JetBrains Mono", ui-monospace, monospace;
 
   /* ─── Radios ─── */
   --radius-sm: 0.375rem;
@@ -23,9 +25,9 @@
   --radius-xl: 1rem;
 
   /* ─── Paleta Deep Space (OKLCH) ─── */
-  /* Fondos */
-  --color-background: oklch(0.13 0.01 260);
-  --color-foreground: oklch(0.97 0.005 260);
+  /* Fondos — base grafito casi negro (~#070809) */
+  --color-background: oklch(0.12 0.005 235);
+  --color-foreground: oklch(0.97 0.004 240);
 
   /* Cards y superficies elevadas */
   --color-card: oklch(0.18 0.015 260);
@@ -35,9 +37,9 @@
   --color-popover: oklch(0.16 0.012 260);
   --color-popover-foreground: oklch(0.97 0.005 260);
 
-  /* Primary — Neón Azul (acento principal) */
-  --color-primary: oklch(0.7 0.2 250);
-  --color-primary-foreground: oklch(0.13 0.01 260);
+  /* Primary — Verde ácido de señal (color firma "Orquestador máximo") */
+  --color-primary: oklch(0.87 0.22 140);
+  --color-primary-foreground: oklch(0.14 0.01 240);
 
   /* Secondary — Gris cálido elegante */
   --color-secondary: oklch(0.25 0.015 260);
@@ -47,9 +49,18 @@
   --color-muted: oklch(0.22 0.012 260);
   --color-muted-foreground: oklch(0.65 0.015 260);
 
-  /* Accent — Cyan sutil */
-  --color-accent: oklch(0.75 0.15 200);
-  --color-accent-foreground: oklch(0.13 0.01 260);
+  /* Accent — Cyan sutil (señal de apoyo) */
+  --color-accent: oklch(0.76 0.13 205);
+  --color-accent-foreground: oklch(0.14 0.01 240);
+
+  /* Señal — verde ácido protagonista (alias semántico del color firma) */
+  --color-signal: oklch(0.87 0.22 140);
+  --color-signal-foreground: oklch(0.14 0.01 240);
+
+  /* Canales de pista (crear / construir / escalar) — tonales, disciplinados */
+  --color-track-create: oklch(0.72 0.15 290);
+  --color-track-build: oklch(0.78 0.12 215);
+  --color-track-scale: oklch(0.80 0.14 75);
 
   /* Destructive — Rojo profundo */
   --color-destructive: oklch(0.55 0.2 25);
@@ -57,7 +68,7 @@
 
   /* Bordes y anillos */
   --color-border: oklch(0.3 0.02 260);
-  --color-ring: oklch(0.7 0.2 250);
+  --color-ring: oklch(0.87 0.22 140);
   --color-input: oklch(0.25 0.015 260);
 
   /* Sidebar (futuro) */
@@ -189,7 +200,7 @@
 
   /* Selección de texto con acento */
   ::selection {
-    background-color: oklch(0.7 0.2 250 / 0.3);
+    background-color: oklch(0.87 0.22 140 / 0.28);
     color: var(--color-foreground);
   }
 
@@ -317,7 +328,7 @@
 
   /* ─── Gradiente de texto neón ─── */
   .text-gradient {
-    background: linear-gradient(135deg, oklch(0.7 0.2 250), oklch(0.75 0.15 200));
+    background: linear-gradient(135deg, oklch(0.87 0.22 140), oklch(0.78 0.13 200));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

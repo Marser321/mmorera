@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { motion, LazyMotion, AnimatePresence, useReducedMotion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { ArrowRight, Eye, Gauge, Network, Route, Sparkles, Wrench } from "lucide-react";
+import { ArrowRight, Eye, Gauge, Route, Sparkles, Wrench } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import {
     SiAnthropic,
@@ -31,12 +31,6 @@ const ROTATING_ROLES = [
     { label: "Vibe Coder / AI Integrator", color: "text-emerald-400", dot: "bg-emerald-400", shadow: "shadow-[0_0_8px_rgba(52,211,153,0.5)]" },
     { label: "Operations Optimizer", color: "text-amber-400", dot: "bg-amber-400", shadow: "shadow-[0_0_8px_rgba(251,191,36,0.5)]" },
 ];
-
-const HERO_CONTENT = {
-    title: ["Tech & Creative", "Orchestrator"],
-    subtitle:
-        "I orchestrate technologies, content and operations into implementation plans that turn complex problems into systems your business can actually use.",
-};
 
 const TECH_NODES = [
     { name: "OpenAI", group: "AI", Icon: SiOpenai, x: 14, y: 22, delay: 0.1 },

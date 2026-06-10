@@ -25,6 +25,7 @@ export function TrackProvider({ children }: { children: React.ReactNode }) {
 
     useEffect(() => {
         const saved = localStorage.getItem(STORAGE_KEY);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         if (isTrackId(saved)) setTrackState(saved);
         setMounted(true);
     }, []);

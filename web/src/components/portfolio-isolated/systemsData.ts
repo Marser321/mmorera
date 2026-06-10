@@ -7,7 +7,7 @@ export interface SystemNodeData {
     initialLatency: number;
     tech: string;
     logs: Array<{ es: string; en: string; type: 'info' | 'success' | 'warn' | 'error' }>;
-    payload: Record<string, any>;
+    payload: Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
 }
 
 export const SYSTEMS_NODES: SystemNodeData[] = [

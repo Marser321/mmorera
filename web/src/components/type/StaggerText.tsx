@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, useReducedMotion } from 'framer-motion';
-import type { ElementType } from 'react';
+import type { ElementType, ReactNode } from 'react';
 import { SplitText } from './SplitText';
 import { EASE_OUT } from '@/lib/motion';
 
@@ -26,7 +26,7 @@ export function StaggerText({
     once = true,
 }: StaggerTextProps) {
     const reduced = useReducedMotion();
-    const Tag = as as ElementType;
+    const Tag = as as ElementType<{ className?: string; children?: ReactNode }>;
 
     if (reduced) {
         return <Tag className={className}>{text}</Tag>;

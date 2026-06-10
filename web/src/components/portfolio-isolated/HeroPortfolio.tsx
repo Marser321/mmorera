@@ -5,6 +5,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, ArrowRight, Eye, Film, Code2, Rocket } from 'lucide-react';
 import { useDevMode } from './DevModeContext';
 import { useLanguage } from '@/context/LanguageContext';
+import dynamic from 'next/dynamic';
+
+// Núcleo 3D del hero — cargado sin SSR para mantener three fuera del bundle inicial.
+const OrchestrationCore = dynamic(
+    () => import('@/components/shared/OrchestrationCore').then((m) => m.OrchestrationCore),
+    { ssr: false },
+);
 
 // ─────────────────────────────────────────────
 // TRACK DATA
@@ -387,17 +394,35 @@ export function HeroPortfolio() {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [toggleDevMode]);
 
+    // Núcleo 3D sólo en desktop sin reduced-motion (fallback: campo generativo + glows)
+    const [show3D, setShow3D] = useState(false);
+    useEffect(() => {
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const desktop = window.matchMedia('(min-width: 1024px)').matches;
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setShow3D(desktop && !reduce);
+    }, []);
+
     // Títulos bilingües
     const titleLine1 = t('hero', 'title1');
     const titleLine2 = t('hero', 'title2');
     const titleLine3 = t('hero', 'title3');
 
     return (
-        <section className="relative w-full min-h-screen bg-black flex flex-col justify-center items-center overflow-hidden pt-24 pb-16 select-none">
+        <section className="relative w-full min-h-screen bg-transparent flex flex-col justify-center items-center overflow-hidden pt-24 pb-16 select-none">
 
             {/* FONDO DECORATIVO: Gradientes suaves */}
             <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-violet-600/[0.03] blur-[150px] rounded-full pointer-events-none" />
             <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-cyan-600/[0.03] blur-[150px] rounded-full pointer-events-none" />
+
+            {/* Núcleo de orquestación 3D (pieza firma) */}
+            {show3D && (
+                <div aria-hidden className="absolute inset-0 z-[1] flex items-center justify-center pointer-events-none">
+                    <div className="h-[120vmin] w-[120vmin] max-h-[860px] max-w-[860px] opacity-70">
+                        <OrchestrationCore />
+                    </div>
+                </div>
+            )}
 
             {/* CONTENIDO PRINCIPAL */}
             <div className="relative z-30 flex flex-col items-center w-full max-w-5xl text-center px-6">
@@ -418,7 +443,7 @@ export function HeroPortfolio() {
                 </motion.div>
 
                 {/* Título con clip-path reveal */}
-                <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black uppercase tracking-tight text-white leading-[0.9] mb-2">
+                <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold uppercase tracking-[-0.02em] text-white leading-[0.92] mb-2">
                     {/* Línea 1 */}
                     <motion.span
                         className="block overflow-hidden py-1"
@@ -431,7 +456,8 @@ export function HeroPortfolio() {
 
                     {/* Línea 2 */}
                     <motion.span
-                        className="block overflow-hidden py-1 text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-violet-400"
+                        className="block overflow-hidden py-1 text-transparent bg-clip-text"
+                        style={{ backgroundImage: 'linear-gradient(90deg, var(--color-signal), var(--color-accent))' }}
                         initial={{ clipPath: 'inset(0 100% 0 0)' }}
                         animate={{ clipPath: 'inset(0 0% 0 0)' }}
                         transition={{ duration: 0.6, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
@@ -442,7 +468,8 @@ export function HeroPortfolio() {
                     {/* Línea 3 (solo en inglés: "Orchestrator") */}
                     {titleLine3 && (
                         <motion.span
-                            className="block overflow-hidden py-1 text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-white/40"
+                            className="block overflow-hidden py-1 text-transparent bg-clip-text"
+                            style={{ backgroundImage: 'linear-gradient(90deg, var(--color-accent), color-mix(in oklch, var(--color-foreground) 45%, transparent))' }}
                             initial={{ clipPath: 'inset(0 100% 0 0)' }}
                             animate={{ clipPath: 'inset(0 0% 0 0)' }}
                             transition={{ duration: 0.6, delay: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}

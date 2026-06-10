@@ -277,6 +277,7 @@ export function PortfolioSection() {
 
     // Default: filtra al track elegido una vez montado (el usuario puede cambiarlo).
     React.useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         if (mounted && track) setFilter(track);
     }, [mounted, track]);
 

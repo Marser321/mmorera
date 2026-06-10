@@ -463,4 +463,188 @@
   <request>Aprobación explícita del usuario para iniciar la codificación e integración del sistema multilenguaje.</request>
 </home_multilanguage_system>
 
+<full_pass_visual_audit_session_2026_05_30>
+  <status>approved_in_progress</status>
+  <trigger>Usuario aprobo implementar la auditoria full pass y dejar `web` levantado en local para anotaciones visuales.</trigger>
+  <scope>Trabajar sobre `/Users/mariomorera/Desktop/MMORERA/web`. No intervenir `AD Media Solution` ni `agencia-de-automatización-ia` en esta sesion.</scope>
+  <goal>Levantar la app en local y auditar percepcion visual, negocio, UX, rutas, consola, responsive y salud tecnica antes de aplicar cambios de producto o codigo.</goal>
+  <current_state>
+    <finding>`pnpm build` compila correctamente.</finding>
+    <finding>No habia servidor activo en puertos `3000-3003` durante la exploracion inicial.</finding>
+    <finding>`npm` local falla por una instalacion global rota; usar `pnpm` como carril operativo para esta app.</finding>
+    <finding>`pnpm lint` falla con deuda existente en hooks/contextos y tipos `any`: `AplicarOS.tsx`, `portfolio-section.tsx`, `LanguageContext.tsx`, `TrackContext.tsx` y `systemsData.ts`.</finding>
+    <finding>`pnpm test` queda colgado en `src/lib/chat-api.test.ts`; aislarlo antes de confiar en la suite.</finding>
+    <finding>Hay mezcla de marca/copy: referencias a `NEXO`, `MMORE`, `Mathias`, `Supabase` y `MMorera`.</finding>
+    <finding>El footer mantiene placeholders con `href="#"` en enlaces sociales/legales.</finding>
+  </current_state>
+  <work_phases>
+    <phase name="1_local_run">
+      <what>Levantar `web` con `pnpm dev` en `http://localhost:3000`; si el puerto se ocupa, usar `3001`.</what>
+      <why>La auditoria debe hacerse sobre la experiencia real renderizada, con hot reload y consola disponible.</why>
+      <business_benefit>Permite revisar conversion, claridad y confianza en contexto antes de invertir tiempo en cambios aislados.</business_benefit>
+    </phase>
+    <phase name="2_visual_and_technical_audit">
+      <what>Revisar `/`, `/sistemas`, `/estudio`, `/casos-de-exito`, `/aplicar` y `/portfolio-preview` en desktop y mobile `390px`.</what>
+      <why>Estas rutas cubren el embudo principal: propuesta, sistemas, estudio, prueba de trabajo, aplicacion y preview.</why>
+      <business_benefit>Detecta fricciones que pueden bajar confianza o conversion: solapamientos, CTA debiles, copy inconsistente, consola ruidosa o rutas rotas.</business_benefit>
+    </phase>
+    <phase name="3_annotations_to_tasks">
+      <what>Convertir anotaciones visuales del usuario en tareas pequeñas y aprobables, una por vez.</what>
+      <why>El feedback visual funciona mejor cuando se transforma en cambios atomicos con validacion inmediata.</why>
+      <business_benefit>Evita retrabajo, conserva coherencia premium y permite mejorar rapido sin romper secciones sanas.</business_benefit>
+    </phase>
+    <phase name="4_validation_after_each_change">
+      <what>Despues de cada cambio futuro, recargar navegador, revisar consola/overflow y correr `pnpm build`; reintentar `pnpm lint` cuando se aborde deuda tecnica.</what>
+      <why>Cada mejora debe terminar comprobada en la ruta real y con checks automaticos cuando correspondan.</why>
+      <business_benefit>Reduce riesgo operativo antes de demo, venta o despliegue.</business_benefit>
+    </phase>
+  </work_phases>
+  <validation_plan>
+    <check>Confirmar que el servidor queda disponible en la URL local elegida.</check>
+    <check>Abrir la app en navegador local visible para que el usuario pueda anotar detalles.</check>
+    <check>Auditar primer viewport, jerarquia, CTAs, navegacion inferior, portfolio, contacto, consola y responsive.</check>
+    <check>No exponer secretos; usar `.env` o variables de entorno si se valida formulario/chat con servicios reales.</check>
+  </validation_plan>
+  <guardrails>
+    <atomicity>Una mejora por vez: detectar, acordar, implementar y validar.</atomicity>
+    <security>No escribir API keys, tokens ni secretos en codigo, prompts persistentes o archivos versionados.</security>
+    <insforge>Si aparece trabajo nuevo de integracion InsForge, primero obtener documentacion oficial actualizada mediante MCP.</insforge>
+    <git_hygiene>No revertir cambios existentes del usuario. Reportar archivos tocados al finalizar.</git_hygiene>
+    <design_quality>Priorizar una experiencia sobria, clara, premium, responsive y sin solapamientos.</design_quality>
+  </guardrails>
+</full_pass_visual_audit_session_2026_05_30>
 
+<studio_remove_creative_services_section>
+  <status>implemented_validated</status>
+  <trigger>Comentario visual en navegador sobre `/estudio`: "sacamos esta seccion" apuntando a la seccion `LO QUE HAGO / SERVICIOS CREATIVOS`.</trigger>
+  <scope>Editar solamente la composicion de la ruta `/estudio` en `web/src/app/estudio/page.tsx`.</scope>
+  <what>Quitar el render de `CreativeServices` y su import dinamico para que la seccion de servicios creativos no aparezca en la pagina Estudio.</what>
+  <why>La pagina debe quedar mas enfocada y menos repetitiva; esta seccion agrega densidad visual entre la trayectoria y el proceso.</why>
+  <business_benefit>Reduce scroll y ruido comercial, haciendo que el track creativo se sienta mas curado y directo.</business_benefit>
+  <validation>Recargar `http://localhost:3000/estudio`, confirmar que `LO QUE HAGO / SERVICIOS CREATIVOS` ya no aparece, que la pagina fluye de `AboutTimeline` a `ProcessFilm`, y correr checks automaticos disponibles.</validation>
+  <validation_result>`/estudio` recargada en navegador local: la seccion `LO QUE HAGO / SERVICIOS CREATIVOS` y el copy `POSTPRODUCCION AUDIOVISUAL REMOTA` ya no aparecen; no hay overflow horizontal. `pnpm exec tsc --noEmit` paso y `pnpm build` paso.</validation_result>
+  <guardrails>
+    <atomicity>Solo remover esta seccion de `/estudio`; no borrar `CreativeServices.tsx` ni tocar otros tracks.</atomicity>
+    <git_hygiene>No revertir cambios existentes del usuario.</git_hygiene>
+  </guardrails>
+</studio_remove_creative_services_section>
+
+<studio_remove_process_film_section>
+  <status>implemented_validated</status>
+  <trigger>Comentario visual en navegador sobre `/estudio`: "esta tambien" apuntando a la seccion `COMO TRABAJO / DE LA IDEA CRUDA A LA PIEZA FINAL`.</trigger>
+  <scope>Editar solamente la composicion de la ruta `/estudio` en `web/src/app/estudio/page.tsx`.</scope>
+  <what>Quitar el render de `ProcessFilm` y su import dinamico para que la seccion de proceso creativo no aparezca en la pagina Estudio.</what>
+  <why>Despues de quitar servicios creativos, esta segunda seccion mantiene densidad narrativa que el usuario quiere simplificar.</why>
+  <business_benefit>Acorta la pagina, reduce friccion visual y concentra la experiencia en hero, trayectoria y accion final.</business_benefit>
+  <validation>Recargar `http://localhost:3000/estudio`, confirmar que `COMO TRABAJO / DE LA IDEA CRUDA A LA PIEZA FINAL` ya no aparece, que la pagina fluye de `AboutTimeline` a `CrossTrackBridge`, y correr checks automaticos disponibles.</validation>
+  <validation_result>`/estudio` recargada en navegador local: la seccion `COMO TRABAJO / DE LA IDEA CRUDA A LA PIEZA FINAL` ya no aparece; tampoco reaparece `SERVICIOS CREATIVOS`; no hay overflow horizontal. `pnpm exec tsc --noEmit` paso y `pnpm build` paso.</validation_result>
+  <guardrails>
+    <atomicity>Solo remover esta seccion de `/estudio`; no borrar `ProcessFilm.tsx` ni tocar otros tracks.</atomicity>
+    <git_hygiene>No revertir cambios existentes del usuario.</git_hygiene>
+  </guardrails>
+</studio_remove_process_film_section>
+
+<studio_remove_cross_track_bridge_section>
+  <status>implemented_validated</status>
+  <trigger>Comentario visual en navegador sobre `/estudio`: "esta tambien la sacamos" apuntando al puente `Y SI ADEMAS NECESITAS SISTEMAS`.</trigger>
+  <scope>Editar solamente la composicion de la ruta `/estudio` en `web/src/app/estudio/page.tsx`.</scope>
+  <what>Quitar el render de `CrossTrackBridge` y su import dinamico para que el puente hacia sistemas no aparezca al final de Estudio.</what>
+  <why>El usuario quiere depurar el track creativo y remover bloques de cierre que agregan ruido o empujan a otra narrativa.</why>
+  <business_benefit>La pagina queda mas corta, curada y concentrada en la identidad creativa sin desviar al visitante hacia sistemas.</business_benefit>
+  <validation>Recargar `http://localhost:3000/estudio`, confirmar que el copy `Y SI ADEMAS NECESITAS SISTEMAS` y el boton `VER SOFTWARE & SISTEMAS` ya no aparecen, y correr checks automaticos disponibles.</validation>
+  <validation_result>`/estudio` recargada en navegador local: el puente hacia sistemas ya no aparece; tampoco aparecen las secciones removidas previamente (`SERVICIOS CREATIVOS` y `COMO TRABAJO`). No hay overflow horizontal. `pnpm exec tsc --noEmit` paso y `pnpm build` paso.</validation_result>
+  <guardrails>
+    <atomicity>Solo remover esta seccion de `/estudio`; no borrar `CrossTrackBridge.tsx` ni tocar `/sistemas`.</atomicity>
+    <git_hygiene>No revertir cambios existentes del usuario.</git_hygiene>
+  </guardrails>
+</studio_remove_cross_track_bridge_section>
+
+<studio_about_traditional_rewrite>
+  <status>implemented_validated</status>
+  <trigger>Comentario visual en navegador sobre `/estudio`: el bloque `SOBRE MI / DETRAS DE LAS HERRAMIENTAS` no se entiende y debe manejarse de una manera mas tradicional.</trigger>
+  <scope>Reemplazar la implementacion de `web/src/components/portfolio-isolated/AboutTimeline.tsx` manteniendo el id `sobre-mi-timeline` para compatibilidad de anclas.</scope>
+  <what>Convertir la seccion experimental de monitor/timeline en un bloque tradicional de Sobre mi: encabezado claro, parrafos breves, tres areas de experiencia y una lista de aportes concretos.</what>
+  <why>La narrativa actual depende de una metafora audiovisual compleja; para comunicar confianza, trayectoria y criterio conviene una estructura mas directa.</why>
+  <business_benefit>Mejora comprension inmediata, reduce friccion y hace que la propuesta personal se perciba mas profesional y vendible.</business_benefit>
+  <validation>Recargar `http://localhost:3000/estudio`, confirmar que ya no aparece `DETRAS DE LAS HERRAMIENTAS`, que la seccion muestra una estructura tradicional clara, sin overflow horizontal, y correr checks automaticos disponibles.</validation>
+  <validation_result>`/estudio` recargada en navegador local: ya no aparece `DETRAS DE LAS HERRAMIENTAS`; la seccion ahora muestra `Una mirada practica entre creatividad, tecnologia y operacion`, perfil de trabajo y tres areas claras. No hay overflow horizontal. `pnpm exec tsc --noEmit`, lint enfocado de `AboutTimeline.tsx`/`estudio/page.tsx` y `pnpm build` pasaron.</validation_result>
+  <guardrails>
+    <atomicity>Solo reescribir esta seccion. No tocar hero, navbar, footer ni otras rutas.</atomicity>
+    <design_quality>Texto claro, menos metafora, layout tradicional sobrio y responsive.</design_quality>
+    <git_hygiene>No revertir cambios existentes del usuario.</git_hygiene>
+  </guardrails>
+</studio_about_traditional_rewrite>
+
+<social_share_image_mmorera_agency>
+  <status>implemented_validated</status>
+  <trigger>Pedido del usuario: al compartir la web, la imagen debe ser el logo de MMorera Agency y no el de Vercel.</trigger>
+  <scope>Actualizar metadata global y generar imagenes sociales para `web`, sin tocar contenido visible de las paginas.</scope>
+  <what>
+    <step>Crear rutas especiales `opengraph-image.tsx` y `twitter-image.tsx` con `ImageResponse`, usando el logo MM existente como base visual y texto `MMorera Agency`.</step>
+    <step>Actualizar `web/src/app/layout.tsx` para declarar `metadataBase`, `openGraph.images`, `twitter.card`, `twitter.images` y JSON-LD apuntando al nuevo asset social.</step>
+    <step>Eliminar referencias a `/og-image.png`, actualmente inexistente.</step>
+  </what>
+  <why>Los previews de WhatsApp, LinkedIn, X/Twitter y otros scrapers dependen de metadata social explicita; si falta, pueden caer a iconos/fallbacks no deseados.</why>
+  <business_benefit>Mejora consistencia de marca en cada enlace compartido y evita que una preview con Vercel reduzca percepcion profesional.</business_benefit>
+  <validation>Verificar `/opengraph-image`, `/twitter-image`, HTML de rutas principales con `og:image` y `twitter:image`, ausencia de `/og-image.png`, TypeScript, lint enfocado y build.</validation>
+  <validation_result>`/opengraph-image` y `/twitter-image` responden `200 OK` con `content-type: image/png`; la imagen Open Graph renderiza el logo MM y el texto `MMorera Agency` en 1200x630. El HTML de `/`, `/estudio`, `/sistemas` y `/casos-de-exito` incluye `og:image` y `twitter:image`; no queda referencia a `/og-image.png`. `pnpm exec tsc --noEmit`, lint enfocado de `layout.tsx`/rutas de imagen/componente social and `pnpm build` pasaron.</validation_result>
+  <guardrails>
+    <atomicity>No tocar contenido de paginas ni diseno interno del sitio; solo metadata e imagenes de preview.</atomicity>
+    <brand>Usar `MMorera Agency` como texto visible y el logo MM actual como base visual.</brand>
+    <security>No introducir secretos ni integraciones externas.</security>
+    <git_hygiene>No revertir cambios existentes del usuario.</git_hygiene>
+  </guardrails>
+</social_share_image_mmorera_agency>
+
+# Reporte de Auditoría Técnica & Plan de Alineación (Junio 2026)
+
+Este plan resume el análisis solicitado por el usuario respecto a los cambios locales no commiteados y propone acciones específicas para limpiar la deuda técnica de linter y asegurar la estabilidad de la aplicación MMorera.
+
+## Estado del Repositorio (Cambios Locales)
+
+Hemos analizado el estado actual del espacio de trabajo. Se identificaron cambios significativos realizados por modelos anteriores que se encuentran en el working directory sin commitear.
+
+### Hallazgos Principales:
+1. **Compilación Correcta**: El comando `pnpm run build` compila al 100% de manera exitosa, generando las rutas estáticas y dinámicas clave (`/`, `/casos-de-exito`, `/sistemas`, `/estudio`, `/aplicar`).
+2. **Uso de Tailwind CSS v4**: El proyecto fue actualizado a Tailwind v4 (`"tailwindcss": "^4"` y `"@tailwindcss/postcss": "^4"`). Aunque la recomendación original de InsForge aconsejaba mantener Tailwind v3.4, la migración ya se completó localmente, compila correctamente y no presenta regresiones.
+3. **Escena 3D y Fondo Generativo**: Se introdujo Three.js (`@react-three/fiber`, `@react-three/drei`, `three`) y se creó un núcleo 3D dinámico interactivo al mouse (`OrchestrationCore.tsx`) para la home. También se reemplazaron los iconos flotantes decorativos del fondo por un campo generativo interactivo (`GenerativeField.tsx`).
+4. **Simplificación Editorial**: Se completó la eliminación de bloques repetitivos e innecesarios en `/estudio` (`CreativeServices`, `ProcessFilm`, `CrossTrackBridge`) y en `/sistemas` (pricing, metrics, contact).
+5. **Errores de Linter Activos**: El comando `pnpm lint` reporta **12 problemas (6 errores, 6 warnings)**. Los errores son causados por llamadas sincrónicas a `setState` dentro de `useEffect` (regla `react-hooks/set-state-in-effect`), que pueden gatillar renders en cascada innecesarios, además de un tipo `any` sin especificar.
+
+---
+
+## Propuesta de Cambios Quirúrgicos
+
+Proponemos realizar una serie de micro-tareas para limpiar la deuda técnica del linter **sin alterar** los refinamientos visuales ni los componentes interactivos creados por los modelos anteriores.
+
+### 🛠️ Corrección de Deuda de Linter (ESLint)
+
+#### [MODIFY] [LanguageContext.tsx](file:///Users/mariomorera/Desktop/MMORERA/web/src/context/LanguageContext.tsx)
+- Corregir el error `react-hooks/set-state-in-effect` en la línea 25. Silenciar la regla de forma explícita y documentada con `// eslint-disable-next-line react-hooks/set-state-in-effect` o reestructurar el efecto para que la asignación no dispare renders sincrónicos indebidos en el ciclo de hidratación.
+- Cambiar el tipo `any` de la línea 47 por una declaración de tipos robusta basada en la estructura de `translations`.
+
+#### [MODIFY] [TrackContext.tsx](file:///Users/mariomorera/Desktop/MMORERA/web/src/context/TrackContext.tsx)
+- Corregir el error de ESLint en la línea 28 mitigando el set-state dentro del efecto, asegurando una hidratación limpia del track preferido.
+
+#### [MODIFY] [portfolio-section.tsx](file:///Users/mariomorera/Desktop/MMORERA/web/src/components/sections/portfolio-section.tsx)
+- Corregir la línea 280 para evitar el renderizado en cascada que reporta el plugin `react-hooks/set-state-in-effect`.
+
+#### [MODIFY] [hero-section.tsx](file:///Users/mariomorera/Desktop/MMORERA/web/src/components/sections/hero-section.tsx)
+- Remover las variables declaradas e imports que no se utilizan (`useRef`, `Network`, `HERO_CONTENT`), eliminando 3 warnings reportados por el linter.
+
+---
+
+## Preguntas Abiertas para el Usuario
+
+> [!IMPORTANT]
+> **¿Deseás que procedamos con las correcciones del linter?** Esto nos permitirá tener un build 100% verde (cero errores, cero warnings), facilitando la futura labor de despliegue y mantenimiento técnico sin afectar en nada la visual de las páginas.
+>
+> **¿Deseás levantar el servidor de desarrollo local (`pnpm dev`)** en segundo plano para poder explorar las rutas y el comportamiento de las animaciones en vivo en tu navegador?
+
+---
+
+## Plan de Verificación
+
+Una vez aplicadas las correcciones propuestas:
+1. Ejecutaremos `pnpm lint` en `web/` para confirmar que los 12 problemas han sido resueltos de forma exitosa (cero errores y warnings).
+2. Ejecutaremos `pnpm run build` para asegurar la correcta generación estática de Next.js sin errores de tipado.

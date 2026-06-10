@@ -30,7 +30,7 @@ interface Plan {
     subtitle: string;
     description: string;
     basePrice: number; // precio base mensual (sin descuento)
-    icon: React.ElementType;
+    icon: React.ElementType<{ className?: string }>;
     features: string[];
     capacitacion: string;
     highlight: boolean;
@@ -106,7 +106,7 @@ const PLANS: Plan[] = [
 interface TrojanHorse {
     name: string;
     description: string;
-    icon: React.ElementType;
+    icon: React.ElementType<{ className?: string }>;
     price: string;
     priceBadgeColor: string;
     borderColor: string;
@@ -158,7 +158,7 @@ const TROJAN_HORSES: TrojanHorse[] = [
 interface ServicePack {
     name: string;
     description: string;
-    icon: React.ElementType;
+    icon: React.ElementType<{ className?: string }>;
     iconColor: string;
     iconBg: string;
     includes: string[];

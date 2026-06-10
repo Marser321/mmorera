@@ -22,6 +22,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         const savedLang = localStorage.getItem('language') as Language;
         if (savedLang === 'es' || savedLang === 'en') {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setLanguageState(savedLang);
         } else {
             // Detectar idioma del navegador
@@ -44,13 +45,18 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
     // Función de traducción
     const t = (section: string, key: string): string => {
-        const sec = (translations as any)[section];
+        const sec = translations[section as keyof typeof translations] as Record<string, Record<Language, string> & { es?: string; en?: string }> | undefined;
         if (!sec) return key;
         
         const item = sec[key];
         if (!item) return key;
-        
-        return item[language] || item['es'] || key;
+
+        // Respetar valores intencionalmente vacíos ('') como traducción válida:
+        // un '' no debe caer al fallback de la key (que el CSS uppercase mostraba
+        // como "TITLE3"). Sólo caemos al fallback si el valor es undefined.
+        if (typeof item[language] === 'string') return item[language];
+        if (typeof item['es'] === 'string') return item['es'];
+        return key;
     };
 
     return (

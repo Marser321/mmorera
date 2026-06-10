@@ -268,7 +268,7 @@ function PanelHeader({
     eyebrow,
     title,
 }: {
-    icon: React.ElementType;
+    icon: React.ElementType<{ className?: string }>;
     eyebrow: string;
     title: string;
 }) {

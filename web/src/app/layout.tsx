@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display, JetBrains_Mono } from "next/font/google";
+import { Unbounded, Familjen_Grotesk, Space_Mono } from "next/font/google";
 import "./globals.css";
 import { GlobalBackground } from "@/components/shared/GlobalBackground";
 import { Navbar } from "@/components/sections/navbar";
@@ -12,40 +12,64 @@ import { TrackSwitcher } from "@/components/track/TrackSwitcher";
 import { ScrollProgressBar } from "@/components/scroll/ScrollProgressBar";
 
 const ChatWidgetLoader = dynamic(() => import('@/components/interactive/chat-widget-loader').then(mod => mod.ChatWidgetLoader));
+const siteUrl = "https://mmorera.com";
+const shareImage = {
+    url: `${siteUrl}/opengraph-image`,
+    width: 1200,
+    height: 630,
+    alt: "MMorera Agency",
+};
 
-const inter = Inter({
+// Identidad "Orquestador máximo": display expresivo (Unbounded) como sistema
+// visual dominante, body neutro moderno (Familjen Grotesk) y mono con carácter
+// (Space Mono) para timecode/telemetría. Reemplaza Inter/Playfair/JetBrains.
+const displayFont = Unbounded({
     subsets: ["latin"],
     display: "swap",
-    variable: "--font-sans",
+    variable: "--ff-display",
+    weight: ["400", "500", "700", "900"],
 });
 
-const playfair = Playfair_Display({
+const bodyFont = Familjen_Grotesk({
     subsets: ["latin"],
     display: "swap",
-    variable: "--font-heading",
-    weight: ["400", "600", "700", "800"],
+    variable: "--ff-body",
+    weight: ["400", "500", "600", "700"],
 });
 
-const jetbrains = JetBrains_Mono({
+const monoFont = Space_Mono({
     subsets: ["latin"],
     display: "swap",
-    variable: "--font-mono",
-    weight: ["400", "500"],
+    variable: "--ff-mono",
+    weight: ["400", "700"],
 });
 
 export const metadata: Metadata = {
-    title: "Mario Morera | Multipotential Tech Architect — Creative Development, Video & Automation",
-    description: "I orchestrate AI-powered development, high-end video production, modern marketing and analog-to-digital operations for global brands. Remote worldwide, based in Miami, FL.",
-    keywords: ["AI Development", "Vibe Coding", "Motion Design", "Marketing Automation", "Process Orchestration", "Miami Tech", "Mario Morera"],
-    authors: [{ name: "Mario Morera", url: "https://mmorera.com" }],
+    metadataBase: new URL(siteUrl),
+    title: "Nexus.AI | Sistemas Operativos de IA y Automatización B2B",
+    description: "Construimos sistemas operativos de IA y automatizaciones de alto rendimiento para escalar tus ventas y optimizar operaciones sin aumentar tu nómina.",
+    keywords: ["IA Development", "Nexus.AI", "Sistemas Operativos de IA", "Automatización de Marketing", "CRM", "Orquestación de Procesos", "Mario Morera"],
+    authors: [{ name: "Mario Morera", url: siteUrl }],
     creator: "Mario Morera",
     openGraph: {
         type: "website",
-        locale: "en_US",
-        url: "https://mmorera.com",
-        title: "Mario Morera | Multipotential Tech Architect",
-        description: "AI-powered development, high-end video, modern marketing and operational orchestration. Remote worldwide, based in Miami, FL.",
-        siteName: "Mario Morera",
+        locale: "es_ES",
+        url: siteUrl,
+        title: "Nexus.AI | Sistemas Operativos de IA y Automatización B2B",
+        description: "Construimos sistemas operativos de IA y automatizaciones de alto rendimiento para escalar tus ventas y optimizar operaciones sin aumentar tu nómina.",
+        siteName: "Nexus.AI",
+        images: [shareImage],
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "Nexus.AI | Sistemas Operativos de IA y Automatización B2B",
+        description: "Construimos sistemas operativos de IA y automatizaciones de alto rendimiento para escalar tus ventas y optimizar operaciones sin aumentar tu nómina.",
+        images: [
+            {
+                url: `${siteUrl}/twitter-image`,
+                alt: "Nexus.AI",
+            },
+        ],
     },
 };
 
@@ -55,7 +79,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" className={`dark ${inter.variable} ${playfair.variable} ${jetbrains.variable}`}>
+        <html lang="es" className={`dark ${bodyFont.variable} ${displayFont.variable} ${monoFont.variable}`}>
             <head>
                 <script
                     type="application/ld+json"
@@ -63,10 +87,10 @@ export default function RootLayout({
                         __html: JSON.stringify({
                             "@context": "https://schema.org",
                             "@type": "ProfessionalService",
-                            "name": "Mario Morera — AI-Powered Growth Partner",
-                            "image": "https://mmorera.com/og-image.png",
-                            "@id": "https://mmorera.com",
-                            "url": "https://mmorera.com",
+                            "name": "Nexus.AI",
+                            "image": `${siteUrl}/opengraph-image`,
+                            "@id": siteUrl,
+                            "url": siteUrl,
                             "priceRange": "$$$",
                             "address": {
                                 "@type": "PostalAddress",
@@ -78,7 +102,7 @@ export default function RootLayout({
                                 "@type": "Country",
                                 "name": "United States"
                             },
-                            "description": "Multipotential tech architect: AI-powered creative development, high-end video production, modern marketing integrations and analog-to-digital operations orchestration."
+                            "description": "Construimos sistemas operativos de IA y automatizaciones de alto rendimiento para escalar tus ventas y optimizar operaciones sin aumentar tu nómina."
                         })
                     }}
                 />
@@ -108,4 +132,3 @@ export default function RootLayout({
         </html>
     );
 }
-
