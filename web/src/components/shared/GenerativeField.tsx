@@ -3,19 +3,29 @@
 import { useEffect, useRef } from 'react';
 
 /**
- * Campo generativo de "La Consola": un flow-field de motas de señal que derivan
- * por un campo vectorial y forman un vórtice suave alrededor del cursor. Es la
- * textura viva del fondo (reemplaza los iconos flotantes decorativos).
- *
- * Disciplinado a propósito (frontend-design: gastar la audacia en la tipografía,
- * mantener el resto quieto): pocas partículas, alpha bajo, mayormente blancas con
- * algunas en verde señal / cyan. Perf: DPR clampeado, pausa con la pestaña oculta,
- * y bajo prefers-reduced-motion dibuja un único frame estático sin loop.
+ * GenerativeField — Campo de partículas de alta densidad.
+ * 
+ * Flow-field con ~900+ partículas que derivan por un campo vectorial orgánico.
+ * Microinteracciones con el cursor:
+ *   1. Vórtice gravitacional — las partículas orbitan alrededor del cursor
+ *   2. Líneas de constelación — se dibujan conexiones entre partículas cercanas al cursor
+ *   3. Glow de proximidad — las partículas cercanas al cursor brillan más
+ *   4. Repulsión suave — leve empuje radial para que no se acumulen en el centro
+ * 
+ * Rendimiento: DPR clampeado, pausa con pestaña oculta, reduced-motion respetado.
  */
-const SIGNAL = '#93e83a'; // ~ --color-primary (verde ácido)
-const ACCENT = '#2ec8d8'; // ~ --color-accent (cyan)
+const SIGNAL = '#93e83a';
+const ACCENT = '#2ec8d8';
+const WARM   = '#a78bfa'; // Violeta sutil para variedad
 
-type Particle = { x: number; y: number; vx: number; vy: number; kind: 0 | 1 | 2 };
+type Particle = {
+    x: number;
+    y: number;
+    vx: number;
+    vy: number;
+    kind: 0 | 1 | 2 | 3; // 0=blanco, 1=signal, 2=cyan, 3=violeta
+    baseSize: number;
+};
 
 function rgba(hex: string, a: number) {
     const n = parseInt(hex.slice(1), 16);
@@ -47,9 +57,10 @@ export function GenerativeField() {
             return {
                 x: Math.random() * w,
                 y: Math.random() * h,
-                vx: (Math.random() - 0.5) * 0.2,
-                vy: (Math.random() - 0.5) * 0.2,
-                kind: r < 0.16 ? 1 : r < 0.26 ? 2 : 0,
+                vx: (Math.random() - 0.5) * 0.15,
+                vy: (Math.random() - 0.5) * 0.15,
+                kind: r < 0.22 ? 1 : r < 0.38 ? 2 : r < 0.44 ? 3 : 0,
+                baseSize: 0.8 + Math.random() * 1.2,
             };
         };
 
@@ -61,56 +72,122 @@ export function GenerativeField() {
             canvas.style.width = `${w}px`;
             canvas.style.height = `${h}px`;
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-            const count = Math.round(Math.min((w * h) / 9000, isMobile ? 70 : 180));
+            // Alta densidad: ~900 en desktop, ~300 en mobile
+            const count = Math.round(Math.min((w * h) / 1600, isMobile ? 300 : 950));
             particles = Array.from({ length: count }, spawn);
         };
 
-        const flowAngle = (x: number, y: number) =>
-            (Math.sin(x * 0.0016 + t) + Math.cos(y * 0.0016 - t * 0.8)) * Math.PI;
+        // Campo vectorial orgánico con dos frecuencias superpuestas
+        const flowAngle = (x: number, y: number) => {
+            const f1 = Math.sin(x * 0.0014 + t) + Math.cos(y * 0.0014 - t * 0.7);
+            const f2 = Math.sin(x * 0.0008 - t * 0.4) * 0.5;
+            return (f1 + f2) * Math.PI;
+        };
+
+        // Radio de interacción del mouse
+        const MOUSE_R = isMobile ? 180 : 320;
+        // Radio para dibujar líneas de constelación
+        const LINK_R = isMobile ? 100 : 160;
+        const LINK_DIST = isMobile ? 50 : 70; // Distancia máxima entre partículas para conectar
 
         const draw = () => {
-            t += 0.0009;
+            t += 0.001;
             ctx.clearRect(0, 0, w, h);
             ctx.globalCompositeOperation = 'lighter';
 
+            // Recolectar partículas cercanas al cursor para las líneas
+            const nearCursor: Particle[] = [];
+
             for (const p of particles) {
                 const a = flowAngle(p.x, p.y);
-                p.vx += Math.cos(a) * 0.02;
-                p.vy += Math.sin(a) * 0.02;
+                p.vx += Math.cos(a) * 0.025;
+                p.vy += Math.sin(a) * 0.025;
 
+                // ── Microinteracción con el cursor ──
+                let cursorProximity = 0;
                 if (mouse.active) {
                     const dx = p.x - mouse.x;
                     const dy = p.y - mouse.y;
                     const d2 = dx * dx + dy * dy;
-                    const R = 180;
-                    if (d2 < R * R) {
+
+                    if (d2 < MOUSE_R * MOUSE_R) {
                         const d = Math.sqrt(d2) || 1;
-                        const f = (1 - d / R) * 0.55;
-                        // tangencial (vórtice) + leve repulsión
-                        p.vx += (-dy / d) * f + (dx / d) * f * 0.3;
-                        p.vy += (dx / d) * f + (dy / d) * f * 0.3;
+                        const f = (1 - d / MOUSE_R);
+                        cursorProximity = f;
+
+                        // Fuerza tangencial (vórtice) + repulsión suave
+                        const vortexStrength = f * 0.6;
+                        const repelStrength = f * f * 0.25;
+                        p.vx += (-dy / d) * vortexStrength + (dx / d) * repelStrength;
+                        p.vy += (dx / d) * vortexStrength + (dy / d) * repelStrength;
+                    }
+
+                    // Recolectar para líneas de constelación
+                    if (d2 < LINK_R * LINK_R) {
+                        nearCursor.push(p);
                     }
                 }
 
+                // Fricción
                 p.vx *= 0.94;
                 p.vy *= 0.94;
                 p.x += p.vx;
                 p.y += p.vy;
 
+                // Wrap-around
                 if (p.x < -10) p.x = w + 10;
                 else if (p.x > w + 10) p.x = -10;
                 if (p.y < -10) p.y = h + 10;
                 else if (p.y > h + 10) p.y = -10;
 
-                const speed = Math.min(Math.hypot(p.vx, p.vy), 2);
-                const alpha = Math.min(0.1 + speed * 0.12, 0.55);
+                // ── Renderizado del punto ──
+                const speed = Math.min(Math.hypot(p.vx, p.vy), 2.5);
+                // Base alpha + boost por velocidad + boost por proximidad al cursor
+                const baseAlpha = 0.12 + speed * 0.12;
+                const cursorBoost = cursorProximity * 0.45;
+                const alpha = Math.min(baseAlpha + cursorBoost, 0.75);
+
+                // Tamaño reactivo: se agranda suavemente cerca del cursor
+                const sizeBoost = cursorProximity * 1.5;
+                const size = p.baseSize + sizeBoost;
+
                 ctx.fillStyle =
-                    p.kind === 0 ? rgba('#ffffff', alpha * 0.6)
+                    p.kind === 0 ? rgba('#ffffff', alpha * 0.55)
                         : p.kind === 1 ? rgba(SIGNAL, alpha)
-                            : rgba(ACCENT, alpha);
+                            : p.kind === 2 ? rgba(ACCENT, alpha * 0.9)
+                                : rgba(WARM, alpha * 0.5);
+
                 ctx.beginPath();
-                ctx.arc(p.x, p.y, p.kind === 0 ? 1.3 : 2.2, 0, Math.PI * 2);
+                ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
                 ctx.fill();
+            }
+
+            // ── Líneas de constelación entre partículas cercanas al cursor ──
+            if (nearCursor.length > 1) {
+                for (let i = 0; i < nearCursor.length; i++) {
+                    for (let j = i + 1; j < nearCursor.length; j++) {
+                        const a = nearCursor[i];
+                        const b = nearCursor[j];
+                        const dx = a.x - b.x;
+                        const dy = a.y - b.y;
+                        const d = Math.sqrt(dx * dx + dy * dy);
+
+                        if (d < LINK_DIST) {
+                            const lineAlpha = (1 - d / LINK_DIST) * 0.12;
+                            // Color basado en el tipo de la primera partícula
+                            const lineColor = a.kind === 1 ? SIGNAL
+                                : a.kind === 2 ? ACCENT
+                                    : a.kind === 3 ? WARM : '#ffffff';
+
+                            ctx.strokeStyle = rgba(lineColor, lineAlpha);
+                            ctx.lineWidth = 0.5;
+                            ctx.beginPath();
+                            ctx.moveTo(a.x, a.y);
+                            ctx.lineTo(b.x, b.y);
+                            ctx.stroke();
+                        }
+                    }
+                }
             }
 
             ctx.globalCompositeOperation = 'source-over';

@@ -38,9 +38,9 @@ const TRACKS: TrackData[] = [
         colorHex: '#a78bfa',
         Icon: Film,
         tools: [
-            { name: 'Premiere Pro', meta: 'CODEC: ProRes 422 HQ · TIMELINE: Multicam' },
-            { name: 'After Effects', meta: 'ENGINE: Mercury GPU · COMP: 32-bit Float' },
-            { name: 'Photoshop / Lightroom', meta: 'COLOR: Adobe RGB · OUTPUT: DCI-P3' },
+            { name: 'Edición Audiovisual', meta: 'CODEC: ProRes 422 HQ · TIMELINE: Multicam' },
+            { name: 'Efectos & Gráficos', meta: 'ENGINE: Mercury GPU · COMP: 32-bit Float' },
+            { name: 'Dirección de Arte & Color', meta: 'COLOR: Adobe RGB · OUTPUT: DCI-P3' },
         ],
     },
     {
@@ -50,9 +50,9 @@ const TRACKS: TrackData[] = [
         colorHex: '#22d3ee',
         Icon: Code2,
         tools: [
-            { name: 'Next.js / React', meta: 'RSC: Server Components · CACHE: Edge Revalidate' },
-            { name: 'TypeScript', meta: 'STRICT: true · TARGET: ES2022' },
-            { name: 'Supabase / PostgreSQL', meta: 'AUTH: GoTrue/JWT · REALTIME: WebSockets' },
+            { name: 'Desarrollo Frontend', meta: 'RSC: Server Components · CACHE: Edge Revalidate' },
+            { name: 'Arquitectura de Tipos', meta: 'STRICT: true · TARGET: ES2022' },
+            { name: 'Motores de Datos', meta: 'AUTH: GoTrue/JWT · REALTIME: WebSockets' },
         ],
     },
     {
@@ -62,275 +62,27 @@ const TRACKS: TrackData[] = [
         colorHex: '#fbbf24',
         Icon: Rocket,
         tools: [
-            { name: 'GoHighLevel', meta: 'ROLE: CRM Pipeline · API: REST + Webhooks' },
-            { name: 'n8n Workflows', meta: 'HOST: Self-Hosted · LOGIC: Visual Nodes' },
-            { name: 'WhatsApp API', meta: 'CHANNEL: Business · FLOW: Async Dispatch' },
+            { name: 'Embudos & CRM de Ventas', meta: 'ROLE: CRM Pipeline · API: REST + Webhooks' },
+            { name: 'Orquestación de Procesos', meta: 'HOST: Self-Hosted · LOGIC: Visual Nodes' },
+            { name: 'Canales de Mensajería', meta: 'CHANNEL: Business · FLOW: Async Dispatch' },
         ],
     },
 ];
 
-// ─────────────────────────────────────────────
-// VU METER (Track: CREAR)
-// ─────────────────────────────────────────────
-function VuMeter({ isHovered }: { isHovered: boolean }) {
-    const [bars, setBars] = useState<number[]>([0.4, 0.6, 0.5, 0.7, 0.3, 0.55]);
-    const [peak, setPeak] = useState(-6.2);
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            if (isHovered) {
-                // Clipping: todas al máximo
-                setBars([0.95, 1.0, 0.98, 1.0, 0.96, 0.99]);
-                setPeak(0.0);
-            } else {
-                setBars(prev => prev.map(() => 0.2 + Math.random() * 0.6));
-                setPeak(parseFloat((-8 + Math.random() * 5).toFixed(1)));
-            }
-        }, 150);
-        return () => clearInterval(interval);
-    }, [isHovered]);
-
-    return (
-        <div className="flex flex-col gap-1.5">
-            <div className="flex items-end gap-[3px] h-8">
-                {bars.map((val, i) => (
-                    <motion.div
-                        key={i}
-                        className="w-[6px] rounded-sm"
-                        animate={{
-                            height: `${val * 100}%`,
-                            backgroundColor: val > 0.9 ? '#ef4444' : val > 0.7 ? '#facc15' : '#a78bfa',
-                        }}
-                        transition={{ type: 'spring', stiffness: 300, damping: 15 }}
-                    />
-                ))}
-            </div>
-            <span className={`font-mono text-[9px] tracking-wider ${isHovered ? 'text-red-400' : 'text-violet-400/70'}`}>
-                PEAK: {peak.toFixed(1)} dB{isHovered ? ' ▲ CLIP' : ''}
-            </span>
-        </div>
-    );
-}
-
-// ─────────────────────────────────────────────
-// TERMINAL BUILD (Track: CONSTRUIR)
-// ─────────────────────────────────────────────
-const BUILD_COMMANDS = [
-    { cmd: '$ next build', result: '✓ Compiled (2.1s)', bundle: '42.1 kB' },
-    { cmd: '$ tsc --noEmit', result: '✓ No errors', bundle: '0 issues' },
-    { cmd: '$ pnpm dev', result: '✓ Ready on :3000', bundle: 'HMR: 12ms' },
-];
-
-function TerminalBuild({ isHovered }: { isHovered: boolean }) {
-    const [cmdIndex, setCmdIndex] = useState(0);
-    const [displayedText, setDisplayedText] = useState('');
-    const [phase, setPhase] = useState<'typing' | 'spinner' | 'result' | 'pause'>('typing');
-    const [spinnerFrame, setSpinnerFrame] = useState(0);
-    const spinnerChars = '⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏';
-    const speedMultiplier = isHovered ? 0.3 : 1;
-
-    useEffect(() => {
-        const command = BUILD_COMMANDS[cmdIndex];
-        let timeout: NodeJS.Timeout;
-
-        if (phase === 'typing') {
-            if (displayedText.length < command.cmd.length) {
-                timeout = setTimeout(() => {
-                    setDisplayedText(command.cmd.slice(0, displayedText.length + 1));
-                }, 30 * speedMultiplier);
-            } else {
-                timeout = setTimeout(() => setPhase('spinner'), 200 * speedMultiplier);
-            }
-        } else if (phase === 'spinner') {
-            if (spinnerFrame < 10) {
-                timeout = setTimeout(() => setSpinnerFrame(prev => prev + 1), 80 * speedMultiplier);
-            } else {
-                setTimeout(() => setPhase('result'), 0);
-            }
-        } else if (phase === 'result') {
-            timeout = setTimeout(() => setPhase('pause'), 3000);
-        } else if (phase === 'pause') {
-            timeout = setTimeout(() => {
-                setCmdIndex(prev => (prev + 1) % BUILD_COMMANDS.length);
-                setDisplayedText('');
-                setPhase('typing');
-                setSpinnerFrame(0);
-            }, 500);
-        }
-
-        return () => clearTimeout(timeout);
-    }, [phase, displayedText, spinnerFrame, cmdIndex, speedMultiplier]);
-
-    const command = BUILD_COMMANDS[cmdIndex];
-
-    return (
-        <div className="flex flex-col gap-1 font-mono text-[10px] leading-relaxed h-8 justify-center">
-            <div className="text-cyan-300/90 truncate">
-                {displayedText}
-                {phase === 'typing' && <span className="animate-pulse">▊</span>}
-                {phase === 'spinner' && (
-                    <span className="text-cyan-500 ml-1">{spinnerChars[spinnerFrame % spinnerChars.length]}</span>
-                )}
-            </div>
-            {(phase === 'result' || phase === 'pause') && (
-                <div className="text-emerald-400/80 truncate">{command.result} · {command.bundle}</div>
-            )}
-        </div>
-    );
-}
-
-// ─────────────────────────────────────────────
-// NETWORK MONITOR (Track: ESCALAR)
-// ─────────────────────────────────────────────
-const HTTP_CODES = ['200 OK', '201 Created', '302 Redirect', '200 OK'];
-
-function NetworkMonitor({ isHovered }: { isHovered: boolean }) {
-    const [latency, setLatency] = useState(142);
-    const [codeIndex, setCodeIndex] = useState(0);
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            if (isHovered) {
-                setLatency(12);
-            } else {
-                setLatency(85 + Math.floor(Math.random() * 125));
-            }
-        }, 2000);
-        return () => clearInterval(interval);
-    }, [isHovered]);
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setCodeIndex(prev => (prev + 1) % HTTP_CODES.length);
-        }, 6000);
-        return () => clearInterval(interval);
-    }, []);
-
-    return (
-        <div className="flex flex-col gap-1.5 h-8 justify-center">
-            <div className="flex items-center gap-2 font-mono text-[10px]">
-                <span className={`w-2 h-2 rounded-full ${isHovered ? 'bg-emerald-400' : 'bg-amber-400'} animate-pulse`} />
-                <span className="text-white/60 uppercase tracking-wider">ONLINE</span>
-                <span className={`font-bold ${isHovered ? 'text-emerald-400' : 'text-amber-400'}`}>
-                    {latency}ms
-                </span>
-                {isHovered && <span className="text-emerald-400 text-[8px]">⚡</span>}
-            </div>
-            <span className="font-mono text-[9px] text-amber-400/60 tracking-wider">
-                HTTP {HTTP_CODES[codeIndex]} ✓
-            </span>
-        </div>
-    );
-}
 
 // ─────────────────────────────────────────────
 // TRACK CARD COMPONENT
 // ─────────────────────────────────────────────
-function TrackCard({ track, index }: { track: TrackData; index: number }) {
-    const { t } = useLanguage();
-    const [isHovered, setIsHovered] = useState(false);
-    const [hoveredTool, setHoveredTool] = useState<string | null>(null);
 
-    const TrackIcon = track.Icon;
-
-    // Color mapping por track
-    const colorMap: Record<string, { border: string; bg: string; text: string; textDim: string; iconBg: string }> = {
-        violet: {
-            border: 'border-violet-500/30',
-            bg: 'bg-violet-500/5',
-            text: 'text-violet-400',
-            textDim: 'text-violet-400/60',
-            iconBg: 'bg-violet-500/10',
-        },
-        cyan: {
-            border: 'border-cyan-500/30',
-            bg: 'bg-cyan-500/5',
-            text: 'text-cyan-400',
-            textDim: 'text-cyan-400/60',
-            iconBg: 'bg-cyan-500/10',
-        },
-        amber: {
-            border: 'border-amber-500/30',
-            bg: 'bg-amber-500/5',
-            text: 'text-amber-400',
-            textDim: 'text-amber-400/60',
-            iconBg: 'bg-amber-500/10',
-        },
-    };
-
-    const colors = colorMap[track.color];
-
-    return (
-        <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4, delay: 0.9 + index * 0.1 }}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => { setIsHovered(false); setHoveredTool(null); }}
-            className={`relative flex flex-col rounded-2xl border ${colors.border} ${colors.bg} backdrop-blur-md p-5 transition-all duration-300 cursor-default min-w-[260px] flex-1 ${
-                isHovered ? 'border-opacity-100 shadow-lg' : ''
-            }`}
-            style={isHovered ? { boxShadow: `0 0 30px ${track.colorHex}15` } : undefined}
-        >
-            {/* Header del track */}
-            <div className="flex items-center gap-3 mb-4">
-                <div className={`flex items-center justify-center w-9 h-9 rounded-xl ${colors.iconBg}`}>
-                    <TrackIcon className={`w-4.5 h-4.5 ${colors.text}`} />
-                </div>
-                <span className={`font-mono text-xs font-black uppercase tracking-[0.3em] ${colors.text}`}>
-                    {t('hero', track.labelKey)}
-                </span>
-            </div>
-
-            {/* Indicador animado */}
-            <div className="mb-4 min-h-[52px]">
-                {track.id === 'crear' && <VuMeter isHovered={isHovered} />}
-                {track.id === 'construir' && <TerminalBuild isHovered={isHovered} />}
-                {track.id === 'escalar' && <NetworkMonitor isHovered={isHovered} />}
-            </div>
-
-            {/* Separador */}
-            <div className={`w-full h-px ${colors.border} mb-3`} />
-
-            {/* Lista de herramientas */}
-            <div className="flex flex-col gap-1.5">
-                {track.tools.map((tool) => (
-                    <div key={tool.name} className="relative">
-                        <button
-                            className={`text-left w-full text-[11px] font-medium transition-colors duration-200 ${
-                                hoveredTool === tool.name ? 'text-white' : 'text-zinc-400 hover:text-zinc-200'
-                            }`}
-                            onMouseEnter={() => setHoveredTool(tool.name)}
-                            onMouseLeave={() => setHoveredTool(null)}
-                        >
-                            {tool.name}
-                        </button>
-                        <AnimatePresence>
-                            {hoveredTool === tool.name && (
-                                <motion.div
-                                    initial={{ opacity: 0, height: 0 }}
-                                    animate={{ opacity: 1, height: 'auto' }}
-                                    exit={{ opacity: 0, height: 0 }}
-                                    transition={{ duration: 0.15 }}
-                                    className={`overflow-hidden font-mono text-[8px] ${colors.textDim} tracking-wider leading-relaxed`}
-                                >
-                                    → {tool.meta}
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-                    </div>
-                ))}
-            </div>
-        </motion.div>
-    );
-}
 
 // ─────────────────────────────────────────────
 // HERO PORTFOLIO (MAIN COMPONENT)
 // ─────────────────────────────────────────────
 export function HeroPortfolio() {
     const { isDevMode, metrics, toggleDevMode } = useDevMode();
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
+    const [activeTrack, setActiveTrack] = useState<string>('crear');
 
     // --- TIMECODE PLAYER (23.976 FPS) ---
     const [timecode, setTimecode] = useState('01:00:00:00');
@@ -415,6 +167,19 @@ export function HeroPortfolio() {
             <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-violet-600/[0.03] blur-[150px] rounded-full pointer-events-none" />
             <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-cyan-600/[0.03] blur-[150px] rounded-full pointer-events-none" />
 
+            {/* Video de Fondo Abstracto (Máquina de Crecimiento) */}
+            <div className="absolute inset-0 z-0 opacity-[0.06] pointer-events-none mix-blend-screen overflow-hidden">
+                <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-full h-full object-cover"
+                >
+                    <source src="/videos/growth-machine.mp4" type="video/mp4" />
+                </video>
+            </div>
+
             {/* Núcleo de orquestación 3D (pieza firma) */}
             {show3D && (
                 <div aria-hidden className="absolute inset-0 z-[1] flex items-center justify-center pointer-events-none">
@@ -489,34 +254,73 @@ export function HeroPortfolio() {
                     {t('hero', 'subtitle')}
                 </motion.p>
 
-                {/* ═══════════════════════════════════════════
-                    LOS 3 TRACKS: CREAR · CONSTRUIR · ESCALAR
-                    ═══════════════════════════════════════════ */}
-
-                {/* Desktop: 3 columnas simétricas */}
-                <div className="hidden md:flex w-full gap-4 mb-12">
-                    {TRACKS.map((track, i) => (
-                        <TrackCard key={track.id} track={track} index={i} />
-                    ))}
-                </div>
-
-                {/* Mobile: Carrusel horizontal con scroll-snap */}
-                <div className="md:hidden w-full mb-12">
-                    <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 -mx-2 px-2 scrollbar-hide">
-                        {TRACKS.map((track, i) => (
-                            <div key={track.id} className="snap-center shrink-0 w-[85vw] max-w-[320px]">
-                                <TrackCard track={track} index={i} />
-                            </div>
-                        ))}
+                {/* ─────────────────────────────────────────────
+                    DISCIPLINAS INTERACTIVAS MINIMALISTAS
+                    ───────────────────────────────────────────── */}
+                <div className="w-full max-w-3xl mx-auto mb-16 mt-8">
+                    <div className="flex justify-center items-center gap-4 md:gap-8 flex-wrap border-b border-white/5 pb-6">
+                        {TRACKS.map((track) => {
+                            const isActive = activeTrack === track.id;
+                            const TrackIcon = track.Icon;
+                            const colorClass = track.color === 'violet' 
+                                ? 'text-violet-400' 
+                                : track.color === 'cyan' 
+                                ? 'text-cyan-400' 
+                                : 'text-amber-400';
+                            
+                            return (
+                                <button
+                                    key={track.id}
+                                    onMouseEnter={() => setActiveTrack(track.id)}
+                                    onClick={() => setActiveTrack(track.id)}
+                                    className={`flex items-center gap-2.5 px-4 py-2 rounded-full border transition-all duration-300 cursor-pointer ${
+                                        isActive 
+                                            ? `bg-white/[0.03] border-white/15 ${colorClass} shadow-[0_0_15px_rgba(255,255,255,0.02)]`
+                                            : 'bg-transparent border-transparent text-zinc-500 hover:text-zinc-300'
+                                    }`}
+                                >
+                                    <TrackIcon className="w-4.5 h-4.5" />
+                                    <span className="font-mono text-xs font-black uppercase tracking-[0.2em]">
+                                        {t('hero', track.labelKey)}
+                                    </span>
+                                </button>
+                            );
+                        })}
                     </div>
-                    {/* Dots indicadores */}
-                    <div className="flex justify-center gap-2 mt-3">
-                        {TRACKS.map((track) => (
-                            <div
-                                key={track.id}
-                                className="w-1.5 h-1.5 rounded-full bg-zinc-600"
-                            />
-                        ))}
+
+                    {/* Copy dinámico según la disciplina activa */}
+                    <div className="min-h-[90px] mt-6 px-4 flex flex-col justify-center items-center">
+                        <AnimatePresence mode="wait">
+                            {TRACKS.map((track) => {
+                                if (track.id !== activeTrack) return null;
+                                return (
+                                    <motion.div
+                                        key={track.id}
+                                        initial={{ opacity: 0, y: 5 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -5 }}
+                                        transition={{ duration: 0.25 }}
+                                        className="text-center max-w-xl"
+                                    >
+                                        <p className="text-zinc-300 text-sm font-light leading-relaxed">
+                                            {track.id === 'crear' 
+                                                ? (language === 'es' ? 'Dirección de arte, edición audiovisual de alto impacto, corrección de color profesional y motion graphics premium para posicionar tu marca en la cima.' : 'Art direction, high-impact video editing, professional color grading, and premium motion graphics to position your brand at the top.')
+                                                : track.id === 'construir'
+                                                ? (language === 'es' ? 'Desarrollo frontend ágil, estructuración de interfaces dinámicas, lógica de tipos segura y bases de datos integradas en tiempo real.' : 'Agile frontend development, dynamic user interfaces structure, safe type architectures, and databases integrated in real time.')
+                                                : (language === 'es' ? 'Embudos de venta avanzados, CRM comercial unificado, automatizaciones lógicas de procesos y mensajería automatizada 24/7.' : 'Advanced sales funnels, unified commercial CRM, logical process automation, and automated messaging running 24/7.')
+                                            }
+                                        </p>
+                                        <div className="mt-3 flex justify-center gap-3 flex-wrap">
+                                            {track.tools.map((tool) => (
+                                                <span key={tool.name} className="text-[9px] font-mono text-zinc-500 bg-white/[0.02] border border-white/5 px-2 py-0.5 rounded-full">
+                                                    {tool.name}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </motion.div>
+                                );
+                            })}
+                        </AnimatePresence>
                     </div>
                 </div>
 

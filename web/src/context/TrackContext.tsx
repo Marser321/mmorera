@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { type TrackId, isTrackId } from '@/data/tracks';
 
 interface TrackContextType {
@@ -22,6 +23,7 @@ const STORAGE_KEY = 'mm_track';
 export function TrackProvider({ children }: { children: React.ReactNode }) {
     const [track, setTrackState] = useState<TrackId | null>(null);
     const [mounted, setMounted] = useState(false);
+    const pathname = usePathname();
 
     useEffect(() => {
         const saved = localStorage.getItem(STORAGE_KEY);
@@ -29,6 +31,18 @@ export function TrackProvider({ children }: { children: React.ReactNode }) {
         if (isTrackId(saved)) setTrackState(saved);
         setMounted(true);
     }, []);
+
+    useEffect(() => {
+        if (!mounted) return;
+        if (pathname?.startsWith('/estudio')) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setTrackState('design');
+            localStorage.setItem(STORAGE_KEY, 'design');
+        } else if (pathname?.startsWith('/sistemas')) {
+            setTrackState('software');
+            localStorage.setItem(STORAGE_KEY, 'software');
+        }
+    }, [pathname, mounted]);
 
     const setTrack = (t: TrackId) => {
         setTrackState(t);

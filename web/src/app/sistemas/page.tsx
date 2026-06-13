@@ -1,6 +1,7 @@
 import dynamic from 'next/dynamic';
 import { Metadata } from 'next';
 import { RevealHeading } from '@/components/type/RevealHeading';
+import { SystemsHUDHeader } from '@/components/sections/SystemsHUDHeader';
 
 const GHLCRMOrbit = dynamic(() => import('@/components/animations/GHLCRMOrbit').then(mod => mod.GHLCRMOrbit));
 const SistemasBlueprint = dynamic(() => import('@/components/portfolio-isolated/SistemasBlueprint').then(mod => mod.SistemasBlueprint));
@@ -19,9 +20,7 @@ export default function SystemsPage() {
         <main id="contenido-principal" className="pt-24 min-h-screen">
             {/* Hero de Sistemas */}
             <section className="container mx-auto px-4 py-12 md:py-16 flex flex-col items-center text-center">
-                <div className="mb-5 inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 font-mono text-[10px] uppercase tracking-[0.3em] text-primary">
-                    GoHighLevel + automatización IA
-                </div>
+                <SystemsHUDHeader />
                 <RevealHeading
                     text="CRM operativo para conectar captación, seguimiento y ventas"
                     as="h1"

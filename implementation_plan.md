@@ -643,8 +643,92 @@ Proponemos realizar una serie de micro-tareas para limpiar la deuda técnica del
 
 ---
 
+---
+
 ## Plan de Verificación
 
 Una vez aplicadas las correcciones propuestas:
 1. Ejecutaremos `pnpm lint` en `web/` para confirmar que los 12 problemas han sido resueltos de forma exitosa (cero errores y warnings).
 2. Ejecutaremos `pnpm run build` para asegurar la correcta generación estática de Next.js sin errores de tipado.
+
+---
+
+# Rediseño de Headers y Eliminación de Switcher Redundante
+
+## Contexto y Diagnóstico (Pensamiento Lateral)
+El sitio cuenta actualmente con múltiples capas de encabezados y switchers redundantes:
+1. El **floating switcher** (`TrackSwitcher.tsx`) en la esquina superior izquierda que dice "DISEÑO" y "SOFTWARE".
+2. El **menú de navegación inferior** (`Navbar.tsx`) que ya contiene links directos a `/estudio` y `/sistemas`.
+3. Los **headers de página** que repiten el nombre de la sección en formato de "pills" genéricas de marketing.
+
+Para eliminar esta fricción cognitiva sin perder la densidad estética (partículas, mesh y glows en el fondo) proponemos:
+- **Remover el TrackSwitcher flotante**: La navegación del usuario por el menú inferior es suficiente. El estado del track se sincronizará automáticamente mediante el hook de ruta (`usePathname`) en `TrackContext.tsx`.
+- **Reimaginar los Headers como un HUD Tecnológico**: En lugar de headers genéricos, diseñaremos una cabecera tipo "HUD / Workbench" técnica e integrada:
+  - Líneas de grilla finas que conectan con el fondo.
+  - Telemetría en tipografía mono (`Space Mono`): coordenadas activas (`ESTUDIO // DEP-01: CREATIVE`), estado (`STABLE // 100% ONLINE`), fps/resolución, latencia.
+  - Mantener y densificar el campo de partículas/glows sutiles en el fondo del header para dar profundidad espacial.
+
+## Cambios Propuestos
+
+### [Estudio, Sistemas y Navegación]
+
+#### [MODIFY] [TrackContext.tsx](file:///Users/mariomorera/Desktop/MMORERA/web/src/context/TrackContext.tsx)
+- Sincronizar automáticamente el track según la ruta actual:
+  - `/estudio` -> `'design'`
+  - `/sistemas` -> `'software'`
+- Esto nos permite deshacernos del selector manual flotante.
+
+#### [MODIFY] [layout.tsx](file:///Users/mariomorera/Desktop/MMORERA/web/src/app/layout.tsx)
+- Remover la importación y el renderizado de `<TrackSwitcher />` de la raíz del layout.
+
+#### [MODIFY] [EstudioHero.tsx](file:///Users/mariomorera/Desktop/MMORERA/web/src/components/sections/EstudioHero.tsx)
+- Reemplazar la pill genérica superior por un panel HUD horizontal con telemetría técnica (e.g. `TRACK: 01_CREATIVE_ESTUDIO // LATENCY: 0.0ms // CAM: ACTIVE // RENDER: DCI-P3`).
+- Agregar un contenedor con grilla técnica sutil y micropartículas en el fondo para aumentar la densidad espacial.
+
+#### [MODIFY] [page.tsx (sistemas)](file:///Users/mariomorera/Desktop/MMORERA/web/src/app/sistemas/page.tsx)
+- Reemplazar la cabecera simple por el mismo lenguaje visual de HUD técnico (e.g. `TRACK: 02_SYSTEMS_OPS // STATUS: ACTIVE // ENGINE: N8N_WORKFLOW // DB: POSTGRESQL`).
+- Añadir glows y grilla técnica integrada con partículas en el fondo del hero.
+
+#### [MODIFY] [PortfolioGrid.tsx](file:///Users/mariomorera/Desktop/MMORERA/web/src/components/portfolio-isolated/PortfolioGrid.tsx)
+- Reestructurar el header de `/casos-de-exito` con el mismo formato HUD (e.g. `TRACK: 03_COMPILED_CASES // TELEMETRY: LIVE_COMPILATION // STACK: AGENTIC`).
+- Mantener y mejorar el swapper de vistas (`Media Pool` / `VS Code`) para que quede alineado con el nuevo HUD.
+
+## Plan de Verificación
+1. Validar el funcionamiento en local: recargar las rutas `/estudio`, `/sistemas` y `/casos-de-exito`.
+2. Confirmar que la navegación inferior ordena los ítems de acuerdo al track actual de forma automática.
+3. Asegurar que los headers se visualizan correctamente en desktop y mobile (Mobile-First) sin overflow horizontal.
+4. Correr `pnpm run build` y `pnpm lint`.
+
+---
+
+# Eliminación de Consolas en Vivo y Simplificación
+
+## Contexto y Diagnóstico (Pensamiento Lateral)
+El usuario solicita remover "las consolas en vivo" y simplificar el sitio. Identificamos dos consolas/simulaciones interactivas en vivo en la aplicación:
+1. **Consola de Diagnóstico en Sistemas** (`SistemasBlueprint.tsx`): Una simulación de terminal que muestra logs vivos de eventos y payloads JSON a nivel de base de datos/API. Genera mucho peso visual y alarga la página `/sistemas`.
+2. **Consolas Animadas del Hero de Home** (`HeroPortfolio.tsx`): Los visualizadores interactivos (VU Meter, terminal de Next build, monitor de latencia HTTP) ubicados dentro de las tarjetas del hero de la home.
+
+Para simplificar el sitio conservando el estilo de grillas, mesh y partículas:
+- **En `/sistemas`**: Removeremos por completo la consola de diagnóstico (`System Diagnostics Terminal` y sus logs) de la parte inferior de `SistemasBlueprint.tsx`. Mantendremos el gráfico de nodos del circuito que es claro y didáctico.
+- **En la Home (`HeroPortfolio`)**: Eliminaremos los visualizadores de consola interactivos (`VuMeter`, `TerminalBuild`, `NetworkMonitor`) de las tres tarjetas del hero. Las tarjetas pasarán a mostrar directamente sus títulos, separadores y listas de herramientas, reduciendo ruido visual e interactivo innecesario.
+
+## Cambios Propuestos
+
+### [Sistemas y Home]
+
+#### [MODIFY] [SistemasBlueprint.tsx](file:///Users/mariomorera/Desktop/MMORERA/web/src/components/portfolio-isolated/SistemasBlueprint.tsx)
+- Eliminar el bloque de JSX que renderiza la terminal de logs/telemetría y JSON (líneas 411 a 533).
+- Eliminar el estado de logs vivos (`liveLogs`), referencias (`liveLogsContainerRef`, `logIdCounter`), y la función de coloreado JSON `HighlightedJSON`.
+- Mantener intacto el flujo interactivo de los nodos en la parte superior (gráfico de circuito e información de latencia integrada).
+
+#### [MODIFY] [HeroPortfolio.tsx](file:///Users/mariomorera/Desktop/MMORERA/web/src/components/portfolio-isolated/HeroPortfolio.tsx)
+- Eliminar las funciones y componentes `VuMeter`, `TerminalBuild` y `NetworkMonitor` (líneas 72 a 224).
+- Quitar el renderizado de estos componentes en `TrackCard` (líneas 285 a 290).
+
+## Plan de Verificación
+1. Iniciar servidor local (`pnpm dev`) y verificar visualmente en el navegador:
+   - La página `/sistemas` ya no muestra la consola de logs al final del blueprint.
+   - El hero de la home tiene tarjetas simplificadas (sin simuladores de consola activos).
+2. Ejecutar `pnpm run build` para asegurar la compilación.
+3. Ejecutar `pnpm lint`.
+

@@ -1,17 +1,14 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { 
     Inbox, 
     Cpu, 
     Database, 
     MessageSquare, 
     BarChart2, 
-    Zap, 
-    Terminal, 
-    RefreshCw, 
-    Wifi 
+    Zap 
 } from 'lucide-react';
 import { useDevMode } from './DevModeContext';
 import { useLanguage } from '@/context/LanguageContext';
@@ -30,43 +27,6 @@ function NodeIcon({ name, className }: { name: string; className?: string }) {
     }
 }
 
-// Coloreador de sintaxis JSON en tiempo real para la terminal
-function HighlightedJSON({ obj }: { obj: Record<string, unknown> }) {
-    const formattedLines = useMemo(() => {
-        const str = JSON.stringify(obj, null, 2);
-        return str.split('\n').map((line, idx) => {
-            const keyMatch = line.match(/^(\s*)"([^"]+)":/);
-            if (keyMatch) {
-                const indent = keyMatch[1];
-                const key = keyMatch[2];
-                const rest = line.substring(keyMatch[0].length);
-                
-                let valClass = 'text-zinc-300';
-                if (rest.includes('"')) valClass = 'text-amber-300/90';
-                else if (rest.match(/\d+/)) valClass = 'text-orange-400';
-                else if (rest.includes('true') || rest.includes('false')) valClass = 'text-emerald-400';
-                
-                return (
-                    <div key={idx} className="font-mono text-[9px] leading-relaxed">
-                        {indent}
-                        <span className="text-zinc-600">&quot;</span>
-                        <span className="text-zinc-100 font-medium">{key}</span>
-                        <span className="text-zinc-600">&quot;:</span>
-                        <span className={valClass}>{rest}</span>
-                    </div>
-                );
-            }
-            return (
-                <div key={idx} className="font-mono text-[9px] leading-relaxed text-zinc-600">
-                    {line}
-                </div>
-            );
-        });
-    }, [obj]);
-
-    return <div className="space-y-0.5">{formattedLines}</div>;
-}
-
 export function SistemasBlueprint() {
     const { isDevMode } = useDevMode();
     const { language } = useLanguage();
@@ -74,11 +34,6 @@ export function SistemasBlueprint() {
     const [selectedNode, setSelectedNode] = useState<SystemNodeData | null>(null);
     const [hoveredNode, setHoveredNode] = useState<SystemNodeData | null>(null);
     const [nodeLatencies, setNodeLatencies] = useState<Record<string, number>>({});
-    
-    // Logs vivos auto-generados para la consola cuando no hay inspección activa
-    const [liveLogs, setLiveLogs] = useState<Array<{ id: number; text: string; time: string; type: string }>>([]);
-    const logIdCounter = useRef(0);
-    const liveLogsContainerRef = useRef<HTMLDivElement>(null);
 
     // Simulación de fluctuación de latencia
     useEffect(() => {
@@ -94,62 +49,7 @@ export function SistemasBlueprint() {
         return () => clearInterval(interval);
     }, []);
 
-    // Stream de logs dinámicos en vivo
-    useEffect(() => {
-        // Logs iniciales de relleno rápido
-        const initialLogs = [
-            { id: ++logIdCounter.current, text: 'SYSTEM: Pipeline initialized. Listening for webhooks...', time: '17:15:00', type: 'info' },
-            { id: ++logIdCounter.current, text: 'DATABASE: Connected to Postgres database (insforge_db)', time: '17:15:01', type: 'success' },
-            { id: ++logIdCounter.current, text: 'METRICS: Cache metrics synced. Listening on port 443', time: '17:15:02', type: 'info' }
-        ];
-        setLiveLogs(initialLogs);
 
-        const logsTemplates = [
-            { text: { es: 'INBOUND: Formulario recibido en /api/leads', en: 'INBOUND: Form submit caught at /api/leads' }, type: 'info' },
-            { text: { es: 'ROUTER: Parsing webhook payload. Event: form_submit', en: 'ROUTER: Parsing webhook payload. Event: form_submit' }, type: 'info' },
-            { text: { es: 'AI_QUALIFIER: Llamando API de OpenAI. Analizando intenciones...', en: 'AI_QUALIFIER: Calling OpenAI API. Assessing buyer intent...' }, type: 'info' },
-            { text: { es: 'AI_QUALIFIER: Score asignado: 94/100. Lead calificado.', en: 'AI_QUALIFIER: Score assigned: 94/100. Qualified lead.' }, type: 'success' },
-            { text: { es: 'CRM_SYNC: Registrando contacto ID: ct_92381 en GoHighLevel.', en: 'CRM_SYNC: Registering contact ID: ct_92381 in GoHighLevel.' }, type: 'info' },
-            { text: { es: 'WHATSAPP_ALERT: Despachando plantilla de agendamiento vía API.', en: 'WHATSAPP_ALERT: Dispatching scheduling template via API.' }, type: 'info' },
-            { text: { es: 'METRICS: ROI e historial recalculados en base de datos.', en: 'METRICS: ROI and history recalculated in db.' }, type: 'success' }
-        ];
-
-        let index = 0;
-        const interval = setInterval(() => {
-            // No alimentar logs si el usuario está inspeccionando activamente con hover o click
-            if (hoveredNode || selectedNode) return;
-
-            const now = new Date();
-            const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
-            
-            const template = logsTemplates[index];
-            const newLog = {
-                id: ++logIdCounter.current,
-                text: template.text[language],
-                time: timeStr,
-                type: template.type
-            };
-
-            setLiveLogs(prev => {
-                const updated = [...prev, newLog];
-                // Mantener los últimos 20 logs para no sobrecargar el DOM
-                return updated.slice(-20);
-            });
-
-            index = (index + 1) % logsTemplates.length;
-        }, 2200);
-
-        return () => clearInterval(interval);
-    }, [hoveredNode, selectedNode, language]);
-
-    // Auto-scroll al final del contenedor de logs
-    useEffect(() => {
-        if (liveLogsContainerRef.current) {
-            liveLogsContainerRef.current.scrollTop = liveLogsContainerRef.current.scrollHeight;
-        }
-    }, [liveLogs]);
-
-    const activeInspectNode = hoveredNode || selectedNode;
 
     return (
         <section id="sistemas-blueprint" className="py-24 md:py-32 relative bg-transparent overflow-hidden">
@@ -183,6 +83,19 @@ export function SistemasBlueprint() {
                     
                     {/* Rejilla de Fondo Técnica */}
                     <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:32px_32px] opacity-40 pointer-events-none" />
+
+                    {/* Video de Fondo Técnico (Líneas de Circuito) */}
+                    <div className="absolute inset-0 z-0 opacity-[0.06] pointer-events-none mix-blend-screen overflow-hidden">
+                        <video
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            className="w-full h-full object-cover"
+                        >
+                            <source src="/videos/circuit-lines.mp4" type="video/mp4" />
+                        </video>
+                    </div>
 
                     {/* LIENZO SVG PARA CABLES DE FIBRA OPTICA (Conexión 1 -> 2 -> 3 -> 4 -> 5 -> 6) */}
                     <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" viewBox="0 0 1000 480" preserveAspectRatio="none">
@@ -256,8 +169,8 @@ export function SistemasBlueprint() {
                                     onClick={() => setSelectedNode(isSelected ? null : node)}
                                     className={`relative rounded-2xl border p-5 text-left cursor-pointer transition-all duration-300 select-none flex flex-col justify-between h-48 ${
                                         isSelected || isHovered
-                                            ? 'border-cyan-400 bg-neutral-950 shadow-[0_0_25px_rgba(34,211,238,0.15)] z-20' 
-                                            : 'border-white/5 bg-neutral-950/60 hover:border-white/20'
+                                            ? 'border-cyan-400 bg-neutral-950 shadow-[0_0_25px_rgba(34,211,238,0.25)] z-20' 
+                                            : 'border-white/5 bg-neutral-950/50 hover:border-white/20 backdrop-blur-md'
                                     }`}
                                     whileHover={{ y: -5 }}
                                 >
@@ -314,8 +227,8 @@ export function SistemasBlueprint() {
                                     onClick={() => setSelectedNode(isSelected ? null : node)}
                                     className={`relative rounded-2xl border p-5 text-left cursor-pointer transition-all duration-300 select-none flex flex-col justify-between h-48 ${
                                         isSelected || isHovered
-                                            ? 'border-emerald-400 bg-neutral-950 shadow-[0_0_25px_rgba(16,185,129,0.15)] z-20' 
-                                            : 'border-white/5 bg-neutral-950/60 hover:border-white/20'
+                                            ? 'border-emerald-400 bg-neutral-950 shadow-[0_0_25px_rgba(16,185,129,0.25)] z-20' 
+                                            : 'border-white/5 bg-neutral-950/50 hover:border-white/20 backdrop-blur-md'
                                     }`}
                                     whileHover={{ y: -5 }}
                                 >
@@ -373,8 +286,8 @@ export function SistemasBlueprint() {
                                 onClick={() => setSelectedNode(isSelected ? null : node)}
                                 className={`relative rounded-xl border p-4 text-left cursor-pointer transition-all duration-300 ${
                                     isSelected 
-                                        ? 'border-emerald-500 bg-neutral-950 shadow-[0_0_15px_rgba(16,185,129,0.15)]' 
-                                        : 'border-white/5 bg-neutral-950/60'
+                                        ? 'border-emerald-500 bg-neutral-950 shadow-[0_0_15px_rgba(16,185,129,0.2)]' 
+                                        : 'border-white/5 bg-neutral-950/50 backdrop-blur-md'
                                 }`}
                             >
                                 {/* Círculo indicador en el riel */}
@@ -407,130 +320,7 @@ export function SistemasBlueprint() {
                     })}
                 </div>
 
-                {/* ──── LA CONSOLA DE TELEMETRÍA Y LOGS VIVOS ──── */}
-                <div className="mt-12 max-w-5xl mx-auto bg-black border border-white/10 rounded-2xl p-5 shadow-2xl relative overflow-hidden backdrop-blur-md">
-                    
-                    {/* Header de Terminal */}
-                    <div className="flex items-center justify-between pb-3 border-b border-white/5 mb-4">
-                        <div className="flex items-center gap-2 font-mono text-[9px] text-zinc-500 uppercase tracking-widest">
-                            <Terminal className="w-3.5 h-3.5 text-emerald-400" />
-                            <span>System Diagnostics Terminal</span>
-                        </div>
 
-                        {/* Botón de reset/desinspeccionar si hay un nodo inspeccionado */}
-                        {activeInspectNode ? (
-                            <button 
-                                onClick={() => {
-                                    setSelectedNode(null);
-                                    setHoveredNode(null);
-                                }}
-                                className="flex items-center gap-1 font-mono text-[8px] bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-md hover:bg-emerald-500/20 transition-colors"
-                            >
-                                <RefreshCw className="w-2.5 h-2.5 animate-spin" style={{ animationDuration: '3s' }} />
-                                <span>{language === 'es' ? 'VER LOGS EN VIVO' : 'RESUME LIVE STREAM'}</span>
-                            </button>
-                        ) : (
-                            <div className="flex items-center gap-1 font-mono text-[8px] text-emerald-500">
-                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                                <span>{language === 'es' ? 'CONSOLA EN VIVO' : 'LIVE CONSOLE'}</span>
-                            </div>
-                        )}
-                    </div>
-
-                    <div className="grid lg:grid-cols-12 gap-6">
-                        
-                        {/* Columna Izquierda: Log Stream (Vivos o específicos de Nodo) */}
-                        <div className="lg:col-span-7 flex flex-col h-60">
-                            <div className="font-mono text-[8px] text-zinc-600 uppercase tracking-widest pb-1 border-b border-white/5 mb-2">
-                                {activeInspectNode 
-                                    ? `NODE LOGS // ${activeInspectNode.id.toUpperCase()}` 
-                                    : 'EVENT STREAM // INCOMING PIPELINE'
-                                }
-                            </div>
-                            
-                            <div 
-                                ref={liveLogsContainerRef}
-                                className="flex-1 overflow-y-auto font-mono text-[10px] space-y-2.5 text-left pr-2 scrollbar-thin scrollbar-thumb-white/10"
-                            >
-                                <AnimatePresence mode="popLayout">
-                                    {activeInspectNode ? (
-                                        // Logs específicos del Nodo Inspeccionado
-                                        <motion.div
-                                            key={`inspect-${activeInspectNode.id}`}
-                                            initial={{ opacity: 0, y: 5 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            exit={{ opacity: 0, y: -5 }}
-                                            className="space-y-2.5"
-                                        >
-                                            <p className="text-zinc-500 italic">
-                                                {language === 'es' 
-                                                    ? `// Mostrando logs detallados para '${activeInspectNode.title[language]}'. Engine: ${activeInspectNode.tech}`
-                                                    : `// Showing detailed logs for '${activeInspectNode.title[language]}'. Engine: ${activeInspectNode.tech}`
-                                                }
-                                            </p>
-                                            {activeInspectNode.logs.map((log, idx) => (
-                                                <div 
-                                                    key={idx}
-                                                    className={`leading-relaxed ${
-                                                        log.type === 'success' ? 'text-emerald-400' :
-                                                        log.type === 'warn' ? 'text-yellow-400' :
-                                                        log.type === 'error' ? 'text-red-400' : 'text-zinc-300'
-                                                    }`}
-                                                >
-                                                    <span className="text-zinc-600 mr-2">[INSPECT]</span>
-                                                    &gt; {log[language]}
-                                                </div>
-                                            ))}
-                                        </motion.div>
-                                    ) : (
-                                        // Logs vivos generales del pipeline
-                                        liveLogs.map((log) => (
-                                            <motion.div
-                                                key={log.id}
-                                                layout
-                                                initial={{ opacity: 0, x: -5 }}
-                                                animate={{ opacity: 1, x: 0 }}
-                                                className={`leading-relaxed ${
-                                                    log.type === 'success' ? 'text-emerald-400' : 'text-zinc-300'
-                                                }`}
-                                            >
-                                                <span className="text-zinc-600 mr-2">[{log.time}]</span>
-                                                {log.text}
-                                            </motion.div>
-                                        ))
-                                    )}
-                                </AnimatePresence>
-                            </div>
-                        </div>
-
-                        {/* Columna Derecha: JSON Schema Payload */}
-                        <div className="lg:col-span-5 flex flex-col h-60 border-t lg:border-t-0 lg:border-l border-white/5 pt-4 lg:pt-0 lg:pl-6">
-                            <div className="font-mono text-[8px] text-zinc-600 uppercase tracking-widest pb-1 border-b border-white/5 mb-2 flex items-center justify-between">
-                                <span>PAYLOAD SCHEMA</span>
-                                {activeInspectNode && (
-                                    <span className="text-cyan-400 font-bold">{activeInspectNode.tech}</span>
-                                )}
-                            </div>
-
-                            <div className="flex-1 overflow-auto bg-neutral-950 p-3 rounded-lg border border-white/5 select-text text-left">
-                                {activeInspectNode ? (
-                                    <HighlightedJSON obj={activeInspectNode.payload} />
-                                ) : (
-                                    <div className="h-full flex flex-col items-center justify-center text-center p-4">
-                                        <Wifi className="w-6 h-6 text-zinc-600 animate-pulse mb-2" />
-                                        <p className="font-mono text-[9px] text-zinc-500 uppercase tracking-widest">
-                                            {language === 'es' 
-                                                ? 'Inspecciona un nodo para analizar su JSON Payload Schema'
-                                                : 'Inspect a node to analyze its JSON Payload Schema'
-                                            }
-                                        </p>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
 
             </div>
 

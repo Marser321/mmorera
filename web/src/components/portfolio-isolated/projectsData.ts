@@ -43,7 +43,7 @@ export const PROJECTS_DATA: ProjectData[] = [
         metric: { es: 'Filtro Inmersivo', en: 'Immersive Filter' },
         iframeUrl: 'https://auto-indol-five.vercel.app/',
         imageUrl: '/portfolio/autohub-cover-v2.png',
-        stack: ['Next.js', 'Framer Motion', 'WebGL', 'Three.js'],
+        stack: ['3D Engine', 'Optimization', 'WebGL'],
         codec: 'ProRes 422 HQ',
         timecode: '00:01:24:12',
         fileSize: '42.8 KB',
@@ -103,8 +103,8 @@ export function AutoHub360Viewer({ modelSrc }: { modelSrc: string }) {
             en: 'Slow admin dashboard delaying reports and inventory visualization.'
         },
         orquestacion: {
-            es: 'Implementación de React Query para caché local y optimización de renderizados.',
-            en: 'React Query implementation for local cache and render optimizations.'
+            es: 'Estrategias de caché en memoria del navegador y optimización de renderizados.',
+            en: 'In-browser caching strategies and render optimizations.'
         },
         impacto: {
             es: 'Lectura en tiempo real de márgenes financieros e inventarios instantáneos.',
@@ -113,7 +113,7 @@ export function AutoHub360Viewer({ modelSrc }: { modelSrc: string }) {
         metric: { es: 'Panel Reactivo', en: 'Reactive Dashboard' },
         iframeUrl: 'https://lnb-saass.vercel.app/',
         imageUrl: '/portfolio/lnb-saass.png',
-        stack: ['React', 'Tailwind CSS', 'ChartJS', 'SWR'],
+        stack: ['Dashboard', 'Performance', 'Cache'],
         codec: 'ProRes 422 LT',
         timecode: '00:02:18:05',
         fileSize: '118.5 KB',
@@ -171,8 +171,8 @@ export function FinanceMetricsPanel() {
             en: 'Manual and highly inefficient candidate and CV screening process.'
         },
         orquestacion: {
-            es: 'Pipeline en Python con OpenAI GPT-4o para parseo estructurado de CVs.',
-            en: 'Python pipeline with OpenAI GPT-4o for structured CV parsing.'
+            es: 'Pipeline de segundo plano con modelos avanzados de IA para parseo estructurado de CVs.',
+            en: 'Background pipeline using advanced AI models for structured CV parsing.'
         },
         impacto: {
             es: 'Reporte de match instantáneo y sugerencias contextuales automáticas.',
@@ -181,7 +181,7 @@ export function FinanceMetricsPanel() {
         metric: { es: 'Clasificador IA', en: 'AI Classifier' },
         iframeUrl: 'https://profecionalcv.vercel.app/',
         imageUrl: '/portfolio/profesional-cv.png',
-        stack: ['Next.js', 'OpenAI API', 'PostgreSQL', 'Python'],
+        stack: ['AI Agent', 'Database', 'Backend API'],
         codec: 'H.264 High',
         timecode: '00:03:05:22',
         fileSize: '34.2 KB',
@@ -242,7 +242,7 @@ async def evaluate_resume(file: UploadFile = File(...)):
         metric: { es: 'Conversión++', en: 'Conversion++' },
         iframeUrl: 'https://evowrap.vercel.app/',
         imageUrl: '/portfolio/evowrap.png',
-        stack: ['HTML5/JS', 'Tailwind CSS', 'Framer Motion', 'SEO'],
+        stack: ['Frontend', 'Animation', 'SEO'],
         codec: 'ProRes 4444',
         timecode: '00:04:12:18',
         fileSize: '15.9 KB',
@@ -298,8 +298,8 @@ async def evaluate_resume(file: UploadFile = File(...)):
             en: 'Revenue loss due to no-shows in manual phone bookings.'
         },
         orquestacion: {
-            es: 'Integración de Stripe Checkout Webhook y WhatsApp Business API en n8n.',
-            en: 'Stripe Checkout Webhook and WhatsApp Business API integration on n8n.'
+            es: 'Pasarela de pagos en línea, alertas automatizadas de mensajería y motor de reglas operativo.',
+            en: 'Online payment gateway, automated instant notifications, and rules engine.'
         },
         impacto: {
             es: 'Reducción drástica de inasistencias y cobro de reserva 100% automatizado.',
@@ -308,7 +308,7 @@ async def evaluate_resume(file: UploadFile = File(...)):
         metric: { es: 'Reserva Segura', en: 'Secure Booking' },
         iframeUrl: 'https://nb-oa7mhumgz-marios-projects-4a53e443.vercel.app/reservar',
         imageUrl: '/portfolio/booking-clinico.png',
-        stack: ['React', 'Node.js', 'Stripe API', 'n8n'],
+        stack: ['Automation', 'Payments', 'Webhooks'],
         codec: 'H.265 Main',
         timecode: '00:05:40:02',
         fileSize: '88.3 KB',
@@ -368,8 +368,8 @@ export async function POST(req: Request) {
             en: 'Impossibility of previewing premium tourist developments remotely.'
         },
         orquestacion: {
-            es: 'Navegación panorámica Three.js y carga optimizada de texturas HD mediante render condicional.',
-            en: 'Three.js panoramic navigation and HD texture load optimization via conditional rendering.'
+            es: 'Navegación panorámica 3D interactiva y carga optimizada de texturas mediante render condicional.',
+            en: '3D interactive panoramic navigation and optimized texture rendering.'
         },
         impacto: {
             es: 'Presentación inmersiva del desarrollo, permitiendo cerrar ventas internacionales.',
@@ -378,7 +378,7 @@ export async function POST(req: Request) {
         metric: { es: 'Tour Inmersivo', en: 'Immersive Tour' },
         iframeUrl: 'https://punta-360.vercel.app/',
         imageUrl: '/portfolio/punta-360.png',
-        stack: ['HTML5', 'Three.js', 'Tailwind', 'Vite'],
+        stack: ['3D Tour', 'WebGL', 'UI/UX'],
         codec: 'ProRes 422 HQ',
         timecode: '00:06:15:10',
         fileSize: '210.4 KB',
@@ -425,5 +425,180 @@ export class PanoramicViewer {
   };
 }`
         }
+    },
+    {
+        id: 6,
+        title: { es: 'Truckers Choice', en: 'Truckers Choice' },
+        filename: 'TruckersChoice.tsx',
+        category: {
+            es: ['Diseño Corporativo', 'Sistemas de Trámites'],
+            en: ['Corporate Design', 'Workflow Systems']
+        },
+        desafio: {
+            es: 'Carga sumamente lenta de cotizadores y portales de seguros/permisos para transportistas con interfaces rígidas.',
+            en: 'Extremely slow loading of insurance and permit quoting portals with rigid user interfaces.'
+        },
+        orquestacion: {
+            es: 'Interfaz Next.js App Router bilingüe, con CDN inteligente y pre-carga selectiva de componentes del cotizador.',
+            en: 'Next.js App Router bilingual interface, featuring intelligent CDN caching and lazy loading of key quoting components.'
+        },
+        impacto: {
+            es: 'Tasa de conversión y retención optimizada para choferes que consultan en ruta en pantallas móviles.',
+            en: 'Optimized conversion and retention rate for truck drivers accessing forms on mobile screens on the road.'
+        },
+        metric: { es: 'Trámite Ágil', en: 'Agile Workflow' },
+        iframeUrl: 'https://truckers-choice-web-site.vercel.app/',
+        imageUrl: '/portfolio/truckers-cover.png',
+        stack: ['Next.js', 'Tailwind CSS', 'i18n'],
+        codec: 'H.264 High',
+        timecode: '00:07:32:04',
+        fileSize: '95.1 KB',
+        codeMock: {
+            language: 'typescript',
+            content: `/**
+ * @module QuotingSystem
+ * @description Dynamic translation wrapper and lazy component loader for the insurance quoting wizard.
+ */
+export function useTranslation(locale: string) {
+  const translations: Record<string, { title: string; button: string }> = {
+    en: { title: "Insurance & Permits Specialists", button: "Get a quote" },
+    es: { title: "Especialistas en Seguros y Permisos", button: "Obtener cotización" }
+  };
+  return translations[locale] || translations.en;
+}`
+        }
+    },
+    {
+        id: 7,
+        title: { es: 'AD Media Solution', en: 'AD Media Solution' },
+        filename: 'AdMediaSolution.tsx',
+        category: {
+            es: ['Dirección Comercial', 'Pauta Digital'],
+            en: ['Sales & Marketing', 'Paid Ads']
+        },
+        desafio: {
+            es: 'Pérdidas de prospectos y agendamientos comerciales debido a la falta de automatización y CRM desarticulado.',
+            en: 'Leads lost and delays in scheduling due to lack of automation and disconnected CRMs.'
+        },
+        orquestacion: {
+            es: 'Integración de CRM personalizado para ingesta de prospectos calificados, soporte automatizado en pauta digital y optimización del embudo de agendamiento.',
+            en: 'Custom CRM integration for qualified lead capture, automated support workflows on paid ads, and booking funnel optimizations.'
+        },
+        impacto: {
+            es: 'Automatización completa del flujo comercial de citas y aumento sustancial en facturación recurrente B2B.',
+            en: '100% automated booking pipeline resulting in increased recurring B2B sales.'
+        },
+        metric: { es: 'CRM & Escala', en: 'CRM & Scaling' },
+        iframeUrl: 'https://admediasolution.vercel.app/',
+        imageUrl: '/portfolio/admedia-cover.png',
+        stack: ['Next.js', 'Tailwind CSS', 'CRM Integration'],
+        codec: 'ProRes 422 LT',
+        timecode: '00:08:44:12',
+        fileSize: '112.3 KB',
+        codeMock: {
+            language: 'typescript',
+            content: `/**
+ * @handler LeadIngestionCRM
+ * @description Secure endpoint to automatically push paid ad leads straight to the internal CRM.
+ */
+export async function submitLeadToCRM(lead: { name: string; phone: string; email: string }) {
+  const response = await fetch('/api/crm/ingest', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ...lead, source: 'paid_ads_campaign' })
+  });
+  return response.ok ? { success: true } : { error: 'Failed to sync lead' };
+}`
+        }
+    },
+    {
+        id: 8,
+        title: { es: 'América Trámites', en: 'América Trámites' },
+        filename: 'AmericaTramites.tsx',
+        category: {
+            es: ['Gestión Consular', 'Plataformas Web'],
+            en: ['Consular Forms', 'Web Platforms']
+        },
+        desafio: {
+            es: 'Dificultad extrema y pérdida de tiempo al completar largos y confusos formularios consulares en línea.',
+            en: 'Extreme friction and loss of time for users completing long and confusing online consular forms.'
+        },
+        orquestacion: {
+            es: 'Interfaz SPA de Vite + React optimizada con validación reactiva de documentos paso a paso y carga asíncrona.',
+            en: 'Vite + React SPA optimized with reactive step-by-step document validations and async file uploads.'
+        },
+        impacto: {
+            es: 'Experiencia sin fricciones para el usuario y agilización del procesamiento migratorio interno de la agencia.',
+            en: 'Seamless user experience with accelerated processing for the agency staff.'
+        },
+        metric: { es: 'Trámites Guiados', en: 'Guided Compliance' },
+        iframeUrl: 'https://atreact.vercel.app/',
+        imageUrl: '/portfolio/america-cover.png',
+        stack: ['React', 'Vite', 'Validation API'],
+        codec: 'H.265 Main',
+        timecode: '00:09:18:22',
+        fileSize: '48.7 KB',
+        codeMock: {
+            language: 'typescript',
+            content: `/**
+ * @helper FormStepValidator
+ * @description Validates required legal documents and personal data fields progressively before allowing step progression.
+ */
+export function StepValidator({ currentStep, data }: { currentStep: number; data: Record<string, any> }) {
+  const requiredFields = ['fullName', 'passportNumber', 'birthDate'];
+  const isStepValid = requiredFields.every(field => data[field] && data[field].trim() !== '');
+  return { valid: isStepValid };
+}`
+        }
+    },
+    {
+        id: 9,
+        title: { es: 'DOGE.S.M LLC', en: 'DOGE.S.M LLC' },
+        filename: 'DogeCleaning.tsx',
+        category: {
+            es: ['Diseño de Lujo', 'Servicios Premium'],
+            en: ['Luxury Design', 'Premium Services']
+        },
+        desafio: {
+            es: 'Sitios web tradicionales de servicios de limpieza de baja calidad estética que no generan confianza en inversores premium.',
+            en: 'Standard cleaning service web pages with low aesthetic quality failing to build trust with high-net-worth real estate owners.'
+        },
+        orquestacion: {
+            es: 'Landing page en Next.js con cursor interactivo animado personalizado y catálogo integrado de membresías de lujo.',
+            en: 'Next.js landing page with customized luxury animated cursor and integrated premium subscription tiers.'
+        },
+        impacto: {
+            es: 'Posicionamiento exclusivo de la marca en Miami y alta fidelización de clientes con estimados fotográficos inmediatos.',
+            en: 'Premium brand positioning in Miami and client retention with automated high-end photo inspection reports.'
+        },
+        metric: { es: 'Estándar de Élite', en: 'Elite Cleaning Standard' },
+        iframeUrl: 'https://doge-27dp.vercel.app/',
+        imageUrl: '/portfolio/doge-cover.png',
+        stack: ['Next.js', 'Tailwind CSS', 'Custom Cursor'],
+        codec: 'ProRes 4444',
+        timecode: '00:10:05:08',
+        fileSize: '134.8 KB',
+        codeMock: {
+            language: 'typescript',
+            content: `import { useEffect } from 'react';
+
+/**
+ * @hook useLuxuryCursor
+ * @description Animates a high-end customized circle aura that follows mouse coordinates smoothly across the page.
+ */
+export function useLuxuryCursor() {
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const cursor = document.getElementById('aura-cursor');
+      if (cursor) {
+        cursor.style.transform = \`translate(\${e.clientX - 40}px, \${e.clientY - 40}px)\`;
+      }
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+}`
+        }
     }
 ];
+

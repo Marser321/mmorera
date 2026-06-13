@@ -14,7 +14,19 @@ export function AppsBuildSection() {
 
     return (
         <section className="relative bg-black py-20 sm:py-28">
-            <div className="container mx-auto px-4 sm:px-6">
+            {/* Video de Fondo Tecnológico (Espacio de Trabajo del Desarrollador) */}
+            <div className="absolute inset-0 z-0 opacity-[0.04] pointer-events-none mix-blend-screen overflow-hidden">
+                <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-full h-full object-cover"
+                >
+                    <source src="/videos/developer-workspace.mp4" type="video/mp4" />
+                </video>
+            </div>
+            <div className="container mx-auto px-4 sm:px-6 relative z-10">
                 <Reveal as="p" className="mb-3 font-mono text-[11px] font-black uppercase tracking-[0.3em] text-emerald-300/80">
                     {t('sistemas', 'apps_eyebrow')}
                 </Reveal>

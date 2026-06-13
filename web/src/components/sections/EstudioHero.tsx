@@ -15,16 +15,52 @@ export function EstudioHero() {
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_28%_30%,rgba(167,139,250,0.16),transparent_42%),radial-gradient(circle_at_78%_62%,rgba(34,211,238,0.10),transparent_42%)]" />
             <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:88px_88px] opacity-20 [mask-image:radial-gradient(ellipse_70%_60%_at_50%_45%,#000_30%,transparent_100%)]" />
 
-            <div className="container relative z-10 mx-auto flex max-w-5xl flex-col items-center">
-                <motion.span
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, ease: EASE_OUT }}
-                    className="mb-6 inline-flex items-center gap-2 rounded-full border border-violet-400/25 bg-violet-500/10 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.18em] text-violet-200 backdrop-blur-xl"
+            {/* Video de Fondo Creativo (Interfaz de Sitio Web Desintegrándose) */}
+            <div className="absolute inset-0 z-0 opacity-[0.06] pointer-events-none mix-blend-screen overflow-hidden">
+                <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-full h-full object-cover"
                 >
-                    <Clapperboard className="h-3.5 w-3.5" />
-                    {t('estudio', 'eyebrow')}
-                </motion.span>
+                    <source src="/videos/website-disintegrate.mp4" type="video/mp4" />
+                </video>
+            </div>
+
+            <div className="container relative z-10 mx-auto flex max-w-5xl flex-col items-center">
+                {/* HUD Header Panel */}
+                <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, ease: EASE_OUT }}
+                    className="w-full max-w-4xl mb-12 border border-white/10 bg-black/45 backdrop-blur-xl rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(167,139,250,0.05)] relative"
+                >
+                    {/* Grid de Fondo para el HUD */}
+                    <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:40px_100%] pointer-events-none" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-violet-500/5 via-transparent to-cyan-500/5 opacity-50 pointer-events-none" />
+                    
+                    {/* Barra de Telemetría Superior */}
+                    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/5 px-4 py-2.5 font-mono text-[9px] font-bold tracking-[0.16em] text-zinc-500 uppercase">
+                        <div className="flex items-center gap-2 text-violet-400">
+                            <span className="relative flex h-1.5 w-1.5 shrink-0">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-violet-500"></span>
+                            </span>
+                            <span>TRACK_ID: 01_CREATIVE_MEDIA</span>
+                        </div>
+                        <div className="hidden sm:flex items-center gap-4">
+                            <span>SYS.LATENCY: 0.00ms</span>
+                            <span>STATUS: OPERATIONAL // 24FPS</span>
+                            <span className="text-zinc-600">|</span>
+                            <span>LOC: OS_NODE_01</span>
+                        </div>
+                        <div className="flex items-center gap-1.5 text-zinc-400 font-black">
+                            <Clapperboard className="h-3 w-3 text-violet-400" />
+                            <span>{t('estudio', 'eyebrow')}</span>
+                        </div>
+                    </div>
+                </motion.div>
 
                 <RevealHeading
                     text={t('estudio', 'title')}

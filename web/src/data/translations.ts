@@ -274,7 +274,7 @@ export const translations = {
         results: { es: 'Resultados', en: 'Results' },
         active_systems: { es: 'Sistemas Activos', en: 'Active Systems' },
         signature: { es: 'Mario Morera', en: 'Mario Morera' },
-        signature_role: { es: 'Creative Technologist — ARG 🇦🇷', en: 'Creative Technologist — ARG 🇦🇷' }
+        signature_role: { es: 'Creative Technologist', en: 'Creative Technologist' }
     },
     about: {
         eyebrow: { es: 'SOBRE MÍ · TRAYECTORIA', en: 'ABOUT ME · BACKGROUND' },

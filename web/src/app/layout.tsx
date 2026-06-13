@@ -8,7 +8,6 @@ import dynamic from 'next/dynamic';
 import CustomCursor from "@/components/ui/CustomCursor";
 import { AppProviders } from "@/components/providers/AppProviders";
 import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
-import { TrackSwitcher } from "@/components/track/TrackSwitcher";
 import { ScrollProgressBar } from "@/components/scroll/ScrollProgressBar";
 
 const ChatWidgetLoader = dynamic(() => import('@/components/interactive/chat-widget-loader').then(mod => mod.ChatWidgetLoader));
@@ -120,7 +119,6 @@ export default function RootLayout({
                     <GlobalBackground />
                     <CustomCursor />
                     <LanguageSwitcher />
-                    <TrackSwitcher />
                     <Navbar />
                     <div className="relative z-10 flex flex-col min-h-screen">
                         {children}
