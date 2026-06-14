@@ -6,6 +6,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { filterProjectsByTrack } from '@/data/projects';
 import { RevealHeading } from '@/components/type/RevealHeading';
 import { Reveal } from '@/components/scroll/Reveal';
+import { BackgroundVideo } from '@/components/shared/BackgroundVideo';
 
 /** Showcase de apps/MVPs a medida (proyectos del track software). El "construyo producto, no sólo configuro CRM". */
 export function AppsBuildSection() {
@@ -14,18 +15,14 @@ export function AppsBuildSection() {
 
     return (
         <section className="relative bg-black py-20 sm:py-28">
-            {/* Video de Fondo Tecnológico (Espacio de Trabajo del Desarrollador) */}
-            <div className="absolute inset-0 z-0 opacity-[0.04] pointer-events-none mix-blend-screen overflow-hidden">
-                <video
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="w-full h-full object-cover"
-                >
-                    <source src="/videos/developer-workspace.mp4" type="video/mp4" />
-                </video>
-            </div>
+            {/* Video de fondo tecnológico (espacio de trabajo del desarrollador) */}
+            <BackgroundVideo
+                src="/videos/developer-workspace.mp4"
+                poster="/videos/posters/developer-workspace.jpg"
+                intensity="cinematic"
+                scrim="center"
+                tint="cyan"
+            />
             <div className="container mx-auto px-4 sm:px-6 relative z-10">
                 <Reveal as="p" className="mb-3 font-mono text-[11px] font-black uppercase tracking-[0.3em] text-emerald-300/80">
                     {t('sistemas', 'apps_eyebrow')}

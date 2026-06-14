@@ -4,6 +4,8 @@ import { motion, useMotionValue, useTransform, animate, useInView } from "framer
 import { TrendingUp, Clock, PiggyBank, Target } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRef, useEffect } from "react";
+import { BackgroundVideo } from "@/components/shared/BackgroundVideo";
+import { useHighlightFamilies } from "@/context/ActiveTechContext";
 
 /* ═══════════════════════════════════════════════════
  * CONFIGURACIÓN DE MÉTRICAS
@@ -146,8 +148,17 @@ function ProgressRing({ progress, color, isInView }: { progress: number; color: 
  * ═══════════════════════════════════════════════════ */
 
 export function MetricsShowcase() {
+    const fieldRef = useHighlightFamilies<HTMLElement>(['AI', 'Automation', 'CRM']);
     return (
-        <section className="py-20 relative bg-transparent overflow-hidden border-b border-white/5">
+        <section ref={fieldRef} className="py-20 relative bg-transparent overflow-hidden border-b border-white/5">
+            {/* Video de fondo: procesamiento de datos */}
+            <BackgroundVideo
+                src="/videos/data-processing.mp4"
+                poster="/videos/posters/data-processing.jpg"
+                intensity="medium"
+                scrim="center"
+                tint="cyan"
+            />
             {/* Background Mesh/Glow */}
             <div className="absolute inset-0 local-noise opacity-[0.03] mix-blend-overlay pointer-events-none" />
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-[200px] bg-primary/5 blur-[100px] rounded-[100%] pointer-events-none" />

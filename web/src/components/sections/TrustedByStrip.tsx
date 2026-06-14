@@ -1,88 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
-import type { IconType } from "react-icons";
-import {
-    SiAnthropic,
-    SiAstro,
-    SiFramer,
-    SiGoogleads,
-    SiGoogleanalytics,
-    SiGooglegemini,
-    SiHtml5,
-    SiHubspot,
-    SiJavascript,
-    SiMake,
-    SiMeta,
-    SiN8N,
-    SiNextdotjs,
-    SiNodedotjs,
-    SiOpenai,
-    SiPostgresql,
-    SiReact,
-    SiSalesforce,
-    SiShopify,
-    SiStripe,
-    SiSupabase,
-    SiTypescript,
-    SiVercel,
-    SiVite,
-    SiWebflow,
-    SiWhatsapp,
-    SiWoocommerce,
-    SiWordpress,
-    SiX,
-    SiZapier,
-    SiZoho,
-} from "react-icons/si";
+import { techByFamilies, type Tech } from "@/data/techStack";
 
-interface TechLogo {
-    name: string;
-    category: "AI" | "Automation" | "Backend" | "Web" | "Commerce" | "Marketing" | "CRM";
-    Icon?: IconType;
-    fallback?: string;
-}
+const upperRowLogos = techByFamilies(["AI", "Automation", "Backend"]);
+const lowerRowLogos = techByFamilies(["Web", "Commerce", "Marketing", "CRM"]);
 
-const upperRowLogos: TechLogo[] = [
-    { name: "OpenAI", category: "AI", Icon: SiOpenai },
-    { name: "Anthropic", category: "AI", Icon: SiAnthropic },
-    { name: "Google Gemini", category: "AI", Icon: SiGooglegemini },
-    { name: "Grok / xAI", category: "AI", Icon: SiX },
-    { name: "Meta", category: "AI", Icon: SiMeta },
-    { name: "n8n", category: "Automation", Icon: SiN8N },
-    { name: "Make", category: "Automation", Icon: SiMake },
-    { name: "Zapier", category: "Automation", Icon: SiZapier },
-    { name: "WhatsApp API", category: "Automation", Icon: SiWhatsapp },
-    { name: "Supabase", category: "Backend", Icon: SiSupabase },
-    { name: "PostgreSQL", category: "Backend", Icon: SiPostgresql },
-    { name: "Node.js", category: "Backend", Icon: SiNodedotjs },
-];
-
-const lowerRowLogos: TechLogo[] = [
-    { name: "Next.js", category: "Web", Icon: SiNextdotjs },
-    { name: "React", category: "Web", Icon: SiReact },
-    { name: "TypeScript", category: "Web", Icon: SiTypescript },
-    { name: "JavaScript", category: "Web", Icon: SiJavascript },
-    { name: "HTML5", category: "Web", Icon: SiHtml5 },
-    { name: "Vite", category: "Web", Icon: SiVite },
-    { name: "Astro", category: "Web", Icon: SiAstro },
-    { name: "WordPress", category: "Web", Icon: SiWordpress },
-    { name: "Webflow", category: "Web", Icon: SiWebflow },
-    { name: "Framer", category: "Web", Icon: SiFramer },
-    { name: "Vercel", category: "Web", Icon: SiVercel },
-    { name: "Shopify", category: "Commerce", Icon: SiShopify },
-    { name: "WooCommerce", category: "Commerce", Icon: SiWoocommerce },
-    { name: "Stripe", category: "Commerce", Icon: SiStripe },
-    { name: "Google Ads", category: "Marketing", Icon: SiGoogleads },
-    { name: "Google Analytics", category: "Marketing", Icon: SiGoogleanalytics },
-    { name: "HubSpot", category: "CRM", Icon: SiHubspot },
-    { name: "Salesforce", category: "CRM", Icon: SiSalesforce },
-    { name: "Zoho CRM", category: "CRM", Icon: SiZoho },
-    { name: "GoHighLevel", category: "CRM", fallback: "GHL" },
-    { name: "Pipedrive", category: "CRM", fallback: "PD" },
-];
-
-function LogoMark({ logo }: { logo: TechLogo }) {
+function LogoMark({ logo }: { logo: Tech }) {
     if (logo.Icon) {
         const Icon = logo.Icon;
         return <Icon className="h-6 w-6 sm:h-7 sm:w-7" aria-hidden="true" />;
@@ -95,7 +19,7 @@ function LogoMark({ logo }: { logo: TechLogo }) {
     );
 }
 
-function TechPill({ logo, index }: { logo: TechLogo; index: number }) {
+function TechPill({ logo, index }: { logo: Tech; index: number }) {
     return (
         <div
             className="group flex shrink-0 cursor-default items-center gap-3 rounded-full border border-white/5 bg-white/[0.02] px-4 py-2 transition-all duration-500 hover:border-white/15 hover:bg-white/[0.06]"
@@ -121,7 +45,7 @@ function MarqueeRow({
     duration,
     reverse = false,
 }: {
-    logos: TechLogo[];
+    logos: Tech[];
     duration: number;
     reverse?: boolean;
 }) {

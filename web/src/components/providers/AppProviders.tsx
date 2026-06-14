@@ -5,6 +5,7 @@ import { LanguageProvider } from '@/context/LanguageContext';
 import { TrackProvider } from '@/context/TrackContext';
 import { DevModeProvider } from '@/components/portfolio-isolated/DevModeContext';
 import { SmoothScrollProvider } from './SmoothScrollProvider';
+import { ActiveTechProvider } from '@/context/ActiveTechContext';
 
 /**
  * Punto único de composición de providers de la app.
@@ -20,11 +21,13 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
         // contenido. Cierra el gap detectado en la auditoría de accesibilidad.
         <MotionConfig reducedMotion="user">
             <LanguageProvider>
-                <TrackProvider>
-                    <DevModeProvider>
-                        <SmoothScrollProvider>{children}</SmoothScrollProvider>
-                    </DevModeProvider>
-                </TrackProvider>
+                <ActiveTechProvider>
+                    <TrackProvider>
+                        <DevModeProvider>
+                            <SmoothScrollProvider>{children}</SmoothScrollProvider>
+                        </DevModeProvider>
+                    </TrackProvider>
+                </ActiveTechProvider>
             </LanguageProvider>
         </MotionConfig>
     );

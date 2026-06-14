@@ -13,6 +13,7 @@ import {
 import { useDevMode } from './DevModeContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { SYSTEMS_NODES, SystemNodeData } from './systemsData';
+import { BackgroundVideo } from '@/components/shared/BackgroundVideo';
 
 // Componente para mapear el icono por string
 function NodeIcon({ name, className }: { name: string; className?: string }) {
@@ -84,18 +85,14 @@ export function SistemasBlueprint() {
                     {/* Rejilla de Fondo Técnica */}
                     <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:32px_32px] opacity-40 pointer-events-none" />
 
-                    {/* Video de Fondo Técnico (Líneas de Circuito) */}
-                    <div className="absolute inset-0 z-0 opacity-[0.06] pointer-events-none mix-blend-screen overflow-hidden">
-                        <video
-                            autoPlay
-                            loop
-                            muted
-                            playsInline
-                            className="w-full h-full object-cover"
-                        >
-                            <source src="/videos/circuit-lines.mp4" type="video/mp4" />
-                        </video>
-                    </div>
+                    {/* Video de fondo técnico (líneas de circuito) */}
+                    <BackgroundVideo
+                        src="/videos/circuit-lines.mp4"
+                        poster="/videos/posters/circuit-lines.jpg"
+                        intensity="medium"
+                        scrim="radial"
+                        tint="cyan"
+                    />
 
                     {/* LIENZO SVG PARA CABLES DE FIBRA OPTICA (Conexión 1 -> 2 -> 3 -> 4 -> 5 -> 6) */}
                     <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" viewBox="0 0 1000 480" preserveAspectRatio="none">

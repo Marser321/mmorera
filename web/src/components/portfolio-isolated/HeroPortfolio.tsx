@@ -6,6 +6,7 @@ import { Sparkles, ArrowRight, Eye, Film, Code2, Rocket } from 'lucide-react';
 import { useDevMode } from './DevModeContext';
 import { useLanguage } from '@/context/LanguageContext';
 import dynamic from 'next/dynamic';
+import { BackgroundVideo } from '@/components/shared/BackgroundVideo';
 
 // Núcleo 3D del hero — cargado sin SSR para mantener three fuera del bundle inicial.
 const OrchestrationCore = dynamic(
@@ -167,18 +168,14 @@ export function HeroPortfolio() {
             <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-violet-600/[0.03] blur-[150px] rounded-full pointer-events-none" />
             <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-cyan-600/[0.03] blur-[150px] rounded-full pointer-events-none" />
 
-            {/* Video de Fondo Abstracto (Máquina de Crecimiento) */}
-            <div className="absolute inset-0 z-0 opacity-[0.06] pointer-events-none mix-blend-screen overflow-hidden">
-                <video
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="w-full h-full object-cover"
-                >
-                    <source src="/videos/growth-machine.mp4" type="video/mp4" />
-                </video>
-            </div>
+            {/* Video de fondo abstracto (máquina de crecimiento) */}
+            <BackgroundVideo
+                src="/videos/growth-machine.mp4"
+                poster="/videos/posters/growth-machine.jpg"
+                intensity="cinematic"
+                scrim="center"
+                tint="violet"
+            />
 
             {/* Núcleo de orquestación 3D (pieza firma) */}
             {show3D && (

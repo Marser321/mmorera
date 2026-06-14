@@ -6,27 +6,26 @@ import { ArrowRight, Clapperboard } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { RevealHeading } from '@/components/type/RevealHeading';
 import { EASE_OUT } from '@/lib/motion';
+import { BackgroundVideo } from '@/components/shared/BackgroundVideo';
+import { useHighlightFamilies } from '@/context/ActiveTechContext';
 
 export function EstudioHero() {
     const { t } = useLanguage();
+    const fieldRef = useHighlightFamilies<HTMLElement>(['Web', 'Marketing']);
 
     return (
-        <section className="relative flex min-h-[92svh] flex-col items-center justify-center overflow-hidden bg-black px-4 pt-24 text-center sm:px-6">
+        <section ref={fieldRef} className="relative flex min-h-[92svh] flex-col items-center justify-center overflow-hidden bg-black px-4 pt-24 text-center sm:px-6">
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_28%_30%,rgba(167,139,250,0.16),transparent_42%),radial-gradient(circle_at_78%_62%,rgba(34,211,238,0.10),transparent_42%)]" />
             <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:88px_88px] opacity-20 [mask-image:radial-gradient(ellipse_70%_60%_at_50%_45%,#000_30%,transparent_100%)]" />
 
-            {/* Video de Fondo Creativo (Interfaz de Sitio Web Desintegrándose) */}
-            <div className="absolute inset-0 z-0 opacity-[0.06] pointer-events-none mix-blend-screen overflow-hidden">
-                <video
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="w-full h-full object-cover"
-                >
-                    <source src="/videos/website-disintegrate.mp4" type="video/mp4" />
-                </video>
-            </div>
+            {/* Video de fondo creativo (interfaz de sitio web desintegrándose) */}
+            <BackgroundVideo
+                src="/videos/website-disintegrate.mp4"
+                poster="/videos/posters/website-disintegrate.jpg"
+                intensity="cinematic"
+                scrim="center"
+                tint="violet"
+            />
 
             <div className="container relative z-10 mx-auto flex max-w-5xl flex-col items-center">
                 {/* HUD Header Panel */}

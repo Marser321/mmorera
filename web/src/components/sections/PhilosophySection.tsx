@@ -3,9 +3,12 @@
 import { ArrowRight, BrainCircuit, ClipboardList, Megaphone, TrendingUp } from 'lucide-react';
 import { Container } from "@/components/ui/container";
 import { useLanguage } from '@/context/LanguageContext';
+import { BackgroundVideo } from '@/components/shared/BackgroundVideo';
+import { useHighlightFamilies } from '@/context/ActiveTechContext';
 
 export function PhilosophySection() {
     const { t } = useLanguage();
+    const fieldRef = useHighlightFamilies<HTMLElement>(['Automation', 'AI', 'CRM']);
 
     const thinkingLayers = [
         {
@@ -34,12 +37,21 @@ export function PhilosophySection() {
     return (
         <section
             id="filosofia"
+            ref={fieldRef}
             className="py-20 md:py-24 relative bg-transparent"
             aria-labelledby="filosofia-heading"
         >
             <Container className="relative z-10">
                 <div className="max-w-5xl mx-auto bg-white/[0.02] border border-white/10 rounded-3xl p-6 md:p-10 lg:p-12 relative overflow-hidden backdrop-blur-md">
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(0,255,179,0.14),transparent_34%),linear-gradient(135deg,rgba(255,255,255,0.04),transparent_48%)] pointer-events-none" />
+                    {/* Video de fondo: infografía corporativa (orquestación del sistema) */}
+                    <BackgroundVideo
+                        src="/videos/corporate-infographic.mp4"
+                        poster="/videos/posters/corporate-infographic.jpg"
+                        intensity="medium"
+                        scrim="left"
+                        tint="signal"
+                    />
 
                     <div className="relative z-10 grid gap-10 lg:grid-cols-[0.95fr_1.05fr] items-start text-left">
                         <div className="space-y-6">

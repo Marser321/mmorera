@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { GenerativeField } from './GenerativeField';
+import { TechParticleField } from './TechParticleField';
 
 /**
  * Fondo global de "La Consola": grid de circuito técnico + glows ambientales de
@@ -38,8 +38,8 @@ export function GlobalBackground() {
             <div className="absolute top-1/4 left-1/4 w-[40vw] h-[40vw] max-w-[600px] max-h-[600px] bg-primary/5 blur-[120px] rounded-full mix-blend-screen" />
             <div className="absolute bottom-1/4 right-1/4 w-[40vw] h-[40vw] max-w-[600px] max-h-[600px] bg-accent/5 blur-[120px] rounded-full mix-blend-screen" />
 
-            {/* Campo generativo reactivo al mouse */}
-            <GenerativeField />
+            {/* Campo de partículas = stack tecnológico (WebGL, fallback 2D) */}
+            <TechParticleField />
         </div>
     );
 }

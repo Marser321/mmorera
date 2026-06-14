@@ -2,6 +2,7 @@ import dynamic from 'next/dynamic';
 import { Metadata } from 'next';
 import { RevealHeading } from '@/components/type/RevealHeading';
 import { SystemsHUDHeader } from '@/components/sections/SystemsHUDHeader';
+import { BackgroundVideo } from '@/components/shared/BackgroundVideo';
 
 const GHLCRMOrbit = dynamic(() => import('@/components/animations/GHLCRMOrbit').then(mod => mod.GHLCRMOrbit));
 const SistemasBlueprint = dynamic(() => import('@/components/portfolio-isolated/SistemasBlueprint').then(mod => mod.SistemasBlueprint));
@@ -19,29 +20,39 @@ export default function SystemsPage() {
     return (
         <main id="contenido-principal" className="pt-24 min-h-screen">
             {/* Hero de Sistemas */}
-            <section className="container mx-auto px-4 py-12 md:py-16 flex flex-col items-center text-center">
-                <SystemsHUDHeader />
-                <RevealHeading
-                    text="CRM operativo para conectar captación, seguimiento y ventas"
-                    as="h1"
-                    trigger="mount"
-                    className="max-w-5xl font-heading text-4xl md:text-7xl font-bold tracking-tight text-white"
+            <section className="relative overflow-hidden py-12 md:py-16">
+                {/* Video de fondo: infografía CRM */}
+                <BackgroundVideo
+                    src="/videos/crm-infographic.mp4"
+                    poster="/videos/posters/crm-infographic.jpg"
+                    intensity="cinematic"
+                    scrim="center"
+                    tint="cyan"
                 />
-                <p className="mt-6 max-w-3xl text-base md:text-xl text-white/58 leading-relaxed">
-                    Uso GHL como base para ordenar leads, conversaciones, agenda, pipeline, automatizaciones y reporting. La IA acelera el sistema, pero el centro es un CRM que tu equipo pueda entender y usar todos los días.
-                </p>
-                <div className="mt-7 flex flex-wrap justify-center gap-3">
-                    {["Lead management", "WhatsApp + email", "Calendario", "Pipeline", "Dashboards"].map((item) => (
-                        <span
-                            key={item}
-                            className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-white/65"
-                        >
-                            {item}
-                        </span>
-                    ))}
-                </div>
-                <div className="mt-12 w-full">
-                    <GHLCRMOrbit />
+                <div className="container relative z-10 mx-auto flex flex-col items-center px-4 text-center">
+                    <SystemsHUDHeader />
+                    <RevealHeading
+                        text="CRM operativo para conectar captación, seguimiento y ventas"
+                        as="h1"
+                        trigger="mount"
+                        className="max-w-5xl font-heading text-4xl md:text-7xl font-bold tracking-tight text-white"
+                    />
+                    <p className="mt-6 max-w-3xl text-base md:text-xl text-white/58 leading-relaxed">
+                        Uso GHL como base para ordenar leads, conversaciones, agenda, pipeline, automatizaciones y reporting. La IA acelera el sistema, pero el centro es un CRM que tu equipo pueda entender y usar todos los días.
+                    </p>
+                    <div className="mt-7 flex flex-wrap justify-center gap-3">
+                        {["Lead management", "WhatsApp + email", "Calendario", "Pipeline", "Dashboards"].map((item) => (
+                            <span
+                                key={item}
+                                className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-white/65"
+                            >
+                                {item}
+                            </span>
+                        ))}
+                    </div>
+                    <div className="mt-12 w-full">
+                        <GHLCRMOrbit />
+                    </div>
                 </div>
             </section>
 
