@@ -247,8 +247,8 @@ export const translations = {
         title2: { es: '× Técnico', en: '× Technical' },
         title3: { es: '', en: 'Orchestrator' },
         subtitle: {
-            es: 'Orquesto tecnologías, contenido y operaciones en sistemas que tu negocio realmente puede usar.',
-            en: 'I orchestrate technologies, content and operations into systems your business can actually use.'
+            es: 'Orquesto tecnología, contenido y operaciones en un solo sistema que tu negocio puede usar de verdad.',
+            en: 'I orchestrate technology, content and operations into one system your business can actually use.'
         },
         tagline: {
             es: 'Tecnologías, contenido y operaciones funcionando como un único sistema',

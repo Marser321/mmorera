@@ -3,6 +3,8 @@
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
+import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader.js';
+import { LOGO_MM_PATHS, LOGO_MM_VIEWBOX } from '@/lib/logoMMPaths';
 
 /**
  * OrchestrationCore — Versión Minimal Premium.
@@ -26,19 +28,21 @@ const ACCENT = '#2ec8d8';
 function InteractivePoints({ pointer }: { pointer: React.RefObject<{ x: number; y: number }> }) {
     const ref = useRef<THREE.Points>(null);
 
-    // Geometría base: icosaedro de alta subdivisión → distribución uniforme de puntos
-    const baseGeo = useMemo(() => new THREE.IcosahedronGeometry(2.1, 4), []);
+    // Geometría base: icosaedro de alta subdivisión → distribución uniforme de puntos.
+    // Esfera achicada: actúa como "campo de contención" alrededor del logo central.
+    const baseGeo = useMemo(() => new THREE.IcosahedronGeometry(1.7, 4), []);
 
     // Copiar posiciones base y crear atributos para tamaño y color dinámicos
-    const { geometry, basePositions, count } = useMemo(() => {
+    const { geometry, count } = useMemo(() => {
         const positions = baseGeo.attributes.position.array as Float32Array;
         const cnt = positions.length / 3;
 
         const geo = new THREE.BufferGeometry();
         geo.setAttribute('position', new THREE.Float32BufferAttribute(new Float32Array(positions), 3));
 
-        // Tamaños dinámicos (se modifican en useFrame)
-        const sizes = new Float32Array(cnt).fill(1.0);
+        // Tamaños dinámicos (se modifican en useFrame). Base más chica: la esfera
+        // es campo de apoyo, no protagonista → puntos finos.
+        const sizes = new Float32Array(cnt).fill(0.6);
         geo.setAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
 
         // Colores dinámicos (base: mezcla verde-cyan, se iluminan cerca del cursor)
@@ -47,7 +51,8 @@ function InteractivePoints({ pointer }: { pointer: React.RefObject<{ x: number; 
         const accentColor = new THREE.Color(ACCENT);
         for (let i = 0; i < cnt; i++) {
             // Mezcla sutil: ~70% signal, ~30% accent, con variación
-            const mix = Math.random() * 0.35;
+            const raw = Math.sin((i + 1) * 12.9898) * 43758.5453;
+            const mix = (raw - Math.floor(raw)) * 0.35;
             const c = baseColor.clone().lerp(accentColor, mix);
             colors[i * 3] = c.r;
             colors[i * 3 + 1] = c.g;
@@ -55,14 +60,14 @@ function InteractivePoints({ pointer }: { pointer: React.RefObject<{ x: number; 
         }
         geo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
 
-        return { geometry: geo, basePositions: new Float32Array(positions), count: cnt };
+        return { geometry: geo, count: cnt };
     }, [baseGeo]);
 
     // Shader material personalizado para tamaños variables por punto
     const material = useMemo(() => {
         return new THREE.ShaderMaterial({
             uniforms: {
-                uOpacity: { value: 0.55 },
+                uOpacity: { value: 0.30 },
             },
             vertexShader: `
                 attribute float size;
@@ -73,7 +78,7 @@ function InteractivePoints({ pointer }: { pointer: React.RefObject<{ x: number; 
                     vColor = color;
                     vAlpha = smoothstep(0.8, 2.5, size);
                     vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-                    gl_PointSize = size * (80.0 / -mvPosition.z);
+                    gl_PointSize = size * (46.0 / -mvPosition.z);
                     gl_Position = projectionMatrix * mvPosition;
                 }
             `,
@@ -147,8 +152,8 @@ function InteractivePoints({ pointer }: { pointer: React.RefObject<{ x: number; 
             const influence = Math.max(0, 1 - dist / 2.2); // Radio de influencia más focalizado
             const influenceSq = influence * influence; // Curva cuadrática = suave
 
-            // Tamaño: base 1.0, expansión sutil cerca del cursor
-            const targetSize = 1.0 + influenceSq * 1.2;
+            // Tamaño: base 0.6 (campo tenue), expansión contenida cerca del cursor
+            const targetSize = 0.6 + influenceSq * 0.7;
             sizes[i] += (targetSize - sizes[i]) * 0.05;
 
             // Color: se acerca al blanco cerca del cursor
@@ -174,7 +179,7 @@ function InteractivePoints({ pointer }: { pointer: React.RefObject<{ x: number; 
 function SubtleWireframe() {
     const ref = useRef<THREE.LineSegments>(null);
     const geo = useMemo(
-        () => new THREE.WireframeGeometry(new THREE.IcosahedronGeometry(2.3, 1)),
+        () => new THREE.WireframeGeometry(new THREE.IcosahedronGeometry(1.9, 1)),
         [],
     );
 
@@ -189,7 +194,7 @@ function SubtleWireframe() {
             <lineBasicMaterial
                 color={ACCENT}
                 transparent
-                opacity={0.07}
+                opacity={0.045}
                 blending={THREE.AdditiveBlending}
                 depthWrite={false}
             />
@@ -198,33 +203,103 @@ function SubtleWireframe() {
 }
 
 // ─────────────────────────────────────────────
-// CENTRO BRILLANTE (punto focal mínimo)
+// LOGO MM 3D — extruido, llega en 3 partes y se ensambla
 // ─────────────────────────────────────────────
-function CenterGlow() {
-    const ref = useRef<THREE.Points>(null);
-    const geo = useMemo(() => new THREE.IcosahedronGeometry(0.5, 2), []);
+const LOGO_TARGET_SIZE = 1.9; // ancho del logo en unidades de mundo
+const ASSEMBLY_DUR = 1.15;    // segundos por parte
+const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
 
-    useFrame((state, delta) => {
-        if (!ref.current) return;
-        const t = state.clock.elapsedTime;
-        ref.current.rotation.y += delta * 0.2;
-        ref.current.rotation.z -= delta * 0.1;
-        const pulse = 1 + Math.sin(t * 2.2) * 0.08;
-        ref.current.scale.setScalar(pulse);
+// Llegada de cada parte (espacio local pre-escala). dir × tamaño = offset inicial.
+const ASSEMBLY = [
+    { delay: 0.0, dir: new THREE.Vector3(1.1, 0.1, 1.4), rot: new THREE.Euler(0, 0.9, 0.2) },
+    { delay: 0.25, dir: new THREE.Vector3(1.0, -1.1, 0.6), rot: new THREE.Euler(-0.4, 0.5, 0.3) },
+    { delay: 0.5, dir: new THREE.Vector3(-1.1, 1.0, 0.6), rot: new THREE.Euler(0.4, -0.5, -0.3) },
+];
+
+function AssemblingLogo() {
+    const groupRef = useRef<THREE.Group>(null);
+    const partsRef = useRef<(THREE.Mesh | null)[]>([]);
+    const startRef = useRef<number | null>(null);
+
+    // Extrusión de los 3 subpaths + centrado/escala compartidos (una sola vez).
+    const { geometries, materials, fitScale, offsets } = useMemo(() => {
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${LOGO_MM_VIEWBOX.width} ${LOGO_MM_VIEWBOX.height}">${LOGO_MM_PATHS.map((d) => `<path d="${d}"/>`).join('')}</svg>`;
+        const parsed = new SVGLoader().parse(svg);
+        const geos = parsed.paths.map((path) => {
+            const shapes = SVGLoader.createShapes(path);
+            return new THREE.ExtrudeGeometry(shapes, {
+                depth: 150,
+                bevelEnabled: true,
+                bevelThickness: 18,
+                bevelSize: 10,
+                bevelSegments: 2,
+                steps: 1,
+            });
+        });
+
+        // bbox unión → centrar y escalar todas las partes con el MISMO transform.
+        const box = new THREE.Box3();
+        geos.forEach((g) => { g.computeBoundingBox(); if (g.boundingBox) box.union(g.boundingBox); });
+        const center = new THREE.Vector3();
+        const size = new THREE.Vector3();
+        box.getCenter(center);
+        box.getSize(size);
+        geos.forEach((g) => g.translate(-center.x, -center.y, -center.z));
+
+        const maxDim = Math.max(size.x, size.y);
+        const fit = LOGO_TARGET_SIZE / maxDim;
+        const offs = ASSEMBLY.map((a) => a.dir.clone().multiplyScalar(maxDim));
+        // Poco metalness (sin env map el metal se ve negro) + emisión sutil → mark claro.
+        const mats = geos.map(() => new THREE.MeshStandardMaterial({
+            color: '#f3f7f8',
+            metalness: 0.18,
+            roughness: 0.38,
+            emissive: new THREE.Color(ACCENT),
+            emissiveIntensity: 0.4,
+            transparent: true,
+            opacity: 0,
+        }));
+
+        return { geometries: geos, materials: mats, fitScale: fit, offsets: offs };
+    }, []);
+
+    useFrame((state) => {
+        if (startRef.current === null) startRef.current = state.clock.elapsedTime;
+        const elapsed = state.clock.elapsedTime - startRef.current;
+
+        let lastProgress = 0;
+        ASSEMBLY.forEach((a, i) => {
+            const mesh = partsRef.current[i];
+            if (!mesh) return;
+            const p = Math.min(1, Math.max(0, (elapsed - a.delay) / ASSEMBLY_DUR));
+            const e = easeOutCubic(p);
+            if (i === ASSEMBLY.length - 1) lastProgress = e;
+            const inv = 1 - e;
+            mesh.position.set(offsets[i].x * inv, offsets[i].y * inv, offsets[i].z * inv);
+            mesh.rotation.set(a.rot.x * inv, a.rot.y * inv, a.rot.z * inv);
+            mesh.scale.setScalar(0.2 + 0.8 * e);
+            materials[i].opacity = e;
+        });
+
+        // Idle suave una vez ensamblado (escalado por el progreso de la última parte).
+        if (groupRef.current) {
+            const t = state.clock.elapsedTime;
+            groupRef.current.rotation.y = Math.sin(t * 0.35) * 0.22 * lastProgress;
+            groupRef.current.rotation.x = Math.sin(t * 0.27 + 1.0) * 0.08 * lastProgress;
+        }
     });
 
     return (
-        <points ref={ref} geometry={geo}>
-            <pointsMaterial
-                color="#ffffff"
-                size={0.015}
-                sizeAttenuation
-                transparent
-                opacity={0.9}
-                blending={THREE.AdditiveBlending}
-                depthWrite={false}
-            />
-        </points>
+        <group ref={groupRef} scale={[fitScale, -fitScale, fitScale]}>
+            {geometries.map((geo, i) => (
+                <mesh
+                    key={i}
+                    ref={(m) => { partsRef.current[i] = m; }}
+                    geometry={geo}
+                    material={materials[i]}
+                />
+            ))}
+        </group>
     );
 }
 
@@ -252,9 +327,13 @@ function Scene({ pointer }: { pointer: React.RefObject<{ x: number; y: number }>
 
     return (
         <group ref={outer}>
+            {/* Luces para el logo extruido (los puntos usan su propio shader y las ignoran) */}
+            <ambientLight intensity={0.55} />
+            <directionalLight position={[3, 4, 5]} intensity={1.3} color="#ffffff" />
+            <pointLight position={[-3, -2, 2]} intensity={0.8} color={ACCENT} />
             <InteractivePoints pointer={pointer} />
             <SubtleWireframe />
-            <CenterGlow />
+            <AssemblingLogo />
         </group>
     );
 }

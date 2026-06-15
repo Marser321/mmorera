@@ -19,6 +19,28 @@ interface SampleOptions {
     resolution?: number;
     threshold?: number;
     max?: number;
+    /** Recentra al bounding box del dibujo y escala para que llene el cuadro. */
+    fit?: boolean;
+}
+
+// Recentra los puntos a su bounding box y los escala (uniforme, preservando
+// aspecto) para que la dimensión mayor llene ~96% de [-0.5, 0.5]. Así todo logo
+// queda centrado y del mismo tamaño, sin importar el padding interno del SVG.
+function fitToBoundingBox(pts: IconPoint[]): IconPoint[] {
+    if (pts.length < 2) return pts;
+    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+    for (const p of pts) {
+        if (p.x < minX) minX = p.x;
+        if (p.x > maxX) maxX = p.x;
+        if (p.y < minY) minY = p.y;
+        if (p.y > maxY) maxY = p.y;
+    }
+    const cx = (minX + maxX) / 2;
+    const cy = (minY + maxY) / 2;
+    const span = Math.max(maxX - minX, maxY - minY);
+    if (span <= 0) return pts;
+    const scale = 0.96 / span;
+    return pts.map((p) => ({ x: (p.x - cx) * scale, y: (p.y - cy) * scale }));
 }
 
 // Lee los píxeles opacos de un canvas y los devuelve como puntos normalizados.
@@ -27,6 +49,7 @@ function pixelsToPoints(
     resolution: number,
     threshold: number,
     max: number,
+    fit: boolean,
 ): IconPoint[] {
     let data: Uint8ClampedArray;
     try {
@@ -35,7 +58,7 @@ function pixelsToPoints(
         return [];
     }
 
-    const pts: IconPoint[] = [];
+    let pts: IconPoint[] = [];
     for (let y = 0; y < resolution; y++) {
         for (let x = 0; x < resolution; x++) {
             if (data[(y * resolution + x) * 4 + 3] > threshold) {
@@ -43,6 +66,9 @@ function pixelsToPoints(
             }
         }
     }
+
+    // Recentrado/escala al bounding box ANTES de submuestrear (usa todos los puntos).
+    if (fit) pts = fitToBoundingBox(pts);
 
     // Submuestreo uniforme si hay más puntos que el máximo.
     if (pts.length > max) {
@@ -56,7 +82,7 @@ function pixelsToPoints(
 
 export async function sampleIcon(
     Icon: IconType,
-    { resolution = 110, threshold = 80, max = 1800 }: SampleOptions = {},
+    { resolution = 110, threshold = 80, max = 1800, fit = false }: SampleOptions = {},
 ): Promise<IconPoint[]> {
     // react-icons renderiza un <svg> con xmlns y fill=currentColor → forzamos blanco.
     const svg = renderToStaticMarkup(
@@ -83,13 +109,13 @@ export async function sampleIcon(
     const ctx = canvas.getContext('2d', { willReadFrequently: true });
     if (!ctx) return [];
     ctx.drawImage(img, 0, 0, resolution, resolution);
-    return pixelsToPoints(ctx, resolution, threshold, max);
+    return pixelsToPoints(ctx, resolution, threshold, max, fit);
 }
 
 /** Igual que sampleIcon pero a partir de un texto (marca sin ícono, ej. "GHL"). */
 export function sampleText(
     text: string,
-    { resolution = 110, threshold = 80, max = 1800 }: SampleOptions = {},
+    { resolution = 110, threshold = 80, max = 1800, fit = false }: SampleOptions = {},
 ): IconPoint[] {
     const canvas = document.createElement('canvas');
     canvas.width = resolution;
@@ -98,7 +124,7 @@ export function sampleText(
     if (!ctx) return [];
 
     // Tamaño de fuente que encaje el texto a lo ancho del canvas.
-    let fontSize = Math.floor(resolution * 0.55);
+    let fontSize = Math.floor(resolution * 0.62);
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -110,5 +136,5 @@ export function sampleText(
         ctx.font = `800 ${fontSize}px sans-serif`;
     }
     ctx.fillText(text, resolution / 2, resolution / 2);
-    return pixelsToPoints(ctx, resolution, threshold, max);
+    return pixelsToPoints(ctx, resolution, threshold, max, fit);
 }

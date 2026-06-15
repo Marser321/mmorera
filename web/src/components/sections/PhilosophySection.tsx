@@ -42,14 +42,14 @@ export function PhilosophySection() {
             aria-labelledby="filosofia-heading"
         >
             <Container className="relative z-10">
-                <div className="max-w-5xl mx-auto bg-white/[0.02] border border-white/10 rounded-3xl p-6 md:p-10 lg:p-12 relative overflow-hidden backdrop-blur-md">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(0,255,179,0.14),transparent_34%),linear-gradient(135deg,rgba(255,255,255,0.04),transparent_48%)] pointer-events-none" />
+                <div className="max-w-5xl mx-auto bg-white/[0.012] border border-white/10 rounded-3xl p-6 md:p-10 lg:p-12 relative overflow-hidden backdrop-blur-sm">
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(0,255,179,0.1),transparent_34%),linear-gradient(135deg,rgba(255,255,255,0.025),transparent_48%)] pointer-events-none" />
                     {/* Video de fondo: infografía corporativa (orquestación del sistema) */}
                     <BackgroundVideo
                         src="/videos/corporate-infographic.mp4"
                         poster="/videos/posters/corporate-infographic.jpg"
-                        intensity="medium"
-                        scrim="left"
+                        intensity="cinematic"
+                        scrim="radial"
                         tint="signal"
                     />
 
@@ -94,7 +94,7 @@ export function PhilosophySection() {
                         </div>
 
                         <div className="space-y-4 lg:pl-8 lg:border-l border-white/10">
-                            <div className="rounded-2xl border border-primary/20 bg-primary/[0.06] p-5">
+                            <div className="rounded-2xl border border-primary/25 bg-primary/[0.045] p-5 backdrop-blur-[2px]">
                                 <BrainCircuit className="mb-4 h-6 w-6 text-primary" />
                                 <h3 className="text-xl md:text-2xl font-heading text-white tracking-tight">
                                     {t('philosophy', 'lateral_title')}
@@ -108,7 +108,7 @@ export function PhilosophySection() {
                                 {thinkingLayers.map(({ title, description, icon: Icon }) => (
                                     <article
                                         key={title}
-                                        className="group rounded-2xl border border-white/10 bg-black/[0.22] p-4 transition-colors duration-300 hover:border-primary/35 hover:bg-primary/[0.04]"
+                                        className="group rounded-2xl border border-white/10 bg-black/[0.12] p-4 backdrop-blur-[2px] transition-colors duration-300 hover:border-primary/35 hover:bg-primary/[0.04]"
                                     >
                                         <div className="flex gap-4">
                                             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-primary">

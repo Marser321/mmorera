@@ -732,3 +732,143 @@ Para simplificar el sitio conservando el estilo de grillas, mesh y partículas:
 2. Ejecutar `pnpm run build` para asegurar la compilación.
 3. Ejecutar `pnpm lint`.
 
+<reactive_backgrounds_visual_variety>
+  <status>implemented_validated</status>
+  <trigger>Pedido del usuario: mejorar la estetica del sitio agregando variedad de fondos, mas logos formados por particulas reactivas al mouse y particulas ambientales flotantes.</trigger>
+  <scope>Mejorar exclusivamente el sistema global de fondos reactivos de `web`, sus datos de escenas y el contexto que selecciona familias tecnologicas.</scope>
+  <summary>Reemplazar la coleccion fija de logos por escenas curadas segun ruta o seccion, sumar transiciones suaves entre escenas y agregar una capa ambiental de particulas flotantes sin comprometer legibilidad ni rendimiento.</summary>
+  <implementation>
+    <scene_resolution>
+      <step>Agregar un tipo interno `ParticleScene` y un resolvedor determinista que convierta ruta y familias activas en una coleccion curada de tecnologias.</step>
+      <step>Definir escenas para Home, Estudio, Sistemas, Casos de Exito y variaciones activadas por secciones especificas.</step>
+      <step>Limitar cada escena a un maximo de 12 logos en desktop y 7 en mobile, sin duplicados y usando solamente tecnologias existentes en `TECH_STACK`.</step>
+    </scene_resolution>
+    <webgl_field>
+      <step>Actualizar `TechParticleField` para cachear geometria por escena y mantener como maximo la escena actual y la anterior durante un crossfade aproximado de 900 ms.</step>
+      <step>Usar layouts dedicados con zonas centrales protegidas para preservar la lectura de titulos, formularios y CTAs.</step>
+      <step>Agregar una capa WebGL independiente de aproximadamente 500 particulas ambientales en desktop y 140 en mobile, con flotacion lenta, profundidad, color sutil y reaccion suave al cursor.</step>
+      <step>Mantener DPR limitado, pausa al ocultar la pestaña, bajo consumo WebGL, fallback 2D y respeto por `prefers-reduced-motion`.</step>
+    </webgl_field>
+    <global_background>
+      <step>Ajustar los glows globales para acompanhar suavemente las familias activas sin competir con videos ni contenido.</step>
+      <step>Extender el fallback 2D para conservar variedad ambiental cuando WebGL o movimiento completo no esten disponibles.</step>
+    </global_background>
+    <technical_cleanup>
+      <step>Corregir los errores de lint preexistentes en el sistema tocado, usando refs para uniforms animados y asociando correctamente el override de familias a la ruta activa.</step>
+    </technical_cleanup>
+  </implementation>
+  <business_benefit>La experiencia ganara identidad, variedad y sensacion de profundidad durante la navegacion, reforzando la amplitud tecnologica del portfolio sin reducir claridad, velocidad ni conversion.</business_benefit>
+  <validation>
+    <automated>Agregar tests unitarios del resolvedor de escenas y ejecutar `pnpm test`, `pnpm exec tsc --noEmit`, ESLint enfocado, lint completo y `pnpm build`.</automated>
+    <browser>Validar Home, Estudio, Sistemas y Casos de Exito en desktop y mobile, comprobando cambio de escenas, reaccion al mouse, particulas ambientales, legibilidad, ausencia de overflow y fallback de movimiento reducido.</browser>
+    <validation_result>El resolvedor paso sus 3 tests al compilarse con TypeScript y ejecutarse con Node; `pnpm exec tsc --noEmit`, ESLint enfocado, lint completo y `pnpm build` pasaron. `pnpm test` inicia pero queda colgado en el runner `tsx` antes de reportar tests, comportamiento reproducible tambien al ejecutar un unico test. En navegador se validaron Home, Estudio, Sistemas y Casos de Exito: escenas distintas, cambio por seccion, reaccion al cursor, particulas ambientales, cero errores WebGL, cero overflow y composicion mobile legible.</validation_result>
+  </validation>
+  <guardrails>
+    <approval>Despues de registrar este plan, pausar y esperar aprobacion explicita del vibe antes de implementar.</approval>
+    <atomicity>Trabajar por fases: resolvedor y datos, campo WebGL y fallback, glows globales, tests y validacion visual.</atomicity>
+    <visual_quality>Mantener intensidad equilibrada; los fondos deben apoyar al contenido y no tapar textos, videos, controles ni CTAs.</visual_quality>
+    <performance>Mantener como maximo dos geometrías de logos durante la transicion, cachear escenas, limitar densidad por dispositivo y pausar animacion fuera de uso.</performance>
+    <accessibility>Conservar `aria-hidden`, `pointer-events-none`, soporte para `prefers-reduced-motion` y legibilidad de contenido.</accessibility>
+    <compatibility>No modificar APIs publicas, backend, InsForge, datos externos ni incorporar assets o dependencias nuevas.</compatibility>
+    <security>No escribir secretos, tokens ni credenciales en archivos versionados.</security>
+    <git_hygiene>No revertir cambios existentes del usuario ni modificar archivos fuera del alcance.</git_hygiene>
+  </guardrails>
+</reactive_backgrounds_visual_variety>
+
+<local_preview_for_specific_feedback>
+  <status>awaiting_vibe_approval</status>
+  <trigger>Pedido del usuario: ejecutar el proyecto en local para indicar cambios especificos.</trigger>
+  <scope>Levantar la aplicacion activa ubicada en `web` sin modificar codigo fuente.</scope>
+  <plan>
+    <phase name="implement">
+      <step>Iniciar el servidor de desarrollo de Next.js con `pnpm dev` desde `/Users/mariomorera/Desktop/MMORERA/web`.</step>
+      <step>Mantener el proceso activo para que el usuario pueda revisar la aplicacion y solicitar cambios concretos.</step>
+    </phase>
+    <phase name="validate">
+      <step>Confirmar que el servidor compila y responde en la URL local informada por Next.js.</step>
+      <step>Abrir la aplicacion en el navegador local y comprobar que carga sin errores visibles.</step>
+    </phase>
+  </plan>
+  <business_benefit>Permite revisar el estado real de la experiencia y convertir feedback visual en cambios concretos y verificables.</business_benefit>
+  <guardrails>
+    <approval>Esperar aprobacion explicita del vibe antes de iniciar el servidor local.</approval>
+    <atomicity>Separar el arranque del servidor de la validacion visual.</atomicity>
+    <security>No exponer ni escribir secretos durante el arranque.</security>
+    <git_hygiene>No modificar ni revertir los cambios existentes del usuario.</git_hygiene>
+  </guardrails>
+</local_preview_for_specific_feedback>
+
+<compact_adaptive_approach_cards>
+  <status>awaiting_vibe_approval</status>
+  <trigger>Comentario visual del usuario: optimizar el tamaño de las tarjetas con copy para evitar tamaños excesivos.</trigger>
+  <scope>Compactar exclusivamente la seccion `AdaptiveApproach` de la Home, manteniendo intactos el contenido, las traducciones y el comportamiento responsive.</scope>
+  <diagnosis>La composicion gana altura por el padding amplio de la seccion y tarjeta principal, los espacios verticales internos y el estiramiento de ambas columnas en desktop.</diagnosis>
+  <implementation>
+    <step>Reducir moderadamente el padding vertical de la seccion y la distancia entre encabezado y grilla.</step>
+    <step>Hacer mas compacta la tarjeta principal mediante padding, tipografia, iconos y espacios internos ajustados.</step>
+    <step>Reducir padding y separaciones de las seis tarjetas modulares, conservando legibilidad y jerarquia visual.</step>
+    <step>Evitar alturas artificialmente grandes en desktop y permitir que cada tarjeta responda mejor a la longitud real del copy.</step>
+  </implementation>
+  <business_benefit>La seccion comunicara el enfoque con mayor rapidez, mostrara mas contenido dentro del viewport y reducira la sensacion de tarjetas vacias o sobredimensionadas.</business_benefit>
+  <validation>
+    <automated>Ejecutar ESLint enfocado sobre `AdaptiveApproach.tsx`.</automated>
+    <browser>Validar la Home en desktop y mobile, revisando equilibrio, legibilidad, ausencia de overflow y alturas compactas.</browser>
+  </validation>
+  <guardrails>
+    <approval>Esperar aprobacion explicita del vibe antes de editar el componente.</approval>
+    <content>No recortar ni reescribir el copy existente.</content>
+    <responsive>Preservar legibilidad y espacios tactiles adecuados en mobile.</responsive>
+    <scope_control>No modificar otras secciones, traducciones, fondos ni componentes.</scope_control>
+    <git_hygiene>No revertir cambios existentes del usuario.</git_hygiene>
+  </guardrails>
+</compact_adaptive_approach_cards>
+
+<increase_philosophy_background_visibility>
+  <status>awaiting_vibe_approval</status>
+  <trigger>Comentario visual del usuario: el fondo de la seccion Filosofia no es tan visible como se desea.</trigger>
+  <scope>Aumentar la presencia visual del video de fondo dentro de `PhilosophySection`, preservando legibilidad y jerarquia del contenido.</scope>
+  <diagnosis>El video queda excesivamente atenuado por la combinacion de intensidad media, scrim lateral, tinte, blur del contenedor y superficies internas oscuras.</diagnosis>
+  <implementation>
+    <step>Aumentar la intensidad visible del video y usar un scrim menos invasivo para revelar mejor la infografia.</step>
+    <step>Reducir ligeramente la opacidad de la superficie principal y el blur que cubren el video.</step>
+    <step>Aligerar de forma controlada las tarjetas internas para que el fondo permanezca perceptible sin competir con el copy.</step>
+    <step>Mantener bordes y contrastes locales para que textos y CTAs sigan siendo faciles de leer.</step>
+  </implementation>
+  <business_benefit>La seccion ganara profundidad, identidad visual y una relacion mas clara entre el mensaje de orquestacion y la infografia animada de fondo.</business_benefit>
+  <validation>
+    <automated>Ejecutar ESLint enfocado sobre `PhilosophySection.tsx`.</automated>
+    <browser>Validar desktop y mobile, comprobando visibilidad del fondo, contraste del copy, CTA, ausencia de overflow y errores.</browser>
+  </validation>
+  <guardrails>
+    <approval>Esperar aprobacion explicita del vibe antes de editar.</approval>
+    <accessibility>Priorizar legibilidad del texto sobre intensidad visual.</accessibility>
+    <scope_control>No modificar el video, el copy, otras secciones ni el sistema global de particulas.</scope_control>
+    <git_hygiene>No revertir cambios existentes del usuario.</git_hygiene>
+  </guardrails>
+</increase_philosophy_background_visibility>
+
+<studio_timeline_visual_backgrounds>
+  <status>implemented_validated</status>
+  <trigger>Pedido aprobado del usuario: evitar el exceso de negro y las tarjetas vacias en la trayectoria de Estudio.</trigger>
+  <scope>Transformar exclusivamente `AboutTimeline` mediante recursos visuales locales, manteniendo copy, traducciones y estructura responsive.</scope>
+  <implementation>
+    <step>Revelar el campo global de particulas reemplazando el fondo negro solido por una superficie transparente.</step>
+    <step>Agregar `developer-workspace.mp4` como fondo ambiental suave con poster, scrim radial y tinte cyan.</step>
+    <step>Asignar imagenes locales a los tres pilares: `punta-360.png`, `autohub-cover-v2.png` y `gym-crm.png`.</step>
+    <step>Usar gradientes oscuros localizados para preservar la lectura sobre las imagenes.</step>
+    <step>Diferenciar el perfil y el bloque final con mesh, glows y transparencias, evitando superficies planas.</step>
+  </implementation>
+  <business_benefit>La seccion demostrara visualmente la combinacion de creatividad, producto y operacion, aumentando identidad y profundidad sin perder claridad.</business_benefit>
+  <validation>
+    <automated>Ejecutar ESLint enfocado sobre `AboutTimeline.tsx`.</automated>
+    <browser>Validar `/estudio` en desktop y mobile, revisando fondos, contraste, copy, overflow, errores y fallback visual.</browser>
+    <validation_result>ESLint enfocado, TypeScript sin emision y `git diff --check` pasaron. En navegador se confirmaron video, particulas, tres imagenes de pilares, copy legible, tarjetas diferenciadas, cero errores y cero overflow horizontal en desktop y mobile.</validation_result>
+  </validation>
+  <guardrails>
+    <approval>El usuario aprobo explicitamente la implementacion del plan.</approval>
+    <accessibility>Mantener contraste suficiente y texto legible sobre todos los recursos visuales.</accessibility>
+    <performance>Usar solamente recursos locales existentes y `next/image`; el video reutiliza el componente optimizado `BackgroundVideo`.</performance>
+    <scope_control>No modificar copy, traducciones, APIs ni otras secciones.</scope_control>
+    <git_hygiene>No revertir cambios existentes del usuario.</git_hygiene>
+  </guardrails>
+</studio_timeline_visual_backgrounds>

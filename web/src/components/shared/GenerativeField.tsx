@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { FAMILIES, type Family } from '@/data/techStack';
 
 /**
  * GenerativeField — Campo de partículas de alta densidad.
@@ -14,16 +15,12 @@ import { useEffect, useRef } from 'react';
  * 
  * Rendimiento: DPR clampeado, pausa con pestaña oculta, reduced-motion respetado.
  */
-const SIGNAL = '#93e83a';
-const ACCENT = '#2ec8d8';
-const WARM   = '#a78bfa'; // Violeta sutil para variedad
-
 type Particle = {
     x: number;
     y: number;
     vx: number;
     vy: number;
-    kind: 0 | 1 | 2 | 3; // 0=blanco, 1=signal, 2=cyan, 3=violeta
+    color: string;
     baseSize: number;
 };
 
@@ -32,7 +29,7 @@ function rgba(hex: string, a: number) {
     return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`;
 }
 
-export function GenerativeField() {
+export function GenerativeField({ activeFamilies = [] }: { activeFamilies?: Family[] }) {
     const ref = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
@@ -51,15 +48,21 @@ export function GenerativeField() {
         let raf = 0;
         let t = 0;
         const mouse = { x: -9999, y: -9999, active: false };
+        const activeColors = (
+            activeFamilies.length
+                ? FAMILIES.filter((family) => activeFamilies.includes(family.id))
+                : FAMILIES
+        ).map((family) => family.color);
 
         const spawn = (): Particle => {
-            const r = Math.random();
             return {
                 x: Math.random() * w,
                 y: Math.random() * h,
                 vx: (Math.random() - 0.5) * 0.15,
                 vy: (Math.random() - 0.5) * 0.15,
-                kind: r < 0.22 ? 1 : r < 0.38 ? 2 : r < 0.44 ? 3 : 0,
+                color: Math.random() < 0.54
+                    ? '#ffffff'
+                    : activeColors[Math.floor(Math.random() * activeColors.length)] ?? '#93e83a',
                 baseSize: 0.8 + Math.random() * 1.2,
             };
         };
@@ -72,8 +75,8 @@ export function GenerativeField() {
             canvas.style.width = `${w}px`;
             canvas.style.height = `${h}px`;
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-            // Alta densidad: ~900 en desktop, ~300 en mobile
-            const count = Math.round(Math.min((w * h) / 1600, isMobile ? 300 : 950));
+            // Fallback equilibrado: conserva profundidad sin competir con el contenido.
+            const count = Math.round(Math.min((w * h) / 2100, isMobile ? 180 : 560));
             particles = Array.from({ length: count }, spawn);
         };
 
@@ -151,11 +154,7 @@ export function GenerativeField() {
                 const sizeBoost = cursorProximity * 1.5;
                 const size = p.baseSize + sizeBoost;
 
-                ctx.fillStyle =
-                    p.kind === 0 ? rgba('#ffffff', alpha * 0.55)
-                        : p.kind === 1 ? rgba(SIGNAL, alpha)
-                            : p.kind === 2 ? rgba(ACCENT, alpha * 0.9)
-                                : rgba(WARM, alpha * 0.5);
+                ctx.fillStyle = rgba(p.color, p.color === '#ffffff' ? alpha * 0.5 : alpha * 0.82);
 
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
@@ -174,12 +173,7 @@ export function GenerativeField() {
 
                         if (d < LINK_DIST) {
                             const lineAlpha = (1 - d / LINK_DIST) * 0.12;
-                            // Color basado en el tipo de la primera partícula
-                            const lineColor = a.kind === 1 ? SIGNAL
-                                : a.kind === 2 ? ACCENT
-                                    : a.kind === 3 ? WARM : '#ffffff';
-
-                            ctx.strokeStyle = rgba(lineColor, lineAlpha);
+                            ctx.strokeStyle = rgba(a.color, lineAlpha);
                             ctx.lineWidth = 0.5;
                             ctx.beginPath();
                             ctx.moveTo(a.x, a.y);
@@ -227,7 +221,7 @@ export function GenerativeField() {
             window.removeEventListener('pointerleave', onLeave);
             document.removeEventListener('visibilitychange', onVisibility);
         };
-    }, []);
+    }, [activeFamilies]);
 
     return <canvas ref={ref} aria-hidden className="absolute inset-0 h-full w-full" />;
 }

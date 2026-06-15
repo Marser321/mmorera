@@ -1,34 +1,13 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-    Play, 
-    Folder, 
-    FileCode, 
-    Monitor, 
-    Tablet, 
-    Smartphone, 
-    ExternalLink, 
-    Settings, 
-    Film, 
-    Code, 
-    Terminal,
-    Sparkles,
-    Eye,
-    EyeOff,
-    Trophy
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
+import { Play, Trophy } from 'lucide-react';
 import { useDevMode } from './DevModeContext';
 import { useLanguage } from '@/context/LanguageContext';
-import { PROJECTS_DATA, ProjectData } from './projectsData';
-import {
-    Dialog,
-    DialogContent,
-    DialogTrigger,
-    DialogTitle
-} from '@/components/ui/dialog';
+import { PROJECTS_DATA } from './projectsData';
+import { ProjectCaseDialog } from './ProjectCaseDialog';
+import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 
 // --- COMPONENTE INTERNO DE TEXT SCRAMBLE BILINGÜE ---
 function ScrambleText({ text, active }: { text: string; active: boolean }) {
@@ -73,7 +52,6 @@ export function PortfolioGrid() {
     const { language } = useLanguage();
     
     const [hoveredProjectId, setHoveredProjectId] = useState<number | null>(null);
-    const [device, setDevice] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
 
     return (
         <section id="portfolio-grid" className="py-24 md:py-32 relative bg-transparent overflow-hidden">
@@ -161,132 +139,9 @@ export function PortfolioGrid() {
                                                 </div>
                                             </div>
                                         </DialogTrigger>
-                                        
-                                        {/* MODAL DETALLADO DE CASO DE ESTUDIO (DOS COLUMNAS: NARRATIVA + VISOR DEMO) */}
-                                        <DialogContent className="max-w-[95vw] w-[1100px] h-[85vh] p-0 bg-neutral-950/95 border-white/10 flex flex-col md:flex-row overflow-hidden shadow-2xl backdrop-blur-xl">
-                                            {/* Columna Izquierda: Detalles del Proyecto */}
-                                            <div className="flex-1 p-6 md:p-8 flex flex-col justify-between overflow-y-auto border-b md:border-b-0 md:border-r border-white/5 text-zinc-300">
-                                                <div>
-                                                    <div className="flex items-center gap-2 mb-4">
-                                                        <span className="bg-violet-500/20 text-violet-400 text-[8px] px-2 py-0.5 rounded border border-violet-500/20 uppercase tracking-widest font-black shrink-0">
-                                                            {language === 'es' ? 'Caso de Estudio' : 'Case Study'}
-                                                        </span>
-                                                    </div>
 
-                                                    <DialogTitle className="text-2xl md:text-3xl font-black text-white uppercase tracking-tight mb-6 leading-none">
-                                                        {project.title[language]}
-                                                    </DialogTitle>
-
-                                                    <div className="space-y-6">
-                                                        {/* Desafío */}
-                                                        <div>
-                                                            <h4 className="text-[10px] font-mono font-bold tracking-[0.2em] text-violet-400 uppercase mb-2">
-                                                                {language === 'es' ? '01 // El Desafío' : '01 // The Challenge'}
-                                                            </h4>
-                                                            <p className="text-xs font-light leading-relaxed text-zinc-300">
-                                                                {project.desafio[language]}
-                                                            </p>
-                                                        </div>
-
-                                                        {/* Solución / Orquestación */}
-                                                        <div>
-                                                            <h4 className="text-[10px] font-mono font-bold tracking-[0.2em] text-violet-400 uppercase mb-2">
-                                                                {language === 'es' ? '02 // Orquestación' : '02 // Orchestration'}
-                                                            </h4>
-                                                            <p className="text-xs font-light leading-relaxed text-zinc-300">
-                                                                {project.orquestacion[language]}
-                                                            </p>
-                                                        </div>
-
-                                                        {/* Impacto */}
-                                                        <div>
-                                                            <h4 className="text-[10px] font-mono font-bold tracking-[0.2em] text-violet-400 uppercase mb-2">
-                                                                {language === 'es' ? '03 // Impacto Operativo' : '03 // Operational Impact'}
-                                                            </h4>
-                                                            <p className="text-xs font-light leading-relaxed text-zinc-300">
-                                                                {project.impacto[language]}
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                {/* Métrica Destacada */}
-                                                <div className="mt-8 p-4 rounded-xl border border-white/5 bg-white/[0.01] flex items-center justify-between shadow-[inset_0_0_15px_rgba(255,255,255,0.01)] shrink-0">
-                                                    <div>
-                                                        <span className="text-[8px] font-mono text-zinc-500 uppercase tracking-wider block">
-                                                            {language === 'es' ? 'Métrica de Éxito' : 'Success Metric'}
-                                                        </span>
-                                                        <span className="text-sm font-bold text-white uppercase tracking-tight mt-0.5 block">
-                                                            {project.metric[language]}
-                                                        </span>
-                                                    </div>
-                                                    <span className="bg-violet-500/10 border border-violet-500/20 px-2.5 py-1 rounded text-[10px] font-mono text-violet-300 font-bold shadow-[0_0_10px_rgba(167,139,250,0.05)]">
-                                                        ROI +++
-                                                    </span>
-                                                </div>
-                                            </div>
-
-                                            {/* Columna Derecha: Previsualización de Demo */}
-                                            <div className="flex-1 bg-black/40 flex flex-col h-full overflow-hidden">
-                                                <div className="p-4 border-b border-white/5 bg-neutral-950 flex justify-between items-center shrink-0">
-                                                    <span className="text-xs font-bold text-white uppercase tracking-wider">
-                                                        {language === 'es' ? 'Previsualización Real' : 'Live Preview'}
-                                                    </span>
-                                                    
-                                                    {/* Selector de Dispositivos */}
-                                                    <div className="flex items-center gap-1 bg-black/40 border border-white/10 p-1 rounded-lg">
-                                                        {(['desktop', 'tablet', 'mobile'] as const).map((d) => (
-                                                            <button 
-                                                                key={d}
-                                                                onClick={() => setDevice(d)} 
-                                                                className={cn(
-                                                                    "p-1.5 rounded transition-colors text-white/50 hover:text-white cursor-pointer", 
-                                                                    device === d && "bg-white/10 text-white"
-                                                                )}
-                                                                title={`${d.charAt(0).toUpperCase() + d.slice(1)} Mode`}
-                                                            >
-                                                                {d === 'desktop' ? <Monitor className="w-3.5 h-3.5" /> : d === 'tablet' ? <Tablet className="w-3.5 h-3.5" /> : <Smartphone className="w-3.5 h-3.5" />}
-                                                            </button>
-                                                        ))}
-                                                    </div>
-                                                </div>
-
-                                                {/* Navegador Simulado */}
-                                                <div className="bg-neutral-900 px-4 py-1.5 border-b border-white/5 flex items-center gap-3 select-none text-[10px] font-mono text-zinc-500 shrink-0">
-                                                    <div className="flex gap-1.5">
-                                                        <span className="w-2 h-2 rounded-full bg-red-500/20" />
-                                                        <span className="w-2 h-2 rounded-full bg-yellow-500/20" />
-                                                        <span className="w-2 h-2 rounded-full bg-green-500/20" />
-                                                    </div>
-                                                    <div className="flex-1 bg-black/40 border border-white/5 px-3 py-1 rounded text-center text-zinc-400 truncate max-w-[280px] mx-auto">
-                                                        https://mariomorera.dev/preview/{project.filename.split('.')[0].toLowerCase()}
-                                                    </div>
-                                                    <a 
-                                                        href={project.iframeUrl} 
-                                                        target="_blank" 
-                                                        rel="noopener noreferrer" 
-                                                        className="flex items-center gap-1 text-violet-400 hover:text-white transition-colors"
-                                                    >
-                                                        <span>OPEN</span>
-                                                        <ExternalLink className="w-3 h-3" />
-                                                    </a>
-                                                </div>
-
-                                                {/* Contenedor del Iframe */}
-                                                <div className="flex-1 w-full bg-neutral-950 flex justify-center items-center overflow-hidden p-4 relative">
-                                                    <div className={cn(
-                                                        "h-full border border-white/10 bg-black rounded-xl overflow-hidden transition-all duration-500 shadow-2xl relative",
-                                                        device === 'desktop' ? "w-full" : device === 'tablet' ? "w-[768px] aspect-[4/3] max-h-[90%]" : "w-[320px] aspect-[9/16] max-h-[95%]"
-                                                    )}>
-                                                        <iframe
-                                                            src={project.iframeUrl}
-                                                            className="w-full h-full border-0 bg-neutral-950"
-                                                            title={`Demo of ${project.title[language]}`}
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </DialogContent>
+                                        {/* Modal detallado de caso de estudio (narrativa + visor demo) */}
+                                        <ProjectCaseDialog project={project} />
                                     </Dialog>
                                 );
                             })}

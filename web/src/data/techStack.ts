@@ -2,6 +2,9 @@ import type { IconType } from 'react-icons';
 import {
     SiAnthropic,
     SiAstro,
+    SiBlender,
+    SiDavinciresolve,
+    SiFigma,
     SiFramer,
     SiGoogleads,
     SiGoogleanalytics,
@@ -46,7 +49,8 @@ export type Family =
     | 'Web'
     | 'Commerce'
     | 'Marketing'
-    | 'CRM';
+    | 'CRM'
+    | 'Media';
 
 export interface Tech {
     name: string;
@@ -72,6 +76,7 @@ export const FAMILIES: FamilyMeta[] = [
     { id: 'Commerce', label: 'Commerce', color: '#f472b6' },
     { id: 'Marketing', label: 'Marketing', color: '#fb923c' },
     { id: 'CRM', label: 'CRM', color: '#fbbf24' },
+    { id: 'Media', label: 'Audiovisual', color: '#e879f9' },
 ];
 
 export const FAMILY_ORDER: Family[] = FAMILIES.map((f) => f.id);
@@ -119,6 +124,15 @@ export const TECH_STACK: Tech[] = [
     { name: 'Zoho CRM', category: 'CRM', Icon: SiZoho },
     { name: 'GoHighLevel', category: 'CRM', fallback: 'GHL' },
     { name: 'Pipedrive', category: 'CRM', fallback: 'PD' },
+    // Media (audiovisual) — logos reales donde existen; etiqueta de texto para el resto.
+    { name: 'DaVinci Resolve', category: 'Media', Icon: SiDavinciresolve },
+    { name: 'Blender', category: 'Media', Icon: SiBlender },
+    { name: 'Figma', category: 'Media', Icon: SiFigma },
+    { name: 'Premiere Pro', category: 'Media', fallback: 'Pr' },
+    { name: 'After Effects', category: 'Media', fallback: 'Ae' },
+    { name: 'Photoshop', category: 'Media', fallback: 'Ps' },
+    { name: 'Illustrator', category: 'Media', fallback: 'Il' },
+    { name: 'Audition', category: 'Media', fallback: 'Au' },
 ];
 
 /** Techs de una o varias familias, conservando el orden de TECH_STACK. */
@@ -143,18 +157,3 @@ export const ROUTE_FAMILIES: Record<string, Family[]> = {
     '/casos-de-exito': ['Web', 'AI', 'CRM'],
     '/aplicar': [],
 };
-
-/**
- * Subconjunto cuyos logos dibujan las partículas del fondo. Elegidas por
- * silueta reconocible y variedad de familia (todas tienen Icon).
- */
-// El orden mapea 1:1 con los SLOTS de TechParticleField (tamaño/posición).
-// GoHighLevel va en un slot mediano para que el texto "GHL" se lea.
-const LOGO_TECH_NAMES = [
-    'OpenAI', 'Anthropic', 'GoHighLevel', 'Supabase', 'n8n',
-    'React', 'Shopify', 'HubSpot', 'Google Analytics', 'Stripe',
-];
-
-export const LOGO_TECHS: Tech[] = LOGO_TECH_NAMES
-    .map((name) => TECH_STACK.find((t) => t.name === name))
-    .filter((t): t is Tech => !!t && (!!t.Icon || !!t.fallback));

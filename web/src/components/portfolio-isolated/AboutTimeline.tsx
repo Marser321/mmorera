@@ -1,9 +1,17 @@
 'use client';
 
+import Image from 'next/image';
 import { Briefcase, CheckCircle2, Clapperboard, Code2, Workflow } from 'lucide-react';
 
+import { BackgroundVideo } from '@/components/shared/BackgroundVideo';
 import { Container } from '@/components/ui/container';
 import { useLanguage, type Language } from '@/context/LanguageContext';
+
+const PILLAR_IMAGES = [
+    '/portfolio/punta-360.png',
+    '/portfolio/autohub-cover-v2.png',
+    '/portfolio/gym-crm.png',
+] as const;
 
 const CONTENT: Record<Language, {
     eyebrow: string;
@@ -114,9 +122,18 @@ export function AboutTimeline() {
     return (
         <section
             id="sobre-mi-timeline"
-            className="relative overflow-hidden bg-black py-20 md:py-28"
+            className="relative overflow-hidden bg-transparent py-20 md:py-28"
         >
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:80px_80px] opacity-30" />
+            <BackgroundVideo
+                src="/videos/developer-workspace.mp4"
+                poster="/videos/posters/developer-workspace.jpg"
+                intensity="medium"
+                scrim="radial"
+                tint="cyan"
+                className="opacity-75"
+            />
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_18%,rgba(167,139,250,0.15),transparent_34%),radial-gradient(circle_at_84%_62%,rgba(34,211,238,0.13),transparent_38%),linear-gradient(to_bottom,rgba(0,0,0,0.16),rgba(0,0,0,0.48))]" />
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:80px_80px] opacity-25" />
             <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
 
             <Container className="relative z-10">
@@ -138,8 +155,10 @@ export function AboutTimeline() {
                         </div>
                     </div>
 
-                    <aside className="rounded-lg border border-white/10 bg-white/[0.035] p-6">
-                        <div className="mb-6 flex items-center gap-3">
+                    <aside className="relative overflow-hidden rounded-2xl border border-cyan-300/15 bg-[linear-gradient(145deg,rgba(34,211,238,0.1),rgba(15,23,42,0.5)_48%,rgba(167,139,250,0.1))] p-6 shadow-[0_24px_80px_rgba(2,8,23,0.3)] backdrop-blur-md">
+                        <div className="pointer-events-none absolute -right-16 -top-16 size-48 rounded-full bg-cyan-400/15 blur-3xl" />
+                        <div className="pointer-events-none absolute -bottom-20 -left-16 size-48 rounded-full bg-violet-400/15 blur-3xl" />
+                        <div className="relative mb-6 flex items-center gap-3">
                             <span className="grid size-10 place-items-center rounded-lg border border-emerald-400/20 bg-emerald-400/10 text-emerald-300">
                                 <Briefcase className="size-5" />
                             </span>
@@ -151,7 +170,7 @@ export function AboutTimeline() {
                             </div>
                         </div>
 
-                        <dl className="space-y-4">
+                        <dl className="relative space-y-4">
                             {copy.profileItems.map((item) => (
                                 <div key={item.label} className="border-t border-white/10 pt-4">
                                     <dt className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/35">
@@ -167,50 +186,63 @@ export function AboutTimeline() {
                 </div>
 
                 <div className="mt-14 grid gap-4 md:grid-cols-3">
-                    {copy.pillars.map((pillar) => {
+                    {copy.pillars.map((pillar, index) => {
                         const Icon = pillar.icon;
 
                         return (
                             <article
                                 key={pillar.title}
-                                className="rounded-lg border border-white/10 bg-white/[0.03] p-5"
+                                className="group relative min-h-[17rem] overflow-hidden rounded-2xl border border-white/15 bg-slate-950/55 p-5 shadow-[0_24px_80px_rgba(2,8,23,0.32)] backdrop-blur-sm"
                             >
-                                <div className="mb-5 flex items-center gap-3">
-                                    <span className="grid size-10 place-items-center rounded-lg border border-violet-300/20 bg-violet-300/10 text-violet-200">
-                                        <Icon className="size-5" />
-                                    </span>
-                                    <h3 className="text-base font-black uppercase tracking-tight text-white">
-                                        {pillar.title}
-                                    </h3>
-                                </div>
-                                <p className="min-h-[4.5rem] text-sm leading-relaxed text-white/55">
-                                    {pillar.description}
-                                </p>
-                                <div className="mt-5 flex flex-wrap gap-2">
-                                    {pillar.items.map((item) => (
-                                        <span
-                                            key={item}
-                                            className="rounded-full border border-white/10 bg-black/25 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-white/48"
-                                        >
-                                            {item}
+                                <Image
+                                    src={PILLAR_IMAGES[index]}
+                                    alt=""
+                                    fill
+                                    sizes="(max-width: 768px) 100vw, 33vw"
+                                    className="object-cover opacity-45 saturate-[0.85] transition duration-700 group-hover:scale-105 group-hover:opacity-55"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/65 to-transparent" />
+                                <div className="absolute inset-0 bg-gradient-to-br from-violet-500/10 via-transparent to-cyan-400/10" />
+
+                                <div className="relative z-10 flex h-full min-h-[15rem] flex-col justify-end">
+                                    <div className="mb-5 flex items-center gap-3">
+                                        <span className="grid size-10 place-items-center rounded-lg border border-violet-300/25 bg-violet-300/15 text-violet-100 backdrop-blur-md">
+                                            <Icon className="size-5" />
                                         </span>
-                                    ))}
+                                        <h3 className="text-base font-black uppercase tracking-tight text-white">
+                                            {pillar.title}
+                                        </h3>
+                                    </div>
+                                    <p className="text-sm leading-relaxed text-white/72">
+                                        {pillar.description}
+                                    </p>
+                                    <div className="mt-5 flex flex-wrap gap-2">
+                                        {pillar.items.map((item) => (
+                                            <span
+                                                key={item}
+                                                className="rounded-full border border-white/15 bg-black/35 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-white/65 backdrop-blur-md"
+                                            >
+                                                {item}
+                                            </span>
+                                        ))}
+                                    </div>
                                 </div>
                             </article>
                         );
                     })}
                 </div>
 
-                <div className="mt-10 rounded-lg border border-white/10 bg-white/[0.03] p-6 md:p-8">
-                    <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+                <div className="relative mt-10 overflow-hidden rounded-2xl border border-emerald-300/15 bg-[linear-gradient(115deg,rgba(16,185,129,0.1),rgba(8,15,28,0.56)_42%,rgba(34,211,238,0.08))] p-6 shadow-[0_24px_80px_rgba(2,8,23,0.3)] backdrop-blur-md md:p-8">
+                    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_100%,rgba(16,185,129,0.16),transparent_34%),radial-gradient(circle_at_88%_0%,rgba(34,211,238,0.13),transparent_30%)]" />
+                    <div className="relative flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
                         <div className="max-w-sm">
-                            <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-cyan-300/70">
+                            <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-cyan-300/80">
                                 {copy.approachTitle}
                             </p>
                         </div>
                         <ul className="grid flex-1 gap-4 md:grid-cols-2">
                             {copy.approachItems.map((item) => (
-                                <li key={item} className="flex gap-3 text-sm leading-relaxed text-white/62">
+                                <li key={item} className="flex gap-3 text-sm leading-relaxed text-white/72">
                                     <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-emerald-300" />
                                     <span>{item}</span>
                                 </li>

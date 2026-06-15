@@ -1,12 +1,14 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { Sparkles, ArrowRight, Eye, Film, Code2, Rocket } from 'lucide-react';
 import { useDevMode } from './DevModeContext';
 import { useLanguage } from '@/context/LanguageContext';
+import { useActiveTech } from '@/context/ActiveTechContext';
+import type { Family } from '@/data/techStack';
+import { EASE_OUT, DURATION, fadeUp } from '@/lib/motion';
 import dynamic from 'next/dynamic';
-import { BackgroundVideo } from '@/components/shared/BackgroundVideo';
 
 // Núcleo 3D del hero — cargado sin SSR para mantener three fuera del bundle inicial.
 const OrchestrationCore = dynamic(
@@ -28,6 +30,7 @@ interface TrackData {
     color: string;       // Color base del track (Tailwind class prefix)
     colorHex: string;    // Hex para SVG/Canvas
     Icon: React.ComponentType<{ className?: string }>;
+    families: Family[];  // Familias del campo de partículas que se resaltan en hover
     tools: TrackTool[];
 }
 
@@ -35,9 +38,10 @@ const TRACKS: TrackData[] = [
     {
         id: 'crear',
         labelKey: 'track_crear',
-        color: 'violet',
-        colorHex: '#a78bfa',
+        color: 'fuchsia',
+        colorHex: '#e879f9',
         Icon: Film,
+        families: ['Media'],
         tools: [
             { name: 'Edición Audiovisual', meta: 'CODEC: ProRes 422 HQ · TIMELINE: Multicam' },
             { name: 'Efectos & Gráficos', meta: 'ENGINE: Mercury GPU · COMP: 32-bit Float' },
@@ -50,6 +54,7 @@ const TRACKS: TrackData[] = [
         color: 'cyan',
         colorHex: '#22d3ee',
         Icon: Code2,
+        families: ['Web', 'Backend', 'AI'],
         tools: [
             { name: 'Desarrollo Frontend', meta: 'RSC: Server Components · CACHE: Edge Revalidate' },
             { name: 'Arquitectura de Tipos', meta: 'STRICT: true · TARGET: ES2022' },
@@ -62,6 +67,7 @@ const TRACKS: TrackData[] = [
         color: 'amber',
         colorHex: '#fbbf24',
         Icon: Rocket,
+        families: ['Automation', 'CRM', 'AI'],
         tools: [
             { name: 'Embudos & CRM de Ventas', meta: 'ROLE: CRM Pipeline · API: REST + Webhooks' },
             { name: 'Orquestación de Procesos', meta: 'HOST: Self-Hosted · LOGIC: Visual Nodes' },
@@ -72,10 +78,30 @@ const TRACKS: TrackData[] = [
 
 
 
-// ─────────────────────────────────────────────
-// TRACK CARD COMPONENT
-// ─────────────────────────────────────────────
+// hex → rgba para teñir el indicador del selector con el color del track activo.
+function hexToRgba(hex: string, alpha: number): string {
+    const n = parseInt(hex.slice(1), 16);
+    return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${alpha})`;
+}
 
+// Entrada del selector: el contenedor aparece mientras se ensambla el logo y
+// revela las 3 opciones una por una (paso a paso).
+const selectorBar: Variants = {
+    hidden: { opacity: 0, y: 10, scale: 0.96 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: {
+            duration: DURATION.base,
+            ease: EASE_OUT,
+            delay: 0.6,
+            when: 'beforeChildren',
+            staggerChildren: 0.12,
+            delayChildren: 0.85,
+        },
+    },
+};
 
 // ─────────────────────────────────────────────
 // HERO PORTFOLIO (MAIN COMPONENT)
@@ -83,7 +109,53 @@ const TRACKS: TrackData[] = [
 export function HeroPortfolio() {
     const { isDevMode, metrics, toggleDevMode } = useDevMode();
     const { t, language } = useLanguage();
+    const { setActiveFamilies } = useActiveTech();
     const [activeTrack, setActiveTrack] = useState<string>('crear');
+
+    // El track activo manda qué familias se resaltan en el campo de partículas
+    // global → al pasar el mouse, los logos del fondo cambian a esa disciplina.
+    useEffect(() => {
+        const track = TRACKS.find((tr) => tr.id === activeTrack);
+        if (track) setActiveFamilies(track.families);
+    }, [activeTrack, setActiveFamilies]);
+
+    // Intro guiada: al cargar, el indicador barre los 3 modos (cambiando el fondo
+    // de verdad) y se posa en el default. Cualquier interacción lo cancela.
+    const introTimers = useRef<number[]>([]);
+    const introActive = useRef(true);
+
+    const stopIntro = useCallback(() => {
+        introActive.current = false;
+        introTimers.current.forEach((id) => clearTimeout(id));
+        introTimers.current = [];
+    }, []);
+
+    const selectTrack = useCallback((id: string) => {
+        stopIntro();
+        setActiveTrack(id);
+    }, [stopIntro]);
+
+    useEffect(() => {
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduce) {
+            introActive.current = false;
+            return;
+        }
+        const sequence = ['construir', 'escalar', 'crear']; // arranca en 'crear', barre y vuelve
+        let delay = 1100; // tras el reveal de opciones / mientras se ensambla el logo
+        const timers = introTimers.current;
+        sequence.forEach((id) => {
+            const tid = window.setTimeout(() => {
+                if (!introActive.current) return;
+                setActiveTrack(id);
+            }, delay);
+            timers.push(tid);
+            delay += 950;
+        });
+        return () => {
+            timers.forEach((id) => clearTimeout(id));
+        };
+    }, []);
 
     // --- TIMECODE PLAYER (23.976 FPS) ---
     const [timecode, setTimecode] = useState('01:00:00:00');
@@ -156,6 +228,9 @@ export function HeroPortfolio() {
         setShow3D(desktop && !reduce);
     }, []);
 
+    // Color ambiental del track activo (tiñe los glows del hero).
+    const activeTrackColor = TRACKS.find((tr) => tr.id === activeTrack)?.colorHex ?? '#a78bfa';
+
     // Títulos bilingües
     const titleLine1 = t('hero', 'title1');
     const titleLine2 = t('hero', 'title2');
@@ -164,27 +239,37 @@ export function HeroPortfolio() {
     return (
         <section className="relative w-full min-h-screen bg-transparent flex flex-col justify-center items-center overflow-hidden pt-24 pb-16 select-none">
 
-            {/* FONDO DECORATIVO: Gradientes suaves */}
-            <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-violet-600/[0.03] blur-[150px] rounded-full pointer-events-none" />
-            <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-cyan-600/[0.03] blur-[150px] rounded-full pointer-events-none" />
-
-            {/* Video de fondo abstracto (máquina de crecimiento) */}
-            <BackgroundVideo
-                src="/videos/growth-machine.mp4"
-                poster="/videos/posters/growth-machine.jpg"
-                intensity="cinematic"
-                scrim="center"
-                tint="violet"
+            {/* FONDO DECORATIVO: glows que se tiñen con el track activo */}
+            <div
+                aria-hidden
+                className="absolute top-0 left-1/4 w-[500px] h-[500px] blur-[150px] rounded-full pointer-events-none opacity-[0.05] transition-colors duration-700"
+                style={{ backgroundColor: activeTrackColor }}
+            />
+            <div
+                aria-hidden
+                className="absolute bottom-0 right-1/4 w-[500px] h-[500px] blur-[150px] rounded-full pointer-events-none opacity-[0.04] transition-colors duration-700"
+                style={{ backgroundColor: activeTrackColor }}
             />
 
             {/* Núcleo de orquestación 3D (pieza firma) */}
             {show3D && (
                 <div aria-hidden className="absolute inset-0 z-[1] flex items-center justify-center pointer-events-none">
-                    <div className="h-[120vmin] w-[120vmin] max-h-[860px] max-w-[860px] opacity-70">
+                    <div className="h-[78vmin] w-[78vmin] max-h-[560px] max-w-[560px] opacity-90">
                         <OrchestrationCore />
                     </div>
                 </div>
             )}
+
+            {/* Scrim/viñeta: asegura la legibilidad del texto sobre el núcleo 3D
+                y las partículas, sin apagar el logo central. */}
+            <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 z-[2]"
+                style={{
+                    background:
+                        'radial-gradient(ellipse 70% 60% at 50% 52%, rgba(8,10,14,0.62) 0%, rgba(8,10,14,0.34) 42%, transparent 72%)',
+                }}
+            />
 
             {/* CONTENIDO PRINCIPAL */}
             <div className="relative z-30 flex flex-col items-center w-full max-w-5xl text-center px-6">
@@ -246,7 +331,7 @@ export function HeroPortfolio() {
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.7 }}
-                    className="max-w-2xl text-base sm:text-lg font-light text-zinc-400 leading-relaxed mb-12 text-pretty"
+                    className="max-w-2xl text-base sm:text-lg font-normal text-zinc-200 leading-relaxed mb-12 text-pretty [text-shadow:0_1px_12px_rgba(0,0,0,0.55)]"
                 >
                     {t('hero', 'subtitle')}
                 </motion.p>
@@ -255,38 +340,67 @@ export function HeroPortfolio() {
                     DISCIPLINAS INTERACTIVAS MINIMALISTAS
                     ───────────────────────────────────────────── */}
                 <div className="w-full max-w-3xl mx-auto mb-16 mt-8">
-                    <div className="flex justify-center items-center gap-4 md:gap-8 flex-wrap border-b border-white/5 pb-6">
-                        {TRACKS.map((track) => {
-                            const isActive = activeTrack === track.id;
-                            const TrackIcon = track.Icon;
-                            const colorClass = track.color === 'violet' 
-                                ? 'text-violet-400' 
-                                : track.color === 'cyan' 
-                                ? 'text-cyan-400' 
-                                : 'text-amber-400';
-                            
-                            return (
-                                <button
-                                    key={track.id}
-                                    onMouseEnter={() => setActiveTrack(track.id)}
-                                    onClick={() => setActiveTrack(track.id)}
-                                    className={`flex items-center gap-2.5 px-4 py-2 rounded-full border transition-all duration-300 cursor-pointer ${
-                                        isActive 
-                                            ? `bg-white/[0.03] border-white/15 ${colorClass} shadow-[0_0_15px_rgba(255,255,255,0.02)]`
-                                            : 'bg-transparent border-transparent text-zinc-500 hover:text-zinc-300'
-                                    }`}
-                                >
-                                    <TrackIcon className="w-4.5 h-4.5" />
-                                    <span className="font-mono text-xs font-black uppercase tracking-[0.2em]">
-                                        {t('hero', track.labelKey)}
-                                    </span>
-                                </button>
-                            );
-                        })}
+                    {/* Toggle segmentado: indicador deslizante marca la disciplina activa */}
+                    <div className="flex justify-center">
+                        <motion.div
+                            variants={selectorBar}
+                            initial="hidden"
+                            animate="visible"
+                            className="relative inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/[0.03] p-1.5 backdrop-blur-xl"
+                        >
+                            {TRACKS.map((track) => {
+                                const isActive = activeTrack === track.id;
+                                const TrackIcon = track.Icon;
+                                const colorClass = track.color === 'fuchsia'
+                                    ? 'text-fuchsia-400'
+                                    : track.color === 'cyan'
+                                    ? 'text-cyan-400'
+                                    : 'text-amber-400';
+
+                                return (
+                                    <motion.button
+                                        key={track.id}
+                                        variants={fadeUp}
+                                        onMouseEnter={() => selectTrack(track.id)}
+                                        onClick={() => selectTrack(track.id)}
+                                        onFocus={() => selectTrack(track.id)}
+                                        aria-pressed={isActive}
+                                        className="relative flex items-center gap-2 rounded-full px-3 py-2.5 transition-colors duration-300 cursor-pointer sm:px-6"
+                                    >
+                                        {isActive && (
+                                            <motion.span
+                                                layoutId="trackIndicator"
+                                                aria-hidden
+                                                initial={false}
+                                                className="absolute inset-0 rounded-full border"
+                                                style={{
+                                                    backgroundColor: hexToRgba(track.colorHex, 0.12),
+                                                    borderColor: hexToRgba(track.colorHex, 0.4),
+                                                    boxShadow: `0 0 22px ${hexToRgba(track.colorHex, 0.22)}`,
+                                                }}
+                                                transition={{ type: 'spring', stiffness: 420, damping: 34 }}
+                                            />
+                                        )}
+                                        <TrackIcon
+                                            className={`relative z-10 h-4 w-4 transition-colors duration-300 sm:h-[18px] sm:w-[18px] ${
+                                                isActive ? colorClass : 'text-zinc-500'
+                                            }`}
+                                        />
+                                        <span
+                                            className={`relative z-10 font-mono text-[10px] font-black uppercase tracking-[0.15em] transition-colors duration-300 sm:text-xs ${
+                                                isActive ? 'text-white' : 'text-zinc-500'
+                                            }`}
+                                        >
+                                            {t('hero', track.labelKey)}
+                                        </span>
+                                    </motion.button>
+                                );
+                            })}
+                        </motion.div>
                     </div>
 
                     {/* Copy dinámico según la disciplina activa */}
-                    <div className="min-h-[90px] mt-6 px-4 flex flex-col justify-center items-center">
+                    <div className="min-h-[90px] mt-8 px-4 flex flex-col justify-center items-center">
                         <AnimatePresence mode="wait">
                             {TRACKS.map((track) => {
                                 if (track.id !== activeTrack) return null;
@@ -299,17 +413,17 @@ export function HeroPortfolio() {
                                         transition={{ duration: 0.25 }}
                                         className="text-center max-w-xl"
                                     >
-                                        <p className="text-zinc-300 text-sm font-light leading-relaxed">
-                                            {track.id === 'crear' 
-                                                ? (language === 'es' ? 'Dirección de arte, edición audiovisual de alto impacto, corrección de color profesional y motion graphics premium para posicionar tu marca en la cima.' : 'Art direction, high-impact video editing, professional color grading, and premium motion graphics to position your brand at the top.')
+                                        <p className="text-zinc-100 text-sm sm:text-base font-normal leading-relaxed [text-shadow:0_1px_12px_rgba(0,0,0,0.55)]">
+                                            {track.id === 'crear'
+                                                ? (language === 'es' ? 'Dirección de arte, edición de alto impacto, color profesional y motion graphics premium.' : 'Art direction, high-impact editing, pro color grading and premium motion graphics.')
                                                 : track.id === 'construir'
-                                                ? (language === 'es' ? 'Desarrollo frontend ágil, estructuración de interfaces dinámicas, lógica de tipos segura y bases de datos integradas en tiempo real.' : 'Agile frontend development, dynamic user interfaces structure, safe type architectures, and databases integrated in real time.')
-                                                : (language === 'es' ? 'Embudos de venta avanzados, CRM comercial unificado, automatizaciones lógicas de procesos y mensajería automatizada 24/7.' : 'Advanced sales funnels, unified commercial CRM, logical process automation, and automated messaging running 24/7.')
+                                                ? (language === 'es' ? 'Frontend ágil, interfaces dinámicas, tipos seguros y datos en tiempo real.' : 'Agile frontend, dynamic interfaces, safe types and real-time data.')
+                                                : (language === 'es' ? 'Embudos de venta, CRM unificado, automatización de procesos y mensajería 24/7.' : 'Sales funnels, unified CRM, process automation and 24/7 messaging.')
                                             }
                                         </p>
                                         <div className="mt-3 flex justify-center gap-3 flex-wrap">
                                             {track.tools.map((tool) => (
-                                                <span key={tool.name} className="text-[9px] font-mono text-zinc-500 bg-white/[0.02] border border-white/5 px-2 py-0.5 rounded-full">
+                                                <span key={tool.name} className="text-[9px] font-mono text-zinc-200 bg-white/[0.06] border border-white/10 px-2 py-0.5 rounded-full backdrop-blur-sm">
                                                     {tool.name}
                                                 </span>
                                             ))}

@@ -29,21 +29,16 @@ const ActiveTechContext = createContext<ActiveTechValue | null>(null);
 
 export function ActiveTechProvider({ children }: { children: ReactNode }) {
     const pathname = usePathname();
-    const [override, setOverride] = useState<Family[] | null>(null);
-
-    // Al navegar, volver al default de la ruta.
-    useEffect(() => {
-        setOverride(null);
-    }, [pathname]);
+    const [override, setOverride] = useState<{ pathname: string; families: Family[] } | null>(null);
 
     const activeFamilies = useMemo<Family[]>(
-        () => override ?? ROUTE_FAMILIES[pathname] ?? [],
+        () => override?.pathname === pathname ? override.families : ROUTE_FAMILIES[pathname] ?? [],
         [override, pathname],
     );
 
     const setActiveFamilies = useCallback((families: Family[]) => {
-        setOverride(families);
-    }, []);
+        setOverride({ pathname, families });
+    }, [pathname]);
 
     const value = useMemo(
         () => ({ activeFamilies, setActiveFamilies }),

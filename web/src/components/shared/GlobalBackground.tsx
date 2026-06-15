@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { FAMILIES, type Family } from '@/data/techStack';
+import { useActiveTech } from '@/context/ActiveTechContext';
 import { TechParticleField } from './TechParticleField';
 
 /**
@@ -10,14 +11,11 @@ import { TechParticleField } from './TechParticleField';
  * textura coherente.
  */
 export function GlobalBackground() {
-    const [mounted, setMounted] = useState(false);
-
-    useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setMounted(true);
-    }, []);
-
-    if (!mounted) return null;
+    const { activeFamilies } = useActiveTech();
+    const glowFamilies: Family[] = activeFamilies.length ? activeFamilies : ['Web', 'Automation'];
+    const primaryGlow = FAMILIES.find((family) => family.id === glowFamilies[0])?.color ?? '#93e83a';
+    const secondaryGlow = FAMILIES.find((family) => family.id === glowFamilies[1])?.color ?? '#2ec8d8';
+    const tertiaryGlow = FAMILIES.find((family) => family.id === glowFamilies[2])?.color ?? primaryGlow;
 
     return (
         <div className="fixed inset-0 pointer-events-none z-[-1] overflow-hidden bg-background">
@@ -34,9 +32,19 @@ export function GlobalBackground() {
                 </svg>
             </div>
 
-            {/* Glows ambientales (señal) */}
-            <div className="absolute top-1/4 left-1/4 w-[40vw] h-[40vw] max-w-[600px] max-h-[600px] bg-primary/5 blur-[120px] rounded-full mix-blend-screen" />
-            <div className="absolute bottom-1/4 right-1/4 w-[40vw] h-[40vw] max-w-[600px] max-h-[600px] bg-accent/5 blur-[120px] rounded-full mix-blend-screen" />
+            {/* Glows ambientales que acompañan la familia activa */}
+            <div
+                className="absolute left-[8%] top-[12%] h-[42vw] max-h-[620px] w-[42vw] max-w-[620px] rounded-full opacity-[0.08] blur-[130px] mix-blend-screen transition-colors duration-[1200ms]"
+                style={{ backgroundColor: primaryGlow }}
+            />
+            <div
+                className="absolute bottom-[8%] right-[8%] h-[44vw] max-h-[660px] w-[44vw] max-w-[660px] rounded-full opacity-[0.07] blur-[140px] mix-blend-screen transition-colors duration-[1200ms]"
+                style={{ backgroundColor: secondaryGlow }}
+            />
+            <div
+                className="absolute right-[36%] top-[42%] h-[24vw] max-h-[360px] w-[24vw] max-w-[360px] rounded-full opacity-[0.045] blur-[110px] mix-blend-screen transition-colors duration-[1200ms]"
+                style={{ backgroundColor: tertiaryGlow }}
+            />
 
             {/* Campo de partículas = stack tecnológico (WebGL, fallback 2D) */}
             <TechParticleField />

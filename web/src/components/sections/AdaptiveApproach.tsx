@@ -104,7 +104,7 @@ export function AdaptiveApproach() {
     return (
         <section
             id="enfoque"
-            className="relative overflow-hidden bg-transparent py-20 md:py-28"
+            className="relative overflow-hidden bg-transparent py-16 md:py-20"
             aria-labelledby="enfoque-heading"
         >
             <div className="pointer-events-none absolute left-1/2 top-0 h-[520px] w-[760px] -translate-x-1/2 rounded-full bg-cyan-500/[0.06] blur-[150px]" />
@@ -116,7 +116,7 @@ export function AdaptiveApproach() {
                         initial={{ opacity: 0, y: 10 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="mb-4 inline-block text-[11px] font-bold uppercase tracking-[0.3em] text-emerald-400"
+                        className="mb-3 inline-block text-[11px] font-bold uppercase tracking-[0.3em] text-emerald-400"
                     >
                         {t('adaptive', 'eyebrow')}
                     </motion.span>
@@ -126,7 +126,7 @@ export function AdaptiveApproach() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.05 }}
-                        className="mb-6 text-3xl font-black leading-[1.1] tracking-tight text-white md:text-4xl lg:text-5xl"
+                        className="mb-4 text-3xl font-black leading-[1.1] tracking-tight text-white md:text-4xl lg:text-5xl"
                     >
                         {t('adaptive', 'title_part1')}{" "}
                         <span className="bg-gradient-to-r from-emerald-400 to-cyan-300 bg-clip-text text-transparent">
@@ -149,24 +149,24 @@ export function AdaptiveApproach() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: 0.15 }}
-                    className="mx-auto mt-12 grid max-w-6xl gap-8 lg:grid-cols-[0.82fr_1.18fr] lg:items-stretch"
+                    className="mx-auto mt-9 grid max-w-6xl gap-5 lg:grid-cols-[0.82fr_1.18fr] lg:items-start"
                 >
-                    <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.025] p-6 backdrop-blur-md md:p-8">
+                    <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.025] p-5 backdrop-blur-md md:p-6">
                         <div className="pointer-events-none absolute -left-24 top-0 h-64 w-64 rounded-full bg-emerald-500/10 blur-[90px]" />
                         <div className="relative z-10">
-                            <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.24em] text-emerald-300">
-                                <Workflow className="h-4 w-4" />
+                            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.24em] text-emerald-300">
+                                <Workflow className="h-3.5 w-3.5" />
                                 {t('adaptive', 'card_badge')}
                             </div>
 
-                            <h3 className="text-2xl font-black leading-tight text-white md:text-3xl">
+                            <h3 className="text-xl font-black leading-tight text-white md:text-2xl">
                                 {t('adaptive', 'card_title')}
                             </h3>
-                            <p className="mt-4 text-sm leading-relaxed text-white/55 md:text-base">
+                            <p className="mt-3 text-sm leading-relaxed text-white/55">
                                 {t('adaptive', 'card_desc')}
                             </p>
 
-                            <div className="mt-8 space-y-4">
+                            <div className="mt-6 space-y-3">
                                 {REFINEMENT_STEPS.map((step, index) => {
                                     const Icon = step.icon;
                                     const { label, detail } = getStepTranslation(index);
@@ -177,21 +177,21 @@ export function AdaptiveApproach() {
                                             whileInView={{ opacity: 1, x: 0 }}
                                             viewport={{ once: true }}
                                             transition={{ delay: 0.12 + index * 0.08 }}
-                                            className="grid grid-cols-[auto_1fr] gap-4"
+                                            className="grid grid-cols-[auto_1fr] gap-3"
                                         >
                                             <div className="relative">
-                                                <div className="grid h-11 w-11 place-items-center rounded-2xl border border-white/10 bg-black/35 text-emerald-300">
-                                                    <Icon className="h-5 w-5" />
+                                                <div className="grid h-9 w-9 place-items-center rounded-xl border border-white/10 bg-black/35 text-emerald-300">
+                                                    <Icon className="h-4 w-4" />
                                                 </div>
                                                 {index < REFINEMENT_STEPS.length - 1 && (
-                                                    <div className="absolute left-1/2 top-12 h-6 w-px -translate-x-1/2 bg-white/10" />
+                                                    <div className="absolute left-1/2 top-10 h-5 w-px -translate-x-1/2 bg-white/10" />
                                                 )}
                                             </div>
                                             <div>
-                                                <p className="text-sm font-black uppercase tracking-[0.16em] text-white">
+                                                <p className="text-xs font-black uppercase tracking-[0.16em] text-white">
                                                     {label}
                                                 </p>
-                                                <p className="mt-1 text-sm leading-relaxed text-white/45">
+                                                <p className="mt-0.5 text-xs leading-relaxed text-white/45">
                                                     {detail}
                                                 </p>
                                             </div>
@@ -202,7 +202,7 @@ export function AdaptiveApproach() {
 
                             <a
                                 href="/aplicar"
-                                className="mt-8 inline-flex items-center gap-2 text-sm font-bold text-emerald-300 transition-colors hover:text-white"
+                                className="mt-6 inline-flex items-center gap-2 text-xs font-bold text-emerald-300 transition-colors hover:text-white"
                             >
                                 {t('adaptive', 'card_cta')}
                                 <ArrowRight className="h-4 w-4" />
@@ -210,7 +210,7 @@ export function AdaptiveApproach() {
                         </div>
                     </div>
 
-                    <div className="grid gap-3 sm:grid-cols-2">
+                    <div className="grid gap-3 sm:grid-cols-2 lg:auto-rows-max">
                         {PERFORMANCE_MODULES.map((module, index) => {
                             const Icon = module.icon;
                             const { title, tool, desc } = getModuleTranslation(index);
@@ -222,23 +222,23 @@ export function AdaptiveApproach() {
                                     viewport={{ once: true }}
                                     transition={{ delay: 0.08 + index * 0.06 }}
                                     className={cn(
-                                        "group relative overflow-hidden rounded-2xl border bg-white/[0.018] p-5 backdrop-blur-md transition-colors duration-300 hover:bg-white/[0.04]",
+                                        "group relative overflow-hidden rounded-2xl border bg-white/[0.018] p-4 backdrop-blur-md transition-colors duration-300 hover:bg-white/[0.04]",
                                         module.border
                                     )}
                                 >
                                     <div className={cn("absolute inset-x-0 top-0 h-px opacity-60", module.bg)} />
-                                    <div className="flex items-start gap-4">
-                                        <div className={cn("grid h-11 w-11 shrink-0 place-items-center rounded-2xl border", module.border, module.bg, module.tone)}>
-                                            <Icon className="h-5 w-5" />
+                                    <div className="flex items-start gap-3">
+                                        <div className={cn("grid h-9 w-9 shrink-0 place-items-center rounded-xl border", module.border, module.bg, module.tone)}>
+                                            <Icon className="h-4 w-4" />
                                         </div>
                                         <div className="min-w-0">
                                             <p className={cn("text-[10px] font-black uppercase tracking-[0.2em]", module.tone)}>
                                                 {tool}
                                             </p>
-                                            <h3 className="mt-2 text-base font-black text-white">
+                                            <h3 className="mt-1.5 text-sm font-black text-white">
                                                 {title}
                                             </h3>
-                                            <p className="mt-2 text-sm leading-relaxed text-white/48">
+                                            <p className="mt-1.5 text-xs leading-relaxed text-white/48">
                                                 {desc}
                                             </p>
                                         </div>
