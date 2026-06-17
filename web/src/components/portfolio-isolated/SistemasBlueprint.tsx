@@ -14,6 +14,7 @@ import { useDevMode } from './DevModeContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { SYSTEMS_NODES, SystemNodeData } from './systemsData';
 import { BackgroundVideo } from '@/components/shared/BackgroundVideo';
+import { useIsMobile } from '@/hooks/useMediaQuery';
 
 // Componente para mapear el icono por string
 function NodeIcon({ name, className }: { name: string; className?: string }) {
@@ -28,16 +29,27 @@ function NodeIcon({ name, className }: { name: string; className?: string }) {
     }
 }
 
+function getInitialLatencies(): Record<string, number> {
+    const initial: Record<string, number> = {};
+    SYSTEMS_NODES.forEach(node => {
+        initial[node.id] = node.initialLatency;
+    });
+    return initial;
+}
+
 export function SistemasBlueprint() {
     const { isDevMode } = useDevMode();
     const { language } = useLanguage();
+    const isMobile = useIsMobile();
 
     const [selectedNode, setSelectedNode] = useState<SystemNodeData | null>(null);
     const [hoveredNode, setHoveredNode] = useState<SystemNodeData | null>(null);
-    const [nodeLatencies, setNodeLatencies] = useState<Record<string, number>>({});
+    const [nodeLatencies, setNodeLatencies] = useState<Record<string, number>>(getInitialLatencies);
 
     // Simulación de fluctuación de latencia
     useEffect(() => {
+        if (isMobile) return;
+
         const interval = setInterval(() => {
             const updated: Record<string, number> = {};
             SYSTEMS_NODES.forEach(node => {
@@ -48,12 +60,12 @@ export function SistemasBlueprint() {
         }, 1500);
 
         return () => clearInterval(interval);
-    }, []);
+    }, [isMobile]);
 
 
 
     return (
-        <section id="sistemas-blueprint" className="py-24 md:py-32 relative bg-transparent overflow-hidden">
+        <section id="sistemas-blueprint" className="relative overflow-hidden bg-transparent py-16 md:py-32">
             {/* Luces de Fondo (Deep Space) */}
             <div className="absolute top-1/2 left-1/3 w-[500px] h-[500px] bg-cyan-500/5 blur-[150px] rounded-full -translate-y-1/2 pointer-events-none" />
             <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-emerald-500/5 blur-[120px] rounded-full pointer-events-none" />
@@ -61,17 +73,17 @@ export function SistemasBlueprint() {
             <div className="container mx-auto px-4 relative z-10">
                 
                 {/* Encabezado */}
-                <div className="mx-auto mb-20 max-w-3xl text-center">
+                <div className="mx-auto mb-12 max-w-3xl text-center md:mb-20">
                     <span className="text-emerald-500 font-bold tracking-[0.4em] uppercase text-[10px] block mb-3">
                         {language === 'es' ? 'AUTOMATIZACIONES · BLUEPRINT' : 'AUTOMATIONS · BLUEPRINT'}
                     </span>
-                    <h2 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter leading-none mb-6">
+                    <h2 className="text-3xl md:text-6xl font-black text-white uppercase tracking-tight md:tracking-tighter leading-tight md:leading-none mb-5 md:mb-6">
                         {language === 'es' ? 'Flujo de Datos' : 'Data Pipeline'}{' '}
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-emerald-400 to-violet-500">
                             {language === 'es' ? 'Operativo' : 'In Action'}
                         </span>
                     </h2>
-                    <p className="mx-auto max-w-2xl text-base text-zinc-400 font-light leading-relaxed">
+                    <p className="mx-auto max-w-2xl text-sm text-zinc-400 font-light leading-relaxed md:text-base">
                         {language === 'es'
                             ? 'Un sistema de captación B2B no es estático: es una coreografía de eventos, latencias y llamadas API en cascada. Inspeccioná los nodos del circuito para ver telemetría y payloads reales.'
                             : 'A B2B capture system is not static: it is a choreography of cascading events, latencies, and API calls. Inspect the circuit nodes to see live telemetry and payloads.'
@@ -269,11 +281,11 @@ export function SistemasBlueprint() {
                 </div>
 
                 {/* ──── CIRCUITO DE BLUEPRINT (MOBILE) ──── */}
-                <div className="grid gap-4 md:hidden max-w-md mx-auto relative pl-8">
+                <div className="grid gap-3 md:hidden max-w-md mx-auto relative pl-7">
                     {/* Línea vertical izquierda de circuito */}
                     <div className="absolute top-4 bottom-4 left-3 w-[2px] bg-gradient-to-b from-cyan-500 via-emerald-500 to-violet-500" />
                     
-                    {SYSTEMS_NODES.map((node, index) => {
+                    {SYSTEMS_NODES.slice(0, 4).map((node, index) => {
                         const isSelected = selectedNode?.id === node.id;
                         const currentLatency = nodeLatencies[node.id] || node.initialLatency;
 

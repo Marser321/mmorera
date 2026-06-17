@@ -9,6 +9,7 @@ import { useActiveTech } from '@/context/ActiveTechContext';
 import type { Family } from '@/data/techStack';
 import { EASE_OUT, DURATION, fadeUp } from '@/lib/motion';
 import dynamic from 'next/dynamic';
+import { useIsMobile } from '@/hooks/useMediaQuery';
 
 // Núcleo 3D del hero — cargado sin SSR para mantener three fuera del bundle inicial.
 const OrchestrationCore = dynamic(
@@ -110,14 +111,19 @@ export function HeroPortfolio() {
     const { isDevMode, metrics, toggleDevMode } = useDevMode();
     const { t, language } = useLanguage();
     const { setActiveFamilies } = useActiveTech();
+    const isMobile = useIsMobile();
     const [activeTrack, setActiveTrack] = useState<string>('crear');
 
     // El track activo manda qué familias se resaltan en el campo de partículas
     // global → al pasar el mouse, los logos del fondo cambian a esa disciplina.
     useEffect(() => {
+        if (isMobile) {
+            setActiveFamilies([]);
+            return;
+        }
         const track = TRACKS.find((tr) => tr.id === activeTrack);
         if (track) setActiveFamilies(track.families);
-    }, [activeTrack, setActiveFamilies]);
+    }, [activeTrack, isMobile, setActiveFamilies]);
 
     // Intro guiada: al cargar, el indicador barre los 3 modos (cambiando el fondo
     // de verdad) y se posa en el default. Cualquier interacción lo cancela.
@@ -137,7 +143,7 @@ export function HeroPortfolio() {
 
     useEffect(() => {
         const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (reduce) {
+        if (reduce || isMobile) {
             introActive.current = false;
             return;
         }
@@ -155,7 +161,7 @@ export function HeroPortfolio() {
         return () => {
             timers.forEach((id) => clearTimeout(id));
         };
-    }, []);
+    }, [isMobile]);
 
     // --- TIMECODE PLAYER (23.976 FPS) ---
     const [timecode, setTimecode] = useState('01:00:00:00');
@@ -182,6 +188,9 @@ export function HeroPortfolio() {
     }, []);
 
     useEffect(() => {
+        if (isMobile) {
+            return;
+        }
         window.addEventListener('mousemove', handleActivity);
         window.addEventListener('scroll', handleActivity);
         return () => {
@@ -189,9 +198,11 @@ export function HeroPortfolio() {
             window.removeEventListener('scroll', handleActivity);
             if (mouseTimerRef.current) clearTimeout(mouseTimerRef.current);
         };
-    }, [handleActivity]);
+    }, [handleActivity, isMobile]);
 
     useEffect(() => {
+        if (isMobile) return;
+
         let reqId: number;
         const updateClock = (timestamp: number) => {
             if (isPlaying) {
@@ -205,7 +216,7 @@ export function HeroPortfolio() {
         };
         reqId = requestAnimationFrame(updateClock);
         return () => cancelAnimationFrame(reqId);
-    }, [isPlaying, formatTimecode]);
+    }, [isPlaying, formatTimecode, isMobile]);
 
     // --- DEV MODE VIA ATAJO DE TECLADO (Cmd+Shift+D) ---
     useEffect(() => {
@@ -279,7 +290,7 @@ export function HeroPortfolio() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.4 }}
-                    className="mb-6 flex items-center gap-2 font-mono text-[10px] text-zinc-500 tracking-widest"
+                    className="mb-6 hidden items-center gap-2 font-mono text-[10px] tracking-widest text-zinc-500 sm:flex"
                 >
                     <span className={`w-1.5 h-1.5 rounded-full ${isPlaying ? 'bg-emerald-500 animate-pulse' : 'bg-zinc-600'}`} />
                     <span className="text-zinc-300 font-bold">{timecode}</span>
@@ -440,7 +451,7 @@ export function HeroPortfolio() {
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4, delay: 1.3 }}
-                    className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mb-12"
+                    className="mb-12 flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:gap-4"
                 >
                     <motion.a
                         href="/aplicar"
@@ -459,7 +470,7 @@ export function HeroPortfolio() {
                     <motion.a
                         href="/casos-de-exito"
                         whileTap={{ scale: 0.98 }}
-                        className="inline-flex h-12 items-center justify-center rounded-full border border-white/10 px-8 text-xs font-black uppercase text-white/60 transition-all duration-300 hover:border-white/20 hover:bg-white/5 hover:text-white sm:h-14 sm:px-10"
+                        className="hidden h-12 items-center justify-center rounded-full border border-white/10 px-8 text-xs font-black uppercase text-white/60 transition-all duration-300 hover:border-white/20 hover:bg-white/5 hover:text-white sm:inline-flex sm:h-14 sm:px-10"
                     >
                         <Eye className="mr-2 w-4 h-4" />
                         {t('hero', 'cta_cases')} →

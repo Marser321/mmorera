@@ -234,7 +234,7 @@ void main() {
     float famW = uFamilyWeight[fi];
     float act = mix(0.4, 1.0, famW);
     vColor = aColor;
-    vAlpha = (0.22 + 0.55 * famW) + infl * 0.4;
+    vAlpha = (0.14 + 0.42 * famW) + infl * 0.34;
     gl_PointSize = aSize * act * (1.0 + infl * 1.2) * uPointScale * uPixelRatio;
     gl_Position = vec4(pos, 0.0, 1.0);
 }
@@ -268,7 +268,7 @@ void main() {
     int fi = int(aFamily + 0.5);
     float famW = uFamilyWeight[fi];
     vColor = aColor;
-    vAlpha = mix(0.12, 0.4, famW) + influence * 0.24;
+    vAlpha = mix(0.08, 0.28, famW) + influence * 0.2;
     gl_PointSize = aSize * (0.75 + aDepth * 0.8 + influence) * uPixelRatio;
     gl_Position = vec4(pos, 0.0, 1.0);
 }
@@ -480,7 +480,7 @@ function AmbientParticleSystem({
         uMouseActive: { value: 0 },
         uPixelRatio: { value: 1.5 },
         uFamilyWeight: { value: familyWeights(activeFamilies, 0.52) },
-        uOpacity: { value: isMobile ? 0.42 : 0.5 },
+        uOpacity: { value: isMobile ? 0.3 : 0.36 },
     }), [activeFamilies, isMobile]);
 
     useEffect(() => {
@@ -670,7 +670,7 @@ function ConstellationLayer({
             nodePos[i * 3] = px[i];
             nodePos[i * 3 + 1] = py[i];
             nodePos[i * 3 + 2] = 0;
-            nodeAlpha[i] = Math.min(0.12 + proximity * 0.5, 0.7);
+            nodeAlpha[i] = Math.min(0.08 + proximity * 0.42, 0.56);
         }
         nodeGeo.attributes.position.needsUpdate = true;
         nodeGeo.attributes.aAlpha.needsUpdate = true;
@@ -835,12 +835,12 @@ export function TechParticleField() {
                 if (existing) {
                     return current.map((layer) => ({
                         ...layer,
-                        targetOpacity: layer.sceneId === scene.id ? 0.92 : 0,
+                        targetOpacity: layer.sceneId === scene.id ? 0.68 : 0,
                     }));
                 }
                 return [
                     ...current.map((layer) => ({ ...layer, targetOpacity: 0 })),
-                    { sceneId: scene.id, geo, targetOpacity: 0.92 },
+                    { sceneId: scene.id, geo, targetOpacity: 0.68 },
                 ].slice(-2);
             });
         });
@@ -857,6 +857,7 @@ export function TechParticleField() {
     }, []);
 
     if (!environment) return null;
+    if (environment.isMobile) return null;
     if (environment.mode === 'fallback') return <GenerativeField activeFamilies={activeFamilies} />;
 
     return (

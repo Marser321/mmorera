@@ -1,5 +1,86 @@
 # Implementation Plan
 
+<mobile_first_simplification>
+  <status>approved_by_vibe</status>
+  <approval_source>El usuario pidio explicitamente "PLEASE IMPLEMENT THIS PLAN".</approval_source>
+  <goal>Crear una experiencia mobile performance-first para `/`, `/sistemas`, `/estudio`, `/casos-de-exito` y `/aplicar`, manteniendo desktop rico pero reduciendo fondos animados, WebGL y composiciones pesadas en mobile.</goal>
+  <scope>
+    <navigation>Navbar con orden estable: Home, Sistemas, Estudio, Casos, Aplicar. Sin reordenamiento por track ni expansion/colapso en mobile.</navigation>
+    <backgrounds>Desactivar WebGL/particulas y videos de fondo en mobile; usar poster, grilla y gradientes estaticos.</backgrounds>
+    <systems_page>Hacer `/sistemas` mas liviana en mobile, manteniendo mensaje CRM y proyectos compactos.</systems_page>
+    <cases_page>Convertir mobile de `/casos-de-exito` en carrusel liviano con imagen, titulo, valor corto, chips y CTA.</cases_page>
+    <apply_page>Priorizar `/aplicar` como conversion mobile, con spacing mas compacto y controles de avance siempre faciles de alcanzar.</apply_page>
+  </scope>
+  <work_phases>
+    <phase name="1_mobile_performance_mode">
+      <what>Desactivar WebGL global y video playback en mobile, manteniendo capas estaticas de identidad.</what>
+      <why>Mobile debe sentirse fluido antes que espectacular.</why>
+      <business_benefit>Reduce friccion, mejora navegacion y hace que el usuario llegue al formulario sin cansancio visual.</business_benefit>
+    </phase>
+    <phase name="2_stable_navigation">
+      <what>Fijar orden y ancho de los items del navbar mobile.</what>
+      <why>Si los destinos cambian de posicion, volver o avanzar se vuelve contraintuitivo.</why>
+      <business_benefit>Mejora orientacion y aumenta confianza en la experiencia.</business_benefit>
+    </phase>
+    <phase name="3_mobile_content_simplification">
+      <what>Aligerar carousel de casos, secciones de sistemas y formulario aplicar.</what>
+      <why>El contenido mobile debe priorizar lectura, pocos gestos y accion clara.</why>
+      <business_benefit>Sube la probabilidad de completar el brief y pedir contacto.</business_benefit>
+    </phase>
+    <phase name="4_validation">
+      <what>Correr lint, build, tests y verificar rutas principales en local.</what>
+      <why>El ajuste toca componentes compartidos y debe preservar desktop.</why>
+      <business_benefit>Entrega una version mas confiable para demo y feedback inmediato.</business_benefit>
+    </phase>
+  </work_phases>
+  <guardrails>
+    <security>No escribir secretos, API keys ni tokens en codigo o archivos versionados.</security>
+    <compatibility>No agregar APIs publicas, no cambiar contratos de datos, no tocar dependencias.</compatibility>
+    <desktop_integrity>Mantener la experiencia rica en desktop salvo ajustes necesarios de compatibilidad.</desktop_integrity>
+    <git_hygiene>No revertir cambios previos ni limpiar archivos ajenos al alcance.</git_hygiene>
+  </guardrails>
+</mobile_first_simplification>
+
+<portfolio_intuitive_refinement>
+  <status>approved_by_vibe</status>
+  <approval_source>El usuario pidio explicitamente "PLEASE IMPLEMENT THIS PLAN".</approval_source>
+  <goal>Refinar `/casos-de-exito` y `/portfolio-preview` para que los proyectos se lean con mas ancho, las tarjetas no corten titulos ni CTAs, y los logos/fondo tecnologico se perciban mas ambientales sin perder reaccion por hover, cursor, track o familias activas.</goal>
+  <scope>
+    <route>/Users/mariomorera/Desktop/MMORERA/web/src/app/casos-de-exito/page.tsx via PortfolioReel</route>
+    <route>/Users/mariomorera/Desktop/MMORERA/web/src/app/portfolio-preview/page.tsx via PortfolioGrid</route>
+    <background>/Users/mariomorera/Desktop/MMORERA/web/src/components/shared/GlobalBackground.tsx y TechParticleField</background>
+    <logos>/Users/mariomorera/Desktop/MMORERA/web/src/components/sections/TrustedByStrip.tsx</logos>
+  </scope>
+  <work_phases>
+    <phase name="1_responsive_portfolio">
+      <what>Aumentar aire util, wrapping y estabilidad visual en reel, grid y modal de casos.</what>
+      <why>Los titulos y acciones deben poder ocupar dos lineas sin romper tarjetas ni competir con chips.</why>
+      <business_benefit>Mejora claridad comercial del portfolio y reduce friccion en dispositivos chicos.</business_benefit>
+    </phase>
+    <phase name="2_ambient_logos">
+      <what>Bajar presencia base de logos/particulas y tira de logos, conservando interactividad.</what>
+      <why>El fondo debe aportar contexto tecnico sin robar foco al mensaje y a los proyectos.</why>
+      <business_benefit>Eleva percepcion premium y hace mas intuitiva la lectura del sitio.</business_benefit>
+    </phase>
+    <phase name="3_copy_audit">
+      <what>Ajustar copys visibles de proyectos para mantener desafio, orquestacion e impacto con frases mas claras.</what>
+      <why>El portfolio debe explicar capacidad concreta sin sonar excesivamente tecnico o largo.</why>
+      <business_benefit>Hace mas facil que prospectos entiendan valor y encaje operativo.</business_benefit>
+    </phase>
+    <phase name="4_validation">
+      <what>Ejecutar lint/build y verificar `/`, `/casos-de-exito`, `/portfolio-preview` en 390x844, 768x1024 y 1440x900.</what>
+      <why>El cambio queda completo solo si compila y se ve sin solapamientos reales.</why>
+      <business_benefit>Reduce riesgo antes de demo, venta o despliegue.</business_benefit>
+    </phase>
+  </work_phases>
+  <guardrails>
+    <security>No escribir secretos, API keys ni tokens en codigo o archivos versionados.</security>
+    <compatibility>No agregar APIs publicas nuevas, no cambiar contratos de datos y no tocar dependencias.</compatibility>
+    <git_hygiene>No revertir cambios ajenos ni limpiar archivos no relacionados.</git_hygiene>
+    <design_quality>Evitar textos solapados, titulos cortados, CTAs comprimidos y fondos que compitan con el contenido.</design_quality>
+  </guardrails>
+</portfolio_intuitive_refinement>
+
 <implementation_scope>
   <primary_workspace>/Users/mariomorera/Desktop/MMORERA</primary_workspace>
   <primary_app>/Users/mariomorera/Desktop/MMORERA/web</primary_app>

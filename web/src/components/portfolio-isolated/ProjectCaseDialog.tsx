@@ -38,14 +38,14 @@ export function ProjectCaseDialog({ project }: { project: ProjectData }) {
                 <span className="mb-2 inline-block rounded border border-violet-500/20 bg-violet-500/20 px-2 py-0.5 text-[8px] font-black uppercase tracking-widest text-violet-400">
                     {language === 'es' ? 'Caso de Estudio' : 'Case Study'}
                 </span>
-                <DialogTitle className="text-xl font-black uppercase leading-none tracking-tight text-white sm:text-2xl lg:text-3xl">
+                <DialogTitle className="max-w-[min(100%,52rem)] break-words text-xl font-black uppercase leading-tight tracking-tight text-white [text-wrap:balance] sm:text-2xl lg:text-3xl">
                     {project.title[language]}
                 </DialogTitle>
                 <div className="mt-3 flex flex-wrap gap-1.5">
                     {project.category[language].map((c) => (
                         <span
                             key={c}
-                            className="rounded-full border border-white/10 bg-white/[0.05] px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-zinc-300"
+                            className="rounded-full border border-white/10 bg-white/[0.05] px-2 py-0.5 text-[9px] font-bold uppercase leading-tight tracking-wider text-zinc-300"
                         >
                             {c}
                         </span>
@@ -131,16 +131,16 @@ export function ProjectCaseDialog({ project }: { project: ProjectData }) {
                     </div>
 
                     {/* Métrica Destacada */}
-                    <div className="mt-6 flex shrink-0 items-center justify-between rounded-xl border border-white/5 bg-white/[0.01] p-4 shadow-[inset_0_0_15px_rgba(255,255,255,0.01)]">
-                        <div>
+                    <div className="mt-6 flex shrink-0 flex-col gap-3 rounded-xl border border-white/5 bg-white/[0.01] p-4 shadow-[inset_0_0_15px_rgba(255,255,255,0.01)] sm:flex-row sm:items-center sm:justify-between">
+                        <div className="min-w-0">
                             <span className="block font-mono text-[8px] uppercase tracking-wider text-zinc-500">
                                 {language === 'es' ? 'Métrica de Éxito' : 'Success Metric'}
                             </span>
-                            <span className="mt-0.5 block text-sm font-bold uppercase tracking-tight text-white">
+                            <span className="mt-0.5 block break-words text-sm font-bold uppercase leading-tight tracking-tight text-white">
                                 {project.metric[language]}
                             </span>
                         </div>
-                        <span className="rounded border border-violet-500/20 bg-violet-500/10 px-2.5 py-1 font-mono text-[10px] font-bold text-violet-300 shadow-[0_0_10px_rgba(167,139,250,0.05)]">
+                        <span className="w-fit shrink-0 rounded border border-violet-500/20 bg-violet-500/10 px-2.5 py-1 font-mono text-[10px] font-bold text-violet-300 shadow-[0_0_10px_rgba(167,139,250,0.05)]">
                             ROI +++
                         </span>
                     </div>

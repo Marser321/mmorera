@@ -122,7 +122,7 @@ export function AboutTimeline() {
     return (
         <section
             id="sobre-mi-timeline"
-            className="relative overflow-hidden bg-transparent py-20 md:py-28"
+            className="relative overflow-hidden bg-transparent py-14 md:py-28"
         >
             <BackgroundVideo
                 src="/videos/developer-workspace.mp4"
@@ -133,7 +133,7 @@ export function AboutTimeline() {
                 className="opacity-75"
             />
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_18%,rgba(167,139,250,0.15),transparent_34%),radial-gradient(circle_at_84%_62%,rgba(34,211,238,0.13),transparent_38%),linear-gradient(to_bottom,rgba(0,0,0,0.16),rgba(0,0,0,0.48))]" />
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:80px_80px] opacity-25" />
+            <div className="absolute inset-0 hidden bg-[linear-gradient(to_right,rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:80px_80px] opacity-25 md:block" />
             <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
 
             <Container className="relative z-10">
@@ -142,7 +142,7 @@ export function AboutTimeline() {
                         <span className="mb-4 block font-mono text-[10px] font-bold uppercase tracking-[0.34em] text-emerald-300/80">
                             {copy.eyebrow}
                         </span>
-                        <h2 className="max-w-4xl text-4xl font-black uppercase leading-[0.95] tracking-tight text-white md:text-6xl">
+                        <h2 className="max-w-4xl text-3xl font-black uppercase leading-tight tracking-tight text-white md:text-6xl md:leading-[0.95]">
                             {copy.title}
                         </h2>
                         <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/68 md:text-lg">
@@ -192,14 +192,14 @@ export function AboutTimeline() {
                         return (
                             <article
                                 key={pillar.title}
-                                className="group relative min-h-[17rem] overflow-hidden rounded-2xl border border-white/15 bg-slate-950/55 p-5 shadow-[0_24px_80px_rgba(2,8,23,0.32)] backdrop-blur-sm"
+                                className="group relative min-h-[14rem] overflow-hidden rounded-2xl border border-white/15 bg-slate-950/55 p-5 shadow-[0_18px_54px_rgba(2,8,23,0.28)] backdrop-blur-sm md:min-h-[17rem] md:shadow-[0_24px_80px_rgba(2,8,23,0.32)]"
                             >
                                 <Image
                                     src={PILLAR_IMAGES[index]}
                                     alt=""
                                     fill
                                     sizes="(max-width: 768px) 100vw, 33vw"
-                                    className="object-cover opacity-45 saturate-[0.85] transition duration-700 group-hover:scale-105 group-hover:opacity-55"
+                                    className="object-cover opacity-36 saturate-[0.85] transition duration-700 md:opacity-45 md:group-hover:scale-105 md:group-hover:opacity-55"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/65 to-transparent" />
                                 <div className="absolute inset-0 bg-gradient-to-br from-violet-500/10 via-transparent to-cyan-400/10" />

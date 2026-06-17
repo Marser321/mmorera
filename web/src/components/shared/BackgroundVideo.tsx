@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from 'framer-motion';
+import { useIsMobile } from '@/hooks/useMediaQuery';
 
 /**
  * Fondo de video reutilizable, pensado para presencia "cinematográfica" sin
@@ -92,6 +93,7 @@ export function BackgroundVideo({
     className = '',
 }: BackgroundVideoProps) {
     const prefersReduced = useReducedMotion();
+    const isMobile = useIsMobile();
     const containerRef = useRef<HTMLDivElement>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
     const [hasEntered, setHasEntered] = useState(false);
@@ -125,9 +127,10 @@ export function BackgroundVideo({
         }
     }, [inView, hasEntered, prefersReduced]);
 
-    const opacity = OPACITY[intensity];
+    const opacity = isMobile ? Math.min(OPACITY[intensity], 0.16) : OPACITY[intensity];
     const scrimBg = scrimBackground(scrim);
-    const showVideo = hasEntered && !prefersReduced;
+    const showVideo = hasEntered && !prefersReduced && !isMobile;
+    const baseDim = isMobile ? Math.max(BASE_DIM[intensity], 0.42) : BASE_DIM[intensity];
 
     return (
         <div
@@ -164,7 +167,7 @@ export function BackgroundVideo({
             </div>
 
             {/* Piso de contraste uniforme */}
-            <div className="absolute inset-0 bg-black" style={{ opacity: BASE_DIM[intensity] }} />
+            <div className="absolute inset-0 bg-black" style={{ opacity: baseDim }} />
 
             {/* Tinte tonal coherente con el track de la sección */}
             {tint !== 'none' && (

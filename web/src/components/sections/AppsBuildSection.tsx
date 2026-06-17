@@ -38,7 +38,7 @@ export function AppsBuildSection() {
 
                 <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
                     {projects.map((p, i) => (
-                        <Reveal key={p.id} delay={(i % 3) * 0.08} className="h-full">
+                        <Reveal key={p.id} delay={(i % 3) * 0.08} className={`h-full ${i > 2 ? 'hidden sm:block' : ''}`}>
                             <article className="group relative flex h-72 flex-col justify-end overflow-hidden rounded-3xl border border-white/10 bg-black/80">
                                 <Image
                                     src={p.imageUrls[0]}

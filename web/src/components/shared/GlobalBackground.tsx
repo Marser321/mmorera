@@ -20,7 +20,7 @@ export function GlobalBackground() {
     return (
         <div className="fixed inset-0 pointer-events-none z-[-1] overflow-hidden bg-background">
             {/* Grid de circuito técnico */}
-            <div className="absolute inset-0 opacity-[0.12]">
+            <div className="absolute inset-0 opacity-[0.1] md:opacity-[0.08]">
                 <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <pattern id="circuit-bg" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
@@ -34,20 +34,27 @@ export function GlobalBackground() {
 
             {/* Glows ambientales que acompañan la familia activa */}
             <div
-                className="absolute left-[8%] top-[12%] h-[42vw] max-h-[620px] w-[42vw] max-w-[620px] rounded-full opacity-[0.08] blur-[130px] mix-blend-screen transition-colors duration-[1200ms]"
+                className="absolute left-[8%] top-[12%] h-[72vw] max-h-[620px] w-[72vw] max-w-[620px] rounded-full opacity-[0.04] blur-[110px] mix-blend-screen transition-colors duration-[1200ms] md:h-[42vw] md:w-[42vw] md:opacity-[0.055] md:blur-[140px]"
                 style={{ backgroundColor: primaryGlow }}
             />
             <div
-                className="absolute bottom-[8%] right-[8%] h-[44vw] max-h-[660px] w-[44vw] max-w-[660px] rounded-full opacity-[0.07] blur-[140px] mix-blend-screen transition-colors duration-[1200ms]"
+                className="absolute bottom-[8%] right-[8%] h-[76vw] max-h-[660px] w-[76vw] max-w-[660px] rounded-full opacity-[0.035] blur-[120px] mix-blend-screen transition-colors duration-[1200ms] md:h-[44vw] md:w-[44vw] md:opacity-[0.05] md:blur-[150px]"
                 style={{ backgroundColor: secondaryGlow }}
             />
             <div
-                className="absolute right-[36%] top-[42%] h-[24vw] max-h-[360px] w-[24vw] max-w-[360px] rounded-full opacity-[0.045] blur-[110px] mix-blend-screen transition-colors duration-[1200ms]"
+                className="absolute right-[36%] top-[42%] h-[24vw] max-h-[360px] w-[24vw] max-w-[360px] rounded-full opacity-[0.035] blur-[120px] mix-blend-screen transition-colors duration-[1200ms]"
                 style={{ backgroundColor: tertiaryGlow }}
             />
 
             {/* Campo de partículas = stack tecnológico (WebGL, fallback 2D) */}
-            <TechParticleField />
+            <div className="absolute inset-0 hidden opacity-80 md:block">
+                <TechParticleField />
+            </div>
+
+            <div
+                aria-hidden
+                className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(7,8,9,0.18)_52%,rgba(7,8,9,0.42)_100%)]"
+            />
         </div>
     );
 }

@@ -96,14 +96,14 @@ export function PortfolioGrid() {
                     </div>
                 </div>
 
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
                             {PROJECTS_DATA.map((project) => {
                                 const isHovered = hoveredProjectId === project.id;
                                 return (
                                     <Dialog key={project.id}>
                                         <DialogTrigger asChild>
                                             <div
-                                                className="group relative bg-neutral-950/60 backdrop-blur-md border border-white/5 hover:border-violet-500/80 hover:bg-neutral-950 hover:backdrop-blur-none hover:shadow-[0_0_35px_rgba(139,92,246,0.15)] rounded-2xl overflow-hidden shadow-2xl transition-all duration-500 flex flex-col justify-end aspect-[16/10] cursor-pointer"
+                                                className="group relative flex min-h-[260px] cursor-pointer flex-col justify-end overflow-hidden rounded-2xl border border-white/5 bg-neutral-950/60 shadow-2xl backdrop-blur-md transition-all duration-500 hover:border-violet-500/80 hover:bg-neutral-950 hover:shadow-[0_0_35px_rgba(139,92,246,0.15)] hover:backdrop-blur-none sm:min-h-[280px] xl:aspect-[16/10] xl:min-h-0"
                                                 onMouseEnter={() => setHoveredProjectId(project.id)}
                                                 onMouseLeave={() => setHoveredProjectId(null)}
                                             >
@@ -112,26 +112,26 @@ export function PortfolioGrid() {
                                                     className="absolute inset-0 z-0 bg-cover bg-center opacity-30 group-hover:opacity-80 group-hover:scale-105 transition-all duration-500"
                                                     style={{ backgroundImage: `url(${project.imageUrl})` }}
                                                 />
-                                                <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/80 via-neutral-950/40 to-transparent z-10" />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/55 to-transparent z-10" />
 
                                                 {/* CONTENIDO DE LA TARJETA SIMPLIFICADO */}
-                                                <div className="absolute inset-0 flex flex-col justify-end p-5 z-20 text-left">
+                                                <div className="absolute inset-0 z-20 flex flex-col justify-end p-5 text-left sm:p-6">
                                                     
                                                     {/* Scramble Title */}
-                                                    <h3 className="text-xl font-black text-white uppercase tracking-tight mb-2">
+                                                    <h3 className="mb-3 max-w-full break-words text-xl font-black uppercase leading-tight tracking-tight text-white [text-wrap:balance] sm:text-2xl">
                                                         <ScrambleText text={project.title[language]} active={isHovered} />
                                                     </h3>
                                                     
                                                     {/* Footer con Stack y botón minimalista */}
-                                                    <div className="flex justify-between items-center border-t border-white/5 pt-3 mt-1">
-                                                        <div className="flex gap-1 flex-wrap">
+                                                    <div className="mt-1 flex flex-col gap-3 border-t border-white/5 pt-3 sm:flex-row sm:items-end sm:justify-between">
+                                                        <div className="flex min-w-0 flex-wrap gap-1.5">
                                                             {project.stack.slice(0, 3).map(s => (
-                                                                <span key={s} className="bg-white/5 border border-white/5 px-2 py-0.5 rounded text-[8px] font-mono text-zinc-400">
+                                                                <span key={s} className="rounded border border-white/5 bg-white/5 px-2 py-0.5 font-mono text-[8px] text-zinc-400">
                                                                     {s}
                                                                 </span>
                                                             ))}
                                                         </div>
-                                                        <span className="flex items-center gap-1.5 text-[9px] font-mono font-black text-violet-400 group-hover:text-white transition-colors">
+                                                        <span className="flex shrink-0 items-center gap-1.5 self-start font-mono text-[9px] font-black uppercase leading-tight text-violet-400 transition-colors group-hover:text-white sm:self-auto">
                                                             {language === 'es' ? 'VER TECNOLOGÍAS' : 'VIEW TECH'}
                                                             <Play className="w-3 h-3 text-violet-400 fill-violet-400/20 group-hover:fill-white/20 transition-all" />
                                                         </span>

@@ -29,16 +29,16 @@ export const PROJECTS_DATA: ProjectData[] = [
             en: ['Creative Tech', 'UX Design']
         },
         desafio: {
-            es: 'Carga sumamente lenta de imágenes 360° en catálogos de concesionarias rígidos.',
-            en: 'Extremely slow loading of 360° images on rigid car dealership catalogs.'
+            es: 'Catálogos de concesionarias lentos, con imágenes 360° pesadas y poca fluidez.',
+            en: 'Slow dealership catalogs with heavy 360° imagery and little fluidity.'
         },
         orquestacion: {
-            es: 'Compresión progresiva de assets WebGL y pre-carga en hilos secundarios del navegador.',
-            en: 'Progressive compression of WebGL assets and pre-loading on secondary browser threads.'
+            es: 'Assets WebGL comprimidos, precarga progresiva y render pensado para mobile.',
+            en: 'Compressed WebGL assets, progressive preloading, and mobile-ready rendering.'
         },
         impacto: {
-            es: 'Navegación 360° inmersiva fluida en mobile a 60fps constantes.',
-            en: 'Fluid 360° immersive navigation on mobile at a constant 60fps.'
+            es: 'Exploración 360° fluida que vuelve el catálogo más inmersivo y confiable.',
+            en: 'Fluid 360° browsing that makes the catalog feel more immersive and trustworthy.'
         },
         metric: { es: 'Filtro Inmersivo', en: 'Immersive Filter' },
         iframeUrl: 'https://auto-indol-five.vercel.app/',
@@ -99,16 +99,16 @@ export function AutoHub360Viewer({ modelSrc }: { modelSrc: string }) {
             en: ['SaaS Dashboard', 'Data Systems']
         },
         desafio: {
-            es: 'Tablero administrativo lento que demoraba reportes y visualización de inventario.',
-            en: 'Slow admin dashboard delaying reports and inventory visualization.'
+            es: 'Panel administrativo lento para reportes, inventario y lectura financiera diaria.',
+            en: 'Slow admin dashboard for reports, inventory, and daily financial reads.'
         },
         orquestacion: {
-            es: 'Estrategias de caché en memoria del navegador y optimización de renderizados.',
-            en: 'In-browser caching strategies and render optimizations.'
+            es: 'Caché local, componentes reactivos y vistas optimizadas para decisiones rápidas.',
+            en: 'Local cache, reactive components, and optimized views for faster decisions.'
         },
         impacto: {
-            es: 'Lectura en tiempo real de márgenes financieros e inventarios instantáneos.',
-            en: 'Real-time reading of financial margins and instant inventory audits.'
+            es: 'Márgenes, stock y operación visibles con menos espera y menos fricción.',
+            en: 'Margins, stock, and operations visible with less waiting and less friction.'
         },
         metric: { es: 'Panel Reactivo', en: 'Reactive Dashboard' },
         iframeUrl: 'https://lnb-saass.vercel.app/',
@@ -167,16 +167,16 @@ export function FinanceMetricsPanel() {
             en: ['AI & Agents', 'Automation']
         },
         desafio: {
-            es: 'Proceso manual y sumamente ineficiente de calificación de candidatos y CVs.',
-            en: 'Manual and highly inefficient candidate and CV screening process.'
+            es: 'Evaluación manual de CVs lenta, repetitiva y difícil de comparar.',
+            en: 'Manual resume review that was slow, repetitive, and hard to compare.'
         },
         orquestacion: {
-            es: 'Pipeline de segundo plano con modelos avanzados de IA para parseo estructurado de CVs.',
-            en: 'Background pipeline using advanced AI models for structured CV parsing.'
+            es: 'Pipeline IA para leer CVs, extraer datos clave y ordenar señales de match.',
+            en: 'AI pipeline to read resumes, extract key data, and rank match signals.'
         },
         impacto: {
-            es: 'Reporte de match instantáneo y sugerencias contextuales automáticas.',
-            en: 'Instant match reports and automatic contextual suggestions.'
+            es: 'Reporte claro de compatibilidad y mejoras accionables en pocos segundos.',
+            en: 'Clear fit report and actionable improvements in a few seconds.'
         },
         metric: { es: 'Clasificador IA', en: 'AI Classifier' },
         iframeUrl: 'https://profecionalcv.vercel.app/',
@@ -228,16 +228,16 @@ async def evaluate_resume(file: UploadFile = File(...)):
             en: ['Conversion Design', 'Technical SEO']
         },
         desafio: {
-            es: 'Baja conversión de leads en servicios de personalización vehicular de alta gama.',
-            en: 'Low lead conversion on premium vehicle wrapping services.'
+            es: 'Servicios premium de personalización con tráfico, pero poca conversión.',
+            en: 'Premium customization services with traffic, but low conversion.'
         },
         orquestacion: {
-            es: 'Diseño ultra rápido en Vanilla JS y animaciones CSS optimizadas contra bloqueos de hilo.',
-            en: 'Ultra-fast Vanilla JS design and CSS animations optimized to prevent thread blocks.'
+            es: 'Landing rápida con microinteracciones y recorrido visual orientado a consulta.',
+            en: 'Fast landing with microinteractions and a visual path designed for inquiries.'
         },
         impacto: {
-            es: 'Incremento sustancial en la conversión y excelente presencia estética de marca.',
-            en: 'Substantial increase in conversions and premium brand aesthetic presence.'
+            es: 'Marca más premium y camino de contacto más claro para leads de alto valor.',
+            en: 'More premium brand presence and a clearer contact path for high-value leads.'
         },
         metric: { es: 'Conversión++', en: 'Conversion++' },
         iframeUrl: 'https://evowrap.vercel.app/',
@@ -294,16 +294,16 @@ async def evaluate_resume(file: UploadFile = File(...)):
             en: ['Automations', 'Payment Gateways']
         },
         desafio: {
-            es: 'Pérdidas de facturación por inasistencias en reservas manuales telefónicas.',
-            en: 'Revenue loss due to no-shows in manual phone bookings.'
+            es: 'Reservas manuales con ausencias frecuentes y tiempo operativo perdido.',
+            en: 'Manual bookings with frequent no-shows and wasted operating time.'
         },
         orquestacion: {
-            es: 'Pasarela de pagos en línea, alertas automatizadas de mensajería y motor de reglas operativo.',
-            en: 'Online payment gateway, automated instant notifications, and rules engine.'
+            es: 'Pago de seña, confirmaciones automáticas y reglas simples para ordenar turnos.',
+            en: 'Deposit payment, automated confirmations, and simple rules to organize bookings.'
         },
         impacto: {
-            es: 'Reducción drástica de inasistencias y cobro de reserva 100% automatizado.',
-            en: 'Drastic reduction of no-shows and 100% automated booking deposit charges.'
+            es: 'Agenda más predecible, menos ausencias y reservas confirmadas sin llamadas.',
+            en: 'More predictable schedule, fewer no-shows, and confirmed bookings without calls.'
         },
         metric: { es: 'Reserva Segura', en: 'Secure Booking' },
         iframeUrl: 'https://nb-oa7mhumgz-marios-projects-4a53e443.vercel.app/reservar',
@@ -364,16 +364,16 @@ export async function POST(req: Request) {
             en: ['WebGL / 3D', 'Real Estate']
         },
         desafio: {
-            es: 'Imposibilidad de previsualizar desarrollos turísticos premium de forma remota.',
-            en: 'Impossibility of previewing premium tourist developments remotely.'
+            es: 'Desarrollos premium difíciles de presentar a distancia con suficiente impacto.',
+            en: 'Premium developments were hard to present remotely with enough impact.'
         },
         orquestacion: {
-            es: 'Navegación panorámica 3D interactiva y carga optimizada de texturas mediante render condicional.',
-            en: '3D interactive panoramic navigation and optimized texture rendering.'
+            es: 'Recorrido 360° con carga progresiva y escenas preparadas para navegación fluida.',
+            en: '360° walkthrough with progressive loading and scenes tuned for smooth browsing.'
         },
         impacto: {
-            es: 'Presentación inmersiva del desarrollo, permitiendo cerrar ventas internacionales.',
-            en: 'Immersive presentation of the development, enabling international remote sales.'
+            es: 'Visita remota más convincente para elevar percepción y acelerar consultas.',
+            en: 'More convincing remote visit to raise perceived value and speed up inquiries.'
         },
         metric: { es: 'Tour Inmersivo', en: 'Immersive Tour' },
         iframeUrl: 'https://punta-360.vercel.app/',
@@ -435,16 +435,16 @@ export class PanoramicViewer {
             en: ['Corporate Design', 'Workflow Systems']
         },
         desafio: {
-            es: 'Carga sumamente lenta de cotizadores y portales de seguros/permisos para transportistas con interfaces rígidas.',
-            en: 'Extremely slow loading of insurance and permit quoting portals with rigid user interfaces.'
+            es: 'Cotizadores y trámites para transportistas con fricción, demora y poca claridad móvil.',
+            en: 'Carrier quoting and permit flows with friction, delays, and poor mobile clarity.'
         },
         orquestacion: {
-            es: 'Interfaz Next.js App Router bilingüe, con CDN inteligente y pre-carga selectiva de componentes del cotizador.',
-            en: 'Next.js App Router bilingual interface, featuring intelligent CDN caching and lazy loading of key quoting components.'
+            es: 'Interfaz bilingüe, carga selectiva y flujo guiado para consultar desde la ruta.',
+            en: 'Bilingual interface, selective loading, and guided flow for on-the-road inquiries.'
         },
         impacto: {
-            es: 'Tasa de conversión y retención optimizada para choferes que consultan en ruta en pantallas móviles.',
-            en: 'Optimized conversion and retention rate for truck drivers accessing forms on mobile screens on the road.'
+            es: 'Consulta móvil más clara para choferes, con menos abandono en formularios clave.',
+            en: 'Clearer mobile inquiry flow for drivers, with less drop-off on key forms.'
         },
         metric: { es: 'Trámite Ágil', en: 'Agile Workflow' },
         iframeUrl: 'https://truckers-choice-web-site.vercel.app/',
@@ -477,16 +477,16 @@ export function useTranslation(locale: string) {
             en: ['Sales & Marketing', 'Paid Ads']
         },
         desafio: {
-            es: 'Pérdidas de prospectos y agendamientos comerciales debido a la falta de automatización y CRM desarticulado.',
-            en: 'Leads lost and delays in scheduling due to lack of automation and disconnected CRMs.'
+            es: 'Prospectos dispersos, agenda lenta y poco seguimiento dentro del flujo comercial.',
+            en: 'Scattered leads, slow scheduling, and weak follow-up inside the sales flow.'
         },
         orquestacion: {
-            es: 'Integración de CRM personalizado para ingesta de prospectos calificados, soporte automatizado en pauta digital y optimización del embudo de agendamiento.',
-            en: 'Custom CRM integration for qualified lead capture, automated support workflows on paid ads, and booking funnel optimizations.'
+            es: 'CRM personalizado, automatización de pauta y embudo de agenda más ordenado.',
+            en: 'Custom CRM, paid-media automation, and a cleaner booking funnel.'
         },
         impacto: {
-            es: 'Automatización completa del flujo comercial de citas y aumento sustancial en facturación recurrente B2B.',
-            en: '100% automated booking pipeline resulting in increased recurring B2B sales.'
+            es: 'Seguimiento más consistente, citas mejor gestionadas y base lista para escalar.',
+            en: 'More consistent follow-up, better-managed bookings, and a base ready to scale.'
         },
         metric: { es: 'CRM & Escala', en: 'CRM & Scaling' },
         iframeUrl: 'https://admediasolution.vercel.app/',
@@ -520,16 +520,16 @@ export async function submitLeadToCRM(lead: { name: string; phone: string; email
             en: ['Consular Forms', 'Web Platforms']
         },
         desafio: {
-            es: 'Dificultad extrema y pérdida de tiempo al completar largos y confusos formularios consulares en línea.',
-            en: 'Extreme friction and loss of time for users completing long and confusing online consular forms.'
+            es: 'Formularios consulares largos, confusos y con alta carga de soporte manual.',
+            en: 'Long, confusing consular forms with a heavy manual support load.'
         },
         orquestacion: {
-            es: 'Interfaz SPA de Vite + React optimizada con validación reactiva de documentos paso a paso y carga asíncrona.',
-            en: 'Vite + React SPA optimized with reactive step-by-step document validations and async file uploads.'
+            es: 'Formulario guiado con validaciones por paso, carga de documentos y avance claro.',
+            en: 'Guided form with step validation, document upload, and clear progression.'
         },
         impacto: {
-            es: 'Experiencia sin fricciones para el usuario y agilización del procesamiento migratorio interno de la agencia.',
-            en: 'Seamless user experience with accelerated processing for the agency staff.'
+            es: 'Usuarios mejor guiados y equipo interno con menos correcciones repetidas.',
+            en: 'Better-guided users and internal teams facing fewer repeated corrections.'
         },
         metric: { es: 'Trámites Guiados', en: 'Guided Compliance' },
         iframeUrl: 'https://atreact.vercel.app/',
@@ -560,16 +560,16 @@ export function StepValidator({ currentStep, data }: { currentStep: number; data
             en: ['Luxury Design', 'Premium Services']
         },
         desafio: {
-            es: 'Sitios web tradicionales de servicios de limpieza de baja calidad estética que no generan confianza en inversores premium.',
-            en: 'Standard cleaning service web pages with low aesthetic quality failing to build trust with high-net-worth real estate owners.'
+            es: 'Servicio premium con presencia digital genérica que no transmitía confianza.',
+            en: 'Premium service with generic digital presence that did not build trust.'
         },
         orquestacion: {
-            es: 'Landing page en Next.js con cursor interactivo animado personalizado y catálogo integrado de membresías de lujo.',
-            en: 'Next.js landing page with customized luxury animated cursor and integrated premium subscription tiers.'
+            es: 'Landing de lujo con interacción cuidada y catálogo claro de membresías.',
+            en: 'Luxury landing with polished interaction and clear membership catalog.'
         },
         impacto: {
-            es: 'Posicionamiento exclusivo de la marca en Miami y alta fidelización de clientes con estimados fotográficos inmediatos.',
-            en: 'Premium brand positioning in Miami and client retention with automated high-end photo inspection reports.'
+            es: 'Marca más exclusiva y consulta más simple para clientes premium en Miami.',
+            en: 'More exclusive brand presence and simpler inquiries for premium Miami clients.'
         },
         metric: { es: 'Estándar de Élite', en: 'Elite Cleaning Standard' },
         iframeUrl: 'https://doge-27dp.vercel.app/',
@@ -601,4 +601,3 @@ export function useLuxuryCursor() {
         }
     }
 ];
-

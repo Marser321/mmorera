@@ -13,7 +13,7 @@ function LogoMark({ logo }: { logo: Tech }) {
     }
 
     return (
-        <span className="grid h-6 min-w-7 place-items-center rounded-md border border-white/10 px-1.5 font-mono text-[10px] font-black tracking-[0.08em] sm:h-7">
+        <span className="grid h-6 min-w-7 place-items-center rounded-md border border-white/[0.06] px-1.5 font-mono text-[10px] font-black tracking-[0.08em] sm:h-7">
             {logo.fallback}
         </span>
     );
@@ -22,17 +22,17 @@ function LogoMark({ logo }: { logo: Tech }) {
 function TechPill({ logo, index }: { logo: Tech; index: number }) {
     return (
         <div
-            className="group flex shrink-0 cursor-default items-center gap-3 rounded-full border border-white/5 bg-white/[0.02] px-4 py-2 transition-all duration-500 hover:border-white/15 hover:bg-white/[0.06]"
+            className="group flex shrink-0 cursor-default items-center gap-3 rounded-full border border-white/[0.035] bg-white/[0.012] px-4 py-2 opacity-70 transition-all duration-500 hover:border-white/[0.12] hover:bg-white/[0.045] hover:opacity-100"
             aria-label={`${logo.name} (${logo.category})`}
         >
-            <div className="text-white/25 transition-colors duration-500 group-hover:text-white/80">
+            <div className="text-white/[0.18] transition-colors duration-500 group-hover:text-white/75">
                 <LogoMark logo={logo} />
             </div>
-            <span className="whitespace-nowrap text-xs font-medium text-white/20 transition-colors duration-500 group-hover:text-white/60">
+            <span className="whitespace-nowrap text-xs font-medium text-white/[0.16] transition-colors duration-500 group-hover:text-white/60">
                 {logo.name}
             </span>
             {index % 5 === 0 && (
-                <span className="hidden rounded-full border border-white/5 bg-white/[0.03] px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.16em] text-white/20 transition-colors duration-500 group-hover:text-white/40 md:inline">
+                <span className="hidden rounded-full border border-white/[0.04] bg-white/[0.02] px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.16em] text-white/[0.16] transition-colors duration-500 group-hover:text-white/40 md:inline">
                     {logo.category}
                 </span>
             )}
@@ -73,16 +73,16 @@ function MarqueeRow({
 
 export function TrustedByStrip() {
     return (
-        <section className="relative overflow-hidden border-y border-white/5 bg-transparent py-10">
+        <section className="relative overflow-hidden border-y border-white/[0.035] bg-black/[0.08] py-10">
             <div className="mb-8 px-6 text-center">
                 <span className="font-mono text-[9px] uppercase leading-relaxed tracking-[0.26em] text-white/25 sm:text-[10px] sm:tracking-[0.4em]">
-                    Infraestructura que usan las empresas líderes
+                    Infraestructura que uso para construir sistemas
                 </span>
             </div>
 
             <div className="relative w-full overflow-hidden">
-                <div className="pointer-events-none absolute bottom-0 left-0 top-0 z-10 w-24 bg-gradient-to-r from-black to-transparent" />
-                <div className="pointer-events-none absolute bottom-0 right-0 top-0 z-10 w-24 bg-gradient-to-l from-black to-transparent" />
+                <div className="pointer-events-none absolute bottom-0 left-0 top-0 z-10 w-24 bg-gradient-to-r from-background to-transparent" />
+                <div className="pointer-events-none absolute bottom-0 right-0 top-0 z-10 w-24 bg-gradient-to-l from-background to-transparent" />
 
                 <div className="space-y-4">
                     <MarqueeRow logos={upperRowLogos} duration={45} />

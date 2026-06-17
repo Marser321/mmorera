@@ -169,13 +169,13 @@ export function AplicarOS() {
     }
 
     return (
-        <section id="aplicar-os-section" className="py-24 relative bg-transparent overflow-hidden">
+        <section id="aplicar-os-section" className="relative overflow-hidden bg-transparent px-0 py-16 pb-28 md:py-24">
             <div className="container mx-auto px-4 max-w-2xl">
                 
-                <div className="bg-neutral-950/70 border border-white/10 rounded-3xl p-6 md:p-8 backdrop-blur-md shadow-2xl relative overflow-hidden">
+                <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-neutral-950/78 p-4 shadow-2xl backdrop-blur-md md:rounded-3xl md:p-8">
                     
                     {/* Encabezado del Formulario */}
-                    <div className="flex justify-between items-center border-b border-white/5 pb-4 mb-6 select-none">
+                    <div className="mb-5 flex items-center justify-between border-b border-white/5 pb-4 select-none md:mb-6">
                         <h3 className="text-white font-bold text-base flex items-center gap-2">
                             {(() => { 
                                 const Icon = STEPS[step].icon; 
@@ -189,7 +189,7 @@ export function AplicarOS() {
                     </div>
 
                     {/* Formulario Inputs */}
-                    <div className="min-h-[220px] flex flex-col justify-center text-left">
+                    <div className="flex min-h-[210px] flex-col justify-center text-left md:min-h-[220px]">
                         {step === 0 && (
                             <div className="space-y-4">
                                 <div>
@@ -237,7 +237,7 @@ export function AplicarOS() {
                                     <label className="block text-zinc-500 font-mono text-[9px] uppercase font-bold tracking-wider mb-2">
                                         {language === 'es' ? 'Facturación Mensual' : 'Monthly Revenue'}
                                     </label>
-                                    <div className="grid grid-cols-2 gap-2">
+                                    <div className="grid gap-2 sm:grid-cols-2">
                                         {REVENUE_OPTIONS.map((opt) => {
                                             const label = opt[language];
                                             const isSelected = formData.revenue === label;
@@ -315,12 +315,12 @@ export function AplicarOS() {
                     </div>
 
                     {/* Controles de Navegación del Brief */}
-                    <div className="flex items-center justify-between mt-8 pt-4 border-t border-white/5 font-mono text-xs">
+                    <div className="sticky bottom-3 z-20 -mx-1 mt-6 flex items-center justify-between rounded-2xl border border-white/8 bg-neutral-950/92 p-3 font-mono text-xs shadow-[0_14px_40px_rgba(0,0,0,0.32)] backdrop-blur-xl md:static md:mx-0 md:mt-8 md:rounded-none md:border-x-0 md:border-b-0 md:bg-transparent md:p-0 md:pt-4 md:shadow-none md:backdrop-blur-none">
                         <button
                             type="button"
                             onClick={() => setStep(prev => Math.max(0, prev - 1))}
                             disabled={step === 0}
-                            className="flex items-center gap-1.5 text-zinc-500 hover:text-white disabled:opacity-20 transition-colors cursor-pointer select-none border-0 bg-transparent p-0"
+                            className="flex min-h-10 items-center gap-1.5 rounded-xl border-0 bg-transparent px-2 text-zinc-500 transition-colors hover:text-white disabled:opacity-20 cursor-pointer select-none"
                         >
                             <ArrowLeft className="w-3.5 h-3.5" /> PREV
                         </button>
@@ -330,7 +330,7 @@ export function AplicarOS() {
                                 type="button"
                                 onClick={() => setStep(prev => prev + 1)}
                                 disabled={!canAdvance()}
-                                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/30 disabled:opacity-20 cursor-pointer select-none"
+                                className="flex min-h-10 items-center gap-1.5 rounded-xl border border-emerald-500/30 bg-emerald-500/20 px-4 py-2 text-emerald-300 hover:bg-emerald-500/30 disabled:opacity-20 cursor-pointer select-none"
                             >
                                 NEXT <ArrowRight className="w-3.5 h-3.5" />
                             </button>
@@ -339,7 +339,7 @@ export function AplicarOS() {
                                 type="button"
                                 onClick={handleFormSubmit}
                                 disabled={!canAdvance() || submitting}
-                                className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-emerald-500/30 border border-emerald-400/40 text-emerald-300 hover:bg-emerald-500/40 disabled:opacity-20 cursor-pointer shadow-[0_0_20px_rgba(16,185,129,0.15)] select-none text-xs font-mono"
+                                className="flex min-h-10 items-center gap-1.5 rounded-xl border border-emerald-400/40 bg-emerald-500/30 px-5 py-2.5 font-mono text-xs text-emerald-300 shadow-[0_0_20px_rgba(16,185,129,0.15)] hover:bg-emerald-500/40 disabled:opacity-20 cursor-pointer select-none"
                             >
                                 {submitting 
                                     ? (language === 'es' ? 'ENVIANDO...' : 'SENDING...') 

@@ -14,7 +14,6 @@ import { useEffect, useRef, useState } from 'react';
 import { ExternalLink, ArrowUpRight, Trophy, Sparkles } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
-import { EASE_OUT, DURATION, VIEWPORT } from '@/lib/motion';
 import { PROJECTS_DATA, type ProjectData } from './projectsData';
 import { ProjectCaseDialog } from './ProjectCaseDialog';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
@@ -77,11 +76,11 @@ function PanelBody({
     const textOpacity = useTransform(f, [0, 1], [0.25, 1]);
 
     return (
-        <div className="mx-auto flex h-full w-full max-w-7xl flex-col items-center gap-8 px-6 py-20 lg:flex-row lg:gap-12 lg:py-0">
+        <div className="mx-auto flex h-full w-full max-w-[92rem] flex-col items-center gap-8 px-5 py-20 sm:px-8 lg:flex-row lg:gap-14 lg:py-0 xl:px-10">
             {/* Textos grandes flotantes */}
             <motion.div
                 style={simple ? undefined : { x: textX, opacity: textOpacity }}
-                className="order-2 flex w-full flex-col lg:order-1 lg:w-[42%]"
+                className="order-2 flex w-full min-w-0 flex-col lg:order-1 lg:w-[40%] xl:w-[38%]"
             >
                 <div className="mb-4 flex items-center gap-3 font-mono text-[11px] font-black uppercase tracking-[0.25em] text-violet-300/80">
                     <span>{String(index + 1).padStart(2, '0')}</span>
@@ -101,14 +100,14 @@ function PanelBody({
                 </div>
 
                 <h3
-                    className="text-4xl font-black uppercase leading-[0.92] tracking-tight text-white sm:text-6xl lg:text-7xl"
+                    className="max-w-3xl break-words text-3xl font-black uppercase leading-[1.02] tracking-tight text-white [text-wrap:balance] sm:text-5xl sm:leading-[0.98] lg:text-6xl xl:text-7xl"
                     style={{ fontFamily: 'var(--ff-display)' }}
                 >
                     {project.title[language]}
                 </h3>
 
                 {/* Desarrollo del proyecto */}
-                <p className="mt-6 max-w-xl text-sm font-light leading-relaxed text-zinc-300 sm:text-base">
+                <p className="mt-6 max-w-2xl text-sm font-light leading-relaxed text-zinc-300 sm:text-base">
                     {project.orquestacion[language]}
                 </p>
 
@@ -136,7 +135,7 @@ function PanelBody({
                         {project.metric[language]}
                     </span>
                     <DialogTrigger asChild>
-                        <button className="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-[11px] font-black uppercase tracking-wider text-neutral-950 transition-transform hover:-translate-y-0.5 cursor-pointer">
+                        <button className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full bg-white px-4 py-2 text-center text-[11px] font-black uppercase leading-tight tracking-wider text-neutral-950 transition-transform hover:-translate-y-0.5 cursor-pointer">
                             {language === 'es' ? 'Ver caso' : 'View case'}
                             <ArrowUpRight className="h-3.5 w-3.5" />
                         </button>
@@ -145,7 +144,7 @@ function PanelBody({
                         href={project.iframeUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 rounded-full border border-white/15 px-4 py-2 text-[11px] font-black uppercase tracking-wider text-white/70 transition-colors hover:border-white/30 hover:text-white"
+                        className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full border border-white/15 px-4 py-2 text-center text-[11px] font-black uppercase leading-tight tracking-wider text-white/70 transition-colors hover:border-white/30 hover:text-white"
                     >
                         {language === 'es' ? 'En vivo' : 'Live'}
                         <ExternalLink className="h-3.5 w-3.5" />
@@ -158,7 +157,7 @@ function PanelBody({
                 style={simple ? undefined : { scale: winScale, opacity: winOpacity }}
                 onPointerMove={handlePointerMove}
                 onPointerLeave={resetTilt}
-                className="order-1 w-full lg:order-2 lg:w-[58%]"
+                className="order-1 w-full min-w-0 lg:order-2 lg:w-[60%] xl:w-[62%]"
             >
                 <motion.div
                     style={simple ? undefined : { rotateX, rotateY, transformPerspective: 1200 }}
@@ -171,7 +170,7 @@ function PanelBody({
                             <span className="h-2.5 w-2.5 rounded-full bg-yellow-500/40" />
                             <span className="h-2.5 w-2.5 rounded-full bg-green-500/40" />
                         </div>
-                        <div className="mx-auto max-w-[60%] flex-1 truncate rounded-md border border-white/5 bg-black/40 px-3 py-1 text-center font-mono text-[10px] text-zinc-400">
+                        <div className="mx-auto max-w-[68%] flex-1 truncate rounded-md border border-white/5 bg-black/40 px-3 py-1 text-center font-mono text-[10px] text-zinc-400">
                             {browserUrl(project)}
                         </div>
                     </div>
@@ -230,17 +229,71 @@ function ReelPanelSimple({
     index: number;
     total: number;
 }) {
+    const { language } = useLanguage();
+
     return (
         <Dialog>
-            <motion.div
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={VIEWPORT}
-                transition={{ duration: DURATION.base, ease: EASE_OUT }}
-                className="w-[88vw] shrink-0 snap-center sm:w-[78vw]"
-            >
-                <PanelBody project={project} index={index} total={total} simple />
-            </motion.div>
+            <article className="w-[86vw] shrink-0 snap-center overflow-hidden rounded-2xl border border-white/10 bg-neutral-950/80 shadow-[0_18px_60px_rgba(0,0,0,0.36)] sm:w-[72vw] md:w-[56vw]">
+                <div className="relative aspect-[16/10] w-full overflow-hidden bg-black">
+                    <Image
+                        src={project.imageUrl}
+                        alt={project.title[language]}
+                        fill
+                        sizes="(max-width: 768px) 86vw, 56vw"
+                        className="object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/35 to-transparent" />
+                    <div className="absolute left-4 top-4 rounded-full border border-white/10 bg-black/50 px-2.5 py-1 font-mono text-[9px] font-black text-white/65 backdrop-blur-md">
+                        {String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
+                    </div>
+                </div>
+
+                <div className="p-5">
+                    <div className="mb-3 flex flex-wrap gap-1.5">
+                        {project.category[language].slice(0, 2).map((c) => (
+                            <span
+                                key={c}
+                                className="rounded-full border border-white/10 bg-white/[0.04] px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-zinc-300"
+                            >
+                                {c}
+                            </span>
+                        ))}
+                    </div>
+                    <h3
+                        className="break-words text-2xl font-black uppercase leading-tight tracking-tight text-white [text-wrap:balance]"
+                        style={{ fontFamily: 'var(--ff-display)' }}
+                    >
+                        {project.title[language]}
+                    </h3>
+                    <p className="mt-3 text-sm leading-relaxed text-zinc-400">
+                        {project.impacto[language]}
+                    </p>
+                    <div className="mt-4 flex flex-wrap gap-1.5">
+                        {project.stack.slice(0, 3).map((s) => (
+                            <span key={s} className="rounded border border-white/8 bg-white/[0.04] px-2 py-1 font-mono text-[9px] text-white/45">
+                                {s}
+                            </span>
+                        ))}
+                    </div>
+                    <div className="mt-5 flex flex-wrap gap-2">
+                        <DialogTrigger asChild>
+                            <button className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full bg-white px-4 py-2 text-[11px] font-black uppercase tracking-wider text-neutral-950">
+                                {language === 'es' ? 'Ver caso' : 'View case'}
+                                <ArrowUpRight className="h-3.5 w-3.5" />
+                            </button>
+                        </DialogTrigger>
+                        <a
+                            href={project.iframeUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full border border-white/15 px-4 py-2 text-[11px] font-black uppercase tracking-wider text-white/65"
+                        >
+                            {language === 'es' ? 'En vivo' : 'Live'}
+                            <ExternalLink className="h-3.5 w-3.5" />
+                        </a>
+                    </div>
+                </div>
+            </article>
             <ProjectCaseDialog project={project} />
         </Dialog>
     );
