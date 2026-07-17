@@ -1,0 +1,15 @@
+# macOS / volúmenes externos
+.DS_Store
+._*
+**/._*
+
+# Configuración local de agentes
+.claude/
+
+# Recursos y material de trabajo no versionado
+.agents/
+AD Media Solution/
+Fondos y recursos /
+
+# Cachés de build (nunca versionar)
+web - copia/.next/
