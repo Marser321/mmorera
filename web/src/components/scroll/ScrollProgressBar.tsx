@@ -21,7 +21,12 @@ function formatTimecode(seconds: number) {
     return `${mm}:${ss}`;
 }
 
-export function ScrollProgressBar() {
+interface ScrollProgressBarProps {
+    /** Color del modo activo (Crear/Construir/Escalar): tiñe pista y playhead. */
+    accent?: string;
+}
+
+export function ScrollProgressBar({ accent }: ScrollProgressBarProps = {}) {
     const { scrollYProgress } = useScroll();
     const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.3 });
     const width = useTransform(progress, (v) => `${Math.min(Math.max(v, 0), 1) * 100}%`);
@@ -37,12 +42,22 @@ export function ScrollProgressBar() {
             <div className="relative h-4 overflow-hidden">
                 <div className="absolute inset-x-0 top-0 h-[3px] bg-white/[0.08]" />
                 <motion.div
-                    style={{ width }}
+                    style={{
+                        width,
+                        background: accent ? `linear-gradient(90deg, ${accent}88, ${accent})` : undefined,
+                        transition: 'background 0.6s ease',
+                    }}
                     className="absolute left-0 top-0 h-[3px] bg-gradient-to-r from-primary via-accent to-primary"
                 >
                     {/* Cabezal / playhead: anillo "live" + punto sólido con glow */}
-                    <span className="absolute right-0 top-[1.5px] block h-2.5 w-2.5 -translate-y-1/2 translate-x-1/2 rounded-full bg-primary/40 animate-ping" />
-                    <span className="absolute right-0 top-[1.5px] block h-2.5 w-2.5 -translate-y-1/2 translate-x-1/2 rounded-full bg-primary shadow-[0_0_14px_3px] shadow-primary/70" />
+                    <span
+                        className="absolute right-0 top-[1.5px] block h-2.5 w-2.5 -translate-y-1/2 translate-x-1/2 rounded-full bg-primary/40 animate-ping"
+                        style={accent ? { background: `${accent}66` } : undefined}
+                    />
+                    <span
+                        className="absolute right-0 top-[1.5px] block h-2.5 w-2.5 -translate-y-1/2 translate-x-1/2 rounded-full bg-primary shadow-[0_0_14px_3px] shadow-primary/70"
+                        style={accent ? { background: accent, boxShadow: `0 0 14px 3px ${accent}b3`, transition: 'background 0.6s ease, box-shadow 0.6s ease' } : undefined}
+                    />
                 </motion.div>
             </div>
 

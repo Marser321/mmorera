@@ -15,6 +15,7 @@ import type { TrackId } from "@/types/site";
 import { isTrackMode, resolveTrackMode, TRACK_MODE_QUERY } from "@/data/trackModes";
 import { AuthorManifestoScene, type AuthorManifestoCopy } from "@/components/premium/AuthorManifestoScene";
 import { MethodTimeline } from "@/components/premium/home/MethodTimeline";
+import { DecodeText } from "@/components/motion/DecodeText";
 import { SplitReveal } from "@/components/motion/SplitReveal";
 import { Cascade, CascadeItem } from "@/components/motion/Cascade";
 import { DrawRule } from "@/components/motion/DrawRule";
@@ -198,7 +199,7 @@ export function HomeExperience({
 
   return (
     <main id="contenido-principal">
-      <ScrollProgressBar />
+      <ScrollProgressBar accent={modeSelected ? tracks[activeTrack].color : undefined} />
 
       <section ref={heroRef} data-home-section="hero" className="relative min-h-[100svh] px-5 pb-10 pt-28 sm:px-8 sm:pb-16 sm:pt-32 lg:flex lg:items-end lg:px-12">
         <div className="relative z-10 mx-auto grid w-full max-w-[1480px] gap-8 lg:grid-cols-[minmax(0,1.34fr)_minmax(360px,.66fr)] lg:items-end lg:gap-10">
@@ -209,7 +210,7 @@ export function HomeExperience({
               transition={{ duration: DURATION.base, ease: EASE_OUT }}
               className="mb-6 max-w-xl font-mono text-[9px] uppercase tracking-[0.18em] text-[#F3F0E8]/48 sm:text-[10px]"
             >
-              {c.eyebrow}
+              <DecodeText text={c.eyebrow} decodeOnMount duration={900} />
             </motion.p>
             <SplitReveal
               as="h1"
@@ -259,8 +260,8 @@ export function HomeExperience({
                 <span>{c.territory}</span>
               </div>
               <div className="mt-3 flex items-end justify-between gap-6">
-                <p className="text-2xl font-medium tracking-[-0.035em] text-[#F3F0E8]">{activeTechLabel}</p>
-                <p className="max-w-32 text-right font-mono text-[9px] uppercase leading-4 tracking-[0.16em] text-[#F3F0E8]/38">{activeTerritory}</p>
+                <DecodeText as="p" text={activeTechLabel} className="text-2xl font-medium tracking-[-0.035em] text-[#F3F0E8]" />
+                <DecodeText as="p" text={activeTerritory} className="max-w-32 text-right font-mono text-[9px] uppercase leading-4 tracking-[0.16em] text-[#F3F0E8]/38" />
               </div>
             </div>
 
