@@ -1,4 +1,5 @@
 import type { IconType } from 'react-icons';
+import { MultiModelAiMark } from '@/components/icons/MultiModelAiMark';
 import {
     SiAnthropic,
     SiAstro,
@@ -24,6 +25,7 @@ import {
     SiShopify,
     SiStripe,
     SiSupabase,
+    SiThreedotjs,
     SiTypescript,
     SiVercel,
     SiVite,
@@ -57,6 +59,13 @@ export interface Tech {
     category: Family;
     Icon?: IconType;
     fallback?: string;
+    label?: LocalizedTechCopy;
+    descriptor?: LocalizedTechCopy;
+}
+
+export interface LocalizedTechCopy {
+    es: string;
+    en: string;
 }
 
 export interface FamilyMeta {
@@ -85,13 +94,25 @@ export const familyIndex = (f: Family): number => FAMILY_ORDER.indexOf(f);
 
 export const TECH_STACK: Tech[] = [
     // AI
+    {
+        name: 'Multi-model AI',
+        category: 'AI',
+        Icon: MultiModelAiMark,
+        label: { es: 'IA multimodelo', en: 'Multi-model AI' },
+        descriptor: { es: 'Inteligencia aplicada', en: 'Applied intelligence' },
+    },
     { name: 'OpenAI', category: 'AI', Icon: SiOpenai },
     { name: 'Anthropic', category: 'AI', Icon: SiAnthropic },
     { name: 'Google Gemini', category: 'AI', Icon: SiGooglegemini },
     { name: 'Grok / xAI', category: 'AI', Icon: SiX },
     { name: 'Meta', category: 'AI', Icon: SiMeta },
     // Automation
-    { name: 'n8n', category: 'Automation', Icon: SiN8N },
+    {
+        name: 'n8n',
+        category: 'Automation',
+        Icon: SiN8N,
+        descriptor: { es: 'Sistemas y automatización', en: 'Systems and automation' },
+    },
     { name: 'Make', category: 'Automation', Icon: SiMake },
     { name: 'Zapier', category: 'Automation', Icon: SiZapier },
     { name: 'WhatsApp API', category: 'Automation', Icon: SiWhatsapp },
@@ -100,7 +121,18 @@ export const TECH_STACK: Tech[] = [
     { name: 'PostgreSQL', category: 'Backend', Icon: SiPostgresql },
     { name: 'Node.js', category: 'Backend', Icon: SiNodedotjs },
     // Web
-    { name: 'Next.js', category: 'Web', Icon: SiNextdotjs },
+    {
+        name: 'Next.js',
+        category: 'Web',
+        Icon: SiNextdotjs,
+        descriptor: { es: 'Producto digital', en: 'Digital product' },
+    },
+    {
+        name: 'Three.js',
+        category: 'Web',
+        Icon: SiThreedotjs,
+        descriptor: { es: 'Experiencias interactivas', en: 'Interactive experiences' },
+    },
     { name: 'React', category: 'Web', Icon: SiReact },
     { name: 'TypeScript', category: 'Web', Icon: SiTypescript },
     { name: 'JavaScript', category: 'Web', Icon: SiJavascript },
@@ -114,7 +146,12 @@ export const TECH_STACK: Tech[] = [
     // Commerce
     { name: 'Shopify', category: 'Commerce', Icon: SiShopify },
     { name: 'WooCommerce', category: 'Commerce', Icon: SiWoocommerce },
-    { name: 'Stripe', category: 'Commerce', Icon: SiStripe },
+    {
+        name: 'Stripe',
+        category: 'Commerce',
+        Icon: SiStripe,
+        descriptor: { es: 'Comercio y monetización', en: 'Commerce and monetization' },
+    },
     // Marketing
     { name: 'Google Ads', category: 'Marketing', Icon: SiGoogleads },
     { name: 'Google Analytics', category: 'Marketing', Icon: SiGoogleanalytics },
@@ -127,7 +164,12 @@ export const TECH_STACK: Tech[] = [
     // Media (audiovisual) — logos reales donde existen; etiqueta de texto para el resto.
     { name: 'DaVinci Resolve', category: 'Media', Icon: SiDavinciresolve },
     { name: 'Blender', category: 'Media', Icon: SiBlender },
-    { name: 'Figma', category: 'Media', Icon: SiFigma },
+    {
+        name: 'Figma',
+        category: 'Media',
+        Icon: SiFigma,
+        descriptor: { es: 'Dirección visual', en: 'Visual direction' },
+    },
     { name: 'Premiere Pro', category: 'Media', fallback: 'Pr' },
     { name: 'After Effects', category: 'Media', fallback: 'Ae' },
     { name: 'Photoshop', category: 'Media', fallback: 'Ps' },

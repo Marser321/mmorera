@@ -1,16 +1,15 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /*
  * ══════════════════════════════════════════════════════
  * SISTEMA DE DISEÑO "DEEP SPACE"
- * Paleta OKLCH · Tailwind CSS v4 · Dark Mode Nativo
+ * Paleta OKLCH · Tailwind CSS 3.4 · Dark Mode Nativo
  * ══════════════════════════════════════════════════════
  */
 
-@custom-variant dark (&:is(.dark *));
-
-@theme {
+:root {
   /* ─── Tipografía — "Orquestador máximo" ───
      next/font inyecta las familias reales como --ff-display / --ff-body /
      --ff-mono (ver layout.tsx). Acá sólo las referenciamos con fallbacks. */
@@ -26,20 +25,20 @@
 
   /* ─── Paleta Deep Space (OKLCH) ─── */
   /* Fondos — base grafito casi negro (~#070809) */
-  --color-background: oklch(0.12 0.005 235);
-  --color-foreground: oklch(0.97 0.004 240);
+  --color-background: #070809;
+  --color-foreground: #F3F0E8;
 
   /* Cards y superficies elevadas */
-  --color-card: oklch(0.18 0.015 260);
-  --color-card-foreground: oklch(0.97 0.005 260);
+  --color-card: #0D1114;
+  --color-card-foreground: #F3F0E8;
 
   /* Popover / Dropdowns */
   --color-popover: oklch(0.16 0.012 260);
   --color-popover-foreground: oklch(0.97 0.005 260);
 
   /* Primary — Verde ácido de señal (color firma "Orquestador máximo") */
-  --color-primary: oklch(0.87 0.22 140);
-  --color-primary-foreground: oklch(0.14 0.01 240);
+  --color-primary: #F3F0E8;
+  --color-primary-foreground: #070809;
 
   /* Secondary — Gris cálido elegante */
   --color-secondary: oklch(0.25 0.015 260);
@@ -50,17 +49,17 @@
   --color-muted-foreground: oklch(0.65 0.015 260);
 
   /* Accent — Cyan sutil (señal de apoyo) */
-  --color-accent: oklch(0.76 0.13 205);
+  --color-accent: #55D8FF;
   --color-accent-foreground: oklch(0.14 0.01 240);
 
   /* Señal — verde ácido protagonista (alias semántico del color firma) */
-  --color-signal: oklch(0.87 0.22 140);
+  --color-signal: #71F3A2;
   --color-signal-foreground: oklch(0.14 0.01 240);
 
   /* Canales de pista (crear / construir / escalar) — tonales, disciplinados */
-  --color-track-create: oklch(0.72 0.15 290);
-  --color-track-build: oklch(0.78 0.12 215);
-  --color-track-scale: oklch(0.80 0.14 75);
+  --color-track-create: #B68CFF;
+  --color-track-build: #55D8FF;
+  --color-track-scale: #71F3A2;
 
   /* Destructive — Rojo profundo */
   --color-destructive: oklch(0.55 0.2 25);
@@ -68,7 +67,7 @@
 
   /* Bordes y anillos */
   --color-border: oklch(0.3 0.02 260);
-  --color-ring: oklch(0.87 0.22 140);
+  --color-ring: #55D8FF;
   --color-input: oklch(0.25 0.015 260);
 
   /* Sidebar (futuro) */
@@ -192,15 +191,9 @@
     font-family: var(--font-sans);
   }
 
-  /* Ocultar cursor cuando el CustomCursor está activo */
-  body.custom-cursor-active,
-  body.custom-cursor-active * {
-    cursor: none !important;
-  }
-
   /* Selección de texto con acento */
   ::selection {
-    background-color: oklch(0.87 0.22 140 / 0.28);
+    background-color: rgb(182 140 255 / 0.32);
     color: var(--color-foreground);
   }
 
@@ -448,6 +441,41 @@
 
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+
+  /* Subrayado que se dibuja al hover/focus. El pseudo-elemento hereda el
+     color actual, así funciona sobre ivory y sobre acentos. */
+  .link-draw {
+    position: relative;
+  }
+
+  .link-draw::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.15em;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 250ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .link-draw:hover::after,
+  .link-draw:focus-visible::after,
+  .group:hover .link-draw::after,
+  .group:focus-visible .link-draw::after {
+    transform: scaleX(1);
+  }
+
+  /* Feedback táctil de presión para cards y pills. */
+  .pressable {
+    transition: transform 120ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .pressable:active {
+    transform: scale(0.985);
   }
 }
 

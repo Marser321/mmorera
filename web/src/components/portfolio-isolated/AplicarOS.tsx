@@ -38,7 +38,6 @@ export function AplicarOS() {
     useEffect(() => {
         const param = new URLSearchParams(window.location.search).get('track');
         if (isTrackId(param)) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
             setTrackId(param);
             setCtxTrack(param);
         } else if (ctxTrack) {
@@ -49,6 +48,7 @@ export function AplicarOS() {
     const [step, setStep] = useState(0);
     const [submitted, setSubmitted] = useState(false);
     const [submitting, setSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
     const [formData, setFormData] = useState<FormData>({
         name: '',
         email: '',
@@ -99,6 +99,7 @@ export function AplicarOS() {
     // Lógica de Envío Directo del Formulario
     const handleFormSubmit = async () => {
         setSubmitting(true);
+        setSubmitError(null);
 
         const leadData = {
             nombre: formData.name,
@@ -110,34 +111,14 @@ export function AplicarOS() {
             timeline: formData.timeline
         };
 
-        const trackLabel = trackId === 'design' ? 'Diseño / Creativo' : trackId === 'software' ? 'Software / Sistemas' : '—';
-
-        const waMessage = language === 'es'
-            ? `¡Hola Mario! 👋 Acabo de completar el brief para mi proyecto.\n\n` +
-              `*Interés:* ${trackLabel}\n` +
-              `*Nombre:* ${formData.name}\n` +
-              `*Email:* ${formData.email}\n` +
-              `*Empresa:* ${formData.company}\n` +
-              `*Facturación Mensual:* ${formData.revenue}\n` +
-              `*Timeline de Despliegue:* ${formData.timeline}\n\n` +
-              `*Desafío/Bottleneck:* ${formData.challenge}`
-            : `Hello Mario! 👋 I just completed the brief for my project.\n\n` +
-              `*Interest:* ${trackLabel}\n` +
-              `*Name:* ${formData.name}\n` +
-              `*Email:* ${formData.email}\n` +
-              `*Company:* ${formData.company}\n` +
-              `*Monthly Revenue:* ${formData.revenue}\n` +
-              `*Timeline:* ${formData.timeline}\n\n` +
-              `*Challenge/Bottleneck:* ${formData.challenge}`;
-
-        const waUrl = `https://wa.me/59892323675?text=${encodeURIComponent(waMessage)}`;
-
         try {
-            window.open(waUrl, '_blank');
-            await submitLead(leadData);
+            const result = await submitLead(leadData);
+            if (!result.success) throw new Error(result.error);
             setSubmitted(true);
-        } catch (err) {
-            console.error(err);
+        } catch {
+            setSubmitError(language === 'es'
+                ? 'No pude enviar el brief. Probá nuevamente o escribime por email.'
+                : 'I could not send the brief. Try again or contact me by email.');
         } finally {
             setSubmitting(false);
         }
@@ -150,17 +131,17 @@ export function AplicarOS() {
                 <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="max-w-md px-8 py-12 bg-neutral-950 border border-white/10 rounded-3xl backdrop-blur-md shadow-3xl text-center relative overflow-hidden"
+                    className="relative max-w-md overflow-hidden rounded-[1.25rem] border border-white/10 bg-[#0D1114]/88 px-8 py-12 text-center shadow-2xl backdrop-blur-md"
                 >
-                    <div className="absolute top-0 inset-x-0 h-[3px] bg-emerald-500" />
-                    <CheckCircle2 className="w-16 h-16 text-emerald-400 mx-auto mb-6" />
-                    <h2 className="text-2xl font-black text-white uppercase tracking-tight mb-3">
+                    <div className="absolute inset-x-0 top-0 h-[3px] bg-[#71F3A2]" />
+                    <CheckCircle2 className="mx-auto mb-6 h-16 w-16 text-[#71F3A2]" />
+                    <h2 className="mb-3 text-3xl font-medium tracking-[-.04em] text-[#F3F0E8]">
                         {language === 'es' ? 'Brief Recibido' : 'Brief Received'}
                     </h2>
                     <p className="text-zinc-400 text-sm leading-relaxed mb-6">
                         {language === 'es'
-                            ? `Gracias, ${formData.name}. Tu información ha sido enviada con éxito. Te contactaré en menos de 48 horas.`
-                            : `Thank you, ${formData.name}. Your details have been sent successfully. I will reach out in less than 48 hours.`
+                            ? `Gracias, ${formData.name}. Tu información fue enviada correctamente. Voy a revisar el contexto y responderte por email.`
+                            : `Thank you, ${formData.name}. Your details were sent successfully. I’ll review the context and reply by email.`
                         }
                     </p>
                 </motion.div>
@@ -169,18 +150,15 @@ export function AplicarOS() {
     }
 
     return (
-        <section id="aplicar-os-section" className="relative overflow-hidden bg-transparent px-0 py-16 pb-28 md:py-24">
-            <div className="container mx-auto px-4 max-w-2xl">
+        <section id="aplicar-os-section" className="relative overflow-hidden bg-transparent px-0 py-14 pb-24 md:py-20">
+            <div className="container mx-auto max-w-3xl px-0 sm:px-4">
                 
-                <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-neutral-950/78 p-4 shadow-2xl backdrop-blur-md md:rounded-3xl md:p-8">
+                <div className="relative overflow-hidden rounded-[1.25rem] border border-white/10 bg-[#0D1114]/82 p-4 shadow-2xl backdrop-blur-md md:p-8">
                     
                     {/* Encabezado del Formulario */}
                     <div className="mb-5 flex items-center justify-between border-b border-white/5 pb-4 select-none md:mb-6">
                         <h3 className="text-white font-bold text-base flex items-center gap-2">
-                            {(() => { 
-                                const Icon = STEPS[step].icon; 
-                                return <Icon className="w-4 h-4 text-emerald-400" />; 
-                            })()}
+                            {(() => { const Icon = STEPS[step].icon; return <Icon className="h-4 w-4 text-[#71F3A2]" />; })()}
                             {STEPS[step].title[language]}
                         </h3>
                         <span className="font-mono text-[9px] text-zinc-500">
@@ -193,27 +171,29 @@ export function AplicarOS() {
                         {step === 0 && (
                             <div className="space-y-4">
                                 <div>
-                                    <label className="block text-zinc-500 font-mono text-[9px] uppercase font-bold tracking-wider mb-1.5">
+                                    <label htmlFor="brief-name" className="block text-zinc-500 font-mono text-[9px] uppercase font-bold tracking-wider mb-1.5">
                                         {language === 'es' ? 'Nombre Completo' : 'Full Name'}
                                     </label>
                                     <input
+                                        id="brief-name"
                                         type="text"
                                         value={formData.name}
                                         onChange={(e) => updateField('name', e.target.value)}
                                         placeholder={language === 'es' ? 'Esteban Quito' : 'John Doe'}
-                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-white/20 focus:border-emerald-500/50 focus:outline-none focus:ring-1 focus:ring-emerald-500/30 transition-all font-sans"
+                                        className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 font-sans text-sm text-white transition-all placeholder:text-white/20 focus:border-[#71F3A2]/50 focus:outline-none focus:ring-1 focus:ring-[#71F3A2]/30"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-zinc-500 font-mono text-[9px] uppercase font-bold tracking-wider mb-1.5">
+                                    <label htmlFor="brief-email" className="block text-zinc-500 font-mono text-[9px] uppercase font-bold tracking-wider mb-1.5">
                                         {language === 'es' ? 'Correo Electrónico' : 'Email Address'}
                                     </label>
                                     <input
+                                        id="brief-email"
                                         type="email"
                                         value={formData.email}
                                         onChange={(e) => updateField('email', e.target.value)}
                                         placeholder={language === 'es' ? 'esteban@empresa.com' : 'john@company.com'}
-                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-white/20 focus:border-emerald-500/50 focus:outline-none focus:ring-1 focus:ring-emerald-500/30 transition-all font-sans"
+                                        className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 font-sans text-sm text-white transition-all placeholder:text-white/20 focus:border-[#71F3A2]/50 focus:outline-none focus:ring-1 focus:ring-[#71F3A2]/30"
                                     />
                                 </div>
                             </div>
@@ -222,15 +202,16 @@ export function AplicarOS() {
                         {step === 1 && (
                             <div className="space-y-4">
                                 <div>
-                                    <label className="block text-zinc-500 font-mono text-[9px] uppercase font-bold tracking-wider mb-1.5">
+                                    <label htmlFor="brief-company" className="block text-zinc-500 font-mono text-[9px] uppercase font-bold tracking-wider mb-1.5">
                                         {language === 'es' ? 'Nombre de la Empresa' : 'Company Name'}
                                     </label>
                                     <input
+                                        id="brief-company"
                                         type="text"
                                         value={formData.company}
                                         onChange={(e) => updateField('company', e.target.value)}
                                         placeholder={language === 'es' ? 'Quito S.A.' : 'Doe Industries'}
-                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-white/20 focus:border-emerald-500/50 focus:outline-none focus:ring-1 focus:ring-emerald-500/30 transition-all font-sans"
+                                        className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 font-sans text-sm text-white transition-all placeholder:text-white/20 focus:border-[#71F3A2]/50 focus:outline-none focus:ring-1 focus:ring-[#71F3A2]/30"
                                     />
                                 </div>
                                 <div>
@@ -248,7 +229,7 @@ export function AplicarOS() {
                                                     onClick={() => updateField('revenue', label)}
                                                     className={`text-left px-3 py-2.5 rounded-xl border text-[10px] font-mono transition-all duration-200 cursor-pointer ${
                                                         isSelected
-                                                            ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.1)]'
+                                                            ? 'border-[#71F3A2]/40 bg-[#71F3A2]/10 text-[#71F3A2] shadow-[0_0_15px_rgba(113,243,162,0.08)]'
                                                             : 'bg-white/5 border-white/5 text-zinc-400 hover:border-white/20 hover:text-white'
                                                     }`}
                                                 >
@@ -263,13 +244,14 @@ export function AplicarOS() {
 
                         {step === 2 && (
                             <div>
-                                <label className="block text-zinc-500 font-mono text-[9px] uppercase font-bold tracking-wider mb-1.5">
+                                <label htmlFor="brief-challenge" className="block text-zinc-500 font-mono text-[9px] uppercase font-bold tracking-wider mb-1.5">
                                     {language === 'es' 
                                         ? '¿Cuál es tu mayor cuello de botella operativo?' 
                                         : 'What is your biggest operational bottleneck?'
                                     }
                                 </label>
                                 <textarea
+                                    id="brief-challenge"
                                     value={formData.challenge}
                                     onChange={(e) => updateField('challenge', e.target.value)}
                                     placeholder={language === 'es'
@@ -277,7 +259,7 @@ export function AplicarOS() {
                                         : 'We lose leads due to slow response times on WhatsApp...'
                                     }
                                     rows={4}
-                                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-white/20 focus:border-emerald-500/50 focus:outline-none focus:ring-1 focus:ring-emerald-500/30 transition-all resize-none font-sans"
+                                    className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 font-sans text-sm text-white transition-all placeholder:text-white/20 focus:border-[#71F3A2]/50 focus:outline-none focus:ring-1 focus:ring-[#71F3A2]/30"
                                 />
                             </div>
                         )}
@@ -301,7 +283,7 @@ export function AplicarOS() {
                                                 onClick={() => updateField('timeline', label)}
                                                 className={`text-left px-4 py-3 rounded-xl border text-[11px] font-mono transition-all duration-200 cursor-pointer ${
                                                     isSelected
-                                                        ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.1)]'
+                                                        ? 'border-[#71F3A2]/40 bg-[#71F3A2]/10 text-[#71F3A2] shadow-[0_0_15px_rgba(113,243,162,0.08)]'
                                                         : 'bg-white/5 border-white/5 text-zinc-400 hover:border-white/20 hover:text-white'
                                                 }`}
                                             >
@@ -315,7 +297,7 @@ export function AplicarOS() {
                     </div>
 
                     {/* Controles de Navegación del Brief */}
-                    <div className="sticky bottom-3 z-20 -mx-1 mt-6 flex items-center justify-between rounded-2xl border border-white/8 bg-neutral-950/92 p-3 font-mono text-xs shadow-[0_14px_40px_rgba(0,0,0,0.32)] backdrop-blur-xl md:static md:mx-0 md:mt-8 md:rounded-none md:border-x-0 md:border-b-0 md:bg-transparent md:p-0 md:pt-4 md:shadow-none md:backdrop-blur-none">
+                    <div className="sticky bottom-3 z-20 -mx-1 mt-6 flex items-center justify-between rounded-2xl border border-white/8 bg-[#070809]/92 p-3 font-mono text-xs shadow-[0_14px_40px_rgba(0,0,0,0.32)] backdrop-blur-xl md:static md:mx-0 md:mt-8 md:rounded-none md:border-x-0 md:border-b-0 md:bg-transparent md:p-0 md:pt-4 md:shadow-none md:backdrop-blur-none">
                         <button
                             type="button"
                             onClick={() => setStep(prev => Math.max(0, prev - 1))}
@@ -330,7 +312,7 @@ export function AplicarOS() {
                                 type="button"
                                 onClick={() => setStep(prev => prev + 1)}
                                 disabled={!canAdvance()}
-                                className="flex min-h-10 items-center gap-1.5 rounded-xl border border-emerald-500/30 bg-emerald-500/20 px-4 py-2 text-emerald-300 hover:bg-emerald-500/30 disabled:opacity-20 cursor-pointer select-none"
+                                className="flex min-h-10 cursor-pointer select-none items-center gap-1.5 rounded-xl border border-[#71F3A2]/30 bg-[#71F3A2]/15 px-4 py-2 text-[#71F3A2] hover:bg-[#71F3A2]/25 disabled:opacity-20"
                             >
                                 NEXT <ArrowRight className="w-3.5 h-3.5" />
                             </button>
@@ -339,7 +321,7 @@ export function AplicarOS() {
                                 type="button"
                                 onClick={handleFormSubmit}
                                 disabled={!canAdvance() || submitting}
-                                className="flex min-h-10 items-center gap-1.5 rounded-xl border border-emerald-400/40 bg-emerald-500/30 px-5 py-2.5 font-mono text-xs text-emerald-300 shadow-[0_0_20px_rgba(16,185,129,0.15)] hover:bg-emerald-500/40 disabled:opacity-20 cursor-pointer select-none"
+                                className="flex min-h-10 cursor-pointer select-none items-center gap-1.5 rounded-xl border border-[#71F3A2]/40 bg-[#71F3A2]/20 px-5 py-2.5 font-mono text-xs text-[#71F3A2] shadow-[0_0_20px_rgba(113,243,162,0.12)] hover:bg-[#71F3A2]/30 disabled:opacity-20"
                             >
                                 {submitting 
                                     ? (language === 'es' ? 'ENVIANDO...' : 'SENDING...') 
@@ -349,6 +331,11 @@ export function AplicarOS() {
                             </button>
                         )}
                     </div>
+                    {submitError && (
+                        <p role="alert" className="mt-4 rounded-xl border border-red-400/25 bg-red-400/[0.06] px-4 py-3 text-sm leading-5 text-red-200">
+                            {submitError}
+                        </p>
+                    )}
                 </div>
             </div>
 

@@ -1,132 +1,73 @@
 import type { Metadata } from "next";
-import { Unbounded, Familjen_Grotesk, Space_Mono } from "next/font/google";
+import { Familjen_Grotesk, Space_Mono, Unbounded } from "next/font/google";
 import "./globals.css";
+import { SITE_IDENTITY } from "@/config/site";
+import { AppProviders } from "@/components/providers/AppProviders";
 import { GlobalBackground } from "@/components/shared/GlobalBackground";
 import { Navbar } from "@/components/sections/navbar";
 import { Footer } from "@/components/sections/footer";
-import dynamic from 'next/dynamic';
-import CustomCursor from "@/components/ui/CustomCursor";
-import { AppProviders } from "@/components/providers/AppProviders";
-import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
-import { ScrollProgressBar } from "@/components/scroll/ScrollProgressBar";
 
-const ChatWidgetLoader = dynamic(() => import('@/components/interactive/chat-widget-loader').then(mod => mod.ChatWidgetLoader));
-const siteUrl = "https://mmorera.com";
-const shareImage = {
-    url: `${siteUrl}/opengraph-image`,
-    width: 1200,
-    height: 630,
-    alt: "MMorera Agency",
-};
-
-// Identidad "Orquestador máximo": display expresivo (Unbounded) como sistema
-// visual dominante, body neutro moderno (Familjen Grotesk) y mono con carácter
-// (Space Mono) para timecode/telemetría. Reemplaza Inter/Playfair/JetBrains.
 const displayFont = Unbounded({
-    subsets: ["latin"],
-    display: "swap",
-    variable: "--ff-display",
-    weight: ["400", "500", "700", "900"],
+  subsets: ["latin"], display: "swap", variable: "--ff-display", weight: ["400", "500", "700", "900"],
 });
-
 const bodyFont = Familjen_Grotesk({
-    subsets: ["latin"],
-    display: "swap",
-    variable: "--ff-body",
-    weight: ["400", "500", "600", "700"],
+  subsets: ["latin"], display: "swap", variable: "--ff-body", weight: ["400", "500", "600", "700"],
+});
+const monoFont = Space_Mono({
+  subsets: ["latin"], display: "swap", variable: "--ff-mono", weight: ["400", "700"],
 });
 
-const monoFont = Space_Mono({
-    subsets: ["latin"],
-    display: "swap",
-    variable: "--ff-mono",
-    weight: ["400", "700"],
-});
+const { canonical, metadata: siteMetadata } = SITE_IDENTITY;
 
 export const metadata: Metadata = {
-    metadataBase: new URL(siteUrl),
-    title: "Nexus.AI | Sistemas Operativos de IA y Automatización B2B",
-    description: "Construimos sistemas operativos de IA y automatizaciones de alto rendimiento para escalar tus ventas y optimizar operaciones sin aumentar tu nómina.",
-    keywords: ["IA Development", "Nexus.AI", "Sistemas Operativos de IA", "Automatización de Marketing", "CRM", "Orquestación de Procesos", "Mario Morera"],
-    authors: [{ name: "Mario Morera", url: siteUrl }],
-    creator: "Mario Morera",
-    openGraph: {
-        type: "website",
-        locale: "es_ES",
-        url: siteUrl,
-        title: "Nexus.AI | Sistemas Operativos de IA y Automatización B2B",
-        description: "Construimos sistemas operativos de IA y automatizaciones de alto rendimiento para escalar tus ventas y optimizar operaciones sin aumentar tu nómina.",
-        siteName: "Nexus.AI",
-        images: [shareImage],
-    },
-    twitter: {
-        card: "summary_large_image",
-        title: "Nexus.AI | Sistemas Operativos de IA y Automatización B2B",
-        description: "Construimos sistemas operativos de IA y automatizaciones de alto rendimiento para escalar tus ventas y optimizar operaciones sin aumentar tu nómina.",
-        images: [
-            {
-                url: `${siteUrl}/twitter-image`,
-                alt: "Nexus.AI",
-            },
-        ],
-    },
+  metadataBase: new URL(canonical),
+  title: { default: siteMetadata.title.es, template: "%s — Mario Morera" },
+  description: siteMetadata.description.es,
+  keywords: ["Creative Technologist", "Product Design", "WebGL", "IA", "Automatización", "CRM", "Mario Morera"],
+  authors: [{ name: SITE_IDENTITY.brand, url: canonical }],
+  creator: SITE_IDENTITY.brand,
+  alternates: { canonical: "/", languages: { "es-UY": "/", en: "/en" } },
+  openGraph: {
+    type: "website", locale: "es_UY", alternateLocale: "en_US", url: canonical,
+    title: siteMetadata.title.es, description: siteMetadata.description.es,
+    siteName: SITE_IDENTITY.brand,
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: siteMetadata.title.es }],
+  },
+  twitter: {
+    card: "summary_large_image", title: siteMetadata.title.es,
+    description: siteMetadata.description.es, images: ["/twitter-image"],
+  },
 };
 
-export default function RootLayout({
-    children,
-}: Readonly<{
-    children: React.ReactNode;
-}>) {
-    return (
-        <html lang="es" className={`dark ${bodyFont.variable} ${displayFont.variable} ${monoFont.variable}`}>
-            <head>
-                <script
-                    type="application/ld+json"
-                    dangerouslySetInnerHTML={{
-                        __html: JSON.stringify({
-                            "@context": "https://schema.org",
-                            "@type": "ProfessionalService",
-                            "name": "Nexus.AI",
-                            "image": `${siteUrl}/opengraph-image`,
-                            "@id": siteUrl,
-                            "url": siteUrl,
-                            "priceRange": "$$$",
-                            "address": {
-                                "@type": "PostalAddress",
-                                "addressLocality": "Miami",
-                                "addressRegion": "FL",
-                                "addressCountry": "US"
-                            },
-                            "areaServed": {
-                                "@type": "Country",
-                                "name": "United States"
-                            },
-                            "description": "Construimos sistemas operativos de IA y automatizaciones de alto rendimiento para escalar tus ventas y optimizar operaciones sin aumentar tu nómina."
-                        })
-                    }}
-                />
-            </head>
-            <body className="min-h-screen font-sans antialiased bg-background text-foreground">
-                <AppProviders>
-                    {/* Skip to content — WCAG 2.4.1 */}
-                    <a
-                        href="#contenido-principal"
-                        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground focus:shadow-lg"
-                    >
-                        Saltar al contenido principal
-                    </a>
-                    <ScrollProgressBar />
-                    <GlobalBackground />
-                    <CustomCursor />
-                    <LanguageSwitcher />
-                    <Navbar />
-                    <div className="relative z-10 flex flex-col min-h-screen">
-                        {children}
-                    </div>
-                    <Footer />
-                    <ChatWidgetLoader />
-                </AppProviders>
-            </body>
-        </html>
-    );
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: SITE_IDENTITY.brand,
+  url: canonical,
+  jobTitle: SITE_IDENTITY.role.es,
+  description: siteMetadata.description.es,
+  email: `mailto:${SITE_IDENTITY.contact.email}`,
+  sameAs: [SITE_IDENTITY.social.github, SITE_IDENTITY.social.linkedin],
+  homeLocation: { "@type": "Country", name: "Uruguay" },
+};
+
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  return (
+    <html lang="es" className={`dark ${bodyFont.variable} ${displayFont.variable} ${monoFont.variable}`}>
+      <head>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }} />
+      </head>
+      <body className="min-h-screen overflow-x-hidden bg-background font-sans text-foreground antialiased">
+        <AppProviders>
+          <a href="#contenido-principal" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded-full focus:bg-[#F3F0E8] focus:px-5 focus:py-3 focus:text-[#070809]">
+            Saltar al contenido principal
+          </a>
+          <GlobalBackground />
+          <Navbar />
+          <div className="relative z-10 flex min-h-screen flex-col">{children}</div>
+          <Footer />
+        </AppProviders>
+      </body>
+    </html>
+  );
 }

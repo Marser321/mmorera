@@ -1,890 +1,812 @@
-'use client';
+"use client";
 
-import { Canvas, useFrame } from '@react-three/fiber';
-import { usePathname } from 'next/navigation';
+import { Canvas, useFrame } from "@react-three/fiber";
+import { usePathname } from "next/navigation";
 import {
-    useCallback,
-    useEffect,
-    useMemo,
-    useRef,
-    useState,
-    type RefObject,
-} from 'react';
-import * as THREE from 'three';
-import { FAMILIES, FAMILY_ORDER, familyIndex, type Family, type Tech } from '@/data/techStack';
-import { resolveParticleScene } from '@/data/particleScenes';
-import { sampleIcon, sampleText, type IconPoint } from '@/lib/sampleIcon';
-import { useActiveTech } from '@/context/ActiveTechContext';
-import { GenerativeField } from './GenerativeField';
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+  type RefObject,
+} from "react";
+import * as THREE from "three";
+import { useActiveTech } from "@/context/ActiveTechContext";
+import { PARTICLE_SCENE_LIMITS } from "@/data/particleSceneConfig";
+import { resolveParticleScene } from "@/data/particleScenes";
+import { TECH_STACK, type Tech } from "@/data/techStack";
+import {
+  PARTICLE_IDENTIFIABLE_PROGRESS,
+  createParticleSequenceState,
+  nextParticleSequenceIndex,
+  reduceParticleSequence,
+  type ParticleSequenceEvent,
+  type ParticleSequenceState,
+  type ParticleSequenceTarget,
+} from "@/lib/particleSequence";
+import { sampleIcon, sampleText, type IconPoint } from "@/lib/sampleIcon";
+import type { ParticleSceneDefinition } from "@/types/site";
 
-/**
- * Stack tecnológico dibujado por escenas de logos-partícula. Cada ruta o
- * sección resuelve una colección distinta y la transición conserva como máximo
- * dos geometrías activas. Una segunda capa ambiental aporta profundidad.
- */
+const LOGO_COUNT = { desktop: 16000, tablet: 8200, mobile: 2600 } as const;
+type PointerState = { x: number; y: number; active: boolean; pressed: boolean };
+type Environment = {
+  mode: "webgl" | "fallback";
+  isMobile: boolean;
+  isTablet: boolean;
+};
+type LogoPhase = "assemble" | "hold" | "dissolve";
 
-const COUNT_DESKTOP = 18000;
-const COUNT_MOBILE = 6500;
-const AMBIENT_DESKTOP = 500;
-const AMBIENT_MOBILE = 140;
-
-type Pointer = { x: number; y: number; active: boolean };
-type Environment = { mode: 'webgl' | 'fallback'; isMobile: boolean };
-
-interface Slot {
-    x: number;
-    y: number;
-    scale: number;
-}
-
-interface GeoArrays {
-    position: Float32Array;
-    logo: Float32Array;
-    color: Float32Array;
-    family: Float32Array;
-    seed: Float32Array;
-    logoSeed: Float32Array;
-    size: Float32Array;
-}
-
-interface SceneLayer {
-    sceneId: string;
-    geo: GeoArrays;
-    targetOpacity: number;
-}
-
-// Flancos y esquinas sostienen la composición, dejando libre el centro (título +
-// núcleo 3D). Posiciones ya dentro de la zona segura; `fitSlot` actúa de backstop.
-const DESKTOP_SLOTS: Slot[] = [
-    { x: -0.82, y: 0.50, scale: 0.30 },
-    { x: 0.82, y: 0.54, scale: 0.26 },
-    { x: 0.86, y: 0.02, scale: 0.28 },
-    { x: -0.86, y: -0.06, scale: 0.28 },
-    { x: 0.66, y: -0.62, scale: 0.30 },
-    { x: -0.64, y: -0.64, scale: 0.28 },
-    { x: -0.34, y: 0.82, scale: 0.20 },
-    { x: 0.36, y: 0.82, scale: 0.19 },
-    { x: -0.36, y: -0.84, scale: 0.20 },
-    { x: 0.38, y: -0.84, scale: 0.22 },
-    { x: -0.88, y: 0.30, scale: 0.18 },
-    { x: 0.88, y: 0.32, scale: 0.18 },
-];
-
-const MOBILE_SLOTS: Slot[] = [
-    { x: -0.62, y: 0.70, scale: 0.24 },
-    { x: 0.62, y: 0.64, scale: 0.22 },
-    { x: -0.68, y: 0.06, scale: 0.20 },
-    { x: 0.68, y: -0.04, scale: 0.22 },
-    { x: -0.58, y: -0.66, scale: 0.22 },
-    { x: 0.58, y: -0.70, scale: 0.22 },
-    { x: 0.06, y: 0.84, scale: 0.18 },
-];
-
-// Mantiene el logo ENTERO dentro de [-1,1]: clampa el centro del slot según su
-// media-extensión (0.5·scale con bbox-fit) + flotación + drift + margen de punto.
-// minAspect = aspect ratio más angosto esperado (desktop ~1.15, móvil ~0.5), que
-// es el peor caso para la extensión horizontal (aLogo.x se divide por uAspect).
-function fitSlot(slot: Slot, minAspect: number): Slot {
-    const SAFE = 0.985;
-    const xExt = (0.5 * slot.scale) / minAspect + 0.052 + 0.006 + 0.012;
-    const yExt = 0.5 * slot.scale + 0.072 + 0.006 + 0.012;
-    const xLim = Math.max(0, SAFE - xExt);
-    const yLim = Math.max(0, SAFE - yExt);
-    return {
-        x: Math.max(-xLim, Math.min(xLim, slot.x)),
-        y: Math.max(-yLim, Math.min(yLim, slot.y)),
-        scale: slot.scale,
-    };
+interface LogoGeometryData {
+  cloud: Float32Array;
+  logo: Float32Array;
+  seed: Float32Array;
+  size: Float32Array;
 }
 
 const sampledTechCache = new Map<string, Promise<IconPoint[]>>();
+const logoGeometryCache = new Map<string, Promise<LogoGeometryData>>();
+
+function seededValue(index: number, salt: number): number {
+  const raw = Math.sin((index + 1) * 12.9898 + salt * 78.233) * 43758.5453;
+  return raw - Math.floor(raw);
+}
 
 function sampleTech(tech: Tech): Promise<IconPoint[]> {
-    const cached = sampledTechCache.get(tech.name);
-    if (cached) return cached;
-
-    const sampled = tech.Icon
-        ? sampleIcon(tech.Icon, { resolution: 160, max: 3600, fit: true })
-        : Promise.resolve(sampleText(tech.fallback ?? tech.name, { resolution: 160, max: 3600, fit: true }));
-    sampledTechCache.set(tech.name, sampled);
-    return sampled;
+  const cached = sampledTechCache.get(tech.name);
+  if (cached) return cached;
+  const request = tech.Icon
+    ? sampleIcon(tech.Icon, { resolution: 220, max: 5200, fit: true })
+    : Promise.resolve(sampleText(tech.fallback ?? tech.name, { resolution: 220, max: 5200, fit: true }));
+  sampledTechCache.set(tech.name, request);
+  void request.catch(() => {
+    if (sampledTechCache.get(tech.name) === request) sampledTechCache.delete(tech.name);
+  });
+  return request;
 }
 
-async function buildLogoGeometry(techs: Tech[], slots: Slot[], totalCount: number, minAspect: number): Promise<GeoArrays> {
-    const weights = slots.map((slot) => slot.scale * slot.scale);
-    const weightSum = weights.reduce((sum, weight) => sum + weight, 0);
-    const perLogo = weights.map((weight) => Math.max(300, Math.round((totalCount * weight) / weightSum)));
-    const sampled = await Promise.all(techs.map(sampleTech));
-    const total = perLogo.reduce((sum, count) => sum + count, 0);
+async function buildLogoGeometry(tech: Tech, count: number): Promise<LogoGeometryData> {
+  const cacheKey = `${tech.name}:${count}`;
+  const cached = logoGeometryCache.get(cacheKey);
+  if (cached) return cached;
 
-    const position = new Float32Array(total * 3);
-    const logo = new Float32Array(total * 2);
-    const color = new Float32Array(total * 3);
-    const family = new Float32Array(total);
-    const seed = new Float32Array(total);
-    const logoSeed = new Float32Array(total);
-    const size = new Float32Array(total);
+  const request = sampleTech(tech)
+    .then((points) => {
+      if (points.length === 0) {
+        sampledTechCache.delete(tech.name);
+        throw new Error(`Particle sampling failed for ${tech.name}`);
+      }
 
-    let index = 0;
-    techs.forEach((tech, logoIndex) => {
-        const points = sampled[logoIndex];
-        const slot = fitSlot(slots[logoIndex], minAspect);
-        const familyId = familyIndex(tech.category);
-        const familyColor = new THREE.Color(FAMILIES[familyId].color);
-        const sharedSeed = Math.random();
-        const count = perLogo[logoIndex];
+      const cloud = new Float32Array(count * 3);
+      const logo = new Float32Array(count * 2);
+      const seed = new Float32Array(count);
+      const size = new Float32Array(count);
 
-        for (let pointIndex = 0; pointIndex < count; pointIndex++) {
-            // Paso uniforme sobre TODO el ícono: si el presupuesto es menor que la
-            // nube muestreada, baja-muestrea parejo (cubre arriba Y abajo) en vez de
-            // tomar sólo los primeros puntos (que están ordenados top→bottom).
-            const point = points.length
-                ? points[Math.min(points.length - 1, Math.floor((pointIndex * points.length) / count))]
-                : { x: 0, y: 0 };
-            position[index * 3] = slot.x;
-            position[index * 3 + 1] = slot.y;
-            logo[index * 2] = point.x * slot.scale + (Math.random() - 0.5) * 0.004;
-            logo[index * 2 + 1] = point.y * slot.scale + (Math.random() - 0.5) * 0.004;
-            color[index * 3] = familyColor.r;
-            color[index * 3 + 1] = familyColor.g;
-            color[index * 3 + 2] = familyColor.b;
-            family[index] = familyId;
-            seed[index] = Math.random();
-            logoSeed[index] = sharedSeed;
-            size[index] = 1.35 + Math.random() * 1.05;
-            index++;
-        }
+      for (let index = 0; index < count; index++) {
+        const point = points[Math.min(points.length - 1, Math.floor((index * points.length) / count))];
+        const radius = Math.sqrt(seededValue(index, 2));
+        const angle = seededValue(index, 3) * Math.PI * 2;
+        cloud[index * 3] = Math.cos(angle) * radius;
+        cloud[index * 3 + 1] = Math.sin(angle) * radius;
+        cloud[index * 3 + 2] = seededValue(index, 4);
+        logo[index * 2] = point.x + (seededValue(index, 5) - 0.5) * 0.004;
+        logo[index * 2 + 1] = point.y + (seededValue(index, 6) - 0.5) * 0.004;
+        seed[index] = seededValue(index, 7);
+        size[index] = 1.15 + seededValue(index, 8) * 1.65;
+      }
+      return { cloud, logo, seed, size };
+    })
+    .catch((error: unknown) => {
+      if (logoGeometryCache.get(cacheKey) === request) logoGeometryCache.delete(cacheKey);
+      throw error;
     });
 
-    return { position, logo, color, family, seed, logoSeed, size };
+  logoGeometryCache.set(cacheKey, request);
+  return request;
 }
 
-const SNOISE = /* glsl */ `
-vec3 mod289(vec3 x){return x - floor(x*(1.0/289.0))*289.0;}
-vec2 mod289(vec2 x){return x - floor(x*(1.0/289.0))*289.0;}
+const SIMPLEX_NOISE = /* glsl */ `
+vec3 mod289(vec3 x){return x-floor(x*(1.0/289.0))*289.0;}
+vec2 mod289(vec2 x){return x-floor(x*(1.0/289.0))*289.0;}
 vec3 permute(vec3 x){return mod289(((x*34.0)+1.0)*x);}
 float snoise(vec2 v){
-    const vec4 C = vec4(0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439);
-    vec2 i  = floor(v + dot(v, C.yy));
-    vec2 x0 = v - i + dot(i, C.xx);
-    vec2 i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
-    vec4 x12 = x0.xyxy + C.xxzz;
-    x12.xy -= i1;
-    i = mod289(i);
-    vec3 p = permute(permute(i.y + vec3(0.0, i1.y, 1.0)) + i.x + vec3(0.0, i1.x, 1.0));
-    vec3 m = max(0.5 - vec3(dot(x0, x0), dot(x12.xy, x12.xy), dot(x12.zw, x12.zw)), 0.0);
-    m = m * m; m = m * m;
-    vec3 x = 2.0 * fract(p * C.www) - 1.0;
-    vec3 h = abs(x) - 0.5;
-    vec3 ox = floor(x + 0.5);
-    vec3 a0 = x - ox;
-    m *= 1.79284291400159 - 0.85373472095314 * (a0 * a0 + h * h);
-    vec3 g;
-    g.x  = a0.x * x0.x + h.x * x0.y;
-    g.yz = a0.yz * x12.xz + h.yz * x12.yw;
-    return 130.0 * dot(m, g);
+  const vec4 C=vec4(0.211324865405187,0.366025403784439,-0.577350269189626,0.024390243902439);
+  vec2 i=floor(v+dot(v,C.yy));
+  vec2 x0=v-i+dot(i,C.xx);
+  vec2 i1=(x0.x>x0.y)?vec2(1.0,0.0):vec2(0.0,1.0);
+  vec4 x12=x0.xyxy+C.xxzz; x12.xy-=i1; i=mod289(i);
+  vec3 p=permute(permute(i.y+vec3(0.0,i1.y,1.0))+i.x+vec3(0.0,i1.x,1.0));
+  vec3 m=max(0.5-vec3(dot(x0,x0),dot(x12.xy,x12.xy),dot(x12.zw,x12.zw)),0.0);
+  m=m*m; m=m*m;
+  vec3 x=2.0*fract(p*C.www)-1.0;
+  vec3 h=abs(x)-0.5;
+  vec3 ox=floor(x+0.5);
+  vec3 a0=x-ox;
+  m*=1.79284291400159-0.85373472095314*(a0*a0+h*h);
+  vec3 g; g.x=a0.x*x0.x+h.x*x0.y; g.yz=a0.yz*x12.xz+h.yz*x12.yw;
+  return 130.0*dot(m,g);
 }
 `;
 
 const LOGO_VERTEX = /* glsl */ `
 attribute vec2 aLogo;
-attribute vec3 aColor;
 attribute float aSeed;
-attribute float aLogoSeed;
-attribute float aFamily;
 attribute float aSize;
 uniform float uTime;
 uniform vec2 uMouse;
 uniform float uMouseActive;
-uniform float uMouseR;
-uniform float uPush;
-uniform float uVortex;
-uniform float uDrift;
+uniform float uPressed;
+uniform float uFormation;
+uniform float uOpacity;
 uniform float uAspect;
 uniform float uPixelRatio;
-uniform float uPointScale;
-uniform float uFamilyWeight[8];
-varying vec3 vColor;
+uniform vec2 uCenter;
+uniform float uScale;
 varying float vAlpha;
-${SNOISE}
-void main() {
-    float ls = aLogoSeed * 6.2831853;
-    // Flotación con más rango (lateral + altura) y deriva propia por logo: dos
-    // sinusoides desfasadas por ls → ningún logo en fase. Amplitud máx ~0.052/0.072
-    // (debe coincidir con los términos de flotación de fitSlot para no salirse).
-    vec2 floatOff = vec2(
-        sin(uTime * 0.14 + ls) * 0.034 + sin(uTime * 0.07 + ls * 2.3) * 0.018,
-        sin(uTime * 0.11 + ls * 1.7) * 0.046 + cos(uTime * 0.05 + ls * 1.3) * 0.026
-    );
-    vec2 base = position.xy + floatOff + vec2(aLogo.x / uAspect, aLogo.y);
-    float ph = aSeed * 6.2831853;
-    vec2 n = vec2(
-        snoise(vec2(base.x * 2.2 + uTime * 0.18, base.y * 2.2 + ph)),
-        snoise(vec2(base.y * 2.2 - uTime * 0.16 + ph, base.x * 2.2))
-    );
-    vec2 pos = base + n * uDrift;
-    vec2 tm = pos - uMouse;
-    float d = length(tm);
-    float infl = (1.0 - smoothstep(0.0, uMouseR, d)) * uMouseActive;
-    vec2 dir = d > 0.0001 ? tm / d : vec2(0.0);
-    vec2 tang = vec2(-dir.y, dir.x);
-    pos += dir * infl * uPush + tang * infl * uVortex;
+${SIMPLEX_NOISE}
+void main(){
+  float phase=aSeed*6.2831853;
+  vec2 cloud=uCenter+vec2(position.x/uAspect,position.y)*0.72;
+  cloud+=vec2(sin(uTime*0.12+phase),cos(uTime*0.1+phase*1.4))*0.035;
+  vec2 target=uCenter+vec2(aLogo.x/uAspect,aLogo.y)*uScale;
+  vec2 grain=vec2(
+    snoise(vec2(target.x*3.0+uTime*0.18,phase)),
+    snoise(vec2(target.y*3.0-uTime*0.16,phase+2.4))
+  )*0.008;
+  float formed=smoothstep(0.0,1.0,uFormation);
+  vec2 pos=mix(cloud,target+grain,formed);
 
-    int fi = int(aFamily + 0.5);
-    float famW = uFamilyWeight[fi];
-    float act = mix(0.4, 1.0, famW);
-    vColor = aColor;
-    vAlpha = (0.14 + 0.42 * famW) + infl * 0.34;
-    gl_PointSize = aSize * act * (1.0 + infl * 1.2) * uPointScale * uPixelRatio;
-    gl_Position = vec4(pos, 0.0, 1.0);
+  vec2 delta=pos-uMouse;
+  float corrected=length(vec2(delta.x*uAspect,delta.y));
+  float influence=(1.0-smoothstep(0.0,0.32,corrected))*uMouseActive;
+  vec2 direction=normalize(delta+vec2(0.0001));
+  vec2 tangent=vec2(-direction.y,direction.x);
+  float pull=mix(1.0,-0.72,uPressed);
+  pos+=direction*influence*0.075*pull+tangent*influence*0.026;
+
+  float depthFade=mix(0.35,1.0,position.z);
+  vAlpha=(mix(0.055,0.62,formed)+influence*0.24)*uOpacity*depthFade;
+  gl_PointSize=aSize*(0.7+formed*0.85+influence)*uPixelRatio;
+  gl_Position=vec4(pos,0.0,1.0);
 }
 `;
 
 const AMBIENT_VERTEX = /* glsl */ `
-attribute vec3 aColor;
-attribute float aSeed;
-attribute float aFamily;
-attribute float aSize;
 attribute float aDepth;
+attribute float aSize;
+attribute float aMix;
 uniform float uTime;
 uniform vec2 uMouse;
 uniform float uMouseActive;
 uniform float uPixelRatio;
-uniform float uFamilyWeight[8];
-varying vec3 vColor;
+uniform float uPointScale;
 varying float vAlpha;
-void main() {
-    float phase = aSeed * 6.2831853;
-    vec2 pos = position.xy + vec2(
-        sin(uTime * (0.045 + aDepth * 0.035) + phase) * (0.025 + aDepth * 0.03),
-        cos(uTime * (0.035 + aDepth * 0.03) + phase * 1.6) * (0.035 + aDepth * 0.04)
-    );
-    pos += uMouse * aDepth * 0.012 * uMouseActive;
-    vec2 delta = pos - uMouse;
-    float distanceToMouse = length(delta);
-    float influence = (1.0 - smoothstep(0.0, 0.34, distanceToMouse)) * uMouseActive;
-    pos += normalize(delta + vec2(0.0001)) * influence * 0.035;
+varying float vMix;
+void main(){
+  float phase=aDepth*6.2831853+position.x*2.1;
+  vec2 drift=vec2(sin(uTime*(0.025+aDepth*0.03)+phase),cos(uTime*(0.02+aDepth*0.026)+phase*1.3));
+  vec2 pos=position.xy+drift*(0.008+aDepth*0.018);
+  pos+=uMouse*(0.006+aDepth*0.018)*uMouseActive;
+  vAlpha=(0.15+aDepth*0.38);
+  vMix=aMix;
+  gl_PointSize=aSize*uPointScale*(0.65+aDepth)*uPixelRatio;
+  gl_Position=vec4(pos,0.45-aDepth*0.25,1.0);
+}
+`;
 
-    int fi = int(aFamily + 0.5);
-    float famW = uFamilyWeight[fi];
-    vColor = aColor;
-    vAlpha = mix(0.08, 0.28, famW) + influence * 0.2;
-    gl_PointSize = aSize * (0.75 + aDepth * 0.8 + influence) * uPixelRatio;
-    gl_Position = vec4(pos, 0.0, 1.0);
+const AMBIENT_FRAGMENT = /* glsl */ `
+precision mediump float;
+uniform vec3 uAccent;
+uniform float uOpacity;
+varying float vAlpha;
+varying float vMix;
+void main(){
+  float distanceToCenter=length(gl_PointCoord-vec2(0.5));
+  if(distanceToCenter>0.5) discard;
+  float soft=smoothstep(0.5,0.02,distanceToCenter);
+  vec3 color=mix(vec3(0.953,0.941,0.91),uAccent,vMix);
+  gl_FragColor=vec4(color,soft*vAlpha*uOpacity);
 }
 `;
 
 const PARTICLE_FRAGMENT = /* glsl */ `
 precision mediump float;
-uniform float uOpacity;
-varying vec3 vColor;
 varying float vAlpha;
-void main() {
-    float d = length(gl_PointCoord - vec2(0.5));
-    if (d > 0.5) discard;
-    float a = smoothstep(0.5, 0.0, d) * vAlpha * uOpacity;
-    gl_FragColor = vec4(vColor, a);
+void main(){
+  float distanceToCenter=length(gl_PointCoord-vec2(0.5));
+  if(distanceToCenter>0.5) discard;
+  float soft=smoothstep(0.5,0.04,distanceToCenter);
+  gl_FragColor=vec4(0.953,0.941,0.91,soft*vAlpha);
 }
 `;
 
-// Capa de constelación: nodos (Points) con física CPU y líneas (LineSegments)
-// que se dibujan entre vecinos cerca del cursor. Coordenadas en clip space.
-const NODE_VERTEX = /* glsl */ `
-attribute vec3 aColor;
-attribute float aAlpha;
-attribute float aSize;
-uniform float uPixelRatio;
-varying vec3 vColor;
+const LINE_VERTEX = /* glsl */ `
+attribute float aDepth;
+uniform float uTime;
+uniform vec2 uMouse;
+uniform float uMouseActive;
 varying float vAlpha;
-void main() {
-    vColor = aColor;
-    vAlpha = aAlpha;
-    gl_PointSize = aSize * uPixelRatio;
-    gl_Position = vec4(position.xy, 0.0, 1.0);
+void main(){
+  vec2 pos=position.xy;
+  pos+=vec2(sin(uTime*0.035+aDepth*5.0),cos(uTime*0.03+aDepth*4.0))*0.008;
+  pos+=uMouse*(0.008+aDepth*0.012)*uMouseActive;
+  vAlpha=0.06+aDepth*0.08;
+  gl_Position=vec4(pos,0.3,1.0);
 }
 `;
 
-const LINK_VERTEX = /* glsl */ `
-attribute vec3 aColor;
-attribute float aAlpha;
-varying vec3 vColor;
-varying float vAlpha;
-void main() {
-    vColor = aColor;
-    vAlpha = aAlpha;
-    gl_Position = vec4(position.xy, 0.0, 1.0);
-}
-`;
-
-const LINK_FRAGMENT = /* glsl */ `
+const LINE_FRAGMENT = /* glsl */ `
 precision mediump float;
-varying vec3 vColor;
+uniform vec3 uAccent;
+uniform float uOpacity;
 varying float vAlpha;
-void main() {
-    gl_FragColor = vec4(vColor, vAlpha);
-}
+void main(){gl_FragColor=vec4(uAccent,vAlpha*uOpacity);}
 `;
 
-function familyWeights(activeFamilies: Family[], neutralWeight: number): number[] {
-    return FAMILY_ORDER.map((family) =>
-        activeFamilies.length === 0 ? neutralWeight : activeFamilies.includes(family) ? 1 : 0.14,
-    );
+function anchorForViewport(isMobile: boolean, isTablet: boolean): { center: [number, number]; scale: number } {
+  if (isMobile) return { center: [0, -0.55], scale: 0.62 };
+  if (isTablet) return { center: [0.42, -0.06], scale: 0.9 };
+  return { center: [0.56, -0.02], scale: 1.18 };
 }
 
-function seededValue(index: number, salt: number): number {
-    const raw = Math.sin((index + 1) * 12.9898 + salt * 78.233) * 43758.5453;
-    return raw - Math.floor(raw);
-}
-
-function LogoParticleSystem({
-    geo,
-    pointer,
-    activeFamilies,
-    isMobile,
-    targetOpacity,
-    onFadedOut,
+function LogoFormation({
+  data,
+  pointer,
+  phase,
+  opacity,
+  environment,
 }: {
-    geo: GeoArrays;
-    pointer: RefObject<Pointer>;
-    activeFamilies: Family[];
-    isMobile: boolean;
-    targetOpacity: number;
-    onFadedOut: () => void;
+  data: LogoGeometryData;
+  pointer: RefObject<PointerState>;
+  phase: LogoPhase;
+  opacity: number;
+  environment: Environment;
 }) {
-    const materialRef = useRef<THREE.ShaderMaterial>(null);
-    const fadeReported = useRef(false);
-    const targetWeights = useRef<number[]>(familyWeights(activeFamilies, 0.6));
-    const geometry = useMemo(() => {
-        const next = new THREE.BufferGeometry();
-        next.setAttribute('position', new THREE.BufferAttribute(geo.position, 3));
-        next.setAttribute('aLogo', new THREE.BufferAttribute(geo.logo, 2));
-        next.setAttribute('aColor', new THREE.BufferAttribute(geo.color, 3));
-        next.setAttribute('aFamily', new THREE.BufferAttribute(geo.family, 1));
-        next.setAttribute('aSeed', new THREE.BufferAttribute(geo.seed, 1));
-        next.setAttribute('aLogoSeed', new THREE.BufferAttribute(geo.logoSeed, 1));
-        next.setAttribute('aSize', new THREE.BufferAttribute(geo.size, 1));
-        next.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 10);
-        return next;
-    }, [geo]);
-    const uniforms = useMemo(() => ({
-        uTime: { value: 0 },
-        uMouse: { value: new THREE.Vector2(-10, -10) },
-        uMouseActive: { value: 0 },
-        uMouseR: { value: isMobile ? 0.2 : 0.26 },
-        uPush: { value: 0.08 },
-        uVortex: { value: 0.04 },
-        uDrift: { value: 0.006 },
-        uAspect: { value: 1.6 },
-        uPixelRatio: { value: 1.5 },
-        uPointScale: { value: isMobile ? 1.3 : 1.5 },
-        uFamilyWeight: { value: familyWeights(activeFamilies, 0.6) },
-        uOpacity: { value: 0 },
-    }), [activeFamilies, isMobile]);
+  const materialRef = useRef<THREE.ShaderMaterial>(null);
+  const geometry = useMemo(() => {
+    const next = new THREE.BufferGeometry();
+    next.setAttribute("position", new THREE.BufferAttribute(data.cloud, 3));
+    next.setAttribute("aLogo", new THREE.BufferAttribute(data.logo, 2));
+    next.setAttribute("aSeed", new THREE.BufferAttribute(data.seed, 1));
+    next.setAttribute("aSize", new THREE.BufferAttribute(data.size, 1));
+    next.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 10);
+    return next;
+  }, [data]);
+  useEffect(() => () => geometry.dispose(), [geometry]);
+  const anchor = useMemo(
+    () => anchorForViewport(environment.isMobile, environment.isTablet),
+    [environment.isMobile, environment.isTablet],
+  );
+  const uniforms = useMemo(() => ({
+    uTime: { value: 0 },
+    uMouse: { value: new THREE.Vector2(-10, -10) },
+    uMouseActive: { value: 0 },
+    uPressed: { value: 0 },
+    uFormation: { value: 0 },
+    uOpacity: { value: 0 },
+    uAspect: { value: 1.6 },
+    uPixelRatio: { value: 1.5 },
+    uCenter: { value: new THREE.Vector2(...anchor.center) },
+    uScale: { value: anchor.scale },
+  }), [anchor.center, anchor.scale]);
 
-    useEffect(() => {
-        targetWeights.current = familyWeights(activeFamilies, 0.6);
-    }, [activeFamilies]);
+  useFrame((state, delta) => {
+    const material = materialRef.current;
+    const currentPointer = pointer.current;
+    if (!material || !currentPointer) return;
+    const values = material.uniforms;
+    const targetFormation = phase === "dissolve" ? 0 : 1;
+    values.uTime.value += delta;
+    values.uAspect.value = state.size.height > 0 ? state.size.width / state.size.height : 1.6;
+    values.uPixelRatio.value = state.gl.getPixelRatio();
+    values.uMouse.value.set(currentPointer.x, currentPointer.y);
+    values.uMouseActive.value += ((currentPointer.active ? 1 : 0) - values.uMouseActive.value) * Math.min(1, delta * 6);
+    values.uPressed.value += ((currentPointer.pressed ? 1 : 0) - values.uPressed.value) * Math.min(1, delta * 8);
+    values.uFormation.value += (targetFormation - values.uFormation.value) * Math.min(1, delta * (targetFormation ? 4.2 : 5.2));
+    values.uOpacity.value += (opacity - values.uOpacity.value) * Math.min(1, delta * 5);
+  });
 
-    useEffect(() => {
-        if (targetOpacity > 0) fadeReported.current = false;
-    }, [targetOpacity]);
-
-    useFrame((state, delta) => {
-        const material = materialRef.current;
-        const currentPointer = pointer.current;
-        if (!material || !currentPointer) return;
-
-        const values = material.uniforms;
-        values.uTime.value += delta;
-        values.uPixelRatio.value = state.gl.getPixelRatio();
-        values.uAspect.value = state.size.height > 0 ? state.size.width / state.size.height : 1.6;
-        values.uMouse.value.set(currentPointer.x, currentPointer.y);
-        values.uMouseActive.value += ((currentPointer.active ? 1 : 0) - values.uMouseActive.value) * Math.min(1, delta * 6);
-        values.uOpacity.value += (targetOpacity - values.uOpacity.value) * Math.min(1, delta * 4.5);
-
-        const weights = values.uFamilyWeight.value as number[];
-        const weightStep = Math.min(1, delta * 2.5);
-        for (let index = 0; index < weights.length; index++) {
-            weights[index] += (targetWeights.current[index] - weights[index]) * weightStep;
-        }
-
-        if (targetOpacity === 0 && values.uOpacity.value < 0.015 && !fadeReported.current) {
-            fadeReported.current = true;
-            onFadedOut();
-        }
-    });
-
-    return (
-        <points geometry={geometry} frustumCulled={false}>
-            <shaderMaterial
-                ref={materialRef}
-                uniforms={uniforms}
-                vertexShader={LOGO_VERTEX}
-                fragmentShader={PARTICLE_FRAGMENT}
-                transparent
-                depthWrite={false}
-                depthTest={false}
-                blending={THREE.AdditiveBlending}
-            />
-        </points>
-    );
+  return (
+    <points geometry={geometry} frustumCulled={false}>
+      <shaderMaterial
+        ref={materialRef}
+        uniforms={uniforms}
+        vertexShader={LOGO_VERTEX}
+        fragmentShader={PARTICLE_FRAGMENT}
+        transparent
+        depthWrite={false}
+        depthTest={false}
+        blending={THREE.AdditiveBlending}
+      />
+    </points>
+  );
 }
 
-function AmbientParticleSystem({
-    pointer,
-    activeFamilies,
-    isMobile,
+function AmbientPoints({
+  pointer,
+  accent,
+  count,
+  opacity,
+  pointScale,
+  salt,
 }: {
-    pointer: RefObject<Pointer>;
-    activeFamilies: Family[];
-    isMobile: boolean;
+  pointer: RefObject<PointerState>;
+  accent: string;
+  count: number;
+  opacity: number;
+  pointScale: number;
+  salt: number;
 }) {
-    const materialRef = useRef<THREE.ShaderMaterial>(null);
-    const targetWeights = useRef<number[]>(familyWeights(activeFamilies, 0.52));
-    const geometry = useMemo(() => {
-        const count = isMobile ? AMBIENT_MOBILE : AMBIENT_DESKTOP;
-        const positions = new Float32Array(count * 3);
-        const colors = new Float32Array(count * 3);
-        const families = new Float32Array(count);
-        const seeds = new Float32Array(count);
-        const sizes = new Float32Array(count);
-        const depths = new Float32Array(count);
+  const materialRef = useRef<THREE.ShaderMaterial>(null);
+  const geometry = useMemo(() => {
+    const positions = new Float32Array(count * 3);
+    const depths = new Float32Array(count);
+    const sizes = new Float32Array(count);
+    const mixes = new Float32Array(count);
+    for (let index = 0; index < count; index++) {
+      positions[index * 3] = seededValue(index, salt) * 2.3 - 1.15;
+      positions[index * 3 + 1] = seededValue(index, salt + 1) * 2.25 - 1.1;
+      depths[index] = seededValue(index, salt + 2);
+      sizes[index] = 0.65 + seededValue(index, salt + 3) * 1.8;
+      mixes[index] = seededValue(index, salt + 4) > 0.72 ? 0.75 : 0.04;
+    }
+    const next = new THREE.BufferGeometry();
+    next.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    next.setAttribute("aDepth", new THREE.BufferAttribute(depths, 1));
+    next.setAttribute("aSize", new THREE.BufferAttribute(sizes, 1));
+    next.setAttribute("aMix", new THREE.BufferAttribute(mixes, 1));
+    next.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 10);
+    return next;
+  }, [count, salt]);
+  const uniforms = useMemo(() => ({
+    uTime: { value: 0 },
+    uMouse: { value: new THREE.Vector2(-10, -10) },
+    uMouseActive: { value: 0 },
+    uPixelRatio: { value: 1.5 },
+    uPointScale: { value: pointScale },
+    uAccent: { value: new THREE.Color(accent) },
+    uOpacity: { value: opacity },
+  }), [accent, opacity, pointScale]);
 
-        for (let index = 0; index < count; index++) {
-            const familyId = index % FAMILIES.length;
-            const color = new THREE.Color(FAMILIES[familyId].color);
-            positions[index * 3] = seededValue(index, 1) * 2.2 - 1.1;
-            positions[index * 3 + 1] = seededValue(index, 2) * 2.2 - 1.1;
-            colors[index * 3] = color.r;
-            colors[index * 3 + 1] = color.g;
-            colors[index * 3 + 2] = color.b;
-            families[index] = familyId;
-            seeds[index] = seededValue(index, 3);
-            sizes[index] = 0.65 + seededValue(index, 4) * 1.8;
-            depths[index] = seededValue(index, 5);
-        }
+  useFrame((state, delta) => {
+    const material = materialRef.current;
+    const currentPointer = pointer.current;
+    if (!material || !currentPointer) return;
+    material.uniforms.uTime.value += delta;
+    material.uniforms.uPixelRatio.value = state.gl.getPixelRatio();
+    material.uniforms.uMouse.value.set(currentPointer.x, currentPointer.y);
+    material.uniforms.uMouseActive.value += ((currentPointer.active ? 1 : 0) - material.uniforms.uMouseActive.value) * Math.min(1, delta * 2.5);
+    material.uniforms.uAccent.value.set(accent);
+    material.uniforms.uOpacity.value = opacity;
+  });
 
-        const next = new THREE.BufferGeometry();
-        next.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        next.setAttribute('aColor', new THREE.BufferAttribute(colors, 3));
-        next.setAttribute('aFamily', new THREE.BufferAttribute(families, 1));
-        next.setAttribute('aSeed', new THREE.BufferAttribute(seeds, 1));
-        next.setAttribute('aSize', new THREE.BufferAttribute(sizes, 1));
-        next.setAttribute('aDepth', new THREE.BufferAttribute(depths, 1));
-        next.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 10);
-        return next;
-    }, [isMobile]);
-    const uniforms = useMemo(() => ({
-        uTime: { value: 0 },
-        uMouse: { value: new THREE.Vector2(-10, -10) },
-        uMouseActive: { value: 0 },
-        uPixelRatio: { value: 1.5 },
-        uFamilyWeight: { value: familyWeights(activeFamilies, 0.52) },
-        uOpacity: { value: isMobile ? 0.3 : 0.36 },
-    }), [activeFamilies, isMobile]);
-
-    useEffect(() => {
-        targetWeights.current = familyWeights(activeFamilies, 0.52);
-    }, [activeFamilies]);
-
-    useFrame((state, delta) => {
-        const material = materialRef.current;
-        const currentPointer = pointer.current;
-        if (!material || !currentPointer) return;
-
-        const values = material.uniforms;
-        values.uTime.value += delta;
-        values.uPixelRatio.value = state.gl.getPixelRatio();
-        values.uMouse.value.set(currentPointer.x, currentPointer.y);
-        values.uMouseActive.value += ((currentPointer.active ? 1 : 0) - values.uMouseActive.value) * Math.min(1, delta * 3);
-
-        const weights = values.uFamilyWeight.value as number[];
-        const weightStep = Math.min(1, delta * 2);
-        for (let index = 0; index < weights.length; index++) {
-            weights[index] += (targetWeights.current[index] - weights[index]) * weightStep;
-        }
-    });
-
-    return (
-        <points geometry={geometry} frustumCulled={false}>
-            <shaderMaterial
-                ref={materialRef}
-                uniforms={uniforms}
-                vertexShader={AMBIENT_VERTEX}
-                fragmentShader={PARTICLE_FRAGMENT}
-                transparent
-                depthWrite={false}
-                depthTest={false}
-                blending={THREE.AdditiveBlending}
-            />
-        </points>
-    );
+  return (
+    <points geometry={geometry} frustumCulled={false}>
+      <shaderMaterial
+        ref={materialRef}
+        uniforms={uniforms}
+        vertexShader={AMBIENT_VERTEX}
+        fragmentShader={AMBIENT_FRAGMENT}
+        transparent
+        depthWrite={false}
+        depthTest={false}
+        blending={THREE.AdditiveBlending}
+      />
+    </points>
+  );
 }
 
-const CONSTELLATION_DESKTOP = 90;
-const CONSTELLATION_MOBILE = 40;
-const MAX_LINKS_DESKTOP = 260;
-const MAX_LINKS_MOBILE = 110;
-
-// Partículas flotantes que reaccionan con fuerza al cursor (vórtice + repulsión)
-// y se conectan con líneas de constelación entre vecinas cercanas al puntero
-// —recreando la sensación de la primera versión (GenerativeField), pero en WebGL.
-function ConstellationLayer({
-    pointer,
-    isMobile,
+function ConstellationLines({
+  pointer,
+  accent,
+  isMobile,
+  opacity,
 }: {
-    pointer: RefObject<Pointer>;
-    isMobile: boolean;
+  pointer: RefObject<PointerState>;
+  accent: string;
+  isMobile: boolean;
+  opacity: number;
 }) {
-    const nodeMatRef = useRef<THREE.ShaderMaterial>(null);
-    const nodeRef = useRef<THREE.Points>(null);
-    const linkRef = useRef<THREE.LineSegments>(null);
-
-    const count = isMobile ? CONSTELLATION_MOBILE : CONSTELLATION_DESKTOP;
-    const maxLinks = isMobile ? MAX_LINKS_MOBILE : MAX_LINKS_DESKTOP;
-
-    // Semilla determinista (cómputo puro): posiciones/colores/tamaños iniciales.
-    const seed = useMemo(() => {
-        const px = new Float32Array(count);
-        const py = new Float32Array(count);
-        const phase = new Float32Array(count);
-        const baseColor = new Float32Array(count * 3);
-        const baseSize = new Float32Array(count);
-        const white = new THREE.Color('#ffffff');
-        for (let i = 0; i < count; i++) {
-            px[i] = seededValue(i, 11) * 2 - 1;
-            py[i] = seededValue(i, 12) * 2 - 1;
-            phase[i] = seededValue(i, 15) * 6.2831853;
-            const c = seededValue(i, 16) < 0.54
-                ? white
-                : new THREE.Color(FAMILIES[i % FAMILIES.length].color);
-            baseColor[i * 3] = c.r;
-            baseColor[i * 3 + 1] = c.g;
-            baseColor[i * 3 + 2] = c.b;
-            baseSize[i] = 1.6 + seededValue(i, 17) * 1.8;
+  const materialRef = useRef<THREE.ShaderMaterial>(null);
+  const geometry = useMemo(() => {
+    const nodeCount = isMobile ? 34 : 74;
+    const nodes = Array.from({ length: nodeCount }, (_, index) => ({
+      x: seededValue(index, 31) * 2.1 - 1.05,
+      y: seededValue(index, 32) * 2.05 - 1.025,
+      depth: seededValue(index, 33),
+    }));
+    const segments: number[] = [];
+    const depths: number[] = [];
+    for (let a = 0; a < nodes.length; a++) {
+      for (let b = a + 1; b < nodes.length; b++) {
+        const dx = nodes[a].x - nodes[b].x;
+        const dy = nodes[a].y - nodes[b].y;
+        if (dx * dx + dy * dy < 0.055 && segments.length < (isMobile ? 180 : 520)) {
+          segments.push(nodes[a].x, nodes[a].y, 0, nodes[b].x, nodes[b].y, 0);
+          depths.push(nodes[a].depth, nodes[b].depth);
         }
-        return { px, py, phase, baseColor, baseSize };
-    }, [count]);
+      }
+    }
+    const next = new THREE.BufferGeometry();
+    next.setAttribute("position", new THREE.BufferAttribute(new Float32Array(segments), 3));
+    next.setAttribute("aDepth", new THREE.BufferAttribute(new Float32Array(depths), 1));
+    next.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 10);
+    return next;
+  }, [isMobile]);
+  const uniforms = useMemo(() => ({
+    uTime: { value: 0 },
+    uMouse: { value: new THREE.Vector2(-10, -10) },
+    uMouseActive: { value: 0 },
+    uAccent: { value: new THREE.Color(accent) },
+    uOpacity: { value: opacity },
+  }), [accent, opacity]);
 
-    // Estado físico mutable (clip space [-1,1]). Se inicializa de forma perezosa
-    // dentro de useFrame para no leer/mutar refs durante el render.
-    const simRef = useRef<{ px: Float32Array; py: Float32Array; vx: Float32Array; vy: Float32Array } | null>(null);
+  useFrame((_, delta) => {
+    const material = materialRef.current;
+    const currentPointer = pointer.current;
+    if (!material || !currentPointer) return;
+    material.uniforms.uTime.value += delta;
+    material.uniforms.uMouse.value.set(currentPointer.x, currentPointer.y);
+    material.uniforms.uMouseActive.value += ((currentPointer.active ? 1 : 0) - material.uniforms.uMouseActive.value) * Math.min(1, delta * 2.5);
+    material.uniforms.uAccent.value.set(accent);
+    material.uniforms.uOpacity.value = opacity;
+  });
 
-    // Geometría de nodos: posición + color + alpha + size. La mutación por frame
-    // se hace a través de nodeRef (no del valor memoizado directamente).
-    const nodeGeometry = useMemo(() => {
-        const geo = new THREE.BufferGeometry();
-        geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(count * 3), 3));
-        geo.setAttribute('aColor', new THREE.BufferAttribute(new Float32Array(seed.baseColor), 3));
-        geo.setAttribute('aAlpha', new THREE.BufferAttribute(new Float32Array(count), 1));
-        geo.setAttribute('aSize', new THREE.BufferAttribute(new Float32Array(seed.baseSize), 1));
-        geo.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 10);
-        return geo;
-    }, [count, seed]);
-
-    // Geometría de líneas: buffers de tamaño fijo, draw range dinámico por frame.
-    const linkGeometry = useMemo(() => {
-        const geo = new THREE.BufferGeometry();
-        geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(maxLinks * 2 * 3), 3));
-        geo.setAttribute('aColor', new THREE.BufferAttribute(new Float32Array(maxLinks * 2 * 3), 3));
-        geo.setAttribute('aAlpha', new THREE.BufferAttribute(new Float32Array(maxLinks * 2), 1));
-        geo.setDrawRange(0, 0);
-        geo.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 10);
-        return geo;
-    }, [maxLinks]);
-
-    const nodeUniforms = useMemo(() => ({
-        uPixelRatio: { value: 1.5 },
-        uOpacity: { value: 1 },
-    }), []);
-
-    // Radios en unidades de altura (la x se corrige por aspect para que el campo
-    // de interacción sea isótropo en pantallas anchas).
-    const MOUSE_R = isMobile ? 0.5 : 0.45;
-    const LINK_R = isMobile ? 0.34 : 0.3;
-    const LINK_DIST = isMobile ? 0.2 : 0.16;
-    const VORTEX = 0.011;
-    const REPEL = 0.006;
-
-    useFrame((state) => {
-        const ptr = pointer.current;
-        const nodeGeo = nodeRef.current?.geometry;
-        const linkGeo = linkRef.current?.geometry;
-        if (!ptr || !nodeGeo || !linkGeo) return;
-
-        // Init perezoso del estado mutable (copia las posiciones de la semilla).
-        if (simRef.current == null || simRef.current.px.length !== count) {
-            simRef.current = {
-                px: new Float32Array(seed.px),
-                py: new Float32Array(seed.py),
-                vx: new Float32Array(count),
-                vy: new Float32Array(count),
-            };
-        }
-        const sim = simRef.current;
-        const t = state.clock.elapsedTime;
-        const aspect = state.size.height > 0 ? state.size.width / state.size.height : 1.6;
-
-        const nodePos = nodeGeo.attributes.position.array as Float32Array;
-        const nodeAlpha = nodeGeo.attributes.aAlpha.array as Float32Array;
-        const { px, py, vx, vy } = sim;
-        const { phase } = seed;
-        const active = ptr.active ? 1 : 0;
-
-        for (let i = 0; i < count; i++) {
-            // Deriva orgánica suave (cada partícula con su fase).
-            vx[i] += Math.sin(t * 0.3 + phase[i]) * 0.00006;
-            vy[i] += Math.cos(t * 0.26 + phase[i] * 1.3) * 0.00006;
-
-            let proximity = 0;
-            if (active) {
-                const dx = px[i] - ptr.x;
-                const dy = py[i] - ptr.y;
-                const cdx = dx * aspect;
-                const cdy = dy;
-                const d = Math.hypot(cdx, cdy) || 1e-4;
-                if (d < MOUSE_R) {
-                    const f = 1 - d / MOUSE_R;
-                    proximity = f;
-                    const ux = cdx / d;
-                    const uy = cdy / d;
-                    const vortex = f * VORTEX;
-                    const repel = f * f * REPEL;
-                    // tangencial (-uy, ux) + radial (ux, uy), de vuelta a clip space.
-                    vx[i] += (-uy * vortex + ux * repel) / aspect;
-                    vy[i] += (ux * vortex + uy * repel);
-                }
-            }
-
-            vx[i] *= 0.92;
-            vy[i] *= 0.92;
-            px[i] += vx[i];
-            py[i] += vy[i];
-
-            // Wrap-around dentro del clip space.
-            if (px[i] < -1.05) px[i] = 1.05;
-            else if (px[i] > 1.05) px[i] = -1.05;
-            if (py[i] < -1.05) py[i] = 1.05;
-            else if (py[i] > 1.05) py[i] = -1.05;
-
-            nodePos[i * 3] = px[i];
-            nodePos[i * 3 + 1] = py[i];
-            nodePos[i * 3 + 2] = 0;
-            nodeAlpha[i] = Math.min(0.08 + proximity * 0.42, 0.56);
-        }
-        nodeGeo.attributes.position.needsUpdate = true;
-        nodeGeo.attributes.aAlpha.needsUpdate = true;
-
-        // ── Líneas de constelación entre vecinos cercanos al cursor ──
-        const linkPos = linkGeo.attributes.position.array as Float32Array;
-        const linkColor = linkGeo.attributes.aColor.array as Float32Array;
-        const linkAlpha = linkGeo.attributes.aAlpha.array as Float32Array;
-        let links = 0;
-
-        if (active) {
-            // Recolectar índices cerca del cursor.
-            const near: number[] = [];
-            for (let i = 0; i < count; i++) {
-                const cdx = (px[i] - ptr.x) * aspect;
-                const cdy = py[i] - ptr.y;
-                if (cdx * cdx + cdy * cdy < LINK_R * LINK_R) near.push(i);
-            }
-            const { baseColor } = seed;
-            for (let a = 0; a < near.length && links < maxLinks; a++) {
-                for (let b = a + 1; b < near.length && links < maxLinks; b++) {
-                    const ia = near[a];
-                    const ib = near[b];
-                    const cdx = (px[ia] - px[ib]) * aspect;
-                    const cdy = py[ia] - py[ib];
-                    const d = Math.hypot(cdx, cdy);
-                    if (d < LINK_DIST) {
-                        const alpha = (1 - d / LINK_DIST) * 0.22;
-                        const o = links * 2;
-                        linkPos[o * 3] = px[ia];
-                        linkPos[o * 3 + 1] = py[ia];
-                        linkPos[o * 3 + 2] = 0;
-                        linkPos[(o + 1) * 3] = px[ib];
-                        linkPos[(o + 1) * 3 + 1] = py[ib];
-                        linkPos[(o + 1) * 3 + 2] = 0;
-                        for (let k = 0; k < 2; k++) {
-                            linkColor[(o + k) * 3] = baseColor[ia * 3];
-                            linkColor[(o + k) * 3 + 1] = baseColor[ia * 3 + 1];
-                            linkColor[(o + k) * 3 + 2] = baseColor[ia * 3 + 2];
-                            linkAlpha[o + k] = alpha;
-                        }
-                        links++;
-                    }
-                }
-            }
-        }
-
-        linkGeo.setDrawRange(0, links * 2);
-        linkGeo.attributes.position.needsUpdate = true;
-        linkGeo.attributes.aColor.needsUpdate = true;
-        linkGeo.attributes.aAlpha.needsUpdate = true;
-
-        if (nodeMatRef.current) {
-            nodeMatRef.current.uniforms.uPixelRatio.value = state.gl.getPixelRatio();
-        }
-    });
-
-    return (
-        <>
-            <lineSegments ref={linkRef} geometry={linkGeometry} frustumCulled={false}>
-                <shaderMaterial
-                    vertexShader={LINK_VERTEX}
-                    fragmentShader={LINK_FRAGMENT}
-                    transparent
-                    depthWrite={false}
-                    depthTest={false}
-                    blending={THREE.AdditiveBlending}
-                />
-            </lineSegments>
-            <points ref={nodeRef} geometry={nodeGeometry} frustumCulled={false}>
-                <shaderMaterial
-                    ref={nodeMatRef}
-                    uniforms={nodeUniforms}
-                    vertexShader={NODE_VERTEX}
-                    fragmentShader={PARTICLE_FRAGMENT}
-                    transparent
-                    depthWrite={false}
-                    depthTest={false}
-                    blending={THREE.AdditiveBlending}
-                />
-            </points>
-        </>
-    );
+  return (
+    <lineSegments geometry={geometry} frustumCulled={false}>
+      <shaderMaterial
+        ref={materialRef}
+        uniforms={uniforms}
+        vertexShader={LINE_VERTEX}
+        fragmentShader={LINE_FRAGMENT}
+        transparent
+        depthWrite={false}
+        depthTest={false}
+        blending={THREE.AdditiveBlending}
+      />
+    </lineSegments>
+  );
 }
 
 function hasWebGL(): boolean {
-    try {
-        const canvas = document.createElement('canvas');
-        return !!(
-            window.WebGLRenderingContext
-            && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'))
-        );
-    } catch {
-        return false;
+  try {
+    const canvas = document.createElement("canvas");
+    return Boolean(window.WebGLRenderingContext && (canvas.getContext("webgl") || canvas.getContext("experimental-webgl")));
+  } catch {
+    return false;
+  }
+}
+
+function StaticTechnologyMark({ scene, tech }: { scene: ParticleSceneDefinition; tech?: Tech }) {
+  const { setActiveTechName } = useActiveTech();
+  useEffect(() => {
+    setActiveTechName(scene.mode === "ambient" ? null : tech?.name ?? null);
+    return () => setActiveTechName(null);
+  }, [scene.mode, setActiveTechName, tech?.name]);
+
+  if (scene.mode === "ambient" || !tech) return null;
+  const Icon = tech.Icon;
+  return (
+    <div className="absolute inset-0 opacity-45">
+      <div className="absolute bottom-[10vh] left-1/2 grid h-[30vh] w-[84vw] -translate-x-1/2 place-items-center text-[#F3F0E8] sm:bottom-auto sm:left-auto sm:right-[5vw] sm:top-[17vh] sm:h-[62vh] sm:w-[40vw] sm:translate-x-0">
+        {Icon ? <Icon className="h-full max-h-[54vh] w-full max-w-[35vw]" /> : <span className="font-heading text-[clamp(5rem,18vw,15rem)] font-black tracking-[-.1em]">{tech.fallback}</span>}
+      </div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_76%_28%,transparent_0%,rgba(7,8,9,.2)_42%,#070809_88%)]" />
+    </div>
+  );
+}
+
+type LogoSequenceTarget = ParticleSequenceTarget<LogoGeometryData>;
+
+function waitForTick(milliseconds: number, signal: AbortSignal): Promise<boolean> {
+  return new Promise((resolve) => {
+    if (signal.aborted) {
+      resolve(false);
+      return;
     }
+
+    const timer = window.setTimeout(() => {
+      signal.removeEventListener("abort", onAbort);
+      resolve(true);
+    }, milliseconds);
+    const onAbort = () => {
+      window.clearTimeout(timer);
+      resolve(false);
+    };
+    signal.addEventListener("abort", onAbort, { once: true });
+  });
+}
+
+async function waitForActiveDuration(
+  milliseconds: number,
+  isActive: () => boolean,
+  signal: AbortSignal,
+): Promise<boolean> {
+  let remaining = Math.max(0, milliseconds);
+  while (remaining > 0 && !signal.aborted) {
+    const step = Math.min(64, remaining);
+    const startedAt = performance.now();
+    if (!(await waitForTick(step, signal))) return false;
+    const elapsed = Math.min(performance.now() - startedAt, step * 2);
+    if (isActive()) remaining -= elapsed;
+  }
+  return !signal.aborted;
+}
+
+function ParticleCanvas({
+  scene,
+  techs,
+  environment,
+  pointer,
+  pageVisible,
+  heroVisible,
+  setActiveTechName,
+}: {
+  scene: ParticleSceneDefinition;
+  techs: Tech[];
+  environment: Environment;
+  pointer: RefObject<PointerState>;
+  pageVisible: boolean;
+  heroVisible: boolean;
+  setActiveTechName: (name: string | null) => void;
+}) {
+  const [controller, reactDispatch] = useReducer(
+    reduceParticleSequence<LogoGeometryData>,
+    createParticleSequenceState<LogoGeometryData>(),
+  );
+  const controllerRef = useRef<ParticleSequenceState<LogoGeometryData>>(controller);
+  const pageVisibleRef = useRef(pageVisible);
+  const heroVisibleRef = useRef(heroVisible);
+
+  useEffect(() => {
+    controllerRef.current = controller;
+  }, [controller]);
+  useEffect(() => {
+    pageVisibleRef.current = pageVisible;
+  }, [pageVisible]);
+  useEffect(() => {
+    heroVisibleRef.current = heroVisible;
+  }, [heroVisible]);
+
+  const applySequenceEvent = useCallback((event: ParticleSequenceEvent<LogoGeometryData>) => {
+    controllerRef.current = reduceParticleSequence(controllerRef.current, event);
+    reactDispatch(event);
+  }, []);
+
+  const baseCount = environment.isMobile
+    ? LOGO_COUNT.mobile
+    : environment.isTablet
+      ? LOGO_COUNT.tablet
+      : LOGO_COUNT.desktop;
+  const geometryCount = Math.round(baseCount * scene.density);
+  const techSignature = techs.map((tech) => tech.name).join("|");
+
+  useEffect(() => {
+    const abortController = new AbortController();
+    const { signal } = abortController;
+    const isActive = () => pageVisibleRef.current && heroVisibleRef.current;
+
+    const loadTarget = async (tech: Tech, index: number): Promise<LogoSequenceTarget> => ({
+      name: tech.name,
+      index,
+      cacheKey: `${tech.name}:${geometryCount}`,
+      payload: await buildLogoGeometry(tech, geometryCount),
+    });
+
+    const assembleCurrent = async (): Promise<boolean> => {
+      const confirmationMs = scene.timing.assembleMs * PARTICLE_IDENTIFIABLE_PROGRESS;
+      if (!(await waitForActiveDuration(confirmationMs, isActive, signal))) return false;
+      applySequenceEvent({ type: "confirm" });
+      setActiveTechName(controllerRef.current.confirmedName);
+      if (!(await waitForActiveDuration(scene.timing.assembleMs - confirmationMs, isActive, signal))) return false;
+      applySequenceEvent({ type: "hold" });
+      return true;
+    };
+
+    const run = async () => {
+      applySequenceEvent({ type: "discard-incoming" });
+
+      if (scene.mode === "ambient" || techs.length === 0) {
+        setActiveTechName(null);
+        if (controllerRef.current.current) {
+          applySequenceEvent({ type: "begin-dissolve" });
+          if (!(await waitForActiveDuration(scene.timing.dissolveMs, isActive, signal))) return;
+        }
+        if (!signal.aborted) applySequenceEvent({ type: "clear" });
+        return;
+      }
+
+      let currentIndex = 0;
+      let needsAssembly = false;
+      const firstTech = techs[0];
+      const firstCacheKey = `${firstTech.name}:${geometryCount}`;
+      const existing = controllerRef.current.current;
+
+      if (existing?.cacheKey !== firstCacheKey) {
+        if (existing) applySequenceEvent({ type: "retain-current" });
+
+        let firstTarget: LogoSequenceTarget;
+        try {
+          firstTarget = await loadTarget(firstTech, 0);
+        } catch {
+          if (!signal.aborted) applySequenceEvent({ type: "retain-current" });
+          return;
+        }
+        if (signal.aborted) return;
+
+        if (controllerRef.current.current) {
+          applySequenceEvent({ type: "queue", target: firstTarget });
+          applySequenceEvent({ type: "begin-dissolve" });
+          if (!(await waitForActiveDuration(scene.timing.dissolveMs, isActive, signal))) return;
+          applySequenceEvent({ type: "promote" });
+        } else {
+          applySequenceEvent({ type: "mount", target: firstTarget });
+        }
+        needsAssembly = true;
+      } else if (existing) {
+        const alignedTarget = { ...existing, index: 0 };
+        applySequenceEvent({ type: "align-current", target: alignedTarget });
+        currentIndex = 0;
+        if (controllerRef.current.confirmedName !== existing.name) {
+          applySequenceEvent({ type: "mount", target: alignedTarget });
+          needsAssembly = true;
+        } else {
+          applySequenceEvent({ type: "hold" });
+          setActiveTechName(existing.name);
+        }
+      }
+
+      if (needsAssembly && !(await assembleCurrent())) return;
+      currentIndex = controllerRef.current.current?.index ?? currentIndex;
+
+      if (scene.mode === "locked" || techs.length < 2) return;
+
+      while (!signal.aborted) {
+        const nextIndex = nextParticleSequenceIndex(currentIndex, techs.length);
+        const pendingTarget = loadTarget(techs[nextIndex], nextIndex)
+          .then((target) => ({ target, failed: false as const }))
+          .catch(() => ({ target: null, failed: true as const }));
+
+        if (!(await waitForActiveDuration(scene.timing.holdMs, isActive, signal))) return;
+        const result = await pendingTarget;
+        if (signal.aborted) return;
+        if (result.failed || !result.target) {
+          applySequenceEvent({ type: "retain-current" });
+          continue;
+        }
+
+        applySequenceEvent({ type: "queue", target: result.target });
+        applySequenceEvent({ type: "begin-dissolve" });
+        if (!(await waitForActiveDuration(scene.timing.dissolveMs, isActive, signal))) return;
+        applySequenceEvent({ type: "promote" });
+        currentIndex = nextIndex;
+        if (!(await assembleCurrent())) return;
+      }
+    };
+
+    void run();
+    return () => abortController.abort();
+  }, [
+    applySequenceEvent,
+    geometryCount,
+    scene.mode,
+    scene.timing.assembleMs,
+    scene.timing.dissolveMs,
+    scene.timing.holdMs,
+    setActiveTechName,
+    techSignature,
+    techs,
+  ]);
+
+  useEffect(() => () => setActiveTechName(null), [setActiveTechName]);
+
+  const ambientOpacity = scene.mode === "ambient" ? 0.32 : 0.46;
+  const logoPhase: LogoPhase = controller.phase === "dissolve"
+    ? "dissolve"
+    : controller.phase === "hold"
+      ? "hold"
+      : "assemble";
+  const loadedTargetCount = Number(Boolean(controller.current)) + Number(Boolean(controller.incoming));
+  return (
+    <Canvas
+      aria-hidden
+      data-particle-canvas="global"
+      data-particle-current={controller.current?.name ?? ""}
+      data-particle-incoming={controller.incoming?.name ?? ""}
+      data-particle-confirmed={controller.confirmedName ?? ""}
+      data-particle-phase={controller.phase}
+      data-particle-target-count={loadedTargetCount}
+      dpr={[1, environment.isMobile ? 1.2 : 1.5]}
+      frameloop={pageVisible ? "always" : "never"}
+      gl={{ alpha: true, antialias: false, depth: false, powerPreference: "low-power" }}
+      style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
+    >
+      <AmbientPoints pointer={pointer} accent={scene.accent} count={environment.isMobile ? 90 : 220} opacity={ambientOpacity * 0.55} pointScale={0.7} salt={41} />
+      <ConstellationLines pointer={pointer} accent={scene.accent} isMobile={environment.isMobile} opacity={ambientOpacity} />
+      <AmbientPoints pointer={pointer} accent={scene.accent} count={environment.isMobile ? 70 : 150} opacity={ambientOpacity} pointScale={1.45} salt={61} />
+      {controller.current && (
+        <LogoFormation
+          data={controller.current.payload}
+          pointer={pointer}
+          phase={heroVisible ? logoPhase : "dissolve"}
+          opacity={heroVisible ? scene.intensity : 0}
+          environment={environment}
+        />
+      )}
+    </Canvas>
+  );
 }
 
 export function TechParticleField() {
-    const pathname = usePathname();
-    const { activeFamilies } = useActiveTech();
-    const [environment, setEnvironment] = useState<Environment | null>(null);
-    const [visible, setVisible] = useState(true);
-    const [layers, setLayers] = useState<SceneLayer[]>([]);
-    const pointer = useRef<Pointer>({ x: -10, y: -10, active: false });
-    const geometryCache = useRef(new Map<string, Promise<GeoArrays>>());
-    const scene = useMemo(
-        () => environment ? resolveParticleScene(pathname, activeFamilies, environment.isMobile) : null,
-        [activeFamilies, environment, pathname],
-    );
+  const pathname = usePathname();
+  const { activeFamilies, heroVisible, setActiveTechName } = useActiveTech();
+  const [environment, setEnvironment] = useState<Environment | null>(null);
+  const [pageVisible, setPageVisible] = useState(true);
+  const pointer = useRef<PointerState>({ x: -10, y: -10, active: false, pressed: false });
+  const scene = useMemo(() => resolveParticleScene(pathname, activeFamilies), [activeFamilies, pathname]);
+  const allTechs = useMemo(
+    () => scene.techNames.map((name) => TECH_STACK.find((tech) => tech.name === name)).filter((tech): tech is Tech => Boolean(tech)),
+    [scene.techNames],
+  );
+  const techs = useMemo(
+    () => allTechs.slice(0, environment?.isMobile ? PARTICLE_SCENE_LIMITS.mobile : PARTICLE_SCENE_LIMITS.desktop),
+    [allTechs, environment?.isMobile],
+  );
 
-    useEffect(() => {
-        const mobileQuery = window.matchMedia('(max-width: 768px)');
-        const reduceQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-        const syncEnvironment = () => {
-            setEnvironment({
-                isMobile: mobileQuery.matches,
-                mode: reduceQuery.matches || !hasWebGL() ? 'fallback' : 'webgl',
-            });
-        };
-        const initialFrame = window.requestAnimationFrame(syncEnvironment);
-        const onMove = (event: PointerEvent) => {
-            pointer.current.x = (event.clientX / window.innerWidth) * 2 - 1;
-            pointer.current.y = -((event.clientY / window.innerHeight) * 2 - 1);
-            pointer.current.active = true;
-        };
-        const onLeave = () => {
-            pointer.current.active = false;
-        };
-        const onVisibility = () => setVisible(!document.hidden);
+  useEffect(() => {
+    const mobileQuery = window.matchMedia("(max-width: 768px)");
+    const tabletQuery = window.matchMedia("(max-width: 1100px)");
+    const reduceQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const syncEnvironment = () => setEnvironment({
+      isMobile: mobileQuery.matches,
+      isTablet: !mobileQuery.matches && tabletQuery.matches,
+      mode: reduceQuery.matches || !hasWebGL() ? "fallback" : "webgl",
+    });
+    const onMove = (event: PointerEvent) => {
+      pointer.current.x = (event.clientX / window.innerWidth) * 2 - 1;
+      pointer.current.y = -((event.clientY / window.innerHeight) * 2 - 1);
+      pointer.current.active = true;
+    };
+    const onLeave = () => {
+      pointer.current.active = false;
+      pointer.current.pressed = false;
+    };
+    const onDown = () => { pointer.current.pressed = true; };
+    const onUp = () => { pointer.current.pressed = false; };
+    const onVisibility = () => setPageVisible(!document.hidden);
+    syncEnvironment();
+    mobileQuery.addEventListener("change", syncEnvironment);
+    tabletQuery.addEventListener("change", syncEnvironment);
+    reduceQuery.addEventListener("change", syncEnvironment);
+    window.addEventListener("pointermove", onMove, { passive: true });
+    window.addEventListener("pointerleave", onLeave);
+    window.addEventListener("pointerdown", onDown, { passive: true });
+    window.addEventListener("pointerup", onUp, { passive: true });
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      mobileQuery.removeEventListener("change", syncEnvironment);
+      tabletQuery.removeEventListener("change", syncEnvironment);
+      reduceQuery.removeEventListener("change", syncEnvironment);
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerleave", onLeave);
+      window.removeEventListener("pointerdown", onDown);
+      window.removeEventListener("pointerup", onUp);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, []);
 
-        mobileQuery.addEventListener('change', syncEnvironment);
-        reduceQuery.addEventListener('change', syncEnvironment);
-        window.addEventListener('pointermove', onMove, { passive: true });
-        window.addEventListener('pointerleave', onLeave);
-        document.addEventListener('visibilitychange', onVisibility);
-        return () => {
-            window.cancelAnimationFrame(initialFrame);
-            mobileQuery.removeEventListener('change', syncEnvironment);
-            reduceQuery.removeEventListener('change', syncEnvironment);
-            window.removeEventListener('pointermove', onMove);
-            window.removeEventListener('pointerleave', onLeave);
-            document.removeEventListener('visibilitychange', onVisibility);
-        };
-    }, []);
+  if (!environment) return null;
+  if (environment.mode === "fallback") return <StaticTechnologyMark scene={scene} tech={techs[0]} />;
 
-    useEffect(() => {
-        if (!environment || environment.mode !== 'webgl' || !scene) return;
-        let cancelled = false;
-        const slots = environment.isMobile ? MOBILE_SLOTS : DESKTOP_SLOTS;
-        const count = environment.isMobile ? COUNT_MOBILE : COUNT_DESKTOP;
-        let pendingGeometry = geometryCache.current.get(scene.id);
-
-        if (!pendingGeometry) {
-            pendingGeometry = buildLogoGeometry(scene.techs, slots.slice(0, scene.techs.length), count, environment.isMobile ? 0.5 : 1.15);
-            geometryCache.current.set(scene.id, pendingGeometry);
-        }
-
-        pendingGeometry.then((geo) => {
-            if (cancelled) return;
-            setLayers((current) => {
-                const existing = current.find((layer) => layer.sceneId === scene.id);
-                if (existing) {
-                    return current.map((layer) => ({
-                        ...layer,
-                        targetOpacity: layer.sceneId === scene.id ? 0.68 : 0,
-                    }));
-                }
-                return [
-                    ...current.map((layer) => ({ ...layer, targetOpacity: 0 })),
-                    { sceneId: scene.id, geo, targetOpacity: 0.68 },
-                ].slice(-2);
-            });
-        });
-
-        return () => {
-            cancelled = true;
-        };
-    }, [environment, scene]);
-
-    const removeFadedLayer = useCallback((sceneId: string) => {
-        setLayers((current) => current.filter(
-            (layer) => layer.sceneId !== sceneId || layer.targetOpacity > 0,
-        ));
-    }, []);
-
-    if (!environment) return null;
-    if (environment.isMobile) return null;
-    if (environment.mode === 'fallback') return <GenerativeField activeFamilies={activeFamilies} />;
-
-    return (
-        <Canvas
-            aria-hidden
-            dpr={[1, 1.5]}
-            frameloop={visible ? 'always' : 'never'}
-            gl={{ alpha: true, antialias: false, depth: false, powerPreference: 'low-power' }}
-            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
-        >
-            <AmbientParticleSystem
-                pointer={pointer}
-                activeFamilies={activeFamilies}
-                isMobile={environment.isMobile}
-            />
-            <ConstellationLayer pointer={pointer} isMobile={environment.isMobile} />
-            {layers.map((layer) => (
-                <LogoParticleSystem
-                    key={layer.sceneId}
-                    geo={layer.geo}
-                    pointer={pointer}
-                    activeFamilies={activeFamilies}
-                    isMobile={environment.isMobile}
-                    targetOpacity={layer.targetOpacity}
-                    onFadedOut={() => removeFadedLayer(layer.sceneId)}
-                />
-            ))}
-        </Canvas>
-    );
+  return (
+    <ParticleCanvas
+      scene={scene}
+      techs={techs}
+      environment={environment}
+      pointer={pointer}
+      pageVisible={pageVisible}
+      heroVisible={heroVisible}
+      setActiveTechName={setActiveTechName}
+    />
+  );
 }

@@ -1,20 +1,5 @@
-import { EstudioHero } from '@/components/sections/EstudioHero';
-import dynamic from 'next/dynamic';
-import { Metadata } from 'next';
+import type { Metadata } from "next";
+import { StudioExperience } from "@/components/premium/StudioExperience";
 
-const AboutTimeline = dynamic(() => import('@/components/portfolio-isolated/AboutTimeline').then(mod => mod.AboutTimeline));
-
-export const metadata: Metadata = {
-    title: 'Estudio | Mario Morera — Diseño, Video & Motion',
-    description: 'Diseño web, video de alto impacto, motion graphics e identidad visual. Piezas premium listas para competir a nivel global.',
-};
-
-/** /estudio — Track creativo: hero + trayectoria (timeline). */
-export default function EstudioPage() {
-    return (
-        <main id="contenido-principal">
-            <EstudioHero />
-            <AboutTimeline />
-        </main>
-    );
-}
+export const metadata: Metadata = { title: "Estudio", description: "Dirección visual, experiencias web, motion y tecnología creativa.", alternates: { canonical: "/estudio", languages: { "es-UY": "/estudio", en: "/en/estudio" } } };
+export default function StudioPage() { return <StudioExperience />; }

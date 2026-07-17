@@ -1,100 +1,37 @@
-'use client';
+"use client";
 
-import { Instagram, Linkedin, Twitter, Mail } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { useRef } from 'react';
-
-import { LogoMM } from '@/components/shared/LogoMM';
-import { useLanguage } from '@/context/LanguageContext';
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
+import { SITE_IDENTITY, localePath } from "@/config/site";
+import { useLanguage } from "@/context/LanguageContext";
 
 export function Footer() {
-    const containerRef = useRef<HTMLDivElement>(null);
-    const { t } = useLanguage();
-
-    return (
-        <footer ref={containerRef} className="relative bg-transparent pt-32 pb-12 overflow-hidden border-t border-white/5">
-            {/* Background glow base */}
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-[300px] bg-emerald-500/10 rounded-[100%] blur-[100px] pointer-events-none" />
-
-            <div className="container mx-auto px-4 relative z-10">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
-                    {/* Brand Section */}
-                    <div className="md:col-span-2 space-y-8">
-                        <div className="flex items-center gap-3">
-                            <LogoMM className="w-12 h-12 text-white" />
-                            <div className="flex flex-col -space-y-1">
-                                <span className="text-2xl font-black tracking-tighter text-white">
-                                    MMorera
-                                </span>
-                                <span className="text-[10px] font-bold tracking-[0.4em] text-primary uppercase">
-                                    SME Agency
-                                </span>
-                            </div>
-                        </div>
-                        <p className="text-white/40 max-w-sm font-light leading-relaxed">
-                            {t('footer', 'tagline')}
-                        </p>
-                        <div className="flex gap-4">
-                            {[Twitter, Instagram, Linkedin, Mail].map((Icon, i) => (
-                                <motion.a
-                                    key={i}
-                                    href="#"
-                                    whileHover={{ y: -3, scale: 1.1 }}
-                                    className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:border-white/20 transition-colors"
-                                >
-                                    <Icon className="w-5 h-5" />
-                                </motion.a>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Quick Links */}
-                    <div className="space-y-6">
-                        <h4 className="text-white font-bold tracking-tight">{t('footer', 'ecosystem')}</h4>
-                        <ul className="space-y-4">
-                            {[
-                                { name: t('navbar', 'home'), href: '/' },
-                                { name: t('navbar', 'systems'), href: '/sistemas' },
-                                { name: t('navbar', 'cases'), href: '/casos-de-exito' },
-                                { name: t('navbar', 'apply'), href: '/aplicar' }
-                            ].map((item) => (
-                                <li key={item.name}>
-                                    <a href={item.href} className="text-white/40 hover:text-white transition-colors text-sm font-light">{item.name}</a>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    {/* Legal / Contact */}
-                    <div className="space-y-6">
-                        <h4 className="text-white font-bold tracking-tight">{t('footer', 'legal_title')}</h4>
-                        <ul className="space-y-4">
-                            {[
-                                { name: t('footer', 'privacy'), href: '#' },
-                                { name: t('footer', 'terms'), href: '#' },
-                                { name: t('footer', 'cookies'), href: '#' }
-                            ].map((item) => (
-                                <li key={item.name}>
-                                    <a href={item.href} className="text-white/40 hover:text-white transition-colors text-sm font-light">{item.name}</a>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                </div>
-
-                <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
-                    <div className="text-white/20 text-xs font-mono tracking-widest uppercase text-center md:text-left">
-                        <span>{t('footer', 'legal')}</span>
-                    </div>
-                    <div className="flex items-center gap-8">
-                        <span className="text-white/20 text-[10px] font-mono">{t('footer', 'flow')}</span>
-                        <div className="flex items-center gap-2">
-                            <span className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />
-                            <span className="text-emerald-500/40 text-[10px] uppercase font-bold tracking-tighter">{t('footer', 'system_active')}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </footer>
-    );
+  const { language } = useLanguage();
+  const isEs = language === "es";
+  return (
+    <footer className="relative z-20 border-t border-white/10 bg-[#070809]/92 px-5 py-12 backdrop-blur-xl sm:px-8 lg:px-12">
+      <div className="mx-auto grid max-w-[1480px] gap-10 md:grid-cols-[1.5fr_1fr_1fr]">
+        <div>
+          <p className="text-xl font-semibold tracking-[-0.03em] text-[#F3F0E8]">{SITE_IDENTITY.brand}</p>
+          <p className="mt-3 max-w-md text-sm leading-6 text-[#F3F0E8]/50">{isEs ? "Diseño, desarrollo, IA, automatización y CRM, del concepto a la operación." : "Design, development, AI, automation and CRM, from concept to operations."}</p>
+          <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.16em] text-[#F3F0E8]/35">{SITE_IDENTITY.location[language]}</p>
+        </div>
+        <div className="flex flex-col items-start gap-3 text-sm">
+          <Link href={localePath(language, "/casos-de-exito")} className="text-[#F3F0E8]/55 hover:text-[#F3F0E8]">{isEs ? "Trabajo" : "Work"}</Link>
+          <Link href={localePath(language, "/sistemas")} className="text-[#F3F0E8]/55 hover:text-[#F3F0E8]">{isEs ? "Sistemas" : "Systems"}</Link>
+          <Link href={localePath(language, "/estudio")} className="text-[#F3F0E8]/55 hover:text-[#F3F0E8]">{isEs ? "Estudio" : "Studio"}</Link>
+          <Link href={localePath(language, "/privacidad")} className="text-[#F3F0E8]/55 hover:text-[#F3F0E8]">{isEs ? "Privacidad" : "Privacy"}</Link>
+        </div>
+        <div className="flex flex-col items-start gap-3 text-sm">
+          <a href={`mailto:${SITE_IDENTITY.contact.email}`} className="inline-flex items-center gap-2 text-[#F3F0E8]">Email <ArrowUpRight className="h-3.5 w-3.5" /></a>
+          <a href={SITE_IDENTITY.social.linkedin} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-[#F3F0E8]/55 hover:text-[#F3F0E8]">LinkedIn <ArrowUpRight className="h-3.5 w-3.5" /></a>
+          <a href={SITE_IDENTITY.social.github} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-[#F3F0E8]/55 hover:text-[#F3F0E8]">GitHub <ArrowUpRight className="h-3.5 w-3.5" /></a>
+          <a href={SITE_IDENTITY.contact.whatsapp} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-[#F3F0E8]/55 hover:text-[#F3F0E8]">WhatsApp <ArrowUpRight className="h-3.5 w-3.5" /></a>
+        </div>
+      </div>
+      <div className="mx-auto mt-10 flex max-w-[1480px] flex-col gap-2 border-t border-white/10 pt-5 font-mono text-[10px] uppercase tracking-[0.12em] text-[#F3F0E8]/30 sm:flex-row sm:justify-between">
+        <span>© Mario Morera</span><span>mmorera.agency</span>
+      </div>
+    </footer>
+  );
 }

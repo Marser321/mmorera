@@ -1,6 +1,7 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useEffect } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import { translations } from '@/data/translations';
 
 export type Language = 'es' | 'en';
@@ -16,27 +17,24 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-    const [language, setLanguageState] = useState<Language>('es');
-    const [mounted, setMounted] = useState(false);
-
+    const pathname = usePathname();
+    const router = useRouter();
+    const language: Language = pathname === '/en' || pathname.startsWith('/en/') ? 'en' : 'es';
     useEffect(() => {
-        const savedLang = localStorage.getItem('language') as Language;
-        if (savedLang === 'es' || savedLang === 'en') {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            setLanguageState(savedLang);
-        } else {
-            // Detectar idioma del navegador
-            const browserLang = navigator.language.split('-')[0];
-            if (browserLang === 'en') {
-                setLanguageState('en');
-            }
-        }
-        setMounted(true);
-    }, []);
+        document.documentElement.lang = language;
+    }, [language]);
 
     const setLanguage = (lang: Language) => {
-        setLanguageState(lang);
+        if (lang === language) return;
         localStorage.setItem('language', lang);
+        document.documentElement.lang = lang;
+        const pathWithoutLocale = language === 'en'
+            ? pathname.replace(/^\/en(?=\/|$)/, '') || '/'
+            : pathname;
+        const nextPath = lang === 'en'
+            ? pathWithoutLocale === '/' ? '/en' : `/en${pathWithoutLocale}`
+            : pathWithoutLocale;
+        router.push(`${nextPath}${window.location.search}${window.location.hash}`);
     };
 
     const toggleLanguage = () => {
@@ -60,7 +58,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     };
 
     return (
-        <LanguageContext.Provider value={{ language, toggleLanguage, setLanguage, t, mounted }}>
+        <LanguageContext.Provider value={{ language, toggleLanguage, setLanguage, t, mounted: true }}>
             {children}
         </LanguageContext.Provider>
     );

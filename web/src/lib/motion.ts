@@ -24,6 +24,39 @@ export const SPRING = {
     slow: { type: "spring" as const, stiffness: 45, damping: 18 },
 };
 
+/**
+ * Reglas de contención del sistema de motion (no negociables):
+ * 1. Un solo momento "pinned" por página (home = manifesto; work = reel).
+ * 2. Solo transform + opacity; nunca blur/filter/clip-path sobre contenedores
+ *    grandes encima del canvas WebGL.
+ * 3. Las entradas disparan una sola vez (VIEWPORT.once).
+ * 4. Parallax: desplazamiento total ≤ 80px en desktop, 0 en móvil.
+ * 5. Easings y duraciones salen de este archivo; staggers de STAGGER.
+ * 6. No animar: párrafos más allá de un fadeUp, Navbar/Footer, formularios.
+ * 7. Máximo ~20 motion values scroll-linked vivos por página; preferir
+ *    whileInView (IntersectionObserver) sobre useScroll cuando alcance.
+ */
+
+export const STAGGER = {
+    words: 0.04,
+    items: 0.1,
+} as const;
+
+/** Entrada direccional: el bloque entra desde el lado que ocupa visualmente. */
+export const slideIn = (direction: "left" | "right" | "up", distance = 28): Variants => ({
+    hidden: {
+        opacity: 0,
+        x: direction === "left" ? -distance : direction === "right" ? distance : 0,
+        y: direction === "up" ? distance : 0,
+    },
+    visible: {
+        opacity: 1,
+        x: 0,
+        y: 0,
+        transition: { duration: DURATION.base, ease: EASE_OUT },
+    },
+});
+
 export const fadeUp: Variants = {
     hidden: { opacity: 0, y: 24 },
     visible: {

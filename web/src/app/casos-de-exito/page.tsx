@@ -1,25 +1,10 @@
-import dynamic from 'next/dynamic';
-import { Metadata } from 'next';
-
-const PortfolioReel = dynamic(() => import('@/components/portfolio-isolated/PortfolioReel').then(mod => mod.PortfolioReel));
-const MetricsShowcase = dynamic(() => import('@/components/sections/metrics-showcase').then(mod => mod.MetricsShowcase));
-const NotebookCases = dynamic(() => import('@/components/sections/notebook-cases').then(mod => mod.NotebookCases));
+import type { Metadata } from "next";
+import { WorkExperience } from "@/components/premium/WorkExperience";
 
 export const metadata: Metadata = {
-    title: "Case Studies | Mario Morera — AI & Automation Impact",
-    description: "Real-world case studies demonstrating measurable ROI: AI-powered lead generation, full-stack platforms, and automation systems deployed for B2B clients.",
+  title: "Trabajo",
+  description: "Demos reales y desplegadas de los proyectos que Mario Morera puede construir: web, producto, IA y automatización.",
+  alternates: { canonical: "/casos-de-exito", languages: { "es-UY": "/casos-de-exito", en: "/en/casos-de-exito" } },
 };
 
-/**
- * Casos de Éxito — PortfolioReel (showcase a pantalla completa con scroll lateral)
- * + métricas + notebook.
- */
-export default function CaseStudiesPage() {
-    return (
-        <main id="contenido-principal" className="pt-24 min-h-screen">
-            <PortfolioReel />
-            <MetricsShowcase />
-            <NotebookCases />
-        </main>
-    );
-}
+export default function WorkPage() { return <WorkExperience />; }

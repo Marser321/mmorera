@@ -1,196 +1,95 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { motion, useScroll, useMotionValueEvent } from "framer-motion";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Cpu, Trophy, Send, Palette } from "lucide-react";
-import { LogoMM } from '@/components/shared/LogoMM';
-import { useLanguage } from '@/context/LanguageContext';
-import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { Menu, X } from "lucide-react";
+import { LogoMM } from "@/components/shared/LogoMM";
+import { localePath } from "@/config/site";
+import { useLanguage } from "@/context/LanguageContext";
 
-const HOME_ITEM = { href: "/", icon: Home, label: "Home" };
-const STUDIO_ITEM = { href: "/estudio", icon: Palette, label: "Studio" };
-const SYSTEMS_ITEM = { href: "/sistemas", icon: Cpu, label: "Systems" };
-const CASES_ITEM = { href: "/casos-de-exito", icon: Trophy, label: "Case Studies" };
-
-/** CTA del embudo de aplicación */
-const CTA_ITEM = { href: "/aplicar", icon: Send, label: "Apply" };
-
-const SCROLL_DELTA_THRESHOLD = 18;
-const EXPAND_COLLAPSE_COOLDOWN = 420;
+const labels = {
+  es: { work: "Trabajo", systems: "Sistemas", studio: "Estudio", profile: "Perfil", cta: "Contame tu proyecto", menu: "Abrir menú", close: "Cerrar menú" },
+  en: { work: "Work", systems: "Systems", studio: "Studio", profile: "Profile", cta: "Tell me about your project", menu: "Open menu", close: "Close menu" },
+};
 
 export function Navbar() {
-    const { t } = useLanguage();
-    const [expanded, setExpanded] = useState(true);
-    const pathname = usePathname();
-    const isMobileNav = useMediaQuery('(max-width: 639px)');
+  const pathname = usePathname();
+  const { language, setLanguage } = useLanguage();
+  const [open, setOpen] = useState(false);
+  const copy = labels[language];
+  const links = [
+    { label: copy.work, href: localePath(language, "/casos-de-exito") },
+    { label: copy.systems, href: localePath(language, "/sistemas") },
+    { label: copy.studio, href: localePath(language, "/estudio") },
+    { label: copy.profile, href: `${localePath(language, "/")}#perfil` },
+  ];
 
-    const navItems = [HOME_ITEM, SYSTEMS_ITEM, STUDIO_ITEM, CASES_ITEM];
-    const navExpanded = isMobileNav ? false : expanded;
-    const expandedRef = useRef(expanded);
-    const lastScrollYRef = useRef(0);
-    const lastToggleAtRef = useRef(0);
-
-    const getTranslationKey = (label: string) => {
-        if (label === "Home") return "home";
-        if (label === "Studio") return "studio";
-        if (label === "Systems") return "systems";
-        if (label === "Case Studies") return "cases";
-        if (label === "Apply") return "apply";
-        return label.toLowerCase();
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (event: KeyboardEvent) => event.key === "Escape" && setOpen(false);
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKeyDown);
     };
+  }, [open]);
 
-    const { scrollY } = useScroll();
+  const isActive = (href: string) => {
+    const route = href.split("#")[0];
+    return route !== "/" && route !== "/en" && pathname.startsWith(route);
+  };
 
-    const setExpandedStable = (next: boolean) => {
-        if (expandedRef.current === next) return;
-        expandedRef.current = next;
-        setExpanded(next);
-    };
+  return (
+    <header className="fixed inset-x-0 top-0 z-[100] px-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-6">
+      <div className="mx-auto flex h-16 max-w-[1480px] items-center justify-between rounded-xl border border-white/10 bg-[#070809]/72 px-4 shadow-[0_16px_46px_rgba(0,0,0,.24)] backdrop-blur-xl sm:px-5">
+        <Link href={localePath(language, "/")} className="group flex items-center gap-3 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F3F0E8]" aria-label="Mario Morera — Home">
+          <LogoMM className="h-7 w-7 text-[#F3F0E8] transition-transform duration-500 group-hover:rotate-[-6deg]" />
+          <span className="text-[15px] font-semibold tracking-[-0.02em] text-[#F3F0E8]">Mario Morera</span>
+        </Link>
 
-    useMotionValueEvent(scrollY, "change", (latest) => {
-        if (isMobileNav) return;
-        const previous = lastScrollYRef.current;
-        const delta = latest - previous;
-        if (Math.abs(delta) < SCROLL_DELTA_THRESHOLD) return;
+        <nav className="hidden items-center gap-7 lg:flex" aria-label={language === "es" ? "Navegación principal" : "Main navigation"}>
+          {links.map((item) => (
+            <Link key={item.href} href={item.href} className={`relative rounded-md py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F3F0E8] ${isActive(item.href) ? "text-[#F3F0E8]" : "text-[#F3F0E8]/58 hover:text-[#F3F0E8]"}`}>
+              {item.label}
+              {isActive(item.href) && <span className="absolute inset-x-0 -bottom-1 mx-auto h-px w-4 bg-[#55D8FF]" />}
+            </Link>
+          ))}
+        </nav>
 
-        lastScrollYRef.current = latest;
+        <div className="flex items-center gap-2">
+          <div className="hidden items-center rounded-full border border-white/10 p-1 sm:flex" aria-label={language === "es" ? "Cambiar idioma" : "Change language"}>
+            {(["es", "en"] as const).map((lang) => (
+              <button key={lang} type="button" onClick={() => setLanguage(lang)} aria-pressed={language === lang} className={`rounded-full px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F3F0E8] ${language === lang ? "bg-[#F3F0E8] text-[#070809]" : "text-[#F3F0E8]/45 hover:text-[#F3F0E8]"}`}>{lang}</button>
+            ))}
+          </div>
+          <Link href={localePath(language, "/aplicar")} className="hidden rounded-full bg-[#F3F0E8] px-4 py-2.5 text-sm font-semibold text-[#070809] transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55D8FF] md:inline-flex">
+            {copy.cta}
+          </Link>
+          <button type="button" onClick={() => setOpen((value) => !value)} aria-expanded={open} aria-controls="mobile-menu" aria-label={open ? copy.close : copy.menu} className="grid h-10 w-10 place-items-center rounded-full border border-white/12 text-[#F3F0E8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F3F0E8] lg:hidden">
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
+      </div>
 
-        const now = performance.now();
-        if (now - lastToggleAtRef.current < EXPAND_COLLAPSE_COOLDOWN) return;
-
-        if (delta > 0 && latest > 160) {
-            lastToggleAtRef.current = now;
-            setExpandedStable(false);
-        } else if (delta < 0) {
-            lastToggleAtRef.current = now;
-            setExpandedStable(true);
-        }
-    });
-
-    return (
-        <motion.nav
-            initial={{ y: 100, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 1, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-[100]"
-        >
-            <motion.div
-                className={`
-          flex items-center justify-center gap-1
-          bg-black/60 backdrop-blur-xl border border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.5)] rounded-full transform-gpu
-          transition-[padding,border-radius,background-color,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]
-          max-w-[calc(100vw-1.5rem)] sm:max-w-none
-          ${navExpanded
-                        ? "px-2 py-2 rounded-[1.75rem] sm:px-6 sm:py-3"
-                        : "px-2 py-2 rounded-full"
-                    }
-        `}
-            >
-                {/* Logo integrado en la isla */}
-                <motion.div
-                    animate={{ scale: [1, 1.06, 1] }}
-                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                    whileTap={{ scale: 0.9 }}
-                    className={`
-                    relative hidden items-center justify-center overflow-hidden transition-[width,opacity,margin] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:flex
-                    ${navExpanded ? "sm:w-10 sm:opacity-100 sm:mr-1" : "sm:w-0 sm:opacity-0 sm:mr-0"}
-                `}>
-                    <LogoMM className="w-6 h-6 text-white drop-shadow-[0_0_6px_rgba(255,255,255,0.4)]" />
-                </motion.div>
-
-                {/* Separator */}
-                <div className={`
-                     hidden h-4 w-px bg-white/20 transition-[width,opacity,margin] duration-500 delay-100 sm:block
-                     ${navExpanded ? "opacity-100 mr-1" : "opacity-0 mr-0 w-0"}
-                `} />
-
-                {navItems.map((item) => {
-                    const isActive = pathname === item.href || (item.href !== "/" && pathname?.startsWith(item.href));
-                    const Icon = item.icon;
-
-                    return (
-                        <Link key={item.href} href={item.href} passHref>
-                            <motion.button
-                                aria-label={item.label}
-                                whileTap={{ scale: 0.9 }}
-                                className={`
-                                    relative flex h-10 w-10 items-center justify-center rounded-full py-2 sm:h-10 sm:w-auto
-                                    transition-colors duration-300 cursor-pointer transform-gpu
-                                    ${isActive
-                                        ? "text-white"
-                                        : "text-white/50 hover:text-white/80"
-                                    }
-                                    ${navExpanded ? "gap-1.5 px-2 sm:gap-2 sm:px-3" : "gap-0 px-0 sm:px-2.5"}
-                                `}
-                            >
-                                {/* Indicador activo — glow detrás */}
-                                {isActive && (
-                                    <motion.div
-                                        layoutId="active-pill"
-                                        className="absolute inset-0 rounded-full bg-white/10 border border-white/20"
-                                        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                                    />
-                                )}
-
-                                <span className="relative z-10 grid size-[18px] shrink-0 place-items-center sm:size-5">
-                                    <Icon className="size-[18px] sm:size-5" />
-                                </span>
-
-                                {/* Label — solo visible cuando expanded */}
-                                <span
-                                    className={`
-                                        relative z-10 hidden sm:inline-block text-xs sm:text-sm font-medium whitespace-nowrap overflow-hidden
-                                        transition-[max-width,opacity,transform,margin] duration-400 ease-[cubic-bezier(0.22,1,0.36,1)]
-                                        ${navExpanded ? "max-w-24 opacity-100 translate-x-0" : "max-w-0 opacity-0 -translate-x-1"}
-                                    `}
-                                >
-                                    {t('navbar', getTranslationKey(item.label))}
-                                </span>
-                            </motion.button>
-                        </Link>
-                    );
-                })}
-
-                {/* Separator antes del CTA */}
-                <div className={`
-                     hidden h-4 w-px bg-white/20 transition-[width,opacity,margin] duration-500 delay-100 sm:block
-                     ${navExpanded ? "opacity-100 ml-1" : "opacity-0 ml-0 w-0"}
-                `} />
-
-                {/* CTA — Embudo de Aplicación */}
-                <Link href={CTA_ITEM.href} passHref>
-                    <motion.button
-                        aria-label={t('navbar', getTranslationKey(CTA_ITEM.label))}
-                        whileTap={{ scale: 0.9 }}
-                        className={`
-                            relative flex h-10 w-10 items-center justify-center rounded-full py-2 sm:h-10 sm:w-auto
-                            bg-emerald-500/20 border border-emerald-500/30 text-emerald-300
-                            hover:bg-emerald-500/30 hover:border-emerald-400/50 hover:text-emerald-200
-                            transition-all duration-300 cursor-pointer transform-gpu
-                            shadow-[0_0_12px_rgba(16,185,129,0.15)]
-                            ${pathname === CTA_ITEM.href ? "bg-emerald-500/30 border-emerald-400/50 text-emerald-200" : ""}
-                            ${navExpanded ? "gap-1.5 px-3 sm:gap-2 sm:px-4" : "gap-0 px-0 sm:px-3"}
-                        `}
-                    >
-                        {/* Pulse ring animado */}
-                        <span className="absolute inset-0 hidden rounded-full border border-emerald-400/20 animate-ping opacity-30 sm:block" />
-                        <span className="relative z-10 grid size-4 shrink-0 place-items-center">
-                            <CTA_ITEM.icon className="size-4" />
-                        </span>
-                        <span
-                            className={`
-                                relative z-10 hidden sm:inline-block text-xs font-bold uppercase tracking-wider whitespace-nowrap overflow-hidden
-                                transition-[max-width,opacity,transform,margin] duration-400 ease-[cubic-bezier(0.22,1,0.36,1)]
-                                ${navExpanded ? "max-w-20 opacity-100 translate-x-0" : "max-w-0 opacity-0 -translate-x-1"}
-                            `}
-                        >
-                            {t('navbar', getTranslationKey(CTA_ITEM.label))}
-                        </span>
-                    </motion.button>
-                </Link>
-            </motion.div>
-        </motion.nav>
-    );
+      {open && (
+        <div id="mobile-menu" className="fixed inset-0 -z-10 flex min-h-[100dvh] flex-col bg-[#070809] px-6 pb-[max(2rem,env(safe-area-inset-bottom))] pt-28 lg:hidden">
+          <nav className="flex flex-1 flex-col justify-center gap-2" aria-label={language === "es" ? "Navegación móvil" : "Mobile navigation"}>
+            {links.map((item, index) => (
+              <Link key={item.href} href={item.href} onClick={() => setOpen(false)} className="flex items-baseline justify-between border-b border-white/10 py-5 text-[clamp(2rem,9vw,4rem)] font-medium leading-none tracking-[-0.05em] text-[#F3F0E8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F3F0E8]">
+                {item.label}<span className="font-mono text-xs text-[#F3F0E8]/35">0{index + 1}</span>
+              </Link>
+            ))}
+          </nav>
+          <div className="mt-8 flex items-center justify-between gap-4">
+            <button type="button" onClick={() => { setOpen(false); setLanguage(language === "es" ? "en" : "es"); }} className="rounded-full border border-white/15 px-5 py-3 font-mono text-xs uppercase tracking-widest text-[#F3F0E8]">
+              {language === "es" ? "English" : "Español"}
+            </button>
+            <Link href={localePath(language, "/aplicar")} onClick={() => setOpen(false)} className="rounded-full bg-[#F3F0E8] px-5 py-3 text-sm font-semibold text-[#070809]">{copy.cta}</Link>
+          </div>
+        </div>
+      )}
+    </header>
+  );
 }

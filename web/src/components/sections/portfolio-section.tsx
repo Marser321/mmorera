@@ -3,9 +3,8 @@
 import * as React from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { Button } from '@/components/ui/button';
 import { AnimatedCard } from '@/components/shared/AnimatedCard';
-import { Zap, PlayCircle, Image as ImageIcon, Monitor, Tablet, Smartphone, Maximize2, ExternalLink } from 'lucide-react';
+import { Zap, PlayCircle, Image as ImageIcon, Monitor, Tablet, Smartphone, Maximize2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
     Dialog,
@@ -277,7 +276,6 @@ export function PortfolioSection() {
 
     // Default: filtra al track elegido una vez montado (el usuario puede cambiarlo).
     React.useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         if (mounted && track) setFilter(track);
     }, [mounted, track]);
 

@@ -46,8 +46,8 @@ export function ScrollProgressBar() {
                 </motion.div>
             </div>
 
-            {/* Timecode del transporte — scrubbea con el scroll */}
-            <div className="absolute left-1/2 top-[10px] flex -translate-x-1/2 items-center gap-1.5 font-mono text-[10px] tracking-widest">
+            {/* Timecode del transporte — scrubbea con el scroll (oculto en xs) */}
+            <div className="absolute left-1/2 top-[10px] hidden -translate-x-1/2 items-center gap-1.5 font-mono text-[10px] tracking-widest sm:flex">
                 <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
                 <span className="font-bold tabular-nums text-foreground/85">{tc}</span>
                 <span className="text-foreground/35">/ 01:00</span>

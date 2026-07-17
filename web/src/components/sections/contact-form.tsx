@@ -98,7 +98,7 @@ export function ContactForm() {
                                         <Github className="w-5 h-5" />
                                     </a>
                                     <a
-                                        href="mailto:mario@mmorera.com"
+                                        href="mailto:mario@mmorera.agency"
                                         title={language === 'es' ? 'Enviar correo electrónico' : 'Send email'}
                                         className="w-11 h-11 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:border-white/20 transition-all hover:scale-105"
                                     >
@@ -196,4 +196,3 @@ export function ContactForm() {
         </section>
     );
 }
-

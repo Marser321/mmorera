@@ -23,6 +23,10 @@ import { ROUTE_FAMILIES, type Family } from '@/data/techStack';
 interface ActiveTechValue {
     activeFamilies: Family[];
     setActiveFamilies: (families: Family[]) => void;
+    heroVisible: boolean;
+    setHeroVisible: (visible: boolean) => void;
+    activeTechName: string | null;
+    setActiveTechName: (name: string | null) => void;
 }
 
 const ActiveTechContext = createContext<ActiveTechValue | null>(null);
@@ -30,6 +34,8 @@ const ActiveTechContext = createContext<ActiveTechValue | null>(null);
 export function ActiveTechProvider({ children }: { children: ReactNode }) {
     const pathname = usePathname();
     const [override, setOverride] = useState<{ pathname: string; families: Family[] } | null>(null);
+    const [visibility, setVisibility] = useState<{ pathname: string; visible: boolean } | null>(null);
+    const [activeTech, setActiveTech] = useState<{ pathname: string; name: string | null } | null>(null);
 
     const activeFamilies = useMemo<Family[]>(
         () => override?.pathname === pathname ? override.families : ROUTE_FAMILIES[pathname] ?? [],
@@ -40,9 +46,18 @@ export function ActiveTechProvider({ children }: { children: ReactNode }) {
         setOverride({ pathname, families });
     }, [pathname]);
 
+    const heroVisible = visibility?.pathname === pathname ? visibility.visible : true;
+    const setHeroVisible = useCallback((visible: boolean) => {
+        setVisibility({ pathname, visible });
+    }, [pathname]);
+    const activeTechName = activeTech?.pathname === pathname ? activeTech.name : null;
+    const setActiveTechName = useCallback((name: string | null) => {
+        setActiveTech({ pathname, name });
+    }, [pathname]);
+
     const value = useMemo(
-        () => ({ activeFamilies, setActiveFamilies }),
-        [activeFamilies, setActiveFamilies],
+        () => ({ activeFamilies, setActiveFamilies, heroVisible, setHeroVisible, activeTechName, setActiveTechName }),
+        [activeFamilies, setActiveFamilies, heroVisible, setHeroVisible, activeTechName, setActiveTechName],
     );
 
     return <ActiveTechContext.Provider value={value}>{children}</ActiveTechContext.Provider>;
@@ -51,7 +66,14 @@ export function ActiveTechProvider({ children }: { children: ReactNode }) {
 export function useActiveTech(): ActiveTechValue {
     const ctx = useContext(ActiveTechContext);
     // Fallback no-op para que el campo funcione aunque falte el provider.
-    return ctx ?? { activeFamilies: [], setActiveFamilies: () => {} };
+    return ctx ?? {
+        activeFamilies: [],
+        setActiveFamilies: () => {},
+        heroVisible: true,
+        setHeroVisible: () => {},
+        activeTechName: null,
+        setActiveTechName: () => {},
+    };
 }
 
 /**

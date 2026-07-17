@@ -9,8 +9,8 @@ export const SOCIAL_IMAGE_SIZE = {
     height: 630,
 };
 
-const SIGNAL = "#93e83a";
-const ACCENT = "#2ec8d8";
+const SIGNAL = "#B68CFF";
+const ACCENT = "#55D8FF";
 
 // PRNG determinístico (mulberry32) sembrado con una constante: el campo de motas
 // generativo es estable entre builds (misma imagen cada vez), pero "no template".
@@ -70,7 +70,7 @@ export function SocialShareImage() {
                     position: "absolute",
                     inset: 0,
                     background:
-                        "radial-gradient(circle at 28% 24%, rgba(147,230,58,0.18), transparent 34%), radial-gradient(circle at 76% 72%, rgba(46,200,216,0.14), transparent 36%)",
+                        "radial-gradient(circle at 28% 24%, rgba(182,140,255,0.18), transparent 34%), radial-gradient(circle at 76% 72%, rgba(85,216,255,0.14), transparent 36%)",
                 }}
             />
 
@@ -104,9 +104,9 @@ export function SocialShareImage() {
                         alignItems: "center",
                         justifyContent: "center",
                         borderRadius: 42,
-                        border: "1px solid rgba(147,230,58,0.30)",
-                        background: "rgba(147,230,58,0.06)",
-                        boxShadow: "0 0 70px rgba(147,230,58,0.25)",
+                        border: "1px solid rgba(182,140,255,0.30)",
+                        background: "rgba(182,140,255,0.06)",
+                        boxShadow: "0 0 70px rgba(182,140,255,0.25)",
                     }}
                 >
                     <svg width="116" height="98" viewBox="0 0 2239.69 1885.03" fill={SIGNAL} xmlns="http://www.w3.org/2000/svg">
@@ -126,12 +126,12 @@ export function SocialShareImage() {
                             textTransform: "uppercase",
                         }}
                     >
-                        MMorera Agency
+                        Mario Morera
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 14, fontSize: 27, letterSpacing: 4, textTransform: "uppercase" }}>
-                        <span style={{ color: "rgba(255,255,255,0.72)" }}>Orquestador creativo</span>
+                        <span style={{ color: "rgba(255,255,255,0.72)" }}>Creative Technologist</span>
                         <span style={{ color: SIGNAL, fontWeight: 700 }}>×</span>
-                        <span style={{ color: "rgba(255,255,255,0.72)" }}>técnico</span>
+                        <span style={{ color: "rgba(255,255,255,0.72)" }}>Systems Builder</span>
                     </div>
                 </div>
             </div>
@@ -151,8 +151,8 @@ export function SocialShareImage() {
                     textTransform: "uppercase",
                 }}
             >
-                <span>mmorera.com</span>
-                <span>Miami · Worldwide</span>
+                <span>mmorera.agency</span>
+                <span>Uruguay · Remote</span>
             </div>
         </div>
     );

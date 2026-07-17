@@ -568,8 +568,8 @@ export function StepValidator({ currentStep, data }: { currentStep: number; data
             en: 'Luxury landing with polished interaction and clear membership catalog.'
         },
         impacto: {
-            es: 'Marca más exclusiva y consulta más simple para clientes premium en Miami.',
-            en: 'More exclusive brand presence and simpler inquiries for premium Miami clients.'
+            es: 'Marca más específica y consulta más simple para clientes premium.',
+            en: 'More specific brand presence and simpler inquiries for premium clients.'
         },
         metric: { es: 'Estándar de Élite', en: 'Elite Cleaning Standard' },
         iframeUrl: 'https://doge-27dp.vercel.app/',

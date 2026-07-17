@@ -251,9 +251,6 @@ if (findings.length > 0) {
     console.log("");
   });
   
-  // Guardamos salida JSON en scratch para análisis posterior
-  const jsonPath = path.join(root, "multiagent-audit-report.json");
-  // Opcional, pero útil para integración de IA
   console.log("--------------------------------------------------------------------------------");
 } else {
   console.log("✨ Excelente: No se detectaron deficiencias críticas mediante el análisis multi-agente estático.");
