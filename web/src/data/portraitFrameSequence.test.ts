@@ -16,10 +16,23 @@ describe("author portrait frame sequence", () => {
   it("maps and clamps scroll progress safely", () => {
     assert.deepEqual(resolveFrameBlend(-1, 8), { from: 0, to: 1, mix: 0 });
     assert.deepEqual(resolveFrameBlend(Number.NaN, 8), { from: 0, to: 1, mix: 0 });
-    assert.deepEqual(resolveFrameBlend(0.5, 8), { from: 3, to: 4, mix: 0.5 });
+    // 0.485 / 0.97 = 0.5 exacto tras el remapeo de completado.
+    assert.deepEqual(resolveFrameBlend(0.485, 8), { from: 3, to: 4, mix: 0.5 });
     assert.deepEqual(resolveFrameBlend(2, 8), { from: 7, to: 7, mix: 0 });
     assert.deepEqual(resolveFrameBlend(1, 1), { from: 0, to: 0, mix: 0 });
     assert.deepEqual(resolveFrameBlend(1, 0), { from: 0, to: 0, mix: 0 });
+  });
+
+  it("locks the final frame before the literal end of the scroll track", () => {
+    // El último frame debe alcanzarse al 97% del track, no solo en progress === 1.
+    assert.deepEqual(resolveFrameBlend(1, 6), { from: 5, to: 5, mix: 0 });
+    assert.deepEqual(resolveFrameBlend(0.97, 6), { from: 5, to: 5, mix: 0 });
+    // Caso real medido en móvil: ~7px de recorte → progress 0.9865.
+    assert.deepEqual(resolveFrameBlend(0.9865, 6), { from: 5, to: 5, mix: 0 });
+    // Justo por debajo del umbral sigue en el blend previo (transición continua).
+    const below = resolveFrameBlend(0.94, 6);
+    assert.equal(below.from, 4);
+    assert.ok(below.mix > 0.8 && below.mix < 1);
   });
 
   it("preloads only the bounded window around the active pair", () => {

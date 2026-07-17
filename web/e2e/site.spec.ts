@@ -139,13 +139,17 @@ test("completa la secuencia móvil mientras el retrato sigue visible", async ({ 
     window.scrollTo(0, imageTop - window.innerHeight * 0.9);
   });
   await expect(portrait).toHaveAttribute("data-frame-index", "0");
-  await page.evaluate(() => {
-    const image = document.querySelector<HTMLElement>('[data-testid="author-manifesto"] [role="img"]');
-    if (!image) return;
-    const imageTop = image.getBoundingClientRect().top + window.scrollY;
-    window.scrollTo(0, imageTop + image.offsetHeight - window.innerHeight * 0.9);
-  });
-  await expect.poll(async () => Number(await portrait.getAttribute("data-frame-index"))).toBe(5);
+  // Re-scroll en cada intento: mientras cargan imágenes la página crece y un
+  // único scrollTo puede quedar clampeado corto de forma permanente.
+  await expect.poll(async () => {
+    await page.evaluate(() => {
+      const image = document.querySelector<HTMLElement>('[data-testid="author-manifesto"] [role="img"]');
+      if (!image) return;
+      const imageTop = image.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo(0, imageTop + image.offsetHeight - window.innerHeight * 0.9);
+    });
+    return Number(await portrait.getAttribute("data-frame-index"));
+  }).toBe(5);
   await expect(portrait).toBeInViewport();
   await context.close();
 });

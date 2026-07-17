@@ -31,13 +31,26 @@ export const PORTRAIT_FRAME_SEQUENCE: PortraitFrameSequence = {
   preloadRadius: 1,
 };
 
+/**
+ * La secuencia se completa al 97% del track: el scroll real llega con
+ * redondeos a píxel entero, barras de UI móviles y clamps cerca del fin de
+ * página (medido: hasta ~7px de recorte), así que exigir progress === 1
+ * dejaría el último frame inalcanzable en dispositivos reales. El snap
+ * absorbe además el ruido de subpíxel en los límites intermedios.
+ */
+const SEQUENCE_COMPLETION = 0.97;
+const FRAME_SNAP_EPSILON = 0.01;
+
 export function resolveFrameBlend(progress: number, count: number): PortraitFrameBlend {
   if (count <= 1) return { from: 0, to: 0, mix: 0 };
   const safeProgress = Number.isFinite(progress) ? Math.min(1, Math.max(0, progress)) : 0;
-  const scaled = safeProgress * (count - 1);
-  const from = Math.floor(scaled);
+  const effective = Math.min(1, safeProgress / SEQUENCE_COMPLETION);
+  const scaled = effective * (count - 1);
+  const nearest = Math.round(scaled);
+  const snapped = Math.abs(scaled - nearest) < FRAME_SNAP_EPSILON ? nearest : scaled;
+  const from = Math.floor(snapped);
   const to = Math.min(count - 1, from + 1);
-  return { from, to, mix: to === from ? 0 : scaled - from };
+  return { from, to, mix: to === from ? 0 : snapped - from };
 }
 
 export function resolveFrameCrossfade(mix: number): number {
