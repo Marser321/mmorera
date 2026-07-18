@@ -11,6 +11,20 @@ const TIMING = {
   dissolveMs: 900,
 } as const;
 
+/* Gemelos "print" de los acentos neón: mismo carácter tonal, densidad de
+   tinta legible sobre marfil (ver LIGHT_MODE_DESIGN.md). Los acentos de las
+   escenas se declaran en dark; en modo claro se resuelven con este mapa. */
+export const PRINT_ACCENT: Record<string, string> = {
+  "#F3F0E8": "#14171A",
+  "#B68CFF": "#6D43CC",
+  "#55D8FF": "#0A7EA4",
+  "#71F3A2": "#0E7A46",
+};
+
+export function themedAccent(accent: string, theme: "dark" | "light"): string {
+  return theme === "light" ? PRINT_ACCENT[accent] ?? accent : accent;
+}
+
 export const PARTICLE_SCENES: Record<ParticleSceneId, ParticleSceneDefinition> = {
   identity: {
     id: "identity",

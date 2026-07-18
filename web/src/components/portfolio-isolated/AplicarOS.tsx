@@ -131,14 +131,14 @@ export function AplicarOS() {
                 <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="relative max-w-md overflow-hidden rounded-[1.25rem] border border-white/10 bg-[#0D1114]/88 px-8 py-12 text-center shadow-2xl backdrop-blur-md"
+                    className="relative max-w-md overflow-hidden rounded-[1.25rem] border border-white/10 light:border-[rgb(var(--ink-rgb)/0.1)] bg-[#0D1114]/88 light:bg-card/88 px-8 py-12 text-center shadow-2xl light:shadow-[0_1px_2px_rgb(20_23_26/0.06),0_12px_32px_rgb(20_23_26/0.1)] backdrop-blur-md"
                 >
-                    <div className="absolute inset-x-0 top-0 h-[3px] bg-[#71F3A2]" />
-                    <CheckCircle2 className="mx-auto mb-6 h-16 w-16 text-[#71F3A2]" />
-                    <h2 className="mb-3 text-3xl font-medium tracking-[-.04em] text-[#F3F0E8]">
+                    <div className="absolute inset-x-0 top-0 h-[3px] bg-signal" />
+                    <CheckCircle2 className="mx-auto mb-6 h-16 w-16 text-signal" />
+                    <h2 className="mb-3 text-3xl font-medium tracking-[-.04em] text-foreground">
                         {language === 'es' ? 'Brief Recibido' : 'Brief Received'}
                     </h2>
-                    <p className="text-zinc-400 text-sm leading-relaxed mb-6">
+                    <p className="text-zinc-400 light:text-muted-foreground text-sm leading-relaxed mb-6">
                         {language === 'es'
                             ? `Gracias, ${formData.name}. Tu información fue enviada correctamente. Voy a revisar el contexto y responderte por email.`
                             : `Thank you, ${formData.name}. Your details were sent successfully. I’ll review the context and reply by email.`
@@ -153,15 +153,15 @@ export function AplicarOS() {
         <section id="aplicar-os-section" className="relative overflow-hidden bg-transparent px-0 py-14 pb-24 md:py-20">
             <div className="container mx-auto max-w-3xl px-0 sm:px-4">
                 
-                <div className="relative overflow-hidden rounded-[1.25rem] border border-white/10 bg-[#0D1114]/82 p-4 shadow-2xl backdrop-blur-md md:p-8">
-                    
+                <div className="relative overflow-hidden rounded-[1.25rem] border border-white/10 light:border-[rgb(var(--ink-rgb)/0.1)] bg-[#0D1114]/82 light:bg-card/82 p-4 shadow-2xl light:shadow-[0_1px_2px_rgb(20_23_26/0.06),0_12px_32px_rgb(20_23_26/0.1)] backdrop-blur-md md:p-8">
+
                     {/* Encabezado del Formulario */}
-                    <div className="mb-5 flex items-center justify-between border-b border-white/5 pb-4 select-none md:mb-6">
-                        <h3 className="text-white font-bold text-base flex items-center gap-2">
-                            {(() => { const Icon = STEPS[step].icon; return <Icon className="h-4 w-4 text-[#71F3A2]" />; })()}
+                    <div className="mb-5 flex items-center justify-between border-b border-white/5 light:border-[rgb(var(--ink-rgb)/0.05)] pb-4 select-none md:mb-6">
+                        <h3 className="text-white light:text-foreground font-bold text-base flex items-center gap-2">
+                            {(() => { const Icon = STEPS[step].icon; return <Icon className="h-4 w-4 text-signal" />; })()}
                             {STEPS[step].title[language]}
                         </h3>
-                        <span className="font-mono text-[9px] text-zinc-500">
+                        <span className="font-mono text-[9px] text-zinc-500 light:text-muted-foreground">
                             {language === 'es' ? `Paso ${step + 1} de ${STEPS.length}` : `Step ${step + 1} of ${STEPS.length}`}
                         </span>
                     </div>
@@ -171,7 +171,7 @@ export function AplicarOS() {
                         {step === 0 && (
                             <div className="space-y-4">
                                 <div>
-                                    <label htmlFor="brief-name" className="block text-zinc-500 font-mono text-[9px] uppercase font-bold tracking-wider mb-1.5">
+                                    <label htmlFor="brief-name" className="block text-zinc-500 light:text-muted-foreground font-mono text-[9px] uppercase font-bold tracking-wider mb-1.5">
                                         {language === 'es' ? 'Nombre Completo' : 'Full Name'}
                                     </label>
                                     <input
@@ -180,11 +180,11 @@ export function AplicarOS() {
                                         value={formData.name}
                                         onChange={(e) => updateField('name', e.target.value)}
                                         placeholder={language === 'es' ? 'Esteban Quito' : 'John Doe'}
-                                        className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 font-sans text-sm text-white transition-all placeholder:text-white/20 focus:border-[#71F3A2]/50 focus:outline-none focus:ring-1 focus:ring-[#71F3A2]/30"
+                                        className="w-full rounded-xl border border-white/10 light:border-border bg-white/5 light:bg-input px-4 py-3 font-sans text-sm text-white light:text-foreground transition-all placeholder:text-white/20 light:placeholder:text-foreground/20 focus:border-signal/50 focus:outline-none focus:ring-1 focus:ring-signal/30"
                                     />
                                 </div>
                                 <div>
-                                    <label htmlFor="brief-email" className="block text-zinc-500 font-mono text-[9px] uppercase font-bold tracking-wider mb-1.5">
+                                    <label htmlFor="brief-email" className="block text-zinc-500 light:text-muted-foreground font-mono text-[9px] uppercase font-bold tracking-wider mb-1.5">
                                         {language === 'es' ? 'Correo Electrónico' : 'Email Address'}
                                     </label>
                                     <input
@@ -193,7 +193,7 @@ export function AplicarOS() {
                                         value={formData.email}
                                         onChange={(e) => updateField('email', e.target.value)}
                                         placeholder={language === 'es' ? 'esteban@empresa.com' : 'john@company.com'}
-                                        className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 font-sans text-sm text-white transition-all placeholder:text-white/20 focus:border-[#71F3A2]/50 focus:outline-none focus:ring-1 focus:ring-[#71F3A2]/30"
+                                        className="w-full rounded-xl border border-white/10 light:border-border bg-white/5 light:bg-input px-4 py-3 font-sans text-sm text-white light:text-foreground transition-all placeholder:text-white/20 light:placeholder:text-foreground/20 focus:border-signal/50 focus:outline-none focus:ring-1 focus:ring-signal/30"
                                     />
                                 </div>
                             </div>
@@ -202,7 +202,7 @@ export function AplicarOS() {
                         {step === 1 && (
                             <div className="space-y-4">
                                 <div>
-                                    <label htmlFor="brief-company" className="block text-zinc-500 font-mono text-[9px] uppercase font-bold tracking-wider mb-1.5">
+                                    <label htmlFor="brief-company" className="block text-zinc-500 light:text-muted-foreground font-mono text-[9px] uppercase font-bold tracking-wider mb-1.5">
                                         {language === 'es' ? 'Nombre de la Empresa' : 'Company Name'}
                                     </label>
                                     <input
@@ -211,11 +211,11 @@ export function AplicarOS() {
                                         value={formData.company}
                                         onChange={(e) => updateField('company', e.target.value)}
                                         placeholder={language === 'es' ? 'Quito S.A.' : 'Doe Industries'}
-                                        className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 font-sans text-sm text-white transition-all placeholder:text-white/20 focus:border-[#71F3A2]/50 focus:outline-none focus:ring-1 focus:ring-[#71F3A2]/30"
+                                        className="w-full rounded-xl border border-white/10 light:border-border bg-white/5 light:bg-input px-4 py-3 font-sans text-sm text-white light:text-foreground transition-all placeholder:text-white/20 light:placeholder:text-foreground/20 focus:border-signal/50 focus:outline-none focus:ring-1 focus:ring-signal/30"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-zinc-500 font-mono text-[9px] uppercase font-bold tracking-wider mb-2">
+                                    <label className="block text-zinc-500 light:text-muted-foreground font-mono text-[9px] uppercase font-bold tracking-wider mb-2">
                                         {language === 'es' ? 'Facturación Mensual' : 'Monthly Revenue'}
                                     </label>
                                     <div className="grid gap-2 sm:grid-cols-2">
@@ -229,8 +229,8 @@ export function AplicarOS() {
                                                     onClick={() => updateField('revenue', label)}
                                                     className={`text-left px-3 py-2.5 rounded-xl border text-[10px] font-mono transition-all duration-200 cursor-pointer ${
                                                         isSelected
-                                                            ? 'border-[#71F3A2]/40 bg-[#71F3A2]/10 text-[#71F3A2] shadow-[0_0_15px_rgba(113,243,162,0.08)]'
-                                                            : 'bg-white/5 border-white/5 text-zinc-400 hover:border-white/20 hover:text-white'
+                                                            ? 'border-signal/40 bg-signal/10 text-signal shadow-[0_0_15px_rgba(113,243,162,0.08)] light:shadow-none'
+                                                            : 'bg-white/5 light:bg-[rgb(var(--ink-rgb)/0.05)] border-white/5 light:border-[rgb(var(--ink-rgb)/0.05)] text-zinc-400 light:text-muted-foreground hover:border-white/20 light:hover:border-[rgb(var(--ink-rgb)/0.2)] hover:text-white light:hover:text-foreground'
                                                     }`}
                                                 >
                                                     {label}
@@ -244,7 +244,7 @@ export function AplicarOS() {
 
                         {step === 2 && (
                             <div>
-                                <label htmlFor="brief-challenge" className="block text-zinc-500 font-mono text-[9px] uppercase font-bold tracking-wider mb-1.5">
+                                <label htmlFor="brief-challenge" className="block text-zinc-500 light:text-muted-foreground font-mono text-[9px] uppercase font-bold tracking-wider mb-1.5">
                                     {language === 'es' 
                                         ? '¿Cuál es tu mayor cuello de botella operativo?' 
                                         : 'What is your biggest operational bottleneck?'
@@ -259,14 +259,14 @@ export function AplicarOS() {
                                         : 'We lose leads due to slow response times on WhatsApp...'
                                     }
                                     rows={4}
-                                    className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 font-sans text-sm text-white transition-all placeholder:text-white/20 focus:border-[#71F3A2]/50 focus:outline-none focus:ring-1 focus:ring-[#71F3A2]/30"
+                                    className="w-full resize-none rounded-xl border border-white/10 light:border-border bg-white/5 light:bg-input px-4 py-3 font-sans text-sm text-white light:text-foreground transition-all placeholder:text-white/20 light:placeholder:text-foreground/20 focus:border-signal/50 focus:outline-none focus:ring-1 focus:ring-signal/30"
                                 />
                             </div>
                         )}
 
                         {step === 3 && (
                             <div>
-                                <label className="block text-zinc-500 font-mono text-[9px] uppercase font-bold tracking-wider mb-2">
+                                <label className="block text-zinc-500 light:text-muted-foreground font-mono text-[9px] uppercase font-bold tracking-wider mb-2">
                                     {language === 'es' 
                                         ? '¿Para cuándo necesitas desplegar el sistema?' 
                                         : 'When do you need to deploy the system?'
@@ -283,8 +283,8 @@ export function AplicarOS() {
                                                 onClick={() => updateField('timeline', label)}
                                                 className={`text-left px-4 py-3 rounded-xl border text-[11px] font-mono transition-all duration-200 cursor-pointer ${
                                                     isSelected
-                                                        ? 'border-[#71F3A2]/40 bg-[#71F3A2]/10 text-[#71F3A2] shadow-[0_0_15px_rgba(113,243,162,0.08)]'
-                                                        : 'bg-white/5 border-white/5 text-zinc-400 hover:border-white/20 hover:text-white'
+                                                        ? 'border-signal/40 bg-signal/10 text-signal shadow-[0_0_15px_rgba(113,243,162,0.08)] light:shadow-none'
+                                                        : 'bg-white/5 light:bg-[rgb(var(--ink-rgb)/0.05)] border-white/5 light:border-[rgb(var(--ink-rgb)/0.05)] text-zinc-400 light:text-muted-foreground hover:border-white/20 light:hover:border-[rgb(var(--ink-rgb)/0.2)] hover:text-white light:hover:text-foreground'
                                                 }`}
                                             >
                                                 {label}
@@ -297,12 +297,12 @@ export function AplicarOS() {
                     </div>
 
                     {/* Controles de Navegación del Brief */}
-                    <div className="sticky bottom-3 z-20 -mx-1 mt-6 flex items-center justify-between rounded-2xl border border-white/8 bg-[#070809]/92 p-3 font-mono text-xs shadow-[0_14px_40px_rgba(0,0,0,0.32)] backdrop-blur-xl md:static md:mx-0 md:mt-8 md:rounded-none md:border-x-0 md:border-b-0 md:bg-transparent md:p-0 md:pt-4 md:shadow-none md:backdrop-blur-none">
+                    <div className="sticky bottom-3 z-20 -mx-1 mt-6 flex items-center justify-between rounded-2xl border border-white/8 light:border-[rgb(var(--ink-rgb)/0.08)] bg-background/92 p-3 font-mono text-xs shadow-[0_14px_40px_rgba(0,0,0,0.32)] light:shadow-[0_14px_40px_rgb(20_23_26/0.14)] backdrop-blur-xl md:static md:mx-0 md:mt-8 md:rounded-none md:border-x-0 md:border-b-0 md:bg-transparent md:p-0 md:pt-4 md:shadow-none md:backdrop-blur-none">
                         <button
                             type="button"
                             onClick={() => setStep(prev => Math.max(0, prev - 1))}
                             disabled={step === 0}
-                            className="flex min-h-10 items-center gap-1.5 rounded-xl border-0 bg-transparent px-2 text-zinc-500 transition-colors hover:text-white disabled:opacity-20 cursor-pointer select-none"
+                            className="flex min-h-10 items-center gap-1.5 rounded-xl border-0 bg-transparent px-2 text-zinc-500 light:text-muted-foreground transition-colors hover:text-white light:hover:text-foreground disabled:opacity-20 cursor-pointer select-none"
                         >
                             <ArrowLeft className="w-3.5 h-3.5" /> PREV
                         </button>
@@ -312,7 +312,7 @@ export function AplicarOS() {
                                 type="button"
                                 onClick={() => setStep(prev => prev + 1)}
                                 disabled={!canAdvance()}
-                                className="flex min-h-10 cursor-pointer select-none items-center gap-1.5 rounded-xl border border-[#71F3A2]/30 bg-[#71F3A2]/15 px-4 py-2 text-[#71F3A2] hover:bg-[#71F3A2]/25 disabled:opacity-20"
+                                className="flex min-h-10 cursor-pointer select-none items-center gap-1.5 rounded-xl border border-signal/30 bg-signal/15 px-4 py-2 text-signal hover:bg-signal/25 disabled:opacity-20"
                             >
                                 NEXT <ArrowRight className="w-3.5 h-3.5" />
                             </button>
@@ -321,7 +321,7 @@ export function AplicarOS() {
                                 type="button"
                                 onClick={handleFormSubmit}
                                 disabled={!canAdvance() || submitting}
-                                className="flex min-h-10 cursor-pointer select-none items-center gap-1.5 rounded-xl border border-[#71F3A2]/40 bg-[#71F3A2]/20 px-5 py-2.5 font-mono text-xs text-[#71F3A2] shadow-[0_0_20px_rgba(113,243,162,0.12)] hover:bg-[#71F3A2]/30 disabled:opacity-20"
+                                className="flex min-h-10 cursor-pointer select-none items-center gap-1.5 rounded-xl border border-signal/40 bg-signal/20 px-5 py-2.5 font-mono text-xs text-signal shadow-[0_0_20px_rgba(113,243,162,0.12)] light:shadow-none hover:bg-signal/30 disabled:opacity-20"
                             >
                                 {submitting 
                                     ? (language === 'es' ? 'ENVIANDO...' : 'SENDING...') 
@@ -332,7 +332,7 @@ export function AplicarOS() {
                         )}
                     </div>
                     {submitError && (
-                        <p role="alert" className="mt-4 rounded-xl border border-red-400/25 bg-red-400/[0.06] px-4 py-3 text-sm leading-5 text-red-200">
+                        <p role="alert" className="mt-4 rounded-xl border border-red-400/25 light:border-destructive/30 bg-red-400/[0.06] light:bg-destructive/10 px-4 py-3 text-sm leading-5 text-red-200 light:text-destructive">
                             {submitError}
                         </p>
                     )}

@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader.js';
 import { LOGO_MM_PATHS, LOGO_MM_VIEWBOX } from '@/lib/logoMMPaths';
+import { useTheme } from '@/context/ThemeContext';
 
 /**
  * OrchestrationCore — Versión Minimal Premium.
@@ -18,15 +19,53 @@ import { LOGO_MM_PATHS, LOGO_MM_VIEWBOX } from '@/lib/logoMMPaths';
  * 3. Respiración orgánica asimétrica (escala pulsante desfasada por eje)
  */
 
-const SIGNAL = '#9be63a';
-const ACCENT = '#2ec8d8';
+/* Gemelos "print" (ver LIGHT_MODE_DESIGN.md): en Deep Space la escena es luz
+   aditiva sobre negro; en Master Print es tinta con blending normal sobre
+   papel — mismo carácter tonal (verde/cian), más densidad para leerse. */
+type ScenePhysics = {
+    signal: string;
+    accent: string;
+    logo: string;
+    highlight: string;
+    blending: THREE.Blending;
+    pointsOpacity: number;
+    wireOpacity: number;
+};
+
+const SCENE_PHYSICS: Record<'dark' | 'light', ScenePhysics> = {
+    dark: {
+        signal: '#9be63a',
+        accent: '#2ec8d8',
+        logo: '#f3f7f8',
+        highlight: '#ffffff',
+        blending: THREE.AdditiveBlending,
+        pointsOpacity: 0.3,
+        wireOpacity: 0.045,
+    },
+    light: {
+        signal: '#0E7A46',
+        accent: '#0A7EA4',
+        logo: '#14171A',
+        highlight: '#14171A',
+        blending: THREE.NormalBlending,
+        pointsOpacity: 0.4,
+        wireOpacity: 0.12,
+    },
+};
 
 // ─────────────────────────────────────────────
 // ESFERA INTERACTIVA DE PUNTOS
 // Los puntos reaccionan individualmente al cursor
 // ─────────────────────────────────────────────
-function InteractivePoints({ pointer }: { pointer: React.RefObject<{ x: number; y: number }> }) {
+function InteractivePoints({
+    pointer,
+    physics,
+}: {
+    pointer: React.RefObject<{ x: number; y: number }>;
+    physics: ScenePhysics;
+}) {
     const ref = useRef<THREE.Points>(null);
+    const { signal: SIGNAL, accent: ACCENT } = physics;
 
     // Geometría base: icosaedro de alta subdivisión → distribución uniforme de puntos.
     // Esfera achicada: actúa como "campo de contención" alrededor del logo central.
@@ -61,13 +100,13 @@ function InteractivePoints({ pointer }: { pointer: React.RefObject<{ x: number; 
         geo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
 
         return { geometry: geo, count: cnt };
-    }, [baseGeo]);
+    }, [baseGeo, SIGNAL, ACCENT]);
 
     // Shader material personalizado para tamaños variables por punto
     const material = useMemo(() => {
         return new THREE.ShaderMaterial({
             uniforms: {
-                uOpacity: { value: 0.30 },
+                uOpacity: { value: physics.pointsOpacity },
             },
             vertexShader: `
                 attribute float size;
@@ -96,9 +135,9 @@ function InteractivePoints({ pointer }: { pointer: React.RefObject<{ x: number; 
             `,
             transparent: true,
             depthWrite: false,
-            blending: THREE.AdditiveBlending,
+            blending: physics.blending,
         });
-    }, []);
+    }, [physics.blending, physics.pointsOpacity]);
 
     // Vector reutilizable para proyección del cursor en 3D
     const cursorWorld = useRef(new THREE.Vector3());
@@ -135,7 +174,9 @@ function InteractivePoints({ pointer }: { pointer: React.RefObject<{ x: number; 
         const sizes = sizeAttr.array as Float32Array;
         const colors = colorAttr.array as Float32Array;
 
-        const highlightColor = new THREE.Color('#ffffff');
+        // Dark: se acerca al blanco (más luz) cerca del cursor. Light: se acerca
+        // a la tinta más densa (más grafito) — el blanco se lavaría en el papel.
+        const highlightColor = new THREE.Color(physics.highlight);
         const baseSignal = new THREE.Color(SIGNAL);
         const baseAccent = new THREE.Color(ACCENT);
 
@@ -176,7 +217,7 @@ function InteractivePoints({ pointer }: { pointer: React.RefObject<{ x: number; 
 // ─────────────────────────────────────────────
 // WIREFRAME SUTIL (capa de profundidad)
 // ─────────────────────────────────────────────
-function SubtleWireframe() {
+function SubtleWireframe({ physics }: { physics: ScenePhysics }) {
     const ref = useRef<THREE.LineSegments>(null);
     const geo = useMemo(
         () => new THREE.WireframeGeometry(new THREE.IcosahedronGeometry(1.9, 1)),
@@ -192,10 +233,10 @@ function SubtleWireframe() {
     return (
         <lineSegments ref={ref} geometry={geo}>
             <lineBasicMaterial
-                color={ACCENT}
+                color={physics.accent}
                 transparent
-                opacity={0.045}
-                blending={THREE.AdditiveBlending}
+                opacity={physics.wireOpacity}
+                blending={physics.blending}
                 depthWrite={false}
             />
         </lineSegments>
@@ -216,7 +257,7 @@ const ASSEMBLY = [
     { delay: 0.5, dir: new THREE.Vector3(-1.1, 1.0, 0.6), rot: new THREE.Euler(0.4, -0.5, -0.3) },
 ];
 
-function AssemblingLogo() {
+function AssemblingLogo({ physics }: { physics: ScenePhysics }) {
     const groupRef = useRef<THREE.Group>(null);
     const partsRef = useRef<(THREE.Mesh | null)[]>([]);
     const startRef = useRef<number | null>(null);
@@ -250,18 +291,20 @@ function AssemblingLogo() {
         const fit = LOGO_TARGET_SIZE / maxDim;
         const offs = ASSEMBLY.map((a) => a.dir.clone().multiplyScalar(maxDim));
         // Poco metalness (sin env map el metal se ve negro) + emisión sutil → mark claro.
+        // Dark: mark casi blanco (superficie iluminada). Light: mark de tinta densa
+        // (grafito), el mismo relieve pero revelado en positivo sobre papel.
         const mats = geos.map(() => new THREE.MeshStandardMaterial({
-            color: '#f3f7f8',
+            color: physics.logo,
             metalness: 0.18,
             roughness: 0.38,
-            emissive: new THREE.Color(ACCENT),
+            emissive: new THREE.Color(physics.accent),
             emissiveIntensity: 0.4,
             transparent: true,
             opacity: 0,
         }));
 
         return { geometries: geos, materials: mats, fitScale: fit, offsets: offs };
-    }, []);
+    }, [physics.logo, physics.accent]);
 
     useFrame((state) => {
         if (startRef.current === null) startRef.current = state.clock.elapsedTime;
@@ -308,6 +351,8 @@ function AssemblingLogo() {
 // ─────────────────────────────────────────────
 function Scene({ pointer }: { pointer: React.RefObject<{ x: number; y: number }> }) {
     const outer = useRef<THREE.Group>(null);
+    const { theme } = useTheme();
+    const physics = SCENE_PHYSICS[theme];
 
     useFrame(() => {
         if (!outer.current || !pointer.current) return;
@@ -330,10 +375,10 @@ function Scene({ pointer }: { pointer: React.RefObject<{ x: number; y: number }>
             {/* Luces para el logo extruido (los puntos usan su propio shader y las ignoran) */}
             <ambientLight intensity={0.55} />
             <directionalLight position={[3, 4, 5]} intensity={1.3} color="#ffffff" />
-            <pointLight position={[-3, -2, 2]} intensity={0.8} color={ACCENT} />
-            <InteractivePoints pointer={pointer} />
-            <SubtleWireframe />
-            <AssemblingLogo />
+            <pointLight position={[-3, -2, 2]} intensity={0.8} color={physics.accent} />
+            <InteractivePoints pointer={pointer} physics={physics} />
+            <SubtleWireframe physics={physics} />
+            <AssemblingLogo physics={physics} />
         </group>
     );
 }

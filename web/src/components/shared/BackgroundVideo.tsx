@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { useReducedMotion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/useMediaQuery';
+import { useTheme } from '@/context/ThemeContext';
 
 /**
  * Fondo de video reutilizable, pensado para presencia "cinematográfica" sin
@@ -11,6 +12,8 @@ import { useIsMobile } from '@/hooks/useMediaQuery';
  * cada sección y suma:
  *  - mix-blend-screen sobre fondo oscuro: solo brillan las luces del video,
  *    los negros desaparecen → se puede subir la presencia sin "lavar" el texto.
+ *    En Master Print (claro) el video aporta tintas, no luces: mix-blend-multiply
+ *    + ~30% menos opacidad (ver LIGHT_MODE_DESIGN.md).
  *  - scrim direccional + tint tonal por encima para garantizar contraste.
  *  - poster como fallback inmediato (sin frame negro al cargar).
  *  - IntersectionObserver: el video se monta y reproduce solo dentro del
@@ -55,28 +58,40 @@ const BASE_DIM: Record<Intensity, number> = {
     cinematic: 0.38,
 };
 
+// Neones legibles solo sobre oscuro. Gemelo "print": mismo carácter tonal
+// (violeta/cian/verde), densidad de tinta para leerse sobre marfil.
 const TINT_RGB: Record<Exclude<Tint, 'none'>, string> = {
     violet: '167, 139, 250',
     cyan: '34, 211, 238',
     signal: '52, 211, 153',
 };
 
+const TINT_RGB_LIGHT: Record<Exclude<Tint, 'none'>, string> = {
+    violet: '109, 67, 204', // track-create print (#6D43CC)
+    cyan: '10, 126, 164', // track-build / accent print (#0A7EA4)
+    signal: '14, 122, 70', // track-scale / signal print (#0E7A46)
+};
+
+// Todas las paradas usan var(--color-background) en vez de negro crudo: en
+// dark resuelve a #070809 (mismo resultado visual que antes); en light
+// resuelve a #F3F0E8 (marfil) → el "velo" se vuelve papel, no tinta negra.
 function scrimBackground(scrim: Scrim): string | undefined {
+    const bg = (alpha: number) => `color-mix(in srgb, var(--color-background) ${alpha * 100}%, transparent)`;
     switch (scrim) {
         case 'bottom':
-            return 'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.55) 38%, rgba(0,0,0,0.12) 100%)';
+            return `linear-gradient(to top, ${bg(0.92)} 0%, ${bg(0.55)} 38%, ${bg(0.12)} 100%)`;
         case 'top':
-            return 'linear-gradient(to bottom, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.55) 38%, rgba(0,0,0,0.12) 100%)';
+            return `linear-gradient(to bottom, ${bg(0.92)} 0%, ${bg(0.55)} 38%, ${bg(0.12)} 100%)`;
         case 'left':
-            return 'linear-gradient(to right, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.5) 42%, rgba(0,0,0,0.08) 100%)';
+            return `linear-gradient(to right, ${bg(0.92)} 0%, ${bg(0.5)} 42%, ${bg(0.08)} 100%)`;
         case 'right':
-            return 'linear-gradient(to left, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.5) 42%, rgba(0,0,0,0.08) 100%)';
+            return `linear-gradient(to left, ${bg(0.92)} 0%, ${bg(0.5)} 42%, ${bg(0.08)} 100%)`;
         case 'center':
-            // Oscurece el centro para títulos centrados; deja respirar los bordes.
-            return 'radial-gradient(ellipse 65% 60% at 50% 50%, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.5) 48%, rgba(0,0,0,0.18) 100%)';
+            // Oscurece/aclara el centro para títulos centrados; deja respirar los bordes.
+            return `radial-gradient(ellipse 65% 60% at 50% 50%, ${bg(0.82)} 0%, ${bg(0.5)} 48%, ${bg(0.18)} 100%)`;
         case 'radial':
-            // Viñeta: deja ver el video al centro y oscurece los bordes.
-            return 'radial-gradient(ellipse 78% 72% at 50% 50%, transparent 0%, rgba(0,0,0,0.5) 76%, rgba(0,0,0,0.9) 100%)';
+            // Viñeta: deja ver el video al centro y vela los bordes.
+            return `radial-gradient(ellipse 78% 72% at 50% 50%, transparent 0%, ${bg(0.5)} 76%, ${bg(0.9)} 100%)`;
         case 'none':
         default:
             return undefined;
@@ -95,6 +110,7 @@ export function BackgroundVideo({
 }: BackgroundVideoProps) {
     const prefersReduced = useReducedMotion();
     const isMobile = useIsMobile();
+    const { theme } = useTheme();
     const containerRef = useRef<HTMLDivElement>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
     const [hasEntered, setHasEntered] = useState(false);
@@ -128,10 +144,13 @@ export function BackgroundVideo({
         }
     }, [inView, hasEntered, prefersReduced]);
 
-    const opacity = isMobile ? Math.min(OPACITY[intensity], 0.16) : OPACITY[intensity];
+    const baseOpacity = isMobile ? Math.min(OPACITY[intensity], 0.16) : OPACITY[intensity];
+    // Master Print: el video aporta tinta, no luz — ~30% menos presencia que en dark.
+    const opacity = theme === 'light' ? baseOpacity * 0.7 : baseOpacity;
     const scrimBg = scrimBackground(scrim);
     const showVideo = hasEntered && !prefersReduced && !isMobile;
     const baseDim = isMobile ? Math.max(BASE_DIM[intensity], 0.42) : BASE_DIM[intensity];
+    const tintRgb = theme === 'light' ? TINT_RGB_LIGHT : TINT_RGB;
 
     return (
         <div
@@ -139,8 +158,9 @@ export function BackgroundVideo({
             aria-hidden="true"
             className={`pointer-events-none absolute inset-0 z-0 overflow-hidden ${className}`}
         >
-            {/* Capa de media (poster + video) con la presencia y el blend */}
-            <div className="absolute inset-0 mix-blend-screen" style={{ opacity }}>
+            {/* Capa de media (poster + video) con la presencia y el blend.
+                Dark: screen (solo aporta luces). Light: multiply (solo aporta tintas). */}
+            <div className="absolute inset-0 mix-blend-screen light:mix-blend-multiply" style={{ opacity }}>
                 {poster && (
                     <Image
                         src={poster}
@@ -168,15 +188,15 @@ export function BackgroundVideo({
                 )}
             </div>
 
-            {/* Piso de contraste uniforme */}
-            <div className="absolute inset-0 bg-black" style={{ opacity: baseDim }} />
+            {/* Piso de contraste uniforme: dark oscurece hacia negro, light vela hacia papel */}
+            <div className="absolute inset-0 bg-background" style={{ opacity: baseDim }} />
 
             {/* Tinte tonal coherente con el track de la sección */}
             {tint !== 'none' && (
                 <div
                     className="absolute inset-0 mix-blend-soft-light"
                     style={{
-                        background: `radial-gradient(ellipse 90% 80% at 50% 45%, rgba(${TINT_RGB[tint]}, 0.22), transparent 70%)`,
+                        background: `radial-gradient(ellipse 90% 80% at 50% 45%, rgba(${tintRgb[tint]}, 0.22), transparent 70%)`,
                     }}
                 />
             )}

@@ -13,8 +13,9 @@ import {
 } from "react";
 import * as THREE from "three";
 import { useActiveTech } from "@/context/ActiveTechContext";
+import { useTheme } from "@/context/ThemeContext";
 import { PARTICLE_SCENE_LIMITS } from "@/data/particleSceneConfig";
-import { resolveParticleScene } from "@/data/particleScenes";
+import { resolveParticleScene, themedAccent } from "@/data/particleScenes";
 import { TECH_STACK, type Tech } from "@/data/techStack";
 import {
   PARTICLE_IDENTIFIABLE_PROGRESS,
@@ -196,6 +197,7 @@ void main(){
 
 const AMBIENT_FRAGMENT = /* glsl */ `
 precision mediump float;
+uniform vec3 uBase;
 uniform vec3 uAccent;
 uniform float uOpacity;
 varying float vAlpha;
@@ -204,19 +206,20 @@ void main(){
   float distanceToCenter=length(gl_PointCoord-vec2(0.5));
   if(distanceToCenter>0.5) discard;
   float soft=smoothstep(0.5,0.02,distanceToCenter);
-  vec3 color=mix(vec3(0.953,0.941,0.91),uAccent,vMix);
+  vec3 color=mix(uBase,uAccent,vMix);
   gl_FragColor=vec4(color,soft*vAlpha*uOpacity);
 }
 `;
 
 const PARTICLE_FRAGMENT = /* glsl */ `
 precision mediump float;
+uniform vec3 uBase;
 varying float vAlpha;
 void main(){
   float distanceToCenter=length(gl_PointCoord-vec2(0.5));
   if(distanceToCenter>0.5) discard;
   float soft=smoothstep(0.5,0.04,distanceToCenter);
-  gl_FragColor=vec4(0.953,0.941,0.91,soft*vAlpha);
+  gl_FragColor=vec4(uBase,soft*vAlpha);
 }
 `;
 
@@ -249,18 +252,29 @@ function anchorForViewport(isMobile: boolean, isTablet: boolean): { center: [num
   return { center: [0.56, -0.02], scale: 1.18 };
 }
 
+/* Física del campo por tema. En Deep Space las partículas son LUZ: marfil con
+   blending aditivo (los solapes suman brillo). En Master Print son TINTA:
+   grafito con blending normal — lo aditivo se lava hasta desaparecer sobre
+   papel, y la tinta necesita un poco más de densidad para la misma presencia. */
+const PARTICLE_PHYSICS: Record<"dark" | "light", { base: string; blending: THREE.Blending; opacityBoost: number }> = {
+  dark: { base: "#F3F0E8", blending: THREE.AdditiveBlending, opacityBoost: 1 },
+  light: { base: "#1F2429", blending: THREE.NormalBlending, opacityBoost: 1.25 },
+};
+
 function LogoFormation({
   data,
   pointer,
   phase,
   opacity,
   environment,
+  physics,
 }: {
   data: LogoGeometryData;
   pointer: RefObject<PointerState>;
   phase: LogoPhase;
   opacity: number;
   environment: Environment;
+  physics: (typeof PARTICLE_PHYSICS)["dark"];
 }) {
   const materialRef = useRef<THREE.ShaderMaterial>(null);
   const geometry = useMemo(() => {
@@ -288,6 +302,8 @@ function LogoFormation({
     uPixelRatio: { value: 1.5 },
     uCenter: { value: new THREE.Vector2(...anchor.center) },
     uScale: { value: anchor.scale },
+    uBase: { value: new THREE.Color(physics.base) },
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- uBase se sincroniza en useFrame
   }), [anchor.center, anchor.scale]);
 
   useFrame((state, delta) => {
@@ -304,6 +320,7 @@ function LogoFormation({
     values.uPressed.value += ((currentPointer.pressed ? 1 : 0) - values.uPressed.value) * Math.min(1, delta * 8);
     values.uFormation.value += (targetFormation - values.uFormation.value) * Math.min(1, delta * (targetFormation ? 4.2 : 5.2));
     values.uOpacity.value += (opacity - values.uOpacity.value) * Math.min(1, delta * 5);
+    values.uBase.value.set(physics.base);
   });
 
   return (
@@ -316,7 +333,7 @@ function LogoFormation({
         transparent
         depthWrite={false}
         depthTest={false}
-        blending={THREE.AdditiveBlending}
+        blending={physics.blending}
       />
     </points>
   );
@@ -329,6 +346,7 @@ function AmbientPoints({
   opacity,
   pointScale,
   salt,
+  physics,
 }: {
   pointer: RefObject<PointerState>;
   accent: string;
@@ -336,6 +354,7 @@ function AmbientPoints({
   opacity: number;
   pointScale: number;
   salt: number;
+  physics: (typeof PARTICLE_PHYSICS)["dark"];
 }) {
   const materialRef = useRef<THREE.ShaderMaterial>(null);
   const geometry = useMemo(() => {
@@ -365,7 +384,9 @@ function AmbientPoints({
     uPixelRatio: { value: 1.5 },
     uPointScale: { value: pointScale },
     uAccent: { value: new THREE.Color(accent) },
+    uBase: { value: new THREE.Color(physics.base) },
     uOpacity: { value: opacity },
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- uBase se sincroniza en useFrame
   }), [accent, opacity, pointScale]);
 
   useFrame((state, delta) => {
@@ -377,6 +398,7 @@ function AmbientPoints({
     material.uniforms.uMouse.value.set(currentPointer.x, currentPointer.y);
     material.uniforms.uMouseActive.value += ((currentPointer.active ? 1 : 0) - material.uniforms.uMouseActive.value) * Math.min(1, delta * 2.5);
     material.uniforms.uAccent.value.set(accent);
+    material.uniforms.uBase.value.set(physics.base);
     material.uniforms.uOpacity.value = opacity;
   });
 
@@ -390,7 +412,7 @@ function AmbientPoints({
         transparent
         depthWrite={false}
         depthTest={false}
-        blending={THREE.AdditiveBlending}
+        blending={physics.blending}
       />
     </points>
   );
@@ -401,11 +423,13 @@ function ConstellationLines({
   accent,
   isMobile,
   opacity,
+  physics,
 }: {
   pointer: RefObject<PointerState>;
   accent: string;
   isMobile: boolean;
   opacity: number;
+  physics: (typeof PARTICLE_PHYSICS)["dark"];
 }) {
   const materialRef = useRef<THREE.ShaderMaterial>(null);
   const geometry = useMemo(() => {
@@ -462,7 +486,7 @@ function ConstellationLines({
         transparent
         depthWrite={false}
         depthTest={false}
-        blending={THREE.AdditiveBlending}
+        blending={physics.blending}
       />
     </lineSegments>
   );
@@ -486,12 +510,16 @@ function StaticTechnologyMark({ scene, tech }: { scene: ParticleSceneDefinition;
 
   if (scene.mode === "ambient" || !tech) return null;
   const Icon = tech.Icon;
+  const mist = (pct: number) => `color-mix(in srgb, var(--color-background) ${pct}%, transparent)`;
   return (
     <div className="absolute inset-0 opacity-45">
-      <div className="absolute bottom-[10vh] left-1/2 grid h-[30vh] w-[84vw] -translate-x-1/2 place-items-center text-[#F3F0E8] sm:bottom-auto sm:left-auto sm:right-[5vw] sm:top-[17vh] sm:h-[62vh] sm:w-[40vw] sm:translate-x-0">
+      <div className="absolute bottom-[10vh] left-1/2 grid h-[30vh] w-[84vw] -translate-x-1/2 place-items-center text-foreground sm:bottom-auto sm:left-auto sm:right-[5vw] sm:top-[17vh] sm:h-[62vh] sm:w-[40vw] sm:translate-x-0">
         {Icon ? <Icon className="h-full max-h-[54vh] w-full max-w-[35vw]" /> : <span className="font-heading text-[clamp(5rem,18vw,15rem)] font-black tracking-[-.1em]">{tech.fallback}</span>}
       </div>
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_76%_28%,transparent_0%,rgba(7,8,9,.2)_42%,#070809_88%)]" />
+      <div
+        className="absolute inset-0"
+        style={{ background: `radial-gradient(circle at 76% 28%, transparent 0%, ${mist(20)} 42%, var(--color-background) 88%)` }}
+      />
     </div>
   );
 }
@@ -700,7 +728,10 @@ function ParticleCanvas({
 
   useEffect(() => () => setActiveTechName(null), [setActiveTechName]);
 
-  const ambientOpacity = scene.mode === "ambient" ? 0.32 : 0.46;
+  const { theme } = useTheme();
+  const physics = PARTICLE_PHYSICS[theme];
+  const accent = themedAccent(scene.accent, theme);
+  const ambientOpacity = (scene.mode === "ambient" ? 0.32 : 0.46) * physics.opacityBoost;
   const logoPhase: LogoPhase = controller.phase === "dissolve"
     ? "dissolve"
     : controller.phase === "hold"
@@ -721,16 +752,17 @@ function ParticleCanvas({
       gl={{ alpha: true, antialias: false, depth: false, powerPreference: "low-power" }}
       style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
     >
-      <AmbientPoints pointer={pointer} accent={scene.accent} count={environment.isMobile ? 90 : 220} opacity={ambientOpacity * 0.55} pointScale={0.7} salt={41} />
-      <ConstellationLines pointer={pointer} accent={scene.accent} isMobile={environment.isMobile} opacity={ambientOpacity} />
-      <AmbientPoints pointer={pointer} accent={scene.accent} count={environment.isMobile ? 70 : 150} opacity={ambientOpacity} pointScale={1.45} salt={61} />
+      <AmbientPoints pointer={pointer} accent={accent} count={environment.isMobile ? 90 : 220} opacity={ambientOpacity * 0.55} pointScale={0.7} salt={41} physics={physics} />
+      <ConstellationLines pointer={pointer} accent={accent} isMobile={environment.isMobile} opacity={ambientOpacity} physics={physics} />
+      <AmbientPoints pointer={pointer} accent={accent} count={environment.isMobile ? 70 : 150} opacity={ambientOpacity} pointScale={1.45} salt={61} physics={physics} />
       {controller.current && (
         <LogoFormation
           data={controller.current.payload}
           pointer={pointer}
           phase={heroVisible ? logoPhase : "dissolve"}
-          opacity={heroVisible ? scene.intensity : 0}
+          opacity={heroVisible ? scene.intensity * physics.opacityBoost : 0}
           environment={environment}
+          physics={physics}
         />
       )}
     </Canvas>

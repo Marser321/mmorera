@@ -1,6 +1,7 @@
 'use client';
 
 import { MotionConfig } from 'framer-motion';
+import { ThemeProvider } from '@/context/ThemeContext';
 import { LanguageProvider } from '@/context/LanguageContext';
 import { TrackProvider } from '@/context/TrackContext';
 import { DevModeProvider } from '@/components/portfolio-isolated/DevModeContext';
@@ -20,6 +21,7 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
         // transform/layout se vuelven instantáneas; opacity sigue para no ocultar
         // contenido. Cierra el gap detectado en la auditoría de accesibilidad.
         <MotionConfig reducedMotion="user">
+            <ThemeProvider>
             <LanguageProvider>
                 <ActiveTechProvider>
                     <TrackProvider>
@@ -29,6 +31,7 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
                     </TrackProvider>
                 </ActiveTechProvider>
             </LanguageProvider>
+            </ThemeProvider>
         </MotionConfig>
     );
 }

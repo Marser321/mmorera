@@ -289,6 +289,43 @@ test("presenta movimiento reducido en escritorio sin superponer el manifiesto", 
   await context.close();
 });
 
+test("alterna al modo claro, lo persiste y mantiene la home legible", async ({ page }) => {
+  const pageErrors: Error[] = [];
+  page.on("pageerror", (error) => pageErrors.push(error));
+  await page.goto("/");
+
+  // Default de marca: dark, sin preferencia guardada.
+  await expect(page.locator("html")).toHaveClass(/dark/);
+  const toggle = page.getByRole("button", { name: "Cambiar a modo claro" });
+  await toggle.click();
+
+  await expect(page.locator("html")).toHaveClass(/light/);
+  await expect
+    .poll(() => page.evaluate(() => window.localStorage.getItem("mm-theme")))
+    .toBe("light");
+  // El fondo pasa al marfil de marca y el titular sigue legible (tinta sobre papel).
+  await expect
+    .poll(() => page.evaluate(() => getComputedStyle(document.body).backgroundColor))
+    .toBe("rgb(243, 240, 232)");
+  const heading = page.getByRole("heading", { level: 1 });
+  await expect(heading).toContainText("Convierto ideas con carácter");
+  const headingColor = await heading.evaluate((node) => getComputedStyle(node).color);
+  expect(headingColor).not.toBe("rgb(243, 240, 232)");
+
+  // Anti-FOUC: tras recargar, la clase light ya está aplicada.
+  await page.reload();
+  await expect(page.locator("html")).toHaveClass(/light/);
+  await expect(page.locator("canvas")).toHaveCount(1);
+
+  // Vuelta a oscuro desde el mismo control.
+  await page.getByRole("button", { name: "Cambiar a modo oscuro" }).click();
+  await expect(page.locator("html")).toHaveClass(/dark/);
+  await expect
+    .poll(() => page.evaluate(() => window.localStorage.getItem("mm-theme")))
+    .toBe("dark");
+  expect(pageErrors).toEqual([]);
+});
+
 test("publica canonical, hreflang, OG, JSON-LD y sitemap canónicos", async ({ page, request }) => {
   await page.goto("/");
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://mmorera.agency");

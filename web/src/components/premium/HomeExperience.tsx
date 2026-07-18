@@ -8,6 +8,8 @@ import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { localePath } from "@/config/site";
 import { useLanguage } from "@/context/LanguageContext";
 import { useActiveTech } from "@/context/ActiveTechContext";
+import { useTheme } from "@/context/ThemeContext";
+import { themedAccent } from "@/data/particleScenes";
 import { useIsMobile } from "@/hooks/useMediaQuery";
 import { DURATION, EASE_OUT } from "@/lib/motion";
 import { TECH_STACK, type Family } from "@/data/techStack";
@@ -94,6 +96,10 @@ const authorManifestoCopy = {
   },
 } satisfies Record<"es" | "en", AuthorManifestoCopy>;
 
+// Colores de pista en hex neón (dark, valor histórico): ScrollProgressBar les
+// concatena sufijos alpha hex (`${accent}88`), así que deben quedar literales.
+// El gemelo "print" para uso propio de este componente se resuelve con
+// themedAccent() (ver más abajo) en vez de tocar este valor compartido.
 const tracks = {
   create: {
     color: "#B68CFF",
@@ -133,6 +139,7 @@ export function HomeExperience({
   initialModeSelected?: boolean;
 }) {
   const { language } = useLanguage();
+  const { theme } = useTheme();
   const { setActiveFamilies, setHeroVisible, activeTechName } = useActiveTech();
   const pathname = usePathname();
   const router = useRouter();
@@ -208,7 +215,7 @@ export function HomeExperience({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: DURATION.base, ease: EASE_OUT }}
-              className="mb-6 max-w-xl font-mono text-[9px] uppercase tracking-[0.18em] text-[#F3F0E8]/48 sm:text-[10px]"
+              className="mb-6 max-w-xl font-mono text-[9px] uppercase tracking-[0.18em] text-foreground/48 sm:text-[10px]"
             >
               <DecodeText text={c.eyebrow} decodeOnMount duration={900} />
             </motion.p>
@@ -217,13 +224,13 @@ export function HomeExperience({
               mode="load"
               delay={0.15}
               text={c.title}
-              className="max-w-[900px] text-[clamp(2.75rem,6.25vw,7rem)] font-medium leading-[0.91] tracking-[-0.065em] text-[#F3F0E8]"
+              className="max-w-[900px] text-[clamp(2.75rem,6.25vw,7rem)] font-medium leading-[0.91] tracking-[-0.065em] text-foreground"
             />
             <motion.p
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: DURATION.base, ease: EASE_OUT, delay: 0.5 }}
-              className="mt-6 max-w-2xl text-base leading-7 text-[#F3F0E8]/58 sm:text-xl"
+              className="mt-6 max-w-2xl text-base leading-7 text-foreground/58 sm:text-xl"
             >
               {c.intro}
             </motion.p>
@@ -234,10 +241,10 @@ export function HomeExperience({
               className="mt-8 flex flex-wrap gap-3"
             >
               <Magnetic>
-                <Link href={localePath(language, "/casos-de-exito")} className="pressable inline-flex items-center gap-3 rounded-full bg-[#F3F0E8] px-6 py-3.5 text-sm font-semibold text-[#070809] transition-transform hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55D8FF]">{c.work}<ArrowDownRight className="h-4 w-4" /></Link>
+                <Link href={localePath(language, "/casos-de-exito")} className="pressable inline-flex items-center gap-3 rounded-full bg-foreground px-6 py-3.5 text-sm font-semibold text-background transition-transform hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{c.work}<ArrowDownRight className="h-4 w-4" /></Link>
               </Magnetic>
               <Magnetic>
-                <Link href={localePath(language, "/aplicar")} className="pressable inline-flex items-center gap-3 rounded-full border border-white/16 bg-[#070809]/54 px-6 py-3.5 text-sm font-semibold text-[#F3F0E8] backdrop-blur-md transition-colors hover:border-white/35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F3F0E8]">{c.contact}<ArrowUpRight className="h-4 w-4" /></Link>
+                <Link href={localePath(language, "/aplicar")} className="pressable inline-flex items-center gap-3 rounded-full border border-white/16 bg-background/54 px-6 py-3.5 text-sm font-semibold text-foreground backdrop-blur-md transition-colors hover:border-white/35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground light:border-[rgb(var(--ink-rgb)/0.16)] light:hover:border-[rgb(var(--ink-rgb)/0.32)]">{c.contact}<ArrowUpRight className="h-4 w-4" /></Link>
               </Magnetic>
             </motion.div>
           </motion.div>
@@ -250,28 +257,29 @@ export function HomeExperience({
             className="relative flex min-h-[38vh] flex-col justify-between pb-2 pt-4 lg:min-h-[68vh] lg:pb-8 lg:pt-10"
           >
             <div
-              className="ml-auto w-full max-w-[340px] border-t border-white/12 pt-4"
+              className="ml-auto w-full max-w-[340px] border-t border-white/12 pt-4 light:border-[rgb(var(--ink-rgb)/0.12)]"
               data-testid="technology-stage-label"
               data-active-tech={activeTechName ?? undefined}
               data-active-territory={activeTerritory || undefined}
             >
-              <div className="flex items-center justify-between gap-6 font-mono text-[9px] uppercase tracking-[0.16em] text-[#F3F0E8]/34">
+              <div className="flex items-center justify-between gap-6 font-mono text-[9px] uppercase tracking-[0.16em] text-foreground/34">
                 <span>{c.practice}</span>
                 <span>{c.territory}</span>
               </div>
               <div className="mt-3 flex items-end justify-between gap-6">
-                <DecodeText as="p" text={activeTechLabel} className="text-2xl font-medium tracking-[-0.035em] text-[#F3F0E8]" />
-                <DecodeText as="p" text={activeTerritory} className="max-w-32 text-right font-mono text-[9px] uppercase leading-4 tracking-[0.16em] text-[#F3F0E8]/38" />
+                <DecodeText as="p" text={activeTechLabel} className="text-2xl font-medium tracking-[-0.035em] text-foreground" />
+                <DecodeText as="p" text={activeTerritory} className="max-w-32 text-right font-mono text-[9px] uppercase leading-4 tracking-[0.16em] text-foreground/38" />
               </div>
             </div>
 
-            <div className="ml-auto w-full max-w-[340px] rounded-[1.25rem] border border-white/10 bg-[#0D1114]/74 p-2 backdrop-blur-xl" aria-label={language === "es" ? "Selector de enfoque" : "Focus selector"}>
+            <div className="ml-auto w-full max-w-[340px] rounded-[1.25rem] border border-white/10 bg-card/74 p-2 backdrop-blur-xl light:border-[rgb(var(--ink-rgb)/0.1)] light:shadow-[0_1px_2px_rgb(20_23_26/0.06),0_12px_32px_rgb(20_23_26/0.1)]" aria-label={language === "es" ? "Selector de enfoque" : "Focus selector"}>
               {(Object.keys(tracks) as TrackId[]).map((track, index) => {
                 const item = tracks[track];
+                const dotColor = themedAccent(item.color, theme);
                 const selected = modeSelected && activeTrack === track;
                 return (
-                  <button key={track} type="button" onClick={() => selectTrack(track)} aria-pressed={selected} aria-label={`${item.title[language]} 0${index + 1}`} className={`group flex w-full items-center justify-between rounded-xl px-4 py-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${selected ? "bg-white/[0.075] text-[#F3F0E8]" : "text-[#F3F0E8]/42 hover:text-[#F3F0E8]"}`}>
-                    <span className="flex items-center gap-3"><span className="h-2 w-2 rounded-full transition-transform group-hover:scale-125" style={{ background: item.color, boxShadow: selected ? `0 0 18px ${item.color}` : undefined }} />{item.title[language]}</span>
+                  <button key={track} type="button" onClick={() => selectTrack(track)} aria-pressed={selected} aria-label={`${item.title[language]} 0${index + 1}`} className={`group flex w-full items-center justify-between rounded-xl px-4 py-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white light:focus-visible:ring-foreground ${selected ? "bg-white/[0.075] text-foreground light:bg-[rgb(var(--ink-rgb)/0.06)]" : "text-foreground/42 hover:text-foreground"}`}>
+                    <span className="flex items-center gap-3"><span className="h-2 w-2 rounded-full transition-transform group-hover:scale-125" style={{ background: dotColor, boxShadow: selected && theme !== "light" ? `0 0 18px ${dotColor}` : undefined }} />{item.title[language]}</span>
                     <span className="font-mono text-[9px] uppercase tracking-widest">0{index + 1}</span>
                   </button>
                 );
@@ -281,36 +289,37 @@ export function HomeExperience({
         </div>
       </section>
 
-      <section data-home-section="tracks" className="border-y border-white/10 bg-[#0D1114] px-5 py-24 sm:px-8 lg:px-12 lg:py-32">
+      <section data-home-section="tracks" className="border-y border-white/10 bg-card px-5 py-24 sm:px-8 lg:px-12 lg:py-32 light:border-[rgb(var(--ink-rgb)/0.1)]">
         <div className="mx-auto max-w-[1480px]">
           <div className="grid gap-8 md:grid-cols-[1fr_.75fr] md:items-end">
             <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#F3F0E8]/35">Crear / Construir / Escalar</p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-foreground/35">Crear / Construir / Escalar</p>
               <SplitReveal
                 as="h2"
                 text={c.tracksTitle}
-                className="mt-5 max-w-4xl text-[clamp(2.5rem,5vw,5.8rem)] font-medium leading-[.98] tracking-[-0.055em] text-[#F3F0E8]"
+                className="mt-5 max-w-4xl text-[clamp(2.5rem,5vw,5.8rem)] font-medium leading-[.98] tracking-[-0.055em] text-foreground"
               />
             </div>
-            <Reveal as="p" x={28} y={0} className="max-w-xl text-base leading-7 text-[#F3F0E8]/48 md:justify-self-end">{c.tracksIntro}</Reveal>
+            <Reveal as="p" x={28} y={0} className="max-w-xl text-base leading-7 text-foreground/48 md:justify-self-end">{c.tracksIntro}</Reveal>
           </div>
-          <DrawRule className="mt-14 block h-px w-full bg-white/10" />
+          <DrawRule className="mt-14 block h-px w-full bg-white/10 light:bg-[rgb(var(--ink-rgb)/0.1)]" />
           <Cascade className="grid lg:grid-cols-3">
             {(Object.keys(tracks) as TrackId[]).map((track, index) => {
               const item = tracks[track];
+              const accentColor = themedAccent(item.color, theme);
               return (
-                <CascadeItem key={track} from={trackEntrances[index]} className="border-b border-white/10 lg:border-b-0 lg:border-r">
+                <CascadeItem key={track} from={trackEntrances[index]} className="border-b border-white/10 lg:border-b-0 lg:border-r light:border-[rgb(var(--ink-rgb)/0.1)]">
                   <button
                     type="button"
                     onClick={() => selectTrack(track)}
-                    style={{ "--track-accent": item.color } as CSSProperties}
-                    className={`group pressable relative min-h-[330px] w-full p-6 text-left transition-colors hover:bg-white/[.025] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white ${modeSelected && activeTrack === track ? "bg-white/[.035]" : ""}`}
+                    style={{ "--track-accent": accentColor } as CSSProperties}
+                    className={`group pressable relative min-h-[330px] w-full p-6 text-left transition-colors hover:bg-white/[.025] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white light:hover:bg-[rgb(var(--ink-rgb)/0.03)] light:focus-visible:ring-foreground ${modeSelected && activeTrack === track ? "bg-white/[.035] light:bg-[rgb(var(--ink-rgb)/0.045)]" : ""}`}
                   >
-                    <span aria-hidden className="absolute inset-x-0 top-0 h-[2px] origin-left scale-x-0 transition-transform duration-500 ease-out group-hover:scale-x-100" style={{ background: item.color }} />
-                    <span className="font-mono text-[10px] tracking-widest text-[#F3F0E8]/30 transition-colors duration-300 group-hover:text-[var(--track-accent)]">0{index + 1}</span>
-                    <div className="mt-20 flex items-center gap-3"><span className="h-2.5 w-2.5 rounded-full" style={{ background: item.color }} /><h3 className="text-4xl font-medium tracking-[-0.045em] text-[#F3F0E8]">{item.title[language]}</h3></div>
-                    <p className="mt-5 max-w-sm text-base leading-6 text-[#F3F0E8]/52">{item.statement[language]}</p>
-                    <div className="mt-8 flex flex-wrap gap-x-4 gap-y-2 font-mono text-[9px] uppercase tracking-[0.13em] text-[#F3F0E8]/30">{item.tools.map((tool) => <span key={tool}>{tool}</span>)}</div>
+                    <span aria-hidden className="absolute inset-x-0 top-0 h-[2px] origin-left scale-x-0 transition-transform duration-500 ease-out group-hover:scale-x-100" style={{ background: accentColor }} />
+                    <span className="font-mono text-[10px] tracking-widest text-foreground/30 transition-colors duration-300 group-hover:text-[var(--track-accent)]">0{index + 1}</span>
+                    <div className="mt-20 flex items-center gap-3"><span className="h-2.5 w-2.5 rounded-full" style={{ background: accentColor }} /><h3 className="text-4xl font-medium tracking-[-0.045em] text-foreground">{item.title[language]}</h3></div>
+                    <p className="mt-5 max-w-sm text-base leading-6 text-foreground/52">{item.statement[language]}</p>
+                    <div className="mt-8 flex flex-wrap gap-x-4 gap-y-2 font-mono text-[9px] uppercase tracking-[0.13em] text-foreground/30">{item.tools.map((tool) => <span key={tool}>{tool}</span>)}</div>
                   </button>
                 </CascadeItem>
               );
@@ -330,35 +339,35 @@ export function HomeExperience({
         steps={method.map((step) => ({ title: step[language][0], body: step[language][1] }))}
       />
 
-      <section data-home-section="archive" className="bg-[#070809] px-5 py-24 sm:px-8 lg:px-12 lg:py-32">
+      <section data-home-section="archive" className="bg-background px-5 py-24 sm:px-8 lg:px-12 lg:py-32">
         <div className="mx-auto max-w-[1480px]">
           {/* El marco se ensambla: regla superior izq→der, inferior der→izq */}
-          <DrawRule origin="left" className="block h-px w-full bg-white/10" />
+          <DrawRule origin="left" className="block h-px w-full bg-white/10 light:bg-[rgb(var(--ink-rgb)/0.1)]" />
           <div className="grid gap-10 py-10 md:grid-cols-[.55fr_1.45fr] md:py-14">
-            <Reveal as="p" x={-24} y={0} className="font-mono text-[10px] uppercase tracking-[.18em] text-[#55D8FF]">{c.archive}</Reveal>
+            <Reveal as="p" x={-24} y={0} className="font-mono text-[10px] uppercase tracking-[.18em] text-accent">{c.archive}</Reveal>
             <Reveal x={24} y={0}>
               <Parallax speed={30}>
-                <h2 className="max-w-4xl text-[clamp(2.5rem,5vw,5.4rem)] font-medium leading-[.98] tracking-[-0.055em] text-[#F3F0E8]">{c.archiveTitle}</h2>
+                <h2 className="max-w-4xl text-[clamp(2.5rem,5vw,5.4rem)] font-medium leading-[.98] tracking-[-0.055em] text-foreground">{c.archiveTitle}</h2>
               </Parallax>
-              <p className="mt-7 max-w-2xl text-base leading-7 text-[#F3F0E8]/50">{c.archiveBody}</p>
-              <Link href={localePath(language, "/casos-de-exito")} className="link-draw group mt-8 inline-flex items-center gap-2 pb-1 text-sm text-[#F3F0E8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55D8FF]">{c.archiveCta}<ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" /></Link>
+              <p className="mt-7 max-w-2xl text-base leading-7 text-foreground/50">{c.archiveBody}</p>
+              <Link href={localePath(language, "/casos-de-exito")} className="link-draw group mt-8 inline-flex items-center gap-2 pb-1 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{c.archiveCta}<ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" /></Link>
             </Reveal>
           </div>
-          <DrawRule origin="right" className="block h-px w-full bg-white/10" />
+          <DrawRule origin="right" className="block h-px w-full bg-white/10 light:bg-[rgb(var(--ink-rgb)/0.1)]" />
         </div>
       </section>
 
-      <section data-home-section="cta" className="bg-[#070809] px-5 py-28 sm:px-8 lg:px-12 lg:py-40">
+      <section data-home-section="cta" className="bg-background px-5 py-28 sm:px-8 lg:px-12 lg:py-40">
         <Parallax speed={40} className="mx-auto max-w-[1180px] text-center">
           <SplitReveal
             as="h2"
             text={c.final}
-            className="text-[clamp(2.8rem,6vw,6.8rem)] font-medium leading-[.94] tracking-[-0.06em] text-[#F3F0E8]"
+            className="text-[clamp(2.8rem,6vw,6.8rem)] font-medium leading-[.94] tracking-[-0.06em] text-foreground"
           />
-          <Reveal as="p" className="mx-auto mt-7 max-w-xl text-lg leading-7 text-[#F3F0E8]/52">{c.finalBody}</Reveal>
+          <Reveal as="p" className="mx-auto mt-7 max-w-xl text-lg leading-7 text-foreground/52">{c.finalBody}</Reveal>
           <Reveal delay={0.15} className="mt-10 inline-block">
             <Magnetic>
-              <Link href={localePath(language, "/aplicar")} className="pressable inline-flex items-center gap-3 rounded-full bg-[#F3F0E8] px-7 py-4 text-sm font-semibold text-[#070809] transition-transform hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55D8FF]">{c.contact}<ArrowUpRight className="h-4 w-4" /></Link>
+              <Link href={localePath(language, "/aplicar")} className="pressable inline-flex items-center gap-3 rounded-full bg-foreground px-7 py-4 text-sm font-semibold text-background transition-transform hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{c.contact}<ArrowUpRight className="h-4 w-4" /></Link>
             </Magnetic>
           </Reveal>
         </Parallax>

@@ -1,7 +1,14 @@
 import type { Config } from "tailwindcss";
 import animate from "tailwindcss-animate";
+import plugin from "tailwindcss/plugin";
 
 const color = (name: string) => `var(--color-${name})`;
+
+/* El sitio está escrito dark-first: lo no prefijado ES el modo oscuro.
+   `light:` es la variante para el gemelo "Master Print" (ver LIGHT_MODE_DESIGN.md). */
+const lightVariant = plugin(({ addVariant }) => {
+  addVariant("light", "html.light &");
+});
 
 const config: Config = {
   darkMode: ["class"],
@@ -49,7 +56,7 @@ const config: Config = {
       },
     },
   },
-  plugins: [animate],
+  plugins: [animate, lightVariant],
 };
 
 export default config;

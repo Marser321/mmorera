@@ -39,6 +39,15 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport = {
+  themeColor: "#070809",
+};
+
+/* Anti-FOUC: aplica el tema persistido antes del primer paint. El server
+   siempre emite `dark` (default de marca); si el visitante eligió light, este
+   script lo cambia en <html> antes de que exista contenido pintado. */
+const themeInitScript = `(function(){try{if(localStorage.getItem("mm-theme")==="light"){var r=document.documentElement;r.classList.remove("dark");r.classList.add("light");r.style.colorScheme="light";var m=document.querySelector('meta[name="theme-color"]');m&&m.setAttribute("content","#F3F0E8")}}catch(e){}})()`;
+
 const personJsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
@@ -53,13 +62,14 @@ const personJsonLd = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="es" className={`dark ${bodyFont.variable} ${displayFont.variable} ${monoFont.variable}`}>
+    <html lang="es" className={`dark ${bodyFont.variable} ${displayFont.variable} ${monoFont.variable}`} suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }} />
       </head>
       <body className="min-h-screen overflow-x-hidden bg-background font-sans text-foreground antialiased">
         <AppProviders>
-          <a href="#contenido-principal" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded-full focus:bg-[#F3F0E8] focus:px-5 focus:py-3 focus:text-[#070809]">
+          <a href="#contenido-principal" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded-full focus:bg-foreground focus:px-5 focus:py-3 focus:text-background">
             Saltar al contenido principal
           </a>
           <GlobalBackground />

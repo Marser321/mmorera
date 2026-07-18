@@ -31,14 +31,23 @@ const trackLabels = {
   en: { create: "Create", build: "Build", scale: "Scale" },
 };
 
+// Los acentos de pista son variables CSS: flipean solos entre el neón "Deep
+// Space" y su gemelo profundo "Master Print" (ver globals.css / tailwind.config.ts).
 const TRACK_ACCENT: Record<TrackId, string> = {
-  create: "#B68CFF",
-  build: "#55D8FF",
-  scale: "#71F3A2",
+  create: "var(--color-track-create)",
+  build: "var(--color-track-build)",
+  scale: "var(--color-track-scale)",
 };
 
 function accentFor(project: ProjectCase): string {
   return project.accent ?? TRACK_ACCENT[project.tracks[0] ?? "build"];
+}
+
+// `accent` puede ser una var() (token) o un hex literal (project.accent de los
+// datos). color-mix() acepta ambos por igual, a diferencia de concatenar un
+// sufijo de alpha hex a una cadena var(...).
+function accentWash(accent: string, percent: number): string {
+  return `color-mix(in srgb, ${accent} ${percent}%, transparent)`;
 }
 
 function domainFor(project: ProjectCase): string | null {
@@ -59,7 +68,7 @@ function PanelActions({ project, compact = false }: { project: ProjectCase; comp
       <DialogTrigger asChild>
         <button
           type="button"
-          className="pressable inline-flex min-h-10 cursor-pointer items-center justify-center gap-1.5 rounded-full bg-[#F3F0E8] px-5 py-2 font-mono text-[11px] uppercase tracking-[.14em] text-[#070809] transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55D8FF]"
+          className="pressable inline-flex min-h-10 cursor-pointer items-center justify-center gap-1.5 rounded-full bg-foreground px-5 py-2 font-mono text-[11px] uppercase tracking-[.14em] text-background transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
         >
           {isEs ? "Ver demo en vivo" : "View live demo"}
           <ArrowUpRight className="h-3.5 w-3.5" />
@@ -70,7 +79,7 @@ function PanelActions({ project, compact = false }: { project: ProjectCase; comp
           href={project.liveUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="pressable inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full border border-white/15 px-5 py-2 font-mono text-[11px] uppercase tracking-[.14em] text-[#F3F0E8]/60 transition-colors hover:border-white/30 hover:text-[#F3F0E8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55D8FF]"
+          className="pressable inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full border border-white/15 px-5 py-2 font-mono text-[11px] uppercase tracking-[.14em] text-foreground/60 transition-colors hover:border-white/30 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent light:border-[rgb(var(--ink-rgb)/0.15)] light:hover:border-[rgb(var(--ink-rgb)/0.3)]"
         >
           {isEs ? "Abrir sitio" : "Open site"}
           <ExternalLink className="h-3.5 w-3.5" />
@@ -131,7 +140,7 @@ function ReelPanel({
         {/* Numeral fantasma de fondo */}
         <span
           aria-hidden
-          className="pointer-events-none absolute left-[3vw] top-1/2 -translate-y-1/2 select-none text-[18vw] font-medium leading-none text-white/[0.03]"
+          className="pointer-events-none absolute left-[3vw] top-1/2 -translate-y-1/2 select-none text-[18vw] font-medium leading-none text-white/[0.03] light:text-[rgb(var(--ink-rgb)/0.03)]"
           style={{ fontFamily: "var(--ff-display)" }}
         >
           {String(index + 1).padStart(2, "0")}
@@ -141,7 +150,7 @@ function ReelPanel({
         <motion.div
           aria-hidden
           className="pointer-events-none absolute inset-0"
-          style={{ opacity: glowOpacity, background: `radial-gradient(ellipse at 68% 40%, ${accent}20, transparent 60%)` }}
+          style={{ opacity: glowOpacity, background: `radial-gradient(ellipse at 68% 40%, ${accentWash(accent, 13)}, transparent 60%)` }}
         />
 
         <div className="relative mx-auto grid h-full w-full max-w-[1480px] items-center gap-10 px-5 sm:px-8 lg:grid-cols-[.42fr_.58fr] lg:gap-14 xl:px-10">
@@ -151,23 +160,23 @@ function ReelPanel({
               <span style={{ color: accent }}>
                 {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
               </span>
-              <span aria-hidden className="h-px w-8 bg-white/15" />
-              <span className="text-[#F3F0E8]/40">
+              <span aria-hidden className="h-px w-8 bg-white/15 light:bg-[rgb(var(--ink-rgb)/0.15)]" />
+              <span className="text-foreground/40">
                 {project.tracks.map((track) => trackLabels[language][track]).join(" · ")}
               </span>
             </div>
 
-            <h3 className="mt-6 max-w-3xl break-words text-[clamp(2.8rem,5vw,5.5rem)] font-medium leading-[.9] tracking-[-.05em] text-[#F3F0E8] [text-wrap:balance]">
+            <h3 className="mt-6 max-w-3xl break-words text-[clamp(2.8rem,5vw,5.5rem)] font-medium leading-[.9] tracking-[-.05em] text-foreground [text-wrap:balance]">
               {project.title[language]}
             </h3>
 
-            <p className="mt-6 max-w-xl text-base leading-7 text-[#F3F0E8]/55">{project.summary[language]}</p>
+            <p className="mt-6 max-w-xl text-base leading-7 text-foreground/55">{project.summary[language]}</p>
 
             <div className="mt-7 flex flex-wrap gap-2">
               {project.stack.slice(0, 4).map((item) => (
                 <span
                   key={item}
-                  className="rounded-full border border-white/12 bg-white/[0.03] px-3 py-1 font-mono text-[10px] uppercase tracking-[.08em] text-[#F3F0E8]/50"
+                  className="rounded-full border border-white/12 bg-white/[0.03] px-3 py-1 font-mono text-[10px] uppercase tracking-[.08em] text-foreground/50 light:border-[rgb(var(--ink-rgb)/0.12)] light:bg-[rgb(var(--ink-rgb)/0.03)]"
                 >
                   {item}
                 </span>
@@ -186,7 +195,7 @@ function ReelPanel({
           >
             <motion.div
               style={{ rotateX, rotateY, transformPerspective: 1200 }}
-              className="group relative overflow-hidden rounded-[1.5rem] border border-white/10 bg-[#0D1114] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)]"
+              className="group relative overflow-hidden rounded-[1.5rem] border border-white/10 bg-card shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)] light:border-[rgb(var(--ink-rgb)/0.1)] light:shadow-[0_1px_2px_rgb(20_23_26/0.06),0_12px_32px_rgb(20_23_26/0.1)]"
             >
               <div className="relative aspect-[16/10] w-full overflow-hidden">
                 <Image
@@ -197,11 +206,11 @@ function ReelPanel({
                   sizes="(max-width: 1023px) 86vw, 55vw"
                   className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.02]"
                 />
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#070809]/35 via-transparent to-transparent" />
+                <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,color-mix(in_srgb,var(--color-background)_35%,transparent),transparent)]" />
               </div>
             </motion.div>
             {domain && (
-              <div className="mt-3 flex items-center gap-2 font-mono text-[10px] tracking-[.12em] text-[#F3F0E8]/35">
+              <div className="mt-3 flex items-center gap-2 font-mono text-[10px] tracking-[.12em] text-foreground/35">
                 <span aria-hidden className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: accent }} />
                 <span>{domain}</span>
               </div>
@@ -222,7 +231,7 @@ function ReelCardSimple({ project, index, total }: { project: ProjectCase; index
 
   return (
     <Dialog>
-      <article className="w-[86vw] shrink-0 snap-center overflow-hidden rounded-[1.5rem] border border-white/10 bg-[#0D1114]/86 shadow-[0_18px_60px_rgba(0,0,0,0.36)] sm:w-[72vw] md:w-[56vw]">
+      <article className="w-[86vw] shrink-0 snap-center overflow-hidden rounded-[1.5rem] border border-white/10 bg-[#0D1114]/86 shadow-[0_18px_60px_rgba(0,0,0,0.36)] sm:w-[72vw] md:w-[56vw] light:border-[rgb(var(--ink-rgb)/0.1)] light:bg-card/86 light:shadow-[0_1px_2px_rgb(20_23_26/0.06),0_12px_32px_rgb(20_23_26/0.1)]">
         <div className="relative aspect-[16/10] w-full overflow-hidden">
           <Image
             src={project.media[0].src}
@@ -231,8 +240,8 @@ function ReelCardSimple({ project, index, total }: { project: ProjectCase; index
             sizes="(max-width: 768px) 86vw, 56vw"
             className="object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#070809] via-[#070809]/30 to-transparent" />
-          <div className="absolute left-4 top-4 rounded-full border border-white/10 bg-[#070809]/60 px-2.5 py-1 font-mono text-[9px] text-[#F3F0E8]/65 backdrop-blur-md">
+          <div className="absolute inset-0 bg-[linear-gradient(to_top,color-mix(in_srgb,var(--color-background)_100%,transparent)_0%,color-mix(in_srgb,var(--color-background)_30%,transparent)_45%,transparent_100%)]" />
+          <div className="absolute left-4 top-4 rounded-full border border-white/10 bg-background/60 px-2.5 py-1 font-mono text-[9px] text-foreground/65 backdrop-blur-md light:border-[rgb(var(--ink-rgb)/0.1)]">
             {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
           </div>
         </div>
@@ -241,20 +250,20 @@ function ReelCardSimple({ project, index, total }: { project: ProjectCase; index
           <div className="flex flex-wrap items-center gap-2 font-mono text-[9px] uppercase tracking-[.16em]">
             <span style={{ color: accent }}>{project.tracks.map((track) => trackLabels[language][track]).join(" · ")}</span>
           </div>
-          <h3 className="mt-3 break-words text-2xl font-medium leading-tight tracking-[-.04em] text-[#F3F0E8] [text-wrap:balance]">
+          <h3 className="mt-3 break-words text-2xl font-medium leading-tight tracking-[-.04em] text-foreground [text-wrap:balance]">
             {project.title[language]}
           </h3>
-          <p className="mt-3 text-sm leading-6 text-[#F3F0E8]/52">{project.summary[language]}</p>
+          <p className="mt-3 text-sm leading-6 text-foreground/52">{project.summary[language]}</p>
           <div className="mt-4 flex flex-wrap gap-1.5">
             {project.stack.slice(0, 3).map((item) => (
-              <span key={item} className="rounded-full border border-white/10 bg-white/[0.03] px-2 py-1 font-mono text-[9px] text-[#F3F0E8]/45">
+              <span key={item} className="rounded-full border border-white/10 bg-white/[0.03] px-2 py-1 font-mono text-[9px] text-foreground/45 light:border-[rgb(var(--ink-rgb)/0.1)] light:bg-[rgb(var(--ink-rgb)/0.03)]">
                 {item}
               </span>
             ))}
           </div>
           <PanelActions project={project} compact />
           {domain && (
-            <div className="mt-4 flex items-center gap-2 font-mono text-[9px] tracking-[.12em] text-[#F3F0E8]/30">
+            <div className="mt-4 flex items-center gap-2 font-mono text-[9px] tracking-[.12em] text-foreground/30">
               <span aria-hidden className="h-1 w-1 rounded-full" style={{ backgroundColor: accent }} />
               <span>{domain}</span>
             </div>
@@ -309,7 +318,7 @@ export function WorkReel({ projects }: { projects: ProjectCase[] }) {
           role="region"
           aria-label={isEs ? "Proyectos destacados" : "Featured projects"}
           tabIndex={0}
-          className="snap-x snap-mandatory overflow-x-auto pb-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55D8FF]"
+          className="snap-x snap-mandatory overflow-x-auto pb-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
         >
           <div className="flex gap-4 px-5 sm:px-8">
             {projects.map((project, index) => (
@@ -317,7 +326,7 @@ export function WorkReel({ projects }: { projects: ProjectCase[] }) {
             ))}
           </div>
         </div>
-        <p className="mt-2 px-5 font-mono text-[10px] uppercase tracking-[.2em] text-[#F3F0E8]/30 sm:px-8">
+        <p className="mt-2 px-5 font-mono text-[10px] uppercase tracking-[.2em] text-foreground/30 sm:px-8">
           {isEs ? "Deslizá →" : "Swipe →"}
         </p>
       </section>
@@ -341,17 +350,17 @@ export function WorkReel({ projects }: { projects: ProjectCase[] }) {
 
         {/* Overlay inferior: hint + contador + progreso */}
         <div className="pointer-events-none absolute inset-x-0 bottom-7 flex flex-col items-center gap-3">
-          <motion.span style={{ opacity: hintOpacity }} className="font-mono text-[10px] uppercase tracking-[.2em] text-[#F3F0E8]/35">
+          <motion.span style={{ opacity: hintOpacity }} className="font-mono text-[10px] uppercase tracking-[.2em] text-foreground/35">
             {isEs ? "Scrolleá ↓" : "Scroll ↓"}
           </motion.span>
           <div className="flex items-center gap-4">
-            <span className="font-mono text-[10px] tabular-nums tracking-[.2em] text-[#F3F0E8]/45">
+            <span className="font-mono text-[10px] tabular-nums tracking-[.2em] text-foreground/45">
               {String(current).padStart(2, "0")} / {String(total).padStart(2, "0")}
             </span>
-            <div className="relative h-px w-44 overflow-hidden bg-white/10">
+            <div className="relative h-px w-44 overflow-hidden bg-white/10 light:bg-[rgb(var(--ink-rgb)/0.1)]">
               <motion.div
                 style={{ scaleX: scrollYProgress }}
-                className="absolute inset-0 origin-left bg-gradient-to-r from-[#55D8FF] to-[#71F3A2]"
+                className="absolute inset-0 origin-left bg-gradient-to-r from-track-build to-track-scale"
               />
             </div>
           </div>
