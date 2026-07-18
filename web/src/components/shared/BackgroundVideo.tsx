@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import { useReducedMotion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/useMediaQuery';
 
@@ -141,11 +142,12 @@ export function BackgroundVideo({
             {/* Capa de media (poster + video) con la presencia y el blend */}
             <div className="absolute inset-0 mix-blend-screen" style={{ opacity }}>
                 {poster && (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
+                    <Image
                         src={poster}
                         alt=""
-                        className="absolute inset-0 h-full w-full object-cover"
+                        fill
+                        sizes="100vw"
+                        className="object-cover"
                         style={{ objectPosition }}
                     />
                 )}

@@ -38,12 +38,11 @@ export function DecodeText({
     const mountedRef = useRef(false);
 
     useEffect(() => {
-        const skipAnimation = reduced || (!mountedRef.current && !decodeOnMount);
+        const isMount = !mountedRef.current;
         mountedRef.current = true;
-        if (skipAnimation) {
-            setDisplay(text);
-            return;
-        }
+        // Sin animación no hace falta setState: al montar `display` ya nace
+        // igual a `text`, y con reduced-motion se renderiza `text` directo.
+        if (reduced || (isMount && !decodeOnMount)) return;
 
         const start = performance.now();
         const tick = (now: number) => {
@@ -68,5 +67,5 @@ export function DecodeText({
         };
     }, [text, reduced, duration, decodeOnMount]);
 
-    return createElement(Tag, { className, 'aria-label': text }, display);
+    return createElement(Tag, { className, 'aria-label': text }, reduced ? text : display);
 }

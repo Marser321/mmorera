@@ -74,9 +74,19 @@ function auditFile(file) {
     );
   }
 
-  // 2. Agente SEO: Validar metadata en page.tsx
+  // 2. Agente SEO: Validar metadata en page.tsx (o en el layout.tsx del mismo
+  // directorio — Next hereda la metadata del layout que envuelve la página).
   if (isPage) {
-    const exportsMetadata = /export\s+const\s+metadata\b|export\s+(async\s+)?function\s+generateMetadata\b/.test(source);
+    const metadataRegex = /export\s+const\s+metadata\b|export\s+(async\s+)?function\s+generateMetadata\b/;
+    let exportsMetadata = metadataRegex.test(source);
+    if (!exportsMetadata) {
+      const siblingLayout = ["layout.tsx", "layout.jsx", "layout.ts", "layout.js"]
+        .map((name) => path.join(path.dirname(file), name))
+        .find((candidate) => existsSync(candidate));
+      if (siblingLayout) {
+        exportsMetadata = metadataRegex.test(readFileSync(siblingLayout, "utf8"));
+      }
+    }
     if (!exportsMetadata) {
       addFinding(
         file,
