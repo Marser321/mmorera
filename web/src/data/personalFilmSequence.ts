@@ -1,8 +1,12 @@
 export type PersonalFilmStage = "introduction" | "create" | "build" | "scale" | "convergence" | "closing";
 
+export interface PersonalFilmMediaSource {
+  src: string;
+  type: "video/webm; codecs=vp9" | "video/mp4";
+}
+
 export interface PersonalFilmSource {
-  webm: string;
-  mp4: string;
+  sources: readonly PersonalFilmMediaSource[];
   posterWebp: string;
   posterAvif: string;
   aspectRatio: number;
@@ -23,6 +27,8 @@ export interface PersonalFilmSequence {
   mobile: PersonalFilmSource;
   preloadMargin: string;
   seekThreshold: number;
+  seekWatchdogMs: number;
+  activationTimeoutMs: number;
 }
 
 const ROOT = "/profile/author-film";
@@ -40,21 +46,26 @@ export const PERSONAL_FILM_SEQUENCE: PersonalFilmSequence = {
     { stage: "closing", start: 0.94, end: 1 },
   ],
   desktop: {
-    webm: `${ROOT}/author-film-desktop.webm`,
-    mp4: `${ROOT}/author-film-desktop.mp4`,
+    sources: [
+      { src: `${ROOT}/author-film-desktop.webm`, type: "video/webm; codecs=vp9" },
+      { src: `${ROOT}/author-film-desktop.mp4`, type: "video/mp4" },
+    ],
     posterWebp: `${ROOT}/poster-desktop.webp`,
     posterAvif: `${ROOT}/poster-desktop.avif`,
     aspectRatio: 16 / 9,
   },
   mobile: {
-    webm: `${ROOT}/author-film-mobile.webm`,
-    mp4: `${ROOT}/author-film-mobile.mp4`,
+    sources: [
+      { src: `${ROOT}/author-film-mobile.mp4`, type: "video/mp4" },
+    ],
     posterWebp: `${ROOT}/poster-mobile.webp`,
     posterAvif: `${ROOT}/poster-mobile.avif`,
     aspectRatio: 4 / 5,
   },
   preloadMargin: "800px 0px",
   seekThreshold: 1 / 48,
+  seekWatchdogMs: 250,
+  activationTimeoutMs: 1_500,
 };
 
 export function clampFilmProgress(progress: number) {

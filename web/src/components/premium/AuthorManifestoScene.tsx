@@ -15,11 +15,11 @@ import {
   resolveFilmStage,
   resolveFilmTime,
   resolvePersonalFilmSource,
-  shouldSeekFilm,
   type PersonalFilmSequence,
   type PersonalFilmStage,
 } from "@/data/personalFilmSequence";
 import { useResolvedMediaQuery } from "@/hooks/useMediaQuery";
+import { FilmSeekCoordinator, type FilmSeekRequest } from "@/lib/personalFilmSeek";
 
 export interface AuthorManifestoCopy {
   eyebrow: string;
@@ -116,7 +116,15 @@ function AuthorManifestoSceneComponent({
   const filmTrackRef = useRef<HTMLDivElement>(null);
   const visualRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const seekFrameRef = useRef<number | null>(null);
+  const seekCoordinatorRef = useRef<FilmSeekCoordinator | null>(null);
+  const videoFrameCallbackRef = useRef<number | null>(null);
+  const videoFrameOwnerRef = useRef<HTMLVideoElement | null>(null);
+  const fallbackSeekRequestRef = useRef<FilmSeekRequest | null>(null);
+  const activationTimerRef = useRef<number | null>(null);
+  const primeAttemptRef = useRef(0);
+  const primedSourceRef = useRef("");
+  const lastSeekStartedAtRef = useRef(0);
+  const lastSeekTargetRef = useRef(0);
   const latestProgressRef = useRef(0);
   const targetTimeRef = useRef(0);
   const desktopMatch = useResolvedMediaQuery("(min-width: 1024px)");
@@ -126,10 +134,12 @@ function AuthorManifestoSceneComponent({
   const motionPreferenceResolved = reducedMotionMatch !== null;
   const reducedMotion = reducedMotionMatch === true;
   const source = resolvePersonalFilmSource(sequence, isDesktop);
-  const sourceKey = `${source.webm}|${source.mp4}`;
+  const sourceKey = source.sources.map(({ src }) => src).join("|");
   const sequenceMode = isDesktop ? "desktop" : "mobile";
   const [nearViewport, setNearViewport] = useState(false);
   const [videoState, setVideoState] = useState<{ source: string; status: "idle" | "ready" | "failed" }>({ source: "", status: "idle" });
+  const [activationRequired, setActivationRequired] = useState(false);
+  const [renderedTime, setRenderedTime] = useState(0);
   const [detailsReady, setDetailsReady] = useState(false);
   const [filmStage, setFilmStage] = useState<PersonalFilmStage>("introduction");
   const videoReady = videoState.source === sourceKey && videoState.status === "ready";
@@ -158,6 +168,121 @@ function AuthorManifestoSceneComponent({
   const leftScrimOpacity = useTransform(sectionProgress, [0, 0.82, 0.91], [1, 1, 0.24]);
   const finalScrimOpacity = useTransform(sectionProgress, [0.91, 0.95, 1], [0, 0.82, 0.88]);
 
+  const clearActivationTimer = useCallback(() => {
+    if (activationTimerRef.current === null) return;
+    window.clearTimeout(activationTimerRef.current);
+    activationTimerRef.current = null;
+  }, []);
+
+  const cancelPendingVideoFrame = useCallback(() => {
+    const owner = videoFrameOwnerRef.current;
+    const callbackId = videoFrameCallbackRef.current;
+    if (owner && callbackId !== null && typeof owner.cancelVideoFrameCallback === "function") {
+      owner.cancelVideoFrameCallback(callbackId);
+    }
+    videoFrameCallbackRef.current = null;
+    videoFrameOwnerRef.current = null;
+  }, []);
+
+  const recordPresentedFrame = useCallback((mediaTime: number) => {
+    const safeTime = Number.isFinite(mediaTime) ? Math.min(sequence.duration, Math.max(0, mediaTime)) : 0;
+    setRenderedTime(safeTime);
+    if (visualRef.current) visualRef.current.dataset.filmRenderedTime = safeTime.toFixed(3);
+  }, [sequence.duration]);
+
+  const requestPresentedFrame = useCallback((video: HTMLVideoElement, callback: (mediaTime: number) => void) => {
+    cancelPendingVideoFrame();
+    if (typeof video.requestVideoFrameCallback !== "function") return false;
+    videoFrameOwnerRef.current = video;
+    videoFrameCallbackRef.current = video.requestVideoFrameCallback((_now, metadata) => {
+      if (videoFrameOwnerRef.current !== video) return;
+      videoFrameCallbackRef.current = null;
+      videoFrameOwnerRef.current = null;
+      callback(metadata.mediaTime);
+    });
+    return true;
+  }, [cancelPendingVideoFrame]);
+
+  /* eslint-disable react-hooks/preserve-manual-memoization -- Media callbacks intentionally close over the active responsive source. */
+  const markVideoReady = useCallback((video: HTMLVideoElement, mediaTime: number) => {
+    if (video !== videoRef.current) return;
+    clearActivationTimer();
+    cancelPendingVideoFrame();
+    video.pause();
+    primedSourceRef.current = sourceKey;
+    setActivationRequired(false);
+    recordPresentedFrame(mediaTime);
+    setVideoState({ source: sourceKey, status: "ready" });
+    seekCoordinatorRef.current?.setReady(mediaTime);
+    seekCoordinatorRef.current?.setTarget(targetTimeRef.current);
+  }, [cancelPendingVideoFrame, clearActivationTimer, recordPresentedFrame, sourceKey]);
+
+  const prepareVideo = useCallback((userInitiated = false) => {
+    const video = videoRef.current;
+    if (!video || video.readyState < 1 || primedSourceRef.current === sourceKey) return;
+    const attempt = ++primeAttemptRef.current;
+    clearActivationTimer();
+    if (!isDesktop) {
+      activationTimerRef.current = window.setTimeout(() => {
+        if (primeAttemptRef.current === attempt && primedSourceRef.current !== sourceKey) {
+          setActivationRequired(true);
+        }
+      }, sequence.activationTimeoutMs);
+    }
+
+    video.muted = true;
+    video.playsInline = true;
+    const waitsForPresentedFrame = requestPresentedFrame(video, (mediaTime) => {
+      if (primeAttemptRef.current !== attempt) return;
+      markVideoReady(video, mediaTime);
+    });
+    const playResult = video.play();
+    void playResult.then(() => {
+      if (!waitsForPresentedFrame && primeAttemptRef.current === attempt) {
+        window.requestAnimationFrame(() => markVideoReady(video, video.currentTime));
+      }
+    }).catch(() => {
+      if (userInitiated && primeAttemptRef.current === attempt) setActivationRequired(true);
+    });
+  }, [clearActivationTimer, isDesktop, markVideoReady, requestPresentedFrame, sequence.activationTimeoutMs, sourceKey]);
+  /* eslint-enable react-hooks/preserve-manual-memoization */
+
+  const setupSeekCoordinator = useCallback((video: HTMLVideoElement) => {
+    seekCoordinatorRef.current?.destroy();
+    const availableDuration = Number.isFinite(video.duration)
+      ? Math.min(video.duration, sequence.duration)
+      : sequence.duration;
+    const coordinator = new FilmSeekCoordinator({
+      duration: availableDuration,
+      threshold: sequence.seekThreshold,
+      watchdogMs: sequence.seekWatchdogMs,
+      issueSeek: (request) => {
+        if (video !== videoRef.current || video.readyState < 1 || document.hidden) return;
+        video.pause();
+        fallbackSeekRequestRef.current = null;
+        const waitsForPresentedFrame = requestPresentedFrame(video, (mediaTime) => {
+          if (seekCoordinatorRef.current !== coordinator) return;
+          if (coordinator.settle(request.id, mediaTime)) recordPresentedFrame(mediaTime);
+        });
+        if (!waitsForPresentedFrame) fallbackSeekRequestRef.current = request;
+        const now = performance.now();
+        const waitingForSameSeek = video.seeking
+          && Math.abs(lastSeekTargetRef.current - request.targetTime) < sequence.seekThreshold
+          && now - lastSeekStartedAtRef.current < Math.max(1_000, sequence.seekWatchdogMs * 4);
+        if (waitingForSameSeek) return;
+        try {
+          lastSeekTargetRef.current = request.targetTime;
+          lastSeekStartedAtRef.current = now;
+          video.currentTime = request.targetTime;
+        } catch {
+          fallbackSeekRequestRef.current = null;
+        }
+      },
+    });
+    seekCoordinatorRef.current = coordinator;
+    coordinator.setTarget(targetTimeRef.current);
+  }, [recordPresentedFrame, requestPresentedFrame, sequence.duration, sequence.seekThreshold, sequence.seekWatchdogMs]);
+
   const syncFilmProgress = useCallback((progress: number) => {
     latestProgressRef.current = progress;
     targetTimeRef.current = resolveFilmTime(progress, sequence);
@@ -166,18 +291,8 @@ function AuthorManifestoSceneComponent({
     const nextDetailsReady = progress >= 0.94;
     setDetailsReady((current) => current === nextDetailsReady ? current : nextDetailsReady);
     if (visualRef.current) visualRef.current.dataset.filmTime = targetTimeRef.current.toFixed(3);
-    if (reducedMotion || document.hidden || seekFrameRef.current !== null) return;
-    seekFrameRef.current = window.requestAnimationFrame(() => {
-      seekFrameRef.current = null;
-      const video = videoRef.current;
-      if (!video || video.readyState < 1 || video.seeking) return;
-      const availableDuration = Number.isFinite(video.duration)
-        ? Math.min(video.duration, sequence.duration)
-        : sequence.duration;
-      const target = Math.min(availableDuration, targetTimeRef.current);
-      video.pause();
-      if (shouldSeekFilm(video.currentTime, target, sequence.seekThreshold)) video.currentTime = target;
-    });
+    if (reducedMotion || document.hidden) return;
+    seekCoordinatorRef.current?.setTarget(targetTimeRef.current);
   }, [reducedMotion, sequence]);
 
   useMotionValueEvent(sectionProgress, "change", syncFilmProgress);
@@ -187,6 +302,7 @@ function AuthorManifestoSceneComponent({
     if (!section) return;
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) setNearViewport(true);
+      seekCoordinatorRef.current?.setEnabled(entry.isIntersecting && !document.hidden);
     }, { rootMargin: sequence.preloadMargin, threshold: 0.01 });
     observer.observe(section);
     return () => observer.disconnect();
@@ -196,16 +312,42 @@ function AuthorManifestoSceneComponent({
     if (!viewportResolved || !motionPreferenceResolved) return;
     const frame = window.requestAnimationFrame(() => syncFilmProgress(sectionProgress.get()));
     const syncVisibility = () => {
-      if (!document.hidden) syncFilmProgress(latestProgressRef.current);
+      if (document.hidden) {
+        videoRef.current?.pause();
+        seekCoordinatorRef.current?.setEnabled(false);
+        cancelPendingVideoFrame();
+        return;
+      }
+      seekCoordinatorRef.current?.setEnabled(true);
+      if (primedSourceRef.current === sourceKey) syncFilmProgress(latestProgressRef.current);
+      else prepareVideo();
     };
     document.addEventListener("visibilitychange", syncVisibility);
     return () => {
       window.cancelAnimationFrame(frame);
       document.removeEventListener("visibilitychange", syncVisibility);
-      if (seekFrameRef.current !== null) window.cancelAnimationFrame(seekFrameRef.current);
-      seekFrameRef.current = null;
     };
-  }, [motionPreferenceResolved, sectionProgress, syncFilmProgress, viewportResolved]);
+  }, [cancelPendingVideoFrame, motionPreferenceResolved, prepareVideo, sectionProgress, sourceKey, syncFilmProgress, viewportResolved]);
+
+  useEffect(() => {
+    seekCoordinatorRef.current?.destroy();
+    seekCoordinatorRef.current = null;
+    fallbackSeekRequestRef.current = null;
+    cancelPendingVideoFrame();
+    clearActivationTimer();
+    primeAttemptRef.current += 1;
+    primedSourceRef.current = "";
+    lastSeekStartedAtRef.current = 0;
+    lastSeekTargetRef.current = 0;
+    return () => {
+      seekCoordinatorRef.current?.destroy();
+      seekCoordinatorRef.current = null;
+      fallbackSeekRequestRef.current = null;
+      cancelPendingVideoFrame();
+      clearActivationTimer();
+      primeAttemptRef.current += 1;
+    };
+  }, [cancelPendingVideoFrame, clearActivationTimer, sourceKey]);
 
   const canMountVideo = viewportResolved && motionPreferenceResolved && nearViewport && !reducedMotion && !videoFailed;
   const linksInteractive = reducedMotion || detailsReady;
@@ -219,6 +361,8 @@ function AuthorManifestoSceneComponent({
     ? "reduced"
     : videoFailed
       ? "fallback"
+      : activationRequired
+        ? "activation-required"
       : canMountVideo
         ? videoReady ? "ready" : "loading"
         : "poster";
@@ -232,6 +376,7 @@ function AuthorManifestoSceneComponent({
       data-sequence-state={reducedMotion ? "closing" : filmStage}
       data-film-status={videoStatus}
       data-film-time={reducedMotion ? sequence.duration.toFixed(3) : "0.000"}
+      data-film-rendered-time={reducedMotion ? sequence.duration.toFixed(3) : renderedTime.toFixed(3)}
       className="absolute inset-0 overflow-hidden bg-[#050607]"
       style={reducedMotion ? undefined : { scale: sceneScale }}
     >
@@ -248,7 +393,7 @@ function AuthorManifestoSceneComponent({
       </picture>
       {canMountVideo && (
         <video
-          key={`${source.webm}-${source.mp4}`}
+          key={sourceKey}
           ref={videoRef}
           muted
           playsInline
@@ -258,15 +403,39 @@ function AuthorManifestoSceneComponent({
           data-personal-film
           className={`absolute inset-0 h-full w-full object-contain object-top transition-opacity duration-300 lg:object-cover lg:object-center ${videoReady ? "opacity-100" : "opacity-0"}`}
           onLoadedMetadata={(event) => {
-            event.currentTarget.pause();
+            const video = event.currentTarget;
+            video.pause();
+            setRenderedTime(0);
+            setActivationRequired(false);
+            setVideoState({ source: "", status: "idle" });
+            setupSeekCoordinator(video);
             syncFilmProgress(latestProgressRef.current);
+            prepareVideo();
           }}
-          onLoadedData={() => setVideoState({ source: sourceKey, status: "ready" })}
-          onSeeked={() => syncFilmProgress(latestProgressRef.current)}
-          onError={() => setVideoState({ source: sourceKey, status: "failed" })}
+          onLoadedData={(event) => {
+            if (isDesktop && primedSourceRef.current !== sourceKey) markVideoReady(event.currentTarget, event.currentTarget.currentTime);
+          }}
+          onSeeked={(event) => {
+            const request = fallbackSeekRequestRef.current;
+            const coordinator = seekCoordinatorRef.current;
+            if (!request || !coordinator) return;
+            fallbackSeekRequestRef.current = null;
+            if (coordinator.settle(request.id, event.currentTarget.currentTime)) {
+              recordPresentedFrame(event.currentTarget.currentTime);
+            }
+          }}
+          onError={() => {
+            seekCoordinatorRef.current?.destroy();
+            seekCoordinatorRef.current = null;
+            cancelPendingVideoFrame();
+            clearActivationTimer();
+            setActivationRequired(false);
+            setVideoState({ source: sourceKey, status: "failed" });
+          }}
         >
-          <source src={source.webm} type="video/webm; codecs=vp9" />
-          <source src={source.mp4} type="video/mp4" />
+          {source.sources.map((mediaSource) => (
+            <source key={mediaSource.src} src={mediaSource.src} type={mediaSource.type} />
+          ))}
         </video>
       )}
       <motion.div
@@ -313,6 +482,17 @@ function AuthorManifestoSceneComponent({
           <div ref={filmTrackRef} data-film-track className="relative h-[420vh]">
             <div className="sticky top-0 h-[100svh] overflow-hidden px-5 py-6 sm:px-8 lg:px-12 lg:py-8">
               {filmVisual}
+              {!isDesktop && activationRequired && canMountVideo && !videoFailed && (
+                <div className="pointer-events-none absolute inset-x-0 top-[43%] z-30 flex -translate-y-1/2 justify-center px-5">
+                  <button
+                    type="button"
+                    onClick={() => prepareVideo(true)}
+                    className="pointer-events-auto rounded-full border border-white/25 bg-[#050607]/78 px-5 py-3 font-mono text-[10px] uppercase tracking-[.16em] text-[#F3F0E8] shadow-[0_12px_36px_rgba(0,0,0,.3)] backdrop-blur-md transition-colors hover:border-[#B68CFF]/70 hover:bg-[#050607]/92 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55D8FF] motion-reduce:transition-none"
+                  >
+                    {language === "es" ? "Activar secuencia" : "Enable sequence"}
+                  </button>
+                </div>
+              )}
               <div className="relative z-20 mx-auto h-full max-w-[1480px]">
                 <div className="flex items-start border-t border-white/18 pt-4">
                   <div>

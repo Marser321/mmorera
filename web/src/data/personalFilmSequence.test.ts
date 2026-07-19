@@ -33,21 +33,27 @@ describe("personal film sequence", () => {
   });
 
   it("selects responsive sources and ignores imperceptible seek noise", () => {
-    assert.equal(resolvePersonalFilmSource(PERSONAL_FILM_SEQUENCE, true).aspectRatio, 16 / 9);
-    assert.equal(resolvePersonalFilmSource(PERSONAL_FILM_SEQUENCE, false).aspectRatio, 4 / 5);
+    const desktop = resolvePersonalFilmSource(PERSONAL_FILM_SEQUENCE, true);
+    const mobile = resolvePersonalFilmSource(PERSONAL_FILM_SEQUENCE, false);
+    assert.equal(desktop.aspectRatio, 16 / 9);
+    assert.equal(mobile.aspectRatio, 4 / 5);
+    assert.deepEqual(desktop.sources.map(({ type }) => type), ["video/webm; codecs=vp9", "video/mp4"]);
+    assert.deepEqual(mobile.sources.map(({ type }) => type), ["video/mp4"]);
+    assert.equal(PERSONAL_FILM_SEQUENCE.seekWatchdogMs, 250);
+    assert.equal(PERSONAL_FILM_SEQUENCE.activationTimeoutMs, 1_500);
     assert.equal(shouldSeekFilm(1, 1.01), false);
     assert.equal(shouldSeekFilm(1, 1.1), true);
     assert.equal(shouldSeekFilm(Number.NaN, 1), false);
   });
 
-  it("ships both codecs and final posters within the production budgets", () => {
+  it("ships ordered sources and final posters within the production budgets", () => {
     const publicRoot = join(process.cwd(), "public");
     for (const [viewport, source] of [
       ["desktop", PERSONAL_FILM_SEQUENCE.desktop],
       ["mobile", PERSONAL_FILM_SEQUENCE.mobile],
     ] as const) {
       const maxVideoBytes = viewport === "desktop" ? 6_000_000 : 4_000_000;
-      for (const path of [source.mp4, source.webm]) {
+      for (const { src: path } of source.sources) {
         const file = statSync(join(publicRoot, path.replace(/^\//, "")));
         assert.ok(file.isFile());
         assert.ok(file.size <= maxVideoBytes);

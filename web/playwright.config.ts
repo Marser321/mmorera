@@ -17,7 +17,19 @@ export default defineConfig({
     screenshot: "only-on-failure",
     viewport: { width: 1440, height: 900 },
   },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  projects: [
+    {
+      name: "chromium",
+      testIgnore: ["**/._*", "**/*.webkit.spec.ts"],
+      use: { ...devices["Desktop Chrome"] },
+    },
+    {
+      name: "webkit-mobile-film",
+      testMatch: "**/*.webkit.spec.ts",
+      testIgnore: "**/._*",
+      use: { ...devices["iPhone 13"] },
+    },
+  ],
   webServer: externalBaseUrl
     ? undefined
     : {

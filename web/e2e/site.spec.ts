@@ -238,11 +238,22 @@ test("completa la película móvil mientras el retrato sigue visible", async ({ 
   await page.evaluate(() => {
     const section = document.querySelector<HTMLElement>('[data-testid="author-manifesto"]');
     if (!section) return;
-    window.scrollTo(0, section.offsetTop);
+    section.scrollIntoView();
   });
   await expect(portrait).toHaveAttribute("data-sequence-mode", "mobile");
   await expect(portrait).toHaveAttribute("data-film-status", "ready");
-  await expect(manifesto.locator("video source[type^='video/webm']")).toHaveAttribute("src", /author-film-mobile\.webm$/);
+  const film = manifesto.locator("video[data-personal-film]");
+  await expect(manifesto.locator("video source[type='video/mp4']")).toHaveAttribute("src", /author-film-mobile\.mp4$/);
+  await expect(manifesto.locator("video source[type^='video/webm']")).toHaveCount(0);
+  await expect.poll(() => film.evaluate((video) => (video as HTMLVideoElement).currentSrc)).toMatch(/author-film-mobile\.mp4$/);
+  await page.evaluate(() => {
+    const track = document.querySelector<HTMLElement>("[data-film-track]");
+    if (!track) return;
+    const trackTop = track.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo(0, trackTop + (track.offsetHeight - window.innerHeight) * 0.5);
+  });
+  await expect.poll(() => film.evaluate((video) => (video as HTMLVideoElement).currentTime)).toBeGreaterThan(6.8);
+  await expect.poll(async () => Number(await portrait.getAttribute("data-film-rendered-time"))).toBeGreaterThan(6.8);
   await expect.poll(async () => {
     await page.evaluate(() => {
       const track = document.querySelector<HTMLElement>("[data-film-track]");
@@ -250,10 +261,57 @@ test("completa la película móvil mientras el retrato sigue visible", async ({ 
       const trackTop = track.getBoundingClientRect().top + window.scrollY;
       window.scrollTo(0, trackTop + (track.offsetHeight - window.innerHeight) * 0.965);
     });
-    return Number(await portrait.getAttribute("data-film-time"));
+    return film.evaluate((video) => (video as HTMLVideoElement).currentTime);
   }).toBeGreaterThan(13.9);
+  await expect.poll(async () => Number(await portrait.getAttribute("data-film-rendered-time"))).toBeGreaterThan(13.9);
   await expect(portrait).toHaveAttribute("data-sequence-state", "closing");
   await expect(portrait).toBeInViewport();
+  await page.evaluate(() => {
+    const track = document.querySelector<HTMLElement>("[data-film-track]");
+    if (!track) return;
+    const trackTop = track.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo(0, trackTop + (track.offsetHeight - window.innerHeight) * 0.2);
+  });
+  await expect.poll(() => film.evaluate((video) => (video as HTMLVideoElement).currentTime)).toBeLessThan(3.5);
+  await context.close();
+});
+
+test("desbloquea la pelÃ­cula mÃ³vil sin abandonar el control por scroll", async ({ browser }) => {
+  const context = await browser.newContext({
+    baseURL: BASE_URL,
+    viewport: { width: 390, height: 844 },
+    isMobile: true,
+    hasTouch: true,
+  });
+  const page = await context.newPage();
+  await page.addInitScript(() => {
+    const originalPlay = HTMLMediaElement.prototype.play;
+    let userActivated = false;
+    window.addEventListener("pointerdown", () => { userActivated = true; }, { capture: true });
+    HTMLMediaElement.prototype.play = function play() {
+      if (this instanceof HTMLVideoElement && this.hasAttribute("data-personal-film") && !userActivated) {
+        return Promise.reject(new DOMException("Playback requires activation", "NotAllowedError"));
+      }
+      return originalPlay.call(this);
+    };
+  });
+  await page.goto("/");
+  const manifesto = page.getByTestId("author-manifesto");
+  await page.evaluate(() => document.querySelector('[data-testid="author-manifesto"]')?.scrollIntoView());
+  const activation = page.getByRole("button", { name: "Activar secuencia" });
+  await expect(activation).toBeVisible({ timeout: 5_000 });
+  await activation.click();
+  const portrait = manifesto.getByRole("img");
+  const film = manifesto.locator("video[data-personal-film]");
+  await expect(portrait).toHaveAttribute("data-film-status", "ready");
+  await page.evaluate(() => {
+    const track = document.querySelector<HTMLElement>("[data-film-track]");
+    if (!track) return;
+    const trackTop = track.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo(0, trackTop + (track.offsetHeight - window.innerHeight) * 0.62);
+  });
+  await expect.poll(() => film.evaluate((video) => (video as HTMLVideoElement).currentTime)).toBeGreaterThan(8.5);
+  await expect(activation).toHaveCount(0);
   await context.close();
 });
 
