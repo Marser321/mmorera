@@ -5,12 +5,11 @@ import { MotionBackdrop } from "@/components/shared/MotionBackdrop";
 import { MOTION_ASSETS } from "@/data/motionAssets";
 
 export const metadata: Metadata = {
-  title: "Contame tu proyecto",
-  description:
-    "Un brief para entender el contexto, el desafío y el próximo paso útil.",
+  title: "Contame qué querés mover",
+  description: "Tres pasos para entender el contexto y responder con el próximo paso útil.",
   alternates: {
     canonical: "/aplicar",
-    languages: { "es-UY": "/aplicar", en: "/en/aplicar" },
+    languages: { es: "/aplicar", en: "/en/aplicar" },
   },
 };
 export default function ApplicationPage() {
@@ -24,15 +23,14 @@ export default function ApplicationPage() {
       <header className="mx-auto grid max-w-[1180px] gap-8 border-b border-white/10 pb-10 light:border-[rgb(var(--ink-rgb)/0.1)] md:grid-cols-[1.2fr_.8fr] md:items-end">
         <div>
           <p className="font-mono text-[10px] uppercase tracking-[.18em] text-signal">
-            Brief · 04 pasos
+            Brief · 03 pasos
           </p>
           <h1 className="mt-5 text-[clamp(3.2rem,7vw,6.5rem)] font-medium leading-[.91] tracking-[-.065em] text-foreground">
-            Contame tu proyecto.
+            Contame qué querés mover.
           </h1>
         </div>
         <p className="max-w-xl text-lg leading-7 text-foreground/55 md:justify-self-end">
-          Contexto, desafío y timing. Uso esa información únicamente para
-          evaluar el encaje y responderte.
+          Tres pasos. Contexto suficiente para entender el proyecto y responder con criterio.
         </p>
       </header>
       <AplicarOS />

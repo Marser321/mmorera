@@ -8,17 +8,9 @@ export const SITE_IDENTITY: SiteIdentity = {
   },
   canonical: "https://mmorera.agency",
   locale: { default: "es", alternate: "en" },
-  location: {
-    es: "Uruguay · Trabajo remoto",
-    en: "Uruguay · Working remotely",
-  },
   contact: {
     email: "mario@mmorera.agency",
     whatsapp: "https://wa.me/59892323675",
-  },
-  social: {
-    github: "https://github.com/mariomorera",
-    linkedin: "https://www.linkedin.com/in/mariomorera",
   },
   metadata: {
     title: {
@@ -26,8 +18,8 @@ export const SITE_IDENTITY: SiteIdentity = {
       en: "Mario Morera — Creative Technologist & Systems Builder",
     },
     description: {
-      es: "Diseño y construyo experiencias, productos y sistemas que conectan tecnología creativa, desarrollo, IA, automatización y CRM.",
-      en: "I design and build experiences, products and systems across creative technology, development, AI, automation and CRM.",
+      es: "Diseño y construyo experiencias, productos y sistemas, del concepto a la operación.",
+      en: "I design and build experiences, products and systems, from concept to operations.",
     },
   },
 };

@@ -2,12 +2,11 @@ import type { Metadata } from "next";
 import { AplicarOS } from "@/components/portfolio-isolated/AplicarOS";
 import { SITE_IDENTITY } from "@/config/site";
 export const metadata: Metadata = {
-  title: "Tell me about your project",
-  description:
-    "A short brief to understand the context, challenge and most useful next step.",
+  title: "Tell me what you want to move",
+  description: "Three steps to understand the context and reply with the most useful next step.",
   alternates: {
     canonical: "/en/aplicar",
-    languages: { "es-UY": "/aplicar", en: "/en/aplicar" },
+    languages: { es: "/aplicar", en: "/en/aplicar" },
   },
 };
 export default function EnglishApplicationPage() {
@@ -19,15 +18,14 @@ export default function EnglishApplicationPage() {
       <header className="mx-auto grid max-w-[1180px] gap-8 border-b border-white/10 pb-10 light:border-[rgb(var(--ink-rgb)/0.1)] md:grid-cols-[1.2fr_.8fr] md:items-end">
         <div>
           <p className="font-mono text-[10px] uppercase tracking-[.18em] text-signal">
-            Brief · 04 steps
+            Brief · 03 steps
           </p>
           <h1 className="mt-5 text-[clamp(3.2rem,7vw,6.5rem)] font-medium leading-[.91] tracking-[-.065em] text-foreground">
-            Tell me about your project.
+            Tell me what you want to move.
           </h1>
         </div>
         <p className="max-w-xl text-lg leading-7 text-foreground/55 md:justify-self-end">
-          Context, challenge and timing. I use this information only to evaluate
-          fit and reply.
+          Three steps. Enough context to understand the project and reply with judgment.
         </p>
       </header>
       <AplicarOS />

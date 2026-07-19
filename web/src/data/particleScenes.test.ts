@@ -14,6 +14,7 @@ describe('particle scene resolver', () => {
         assert.deepEqual(PARTICLE_SCENE_TECH_NAMES.home, [
             'Figma',
             'Next.js',
+            'Cloud',
             'Three.js',
             'Multi-model AI',
             'n8n',
@@ -28,22 +29,23 @@ describe('particle scene resolver', () => {
         ]);
         assert.deepEqual(PARTICLE_SCENE_TECH_NAMES.build, [
             'Next.js',
-            'Multi-model AI',
+            'Cloud',
             'TypeScript',
             'PostgreSQL',
             'Supabase',
             'Vercel',
+            'Multi-model AI',
         ]);
         assert.deepEqual(PARTICLE_SCENE_TECH_NAMES.operations, [
             'n8n',
-            'Multi-model AI',
+            'Cloud',
+            'PostgreSQL',
             'HubSpot',
             'Stripe',
-            'Shopify',
-            'Google Analytics',
+            'Multi-model AI',
         ]);
-        assert.deepEqual(PARTICLE_SCENE_TECH_NAMES.studio, ['Figma']);
-        assert.deepEqual(PARTICLE_SCENE_TECH_NAMES.systems, ['n8n']);
+        assert.deepEqual(PARTICLE_SCENE_TECH_NAMES.studio, ['Figma', 'Three.js', 'Blender', 'After Effects', 'DaVinci Resolve']);
+        assert.deepEqual(PARTICLE_SCENE_TECH_NAMES.systems, ['n8n', 'Cloud', 'PostgreSQL', 'HubSpot', 'Stripe', 'Multi-model AI']);
         assert.deepEqual(PARTICLE_SCENE_TECH_NAMES.cases, []);
         assert.deepEqual(PARTICLE_SCENE_TECH_NAMES.apply, []);
     });
@@ -57,6 +59,8 @@ describe('particle scene resolver', () => {
         assert.equal(new Set([home, studio, systems, cases]).size, 4);
         assert.notDeepEqual(PARTICLE_SCENE_TECH_NAMES.home, PARTICLE_SCENE_TECH_NAMES.studio);
         assert.notDeepEqual(PARTICLE_SCENE_TECH_NAMES.studio, PARTICLE_SCENE_TECH_NAMES.systems);
+        assert.equal(resolveParticleScene('/estudio').mode, 'sequence');
+        assert.equal(resolveParticleScene('/sistemas').mode, 'sequence');
     });
 
     test('section families override the route scene deterministically', () => {
@@ -71,9 +75,9 @@ describe('particle scene resolver', () => {
         assert.deepEqual(resolveParticleSceneTechNames('/', [], true), [
             'Figma',
             'Next.js',
+            'Cloud',
             'Three.js',
             'Multi-model AI',
-            'n8n',
         ]);
         assert.deepEqual(resolveParticleSceneTechNames('/', [], false), PARTICLE_SCENE_TECH_NAMES.home);
 
@@ -94,8 +98,8 @@ describe('particle scene resolver', () => {
 
     test('hero tracks resolve to their dedicated scenes', () => {
         const crear: Family[] = ['Media'];
-        const construir: Family[] = ['Web', 'Backend', 'AI'];
-        const escalar: Family[] = ['Automation', 'CRM', 'AI'];
+        const construir: Family[] = ['Web', 'Backend', 'Infrastructure', 'AI'];
+        const escalar: Family[] = ['Automation', 'CRM', 'Infrastructure', 'AI'];
 
         assert.equal(resolveParticleSceneName('/', crear), 'create');
         assert.equal(resolveParticleSceneName('/', construir), 'build');
@@ -112,7 +116,7 @@ describe('particle scene resolver', () => {
             }));
         }
 
-        for (const families of [['Media'], ['Web', 'Backend', 'AI']] as Family[][]) {
+        for (const families of [['Media'], ['Web', 'Backend', 'Infrastructure', 'AI']] as Family[][]) {
             const names = resolveParticleSceneTechNames('/', families);
             const scene = resolveParticleScene('/', families);
             assert.deepEqual(scene.techNames, names);
@@ -138,6 +142,11 @@ describe('particle scene resolver', () => {
         assert.deepEqual(multimodel?.descriptor, {
             es: 'Inteligencia aplicada',
             en: 'Applied intelligence',
+        });
+        assert.equal(TECH_STACK.find((tech) => tech.name === 'Cloud')?.category, 'Infrastructure');
+        assert.deepEqual(TECH_STACK.find((tech) => tech.name === 'Cloud')?.descriptor, {
+            es: 'Infraestructura y despliegue',
+            en: 'Infrastructure and delivery',
         });
 
         const expectedDescriptors = {

@@ -57,14 +57,9 @@ export interface SiteIdentity {
   role: LocalizedText;
   canonical: string;
   locale: { default: "es"; alternate: "en" };
-  location: LocalizedText;
   contact: {
     email: string;
     whatsapp: string;
-  };
-  social: {
-    github: string;
-    linkedin: string;
   };
   metadata: {
     title: LocalizedText;

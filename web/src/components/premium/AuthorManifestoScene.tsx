@@ -37,7 +37,7 @@ interface AuthorManifestoSceneProps {
   sequence?: PersonalFilmSequence;
 }
 
-function SocialLinks({ interactive = true }: { interactive?: boolean }) {
+function DirectLinks({ interactive = true }: { interactive?: boolean }) {
   return (
     <div
       inert={!interactive}
@@ -45,15 +45,14 @@ function SocialLinks({ interactive = true }: { interactive?: boolean }) {
       className={`mt-6 flex flex-wrap content-start gap-x-5 gap-y-3 ${interactive ? "" : "pointer-events-none select-none"}`}
     >
       {[
-        ["LinkedIn", SITE_IDENTITY.social.linkedin],
-        ["GitHub", SITE_IDENTITY.social.github],
         ["Email", `mailto:${SITE_IDENTITY.contact.email}`],
+        ["WhatsApp", SITE_IDENTITY.contact.whatsapp],
       ].map(([label, href]) => (
         <a
           key={label}
           href={href}
-          target={label === "Email" ? undefined : "_blank"}
-          rel={label === "Email" ? undefined : "noreferrer"}
+          target={label === "WhatsApp" ? "_blank" : undefined}
+          rel={label === "WhatsApp" ? "noreferrer" : undefined}
           tabIndex={interactive ? undefined : -1}
           className="inline-flex items-center gap-2 border-b border-white/24 pb-1 text-sm text-[#F3F0E8] transition-colors hover:border-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55D8FF]"
         >
@@ -101,7 +100,7 @@ function EditorialCopy({
         <div className="mt-8 lg:mt-0">
           <p className="font-mono text-[10px] uppercase tracking-[.16em] text-[#B68CFF]">{copy.principleLabel}</p>
           <p className="mt-3 text-[15px] leading-6 text-[#F3F0E8]/84">{copy.principle}</p>
-          <SocialLinks interactive={linksInteractive} />
+          <DirectLinks interactive={linksInteractive} />
         </div>
       </motion.div>
     </div>
@@ -296,12 +295,11 @@ function AuthorManifestoSceneComponent({
         <div ref={filmTrackRef} className="relative min-h-[100svh] overflow-hidden px-5 py-20 sm:px-8 lg:px-12 lg:py-12">
           {filmVisual}
           <div className="relative z-20 mx-auto flex min-h-[calc(100svh-10rem)] max-w-[1480px] flex-col justify-between">
-            <div className="flex items-start justify-between gap-6 border-t border-white/18 pt-4">
+            <div className="flex items-start border-t border-white/18 pt-4">
               <div>
                 <p className="font-mono text-[10px] uppercase tracking-[.18em] text-[#B68CFF]">{copy.eyebrow}</p>
                 <p className="mt-2 font-mono text-[10px] uppercase tracking-[.14em] text-[#F3F0E8]/48">Mario Morera · Perfil</p>
               </div>
-              <p className="max-w-36 text-right font-mono text-[10px] uppercase leading-4 tracking-[.13em] text-[#F3F0E8]/48">{SITE_IDENTITY.location[language]}</p>
             </div>
             <div className="max-w-[900px] pt-28 lg:ml-auto lg:w-[62vw]">
               <p className="font-mono text-[10px] uppercase tracking-[.18em] text-[#F3F0E8]/54">{copy.signature}</p>
@@ -316,12 +314,11 @@ function AuthorManifestoSceneComponent({
             <div className="sticky top-0 h-[100svh] overflow-hidden px-5 py-6 sm:px-8 lg:px-12 lg:py-8">
               {filmVisual}
               <div className="relative z-20 mx-auto h-full max-w-[1480px]">
-                <div className="flex items-start justify-between gap-6 border-t border-white/18 pt-4">
+                <div className="flex items-start border-t border-white/18 pt-4">
                   <div>
                     <p className="font-mono text-[10px] uppercase tracking-[.18em] text-[#B68CFF]">{copy.eyebrow}</p>
                     <p className="mt-2 font-mono text-[10px] uppercase tracking-[.14em] text-[#F3F0E8]/48">Mario Morera · Perfil</p>
                   </div>
-                  <p className="max-w-36 text-right font-mono text-[10px] uppercase leading-4 tracking-[.13em] text-[#F3F0E8]/48">{SITE_IDENTITY.location[language]}</p>
                 </div>
 
                 <div className="absolute inset-x-0 bottom-[8%] top-20 lg:bottom-auto lg:top-[25%] lg:max-w-[850px]" aria-hidden="true">

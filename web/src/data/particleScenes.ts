@@ -76,7 +76,7 @@ export const PARTICLE_SCENES: Record<ParticleSceneId, ParticleSceneDefinition> =
   },
   crm: {
     id: "crm",
-    mode: "locked",
+    mode: "sequence",
     techNames: PARTICLE_SCENE_TECH_NAMES.systems,
     accent: "#71F3A2",
     anchor: "hero-right",
@@ -84,7 +84,7 @@ export const PARTICLE_SCENES: Record<ParticleSceneId, ParticleSceneDefinition> =
     intensity: 0.58,
     interaction: "ambient",
     timing: TIMING,
-    fallback: "n8n formado con puntos marfil.",
+    fallback: "Tecnología operativa formada con puntos marfil.",
   },
   case: {
     id: "case",
@@ -113,7 +113,7 @@ export function resolveParticleScene(pathnameOrId = "/", activeFamilies: Family[
   if (sceneName === "studio") {
     return {
       ...PARTICLE_SCENES.create,
-      mode: "locked",
+      mode: "sequence",
       techNames: PARTICLE_SCENE_TECH_NAMES.studio,
       intensity: 0.58,
     };

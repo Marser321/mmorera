@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
@@ -21,55 +21,55 @@ import { MOTION_ASSETS } from "@/data/motionAssets";
 import { MethodTimeline } from "@/components/premium/home/MethodTimeline";
 import { DecodeText } from "@/components/motion/DecodeText";
 import { SplitReveal } from "@/components/motion/SplitReveal";
-import { Cascade, CascadeItem } from "@/components/motion/Cascade";
 import { DrawRule } from "@/components/motion/DrawRule";
 import { Magnetic } from "@/components/motion/Magnetic";
 import { Reveal } from "@/components/scroll/Reveal";
 import { Parallax } from "@/components/scroll/Parallax";
 import { ScrollProgressBar } from "@/components/scroll/ScrollProgressBar";
+import { TrackRail } from "@/components/premium/home/TrackRail";
 
 const familyByTrack: Record<TrackId, Family[]> = {
   create: ["Media", "Marketing"],
-  build: ["Web", "Backend", "AI"],
-  scale: ["CRM", "Automation", "AI"],
+  build: ["Web", "Backend", "Infrastructure", "AI"],
+  scale: ["CRM", "Automation", "Infrastructure", "AI"],
 };
 
 const copy = {
   es: {
     eyebrow: "Mario Morera · Creative Technologist & Systems Builder",
-    title: "Convierto ideas con carácter en experiencias, productos y sistemas que crecen sin perder lo que las hace distintas.",
-    intro: "Una sola dirección entre criterio visual, tecnología y operación, para llevar una visión donde una disciplina por sí sola no alcanza.",
+    title: "Creo lo que una idea necesita para volverse real.",
+    intro: "Diseño la forma, construyo el producto y conecto la operación.",
     work: "Ver archivo",
-    contact: "Contame tu proyecto",
-    tracksTitle: "Una práctica, tres modos de intervenir.",
-    tracksIntro: "El punto de entrada cambia. La intención es la misma: entender el problema, construir algo útil y dejarlo funcionando.",
+    contact: "Hablemos",
+    tracksTitle: "Tres formas de mover una idea.",
+    tracksIntro: "Crear, construir o escalar. La dirección se adapta al momento del proyecto.",
     method: "Método",
     methodTitle: "Del problema a un sistema que alguien puede usar.",
-    archive: "Archivo en evolución",
-    archiveTitle: "Los mejores casos todavía están entrando.",
-    archiveBody: "El catálogo conserva proyectos y decisiones verificables mientras se incorporan trabajos nuevos. La estructura ya está preparada para que cada caso explique problema, rol, proceso y resultado sin inflar la evidencia.",
-    archiveCta: "Explorar el archivo actual",
-    final: "¿Tu idea tiene algo que proteger y algo nuevo que demostrar?",
-    finalBody: "Si necesita una dirección capaz de unir forma, producto y operación sin volverla genérica, contame el contexto.",
+    archive: "Archivo",
+    archiveTitle: "Trabajo que se puede abrir.",
+    archiveBody: "Casos y demos reales. Cada uno muestra qué problema resuelve y cómo fue construido.",
+    archiveCta: "Explorar el archivo",
+    final: "¿Qué querés hacer posible?",
+    finalBody: "Contame qué querés mover y en qué momento está.",
     practice: "Una práctica",
     territory: "Territorio activo",
   },
   en: {
     eyebrow: "Mario Morera · Creative Technologist & Systems Builder",
-    title: "I turn ideas with character into experiences, products and systems that grow without losing what makes them distinct.",
-    intro: "One direction across visual judgment, technology and operations, taking a vision where no single discipline can reach on its own.",
+    title: "I build what an idea needs to become real.",
+    intro: "I shape the form, build the product and connect the operation.",
     work: "View archive",
-    contact: "Tell me about your project",
-    tracksTitle: "One practice, three ways to intervene.",
-    tracksIntro: "The entry point changes. The intention stays the same: understand the problem, build something useful and leave it working.",
+    contact: "Let’s talk",
+    tracksTitle: "Three ways to move an idea forward.",
+    tracksIntro: "Create, build or scale. The direction adapts to the project’s moment.",
     method: "Method",
     methodTitle: "From the problem to a system someone can actually use.",
-    archive: "Evolving archive",
-    archiveTitle: "The strongest cases are still arriving.",
-    archiveBody: "The catalogue keeps verifiable projects and decisions visible while new work is added. Its structure is ready for every case to explain the problem, role, process and outcome without inflating the evidence.",
-    archiveCta: "Explore the current archive",
-    final: "Does your idea have something worth protecting and something new to prove?",
-    finalBody: "If it needs one direction capable of uniting form, product and operations without making it generic, share the context.",
+    archive: "Archive",
+    archiveTitle: "Work you can open.",
+    archiveBody: "Real cases and demos. Each one shows the problem it solves and how it was built.",
+    archiveCta: "Explore the archive",
+    final: "What do you want to make possible?",
+    finalBody: "Tell me what you want to move and where it stands today.",
     practice: "One practice",
     territory: "Active territory",
   },
@@ -77,22 +77,22 @@ const copy = {
 
 const authorManifestoCopy = {
   es: {
-    eyebrow: "Una práctica propia",
-    convergence: "Una práctica propia",
-    headline: "No elegí entre crear, construir y escalar. Aprendí a hacer que convivan.",
-    body: "Después de años convirtiendo visiones en realidad, construí una práctica propia: criterio visual, producto digital y sistemas bajo una misma dirección. Elijo ideas con carácter, de esas que necesitan llegar donde una sola disciplina no alcanza, y las convierto en experiencias y sistemas capaces de crecer sin perder lo que las hace distintas.",
-    principleLabel: "Principio de selección",
-    principle: "Trabajo con ideas que tienen algo que proteger y algo nuevo que demostrar.",
-    signature: "Una sola dirección · Del concepto a la operación",
+    eyebrow: "Perfil",
+    convergence: "Una sola dirección",
+    headline: "Una sola dirección para todo lo que una idea necesita.",
+    body: "Trabajo entre diseño, producto y sistemas. Acompaño una idea hasta que funciona de verdad.",
+    principleLabel: "Principio",
+    principle: "Proyectos con algo propio que proteger y una ambición clara.",
+    signature: "Del concepto a la operación",
   },
   en: {
-    eyebrow: "A practice of my own",
-    convergence: "A practice of my own",
-    headline: "I didn’t choose between creating, building and scaling. I learned how to make them work together.",
-    body: "After years of turning visions into reality, I built a practice of my own: visual judgment, digital product and systems under one direction. I choose ideas with character—the kind that need to go where one discipline alone cannot reach—and turn them into experiences and systems that can grow without losing what makes them distinct.",
-    principleLabel: "Selection principle",
-    principle: "I work with ideas that have something worth protecting and something new to prove.",
-    signature: "One direction · From concept to operations",
+    eyebrow: "Profile",
+    convergence: "One direction",
+    headline: "One direction for everything an idea needs.",
+    body: "I work across design, product and systems. I stay with an idea until it truly works.",
+    principleLabel: "Principle",
+    principle: "Projects with something of their own to protect and a clear ambition.",
+    signature: "From concept to operations",
   },
 } satisfies Record<"es" | "en", AuthorManifestoCopy>;
 
@@ -104,19 +104,19 @@ const tracks = {
   create: {
     color: "#B68CFF",
     title: { es: "Crear", en: "Create" },
-    statement: { es: "Identidad, interfaces y motion que hacen visible una idea.", en: "Identity, interfaces and motion that make an idea visible." },
+    statement: { es: "Darle forma y carácter.", en: "Give it form and character." },
     tools: ["Creative direction", "UX/UI", "Motion", "WebGL / 3D"],
   },
   build: {
     color: "#55D8FF",
     title: { es: "Construir", en: "Build" },
-    statement: { es: "Productos digitales robustos, del prototipo a producción.", en: "Robust digital products, from prototype to production." },
+    statement: { es: "Convertirla en un producto real.", en: "Turn it into a real product." },
     tools: ["Product design", "Frontend", "Backend", "Multi-model AI"],
   },
   scale: {
     color: "#71F3A2",
     title: { es: "Escalar", en: "Scale" },
-    statement: { es: "Sistemas conectados para que ventas y operaciones avancen mejor.", en: "Connected systems that help sales and operations move better." },
+    statement: { es: "Conectarla con la operación.", en: "Connect it to the operation." },
     tools: ["CRM", "Automation", "Multi-model AI", "Operations"],
   },
 } as const;
@@ -127,9 +127,6 @@ const method = [
   { es: ["Construir", "Producir una versión real, medible y mantenible."], en: ["Build", "Ship something real, measurable and maintainable."] },
   { es: ["Operar", "Observar, mejorar y conectar el sistema con el trabajo diario."], en: ["Operate", "Observe, improve and connect the system to daily work."] },
 ] as const;
-
-// Direcciones de entrada de las cards de tracks: convergen hacia el centro.
-const trackEntrances: Array<"left" | "up" | "right"> = ["left", "up", "right"];
 
 export function HomeExperience({
   initialTrack,
@@ -208,7 +205,7 @@ export function HomeExperience({
     <main id="contenido-principal">
       <ScrollProgressBar accent={modeSelected ? tracks[activeTrack].color : undefined} />
 
-      <section ref={heroRef} data-home-section="hero" className="relative min-h-[100svh] px-5 pb-10 pt-28 sm:px-8 sm:pb-16 sm:pt-32 lg:flex lg:items-end lg:px-12">
+      <section ref={heroRef} data-home-section="hero" className="relative min-h-[100svh] overflow-x-clip px-5 pb-10 pt-28 sm:px-8 sm:pb-16 sm:pt-32 lg:flex lg:items-end lg:px-12">
         <div className="relative z-10 mx-auto grid w-full max-w-[1480px] gap-8 lg:grid-cols-[minmax(0,1.34fr)_minmax(360px,.66fr)] lg:items-end lg:gap-10">
           <motion.div style={{ y: heroLeftY, opacity: heroLeftOpacity }} className="pb-4 lg:pb-8">
             <motion.p
@@ -273,14 +270,13 @@ export function HomeExperience({
             </div>
 
             <div className="ml-auto w-full max-w-[340px] rounded-[1.25rem] border border-white/10 bg-card/74 p-2 backdrop-blur-xl light:border-[rgb(var(--ink-rgb)/0.1)] light:shadow-[0_1px_2px_rgb(20_23_26/0.06),0_12px_32px_rgb(20_23_26/0.1)]" aria-label={language === "es" ? "Selector de enfoque" : "Focus selector"}>
-              {(Object.keys(tracks) as TrackId[]).map((track, index) => {
+              {(Object.keys(tracks) as TrackId[]).map((track) => {
                 const item = tracks[track];
                 const dotColor = themedAccent(item.color, theme);
                 const selected = modeSelected && activeTrack === track;
                 return (
-                  <button key={track} type="button" onClick={() => selectTrack(track)} aria-pressed={selected} aria-label={`${item.title[language]} 0${index + 1}`} className={`group flex w-full items-center justify-between rounded-xl px-4 py-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white light:focus-visible:ring-foreground ${selected ? "bg-white/[0.075] text-foreground light:bg-[rgb(var(--ink-rgb)/0.06)]" : "text-foreground/42 hover:text-foreground"}`}>
+                  <button key={track} type="button" onClick={() => selectTrack(track)} aria-pressed={selected} aria-label={item.title[language]} className={`group flex w-full items-center rounded-xl px-4 py-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white light:focus-visible:ring-foreground ${selected ? "bg-white/[0.075] text-foreground light:bg-[rgb(var(--ink-rgb)/0.06)]" : "text-foreground/42 hover:text-foreground"}`}>
                     <span className="flex items-center gap-3"><span className="h-2 w-2 rounded-full transition-transform group-hover:scale-125" style={{ background: dotColor, boxShadow: selected && theme !== "light" ? `0 0 18px ${dotColor}` : undefined }} />{item.title[language]}</span>
-                    <span className="font-mono text-[9px] uppercase tracking-widest">0{index + 1}</span>
                   </button>
                 );
               })}
@@ -300,31 +296,17 @@ export function HomeExperience({
                 className="mt-5 max-w-4xl text-[clamp(2.5rem,5vw,5.8rem)] font-medium leading-[.98] tracking-[-0.055em] text-foreground"
               />
             </div>
-            <Reveal as="p" x={28} y={0} className="max-w-xl text-base leading-7 text-foreground/48 md:justify-self-end">{c.tracksIntro}</Reveal>
+            <Reveal as="p" x={0} y={18} className="max-w-xl text-base leading-7 text-foreground/48 md:justify-self-end">{c.tracksIntro}</Reveal>
           </div>
           <DrawRule className="mt-14 block h-px w-full bg-white/10 light:bg-[rgb(var(--ink-rgb)/0.1)]" />
-          <Cascade className="grid lg:grid-cols-3">
-            {(Object.keys(tracks) as TrackId[]).map((track, index) => {
-              const item = tracks[track];
-              const accentColor = themedAccent(item.color, theme);
-              return (
-                <CascadeItem key={track} from={trackEntrances[index]} className="border-b border-white/10 lg:border-b-0 lg:border-r light:border-[rgb(var(--ink-rgb)/0.1)]">
-                  <button
-                    type="button"
-                    onClick={() => selectTrack(track)}
-                    style={{ "--track-accent": accentColor } as CSSProperties}
-                    className={`group pressable relative min-h-[330px] w-full p-6 text-left transition-colors hover:bg-white/[.025] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white light:hover:bg-[rgb(var(--ink-rgb)/0.03)] light:focus-visible:ring-foreground ${modeSelected && activeTrack === track ? "bg-white/[.035] light:bg-[rgb(var(--ink-rgb)/0.045)]" : ""}`}
-                  >
-                    <span aria-hidden className="absolute inset-x-0 top-0 h-[2px] origin-left scale-x-0 transition-transform duration-500 ease-out group-hover:scale-x-100" style={{ background: accentColor }} />
-                    <span className="font-mono text-[10px] tracking-widest text-foreground/30 transition-colors duration-300 group-hover:text-[var(--track-accent)]">0{index + 1}</span>
-                    <div className="mt-20 flex items-center gap-3"><span className="h-2.5 w-2.5 rounded-full" style={{ background: accentColor }} /><h3 className="text-4xl font-medium tracking-[-0.045em] text-foreground">{item.title[language]}</h3></div>
-                    <p className="mt-5 max-w-sm text-base leading-6 text-foreground/52">{item.statement[language]}</p>
-                    <div className="mt-8 flex flex-wrap gap-x-4 gap-y-2 font-mono text-[9px] uppercase tracking-[0.13em] text-foreground/30">{item.tools.map((tool) => <span key={tool}>{tool}</span>)}</div>
-                  </button>
-                </CascadeItem>
-              );
-            })}
-          </Cascade>
+          <TrackRail
+            language={language}
+            tracks={tracks}
+            activeTrack={activeTrack}
+            modeSelected={modeSelected}
+            resolveAccent={(color) => themedAccent(color, theme)}
+            onSelect={selectTrack}
+          />
         </div>
       </section>
 

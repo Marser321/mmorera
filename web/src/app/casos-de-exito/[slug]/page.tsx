@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: project.title.es,
     description: project.summary.es,
-    alternates: { canonical: `/casos-de-exito/${slug}`, languages: { "es-UY": `/casos-de-exito/${slug}`, en: `/en/casos-de-exito/${slug}` } },
+    alternates: { canonical: `/casos-de-exito/${slug}`, languages: { es: `/casos-de-exito/${slug}`, en: `/en/casos-de-exito/${slug}` } },
     openGraph: { images: [{ url: project.media[0].src, alt: project.media[0].alt.es }] },
   };
 }

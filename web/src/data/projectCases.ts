@@ -30,7 +30,7 @@ export const PROJECT_CASES: ProjectCase[] = [
   {
     slug: "new-brothers-barberia",
     title: t("New Brothers Barbería", "New Brothers Barbershop"),
-    summary: t("Barbería premium en Uruguay con reservas self-service y seña confirmada sin idas y vueltas.", "A premium barbershop in Uruguay with self-service booking and confirmed deposits, no back-and-forth."),
+    summary: t("Barbería premium con reservas self-service y seña confirmada sin idas y vueltas.", "A premium barbershop with self-service booking and confirmed deposits, no back-and-forth."),
     tracks: ["build", "scale"],
     role: t("Diseño del servicio, interfaz e integración del flujo de reserva.", "Service design, interface and booking-flow integration."),
     challenge: t("Ordenar disponibilidad, confirmación y pago de seña en un flujo breve y comprensible.", "Organise availability, confirmation and deposits in a short, understandable flow."),

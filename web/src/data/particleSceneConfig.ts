@@ -1,17 +1,17 @@
 import type { Family } from "./techStack";
 
 export const PARTICLE_SCENE_LIMITS = {
-  desktop: 6,
+  desktop: 7,
   mobile: 5,
 } as const;
 
 export const PARTICLE_SCENE_TECH_NAMES = {
-  home: ["Figma", "Next.js", "Three.js", "Multi-model AI", "n8n", "Stripe"],
+  home: ["Figma", "Next.js", "Cloud", "Three.js", "Multi-model AI", "n8n", "Stripe"],
   create: ["Figma", "Three.js", "Blender", "After Effects", "DaVinci Resolve"],
-  build: ["Next.js", "Multi-model AI", "TypeScript", "PostgreSQL", "Supabase", "Vercel"],
-  operations: ["n8n", "Multi-model AI", "HubSpot", "Stripe", "Shopify", "Google Analytics"],
-  studio: ["Figma"],
-  systems: ["n8n"],
+  build: ["Next.js", "Cloud", "TypeScript", "PostgreSQL", "Supabase", "Vercel", "Multi-model AI"],
+  operations: ["n8n", "Cloud", "PostgreSQL", "HubSpot", "Stripe", "Multi-model AI"],
+  studio: ["Figma", "Three.js", "Blender", "After Effects", "DaVinci Resolve"],
+  systems: ["n8n", "Cloud", "PostgreSQL", "HubSpot", "Stripe", "Multi-model AI"],
   cases: [],
   apply: [],
 } as const;
@@ -28,7 +28,7 @@ export function resolveParticleSceneName(pathname: string, activeFamilies: Famil
   if (normalized === "/") {
     if (hasAny(activeFamilies, ["Media", "Marketing"])) return "create";
     if (hasAny(activeFamilies, ["CRM", "Automation"])) return "operations";
-    if (hasAny(activeFamilies, ["Web", "Backend", "AI"])) return "build";
+    if (hasAny(activeFamilies, ["Web", "Backend", "Infrastructure", "AI"])) return "build";
     return "home";
   }
   if (normalized.startsWith("/estudio")) return "studio";

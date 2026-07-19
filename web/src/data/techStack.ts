@@ -1,4 +1,5 @@
 import type { IconType } from 'react-icons';
+import { FaCloud } from 'react-icons/fa6';
 import { MultiModelAiMark } from '@/components/icons/MultiModelAiMark';
 import {
     SiAnthropic,
@@ -52,7 +53,8 @@ export type Family =
     | 'Commerce'
     | 'Marketing'
     | 'CRM'
-    | 'Media';
+    | 'Media'
+    | 'Infrastructure';
 
 export interface Tech {
     name: string;
@@ -86,6 +88,7 @@ export const FAMILIES: FamilyMeta[] = [
     { id: 'Marketing', label: 'Marketing', color: '#fb923c' },
     { id: 'CRM', label: 'CRM', color: '#fbbf24' },
     { id: 'Media', label: 'Audiovisual', color: '#e879f9' },
+    { id: 'Infrastructure', label: 'Infraestructura', color: '#7dd3fc' },
 ];
 
 export const FAMILY_ORDER: Family[] = FAMILIES.map((f) => f.id);
@@ -143,6 +146,13 @@ export const TECH_STACK: Tech[] = [
     { name: 'Webflow', category: 'Web', Icon: SiWebflow },
     { name: 'Framer', category: 'Web', Icon: SiFramer },
     { name: 'Vercel', category: 'Web', Icon: SiVercel },
+    // Infrastructure — marca neutral, sin atribuir un proveedor concreto.
+    {
+        name: 'Cloud',
+        category: 'Infrastructure',
+        Icon: FaCloud,
+        descriptor: { es: 'Infraestructura y despliegue', en: 'Infrastructure and delivery' },
+    },
     // Commerce
     { name: 'Shopify', category: 'Commerce', Icon: SiShopify },
     { name: 'WooCommerce', category: 'Commerce', Icon: SiWoocommerce },
@@ -194,8 +204,8 @@ export const familyCounts = (): Record<Family, number> => {
  */
 export const ROUTE_FAMILIES: Record<string, Family[]> = {
     '/': [],
-    '/estudio': ['Web', 'Marketing'],
-    '/sistemas': ['CRM', 'Automation', 'Backend', 'AI'],
+    '/estudio': ['Media', 'Web'],
+    '/sistemas': ['CRM', 'Automation', 'Backend', 'Infrastructure', 'AI'],
     '/casos-de-exito': ['Web', 'AI', 'CRM'],
     '/aplicar': [],
 };

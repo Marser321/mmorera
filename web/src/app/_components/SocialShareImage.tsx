@@ -152,7 +152,6 @@ export function SocialShareImage() {
                 }}
             >
                 <span>mmorera.agency</span>
-                <span>Uruguay · Remote</span>
             </div>
         </div>
     );

@@ -25,7 +25,7 @@ export function SystemsExperience() {
   const isEs = language === "es";
 
   useEffect(() => {
-    setActiveFamilies(["CRM", "Automation", "Backend", "AI"]);
+    setActiveFamilies(["CRM", "Automation", "Backend", "Infrastructure", "AI"]);
     return () => setActiveFamilies([]);
   }, [setActiveFamilies]);
 
@@ -41,8 +41,8 @@ export function SystemsExperience() {
     <main id="contenido-principal" className="bg-transparent pb-28 pt-36 sm:pt-44">
       <section ref={heroRef} className="flex min-h-[72svh] items-end px-5 sm:px-8 lg:px-12">
         <div className="mx-auto grid w-full max-w-[1480px] gap-10 lg:grid-cols-[1.25fr_.75fr] lg:items-end">
-          <div className="pb-4 lg:pb-8"><p className="font-mono text-[10px] uppercase tracking-[.18em] text-signal">{isEs ? "Sistemas" : "Systems"} · CRM / IA / Automatización</p><h1 className="mt-6 max-w-[920px] text-[clamp(3.35rem,7vw,7.8rem)] font-medium leading-[.89] tracking-[-.07em] text-foreground">{isEs ? "Menos herramientas sueltas. Más continuidad operativa." : "Fewer disconnected tools. More operational continuity."}</h1></div>
-          <div className="flex min-h-[42vh] flex-col justify-between border-t border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)] pt-4 lg:mb-8"><div className="flex items-end justify-between gap-6"><div><p className="font-mono text-[9px] uppercase tracking-[.16em] text-[#F3F0E8]/32 light:text-muted-foreground/85">{isEs ? "Tecnología contextual" : "Contextual technology"}</p><p className="mt-2 text-2xl font-medium tracking-[-.035em] text-foreground">{activeTechName ?? "n8n"}</p></div><span className="h-2 w-2 rounded-full bg-signal shadow-[0_0_18px_#71F3A2] light:shadow-none" /></div><div><p className="max-w-xl text-lg leading-7 text-[#F3F0E8]/58 light:text-muted-foreground">{isEs ? "Diseño sistemas que conectan captación, seguimiento, agenda y operación. La automatización aparece donde reduce fricción; la IA, donde mejora una decisión." : "I design systems that connect acquisition, follow-up, booking and operations. Automation appears where it removes friction; AI where it improves a decision."}</p><Link href={localePath(language, "/aplicar")} className="mt-7 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground">{isEs ? "Contame tu sistema" : "Tell me about your system"}<ArrowUpRight className="h-4 w-4" /></Link></div></div>
+          <div className="pb-4 lg:pb-8"><p className="font-mono text-[10px] uppercase tracking-[.18em] text-signal">{isEs ? "Sistemas" : "Systems"} · CRM / IA / Automatización</p><h1 className="mt-6 max-w-[920px] text-[clamp(3.35rem,7vw,7.8rem)] font-medium leading-[.89] tracking-[-.07em] text-foreground">{isEs ? "Conecto lo que hoy trabaja separado." : "I connect what works separately today."}</h1></div>
+          <div className="flex min-h-[42vh] flex-col justify-between border-t border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)] pt-4 lg:mb-8"><div className="flex items-end justify-between gap-6"><div><p className="font-mono text-[9px] uppercase tracking-[.16em] text-[#F3F0E8]/32 light:text-muted-foreground/85">{isEs ? "Tecnología contextual" : "Contextual technology"}</p><p className="mt-2 text-2xl font-medium tracking-[-.035em] text-foreground">{activeTechName ?? "n8n"}</p></div><span className="h-2 w-2 rounded-full bg-signal shadow-[0_0_18px_#71F3A2] light:shadow-none" /></div><div><p className="max-w-xl text-lg leading-7 text-[#F3F0E8]/58 light:text-muted-foreground">{isEs ? "CRM, automatización e IA dentro de un flujo que el equipo puede ver y usar." : "CRM, automation and AI inside a flow the team can see and use."}</p><Link href={localePath(language, "/aplicar")} className="mt-7 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground">{isEs ? "Hablemos" : "Let’s talk"}<ArrowUpRight className="h-4 w-4" /></Link></div></div>
         </div>
       </section>
 

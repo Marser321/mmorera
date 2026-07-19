@@ -1,354 +1,299 @@
 'use client';
 
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { motion } from 'framer-motion';
-import { 
-    ArrowRight, 
-    ArrowLeft, 
-    CheckCircle2, 
-    Building2, 
-    DollarSign, 
-    Cpu, 
-    User 
-} from 'lucide-react';
+import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
+import { ArrowLeft, ArrowRight, CheckCircle2, Layers3, Sparkles, User } from 'lucide-react';
 import { submitLead } from '@/actions/submit-lead';
+import type { ContactFormData } from '@/types';
+import type { LeadField } from '@/lib/leadValidation';
 import { useDevMode } from './DevModeContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { useTrack } from '@/context/TrackContext';
 import { isTrackId, type TrackId } from '@/data/tracks';
 
-interface FormData {
+type BriefData = {
     name: string;
     email: string;
     company: string;
-    revenue: string;
+    projectStage: string;
+    teamContext: string;
     challenge: string;
     timeline: string;
-}
+    website: string;
+};
 
+const initialData: BriefData = {
+    name: '', email: '', company: '', projectStage: '', teamContext: '', challenge: '', timeline: '', website: '',
+};
 
+const fieldIds: Record<LeadField, string> = {
+    nombre: 'brief-name',
+    email: 'brief-email',
+    empresa: 'brief-company',
+    projectStage: 'brief-project-stage-idea',
+    teamContext: 'brief-team-context-solo',
+    mensaje: 'brief-project',
+    timeline: 'brief-timeline-now',
+};
 
 export function AplicarOS() {
     const { isDevMode } = useDevMode();
     const { language } = useLanguage();
-
-    // Track del visitante: prioriza ?track= de la URL, si no usa el TrackContext.
-    const { track: ctxTrack, setTrack: setCtxTrack } = useTrack();
+    const reducedMotion = useReducedMotion();
+    const { track: contextTrack, setTrack: setContextTrack } = useTrack();
     const [trackId, setTrackId] = useState<TrackId | null>(null);
+    const [step, setStep] = useState(0);
+    const [submitted, setSubmitted] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
+    const [touched, setTouched] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
+    const [fieldErrors, setFieldErrors] = useState<Partial<Record<LeadField, string>>>({});
+    const [formData, setFormData] = useState<BriefData>(initialData);
+    const isEs = language === 'es';
+
     useEffect(() => {
         const param = new URLSearchParams(window.location.search).get('track');
         if (isTrackId(param)) {
             setTrackId(param);
-            setCtxTrack(param);
-        } else if (ctxTrack) {
-            setTrackId(ctxTrack);
+            setContextTrack(param);
+        } else if (contextTrack) {
+            setTrackId(contextTrack);
         }
-    }, [ctxTrack, setCtxTrack]);
+    }, [contextTrack, setContextTrack]);
 
-    const [step, setStep] = useState(0);
-    const [submitted, setSubmitted] = useState(false);
-    const [submitting, setSubmitting] = useState(false);
-    const [submitError, setSubmitError] = useState<string | null>(null);
-    const [formData, setFormData] = useState<FormData>({
-        name: '',
-        email: '',
-        company: '',
-        revenue: '',
-        challenge: '',
-        timeline: '',
-    });
+    useEffect(() => {
+        if (!touched || submitted) return;
+        const warnBeforeUnload = (event: BeforeUnloadEvent) => event.preventDefault();
+        window.addEventListener('beforeunload', warnBeforeUnload);
+        return () => window.removeEventListener('beforeunload', warnBeforeUnload);
+    }, [submitted, touched]);
 
-    // Definición de Pasos e Iconos Bilingües
-    const STEPS = useMemo(() => [
-        { id: 'intro', title: { es: 'Sobre Vos', en: 'About You' }, icon: User },
-        { id: 'company', title: { es: 'Tu Negocio', en: 'Your Business' }, icon: Building2 },
-        { id: 'challenge', title: { es: 'El Desafío', en: 'The Challenge' }, icon: Cpu },
-        { id: 'budget', title: { es: 'Inversión', en: 'Investment' }, icon: DollarSign },
+    const steps = useMemo(() => [
+        { title: isEs ? 'Vos' : 'You', icon: User },
+        { title: isEs ? 'Contexto' : 'Context', icon: Layers3 },
+        { title: isEs ? 'Proyecto' : 'Project', icon: Sparkles },
+    ], [isEs]);
+
+    const projectStages = useMemo(() => [
+        { value: 'idea', es: 'Es una idea que todavía no existe.', en: 'It is an idea that does not exist yet.' },
+        { value: 'new-version', es: 'Ya existe y necesita una nueva versión.', en: 'It exists and needs a new version.' },
+        { value: 'grow', es: 'Funciona y necesita crecer.', en: 'It works and needs to grow.' },
+        { value: 'connect', es: 'Varias piezas necesitan conectarse.', en: 'Several pieces need to connect.' },
+    ], []);
+    const teamContexts = useMemo(() => [
+        { value: 'solo', es: 'Lo lidero personalmente.', en: 'I lead it personally.' },
+        { value: 'small-team', es: 'Hay un equipo pequeño involucrado.', en: 'A small team is involved.' },
+        { value: 'multiple-areas', es: 'Participan varias áreas.', en: 'Several areas are involved.' },
+        { value: 'external-direction', es: 'Busco dirección externa de punta a punta.', en: 'I am looking for end-to-end external direction.' },
+    ], []);
+    const timelines = useMemo(() => [
+        { value: 'now', es: 'Quiero empezar ahora.', en: 'I want to start now.' },
+        { value: '1-3-months', es: 'En 1–3 meses.', en: 'In 1–3 months.' },
+        { value: 'this-semester', es: 'Este semestre.', en: 'This semester.' },
+        { value: 'exploring', es: 'Estoy explorando.', en: 'I am exploring.' },
     ], []);
 
-    // Opciones Bilingües
-    const REVENUE_OPTIONS = useMemo(() => [
-        { es: 'Pre-revenue / Early Stage', en: 'Pre-revenue / Early Stage' },
-        { es: '$10K – $50K / mes', en: '$10K – $50K / mo' },
-        { es: '$50K – $200K / mes', en: '$50K – $200K / mo' },
-        { es: '$200K – $1M / mes', en: '$200K – $1M / mo' },
-        { es: '$1M+ / mes', en: '$1M+ / mo' }
-    ], []);
-
-    const TIMELINE_OPTIONS = useMemo(() => [
-        { es: 'ASAP — Lo necesitábamos ayer', en: 'ASAP — Needed yesterday' },
-        { es: '1 a 3 meses', en: '1 to 3 months' },
-        { es: '3 a 6 meses', en: '3 to 6 months' },
-        { es: 'Solo explorando opciones', en: 'Just exploring options' }
-    ], []);
-
-    const updateField = (field: keyof FormData, value: string) => {
-        setFormData(prev => ({ ...prev, [field]: value }));
+    const updateField = (field: keyof BriefData, value: string, errorField?: LeadField) => {
+        setTouched(true);
+        setFormData((current) => ({ ...current, [field]: value }));
+        if (errorField) setFieldErrors((current) => ({ ...current, [errorField]: undefined }));
+        setSubmitError(null);
     };
 
-    const canAdvance = useCallback((): boolean => {
-        switch (step) {
-            case 0: return formData.name.length > 1 && formData.email.includes('@');
-            case 1: return formData.company.length > 1 && formData.revenue !== '';
-            case 2: return formData.challenge.length > 8;
-            case 3: return formData.timeline !== '';
-            default: return false;
+    const validateStep = useCallback((targetStep: number) => {
+        const errors: Partial<Record<LeadField, string>> = {};
+        if (targetStep === 0) {
+            if (formData.name.trim().length < 2) errors.nombre = isEs ? 'Ingresá tu nombre.' : 'Enter your name.';
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) errors.email = isEs ? 'Ingresá un email válido.' : 'Enter a valid email.';
         }
-    }, [step, formData]);
+        if (targetStep === 1) {
+            if (!formData.projectStage) errors.projectStage = isEs ? 'Elegí el momento del proyecto.' : 'Choose the project stage.';
+            if (!formData.teamContext) errors.teamContext = isEs ? 'Elegí el contexto del equipo.' : 'Choose the team context.';
+        }
+        if (targetStep === 2) {
+            if (formData.challenge.trim().length < 20) errors.mensaje = isEs ? 'Contame un poco más: usá al menos 20 caracteres.' : 'Tell me a little more: use at least 20 characters.';
+            if (!formData.timeline) errors.timeline = isEs ? 'Elegí un momento estimado de inicio.' : 'Choose an estimated start time.';
+        }
+        return errors;
+    }, [formData, isEs]);
 
-    // Lógica de Envío Directo del Formulario
-    const handleFormSubmit = async () => {
+    const focusFirstError = (errors: Partial<Record<LeadField, string>>) => {
+        const order: LeadField[] = ['nombre', 'email', 'empresa', 'projectStage', 'teamContext', 'mensaje', 'timeline'];
+        const first = order.find((field) => errors[field]);
+        if (!first) return;
+        const errorStep = ['nombre', 'email'].includes(first) ? 0 : ['empresa', 'projectStage', 'teamContext'].includes(first) ? 1 : 2;
+        setStep(errorStep);
+        window.requestAnimationFrame(() => document.getElementById(fieldIds[first])?.focus());
+    };
+
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const currentErrors = validateStep(step);
+        if (Object.keys(currentErrors).length > 0) {
+            setFieldErrors((existing) => ({ ...existing, ...currentErrors }));
+            focusFirstError(currentErrors);
+            return;
+        }
+        if (step < steps.length - 1) {
+            setStep((current) => current + 1);
+            setSubmitError(null);
+            return;
+        }
+
+        const allErrors = { ...validateStep(0), ...validateStep(1), ...validateStep(2) };
+        if (Object.keys(allErrors).length > 0) {
+            setFieldErrors(allErrors);
+            focusFirstError(allErrors);
+            return;
+        }
+
         setSubmitting(true);
         setSubmitError(null);
-
-        const leadData = {
+        const leadData: ContactFormData = {
             nombre: formData.name,
             email: formData.email,
             empresa: formData.company,
             servicios_interes: trackId ? ['brief_aplicar', `track_${trackId}`] : ['brief_aplicar'],
             mensaje: formData.challenge,
-            revenue: formData.revenue,
-            timeline: formData.timeline
+            projectStage: formData.projectStage,
+            teamContext: formData.teamContext,
+            timeline: formData.timeline,
+            website: formData.website,
         };
 
         try {
             const result = await submitLead(leadData);
-            if (!result.success) throw new Error(result.error);
+            if (!result.success) {
+                if (result.fieldErrors) {
+                    setFieldErrors(result.fieldErrors);
+                    focusFirstError(result.fieldErrors);
+                }
+                setSubmitError(isEs ? result.error : 'I could not send the context. Check the marked fields or try again.');
+                return;
+            }
             setSubmitted(true);
+            setTouched(false);
         } catch {
-            setSubmitError(language === 'es'
-                ? 'No pude enviar el brief. Probá nuevamente o escribime por email.'
-                : 'I could not send the brief. Try again or contact me by email.');
+            setSubmitError(isEs ? 'No pude enviar el contexto. Probá nuevamente o escribime por email.' : 'I could not send the context. Try again or contact me by email.');
         } finally {
             setSubmitting(false);
         }
     };
 
-    // Pantalla de Éxito
+    const errorText = (field: LeadField) => fieldErrors[field] ? (
+        <p id={`${fieldIds[field]}-error`} className="mt-2 text-sm leading-5 text-red-200 light:text-destructive">{fieldErrors[field]}</p>
+    ) : null;
+
     if (submitted) {
         return (
-            <div className="min-h-[500px] flex items-center justify-center text-center">
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="relative max-w-md overflow-hidden rounded-[1.25rem] border border-white/10 light:border-[rgb(var(--ink-rgb)/0.1)] bg-[#0D1114]/88 light:bg-card/88 px-8 py-12 text-center shadow-2xl light:shadow-[0_1px_2px_rgb(20_23_26/0.06),0_12px_32px_rgb(20_23_26/0.1)] backdrop-blur-md"
-                >
+            <div className="flex min-h-[500px] items-center justify-center text-center" aria-live="polite">
+                <motion.div initial={reducedMotion ? false : { opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} className="relative max-w-md overflow-hidden rounded-[1.25rem] border border-white/10 bg-[#0D1114]/88 px-8 py-12 text-center shadow-2xl backdrop-blur-md light:border-[rgb(var(--ink-rgb)/0.1)] light:bg-card/88 light:shadow-[0_1px_2px_rgb(20_23_26/0.06),0_12px_32px_rgb(20_23_26/0.1)]">
                     <div className="absolute inset-x-0 top-0 h-[3px] bg-signal" />
-                    <CheckCircle2 className="mx-auto mb-6 h-16 w-16 text-signal" />
-                    <h2 className="mb-3 text-3xl font-medium tracking-[-.04em] text-foreground">
-                        {language === 'es' ? 'Brief Recibido' : 'Brief Received'}
-                    </h2>
-                    <p className="text-zinc-400 light:text-muted-foreground text-sm leading-relaxed mb-6">
-                        {language === 'es'
-                            ? `Gracias, ${formData.name}. Tu información fue enviada correctamente. Voy a revisar el contexto y responderte por email.`
-                            : `Thank you, ${formData.name}. Your details were sent successfully. I’ll review the context and reply by email.`
-                        }
-                    </p>
+                    <CheckCircle2 aria-hidden="true" className="mx-auto mb-6 h-16 w-16 text-signal" />
+                    <h2 className="mb-3 text-3xl font-medium tracking-[-.04em] text-foreground">{isEs ? 'Contexto recibido' : 'Context received'}</h2>
+                    <p className="mb-6 text-sm leading-relaxed text-zinc-400 light:text-muted-foreground">{isEs ? `Gracias, ${formData.name}. Voy a revisar el contexto y responderte por email.` : `Thank you, ${formData.name}. I’ll review the context and reply by email.`}</p>
                 </motion.div>
             </div>
         );
     }
 
-    return (
-        <section id="aplicar-os-section" className="relative overflow-hidden bg-transparent px-0 py-14 pb-24 md:py-20">
-            <div className="container mx-auto max-w-3xl px-0 sm:px-4">
-                
-                <div className="relative overflow-hidden rounded-[1.25rem] border border-white/10 light:border-[rgb(var(--ink-rgb)/0.1)] bg-[#0D1114]/92 light:bg-card/94 p-4 shadow-2xl light:shadow-[0_1px_2px_rgb(20_23_26/0.06),0_12px_32px_rgb(20_23_26/0.1)] backdrop-blur-md md:p-8">
+    const StepIcon = steps[step].icon;
+    const inputClass = "w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 font-sans text-sm text-white transition-[border-color,box-shadow,background-color] placeholder:text-white/35 focus-visible:border-signal/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal/30 light:border-border light:bg-input light:text-foreground light:placeholder:text-foreground/45";
+    const radioCardClass = "flex min-h-12 cursor-pointer items-center rounded-xl border border-white/8 bg-white/[.035] px-4 py-3 text-sm leading-5 text-foreground/58 transition-[border-color,background-color,color] hover:border-white/22 hover:text-foreground peer-checked:border-signal/50 peer-checked:bg-signal/10 peer-checked:text-foreground peer-focus-visible:ring-2 peer-focus-visible:ring-signal light:border-[rgb(var(--ink-rgb)/0.08)] light:bg-[rgb(var(--ink-rgb)/0.035)] light:hover:border-[rgb(var(--ink-rgb)/0.22)]";
 
-                    {/* Encabezado del Formulario */}
-                    <div className="mb-5 flex items-center justify-between border-b border-white/5 light:border-[rgb(var(--ink-rgb)/0.05)] pb-4 select-none md:mb-6">
-                        <h3 className="text-white light:text-foreground font-bold text-base flex items-center gap-2">
-                            {(() => { const Icon = STEPS[step].icon; return <Icon className="h-4 w-4 text-signal" />; })()}
-                            {STEPS[step].title[language]}
-                        </h3>
-                        <span className="font-mono text-[9px] text-zinc-500 light:text-muted-foreground">
-                            {language === 'es' ? `Paso ${step + 1} de ${STEPS.length}` : `Step ${step + 1} of ${STEPS.length}`}
-                        </span>
+    return (
+        <section id="aplicar-os-section" className="relative overflow-hidden bg-transparent px-0 pb-24 pt-14 md:py-20">
+            <div className="container mx-auto max-w-3xl px-0 sm:px-4">
+                <form name="project-brief" noValidate onSubmit={handleSubmit} onKeyDown={(event) => {
+                    const target = event.target as HTMLInputElement | HTMLTextAreaElement;
+                    if (event.key === 'Enter' && target instanceof HTMLInputElement && target.type === 'radio') {
+                        event.preventDefault();
+                        event.currentTarget.requestSubmit();
+                    }
+                }} className="relative overflow-hidden rounded-[1.25rem] border border-white/10 bg-[#0D1114]/92 p-4 shadow-2xl backdrop-blur-md light:border-[rgb(var(--ink-rgb)/0.1)] light:bg-card/94 light:shadow-[0_1px_2px_rgb(20_23_26/0.06),0_12px_32px_rgb(20_23_26/0.1)] md:p-8">
+                    <div className="absolute -left-[10000px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
+                        <label htmlFor="brief-website">Website</label>
+                        <input id="brief-website" name="website" type="text" value={formData.website} onChange={(event) => updateField('website', event.target.value)} autoComplete="off" tabIndex={-1} />
                     </div>
 
-                    {/* Formulario Inputs */}
-                    <div className="flex min-h-[210px] flex-col justify-center text-left md:min-h-[220px]">
+                    <div className="mb-6 flex items-center justify-between border-b border-white/5 pb-4 light:border-[rgb(var(--ink-rgb)/0.05)]">
+                        <h2 className="flex items-center gap-2 text-base font-semibold text-white light:text-foreground"><StepIcon aria-hidden="true" className="h-4 w-4 text-signal" />{steps[step].title}</h2>
+                        <span className="font-mono text-[9px] text-zinc-500 light:text-muted-foreground">{isEs ? `Paso ${step + 1} de ${steps.length}` : `Step ${step + 1} of ${steps.length}`}</span>
+                    </div>
+
+                    <div className="min-h-[320px] text-left">
                         {step === 0 && (
-                            <div className="space-y-4">
+                            <fieldset className="space-y-5">
+                                <legend className="sr-only">{isEs ? 'Tus datos' : 'Your details'}</legend>
                                 <div>
-                                    <label htmlFor="brief-name" className="block text-zinc-500 light:text-muted-foreground font-mono text-[9px] uppercase font-bold tracking-wider mb-1.5">
-                                        {language === 'es' ? 'Nombre Completo' : 'Full Name'}
-                                    </label>
-                                    <input
-                                        id="brief-name"
-                                        type="text"
-                                        value={formData.name}
-                                        onChange={(e) => updateField('name', e.target.value)}
-                                        placeholder={language === 'es' ? 'Esteban Quito' : 'John Doe'}
-                                        className="w-full rounded-xl border border-white/10 light:border-border bg-white/5 light:bg-input px-4 py-3 font-sans text-sm text-white light:text-foreground transition-all placeholder:text-white/35 light:placeholder:text-foreground/45 focus:border-signal/50 focus:outline-none focus:ring-1 focus:ring-signal/30"
-                                    />
+                                    <label htmlFor="brief-name" className="mb-2 block font-mono text-[9px] font-bold uppercase tracking-wider text-zinc-500 light:text-muted-foreground">{isEs ? 'Nombre' : 'Name'}</label>
+                                    <input id="brief-name" name="nombre" type="text" value={formData.name} onChange={(event) => updateField('name', event.target.value, 'nombre')} autoComplete="name" maxLength={80} aria-invalid={Boolean(fieldErrors.nombre)} aria-describedby={fieldErrors.nombre ? 'brief-name-error' : undefined} placeholder={isEs ? 'Tu nombre…' : 'Your name…'} className={inputClass} />
+                                    {errorText('nombre')}
                                 </div>
                                 <div>
-                                    <label htmlFor="brief-email" className="block text-zinc-500 light:text-muted-foreground font-mono text-[9px] uppercase font-bold tracking-wider mb-1.5">
-                                        {language === 'es' ? 'Correo Electrónico' : 'Email Address'}
-                                    </label>
-                                    <input
-                                        id="brief-email"
-                                        type="email"
-                                        value={formData.email}
-                                        onChange={(e) => updateField('email', e.target.value)}
-                                        placeholder={language === 'es' ? 'esteban@empresa.com' : 'john@company.com'}
-                                        className="w-full rounded-xl border border-white/10 light:border-border bg-white/5 light:bg-input px-4 py-3 font-sans text-sm text-white light:text-foreground transition-all placeholder:text-white/35 light:placeholder:text-foreground/45 focus:border-signal/50 focus:outline-none focus:ring-1 focus:ring-signal/30"
-                                    />
+                                    <label htmlFor="brief-email" className="mb-2 block font-mono text-[9px] font-bold uppercase tracking-wider text-zinc-500 light:text-muted-foreground">Email</label>
+                                    <input id="brief-email" name="email" type="email" value={formData.email} onChange={(event) => updateField('email', event.target.value, 'email')} autoComplete="email" inputMode="email" spellCheck={false} maxLength={254} aria-invalid={Boolean(fieldErrors.email)} aria-describedby={fieldErrors.email ? 'brief-email-error' : undefined} placeholder="nombre@empresa.com…" className={inputClass} />
+                                    {errorText('email')}
                                 </div>
-                            </div>
+                            </fieldset>
                         )}
 
                         {step === 1 && (
-                            <div className="space-y-4">
+                            <div className="space-y-7">
                                 <div>
-                                    <label htmlFor="brief-company" className="block text-zinc-500 light:text-muted-foreground font-mono text-[9px] uppercase font-bold tracking-wider mb-1.5">
-                                        {language === 'es' ? 'Nombre de la Empresa' : 'Company Name'}
-                                    </label>
-                                    <input
-                                        id="brief-company"
-                                        type="text"
-                                        value={formData.company}
-                                        onChange={(e) => updateField('company', e.target.value)}
-                                        placeholder={language === 'es' ? 'Quito S.A.' : 'Doe Industries'}
-                                        className="w-full rounded-xl border border-white/10 light:border-border bg-white/5 light:bg-input px-4 py-3 font-sans text-sm text-white light:text-foreground transition-all placeholder:text-white/35 light:placeholder:text-foreground/45 focus:border-signal/50 focus:outline-none focus:ring-1 focus:ring-signal/30"
-                                    />
+                                    <label htmlFor="brief-company" className="mb-2 block font-mono text-[9px] font-bold uppercase tracking-wider text-zinc-500 light:text-muted-foreground">{isEs ? 'Proyecto o empresa (opcional)' : 'Project or company (optional)'}</label>
+                                    <input id="brief-company" name="empresa" type="text" value={formData.company} onChange={(event) => updateField('company', event.target.value, 'empresa')} autoComplete="organization" maxLength={120} placeholder={isEs ? 'Nombre del proyecto…' : 'Project name…'} className={inputClass} />
                                 </div>
-                                <div>
-                                    <label className="block text-zinc-500 light:text-muted-foreground font-mono text-[9px] uppercase font-bold tracking-wider mb-2">
-                                        {language === 'es' ? 'Facturación Mensual' : 'Monthly Revenue'}
-                                    </label>
+                                <fieldset>
+                                    <legend className="mb-3 font-mono text-[9px] font-bold uppercase tracking-wider text-zinc-500 light:text-muted-foreground">{isEs ? 'Madurez' : 'Stage'}</legend>
                                     <div className="grid gap-2 sm:grid-cols-2">
-                                        {REVENUE_OPTIONS.map((opt) => {
-                                            const label = opt[language];
-                                            const isSelected = formData.revenue === label;
-                                            return (
-                                                <button
-                                                    key={label}
-                                                    type="button"
-                                                    onClick={() => updateField('revenue', label)}
-                                                    className={`text-left px-3 py-2.5 rounded-xl border text-[10px] font-mono transition-all duration-200 cursor-pointer ${
-                                                        isSelected
-                                                            ? 'border-signal/40 bg-signal/10 text-signal shadow-[0_0_15px_rgba(113,243,162,0.08)] light:shadow-none'
-                                                            : 'bg-white/5 light:bg-[rgb(var(--ink-rgb)/0.05)] border-white/5 light:border-[rgb(var(--ink-rgb)/0.05)] text-zinc-400 light:text-muted-foreground hover:border-white/20 light:hover:border-[rgb(var(--ink-rgb)/0.2)] hover:text-white light:hover:text-foreground'
-                                                    }`}
-                                                >
-                                                    {label}
-                                                </button>
-                                            );
-                                        })}
+                                        {projectStages.map((option, index) => <label key={option.value} className="relative"><input id={`brief-project-stage-${option.value}`} className="peer sr-only" type="radio" name="projectStage" value={option.value} checked={formData.projectStage === option.value} onChange={() => updateField('projectStage', option.value, 'projectStage')} aria-describedby={fieldErrors.projectStage && index === 0 ? 'brief-project-stage-idea-error' : undefined} /><span className={radioCardClass}>{option[language]}</span></label>)}
                                     </div>
-                                </div>
+                                    {errorText('projectStage')}
+                                </fieldset>
+                                <fieldset>
+                                    <legend className="mb-3 font-mono text-[9px] font-bold uppercase tracking-wider text-zinc-500 light:text-muted-foreground">{isEs ? 'Equipo' : 'Team'}</legend>
+                                    <div className="grid gap-2 sm:grid-cols-2">
+                                        {teamContexts.map((option, index) => <label key={option.value} className="relative"><input id={`brief-team-context-${option.value}`} className="peer sr-only" type="radio" name="teamContext" value={option.value} checked={formData.teamContext === option.value} onChange={() => updateField('teamContext', option.value, 'teamContext')} aria-describedby={fieldErrors.teamContext && index === 0 ? 'brief-team-context-solo-error' : undefined} /><span className={radioCardClass}>{option[language]}</span></label>)}
+                                    </div>
+                                    {errorText('teamContext')}
+                                </fieldset>
                             </div>
                         )}
 
                         {step === 2 && (
-                            <div>
-                                <label htmlFor="brief-challenge" className="block text-zinc-500 light:text-muted-foreground font-mono text-[9px] uppercase font-bold tracking-wider mb-1.5">
-                                    {language === 'es' 
-                                        ? '¿Cuál es tu mayor cuello de botella operativo?' 
-                                        : 'What is your biggest operational bottleneck?'
-                                    }
-                                </label>
-                                <textarea
-                                    id="brief-challenge"
-                                    value={formData.challenge}
-                                    onChange={(e) => updateField('challenge', e.target.value)}
-                                    placeholder={language === 'es'
-                                        ? 'Perdemos leads por falta de velocidad de respuesta en WhatsApp...'
-                                        : 'We lose leads due to slow response times on WhatsApp...'
-                                    }
-                                    rows={4}
-                                    className="w-full resize-none rounded-xl border border-white/10 light:border-border bg-white/5 light:bg-input px-4 py-3 font-sans text-sm text-white light:text-foreground transition-all placeholder:text-white/35 light:placeholder:text-foreground/45 focus:border-signal/50 focus:outline-none focus:ring-1 focus:ring-signal/30"
-                                />
-                            </div>
-                        )}
-
-                        {step === 3 && (
-                            <div>
-                                <label className="block text-zinc-500 light:text-muted-foreground font-mono text-[9px] uppercase font-bold tracking-wider mb-2">
-                                    {language === 'es' 
-                                        ? '¿Para cuándo necesitas desplegar el sistema?' 
-                                        : 'When do you need to deploy the system?'
-                                    }
-                                </label>
-                                <div className="grid gap-2">
-                                    {TIMELINE_OPTIONS.map((opt) => {
-                                        const label = opt[language];
-                                        const isSelected = formData.timeline === label;
-                                        return (
-                                            <button
-                                                key={label}
-                                                type="button"
-                                                onClick={() => updateField('timeline', label)}
-                                                className={`text-left px-4 py-3 rounded-xl border text-[11px] font-mono transition-all duration-200 cursor-pointer ${
-                                                    isSelected
-                                                        ? 'border-signal/40 bg-signal/10 text-signal shadow-[0_0_15px_rgba(113,243,162,0.08)] light:shadow-none'
-                                                        : 'bg-white/5 light:bg-[rgb(var(--ink-rgb)/0.05)] border-white/5 light:border-[rgb(var(--ink-rgb)/0.05)] text-zinc-400 light:text-muted-foreground hover:border-white/20 light:hover:border-[rgb(var(--ink-rgb)/0.2)] hover:text-white light:hover:text-foreground'
-                                                }`}
-                                            >
-                                                {label}
-                                            </button>
-                                        );
-                                    })}
+                            <div className="space-y-7">
+                                <div>
+                                    <label htmlFor="brief-project" className="mb-2 block font-mono text-[9px] font-bold uppercase tracking-wider text-zinc-500 light:text-muted-foreground">{isEs ? '¿Qué querés cambiar, construir o hacer posible?' : 'What do you want to change, build or make possible?'}</label>
+                                    <textarea id="brief-project" name="mensaje" value={formData.challenge} onChange={(event) => updateField('challenge', event.target.value, 'mensaje')} autoComplete="off" maxLength={2000} rows={6} aria-invalid={Boolean(fieldErrors.mensaje)} aria-describedby={fieldErrors.mensaje ? 'brief-project-error' : undefined} placeholder={isEs ? 'El contexto, qué existe hoy y qué debería cambiar…' : 'The context, what exists today and what should change…'} className={`${inputClass} resize-y`} />
+                                    <div className="flex items-start justify-between gap-4">{errorText('mensaje')}<span className="ml-auto mt-2 font-mono text-[9px] tabular-nums text-foreground/30">{formData.challenge.length}/2000</span></div>
                                 </div>
+                                <fieldset>
+                                    <legend className="mb-3 font-mono text-[9px] font-bold uppercase tracking-wider text-zinc-500 light:text-muted-foreground">{isEs ? 'Momento estimado de inicio' : 'Estimated start time'}</legend>
+                                    <div className="grid gap-2 sm:grid-cols-2">
+                                        {timelines.map((option, index) => <label key={option.value} className="relative"><input id={`brief-timeline-${option.value}`} className="peer sr-only" type="radio" name="timeline" value={option.value} checked={formData.timeline === option.value} onChange={() => updateField('timeline', option.value, 'timeline')} aria-describedby={fieldErrors.timeline && index === 0 ? 'brief-timeline-now-error' : undefined} /><span className={radioCardClass}>{option[language]}</span></label>)}
+                                    </div>
+                                    {errorText('timeline')}
+                                </fieldset>
                             </div>
                         )}
                     </div>
 
-                    {/* Controles de Navegación del Brief */}
-                    <div className="sticky bottom-3 z-20 -mx-1 mt-6 flex items-center justify-between rounded-2xl border border-white/8 light:border-[rgb(var(--ink-rgb)/0.08)] bg-background/92 p-3 font-mono text-xs shadow-[0_14px_40px_rgba(0,0,0,0.32)] light:shadow-[0_14px_40px_rgb(20_23_26/0.14)] backdrop-blur-xl md:static md:mx-0 md:mt-8 md:rounded-none md:border-x-0 md:border-b-0 md:bg-transparent md:p-0 md:pt-4 md:shadow-none md:backdrop-blur-none">
-                        <button
-                            type="button"
-                            onClick={() => setStep(prev => Math.max(0, prev - 1))}
-                            disabled={step === 0}
-                            className="flex min-h-10 items-center gap-1.5 rounded-xl border-0 bg-transparent px-2 text-zinc-500 light:text-muted-foreground transition-colors hover:text-white light:hover:text-foreground disabled:opacity-20 cursor-pointer select-none"
-                        >
-                            <ArrowLeft className="w-3.5 h-3.5" /> PREV
+                    <div className="sticky bottom-3 z-20 -mx-1 mt-8 flex items-center justify-between rounded-2xl border border-white/8 bg-background/92 p-3 font-mono text-xs shadow-[0_14px_40px_rgba(0,0,0,0.32)] backdrop-blur-xl light:border-[rgb(var(--ink-rgb)/0.08)] light:shadow-[0_14px_40px_rgb(20_23_26/0.14)] md:static md:mx-0 md:rounded-none md:border-x-0 md:border-b-0 md:bg-transparent md:p-0 md:pt-5 md:shadow-none md:backdrop-blur-none">
+                        <button type="button" onClick={() => { setStep((current) => Math.max(0, current - 1)); setSubmitError(null); }} disabled={step === 0 || submitting} className="flex min-h-11 items-center gap-2 rounded-xl px-3 text-zinc-400 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-25 light:text-muted-foreground light:hover:text-foreground"><ArrowLeft aria-hidden="true" className="h-4 w-4" />{isEs ? 'Atrás' : 'Back'}</button>
+                        <button type="submit" disabled={submitting} className="flex min-h-11 items-center gap-2 rounded-xl border border-signal/40 bg-signal/15 px-5 text-signal transition-[background-color,opacity] hover:bg-signal/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal disabled:cursor-wait disabled:opacity-60">
+                            {submitting ? (isEs ? 'Enviando…' : 'Sending…') : step < steps.length - 1 ? (isEs ? 'Continuar' : 'Continue') : (isEs ? 'Enviar contexto' : 'Send context')}
+                            <ArrowRight aria-hidden="true" className="h-4 w-4" />
                         </button>
-
-                        {step < STEPS.length - 1 ? (
-                            <button
-                                type="button"
-                                onClick={() => setStep(prev => prev + 1)}
-                                disabled={!canAdvance()}
-                                className="flex min-h-10 cursor-pointer select-none items-center gap-1.5 rounded-xl border border-signal/30 bg-signal/15 px-4 py-2 text-signal hover:bg-signal/25 disabled:opacity-20"
-                            >
-                                NEXT <ArrowRight className="w-3.5 h-3.5" />
-                            </button>
-                        ) : (
-                            <button
-                                type="button"
-                                onClick={handleFormSubmit}
-                                disabled={!canAdvance() || submitting}
-                                className="flex min-h-10 cursor-pointer select-none items-center gap-1.5 rounded-xl border border-signal/40 bg-signal/20 px-5 py-2.5 font-mono text-xs text-signal shadow-[0_0_20px_rgba(113,243,162,0.12)] light:shadow-none hover:bg-signal/30 disabled:opacity-20"
-                            >
-                                {submitting 
-                                    ? (language === 'es' ? 'ENVIANDO...' : 'SENDING...') 
-                                    : (language === 'es' ? 'ENVIAR BRIEF' : 'SUBMIT BRIEF')
-                                } 
-                                <ArrowRight className="w-3.5 h-3.5" />
-                            </button>
-                        )}
                     </div>
-                    {submitError && (
-                        <p role="alert" className="mt-4 rounded-xl border border-red-400/25 light:border-destructive/30 bg-red-400/[0.06] light:bg-destructive/10 px-4 py-3 text-sm leading-5 text-red-200 light:text-destructive">
-                            {submitError}
-                        </p>
-                    )}
-                </div>
+
+                    <div aria-live="polite" aria-atomic="true">
+                        {submitError && <p role="alert" className="mt-4 rounded-xl border border-red-400/25 bg-red-400/[0.06] px-4 py-3 text-sm leading-5 text-red-200 light:border-destructive/30 light:bg-destructive/10 light:text-destructive">{submitError}</p>}
+                    </div>
+                </form>
             </div>
 
-            {/* Dev Mode Wireframe Overlay */}
-            {isDevMode && (
-                <div className="absolute inset-0 z-0 border-[6px] border-emerald-500/20 pointer-events-none">
-                    <div className="absolute top-1/2 left-0 right-0 h-px bg-emerald-500/10" />
-                    <div className="absolute top-0 bottom-0 left-1/2 w-px bg-emerald-500/10" />
-                    <span className="absolute bottom-4 left-4 font-mono text-[8px] text-emerald-500/30 uppercase tracking-widest">
-                        Wireframe Active // OS Form Alignment: 12-Column Grid
-                    </span>
-                </div>
-            )}
+            {isDevMode && <div inert className="pointer-events-none absolute inset-0 z-0 border-[6px] border-emerald-500/20"><div className="absolute inset-x-0 top-1/2 h-px bg-emerald-500/10" /><div className="absolute inset-y-0 left-1/2 w-px bg-emerald-500/10" /></div>}
         </section>
     );
 }

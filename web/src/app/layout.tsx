@@ -26,9 +26,9 @@ export const metadata: Metadata = {
   keywords: ["Creative Technologist", "Product Design", "WebGL", "IA", "Automatización", "CRM", "Mario Morera"],
   authors: [{ name: SITE_IDENTITY.brand, url: canonical }],
   creator: SITE_IDENTITY.brand,
-  alternates: { canonical: "/", languages: { "es-UY": "/", en: "/en" } },
+  alternates: { canonical: "/", languages: { es: "/", en: "/en" } },
   openGraph: {
-    type: "website", locale: "es_UY", alternateLocale: "en_US", url: canonical,
+    type: "website", url: canonical,
     title: siteMetadata.title.es, description: siteMetadata.description.es,
     siteName: SITE_IDENTITY.brand,
     images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: siteMetadata.title.es }],
@@ -56,8 +56,6 @@ const personJsonLd = {
   jobTitle: SITE_IDENTITY.role.es,
   description: siteMetadata.description.es,
   email: `mailto:${SITE_IDENTITY.contact.email}`,
-  sameAs: [SITE_IDENTITY.social.github, SITE_IDENTITY.social.linkedin],
-  homeLocation: { "@type": "Country", name: "Uruguay" },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
