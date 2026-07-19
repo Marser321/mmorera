@@ -6,6 +6,8 @@ import { ArrowUpRight, ChevronRight } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { useActiveTech } from "@/context/ActiveTechContext";
 import { localePath } from "@/config/site";
+import { MotionBackdrop } from "@/components/shared/MotionBackdrop";
+import { MOTION_ASSETS } from "@/data/motionAssets";
 
 const stages = [
   { id: "capture", title: { es: "Captación", en: "Acquisition" }, text: { es: "Formularios, pauta, WhatsApp y fuentes que ya existen.", en: "Forms, paid media, WhatsApp and the sources already in use." } },
@@ -44,7 +46,18 @@ export function SystemsExperience() {
         </div>
       </section>
 
-      <section className="mt-24 border-y border-white/10 light:border-[rgb(var(--ink-rgb)/0.1)] bg-card px-5 py-16 sm:px-8 lg:px-12 lg:py-24" aria-labelledby="system-map-title">
+      <section className="relative mt-20 h-[72svh] overflow-visible md:h-[110vh]" aria-hidden="true">
+        <div className="h-full overflow-hidden border-y border-white/10 bg-background light:border-[rgb(var(--ink-rgb)/0.1)] md:sticky md:top-0 md:h-[100svh]">
+          <MotionBackdrop asset={MOTION_ASSETS.continuity} intensity={0.9} />
+          <div className="relative z-10 mx-auto flex h-full max-w-[1480px] items-end px-5 pb-12 sm:px-8 md:items-center md:pb-0 lg:px-12">
+            <p className="max-w-sm font-mono text-[10px] uppercase leading-5 tracking-[.18em] text-foreground/48">
+              {stages.map((stage) => stage.title[language]).join(" → ")}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-y border-white/10 light:border-[rgb(var(--ink-rgb)/0.1)] bg-card px-5 py-16 sm:px-8 lg:px-12 lg:py-24" aria-labelledby="system-map-title">
         <div className="mx-auto max-w-[1480px]">
           <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end"><div><p className="font-mono text-[10px] uppercase tracking-[.18em] text-[#F3F0E8]/35 light:text-muted-foreground/85">01 · {isEs ? "Mapa operativo" : "Operational map"}</p><h2 id="system-map-title" className="mt-4 text-3xl font-medium tracking-[-.04em] text-foreground sm:text-5xl">{isEs ? "Un flujo, cinco estados visibles." : "One flow, five visible states."}</h2></div><p className="font-mono text-[9px] uppercase tracking-widest text-[#F3F0E8]/28 light:text-muted-foreground/85">{isEs ? "Seleccioná un nodo" : "Select a node"}</p></div>
           <div className="mt-12 rounded-[1.5rem] border border-white/10 light:border-[rgb(var(--ink-rgb)/0.1)] bg-background p-4 sm:p-6">

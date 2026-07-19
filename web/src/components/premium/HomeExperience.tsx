@@ -16,6 +16,8 @@ import { TECH_STACK, type Family } from "@/data/techStack";
 import type { TrackId } from "@/types/site";
 import { isTrackMode, resolveTrackMode, TRACK_MODE_QUERY } from "@/data/trackModes";
 import { AuthorManifestoScene, type AuthorManifestoCopy } from "@/components/premium/AuthorManifestoScene";
+import { MotionBackdrop } from "@/components/shared/MotionBackdrop";
+import { MOTION_ASSETS } from "@/data/motionAssets";
 import { MethodTimeline } from "@/components/premium/home/MethodTimeline";
 import { DecodeText } from "@/components/motion/DecodeText";
 import { SplitReveal } from "@/components/motion/SplitReveal";
@@ -82,7 +84,6 @@ const authorManifestoCopy = {
     principleLabel: "Principio de selección",
     principle: "Trabajo con ideas que tienen algo que proteger y algo nuevo que demostrar.",
     signature: "Una sola dirección · Del concepto a la operación",
-    portraitNote: "Retrato conceptual · reemplazo pendiente",
   },
   en: {
     eyebrow: "A practice of my own",
@@ -92,7 +93,6 @@ const authorManifestoCopy = {
     principleLabel: "Selection principle",
     principle: "I work with ideas that have something worth protecting and something new to prove.",
     signature: "One direction · From concept to operations",
-    portraitNote: "Concept portrait · replacement pending",
   },
 } satisfies Record<"es" | "en", AuthorManifestoCopy>;
 
@@ -357,8 +357,9 @@ export function HomeExperience({
         </div>
       </section>
 
-      <section data-home-section="cta" className="bg-background px-5 py-28 sm:px-8 lg:px-12 lg:py-40">
-        <Parallax speed={40} className="mx-auto max-w-[1180px] text-center">
+      <section data-home-section="cta" className="relative isolate overflow-hidden bg-background px-5 py-28 sm:px-8 lg:px-12 lg:py-40">
+        <MotionBackdrop asset={MOTION_ASSETS.opening} intensity={0.32} scrim="center" />
+        <Parallax speed={40} className="relative z-10 mx-auto max-w-[1180px] text-center">
           <SplitReveal
             as="h2"
             text={c.final}

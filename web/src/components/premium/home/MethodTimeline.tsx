@@ -5,6 +5,8 @@ import { useScroll } from "framer-motion";
 import { SplitReveal } from "@/components/motion/SplitReveal";
 import { DrawRule } from "@/components/motion/DrawRule";
 import { Reveal } from "@/components/scroll/Reveal";
+import { MotionBackdrop } from "@/components/shared/MotionBackdrop";
+import { MOTION_ASSETS } from "@/data/motionAssets";
 
 interface MethodStep {
   title: string;
@@ -21,15 +23,16 @@ export function MethodTimeline({ eyebrow, title, steps }: { eyebrow: string; tit
   const { scrollYProgress } = useScroll({ target: listRef, offset: ["start 80%", "end 65%"] });
 
   return (
-    <section data-home-section="method" className="bg-background px-5 py-24 sm:px-8 lg:px-12 lg:py-32">
-      <div className="mx-auto max-w-[1480px]">
+    <section data-home-section="method" className="relative isolate overflow-hidden bg-background px-5 py-24 sm:px-8 lg:px-12 lg:py-32">
+      <MotionBackdrop asset={MOTION_ASSETS.nucleus} intensity={0.78} />
+      <div className="relative z-10 mx-auto max-w-[1480px]">
         <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-signal">{eyebrow}</p>
         <SplitReveal
           as="h2"
           text={title}
           className="mt-5 max-w-4xl text-[clamp(2.5rem,5vw,5.8rem)] font-medium leading-[.98] tracking-[-0.055em] text-foreground"
         />
-        <div className="relative mt-16">
+        <div className="relative mt-16 max-w-[1040px]">
           <DrawRule progress={scrollYProgress} origin="top" className="absolute bottom-0 left-0 top-0 block w-px bg-signal/40" />
           <ol ref={listRef} className="border-t border-white/12 pl-6 sm:pl-8 light:border-[rgb(var(--ink-rgb)/0.12)]">
             {steps.map((step, index) => (

@@ -1,28 +1,24 @@
 "use client";
 
 import { memo, useCallback, useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import {
   motion,
-  useMotionValue,
   useMotionValueEvent,
   useScroll,
   useTransform,
+  type MotionValue,
 } from "framer-motion";
 import { SITE_IDENTITY } from "@/config/site";
 import {
-  PORTRAIT_FRAME_SEQUENCE,
-  resolveFrameBlend,
-  resolveFrameCrossfade,
-  resolvePreloadWindow,
-  resolveRenderablePair,
-  shouldPreloadFrame,
-  type PortraitFrameBlend,
-  type PortraitRenderablePair,
-  type PortraitFrameSequence,
-  type PortraitFrameStatus,
-} from "@/data/portraitFrameSequence";
+  PERSONAL_FILM_SEQUENCE,
+  resolveFilmStage,
+  resolveFilmTime,
+  resolvePersonalFilmSource,
+  shouldSeekFilm,
+  type PersonalFilmSequence,
+  type PersonalFilmStage,
+} from "@/data/personalFilmSequence";
 import { useResolvedMediaQuery } from "@/hooks/useMediaQuery";
 
 export interface AuthorManifestoCopy {
@@ -33,229 +29,258 @@ export interface AuthorManifestoCopy {
   principleLabel: string;
   principle: string;
   signature: string;
-  portraitNote: string;
 }
 
 interface AuthorManifestoSceneProps {
   language: "es" | "en";
   copy: AuthorManifestoCopy;
-  sequence?: PortraitFrameSequence;
+  sequence?: PersonalFilmSequence;
 }
 
-const EMPTY_BLEND: PortraitFrameBlend = { from: 0, to: 1, mix: 0 };
-const EMPTY_RENDERABLE: PortraitRenderablePair = { from: null, to: null, mix: 0 };
-type SequenceKey = "desktop" | "mobile";
+function SocialLinks({ interactive = true }: { interactive?: boolean }) {
+  return (
+    <div
+      inert={!interactive}
+      aria-hidden={!interactive}
+      className={`mt-6 flex flex-wrap content-start gap-x-5 gap-y-3 ${interactive ? "" : "pointer-events-none select-none"}`}
+    >
+      {[
+        ["LinkedIn", SITE_IDENTITY.social.linkedin],
+        ["GitHub", SITE_IDENTITY.social.github],
+        ["Email", `mailto:${SITE_IDENTITY.contact.email}`],
+      ].map(([label, href]) => (
+        <a
+          key={label}
+          href={href}
+          target={label === "Email" ? undefined : "_blank"}
+          rel={label === "Email" ? undefined : "noreferrer"}
+          tabIndex={interactive ? undefined : -1}
+          className="inline-flex items-center gap-2 border-b border-white/24 pb-1 text-sm text-[#F3F0E8] transition-colors hover:border-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55D8FF]"
+        >
+          {label}<ArrowUpRight className="h-3.5 w-3.5" />
+        </a>
+      ))}
+    </div>
+  );
+}
 
-function markImageLoaded(
-  image: HTMLImageElement,
-  onReady: () => void,
-) {
-  const decoded = typeof image.decode === "function"
-    ? image.decode().catch(() => undefined)
-    : Promise.resolve();
-  void decoded.then(onReady);
+function EditorialCopy({
+  copy,
+  headlineOpacity,
+  headlineY,
+  detailsOpacity,
+  detailsY,
+  animate = false,
+  linksInteractive = true,
+  compact = false,
+}: {
+  copy: AuthorManifestoCopy;
+  headlineOpacity?: MotionValue<number>;
+  headlineY?: MotionValue<number>;
+  detailsOpacity?: MotionValue<number>;
+  detailsY?: MotionValue<number>;
+  animate?: boolean;
+  linksInteractive?: boolean;
+  compact?: boolean;
+}) {
+  return (
+    <div>
+      <motion.div style={animate ? { opacity: headlineOpacity, y: headlineY } : undefined}>
+        <h2 className={compact
+          ? "text-[clamp(2.55rem,10vw,4.5rem)] font-medium leading-[.92] tracking-[-.06em] text-[#F3F0E8]"
+          : "text-[clamp(2.65rem,5vw,6rem)] font-medium leading-[.92] tracking-[-.063em] text-[#F3F0E8]"}
+        >
+          {copy.headline}
+        </h2>
+      </motion.div>
+      <motion.div
+        style={animate ? { opacity: detailsOpacity, y: detailsY } : undefined}
+        className="mt-7 border-t border-white/16 pt-6 lg:grid lg:grid-cols-[1.35fr_.65fr] lg:gap-10"
+      >
+        <p className="max-w-2xl text-base leading-7 text-[#F3F0E8]/66">{copy.body}</p>
+        <div className="mt-8 lg:mt-0">
+          <p className="font-mono text-[10px] uppercase tracking-[.16em] text-[#B68CFF]">{copy.principleLabel}</p>
+          <p className="mt-3 text-[15px] leading-6 text-[#F3F0E8]/84">{copy.principle}</p>
+          <SocialLinks interactive={linksInteractive} />
+        </div>
+      </motion.div>
+    </div>
+  );
 }
 
 function AuthorManifestoSceneComponent({
   language,
   copy,
-  sequence = PORTRAIT_FRAME_SEQUENCE,
+  sequence = PERSONAL_FILM_SEQUENCE,
 }: AuthorManifestoSceneProps) {
   const sectionRef = useRef<HTMLElement>(null);
-  const portraitRef = useRef<HTMLDivElement>(null);
+  const filmTrackRef = useRef<HTMLDivElement>(null);
+  const visualRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const seekFrameRef = useRef<number | null>(null);
+  const latestProgressRef = useRef(0);
+  const targetTimeRef = useRef(0);
   const desktopMatch = useResolvedMediaQuery("(min-width: 1024px)");
   const reducedMotionMatch = useResolvedMediaQuery("(prefers-reduced-motion: reduce)");
   const isDesktop = desktopMatch === true;
   const viewportResolved = desktopMatch !== null;
   const motionPreferenceResolved = reducedMotionMatch !== null;
   const reducedMotion = reducedMotionMatch === true;
-  const frames = isDesktop ? sequence.frames : sequence.mobileFrames;
-  const sequenceKey: SequenceKey = isDesktop ? "desktop" : "mobile";
-  const [activeBlend, setActiveBlend] = useState<PortraitFrameBlend>(EMPTY_BLEND);
-  const activeBlendRef = useRef<Record<SequenceKey, PortraitFrameBlend>>({
-    desktop: EMPTY_BLEND,
-    mobile: EMPTY_BLEND,
-  });
-  const activePairRef = useRef<Record<SequenceKey, string>>({
-    desktop: "0:1",
-    mobile: "0:1",
-  });
-  const [renderableByKey, setRenderableByKey] = useState<Record<SequenceKey, PortraitRenderablePair>>({
-    desktop: EMPTY_RENDERABLE,
-    mobile: EMPTY_RENDERABLE,
-  });
-  const statusesRef = useRef(new Map<string, PortraitFrameStatus>());
-  const lastDisplayedRef = useRef<Record<SequenceKey, number | null>>({
-    desktop: null,
-    mobile: null,
-  });
-  const displayedHistoryRef = useRef<Record<SequenceKey, number[]>>({
-    desktop: [],
-    mobile: [],
-  });
-  const mountedRef = useRef(true);
-  const frameMix = useMotionValue(0);
+  const source = resolvePersonalFilmSource(sequence, isDesktop);
+  const sourceKey = `${source.webm}|${source.mp4}`;
+  const sequenceMode = isDesktop ? "desktop" : "mobile";
+  const [nearViewport, setNearViewport] = useState(false);
+  const [videoState, setVideoState] = useState<{ source: string; status: "idle" | "ready" | "failed" }>({ source: "", status: "idle" });
   const [detailsReady, setDetailsReady] = useState(false);
-  const detailsReadyRef = useRef(false);
+  const [filmStage, setFilmStage] = useState<PersonalFilmStage>("introduction");
+  const videoReady = videoState.source === sourceKey && videoState.status === "ready";
+  const videoFailed = videoState.source === sourceKey && videoState.status === "failed";
 
   const { scrollYProgress: sectionProgress } = useScroll({
-    target: sectionRef,
+    target: filmTrackRef,
     offset: ["start start", "end end"],
   });
-  const { scrollYProgress: mobilePortraitProgress } = useScroll({
-    target: portraitRef,
-    offset: ["start 90%", "end 90%"],
-  });
-  const frameProgress = isDesktop ? sectionProgress : mobilePortraitProgress;
+  const nameOpacity = useTransform(sectionProgress, [0, 0.095, 0.124], [1, 1, 0]);
+  const nameY = useTransform(sectionProgress, [0, 0.124], [0, -24]);
+  const createOpacity = useTransform(sectionProgress, [0.124, 0.145, 0.335, 0.364], [0, 1, 1, 0]);
+  const createX = useTransform(sectionProgress, [0.124, 0.16], [-50, 0]);
+  const buildOpacity = useTransform(sectionProgress, [0.364, 0.385, 0.535, 0.561], [0, 1, 1, 0]);
+  const buildX = useTransform(sectionProgress, [0.364, 0.4], [50, 0]);
+  const scaleOpacity = useTransform(sectionProgress, [0.561, 0.585, 0.805, 0.833], [0, 1, 1, 0]);
+  const scaleX = useTransform(sectionProgress, [0.561, 0.6], [-50, 0]);
+  const convergenceOpacity = useTransform(sectionProgress, [0.833, 0.855, 0.915, 0.94], [0, 1, 1, 0]);
+  const convergenceY = useTransform(sectionProgress, [0.833, 0.865], [30, 0]);
+  const convergenceScale = useTransform(sectionProgress, [0.833, 0.875], [0.97, 1]);
+  const headlineOpacity = useTransform(sectionProgress, [0.94, 0.965, 1], [0, 1, 1]);
+  const headlineY = useTransform(sectionProgress, [0.94, 0.975], [36, 0]);
+  const detailsOpacity = useTransform(sectionProgress, [0.955, 0.982, 1], [0, 1, 1]);
+  const detailsY = useTransform(sectionProgress, [0.955, 0.99], [22, 0]);
+  const sceneScale = useTransform(sectionProgress, [0, 1], [1.015, 1]);
+  const leftScrimOpacity = useTransform(sectionProgress, [0, 0.82, 0.91], [1, 1, 0.24]);
+  const finalScrimOpacity = useTransform(sectionProgress, [0.91, 0.95, 1], [0, 0.82, 0.88]);
 
-  const nameOpacity = useTransform(sectionProgress, [0, 0.13, 0.18], [1, 1, 0]);
-  const nameY = useTransform(sectionProgress, [0, 0.18], [0, -28]);
-  const createOpacity = useTransform(sectionProgress, [0.16, 0.18, 0.34, 0.38], [0, 1, 1, 0]);
-  const createX = useTransform(sectionProgress, [0.16, 0.2], [-60, 0]);
-  const buildOpacity = useTransform(sectionProgress, [0.36, 0.38, 0.51, 0.55], [0, 1, 1, 0]);
-  const buildX = useTransform(sectionProgress, [0.36, 0.4], [60, 0]);
-  const scaleOpacity = useTransform(sectionProgress, [0.53, 0.55, 0.66, 0.7], [0, 1, 1, 0]);
-  const scaleX = useTransform(sectionProgress, [0.53, 0.57], [-60, 0]);
-  const convergenceOpacity = useTransform(sectionProgress, [0.68, 0.72, 0.82, 0.85], [0, 1, 1, 0]);
-  const convergenceY = useTransform(sectionProgress, [0.68, 0.74], [36, 0]);
-  const convergenceScale = useTransform(sectionProgress, [0.68, 0.76], [0.96, 1]);
-  const headlineOpacity = useTransform(sectionProgress, [0.82, 0.86, 1], [0, 1, 1]);
-  const headlineY = useTransform(sectionProgress, [0.82, 0.88], [42, 0]);
-  const detailsOpacity = useTransform(sectionProgress, [0.91, 0.95, 1], [0, 1, 1]);
-  const detailsY = useTransform(sectionProgress, [0.91, 0.97], [24, 0]);
-  const portraitScale = useTransform(sectionProgress, [0, 0.58, 1], [1.06, 1.025, 1]);
-  const shadowOpacity = useTransform(frameProgress, [0, 0.22, 0.62], [0.68, 0.42, 0.06]);
-
-  const updateRenderable = useCallback((
-    blend: PortraitFrameBlend,
-    currentFrames: readonly string[],
-    key: SequenceKey,
-  ) => {
-    const statuses = currentFrames.map((source) => statusesRef.current.get(source));
-    const pair = resolveRenderablePair(blend, statuses, lastDisplayedRef.current[key]);
-    setRenderableByKey((current) => {
-      const previous = current[key];
-      if (previous.from === pair.from && previous.to === pair.to) return current;
-      return { ...current, [key]: pair };
+  const syncFilmProgress = useCallback((progress: number) => {
+    latestProgressRef.current = progress;
+    targetTimeRef.current = resolveFilmTime(progress, sequence);
+    const nextStage = resolveFilmStage(progress, sequence);
+    setFilmStage((current) => current === nextStage ? current : nextStage);
+    const nextDetailsReady = progress >= 0.94;
+    setDetailsReady((current) => current === nextDetailsReady ? current : nextDetailsReady);
+    if (visualRef.current) visualRef.current.dataset.filmTime = targetTimeRef.current.toFixed(3);
+    if (reducedMotion || document.hidden || seekFrameRef.current !== null) return;
+    seekFrameRef.current = window.requestAnimationFrame(() => {
+      seekFrameRef.current = null;
+      const video = videoRef.current;
+      if (!video || video.readyState < 1 || video.seeking) return;
+      const availableDuration = Number.isFinite(video.duration)
+        ? Math.min(video.duration, sequence.duration)
+        : sequence.duration;
+      const target = Math.min(availableDuration, targetTimeRef.current);
+      video.pause();
+      if (shouldSeekFilm(video.currentTime, target, sequence.seekThreshold)) video.currentTime = target;
     });
-  }, []);
+  }, [reducedMotion, sequence]);
+
+  useMotionValueEvent(sectionProgress, "change", syncFilmProgress);
 
   useEffect(() => {
-    mountedRef.current = true;
-    return () => {
-      mountedRef.current = false;
-    };
-  }, []);
-
-  const syncFrameProgress = useCallback((progress: number) => {
-    if (reducedMotion) return;
-    const nextBlend = resolveFrameBlend(progress, frames.length);
-    activeBlendRef.current[sequenceKey] = nextBlend;
-    frameMix.set(resolveFrameCrossfade(nextBlend.mix));
-    const pairKey = `${nextBlend.from}:${nextBlend.to}`;
-    if (pairKey !== activePairRef.current[sequenceKey]) {
-      activePairRef.current[sequenceKey] = pairKey;
-      setActiveBlend(nextBlend);
-      updateRenderable(nextBlend, frames, sequenceKey);
-    }
-
-    if (isDesktop) {
-      const nextDetailsReady = progress >= 0.92;
-      if (detailsReadyRef.current !== nextDetailsReady) {
-        detailsReadyRef.current = nextDetailsReady;
-        setDetailsReady(nextDetailsReady);
-      }
-    }
-  }, [frameMix, frames, isDesktop, reducedMotion, sequenceKey, updateRenderable]);
-
-  useMotionValueEvent(frameProgress, "change", syncFrameProgress);
+    const section = sectionRef.current;
+    if (!section) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) setNearViewport(true);
+    }, { rootMargin: sequence.preloadMargin, threshold: 0.01 });
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, [sequence.preloadMargin]);
 
   useEffect(() => {
     if (!viewportResolved || !motionPreferenceResolved) return;
-    if (reducedMotion) return;
-    const frameId = window.requestAnimationFrame(() => {
-      syncFrameProgress(frameProgress.get());
-    });
-    return () => window.cancelAnimationFrame(frameId);
-  }, [frameProgress, motionPreferenceResolved, reducedMotion, syncFrameProgress, viewportResolved]);
+    const frame = window.requestAnimationFrame(() => syncFilmProgress(sectionProgress.get()));
+    const syncVisibility = () => {
+      if (!document.hidden) syncFilmProgress(latestProgressRef.current);
+    };
+    document.addEventListener("visibilitychange", syncVisibility);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      document.removeEventListener("visibilitychange", syncVisibility);
+      if (seekFrameRef.current !== null) window.cancelAnimationFrame(seekFrameRef.current);
+      seekFrameRef.current = null;
+    };
+  }, [motionPreferenceResolved, sectionProgress, syncFilmProgress, viewportResolved]);
 
-  useEffect(() => {
-    if (!viewportResolved || !motionPreferenceResolved || reducedMotion) return;
-    const windowIndices = resolvePreloadWindow(
-      activeBlend,
-      frames.length,
-      sequence.preloadRadius,
-    );
-
-    for (const index of windowIndices) {
-      const source = frames[index];
-      if (!source || !shouldPreloadFrame(statusesRef.current.get(source))) continue;
-      statusesRef.current.set(source, "loading");
-      const candidate = new window.Image();
-      candidate.src = source;
-      candidate.onload = () => markImageLoaded(candidate, () => {
-        statusesRef.current.set(source, "loaded");
-        if (mountedRef.current) updateRenderable(activeBlendRef.current[sequenceKey], frames, sequenceKey);
-      });
-      candidate.onerror = () => {
-        statusesRef.current.set(source, "failed");
-        if (mountedRef.current) updateRenderable(activeBlendRef.current[sequenceKey], frames, sequenceKey);
-      };
-    }
-  }, [activeBlend, frames, motionPreferenceResolved, reducedMotion, sequence.preloadRadius, sequenceKey, updateRenderable, viewportResolved]);
-
-  const recordRenderedFrame = useCallback((
-    source: string,
-    currentFrames: readonly string[],
-    key: SequenceKey,
-    rememberAsDisplayed: boolean,
-  ) => {
-    const index = currentFrames.indexOf(source);
-    if (index < 0) return;
-    statusesRef.current.set(source, "loaded");
-    if (rememberAsDisplayed) {
-      const history = displayedHistoryRef.current[key].filter((entry) => entry !== index);
-      history.push(index);
-      displayedHistoryRef.current[key] = history;
-      lastDisplayedRef.current[key] = index;
-    }
-    updateRenderable(activeBlendRef.current[key], currentFrames, key);
-  }, [updateRenderable]);
-
-  const recordFailedFrame = useCallback((
-    source: string,
-    currentFrames: readonly string[],
-    key: SequenceKey,
-  ) => {
-    const index = currentFrames.indexOf(source);
-    if (index < 0) return;
-    statusesRef.current.set(source, "failed");
-    const history = displayedHistoryRef.current[key].filter((entry) => entry !== index);
-    displayedHistoryRef.current[key] = history;
-    lastDisplayedRef.current[key] = history.at(-1) ?? null;
-    updateRenderable(activeBlendRef.current[key], currentFrames, key);
-  }, [updateRenderable]);
-
-  const renderable = reducedMotion
-    ? { from: Math.max(0, frames.length - 1), to: Math.max(0, frames.length - 1), mix: 0 }
-    : renderableByKey[sequenceKey];
-
-  const primarySource = renderable.from === null ? sequence.poster : frames[renderable.from] ?? sequence.poster;
-  const secondarySource = renderable.to === null ? primarySource : frames[renderable.to] ?? primarySource;
-  const currentFrame = reducedMotion
-    ? Math.max(0, frames.length - 1)
-    : renderable.from ?? 0;
-  const animateEditorialCopy = isDesktop && !reducedMotion;
-  const linksInteractive = !isDesktop || reducedMotion || detailsReady;
-  const portraitAspectRatio = Number.isFinite(sequence.aspectRatio) && sequence.aspectRatio > 0
-    ? sequence.aspectRatio
-    : 2 / 3;
+  const canMountVideo = viewportResolved && motionPreferenceResolved && nearViewport && !reducedMotion && !videoFailed;
+  const linksInteractive = reducedMotion || detailsReady;
   const imageLabel = language === "es"
-    ? "Retrato editorial conceptual y ficticio de Mario Morera"
-    : "Conceptual fictional editorial portrait of Mario Morera";
+    ? "Mario Morera creando interfaces, productos y sistemas en su estudio"
+    : "Mario Morera creating interfaces, products and systems in his studio";
   const practiceVerbs = language === "es"
     ? { create: "Crear", build: "Construir", scale: "Escalar" }
     : { create: "Create", build: "Build", scale: "Scale" };
+  const videoStatus = reducedMotion
+    ? "reduced"
+    : videoFailed
+      ? "fallback"
+      : canMountVideo
+        ? videoReady ? "ready" : "loading"
+        : "poster";
+
+  const filmVisual = (
+    <motion.div
+      ref={visualRef}
+      role="img"
+      aria-label={imageLabel}
+      data-sequence-mode={reducedMotion ? "reduced" : sequenceMode}
+      data-sequence-state={reducedMotion ? "closing" : filmStage}
+      data-film-status={videoStatus}
+      data-film-time={reducedMotion ? sequence.duration.toFixed(3) : "0.000"}
+      className="absolute inset-0 overflow-hidden bg-[#050607]"
+      style={reducedMotion ? undefined : { scale: sceneScale }}
+    >
+      <picture className="absolute inset-0 block h-full w-full">
+        <source srcSet={source.posterAvif} type="image/avif" />
+        <img
+          src={source.posterWebp}
+          alt=""
+          aria-hidden="true"
+          decoding="async"
+          draggable={false}
+          className="h-full w-full object-contain object-top lg:object-cover lg:object-center"
+        />
+      </picture>
+      {canMountVideo && (
+        <video
+          key={`${source.webm}-${source.mp4}`}
+          ref={videoRef}
+          muted
+          playsInline
+          preload="auto"
+          poster={source.posterWebp}
+          aria-hidden="true"
+          data-personal-film
+          className={`absolute inset-0 h-full w-full object-contain object-top transition-opacity duration-300 lg:object-cover lg:object-center ${videoReady ? "opacity-100" : "opacity-0"}`}
+          onLoadedMetadata={(event) => {
+            event.currentTarget.pause();
+            syncFilmProgress(latestProgressRef.current);
+          }}
+          onLoadedData={() => setVideoState({ source: sourceKey, status: "ready" })}
+          onSeeked={() => syncFilmProgress(latestProgressRef.current)}
+          onError={() => setVideoState({ source: sourceKey, status: "failed" })}
+        >
+          <source src={source.webm} type="video/webm; codecs=vp9" />
+          <source src={source.mp4} type="video/mp4" />
+        </video>
+      )}
+      <motion.div
+        className="absolute inset-0 hidden bg-[linear-gradient(90deg,rgba(5,6,7,.97)_0%,rgba(5,6,7,.78)_30%,rgba(5,6,7,.2)_58%,rgba(5,6,7,.04)_100%)] lg:block"
+        style={{ opacity: reducedMotion ? 0.24 : leftScrimOpacity }}
+      />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,6,7,.08)_0%,rgba(5,6,7,.03)_48%,rgba(5,6,7,.9)_76%,#050607_100%)] lg:bg-[radial-gradient(circle_at_70%_42%,transparent_0%,rgba(5,6,7,.06)_40%,rgba(5,6,7,.4)_100%)]" />
+      <motion.div
+        className="absolute inset-y-0 right-0 hidden w-[68%] bg-[linear-gradient(270deg,rgba(5,6,7,.96)_0%,rgba(5,6,7,.82)_48%,transparent_100%)] lg:block"
+        style={{ opacity: reducedMotion ? 0.88 : finalScrimOpacity }}
+      />
+    </motion.div>
+  );
 
   return (
     <section
@@ -263,182 +288,88 @@ function AuthorManifestoSceneComponent({
       id="perfil"
       data-home-section="manifesto"
       data-testid="author-manifesto"
-      className={`relative scroll-mt-28 border-y border-white/10 bg-[#080A0B] light:border-[rgb(var(--ink-rgb)/0.1)] light:bg-background ${reducedMotion ? "lg:h-auto" : "lg:h-[250vh]"}`}
+      className="relative scroll-mt-28 overflow-clip border-y border-white/10 bg-[#050607] text-[#F3F0E8]"
     >
-      <p className="sr-only">
-        {copy.convergence}: {practiceVerbs.create}, {practiceVerbs.build}, {practiceVerbs.scale}.
-      </p>
-      <div className={`relative px-5 py-20 sm:px-8 sm:py-24 lg:px-12 lg:py-8 ${reducedMotion ? "lg:min-h-screen" : "lg:sticky lg:top-0 lg:h-[100svh] lg:overflow-hidden"}`}>
-        <div className={`mx-auto grid w-full max-w-[1480px] gap-10 lg:grid-cols-[minmax(0,1.06fr)_minmax(420px,.94fr)] lg:items-stretch lg:gap-10 ${reducedMotion ? "lg:min-h-[calc(100svh-4rem)]" : "lg:h-full"}`}>
-          <div className="relative z-20 order-2 flex flex-col lg:order-none lg:py-7">
-            <div className="flex items-start justify-between gap-6 border-t border-white/14 pt-4 light:border-[rgb(var(--ink-rgb)/0.14)]">
+      <p className="sr-only">{copy.convergence}: {practiceVerbs.create}, {practiceVerbs.build}, {practiceVerbs.scale}.</p>
+
+      {reducedMotion ? (
+        <div ref={filmTrackRef} className="relative min-h-[100svh] overflow-hidden px-5 py-20 sm:px-8 lg:px-12 lg:py-12">
+          {filmVisual}
+          <div className="relative z-20 mx-auto flex min-h-[calc(100svh-10rem)] max-w-[1480px] flex-col justify-between">
+            <div className="flex items-start justify-between gap-6 border-t border-white/18 pt-4">
               <div>
-                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-track-create">{copy.eyebrow}</p>
-                <p className="mt-2 font-mono text-[10px] uppercase tracking-[.14em] text-foreground/42">{copy.portraitNote}</p>
+                <p className="font-mono text-[10px] uppercase tracking-[.18em] text-[#B68CFF]">{copy.eyebrow}</p>
+                <p className="mt-2 font-mono text-[10px] uppercase tracking-[.14em] text-[#F3F0E8]/48">Mario Morera · Perfil</p>
               </div>
-              <p className="max-w-36 text-right font-mono text-[10px] uppercase leading-4 tracking-[.13em] text-foreground/42">
-                {SITE_IDENTITY.location[language]}
-              </p>
+              <p className="max-w-36 text-right font-mono text-[10px] uppercase leading-4 tracking-[.13em] text-[#F3F0E8]/48">{SITE_IDENTITY.location[language]}</p>
             </div>
-
-            <div className="mt-12 lg:hidden">
-              <p className="font-mono text-[10px] uppercase tracking-[.18em] text-foreground/46">{copy.signature}</p>
-              <p className="mt-4 text-[clamp(4.2rem,18vw,7rem)] font-medium leading-[.76] tracking-[-.085em] text-foreground">
-                Mario<br />Morera
-              </p>
-              <div className="mt-14 space-y-1 text-[clamp(3rem,14vw,6.5rem)] font-medium uppercase leading-[.82] tracking-[-.075em]">
-                <p className="text-track-create">{practiceVerbs.create}</p>
-                <p className="text-track-build">{practiceVerbs.build}</p>
-                <p className="text-track-scale">{practiceVerbs.scale}</p>
-              </div>
-              <p className="mt-12 border-t border-white/14 pt-5 text-[clamp(2rem,9vw,4rem)] font-medium uppercase leading-[.9] tracking-[-.06em] text-foreground light:border-[rgb(var(--ink-rgb)/0.14)]">
-                {copy.convergence}
-              </p>
+            <div className="max-w-[900px] pt-28 lg:ml-auto lg:w-[62vw]">
+              <p className="font-mono text-[10px] uppercase tracking-[.18em] text-[#F3F0E8]/54">{copy.signature}</p>
+              <p className="mt-5 max-w-3xl text-[clamp(2.6rem,5vw,5.8rem)] font-medium uppercase leading-[.86] tracking-[-.07em] text-[#F3F0E8]">{copy.convergence}</p>
+              <div className="mt-10"><EditorialCopy copy={copy} compact={!isDesktop} /></div>
             </div>
-
-            <div className={`relative hidden lg:block ${reducedMotion ? "lg:pt-10" : "flex-1"}`} aria-hidden="true">
-              {reducedMotion ? (
-                <div>
-                  <p className="font-mono text-[10px] uppercase tracking-[.18em] text-foreground/46">{copy.signature}</p>
-                  <p className="mt-5 text-[clamp(4.5rem,7.2vw,8.6rem)] font-medium leading-[.75] tracking-[-.085em] text-foreground">Mario<br />Morera</p>
-                  <div className="mt-10 flex flex-wrap gap-x-5 text-[clamp(2rem,3.4vw,4.5rem)] font-medium uppercase leading-none tracking-[-.065em]">
-                    <span className="text-track-create">{practiceVerbs.create}</span>
-                    <span className="text-track-build">{practiceVerbs.build}</span>
-                    <span className="text-track-scale">{practiceVerbs.scale}</span>
+          </div>
+        </div>
+      ) : (
+        <>
+          <div ref={filmTrackRef} data-film-track className="relative h-[420vh]">
+            <div className="sticky top-0 h-[100svh] overflow-hidden px-5 py-6 sm:px-8 lg:px-12 lg:py-8">
+              {filmVisual}
+              <div className="relative z-20 mx-auto h-full max-w-[1480px]">
+                <div className="flex items-start justify-between gap-6 border-t border-white/18 pt-4">
+                  <div>
+                    <p className="font-mono text-[10px] uppercase tracking-[.18em] text-[#B68CFF]">{copy.eyebrow}</p>
+                    <p className="mt-2 font-mono text-[10px] uppercase tracking-[.14em] text-[#F3F0E8]/48">Mario Morera · Perfil</p>
                   </div>
-                  <p className="mt-8 max-w-3xl border-t border-white/14 pt-5 text-[clamp(2.4rem,4vw,5rem)] font-medium uppercase leading-[.88] tracking-[-.065em] text-foreground light:border-[rgb(var(--ink-rgb)/0.14)]">
-                    {copy.convergence}
-                  </p>
+                  <p className="max-w-36 text-right font-mono text-[10px] uppercase leading-4 tracking-[.13em] text-[#F3F0E8]/48">{SITE_IDENTITY.location[language]}</p>
                 </div>
-              ) : (
-                <>
-                  <motion.div style={{ opacity: nameOpacity, y: nameY }} className="absolute inset-x-0 top-[24%]">
-                    <p className="font-mono text-[10px] uppercase tracking-[.18em] text-foreground/46">{copy.signature}</p>
-                    <p className="mt-5 text-[clamp(4.5rem,7.2vw,8.6rem)] font-medium leading-[.75] tracking-[-.085em] text-foreground">Mario<br />Morera</p>
+
+                <div className="absolute inset-x-0 bottom-[8%] top-20 lg:bottom-auto lg:top-[25%] lg:max-w-[850px]" aria-hidden="true">
+                  <motion.div style={{ opacity: nameOpacity, y: nameY }} className="absolute bottom-0 left-0 lg:bottom-auto lg:top-0">
+                    <p className="font-mono text-[10px] uppercase tracking-[.18em] text-[#F3F0E8]/54">{copy.signature}</p>
+                    <p className="mt-4 text-[clamp(3.6rem,8vw,8rem)] font-medium leading-[.77] tracking-[-.085em] text-[#F3F0E8]">Mario<br />Morera</p>
                   </motion.div>
-                  <motion.p style={{ opacity: createOpacity, x: createX }} className="absolute left-0 top-[40%] text-[clamp(5rem,9vw,11rem)] font-medium uppercase leading-none tracking-[-.085em] text-track-create">{practiceVerbs.create}</motion.p>
-                  <motion.p style={{ opacity: buildOpacity, x: buildX }} className="absolute -right-[4vw] top-[40%] text-[clamp(4.5rem,8vw,10rem)] font-medium uppercase leading-none tracking-[-.085em] text-track-build">{practiceVerbs.build}</motion.p>
-                  <motion.p style={{ opacity: scaleOpacity, x: scaleX }} className="absolute left-0 top-[40%] text-[clamp(5rem,9vw,11rem)] font-medium uppercase leading-none tracking-[-.085em] text-track-scale">{practiceVerbs.scale}</motion.p>
+                  <motion.p style={{ opacity: createOpacity, x: createX }} className="absolute bottom-0 left-0 text-[clamp(3.6rem,10vw,10rem)] font-medium uppercase leading-none tracking-[-.08em] text-[#B68CFF] lg:bottom-auto lg:top-[18%]">{practiceVerbs.create}</motion.p>
+                  <motion.p style={{ opacity: buildOpacity, x: buildX }} className="absolute bottom-0 left-0 text-[clamp(3.25rem,9vw,9rem)] font-medium uppercase leading-none tracking-[-.08em] text-[#55D8FF] lg:bottom-auto lg:top-[18%]">{practiceVerbs.build}</motion.p>
+                  <motion.p style={{ opacity: scaleOpacity, x: scaleX }} className="absolute bottom-0 left-0 text-[clamp(3.6rem,10vw,10rem)] font-medium uppercase leading-none tracking-[-.08em] text-[#71F3A2] lg:bottom-auto lg:top-[18%]">{practiceVerbs.scale}</motion.p>
                   <motion.p
                     style={{ opacity: convergenceOpacity, y: convergenceY, scale: convergenceScale }}
-                    className="absolute inset-x-0 top-[34%] max-w-[900px] origin-left text-[clamp(3.8rem,6.5vw,7.8rem)] font-medium uppercase leading-[.8] tracking-[-.075em] text-foreground"
+                    className="absolute bottom-0 left-0 max-w-[800px] origin-left text-[clamp(2.5rem,6.2vw,7rem)] font-medium uppercase leading-[.83] tracking-[-.07em] text-[#F3F0E8] lg:bottom-auto lg:top-[8%]"
                   >
                     {copy.convergence}
                   </motion.p>
-                </>
-              )}
-            </div>
-
-            <div className={`relative z-30 mt-12 ${reducedMotion ? "lg:static lg:mt-14 lg:w-auto" : "lg:absolute lg:bottom-[4.5%] lg:left-12 lg:mt-0 lg:w-[58vw] lg:max-w-[900px]"}`}>
-              <motion.div style={animateEditorialCopy ? { opacity: headlineOpacity, y: headlineY } : undefined}>
-                <h2 className="text-[clamp(2.65rem,5vw,6rem)] font-medium leading-[.92] tracking-[-.063em] text-foreground">
-                  {copy.headline}
-                </h2>
-              </motion.div>
-
-              <motion.div
-                style={animateEditorialCopy ? { opacity: detailsOpacity, y: detailsY } : undefined}
-                className="mt-9 border-t border-white/12 pt-6 lg:grid lg:grid-cols-[1.35fr_.65fr] lg:gap-10 light:border-[rgb(var(--ink-rgb)/0.12)]"
-              >
-                <p className="max-w-2xl text-base leading-7 text-foreground/62">{copy.body}</p>
-                <div className="mt-8 lg:mt-0">
-                  <p className="font-mono text-[10px] uppercase tracking-[.16em] text-track-create">{copy.principleLabel}</p>
-                  <p className="mt-3 text-[15px] leading-6 text-foreground/82">{copy.principle}</p>
-                  <div
-                    inert={!linksInteractive}
-                    aria-hidden={!linksInteractive}
-                    className={`mt-6 flex flex-wrap content-start gap-x-5 gap-y-3 ${linksInteractive ? "" : "pointer-events-none select-none"}`}
-                  >
-                    {[
-                      ["LinkedIn", SITE_IDENTITY.social.linkedin],
-                      ["GitHub", SITE_IDENTITY.social.github],
-                      ["Email", `mailto:${SITE_IDENTITY.contact.email}`],
-                    ].map(([label, href]) => (
-                      <a
-                        key={label}
-                        href={href}
-                        target={label === "Email" ? undefined : "_blank"}
-                        rel={label === "Email" ? undefined : "noreferrer"}
-                        tabIndex={linksInteractive ? undefined : -1}
-                        className="inline-flex items-center gap-2 border-b border-white/20 pb-1 text-sm text-foreground transition-colors hover:border-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent light:border-[rgb(var(--ink-rgb)/0.2)] light:hover:border-foreground"
-                      >
-                        {label}<ArrowUpRight className="h-3.5 w-3.5" />
-                      </a>
-                    ))}
-                  </div>
                 </div>
-              </motion.div>
+
+                <motion.div
+                  aria-hidden="true"
+                  style={{ opacity: headlineOpacity, y: headlineY }}
+                  className="absolute inset-x-0 bottom-[4%] bg-[linear-gradient(180deg,transparent_0%,rgba(5,6,7,.96)_20%,#050607_100%)] px-1 pb-2 pt-14 lg:hidden"
+                >
+                  <p className="max-w-[680px] text-[clamp(2.15rem,9vw,4rem)] font-medium leading-[.91] tracking-[-.06em] text-[#F3F0E8]">
+                    {copy.headline}
+                  </p>
+                </motion.div>
+
+                <div className="absolute bottom-[4%] right-0 hidden w-[62vw] max-w-[920px] lg:block">
+                  <EditorialCopy
+                    copy={copy}
+                    headlineOpacity={headlineOpacity}
+                    headlineY={headlineY}
+                    detailsOpacity={detailsOpacity}
+                    detailsY={detailsY}
+                    animate
+                    linksInteractive={linksInteractive}
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
-          <motion.div
-            ref={portraitRef}
-            role="img"
-            aria-label={imageLabel}
-            data-frame-index={currentFrame}
-            data-sequence-mode={reducedMotion ? "reduced" : sequenceKey}
-            className="relative z-10 order-1 w-full max-w-[560px] justify-self-center overflow-hidden bg-card lg:order-none lg:max-w-[60vh] lg:justify-self-end lg:self-center"
-            style={animateEditorialCopy
-              ? { scale: portraitScale, aspectRatio: portraitAspectRatio }
-              : { aspectRatio: portraitAspectRatio }}
-          >
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 bg-cover bg-[center_30%] saturate-[.82]"
-              style={{ backgroundImage: `url(${sequence.poster})` }}
-            />
-            <Image
-              key={`primary-${primarySource}`}
-              data-portrait-layer="primary"
-              src={primarySource}
-              alt=""
-              aria-hidden="true"
-              fill
-              sizes="(min-width: 1024px) 46vw, 100vw"
-              loading="eager"
-              draggable={false}
-              className="object-cover object-[center_30%] saturate-[.82]"
-              onLoad={(event) => {
-                event.currentTarget.style.opacity = "1";
-                recordRenderedFrame(primarySource, frames, sequenceKey, true);
-              }}
-              onError={(event) => {
-                event.currentTarget.style.opacity = "0";
-                recordFailedFrame(primarySource, frames, sequenceKey);
-              }}
-            />
-            <motion.div className="absolute inset-0" style={{ opacity: reducedMotion ? 1 : frameMix }}>
-              <Image
-                key={`secondary-${secondarySource}`}
-                data-portrait-layer="secondary"
-                src={secondarySource}
-                alt=""
-                aria-hidden="true"
-                fill
-                sizes="(min-width: 1024px) 46vw, 100vw"
-                loading="eager"
-                draggable={false}
-                className="object-cover object-[center_30%] saturate-[.82]"
-                onLoad={(event) => {
-                  event.currentTarget.style.opacity = "1";
-                  recordRenderedFrame(secondarySource, frames, sequenceKey, false);
-                }}
-                onError={(event) => {
-                  event.currentTarget.style.opacity = "0";
-                  recordFailedFrame(secondarySource, frames, sequenceKey);
-                }}
-              />
-            </motion.div>
-            <motion.div style={reducedMotion ? { opacity: 0.06 } : { opacity: shadowOpacity }} className="pointer-events-none absolute inset-0 bg-background" />
-            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_srgb,var(--color-background)_2%,transparent)_35%,color-mix(in_srgb,var(--color-background)_76%,transparent)_100%)]" />
-            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,color-mix(in_srgb,var(--color-background)_24%,transparent),transparent_46%,color-mix(in_srgb,var(--color-track-create)_6%,transparent))]" />
-            <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-5 border-t border-white/16 pt-3 sm:bottom-6 sm:left-6 sm:right-6 light:border-[rgb(var(--ink-rgb)/0.16)]">
-              <p className="font-mono text-[10px] uppercase tracking-[.16em] text-foreground/54">Mario Morera</p>
-              <p className="text-right font-mono text-[10px] uppercase tracking-[.14em] text-foreground/42">Creative Technologist<br />&amp; Systems Builder</p>
-            </div>
-          </motion.div>
-        </div>
-      </div>
+          <div className="relative z-20 px-5 pb-20 pt-4 sm:px-8 sm:pb-24 lg:hidden">
+            <EditorialCopy copy={copy} compact />
+          </div>
+        </>
+      )}
     </section>
   );
 }

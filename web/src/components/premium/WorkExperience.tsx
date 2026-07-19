@@ -12,6 +12,8 @@ import { TickerNumber } from "@/components/motion/TickerNumber";
 import { DrawRule } from "@/components/motion/DrawRule";
 import { Reveal } from "@/components/scroll/Reveal";
 import { ScrollProgressBar } from "@/components/scroll/ScrollProgressBar";
+import { MotionBackdrop } from "@/components/shared/MotionBackdrop";
+import { MOTION_ASSETS } from "@/data/motionAssets";
 
 /**
  * WorkExperience — /casos-de-exito: header compacto, reel cinematográfico de
@@ -52,21 +54,20 @@ export function WorkExperience() {
       {/* Reel cinematográfico (full-bleed) */}
       <WorkReel projects={FEATURED_CASES} />
 
+      <section className="relative isolate flex min-h-[74svh] items-end overflow-hidden border-y border-white/10 bg-background px-5 pb-14 sm:px-8 lg:min-h-[82svh] lg:px-12 lg:pb-20 light:border-[rgb(var(--ink-rgb)/0.1)]" aria-labelledby="archive-work">
+        <MotionBackdrop asset={MOTION_ASSETS.archive} intensity={0.9} />
+        <div className="relative z-10 mx-auto w-full max-w-[1480px]">
+          <p className="font-mono text-[9px] uppercase tracking-[.16em] text-foreground/46">
+            {isEs ? "Archivo" : "Archive"} · {String(ARCHIVE_CASES.length).padStart(2, "0")}
+          </p>
+          <h2 id="archive-work" className="mt-4 max-w-3xl text-[clamp(2.8rem,5.4vw,6rem)] font-medium leading-[.94] tracking-[-.055em] text-foreground">
+            {isEs ? "Experiencias, productos y sistemas." : "Experiences, products and systems."}
+          </h2>
+        </div>
+      </section>
+
       {/* Archivo */}
       <section className="mx-auto w-full max-w-[1480px] px-5 pt-20 sm:px-8 lg:px-12" aria-labelledby="archive-work">
-        <div className="mb-10 grid gap-4 pb-6 md:grid-cols-[1fr_auto] md:items-end">
-          <div>
-            <p className="font-mono text-[9px] uppercase tracking-[.16em] text-[#F3F0E8]/28 light:text-muted-foreground/85">
-              {isEs ? "Archivo" : "Archive"} · {String(ARCHIVE_CASES.length).padStart(2, "0")}
-            </p>
-            <h2 id="archive-work" className="mt-3 text-3xl font-medium tracking-[-.04em] text-foreground">
-              {isEs ? "Experiencias, productos y sistemas." : "Experiences, products and systems."}
-            </h2>
-          </div>
-          <span className="font-mono text-[10px] uppercase tracking-widest text-[#F3F0E8]/30 light:text-muted-foreground/85">
-            {String(ARCHIVE_CASES.length).padStart(2, "0")}
-          </span>
-        </div>
         <DrawRule className="mb-10 block h-px w-full bg-white/10 light:bg-[rgb(var(--ink-rgb)/0.1)]" />
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           {ARCHIVE_CASES.map((project, index) => (

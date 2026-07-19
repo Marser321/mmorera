@@ -153,7 +153,7 @@ export function AplicarOS() {
         <section id="aplicar-os-section" className="relative overflow-hidden bg-transparent px-0 py-14 pb-24 md:py-20">
             <div className="container mx-auto max-w-3xl px-0 sm:px-4">
                 
-                <div className="relative overflow-hidden rounded-[1.25rem] border border-white/10 light:border-[rgb(var(--ink-rgb)/0.1)] bg-[#0D1114]/82 light:bg-card/82 p-4 shadow-2xl light:shadow-[0_1px_2px_rgb(20_23_26/0.06),0_12px_32px_rgb(20_23_26/0.1)] backdrop-blur-md md:p-8">
+                <div className="relative overflow-hidden rounded-[1.25rem] border border-white/10 light:border-[rgb(var(--ink-rgb)/0.1)] bg-[#0D1114]/92 light:bg-card/94 p-4 shadow-2xl light:shadow-[0_1px_2px_rgb(20_23_26/0.06),0_12px_32px_rgb(20_23_26/0.1)] backdrop-blur-md md:p-8">
 
                     {/* Encabezado del Formulario */}
                     <div className="mb-5 flex items-center justify-between border-b border-white/5 light:border-[rgb(var(--ink-rgb)/0.05)] pb-4 select-none md:mb-6">
@@ -180,7 +180,7 @@ export function AplicarOS() {
                                         value={formData.name}
                                         onChange={(e) => updateField('name', e.target.value)}
                                         placeholder={language === 'es' ? 'Esteban Quito' : 'John Doe'}
-                                        className="w-full rounded-xl border border-white/10 light:border-border bg-white/5 light:bg-input px-4 py-3 font-sans text-sm text-white light:text-foreground transition-all placeholder:text-white/20 light:placeholder:text-foreground/20 focus:border-signal/50 focus:outline-none focus:ring-1 focus:ring-signal/30"
+                                        className="w-full rounded-xl border border-white/10 light:border-border bg-white/5 light:bg-input px-4 py-3 font-sans text-sm text-white light:text-foreground transition-all placeholder:text-white/35 light:placeholder:text-foreground/45 focus:border-signal/50 focus:outline-none focus:ring-1 focus:ring-signal/30"
                                     />
                                 </div>
                                 <div>
@@ -193,7 +193,7 @@ export function AplicarOS() {
                                         value={formData.email}
                                         onChange={(e) => updateField('email', e.target.value)}
                                         placeholder={language === 'es' ? 'esteban@empresa.com' : 'john@company.com'}
-                                        className="w-full rounded-xl border border-white/10 light:border-border bg-white/5 light:bg-input px-4 py-3 font-sans text-sm text-white light:text-foreground transition-all placeholder:text-white/20 light:placeholder:text-foreground/20 focus:border-signal/50 focus:outline-none focus:ring-1 focus:ring-signal/30"
+                                        className="w-full rounded-xl border border-white/10 light:border-border bg-white/5 light:bg-input px-4 py-3 font-sans text-sm text-white light:text-foreground transition-all placeholder:text-white/35 light:placeholder:text-foreground/45 focus:border-signal/50 focus:outline-none focus:ring-1 focus:ring-signal/30"
                                     />
                                 </div>
                             </div>
@@ -211,7 +211,7 @@ export function AplicarOS() {
                                         value={formData.company}
                                         onChange={(e) => updateField('company', e.target.value)}
                                         placeholder={language === 'es' ? 'Quito S.A.' : 'Doe Industries'}
-                                        className="w-full rounded-xl border border-white/10 light:border-border bg-white/5 light:bg-input px-4 py-3 font-sans text-sm text-white light:text-foreground transition-all placeholder:text-white/20 light:placeholder:text-foreground/20 focus:border-signal/50 focus:outline-none focus:ring-1 focus:ring-signal/30"
+                                        className="w-full rounded-xl border border-white/10 light:border-border bg-white/5 light:bg-input px-4 py-3 font-sans text-sm text-white light:text-foreground transition-all placeholder:text-white/35 light:placeholder:text-foreground/45 focus:border-signal/50 focus:outline-none focus:ring-1 focus:ring-signal/30"
                                     />
                                 </div>
                                 <div>
@@ -259,7 +259,7 @@ export function AplicarOS() {
                                         : 'We lose leads due to slow response times on WhatsApp...'
                                     }
                                     rows={4}
-                                    className="w-full resize-none rounded-xl border border-white/10 light:border-border bg-white/5 light:bg-input px-4 py-3 font-sans text-sm text-white light:text-foreground transition-all placeholder:text-white/20 light:placeholder:text-foreground/20 focus:border-signal/50 focus:outline-none focus:ring-1 focus:ring-signal/30"
+                                    className="w-full resize-none rounded-xl border border-white/10 light:border-border bg-white/5 light:bg-input px-4 py-3 font-sans text-sm text-white light:text-foreground transition-all placeholder:text-white/35 light:placeholder:text-foreground/45 focus:border-signal/50 focus:outline-none focus:ring-1 focus:ring-signal/30"
                                 />
                             </div>
                         )}

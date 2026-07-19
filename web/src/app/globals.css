@@ -177,6 +177,21 @@ html.light {
   }
 }
 
+@keyframes motion-ambient-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1.015);
+  }
+
+  50% {
+    transform: translate3d(0, -6px, 0) scale(1.022);
+  }
+}
+
+.motion-ambient-drift {
+  animation: motion-ambient-drift 9s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
 @keyframes glow-pulse {
 
   0%,

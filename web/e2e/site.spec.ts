@@ -50,7 +50,7 @@ test("prioriza capacidades en home y mantiene los casos en el archivo", async ({
   const manifesto = page.getByTestId("author-manifesto");
   await expect(manifesto).toHaveCount(1);
   await expect(manifesto.getByRole("heading", { level: 2 })).toContainText("No elegí entre crear");
-  await expect(manifesto.locator("[data-portrait-layer]")).toHaveCount(2);
+  await expect(manifesto.locator("picture img")).toHaveCount(1);
   await expect(page.locator("[data-home-section]").evaluateAll((sections) => sections.map((section) => section.getAttribute("data-home-section")))).resolves.toEqual([
     "hero",
     "tracks",
@@ -90,39 +90,44 @@ test("cambia idioma y mantiene el modo elegido en la URL", async ({ page }) => {
   await expect(page.getByTestId("author-manifesto").getByRole("heading", { level: 2 })).toContainText("I didn’t choose between creating");
 });
 
-test("mezcla el retrato por scroll sin añadir otro canvas", async ({ page }) => {
+test("controla la película personal en ambos sentidos sin añadir otro canvas", async ({ page }) => {
   await page.goto("/");
   const manifesto = page.getByTestId("author-manifesto");
+  const visual = manifesto.getByRole("img");
   await manifesto.scrollIntoViewIfNeeded();
+  await expect(visual).toHaveAttribute("data-film-status", "ready");
   await page.evaluate(() => {
-    const section = document.querySelector<HTMLElement>('[data-testid="author-manifesto"]');
-    if (!section) return;
-    window.scrollTo(0, section.offsetTop + (section.offsetHeight - window.innerHeight) * 0.58);
+    const track = document.querySelector<HTMLElement>("[data-film-track]");
+    if (!track) return;
+    const trackTop = track.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo(0, trackTop + (track.offsetHeight - window.innerHeight) * 0.58);
   });
-  await expect.poll(async () => Number(await manifesto.getByRole("img").getAttribute("data-frame-index"))).toBeGreaterThanOrEqual(3);
-  await expect(manifesto.locator("[data-portrait-layer]")).toHaveCount(2);
+  const film = manifesto.locator("video[data-personal-film]");
+  await expect(visual).toHaveAttribute("data-sequence-state", "scale");
+  await expect.poll(() => film.evaluate((video) => (video as HTMLVideoElement).currentTime)).toBeGreaterThan(8);
+  const forwardTime = await film.evaluate((video) => (video as HTMLVideoElement).currentTime);
+  await page.evaluate(() => {
+    const track = document.querySelector<HTMLElement>("[data-film-track]");
+    if (!track) return;
+    const trackTop = track.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo(0, trackTop + (track.offsetHeight - window.innerHeight) * 0.25);
+  });
+  await expect.poll(() => film.evaluate((video) => (video as HTMLVideoElement).currentTime)).toBeLessThan(forwardTime - 2);
+  await expect.poll(() => film.evaluate((video) => (video as HTMLVideoElement).paused)).toBe(true);
   await expect(page.locator("canvas")).toHaveCount(1);
 });
 
-test("conserva el último retrato válido si falta un frame", async ({ page }) => {
-  await page.route("**/profile/author-sequence/desktop/frame-04.jpg", (route) => route.abort("failed"));
+test("recupera el póster final si falla la película personal", async ({ page }) => {
+  await page.route("**/profile/author-film/author-film-desktop.*", (route) => route.abort("failed"));
   await page.goto("/");
   const manifesto = page.getByTestId("author-manifesto");
-  const portrait = manifesto.getByRole("img");
-  const primary = manifesto.locator('[data-portrait-layer="primary"]');
-  await expect.poll(async () => await primary.getAttribute("src")).toContain("frame-01.jpg");
-  const lastValidSource = await primary.getAttribute("src");
-  await page.evaluate(() => {
-    const section = document.querySelector<HTMLElement>('[data-testid="author-manifesto"]');
-    if (!section) return;
-    window.scrollTo(0, section.offsetTop + (section.offsetHeight - window.innerHeight) * 0.44);
-  });
-  await expect(portrait).toHaveAttribute("data-frame-index", "0");
-  await expect(primary).toHaveAttribute("src", lastValidSource ?? "");
-  await expect.poll(async () => manifesto.locator("[data-portrait-layer]").evaluateAll((images) => images.every((image) => (image as HTMLImageElement).naturalWidth > 0))).toBe(true);
+  await manifesto.scrollIntoViewIfNeeded();
+  await expect(manifesto.getByRole("img")).toHaveAttribute("data-film-status", "fallback");
+  await expect(manifesto.locator("video[data-personal-film]")).toHaveCount(0);
+  await expect.poll(() => manifesto.locator("picture img").evaluate((image) => (image as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
 });
 
-test("completa la secuencia móvil mientras el retrato sigue visible", async ({ browser }) => {
+test("completa la película móvil mientras el retrato sigue visible", async ({ browser }) => {
   const context = await browser.newContext({
     baseURL: BASE_URL,
     viewport: { width: 390, height: 844 },
@@ -131,25 +136,26 @@ test("completa la secuencia móvil mientras el retrato sigue visible", async ({ 
   });
   const page = await context.newPage();
   await page.goto("/");
-  const portrait = page.getByTestId("author-manifesto").getByRole("img");
+  const manifesto = page.getByTestId("author-manifesto");
+  const portrait = manifesto.getByRole("img");
   await page.evaluate(() => {
-    const image = document.querySelector<HTMLElement>('[data-testid="author-manifesto"] [role="img"]');
-    if (!image) return;
-    const imageTop = image.getBoundingClientRect().top + window.scrollY;
-    window.scrollTo(0, imageTop - window.innerHeight * 0.9);
+    const section = document.querySelector<HTMLElement>('[data-testid="author-manifesto"]');
+    if (!section) return;
+    window.scrollTo(0, section.offsetTop);
   });
-  await expect(portrait).toHaveAttribute("data-frame-index", "0");
-  // Re-scroll en cada intento: mientras cargan imágenes la página crece y un
-  // único scrollTo puede quedar clampeado corto de forma permanente.
+  await expect(portrait).toHaveAttribute("data-sequence-mode", "mobile");
+  await expect(portrait).toHaveAttribute("data-film-status", "ready");
+  await expect(manifesto.locator("video source[type^='video/webm']")).toHaveAttribute("src", /author-film-mobile\.webm$/);
   await expect.poll(async () => {
     await page.evaluate(() => {
-      const image = document.querySelector<HTMLElement>('[data-testid="author-manifesto"] [role="img"]');
-      if (!image) return;
-      const imageTop = image.getBoundingClientRect().top + window.scrollY;
-      window.scrollTo(0, imageTop + image.offsetHeight - window.innerHeight * 0.9);
+      const track = document.querySelector<HTMLElement>("[data-film-track]");
+      if (!track) return;
+      const trackTop = track.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo(0, trackTop + (track.offsetHeight - window.innerHeight) * 0.98);
     });
-    return Number(await portrait.getAttribute("data-frame-index"));
-  }).toBe(5);
+    return Number(await portrait.getAttribute("data-film-time"));
+  }).toBeGreaterThan(13.9);
+  await expect(portrait).toHaveAttribute("data-sequence-state", "closing");
   await expect(portrait).toBeInViewport();
   await context.close();
 });
@@ -179,13 +185,14 @@ test("mantiene la composición sin desborde en tablet y pantalla ancha", async (
           : null,
       };
     });
+    const cinematicOverscan = 32;
     expect(metrics.bodyWidth).toBeLessThanOrEqual(metrics.viewportWidth);
     expect(metrics.portrait).not.toBeNull();
-    expect(metrics.portrait?.left ?? -1).toBeGreaterThanOrEqual(0);
-    expect(metrics.portrait?.right ?? Infinity).toBeLessThanOrEqual(metrics.viewportWidth);
+    expect(metrics.portrait?.left ?? -Infinity).toBeGreaterThanOrEqual(-cinematicOverscan);
+    expect(metrics.portrait?.right ?? Infinity).toBeLessThanOrEqual(metrics.viewportWidth + cinematicOverscan);
     if (viewport.width >= 1024) {
-      expect(metrics.portrait?.top ?? -1).toBeGreaterThanOrEqual(0);
-      expect(metrics.portrait?.bottom ?? Infinity).toBeLessThanOrEqual(metrics.viewportHeight);
+      expect(metrics.portrait?.top ?? -Infinity).toBeGreaterThanOrEqual(-cinematicOverscan);
+      expect(metrics.portrait?.bottom ?? Infinity).toBeLessThanOrEqual(metrics.viewportHeight + cinematicOverscan);
     }
     expect(pageErrors).toEqual([]);
     await context.close();
@@ -254,7 +261,9 @@ test("ofrece fallback estático con touch y reduced motion", async ({ browser })
   const manifesto = page.getByTestId("author-manifesto");
   await manifesto.scrollIntoViewIfNeeded();
   await expect(manifesto.getByRole("img")).toHaveAttribute("data-sequence-mode", "reduced");
-  await expect(manifesto.getByRole("img")).toHaveAttribute("data-frame-index", "5");
+  await expect(manifesto.getByRole("img")).toHaveAttribute("data-film-status", "reduced");
+  await expect(manifesto.getByRole("img")).toHaveAttribute("data-sequence-state", "closing");
+  await expect(manifesto.locator("video[data-personal-film]")).toHaveCount(0);
   await expect(manifesto.getByRole("heading", { level: 2 })).toBeVisible();
   await expect(manifesto.getByText("Después de años convirtiendo visiones", { exact: false })).toBeVisible();
   await expect(manifesto.getByText("Trabajo con ideas que tienen algo que proteger", { exact: false })).toBeVisible();
@@ -273,7 +282,9 @@ test("presenta movimiento reducido en escritorio sin superponer el manifiesto", 
   page.on("pageerror", (error) => pageErrors.push(error));
   await page.goto("/#perfil");
   const manifesto = page.getByTestId("author-manifesto");
-  await expect(manifesto.getByRole("img")).toHaveAttribute("data-frame-index", "7");
+  await expect(manifesto.getByRole("img")).toHaveAttribute("data-film-status", "reduced");
+  await expect(manifesto.getByRole("img")).toHaveAttribute("data-sequence-state", "closing");
+  await expect(manifesto.locator("video[data-personal-film]")).toHaveCount(0);
   await expect(manifesto.getByRole("heading", { level: 2 })).toBeVisible();
   await expect(manifesto.getByText("Después de años convirtiendo visiones", { exact: false })).toBeVisible();
   await expect(manifesto.getByText("Trabajo con ideas que tienen algo que proteger", { exact: false })).toBeVisible();
@@ -324,6 +335,128 @@ test("alterna al modo claro, lo persiste y mantiene la home legible", async ({ p
     .poll(() => page.evaluate(() => window.localStorage.getItem("mm-theme")))
     .toBe("dark");
   expect(pageErrors).toEqual([]);
+});
+
+test("monta los MP4 locales de forma diferida en las cinco escenas", async ({ page }) => {
+  const integrations = [
+    { path: "/", assets: [{ id: "nucleo-decision", source: "graphite-desktop.mp4" }, { id: "apertura-protegida", source: "minimalist-desktop.mp4" }] },
+    { path: "/sistemas", assets: [{ id: "cinta-continuidad", source: "minimalist-desktop.mp4" }] },
+    { path: "/estudio", assets: [{ id: "telar-pulso", source: "graphite-desktop.mp4" }] },
+    { path: "/casos-de-exito", assets: [{ id: "archivo-estratos", source: "minimalist-desktop.mp4" }] },
+    { path: "/aplicar", assets: [{ id: "apertura-protegida", source: "minimalist-desktop.mp4" }] },
+  ] as const;
+
+  for (const integration of integrations) {
+    await page.goto(integration.path);
+    for (const asset of integration.assets) {
+      const backdrop = page.locator(`[data-motion-asset="${asset.id}"]`);
+      await expect(backdrop).toHaveCount(1);
+      await expect(backdrop).toHaveAttribute("data-motion-preview", "enabled");
+      await backdrop.scrollIntoViewIfNeeded();
+      await expect(backdrop).toHaveAttribute("data-motion-video-status", "ready");
+      await expect(backdrop.locator("video source[type='video/mp4']")).toHaveAttribute("src", new RegExp(`${asset.source}$`));
+    }
+  }
+});
+
+test("cruza el fondo abstracto con el tema y mantiene Perfil oscuro", async ({ page }) => {
+  await page.goto("/");
+  const nucleus = page.locator('[data-motion-asset="nucleo-decision"]');
+  await nucleus.scrollIntoViewIfNeeded();
+  await expect(nucleus).toHaveAttribute("data-motion-video-status", "ready");
+  const previewVideo = nucleus.locator("video[data-motion-video-preview='true']");
+  await expect(previewVideo).toHaveClass(/opacity-100/);
+  const layers = nucleus.locator("picture").locator("..");
+  await expect(layers.nth(0)).toHaveClass(/opacity-100/);
+  await expect(layers.nth(1)).toHaveClass(/opacity-0/);
+
+  await page.getByRole("button", { name: "Cambiar a modo claro" }).click();
+  await expect(previewVideo).toHaveClass(/opacity-0/);
+  await expect.poll(() => previewVideo.evaluate((video) => (video as HTMLVideoElement).paused)).toBe(true);
+  await expect(layers.nth(0)).toHaveClass(/opacity-0/);
+  await expect(layers.nth(1)).toHaveClass(/opacity-100/);
+
+  await page.goto("/#perfil");
+  const manifesto = page.getByTestId("author-manifesto");
+  await expect.poll(() => manifesto.evaluate((section) => getComputedStyle(section).backgroundColor)).toBe("rgb(5, 6, 7)");
+  await expect.poll(() => manifesto.evaluate((section) => getComputedStyle(section).color)).toBe("rgb(243, 240, 232)");
+});
+
+test("mantiene posters estaticos sin montar videos con movimiento reducido", async ({ browser }) => {
+  const context = await browser.newContext({
+    baseURL: BASE_URL,
+    viewport: { width: 1440, height: 900 },
+    reducedMotion: "reduce",
+  });
+  const page = await context.newPage();
+
+  for (const { path, asset } of [
+    { path: "/", asset: "nucleo-decision" },
+    { path: "/sistemas", asset: "cinta-continuidad" },
+    { path: "/estudio", asset: "telar-pulso" },
+    { path: "/casos-de-exito", asset: "archivo-estratos" },
+    { path: "/aplicar", asset: "apertura-protegida" },
+  ]) {
+    await page.goto(path);
+    const backdrop = page.locator(`[data-motion-asset="${asset}"]`);
+    await expect(backdrop).toHaveCount(1);
+    await backdrop.scrollIntoViewIfNeeded();
+    await expect(backdrop.locator("img").first()).toBeAttached();
+    await expect(page.locator("[data-motion-video]")).toHaveCount(0);
+  }
+
+  await context.close();
+});
+
+test("pausa fuera del viewport y conserva una sola reproducción simultánea", async ({ page }) => {
+  await page.goto("/");
+  const nucleus = page.locator('[data-motion-asset="nucleo-decision"]');
+  await nucleus.scrollIntoViewIfNeeded();
+  const nucleusVideo = nucleus.locator("video[data-motion-video]");
+  await expect(nucleus).toHaveAttribute("data-motion-video-status", "ready");
+  await expect.poll(() => nucleusVideo.evaluate((video) => !(video as HTMLVideoElement).paused)).toBe(true);
+
+  const opening = page.locator('[data-motion-asset="apertura-protegida"]');
+  await opening.scrollIntoViewIfNeeded();
+  await expect(opening).toHaveAttribute("data-motion-video-status", "ready");
+  await expect.poll(() => nucleusVideo.evaluate((video) => (video as HTMLVideoElement).paused)).toBe(true);
+  const playingVideos = await page.locator("[data-motion-video]").evaluateAll((videos) =>
+    videos.filter((video) => !(video as HTMLVideoElement).paused).length,
+  );
+  expect(playingVideos).toBeLessThanOrEqual(1);
+});
+
+test("usa Camera solo para Apertura móvil", async ({ browser }) => {
+  const context = await browser.newContext({
+    baseURL: BASE_URL,
+    viewport: { width: 390, height: 844 },
+    isMobile: true,
+    hasTouch: true,
+  });
+  const page = await context.newPage();
+
+  await page.goto("/aplicar");
+  const opening = page.locator('[data-motion-asset="apertura-protegida"]');
+  await opening.scrollIntoViewIfNeeded();
+  await expect(opening).toHaveAttribute("data-motion-video-status", "ready");
+  await expect(opening.locator("video source[type='video/mp4']")).toHaveAttribute("src", /camera-mobile\.mp4$/);
+
+  await page.goto("/estudio");
+  const pulse = page.locator('[data-motion-asset="telar-pulso"]');
+  await pulse.scrollIntoViewIfNeeded();
+  await expect(pulse).toHaveAttribute("data-motion-video-status", "ready");
+  await expect(pulse.locator("video source[type='video/mp4']")).toHaveAttribute("src", /graphite-mobile\.mp4$/);
+  await context.close();
+});
+
+test("recupera el poster si falla un MP4 local", async ({ page }) => {
+  await page.route("**/motion/previews/graphite-desktop.mp4", (route) => route.abort("failed"));
+  await page.goto("/");
+  const nucleus = page.locator('[data-motion-asset="nucleo-decision"]');
+  await nucleus.scrollIntoViewIfNeeded();
+  await expect(nucleus).toHaveAttribute("data-motion-video-status", "fallback");
+  await expect(nucleus.locator("[data-motion-video]")).toHaveCount(0);
+  await expect(nucleus.locator("picture img").first()).toBeAttached();
 });
 
 test("publica canonical, hreflang, OG, JSON-LD y sitemap canónicos", async ({ page, request }) => {
