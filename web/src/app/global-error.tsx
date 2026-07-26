@@ -1,9 +1,27 @@
 "use client";
 
+import { useState } from "react";
+
 /**
  * Global Error Boundary — captura errores client-side no manejados.
- * En producción, muestra el error real para diagnóstico.
+ * En producción solo expone el digest (seguro para correlación en logs);
+ * los detalles internos (mensaje/stack) solo se muestran en desarrollo.
  */
+const COPY = {
+    es: {
+        title: "Error de aplicación",
+        body: "Se produjo un error inesperado. Puedes intentar recargar la vista.",
+        reference: "Referencia",
+        retry: "Intentar de nuevo",
+    },
+    en: {
+        title: "Application error",
+        body: "An unexpected error occurred. You can try reloading the view.",
+        reference: "Reference",
+        retry: "Try again",
+    },
+} as const;
+
 export default function GlobalError({
     error,
     reset,
@@ -11,37 +29,43 @@ export default function GlobalError({
     error: Error & { digest?: string };
     reset: () => void;
 }) {
+    const [lang] = useState<keyof typeof COPY>(() =>
+        typeof navigator !== "undefined" && navigator.language.toLowerCase().startsWith("en")
+            ? "en"
+            : "es",
+    );
+
+    const copy = COPY[lang];
+    const isDev = process.env.NODE_ENV !== "production";
+
     return (
-        <html lang="es">
-            <body className="bg-black text-white min-h-screen flex items-center justify-center p-8">
-                <div className="max-w-2xl w-full space-y-6 text-center">
-                    <h1 className="text-4xl font-bold text-red-400">Error de Aplicación</h1>
-                    <p className="text-lg text-gray-400">
-                        Se produjo un error inesperado. Información de diagnóstico:
-                    </p>
-                    <div className="bg-gray-900 border border-gray-700 rounded-xl p-6 text-left overflow-auto">
-                        <p className="text-sm text-red-300 font-mono break-all">
-                            <strong>Nombre:</strong> {error.name}
+        <html lang={lang}>
+            <body className="flex min-h-screen items-center justify-center bg-[#0a0a0a] p-8 text-[#f3f0e8]">
+                <div className="w-full max-w-2xl space-y-6 text-center">
+                    <h1 className="text-4xl font-medium tracking-tight">{copy.title}</h1>
+                    <p className="text-lg text-[#f3f0e8]/60">{copy.body}</p>
+                    {error.digest && (
+                        <p className="font-mono text-xs text-[#f3f0e8]/40">
+                            {copy.reference}: {error.digest}
                         </p>
-                        <p className="text-sm text-red-300 font-mono break-all mt-2">
-                            <strong>Mensaje:</strong> {error.message}
-                        </p>
-                        {error.digest && (
-                            <p className="text-sm text-yellow-300 font-mono mt-2">
-                                <strong>Digest:</strong> {error.digest}
+                    )}
+                    {isDev && (
+                        <div className="overflow-auto rounded-xl border border-white/10 bg-white/5 p-6 text-left">
+                            <p className="break-all font-mono text-sm text-red-300">
+                                <strong>{error.name}:</strong> {error.message}
                             </p>
-                        )}
-                        {error.stack && (
-                            <pre className="text-xs text-gray-400 font-mono mt-4 whitespace-pre-wrap max-h-64 overflow-y-auto">
-                                {error.stack}
-                            </pre>
-                        )}
-                    </div>
+                            {error.stack && (
+                                <pre className="mt-4 max-h-64 overflow-y-auto whitespace-pre-wrap font-mono text-xs text-white/50">
+                                    {error.stack}
+                                </pre>
+                            )}
+                        </div>
+                    )}
                     <button
                         onClick={reset}
-                        className="px-8 py-3 bg-white text-black font-bold rounded-xl hover:bg-gray-200 transition-colors"
+                        className="rounded-full bg-[#f3f0e8] px-8 py-3 font-medium text-[#0a0a0a] transition-opacity hover:opacity-85"
                     >
-                        Intentar de Nuevo
+                        {copy.retry}
                     </button>
                 </div>
             </body>

@@ -6,6 +6,7 @@ import { AppProviders } from "@/components/providers/AppProviders";
 import { GlobalBackground } from "@/components/shared/GlobalBackground";
 import { Navbar } from "@/components/sections/navbar";
 import { Footer } from "@/components/sections/footer";
+import { WhatsAppFab } from "@/components/shared/WhatsAppFab";
 
 const displayFont = Unbounded({
   subsets: ["latin"], display: "swap", variable: "--ff-display", weight: ["400", "500", "700", "900"],
@@ -74,6 +75,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <Navbar />
           <div className="relative z-10 flex min-h-screen flex-col">{children}</div>
           <Footer />
+          <WhatsAppFab />
         </AppProviders>
       </body>
     </html>

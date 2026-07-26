@@ -52,7 +52,6 @@ const config: Config = {
         shimmer: "shimmer 2.5s linear infinite",
         float: "float 6s ease-in-out infinite",
         "glow-pulse": "glow-pulse 3s ease-in-out infinite",
-        "conic-spin": "conic-spin 8s linear infinite",
       },
     },
   },

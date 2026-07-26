@@ -1,6 +1,8 @@
 import type { IconType } from 'react-icons';
 import { FaCloud } from 'react-icons/fa6';
 import { MultiModelAiMark } from '@/components/icons/MultiModelAiMark';
+import { GhlMark } from '@/components/icons/GhlMark';
+import { HermesMark } from '@/components/icons/HermesMark';
 import {
     SiAnthropic,
     SiAstro,
@@ -109,6 +111,12 @@ export const TECH_STACK: Tech[] = [
     { name: 'Google Gemini', category: 'AI', Icon: SiGooglegemini },
     { name: 'Grok / xAI', category: 'AI', Icon: SiX },
     { name: 'Meta', category: 'AI', Icon: SiMeta },
+    {
+        name: 'Hermes Agents',
+        category: 'AI',
+        Icon: HermesMark,
+        descriptor: { es: 'Agentes autónomos', en: 'Autonomous agents' },
+    },
     // Automation
     {
         name: 'n8n',
@@ -169,7 +177,7 @@ export const TECH_STACK: Tech[] = [
     { name: 'HubSpot', category: 'CRM', Icon: SiHubspot },
     { name: 'Salesforce', category: 'CRM', Icon: SiSalesforce },
     { name: 'Zoho CRM', category: 'CRM', Icon: SiZoho },
-    { name: 'GoHighLevel', category: 'CRM', fallback: 'GHL' },
+    { name: 'GoHighLevel', category: 'CRM', Icon: GhlMark },
     { name: 'Pipedrive', category: 'CRM', fallback: 'PD' },
     // Media (audiovisual) — logos reales donde existen; etiqueta de texto para el resto.
     { name: 'DaVinci Resolve', category: 'Media', Icon: SiDavinciresolve },
