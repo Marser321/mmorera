@@ -5,6 +5,7 @@ import { ArrowUpRight } from "lucide-react";
 import { WorkReel } from "./WorkReel";
 import { CaseBento } from "./CaseBento";
 import { LighthouseBenchmarkArena } from "@/components/premium/work/LighthouseBenchmarkArena";
+import { CaseSolutionMatcher } from "@/components/premium/work/CaseSolutionMatcher";
 import { ARCHIVE_CASES, FEATURED_CASES } from "@/data/projectCases";
 import { useLanguage } from "@/context/LanguageContext";
 import { localePath } from "@/config/site";
@@ -57,6 +58,9 @@ export function WorkExperience() {
 
       {/* Arena de Rendimiento & Auditoría de Velocidad B2B */}
       <LighthouseBenchmarkArena />
+
+      {/* Matriz Táctil de Casos por Industria & Solución */}
+      <CaseSolutionMatcher />
 
       <section className="relative isolate flex min-h-[74svh] items-end overflow-hidden border-y border-white/10 bg-background px-5 pb-14 sm:px-8 lg:min-h-[82svh] lg:px-12 lg:pb-20 light:border-[rgb(var(--ink-rgb)/0.1)]" aria-labelledby="archive-work">
         <MotionBackdrop asset={MOTION_ASSETS.archive} intensity={0.9} />
