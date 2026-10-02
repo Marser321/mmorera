@@ -21,6 +21,7 @@ import { ExclusivitySection } from "@/components/premium/home/ExclusivitySection
 import { OrchestrationWheelSection } from "@/components/premium/home/OrchestrationWheelSection";
 import { DecisionHubSection } from "@/components/premium/home/DecisionHubSection";
 import { WorkflowSection } from "@/components/premium/home/WorkflowSection";
+import { StackMatrixPlayground } from "@/components/premium/home/StackMatrixPlayground";
 import { IslandBar } from "@/components/layout/IslandBar";
 import { AplicarOS } from "@/components/portfolio-isolated/AplicarOS";
 import { BackgroundVideo } from "@/components/shared/BackgroundVideo";
@@ -242,6 +243,9 @@ export function HomeExperience({
 
       {/* ─── 7. BLUEPRINT DE METODOLOGÍA (4 Fases claras) ─── */}
       <WorkflowSection />
+
+      {/* ─── 7.1 MATRIZ INTERACTIVA DE CONECTORES & DIAGNÓSTICO DE FRICCIÓN ─── */}
+      <StackMatrixPlayground />
 
       {/* ─── 8. CATÁLOGO DE CASOS REALES (Bento de proyectos en producción) ─── */}
       <section id="proyectos" className="scroll-mt-20 bg-background px-5 py-20 sm:px-8 sm:py-28 lg:px-12 border-t border-white/10 light:border-[rgb(var(--ink-rgb)/0.1)]">
