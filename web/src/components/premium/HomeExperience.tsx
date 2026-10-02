@@ -23,6 +23,7 @@ import { OrchestrationWheelSection } from "@/components/premium/home/Orchestrati
 import { DecisionHubSection } from "@/components/premium/home/DecisionHubSection";
 import { OperationalFrictionDiagnostic } from "@/components/premium/home/OperationalFrictionDiagnostic";
 import { WorkflowSection } from "@/components/premium/home/WorkflowSection";
+import { AsyncSprintDeliveryRadar } from "@/components/premium/home/AsyncSprintDeliveryRadar";
 import { StackMatrixPlayground } from "@/components/premium/home/StackMatrixPlayground";
 import { SprintRoiCalculator } from "@/components/premium/home/SprintRoiCalculator";
 import { TransformationDiffViewer } from "@/components/premium/home/TransformationDiffViewer";
@@ -254,6 +255,9 @@ export function HomeExperience({
 
       {/* ─── 7. BLUEPRINT DE METODOLOGÍA (4 Fases claras) ─── */}
       <WorkflowSection />
+
+      {/* ─── 7.05 RADAR DE ENTREGA ASÍNCRONA & LIVE CLIENT STREAM ─── */}
+      <AsyncSprintDeliveryRadar />
 
       {/* ─── 7.1 MATRIZ INTERACTIVA DE CONECTORES & DIAGNÓSTICO DE FRICCIÓN ─── */}
       <StackMatrixPlayground />
