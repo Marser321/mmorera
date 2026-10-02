@@ -22,6 +22,7 @@ import { OrchestrationWheelSection } from "@/components/premium/home/Orchestrati
 import { DecisionHubSection } from "@/components/premium/home/DecisionHubSection";
 import { WorkflowSection } from "@/components/premium/home/WorkflowSection";
 import { StackMatrixPlayground } from "@/components/premium/home/StackMatrixPlayground";
+import { SprintRoiCalculator } from "@/components/premium/home/SprintRoiCalculator";
 import { TransformationDiffViewer } from "@/components/premium/home/TransformationDiffViewer";
 import { IslandBar } from "@/components/layout/IslandBar";
 import { AplicarOS } from "@/components/portfolio-isolated/AplicarOS";
@@ -247,6 +248,9 @@ export function HomeExperience({
 
       {/* ─── 7.1 MATRIZ INTERACTIVA DE CONECTORES & DIAGNÓSTICO DE FRICCIÓN ─── */}
       <StackMatrixPlayground />
+
+      {/* ─── 7.2 CALCULADORA TÁCTIL DE SPRINTS & RETORNO B2B ─── */}
+      <SprintRoiCalculator />
 
       {/* ─── 8. CATÁLOGO DE CASOS REALES (Bento de proyectos en producción) ─── */}
       <section id="proyectos" className="scroll-mt-20 bg-background px-5 py-20 sm:px-8 sm:py-28 lg:px-12 border-t border-white/10 light:border-[rgb(var(--ink-rgb)/0.1)]">
