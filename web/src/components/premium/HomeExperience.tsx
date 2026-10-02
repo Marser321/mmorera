@@ -22,6 +22,7 @@ import { OrchestrationWheelSection } from "@/components/premium/home/Orchestrati
 import { DecisionHubSection } from "@/components/premium/home/DecisionHubSection";
 import { WorkflowSection } from "@/components/premium/home/WorkflowSection";
 import { StackMatrixPlayground } from "@/components/premium/home/StackMatrixPlayground";
+import { TransformationDiffViewer } from "@/components/premium/home/TransformationDiffViewer";
 import { IslandBar } from "@/components/layout/IslandBar";
 import { AplicarOS } from "@/components/portfolio-isolated/AplicarOS";
 import { BackgroundVideo } from "@/components/shared/BackgroundVideo";
@@ -270,6 +271,11 @@ export function HomeExperience({
               </Link>
             </div>
           </div>
+
+          {/* Inspector Interactivo de Transformación Operativa Antes vs Después */}
+          <Reveal y={20}>
+            <TransformationDiffViewer />
+          </Reveal>
 
           <Reveal y={24}>
             <CaseBento projects={FEATURED_CASES} featureFirst className="pt-6 pb-12" />
