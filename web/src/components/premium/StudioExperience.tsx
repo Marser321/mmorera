@@ -11,6 +11,7 @@ import { MOTION_ASSETS } from "@/data/motionAssets";
 import { CapabilitiesOrbit } from "@/components/premium/estudio/CapabilitiesOrbit";
 import { KineticMotionLab } from "@/components/premium/estudio/KineticMotionLab";
 import { CreativeInteractionLab } from "@/components/premium/estudio/CreativeInteractionLab";
+import { InteractiveDesignTokenStudio } from "@/components/premium/estudio/InteractiveDesignTokenStudio";
 
 export function StudioExperience() {
   const { language } = useLanguage();
@@ -31,6 +32,7 @@ export function StudioExperience() {
       <CapabilitiesOrbit language={language} />
       <KineticMotionLab />
       <CreativeInteractionLab />
+      <InteractiveDesignTokenStudio />
       <section className="relative isolate flex min-h-[100svh] items-end overflow-hidden px-5 py-24 sm:px-8 lg:px-12 lg:py-32">
         <MotionBackdrop asset={MOTION_ASSETS.pulse} intensity={0.88} />
         <div className="relative z-10 mx-auto grid w-full max-w-[1480px] gap-12 lg:grid-cols-[1fr_1fr] lg:items-end">
