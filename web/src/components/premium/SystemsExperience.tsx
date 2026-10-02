@@ -13,6 +13,7 @@ import { DecodeText } from "@/components/motion/DecodeText";
 import { TickerNumber } from "@/components/motion/TickerNumber";
 import { MOTION_ASSETS } from "@/data/motionAssets";
 import { MagicBento, type BentoItem } from "@/components/ui/magic-bento";
+import { AiAgentInteractiveLab } from "@/components/premium/systems/AiAgentInteractiveLab";
 
 const stages = [
   { id: "capture", title: { es: "Captación", en: "Acquisition" }, text: { es: "Formularios, pauta, WhatsApp y fuentes que ya existen.", en: "Forms, paid media, WhatsApp and the sources already in use." } },
@@ -271,6 +272,9 @@ export function SystemsExperience() {
           </div>
         </div>
       </section>
+
+      {/* ─── 01.5 LABORATORIO INTERACTIVO DE AGENTES DE IA ─── */}
+      <AiAgentInteractiveLab />
 
       <section className="relative isolate overflow-hidden px-5 py-24 sm:px-8 lg:px-12 lg:py-32">
         <BackgroundVideo
