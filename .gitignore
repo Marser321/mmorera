@@ -9,7 +9,12 @@
 # Recursos y material de trabajo no versionado
 .agents/
 AD Media Solution/
-Fondos y recursos /
+Fondos y recursos*/
+"Fondos y recursos*"
+MMorera-Motion-Backgrounds/
+MMorera-Scrollytelling/
+/*.mp4
 
 # Cachés de build (nunca versionar)
-web - copia/.next/
+web - copia/
+.next/

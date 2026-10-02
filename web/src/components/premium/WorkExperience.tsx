@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { CaseCard } from "./CaseCard";
 import { WorkReel } from "./WorkReel";
+import { CaseBento } from "./CaseBento";
 import { ARCHIVE_CASES, FEATURED_CASES } from "@/data/projectCases";
 import { useLanguage } from "@/context/LanguageContext";
 import { localePath } from "@/config/site";
@@ -69,18 +69,9 @@ export function WorkExperience() {
       {/* Archivo */}
       <section className="mx-auto w-full max-w-[1480px] px-5 pt-20 sm:px-8 lg:px-12" aria-labelledby="archive-work">
         <DrawRule className="mb-10 block h-px w-full bg-white/10 light:bg-[rgb(var(--ink-rgb)/0.1)]" />
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {ARCHIVE_CASES.map((project, index) => (
-            <Reveal
-              key={project.slug}
-              x={index % 3 === 0 ? -28 : index % 3 === 2 ? 28 : 0}
-              y={index % 3 === 1 ? 24 : 0}
-              delay={(index % 3) * 0.08}
-            >
-              <CaseCard project={project} />
-            </Reveal>
-          ))}
-        </div>
+        <Reveal y={24}>
+          <CaseBento projects={ARCHIVE_CASES} />
+        </Reveal>
       </section>
 
       {/* CTA de cierre */}

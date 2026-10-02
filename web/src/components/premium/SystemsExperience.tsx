@@ -12,6 +12,7 @@ import { BackgroundVideo } from "@/components/shared/BackgroundVideo";
 import { DecodeText } from "@/components/motion/DecodeText";
 import { TickerNumber } from "@/components/motion/TickerNumber";
 import { MOTION_ASSETS } from "@/data/motionAssets";
+import { MagicBento, type BentoItem } from "@/components/ui/magic-bento";
 
 const stages = [
   { id: "capture", title: { es: "Captación", en: "Acquisition" }, text: { es: "Formularios, pauta, WhatsApp y fuentes que ya existen.", en: "Forms, paid media, WhatsApp and the sources already in use." } },
@@ -27,6 +28,59 @@ const telemetry = [
   { value: 5, prefix: "<", suffix: " min", label: { es: "Primera respuesta al lead", en: "First lead response" } },
   { value: 1, suffix: "", label: { es: "Historia única del prospecto", en: "Single prospect history" } },
 ];
+
+/* "Qué construyo": seis piezas del mismo sistema. Los acentos salen de la
+   paleta de la página (signal = operación, accent = datos, violeta = IA). */
+const builds = [
+  {
+    id: "crm",
+    accent: "#71F3A2",
+    title: { es: "CRM operativo", en: "Operational CRM" },
+    text: { es: "Pipeline, datos, permisos y vistas alineados con el proceso real de tu equipo.", en: "Pipeline, data, permissions and views aligned with the real process." },
+    technologies: ["HubSpot", "GoHighLevel", "Supabase", "PostgreSQL"],
+    metricBadge: { es: "<5 min respuesta", en: "<5 min reply" },
+  },
+  {
+    id: "automation",
+    accent: "#71F3A2",
+    title: { es: "Automatizaciones", en: "Automations" },
+    text: { es: "Eventos, mensajes y tareas que avanzan sin perder trazabilidad ni depender de memoria humana.", en: "Events, messages and tasks that move without losing traceability." },
+    technologies: ["n8n", "Make", "Webhooks", "Zapier"],
+    metricBadge: { es: "100% trazable", en: "100% auditable" },
+  },
+  {
+    id: "ai",
+    accent: "#B68CFF",
+    title: { es: "Herramientas con IA", en: "AI tools" },
+    text: { es: "Clasificación inteligente, extracción y asistencia incorporadas dentro del flujo operativo.", en: "Classification, extraction and assistance built into the workflow." },
+    technologies: ["OpenAI", "Claude", "LangChain", "Vector DB"],
+    metricBadge: { es: "RAG & Agentes", en: "RAG & Agents" },
+  },
+  {
+    id: "integrations",
+    accent: "#55D8FF",
+    title: { es: "Integraciones", en: "Integrations" },
+    text: { es: "Las herramientas que el equipo ya usa, conectadas en un flujo sincronizado en vez de islas.", en: "The tools the team already uses, connected into one flow instead of islands." },
+    technologies: ["Stripe", "REST APIs", "GraphQL", "Webhooks"],
+    metricBadge: { es: "Sync en vivo", en: "Real-time sync" },
+  },
+  {
+    id: "messaging",
+    accent: "#71F3A2",
+    title: { es: "Mensajería", en: "Messaging" },
+    text: { es: "WhatsApp API, mail y formularios entrando al mismo circuito, con respuesta inmediata y seguimiento.", en: "WhatsApp, email and forms feeding the same circuit, with replies and follow-up." },
+    technologies: ["WhatsApp Business API", "Resend", "Twilio", "Telegram"],
+    metricBadge: { es: "Omnicanal 24/7", en: "24/7 Omnichannel" },
+  },
+  {
+    id: "dashboards",
+    accent: "#55D8FF",
+    title: { es: "Tableros", en: "Dashboards" },
+    text: { es: "Los números del flujo a la vista: qué entra, qué avanza, tiempos de respuesta y dónde se traba.", en: "The flow’s numbers in plain sight: what comes in, what moves and where it stalls." },
+    technologies: ["PostHog", "Google Looker", "Grafana", "SQL Analytics"],
+    metricBadge: { es: "Métricas en vivo", en: "Live metrics" },
+  },
+] as const;
 
 const AUTO_ADVANCE_MS = 4500;
 
@@ -61,6 +115,16 @@ export function SystemsExperience() {
     }, AUTO_ADVANCE_MS);
     return () => window.clearInterval(timer);
   }, [paused, reducedMotion]);
+
+  const buildItems: BentoItem[] = builds.map((build, index) => ({
+    id: build.id,
+    label: `0${index + 1}`,
+    title: build.title[language],
+    description: build.text[language],
+    accent: build.accent,
+    technologies: [...build.technologies],
+    metricBadge: build.metricBadge[language],
+  }));
 
   return (
     <main id="contenido-principal" className="bg-transparent pb-28 pt-36 sm:pt-44">
@@ -216,47 +280,17 @@ export function SystemsExperience() {
           scrim="bottom"
           tint="violet"
         />
-        <div className="relative z-10 mx-auto max-w-[1480px]"><p className="font-mono text-[10px] uppercase tracking-[.18em] text-accent">02 · {isEs ? "Qué construyo" : "What I build"}</p><div className="mt-10 grid border-t border-white/10 light:border-[rgb(var(--ink-rgb)/0.1)] lg:grid-cols-3">
-          {[
-            [isEs ? "CRM operativo" : "Operational CRM", isEs ? "Pipeline, datos, permisos y vistas alineados con el proceso real." : "Pipeline, data, permissions and views aligned with the real process."],
-            [isEs ? "Automatizaciones" : "Automations", isEs ? "Eventos, mensajes y tareas que avanzan sin perder trazabilidad." : "Events, messages and tasks that move without losing traceability."],
-            [isEs ? "Herramientas con IA" : "AI tools", isEs ? "Clasificación, extracción y asistencia incorporadas dentro del flujo." : "Classification, extraction and assistance built into the workflow."],
-          ].map(([title, text], index) => <SpotlightCard key={title} title={title} text={text} index={index} />)}
-        </div></div>
+        <div className="relative z-10 mx-auto max-w-[1480px]"><p className="font-mono text-[10px] uppercase tracking-[.18em] text-accent">02 · {isEs ? "Qué construyo" : "What I build"}</p><MagicBento
+          className="mt-10"
+          items={buildItems}
+          glowColor="#71F3A2"
+          enableTilt
+        /></div>
       </section>
 
       <section className="px-5 pt-4 sm:px-8 lg:px-12">
         <div className="mx-auto grid max-w-[1480px] gap-8 border-y border-white/10 light:border-[rgb(var(--ink-rgb)/0.1)] py-10 md:grid-cols-[1fr_auto] md:items-center md:py-14"><h2 className="max-w-4xl text-[clamp(2.4rem,4.5vw,5rem)] font-medium leading-[.98] tracking-[-.05em] text-foreground">{isEs ? "El sistema correcto se nota porque el trabajo deja de romperse entre herramientas." : "The right system is visible when work stops breaking between tools."}</h2><Link href={localePath(language, "/aplicar")} className="inline-flex items-center gap-2 text-sm text-foreground md:justify-self-end">{isEs ? "Revisar un flujo" : "Review a workflow"}<ArrowUpRight className="h-4 w-4" /></Link></div>
       </section>
     </main>
-  );
-}
-
-/** Card con spotlight que sigue al cursor (solo desktop; sin depender de hover en móvil). */
-function SpotlightCard({ title, text, index }: { title: string; text: string; index: number }) {
-  const reducedMotion = useReducedMotion() === true;
-
-  return (
-    <article
-      onPointerMove={(event) => {
-        if (reducedMotion || event.pointerType !== "mouse") return;
-        const rect = event.currentTarget.getBoundingClientRect();
-        event.currentTarget.style.setProperty("--mx", `${event.clientX - rect.left}px`);
-        event.currentTarget.style.setProperty("--my", `${event.clientY - rect.top}px`);
-      }}
-      className="group relative min-h-72 overflow-hidden border-b border-white/10 light:border-[rgb(var(--ink-rgb)/0.1)] p-6 lg:border-b-0 lg:border-r"
-    >
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 hidden opacity-0 transition-opacity duration-500 group-hover:opacity-100 lg:block"
-        style={{
-          background:
-            "radial-gradient(240px circle at var(--mx, 50%) var(--my, 50%), rgb(113 243 162 / 0.09), transparent 70%)",
-        }}
-      />
-      <span className="font-mono text-[9px] text-[#F3F0E8]/25 light:text-muted-foreground/85">0{index + 1}</span>
-      <h3 className="mt-20 text-3xl font-medium tracking-[-.04em] text-foreground">{title}</h3>
-      <p className="mt-4 max-w-sm text-sm leading-6 text-[#F3F0E8]/48 light:text-muted-foreground">{text}</p>
-    </article>
   );
 }

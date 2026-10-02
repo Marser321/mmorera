@@ -199,7 +199,12 @@ export function AplicarOS() {
 
     const StepIcon = steps[step].icon;
     const inputClass = "w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 font-sans text-sm text-white transition-[border-color,box-shadow,background-color] placeholder:text-white/35 focus-visible:border-signal/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal/30 light:border-border light:bg-input light:text-foreground light:placeholder:text-foreground/45";
-    const radioCardClass = "flex min-h-12 cursor-pointer items-center rounded-xl border border-white/8 bg-white/[.035] px-4 py-3 text-sm leading-5 text-foreground/58 transition-[border-color,background-color,color] hover:border-white/22 hover:text-foreground peer-checked:border-signal/50 peer-checked:bg-signal/10 peer-checked:text-foreground peer-focus-visible:ring-2 peer-focus-visible:ring-signal light:border-[rgb(var(--ink-rgb)/0.08)] light:bg-[rgb(var(--ink-rgb)/0.035)] light:hover:border-[rgb(var(--ink-rgb)/0.22)]";
+    const getOptionCardClass = (selected: boolean) =>
+        `flex min-h-12 cursor-pointer items-center justify-between rounded-xl border px-4 py-3 text-sm leading-5 transition-all duration-200 select-none ${
+            selected
+                ? 'border-signal bg-signal/15 text-white font-medium shadow-[0_0_20px_rgba(113,243,162,0.18)] ring-1 ring-signal/50 light:border-signal light:bg-signal/15 light:text-foreground'
+                : 'border-white/10 bg-white/[.035] text-foreground/65 hover:border-white/25 hover:bg-white/[.06] hover:text-foreground light:border-[rgb(var(--ink-rgb)/0.1)] light:bg-[rgb(var(--ink-rgb)/0.035)] light:hover:border-[rgb(var(--ink-rgb)/0.25)]'
+        }`;
 
     return (
         <section id="aplicar-os-section" className="relative overflow-hidden bg-transparent px-0 pb-24 pt-14 md:py-20">
@@ -247,14 +252,58 @@ export function AplicarOS() {
                                 <fieldset>
                                     <legend className="mb-3 font-mono text-[9px] font-bold uppercase tracking-wider text-zinc-500 light:text-muted-foreground">{isEs ? 'Madurez' : 'Stage'}</legend>
                                     <div className="grid gap-2 sm:grid-cols-2">
-                                        {projectStages.map((option, index) => <label key={option.value} className="relative"><input id={`brief-project-stage-${option.value}`} className="peer sr-only" type="radio" name="projectStage" value={option.value} checked={formData.projectStage === option.value} onChange={() => updateField('projectStage', option.value, 'projectStage')} aria-describedby={fieldErrors.projectStage && index === 0 ? 'brief-project-stage-idea-error' : undefined} /><span className={radioCardClass}>{option[language]}</span></label>)}
+                                        {projectStages.map((option, index) => {
+                                            const isSelected = formData.projectStage === option.value;
+                                            return (
+                                                <label key={option.value} className="relative block">
+                                                    <input
+                                                        id={`brief-project-stage-${option.value}`}
+                                                        className="sr-only"
+                                                        type="radio"
+                                                        name="projectStage"
+                                                        value={option.value}
+                                                        checked={isSelected}
+                                                        onChange={() => updateField('projectStage', option.value, 'projectStage')}
+                                                        aria-describedby={fieldErrors.projectStage && index === 0 ? 'brief-project-stage-idea-error' : undefined}
+                                                    />
+                                                    <div className={getOptionCardClass(isSelected)}>
+                                                        <span>{option[language]}</span>
+                                                        <span className={`ml-3 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-all duration-200 ${isSelected ? 'border-signal bg-signal text-black shadow-[0_0_10px_rgba(113,243,162,0.5)]' : 'border-white/20 bg-white/5 light:border-[rgb(var(--ink-rgb)/0.2)]'}`}>
+                                                            {isSelected && <span className="h-2 w-2 rounded-full bg-black" />}
+                                                        </span>
+                                                    </div>
+                                                </label>
+                                            );
+                                        })}
                                     </div>
                                     {errorText('projectStage')}
                                 </fieldset>
                                 <fieldset>
                                     <legend className="mb-3 font-mono text-[9px] font-bold uppercase tracking-wider text-zinc-500 light:text-muted-foreground">{isEs ? 'Equipo' : 'Team'}</legend>
                                     <div className="grid gap-2 sm:grid-cols-2">
-                                        {teamContexts.map((option, index) => <label key={option.value} className="relative"><input id={`brief-team-context-${option.value}`} className="peer sr-only" type="radio" name="teamContext" value={option.value} checked={formData.teamContext === option.value} onChange={() => updateField('teamContext', option.value, 'teamContext')} aria-describedby={fieldErrors.teamContext && index === 0 ? 'brief-team-context-solo-error' : undefined} /><span className={radioCardClass}>{option[language]}</span></label>)}
+                                        {teamContexts.map((option, index) => {
+                                            const isSelected = formData.teamContext === option.value;
+                                            return (
+                                                <label key={option.value} className="relative block">
+                                                    <input
+                                                        id={`brief-team-context-${option.value}`}
+                                                        className="sr-only"
+                                                        type="radio"
+                                                        name="teamContext"
+                                                        value={option.value}
+                                                        checked={isSelected}
+                                                        onChange={() => updateField('teamContext', option.value, 'teamContext')}
+                                                        aria-describedby={fieldErrors.teamContext && index === 0 ? 'brief-team-context-solo-error' : undefined}
+                                                    />
+                                                    <div className={getOptionCardClass(isSelected)}>
+                                                        <span>{option[language]}</span>
+                                                        <span className={`ml-3 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-all duration-200 ${isSelected ? 'border-signal bg-signal text-black shadow-[0_0_10px_rgba(113,243,162,0.5)]' : 'border-white/20 bg-white/5 light:border-[rgb(var(--ink-rgb)/0.2)]'}`}>
+                                                            {isSelected && <span className="h-2 w-2 rounded-full bg-black" />}
+                                                        </span>
+                                                    </div>
+                                                </label>
+                                            );
+                                        })}
                                     </div>
                                     {errorText('teamContext')}
                                 </fieldset>
@@ -271,7 +320,29 @@ export function AplicarOS() {
                                 <fieldset>
                                     <legend className="mb-3 font-mono text-[9px] font-bold uppercase tracking-wider text-zinc-500 light:text-muted-foreground">{isEs ? 'Momento estimado de inicio' : 'Estimated start time'}</legend>
                                     <div className="grid gap-2 sm:grid-cols-2">
-                                        {timelines.map((option, index) => <label key={option.value} className="relative"><input id={`brief-timeline-${option.value}`} className="peer sr-only" type="radio" name="timeline" value={option.value} checked={formData.timeline === option.value} onChange={() => updateField('timeline', option.value, 'timeline')} aria-describedby={fieldErrors.timeline && index === 0 ? 'brief-timeline-now-error' : undefined} /><span className={radioCardClass}>{option[language]}</span></label>)}
+                                        {timelines.map((option, index) => {
+                                            const isSelected = formData.timeline === option.value;
+                                            return (
+                                                <label key={option.value} className="relative block">
+                                                    <input
+                                                        id={`brief-timeline-${option.value}`}
+                                                        className="sr-only"
+                                                        type="radio"
+                                                        name="timeline"
+                                                        value={option.value}
+                                                        checked={isSelected}
+                                                        onChange={() => updateField('timeline', option.value, 'timeline')}
+                                                        aria-describedby={fieldErrors.timeline && index === 0 ? 'brief-timeline-now-error' : undefined}
+                                                    />
+                                                    <div className={getOptionCardClass(isSelected)}>
+                                                        <span>{option[language]}</span>
+                                                        <span className={`ml-3 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-all duration-200 ${isSelected ? 'border-signal bg-signal text-black shadow-[0_0_10px_rgba(113,243,162,0.5)]' : 'border-white/20 bg-white/5 light:border-[rgb(var(--ink-rgb)/0.2)]'}`}>
+                                                            {isSelected && <span className="h-2 w-2 rounded-full bg-black" />}
+                                                        </span>
+                                                    </div>
+                                                </label>
+                                            );
+                                        })}
                                     </div>
                                     {errorText('timeline')}
                                 </fieldset>

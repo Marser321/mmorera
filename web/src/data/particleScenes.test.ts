@@ -37,15 +37,22 @@ describe('particle scene resolver', () => {
             'Multi-model AI',
         ]);
         assert.deepEqual(PARTICLE_SCENE_TECH_NAMES.operations, [
-            'n8n',
-            'Cloud',
-            'PostgreSQL',
+            'GoHighLevel',
             'HubSpot',
+            'n8n',
+            'PostgreSQL',
             'Stripe',
             'Multi-model AI',
         ]);
         assert.deepEqual(PARTICLE_SCENE_TECH_NAMES.studio, ['Figma', 'Three.js', 'Blender', 'After Effects', 'DaVinci Resolve']);
-        assert.deepEqual(PARTICLE_SCENE_TECH_NAMES.systems, ['n8n', 'Cloud', 'PostgreSQL', 'HubSpot', 'Stripe', 'Multi-model AI']);
+        assert.deepEqual(PARTICLE_SCENE_TECH_NAMES.systems, [
+            'GoHighLevel',
+            'HubSpot',
+            'n8n',
+            'PostgreSQL',
+            'Stripe',
+            'Multi-model AI',
+        ]);
         assert.deepEqual(PARTICLE_SCENE_TECH_NAMES.cases, []);
         assert.deepEqual(PARTICLE_SCENE_TECH_NAMES.apply, []);
     });

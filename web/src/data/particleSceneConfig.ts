@@ -9,9 +9,9 @@ export const PARTICLE_SCENE_TECH_NAMES = {
   home: ["Figma", "Next.js", "Cloud", "Three.js", "Multi-model AI", "n8n", "Stripe"],
   create: ["Figma", "Three.js", "Blender", "After Effects", "DaVinci Resolve"],
   build: ["Next.js", "Cloud", "TypeScript", "PostgreSQL", "Supabase", "Vercel", "Multi-model AI"],
-  operations: ["n8n", "Cloud", "PostgreSQL", "HubSpot", "Stripe", "Multi-model AI"],
+  operations: ["GoHighLevel", "HubSpot", "n8n", "PostgreSQL", "Stripe", "Multi-model AI"],
   studio: ["Figma", "Three.js", "Blender", "After Effects", "DaVinci Resolve"],
-  systems: ["n8n", "Cloud", "PostgreSQL", "HubSpot", "Stripe", "Multi-model AI"],
+  systems: ["GoHighLevel", "HubSpot", "n8n", "PostgreSQL", "Stripe", "Multi-model AI"],
   cases: [],
   apply: [],
 } as const;
@@ -31,6 +31,14 @@ export function resolveParticleSceneName(pathname: string, activeFamilies: Famil
     if (hasAny(activeFamilies, ["Web", "Backend", "Infrastructure", "AI"])) return "build";
     return "home";
   }
+  // Una sola familia activa = selección explícita (la órbita de capacidades).
+  // Manda sobre el default de la ruta; los sets de varias familias no.
+  if (activeFamilies.length === 1) {
+    if (hasAny(activeFamilies, ["Media", "Marketing"])) return "create";
+    if (hasAny(activeFamilies, ["CRM", "Automation"])) return "operations";
+    if (hasAny(activeFamilies, ["Web", "Backend", "Infrastructure", "AI"])) return "build";
+  }
+
   if (normalized.startsWith("/estudio")) return "studio";
   if (normalized.startsWith("/sistemas")) return "systems";
   if (normalized.startsWith("/casos-de-exito")) return "cases";

@@ -19,6 +19,17 @@ export const PRINT_ACCENT: Record<string, string> = {
   "#B68CFF": "#6D43CC",
   "#55D8FF": "#0A7EA4",
   "#71F3A2": "#0E7A46",
+  // Familias del stack (ver FAMILIES en techStack.ts): gemelos de tinta para
+  // que la órbita de capacidades siga siendo legible sobre marfil.
+  "#a78bfa": "#6D43CC",
+  "#2ec8d8": "#0E7285",
+  "#38bdf8": "#0A6E9E",
+  "#93e83a": "#4A7A0F",
+  "#f472b6": "#B02A6B",
+  "#fb923c": "#A9500A",
+  "#fbbf24": "#8A5B00",
+  "#e879f9": "#9B2BAF",
+  "#7dd3fc": "#1F6E96",
 };
 
 export function themedAccent(accent: string, theme: "dark" | "light"): string {

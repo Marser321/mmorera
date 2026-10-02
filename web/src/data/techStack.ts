@@ -2,6 +2,7 @@ import type { IconType } from 'react-icons';
 import { FaCloud } from 'react-icons/fa6';
 import { MultiModelAiMark } from '@/components/icons/MultiModelAiMark';
 import { GhlMark } from '@/components/icons/GhlMark';
+import { PipedriveMark } from '@/components/icons/PipedriveMark';
 import { HermesMark } from '@/components/icons/HermesMark';
 import {
     SiAnthropic,
@@ -178,7 +179,7 @@ export const TECH_STACK: Tech[] = [
     { name: 'Salesforce', category: 'CRM', Icon: SiSalesforce },
     { name: 'Zoho CRM', category: 'CRM', Icon: SiZoho },
     { name: 'GoHighLevel', category: 'CRM', Icon: GhlMark },
-    { name: 'Pipedrive', category: 'CRM', fallback: 'PD' },
+    { name: 'Pipedrive', category: 'CRM', Icon: PipedriveMark },
     // Media (audiovisual) — logos reales donde existen; etiqueta de texto para el resto.
     { name: 'DaVinci Resolve', category: 'Media', Icon: SiDavinciresolve },
     { name: 'Blender', category: 'Media', Icon: SiBlender },

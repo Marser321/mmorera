@@ -206,6 +206,34 @@ html.light {
   animation: flow-pulse 3.2s linear infinite;
 }
 
+/*
+ * MagicBento — anillo de glow que sigue al cursor sobre el borde de la tarjeta.
+ * El recorte con `mask-composite` (gradiente visible solo en el borde) no tiene
+ * equivalente en utilidades de Tailwind, por eso vive acá. Las variables las
+ * escribe el componente en cada pointermove.
+ */
+.bento-ring::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1.5px;
+  border-radius: inherit;
+  background: radial-gradient(var(--bento-glow-radius, 260px) circle at var(--bento-glow-x, 50%) var(--bento-glow-y, 50%),
+      rgb(var(--bento-glow-rgb, 182 140 255) / calc(var(--bento-glow, 0) * 0.9)) 0%,
+      rgb(var(--bento-glow-rgb, 182 140 255) / calc(var(--bento-glow, 0) * 0.35)) 35%,
+      transparent 65%);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 2;
+}
+
 @keyframes glow-pulse {
 
   0%,
