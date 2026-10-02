@@ -26,6 +26,7 @@ import { WorkflowSection } from "@/components/premium/home/WorkflowSection";
 import { StackMatrixPlayground } from "@/components/premium/home/StackMatrixPlayground";
 import { SprintRoiCalculator } from "@/components/premium/home/SprintRoiCalculator";
 import { TransformationDiffViewer } from "@/components/premium/home/TransformationDiffViewer";
+import { InteractiveWhatsAppScopeStudio } from "@/components/premium/application/InteractiveWhatsAppScopeStudio";
 import { IslandBar } from "@/components/layout/IslandBar";
 import { AplicarOS } from "@/components/portfolio-isolated/AplicarOS";
 import { BackgroundVideo } from "@/components/shared/BackgroundVideo";
@@ -292,6 +293,13 @@ export function HomeExperience({
           <Reveal y={24}>
             <CaseBento projects={FEATURED_CASES} featureFirst className="pt-6 pb-12" />
           </Reveal>
+        </div>
+      </section>
+
+      {/* ─── 8.5 ESTUDIO TÁCTIL DE ALCANCE & HANDOFF DIRECTO A WHATSAPP ─── */}
+      <section id="cotizador" className="scroll-mt-20 border-t border-white/10 px-5 py-12 sm:px-8 sm:py-16 lg:px-12 light:border-[rgb(var(--ink-rgb)/0.1)]">
+        <div className="mx-auto max-w-[1480px]">
+          <InteractiveWhatsAppScopeStudio />
         </div>
       </section>
 
