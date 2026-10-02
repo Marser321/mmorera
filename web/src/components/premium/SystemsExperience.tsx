@@ -18,6 +18,7 @@ import { VoiceAgentInteractiveSandbox } from "@/components/premium/systems/Voice
 import { OmnichannelInboxSimulator } from "@/components/premium/systems/OmnichannelInboxSimulator";
 import { LiveAutomationPipelinePlayground } from "@/components/premium/systems/LiveAutomationPipelinePlayground";
 import { EdgeResilienceStressTester } from "@/components/premium/systems/EdgeResilienceStressTester";
+import { TechRadarBackstageStudio } from "@/components/premium/systems/TechRadarBackstageStudio";
 
 const stages = [
   { id: "capture", title: { es: "Captación", en: "Acquisition" }, text: { es: "Formularios, pauta, WhatsApp y fuentes que ya existen.", en: "Forms, paid media, WhatsApp and the sources already in use." } },
@@ -291,6 +292,9 @@ export function SystemsExperience() {
 
       {/* ─── 01.9 BANCO DE PRUEBAS DE ESTRÉS & RESILIENCIA EDGE ─── */}
       <EdgeResilienceStressTester />
+
+      {/* ─── 01.95 RADAR DE INTELIGENCIA TECNOLÓGICA & BACKSTAGE STUDIO ─── */}
+      <TechRadarBackstageStudio />
 
       <section className="relative isolate overflow-hidden px-5 py-24 sm:px-8 lg:px-12 lg:py-32">
         <BackgroundVideo
