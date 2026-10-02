@@ -16,6 +16,7 @@ import { CaseBento } from "@/components/premium/CaseBento";
 import { FEATURED_CASES } from "@/data/projectCases";
 import { ServicesSection } from "@/components/premium/home/ServicesSection";
 import { IntegralValueSection } from "@/components/premium/home/IntegralValueSection";
+import { RotaryLeverageCockpit } from "@/components/premium/home/RotaryLeverageCockpit";
 import { PipelineSimulatorSection } from "@/components/premium/home/PipelineSimulatorSection";
 import { ExclusivitySection } from "@/components/premium/home/ExclusivitySection";
 import { OrchestrationWheelSection } from "@/components/premium/home/OrchestrationWheelSection";
@@ -226,6 +227,9 @@ export function HomeExperience({
 
       {/* ─── 4. LA TESIS CONTRA-CORRIENTE: EL OPERADOR INTEGRAL ─── */}
       <IntegralValueSection />
+
+      {/* ─── 4.05 COCKPIT TÁCTIL DE PALANCA OPERATIVA CON DIAL GIRATORIO ─── */}
+      <RotaryLeverageCockpit />
 
       {/* ─── 4.1 SANDBOX TÁCTIL B2B: SIMULADOR DE PIPELINE & TELEMETRÍA ─── */}
       <PipelineSimulatorSection />
