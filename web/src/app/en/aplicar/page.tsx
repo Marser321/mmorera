@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AplicarOS } from "@/components/portfolio-isolated/AplicarOS";
+import { SprintRoadmapDiagnostic } from "@/components/premium/application/SprintRoadmapDiagnostic";
 import { SITE_IDENTITY } from "@/config/site";
 import { MotionBackdrop } from "@/components/shared/MotionBackdrop";
 import { MOTION_ASSETS } from "@/data/motionAssets";
@@ -32,7 +33,10 @@ export default function EnglishApplicationPage() {
           Three steps. Enough context to understand the project and reply with judgment.
         </p>
       </header>
-      <AplicarOS />
+      <SprintRoadmapDiagnostic />
+      <div id="brief-form">
+        <AplicarOS />
+      </div>
       <div className="mx-auto flex max-w-3xl flex-wrap justify-between gap-5 border-t border-white/10 pt-7 light:border-[rgb(var(--ink-rgb)/0.1)] text-sm text-foreground/48">
         <span className="font-mono text-[9px] uppercase tracking-[.15em]">
           Direct channels
