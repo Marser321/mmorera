@@ -8,6 +8,18 @@ export interface TechAlert {
   summary: { es: string; en: string };
   practicalRecommendation: { es: string; en: string };
   recommendedStack: string[];
+  sourceName: string;
+}
+
+export interface ParallelCrawlerAgent {
+  id: string;
+  name: string;
+  sourceTarget: string;
+  status: "idle" | "scanning" | "synced";
+  latencyMs: number;
+  lastEvent: { es: string; en: string };
+  category: "whatsapp" | "llm" | "crm" | "voice";
+  payloadSizeKb: number;
 }
 
 export interface ModelUseCaseRecommendation {
@@ -24,7 +36,7 @@ export interface ModelUseCaseRecommendation {
 export interface ContentBlueprint {
   id: string;
   topicTitle: { es: string; en: string };
-  format: "reel" | "youtube";
+  format: "reel" | "youtube" | "linkedin";
   durationLabel: { es: string; en: string };
   hook: { es: string; en: string };
   trapWarning: { es: string; en: string };
@@ -32,6 +44,92 @@ export interface ContentBlueprint {
   anchorPoints: { es: string[]; en: string[] };
   closingCta: { es: string; en: string };
 }
+
+export interface MultiModelArbitrageResult {
+  monthlyOps: number;
+  singleModelCost: number;
+  singleModelLatencyMs: number;
+  orchestratedCost: number;
+  orchestratedLatencyMs: number;
+  monthlySavingsUsd: number;
+  savingsPercentage: number;
+  breakdown: {
+    triageGeminiOps: number;
+    triageCost: number;
+    ragDeepSeekOps: number;
+    ragCost: number;
+    logicClaudeOps: number;
+    logicCost: number;
+  };
+}
+
+export const PARALLEL_CRAWLER_AGENTS: ParallelCrawlerAgent[] = [
+  {
+    id: "crawler-meta",
+    name: "Agent-Meta (WhatsApp API)",
+    sourceTarget: "developers.facebook.com/docs/whatsapp/changelog",
+    status: "synced",
+    latencyMs: 142,
+    lastEvent: {
+      es: "Detectado: Facturación por mensaje de servicio (ventana de 24h cerrada) desde 01 Oct.",
+      en: "Detected: Per-message billing for service tier (24h window restricted) effective Oct 1st.",
+    },
+    category: "whatsapp",
+    payloadSizeKb: 14.8,
+  },
+  {
+    id: "crawler-anthropic",
+    name: "Agent-Anthropic (Claude Engineering)",
+    sourceTarget: "docs.anthropic.com/en/release-notes/system-prompts",
+    status: "synced",
+    latencyMs: 168,
+    lastEvent: {
+      es: "Detectado: Claude 3.7 Sonnet con Extended Thinking & tokens de presupuesto adaptativo.",
+      en: "Detected: Claude 3.7 Sonnet with Extended Thinking & adaptive reasoning budget.",
+    },
+    category: "llm",
+    payloadSizeKb: 22.4,
+  },
+  {
+    id: "crawler-deepseek",
+    name: "Agent-OpenSource (DeepSeek & Modelos Chinos)",
+    sourceTarget: "github.com/deepseek-ai/DeepSeek-V3/commits/main",
+    status: "synced",
+    latencyMs: 285,
+    lastEvent: {
+      es: "Detectado: DeepSeek R1/V3 destilado en Ollama. Inferencia local a costo de token nulo.",
+      en: "Detected: DeepSeek R1/V3 distilled on Ollama. Local inference at zero marginal token cost.",
+    },
+    category: "llm",
+    payloadSizeKb: 38.1,
+  },
+  {
+    id: "crawler-crm",
+    name: "Agent-CRM (GoHighLevel & HubSpot Specs)",
+    sourceTarget: "highlevel.stoplight.io/docs/integrations/v2/changelog",
+    status: "synced",
+    latencyMs: 194,
+    lastEvent: {
+      es: "Detectado: Nuevos rate limits en endpoints v2 de contactos. Requiere webhooks asíncronos.",
+      en: "Detected: New rate limits on v2 contact endpoints. Asynchronous queue webhooks required.",
+    },
+    category: "crm",
+    payloadSizeKb: 17.5,
+  },
+  {
+    id: "crawler-voice",
+    name: "Agent-Voice (Cartesia & Twilio Media)",
+    sourceTarget: "api.cartesia.ai/v1/voice/changelog",
+    status: "synced",
+    latencyMs: 122,
+    lastEvent: {
+      es: "Detectado: Modelo Sonic multilingüe sub-200ms TTFT sobre WebSockets bidireccionales.",
+      en: "Detected: Sonic multilingual sub-200ms TTFT model running over full-duplex WebSockets.",
+    },
+    category: "voice",
+    payloadSizeKb: 11.2,
+  },
+];
 
 export const TECH_ALERTS: TechAlert[] = [
   {
@@ -53,6 +151,7 @@ export const TECH_ALERTS: TechAlert[] = [
       en: "Deploy AI agents with Redis debouncing buffers and compact replies to avoid inflating message counts.",
     },
     recommendedStack: ["WhatsApp Cloud API", "Redis Buffer", "Gemini 2.5 Flash", "Supabase"],
+    sourceName: "Meta Graph API v21.0 Changelog",
   },
   {
     id: "multi-model-claude-gpt-deepseek",
@@ -73,11 +172,33 @@ export const TECH_ALERTS: TechAlert[] = [
       en: "Architect a dynamic prompt router that delegates tasks to the optimal model based on latency, context and budget.",
     },
     recommendedStack: ["Claude 3.7 Sonnet", "Gemini 2.5 Flash", "OpenAI GPT-4o", "DeepSeek R1"],
+    sourceName: "Anthropic & DeepSeek Official Technical Reports",
+  },
+  {
+    id: "deepseek-chinese-llm-revolution",
+    category: "llm",
+    badge: { es: "Modelos Chinos · Inferencia Abierta", en: "Chinese LLMs · Open Inference" },
+    title: {
+      es: "DeepSeek R1 & V3: Cómo los modelos abiertos chinos rompieron el monopolio de Silicon Valley",
+      en: "DeepSeek R1 & V3: How Chinese open-weight models broke Silicon Valley's monopoly",
+    },
+    date: "24 Sep 2026",
+    impactScore: "critical",
+    summary: {
+      es: "Modelos como DeepSeek R1 y Qwen 2.5 igualan en razonamiento a modelos cerrados que cuestan 20 veces más. Procesan millones de tokens en RAG y extracción de bases de datos casi gratis.",
+      en: "Models like DeepSeek R1 and Qwen 2.5 match reasoning benchmarks of closed models costing 20x more. Ingest millions of RAG tokens and database queries at near-zero costs.",
+    },
+    practicalRecommendation: {
+      es: "Dejar de pagar APIs comerciales caras para resúmenes de documentos masivos; montar pipelines RAG con DeepSeek + pgvector.",
+      en: "Stop overpaying commercial APIs for bulk document summarization; build RAG pipelines with DeepSeek + pgvector.",
+    },
+    recommendedStack: ["DeepSeek R1/V3", "pgvector (Postgres)", "Ollama / vLLM", "Next.js 16"],
+    sourceName: "DeepSeek AI Research & Hugging Face",
   },
   {
     id: "crm-ghl-hubspot-supabase",
     category: "crm",
-    badge: { es: "Arquitectura CRM", en: "CRM Architecture" },
+    badge: { es: "Arquitectura CRM · Soberanía de Datos", en: "CRM Architecture · Data Sovereignty" },
     title: {
       es: "GoHighLevel vs HubSpot vs Supabase: Dónde se traba tu negocio al escalar",
       en: "GoHighLevel vs HubSpot vs Supabase: Where business pipelines break at scale",
@@ -93,11 +214,12 @@ export const TECH_ALERTS: TechAlert[] = [
       en: "Use GHL or HubSpot for intake, but store single-source-of-truth customer records in private Postgres with RLS.",
     },
     recommendedStack: ["Supabase PostgreSQL", "GoHighLevel API", "n8n Webhooks", "Prisma"],
+    sourceName: "HubSpot API Pricing & GoHighLevel v2 Changelog",
   },
   {
     id: "voice-ai-telephony-sub300ms",
     category: "voice",
-    badge: { es: "Telefonía de Voz IA", en: "Voice AI Telephony" },
+    badge: { es: "Telefonía de Voz IA · Baja Latencia", en: "Voice AI Telephony · Ultra-Low Latency" },
     title: {
       es: "Agentes telefónicos sub-300ms: La muerte del IVR robótico tradicional",
       en: "Sub-300ms telephony agents: The death of robotic IVR menu trees",
@@ -112,7 +234,8 @@ export const TECH_ALERTS: TechAlert[] = [
       es: "Conectar telefonía Twilio con pipelines de audio streaming directamente al CRM sin esperas telefónicas.",
       en: "Bridge Twilio SIP trunking with low-latency audio streaming engines directly to CRM workflows.",
     },
-    recommendedStack: ["Twilio SIP", "Cartesia / ElevenLabs", "FastAPI WebSockets", "Cal.com API"],
+    recommendedStack: ["Twilio SIP", "Cartesia Sonic", "FastAPI WebSockets", "Cal.com API"],
+    sourceName: "Cartesia Audio Intelligence & Twilio Media Streams",
   },
 ];
 
@@ -180,7 +303,7 @@ export const MODEL_RECOMMENDATIONS: ModelUseCaseRecommendation[] = [
       es: "Telefonía de Voz Bidireccional en Tiempo Real",
       en: "Real-Time Full-Duplex Voice Telephony",
     },
-    recommendedModel: "Cartesia / ElevenLabs + Claude 3.5 Haiku",
+    recommendedModel: "Cartesia Sonic + Claude 3.5 Haiku",
     supportingTools: ["Twilio Media Streams", "WebSockets", "Google Calendar API"],
     latencyTarget: "<320ms Audio Roundtrip",
     costEstimate10kOps: "~$12.50 USD",
@@ -307,7 +430,207 @@ export const CONTENT_BLUEPRINTS: ContentBlueprint[] = [
       en: "\"If your team wastes hours hunting scattered chats and you need an operational CRM, check the scope studio on my site and let's build your stack.\"",
     },
   },
+  {
+    id: "blueprint-deepseek-breakdown",
+    topicTitle: {
+      es: "DeepSeek R1 y modelos chinos: Cómo ahorrar 90% en IA sin depender de OpenAI",
+      en: "DeepSeek R1 and open models: How to cut AI bills by 90% without OpenAI lock-in",
+    },
+    format: "youtube",
+    durationLabel: { es: "8 a 10 minutos (YouTube Técnico)", en: "8 to 10 minutes (Technical YouTube)" },
+    hook: {
+      es: "\"Si seguís pagándole a OpenAI $20 dólares por millón de tokens para extraer PDFs o clasificar leads, estás quemando el margen de tu agencia sin saberlo.\"",
+      en: "\"If you are still paying OpenAI $20 per million tokens to parse PDFs or classify leads, you are burning your margin without realizing it.\"",
+    },
+    trapWarning: {
+      es: "La confusión común: Creer que los modelos abiertos son difíciles de desplegar o inferiores en razonamiento.",
+      en: "The common misconception: Believing open models are complex to deploy or inferior in mathematical reasoning.",
+    },
+    coreArchitecture: {
+      es: "Mostrar en pantalla: Servidor Ollama / vLLM ejecutando DeepSeek R1 en local y conectado por API a un pipeline en Next.js 16.",
+      en: "Screen preview: Local Ollama / vLLM server running DeepSeek R1 bridged via API to a Next.js 16 production pipeline.",
+    },
+    anchorPoints: {
+      es: [
+        "1. Benchmark de costos: OpenAI vs DeepSeek R1 en 100,000 ejecuciones.",
+        "2. Arquitectura de despliegue: Cuándo usar la nube y cuándo inferencia local.",
+        "3. La regla de oro: Gemini para chat rápido, Claude para código, DeepSeek para RAG.",
+      ],
+      en: [
+        "1. Cost breakdown: OpenAI vs DeepSeek R1 across 100,000 real runs.",
+        "2. Deployment topology: When to use cloud APIs vs on-premise local inference.",
+        "3. The golden rule: Gemini for fast chats, Claude for code, DeepSeek for RAG.",
+      ],
+    },
+    closingCta: {
+      es: "\"En mi web tenés el calculador de arbitraje multi-modelo para ver cuánto ahorrás con tu volumen actual. Si querés implementarlo, tocá el botón de WhatsApp y lo revisamos.\"",
+      en: "\"On my site you have the live multi-model arbitrage calculator to check your exact savings. Message me via WhatsApp to set this up.\"",
+    },
+  },
 ];
+
+export function calculateMultiModelArbitrage(monthlyOps: number): MultiModelArbitrageResult {
+  const safeOps = Math.max(1000, Math.min(monthlyOps, 1000000));
+
+  // Single model naive (e.g. 100% GPT-4o at ~$0.025 per interaction)
+  const singleModelUnitCost = 0.025;
+  const singleModelCost = Math.round(safeOps * singleModelUnitCost);
+  const singleModelLatencyMs = 2400;
+
+  // Multi-model breakdown:
+  // 65% triage & fast chat (Gemini 2.5 Flash at $0.0008 per op)
+  const triageGeminiOps = Math.round(safeOps * 0.65);
+  const triageCost = Math.round(triageGeminiOps * 0.0008);
+
+  // 25% bulk RAG & knowledge extraction (DeepSeek R1/V3 at $0.0012 per op)
+  const ragDeepSeekOps = Math.round(safeOps * 0.25);
+  const ragCost = Math.round(ragDeepSeekOps * 0.0012);
+
+  // 10% critical logic & architecture decisions (Claude 3.7 Sonnet at $0.015 per op)
+  const logicClaudeOps = Math.round(safeOps * 0.1);
+  const logicCost = Math.round(logicClaudeOps * 0.015);
+
+  const orchestratedCost = Math.max(5, triageCost + ragCost + logicCost);
+  const orchestratedLatencyMs = 340;
+
+  const monthlySavingsUsd = Math.max(0, singleModelCost - orchestratedCost);
+  const savingsPercentage = Math.round((monthlySavingsUsd / singleModelCost) * 100);
+
+  return {
+    monthlyOps: safeOps,
+    singleModelCost,
+    singleModelLatencyMs,
+    orchestratedCost,
+    orchestratedLatencyMs,
+    monthlySavingsUsd,
+    savingsPercentage,
+    breakdown: {
+      triageGeminiOps,
+      triageCost,
+      ragDeepSeekOps,
+      ragCost,
+      logicClaudeOps,
+      logicCost,
+    },
+  };
+}
+
+export function generateCustomBlueprint(
+  title: string,
+  format: "reel" | "youtube" | "linkedin",
+  language: "es" | "en" = "es"
+): ContentBlueprint {
+  const isEs = language === "es";
+
+  if (format === "reel") {
+    return {
+      id: `custom-${Date.now()}`,
+      topicTitle: { es: title, en: title },
+      format: "reel",
+      durationLabel: { es: "60 segundos (Reel / Short)", en: "60 seconds (Reel / Short)" },
+      hook: {
+        es: `"${title}: el error que le está costando miles de dólares a tu empresa en este momento."`,
+        en: `"${title}: the exact mistake costing your business thousands right now."`,
+      },
+      trapWarning: {
+        es: "El error común: Intentar resolverlo con herramientas desconectadas o parches temporales.",
+        en: "The common trap: Attempting to fix this with disconnected tools or fragile band-aids.",
+      },
+      coreArchitecture: {
+        es: "Mostrar en pantalla: La arquitectura en producción y el flujo de datos sin fricción.",
+        en: "Screen preview: Show the production architecture and the friction-free data flow.",
+      },
+      anchorPoints: {
+        es: [
+          `1. Qué cambió exactamente en: ${title}`,
+          "2. La solución en código y automatización en vivo.",
+          "3. Cómo implementarlo en 1 solo sprint.",
+        ],
+        en: [
+          `1. What exactly changed with: ${title}`,
+          "2. The code and automation solution live.",
+          "3. How to implement this in a single sprint.",
+        ],
+      },
+      closingCta: {
+        es: "\"Si querés que auditemos esto en tu empresa, enviame un mensaje al WhatsApp de mi perfil.\"",
+        en: "\"If you want us to audit this in your business, message me via WhatsApp in my bio.\"",
+      },
+    };
+  }
+
+  if (format === "youtube") {
+    return {
+      id: `custom-${Date.now()}`,
+      topicTitle: { es: title, en: title },
+      format: "youtube",
+      durationLabel: { es: "8 a 10 minutos (YouTube Técnico)", en: "8 to 10 minutes (Technical YouTube)" },
+      hook: {
+        es: `"${title}: Por qué la mayoría de agencias lo implementan mal y cómo lo resolvemos nosotros en producción."`,
+        en: `"${title}: Why most agencies get this completely wrong and how we build it in production."`,
+      },
+      trapWarning: {
+        es: "La trampa: Seguir recetas obsoletas de tutoriales sin contemplar costos de escala ni límites de API.",
+        en: "The trap: Following outdated tutorials without modeling token economics or API rate limits.",
+      },
+      coreArchitecture: {
+        es: "Mostrar en pantalla: Deep-dive técnico en el editor de código, base de datos y consola de observabilidad.",
+        en: "Screen preview: Technical deep-dive across code editor, database schema and observability console.",
+      },
+      anchorPoints: {
+        es: [
+          "1. El problema real de fondo y por qué duele en la facturación.",
+          "2. Walkthrough paso a paso del código y la arquitectura de datos.",
+          "3. Resultados reales: latencia, ahorro en dólares y resiliencia.",
+        ],
+        en: [
+          "1. The underlying root cause and its direct impact on monthly revenue.",
+          "2. Step-by-step walkthrough of the code and data architecture.",
+          "3. Real metrics: latency, dollar savings, and fault tolerance.",
+        ],
+      },
+      closingCta: {
+        es: "\"Tenés el enlace para agendar una sesión de arquitectura directamente en la descripción del video.\"",
+        en: "\"You have the direct link to book an architecture session in the video description.\"",
+      },
+    };
+  }
+
+  return {
+    id: `custom-${Date.now()}`,
+    topicTitle: { es: title, en: title },
+    format: "linkedin",
+    durationLabel: { es: "Post B2B & Newsletter", en: "B2B Post & Newsletter" },
+    hook: {
+      es: `📌 Análisis Técnico: ${title}.`,
+      en: `📌 Engineering Breakdown: ${title}.`,
+    },
+    trapWarning: {
+      es: "La deuda técnica de las soluciones 'no-code' cuando el volumen supera las 1,000 operaciones/día.",
+      en: "The technical debt of purely no-code setups once traffic exceeds 1,000 daily operations.",
+    },
+    coreArchitecture: {
+      es: "Diagrama visual de la topología distribuida con Next.js 16 y PostgreSQL.",
+      en: "Visual diagram of the distributed topology with Next.js 16 and PostgreSQL.",
+    },
+    anchorPoints: {
+      es: [
+        "1. Tesis: La fragmentación de herramientas destruye el margen comercial.",
+        "2. Solución: Unificar captación, lógica de agentes y base de datos propia.",
+        "3. Métrica: Reducción del 85% en tiempo de respuesta.",
+      ],
+      en: [
+        "1. Thesis: Tool fragmentation destroys operating margins.",
+        "2. Solution: Unify lead intake, agent logic and proprietary database.",
+        "3. Metric: 85% reduction in customer response time.",
+      ],
+    },
+    closingCta: {
+      es: "¿Tu empresa sufre de esta fricción? Te leo en comentarios o coordinemos por mensaje privado.",
+      en: "Is your company facing this friction? Let's discuss in the comments or direct message.",
+    },
+  };
+}
 
 export function generateFormattedBlueprintText(
   blueprint: ContentBlueprint,
