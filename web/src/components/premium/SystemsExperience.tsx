@@ -17,6 +17,7 @@ import { AiAgentInteractiveLab } from "@/components/premium/systems/AiAgentInter
 import { VoiceAgentInteractiveSandbox } from "@/components/premium/systems/VoiceAgentInteractiveSandbox";
 import { OmnichannelInboxSimulator } from "@/components/premium/systems/OmnichannelInboxSimulator";
 import { LiveAutomationPipelinePlayground } from "@/components/premium/systems/LiveAutomationPipelinePlayground";
+import { EdgeResilienceStressTester } from "@/components/premium/systems/EdgeResilienceStressTester";
 
 const stages = [
   { id: "capture", title: { es: "Captación", en: "Acquisition" }, text: { es: "Formularios, pauta, WhatsApp y fuentes que ya existen.", en: "Forms, paid media, WhatsApp and the sources already in use." } },
@@ -287,6 +288,9 @@ export function SystemsExperience() {
 
       {/* ─── 01.8 PIPELINE DE AUTOMATIZACIÓN & WEBHOOKS EN VIVO ─── */}
       <LiveAutomationPipelinePlayground />
+
+      {/* ─── 01.9 BANCO DE PRUEBAS DE ESTRÉS & RESILIENCIA EDGE ─── */}
+      <EdgeResilienceStressTester />
 
       <section className="relative isolate overflow-hidden px-5 py-24 sm:px-8 lg:px-12 lg:py-32">
         <BackgroundVideo
