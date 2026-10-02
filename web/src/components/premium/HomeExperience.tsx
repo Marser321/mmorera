@@ -16,6 +16,7 @@ import { CaseBento } from "@/components/premium/CaseBento";
 import { FEATURED_CASES } from "@/data/projectCases";
 import { ServicesSection } from "@/components/premium/home/ServicesSection";
 import { IntegralValueSection } from "@/components/premium/home/IntegralValueSection";
+import { PipelineSimulatorSection } from "@/components/premium/home/PipelineSimulatorSection";
 import { ExclusivitySection } from "@/components/premium/home/ExclusivitySection";
 import { OrchestrationWheelSection } from "@/components/premium/home/OrchestrationWheelSection";
 import { DecisionHubSection } from "@/components/premium/home/DecisionHubSection";
@@ -221,6 +222,9 @@ export function HomeExperience({
 
       {/* ─── 4. LA TESIS CONTRA-CORRIENTE: EL OPERADOR INTEGRAL ─── */}
       <IntegralValueSection />
+
+      {/* ─── 4.1 SANDBOX TÁCTIL B2B: SIMULADOR DE PIPELINE & TELEMETRÍA ─── */}
+      <PipelineSimulatorSection />
 
       {/* ─── 5. EXCLUSIVIDAD: 4 A 5 PROYECTOS POR TRIMESTRE (Cero Juniors) ─── */}
       <ExclusivitySection />
