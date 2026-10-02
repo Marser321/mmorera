@@ -6,6 +6,7 @@ import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { localePath } from "@/config/site";
 import type { ProjectCase } from "@/types/site";
+import { CaseArchitectureBlueprint } from "@/components/premium/work/CaseArchitectureBlueprint";
 
 export function CaseStudy({ project }: { project: ProjectCase }) {
   const { language } = useLanguage();
@@ -38,6 +39,13 @@ export function CaseStudy({ project }: { project: ProjectCase }) {
             <section className="border-t border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)] py-8"><p className="font-mono text-[9px] uppercase tracking-[.16em] text-accent">02 · {isEs ? "Restricciones" : "Constraints"}</p><ul className="mt-6 space-y-3">{project.constraints.map((item) => <li key={item[language]} className="flex gap-4 text-lg leading-7 text-[#F3F0E8]/55 light:text-muted-foreground"><span className="mt-3 h-1 w-1 shrink-0 rounded-full bg-accent" />{item[language]}</li>)}</ul></section>
             <section className="border-t border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)] py-8"><p className="font-mono text-[9px] uppercase tracking-[.16em] text-signal">03 · {isEs ? "Decisiones" : "Decisions"}</p><ol className="mt-6 space-y-5">{project.decisions.map((item, index) => <li key={item[language]} className="grid grid-cols-[38px_1fr] gap-3 text-lg leading-7 text-[#F3F0E8]/65 light:text-muted-foreground"><span className="font-mono text-[10px] text-[#F3F0E8]/25 light:text-muted-foreground/85">0{index + 1}</span>{item[language]}</li>)}</ol></section>
             <section className="border-y border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)] py-8"><p className="font-mono text-[9px] uppercase tracking-[.16em] text-[#F3F0E8]/35 light:text-muted-foreground/85">04 · {isEs ? "Resultado" : "Outcome"}</p><p className="mt-5 max-w-3xl text-3xl font-medium leading-tight tracking-[-.04em] text-foreground sm:text-5xl">{project.result[language]}</p></section>
+
+            {/* 05 · Topología Interactiva del Sistema */}
+            <CaseArchitectureBlueprint
+              projectSlug={project.slug}
+              projectTitle={project.title[language]}
+              accentColor={project.accent}
+            />
           </div>
         </div>
       </article>
