@@ -20,6 +20,7 @@ import { PipelineSimulatorSection } from "@/components/premium/home/PipelineSimu
 import { ExclusivitySection } from "@/components/premium/home/ExclusivitySection";
 import { OrchestrationWheelSection } from "@/components/premium/home/OrchestrationWheelSection";
 import { DecisionHubSection } from "@/components/premium/home/DecisionHubSection";
+import { OperationalFrictionDiagnostic } from "@/components/premium/home/OperationalFrictionDiagnostic";
 import { WorkflowSection } from "@/components/premium/home/WorkflowSection";
 import { StackMatrixPlayground } from "@/components/premium/home/StackMatrixPlayground";
 import { SprintRoiCalculator } from "@/components/premium/home/SprintRoiCalculator";
@@ -242,6 +243,9 @@ export function HomeExperience({
 
       {/* ─── 6. CENTRO DE CRITERIO (Dilemas CRM y Estrategia Visual) ─── */}
       <DecisionHubSection />
+
+      {/* ─── 6.1 AUDITORÍA TÁCTIL DE FRICCIÓN & DEUDA OPERATIVA ─── */}
+      <OperationalFrictionDiagnostic />
 
       {/* ─── 7. BLUEPRINT DE METODOLOGÍA (4 Fases claras) ─── */}
       <WorkflowSection />
