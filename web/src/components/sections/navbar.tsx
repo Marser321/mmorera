@@ -97,12 +97,13 @@ export function Navbar() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-[100] px-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-6">
-      <div className="mx-auto flex h-16 max-w-[1480px] items-center justify-between rounded-xl border border-white/10 bg-background/72 px-4 shadow-[0_16px_46px_rgba(0,0,0,.24)] backdrop-blur-xl light:border-[rgb(var(--ink-rgb)/0.1)] light:shadow-[0_1px_2px_rgb(20_23_26_/_0.06),0_12px_32px_rgb(20_23_26_/_0.1)] sm:px-5">
+      <div className="relative mx-auto flex h-16 max-w-[1480px] items-center justify-between rounded-xl border border-white/10 bg-background/72 px-4 shadow-[0_16px_46px_rgba(0,0,0,.24)] backdrop-blur-xl light:border-[rgb(var(--ink-rgb)/0.1)] light:shadow-[0_1px_2px_rgb(20_23_26_/_0.06),0_12px_32px_rgb(20_23_26_/_0.1)] sm:px-5">
         <Link href={localePath(language, "/")} className="group rounded-lg p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" aria-label="Mario Morera — Home">
           <LogoMM className="h-7 w-7 text-foreground transition-transform duration-500 group-hover:rotate-[-6deg] motion-reduce:transition-none" />
         </Link>
 
-        <nav className="hidden items-center gap-7 lg:flex" aria-label={language === "es" ? "Navegación principal" : "Main navigation"}>
+        {/* Centrado Absoluto en Escritorio */}
+        <nav className="absolute left-1/2 -translate-x-1/2 hidden items-center gap-8 lg:flex" aria-label={language === "es" ? "Navegación principal" : "Main navigation"}>
           {primaryLinks.map((item) => (
             <Link key={item.href} href={item.href} className={`relative rounded-md py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${isActive(item.href) ? "text-foreground" : "text-foreground/58 hover:text-foreground"}`}>
               {item.label}
@@ -148,14 +149,14 @@ export function Navbar() {
 
       {mobileOpen && (
         <div id="mobile-menu" className="fixed inset-0 -z-10 flex min-h-[100dvh] flex-col overscroll-contain bg-background px-6 pb-[max(2rem,env(safe-area-inset-bottom))] pt-28 lg:hidden">
-          <nav className="flex flex-1 flex-col justify-center gap-2" aria-label={language === "es" ? "Navegación móvil" : "Mobile navigation"}>
+          <nav className="flex flex-1 flex-col justify-center items-center text-center gap-2" aria-label={language === "es" ? "Navegación móvil" : "Mobile navigation"}>
             {mobileLinks.map((item, index) => (
-              <Link ref={index === 0 ? firstMobileLinkRef : undefined} key={item.href} href={item.href} onClick={() => setMobileOpen(false)} className="border-b border-white/10 py-5 text-[clamp(2rem,9vw,4rem)] font-medium leading-none tracking-[-0.05em] text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring light:border-[rgb(var(--ink-rgb)/0.1)]">
+              <Link ref={index === 0 ? firstMobileLinkRef : undefined} key={item.href} href={item.href} onClick={() => setMobileOpen(false)} className="w-full border-b border-white/10 py-5 text-center text-[clamp(2rem,9vw,3.8rem)] font-medium leading-none tracking-[-0.05em] text-foreground transition-colors hover:text-signal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring light:border-[rgb(var(--ink-rgb)/0.1)]">
                 {item.label}
               </Link>
             ))}
           </nav>
-          <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
+          <div className="mt-8 flex flex-wrap items-center justify-center sm:justify-between gap-4">
             <div className="flex items-center gap-2">
               <button type="button" onClick={() => { setMobileOpen(false); setLanguage(language === "es" ? "en" : "es"); }} className="rounded-full border border-white/15 px-5 py-3 font-mono text-xs uppercase tracking-widest text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring light:border-[rgb(var(--ink-rgb)/0.15)]">
                 {language === "es" ? "English" : "Español"}

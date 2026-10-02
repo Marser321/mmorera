@@ -125,8 +125,8 @@ export function AboutTimeline() {
             className="relative overflow-hidden bg-transparent py-14 md:py-28"
         >
             <BackgroundVideo
-                src="/videos/developer-workspace.mp4"
-                poster="/videos/posters/developer-workspace.jpg"
+                src="/videos/graphite-planes.mp4"
+                poster="/videos/posters/graphite-planes.jpg"
                 intensity="medium"
                 scrim="radial"
                 tint="cyan"

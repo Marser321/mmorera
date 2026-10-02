@@ -85,8 +85,8 @@ export function OrchestrationWheelSection() {
     <section id="orquestacion" className="relative scroll-mt-20 isolate overflow-hidden border-t border-white/10 bg-background px-5 py-24 sm:px-8 lg:px-12 lg:py-32 light:border-[rgb(var(--ink-rgb)/0.1)]">
       {/* Background Video Cinemático Suave (Zero lag de scroll) */}
       <BackgroundVideo
-        src="/videos/circuit-lines.mp4"
-        poster="/videos/posters/circuit-lines.jpg"
+        src="/videos/ai-circuits.mp4"
+        poster="/videos/posters/ai-circuits.jpg"
         intensity="subtle"
         scrim="radial"
         tint="cyan"

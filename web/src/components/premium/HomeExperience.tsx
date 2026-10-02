@@ -23,6 +23,9 @@ import { WorkflowSection } from "@/components/premium/home/WorkflowSection";
 import { IslandBar } from "@/components/layout/IslandBar";
 import { AplicarOS } from "@/components/portfolio-isolated/AplicarOS";
 import { BackgroundVideo } from "@/components/shared/BackgroundVideo";
+import { AuthorManifestoScene, type AuthorManifestoCopy } from "@/components/premium/AuthorManifestoScene";
+import { MotionBackdrop } from "@/components/shared/MotionBackdrop";
+import { MOTION_ASSETS } from "@/data/motionAssets";
 
 const copy = {
   es: {
@@ -66,6 +69,27 @@ const copy = {
     ],
   },
 };
+
+const authorManifestoCopy = {
+  es: {
+    eyebrow: "Perfil & Filosofía",
+    convergence: "Una sola dirección",
+    headline: "Una sola dirección para todo lo que una idea necesita.",
+    body: "Trabajo entre diseño de alto impacto, arquitectura de software y automatización con IA. Acompaño cada proyecto hasta que opera y factura de verdad.",
+    principleLabel: "Principio",
+    principle: "Proyectos con algo propio que proteger y una ambición clara.",
+    signature: "Mario Morera — Del concepto a la operación",
+  },
+  en: {
+    eyebrow: "Profile & Philosophy",
+    convergence: "One direction",
+    headline: "One direction for everything an idea needs.",
+    body: "I work across high-impact design, software architecture, and AI automation. I stay with an idea until it truly operates and delivers value.",
+    principleLabel: "Principle",
+    principle: "Projects with their own identity to defend and a clear ambition.",
+    signature: "Mario Morera — From concept to live operation",
+  },
+} satisfies Record<"es" | "en", AuthorManifestoCopy>;
 
 export function HomeExperience({
   initialTrack: _track = "build",
@@ -201,13 +225,21 @@ export function HomeExperience({
       {/* ─── 5. EXCLUSIVIDAD: 4 A 5 PROYECTOS POR TRIMESTRE (Cero Juniors) ─── */}
       <ExclusivitySection />
 
+      {/* ─── 5.1 CINEMÁTICA Y MANIFIESTO PERSONAL (Scroll-Scrubbed Author Film) ─── */}
+      <div id="perfil" className="scroll-mt-20">
+        <AuthorManifestoScene
+          language={language}
+          copy={authorManifestoCopy[language]}
+        />
+      </div>
+
       {/* ─── 6. CENTRO DE CRITERIO (Dilemas CRM y Estrategia Visual) ─── */}
       <DecisionHubSection />
 
       {/* ─── 7. BLUEPRINT DE METODOLOGÍA (4 Fases claras) ─── */}
       <WorkflowSection />
 
-      {/* ─── 6. CATÁLOGO DE CASOS REALES (Bento de proyectos en producción) ─── */}
+      {/* ─── 8. CATÁLOGO DE CASOS REALES (Bento de proyectos en producción) ─── */}
       <section id="proyectos" className="scroll-mt-20 bg-background px-5 py-20 sm:px-8 sm:py-28 lg:px-12 border-t border-white/10 light:border-[rgb(var(--ink-rgb)/0.1)]">
         <div className="mx-auto max-w-[1480px]">
           <div className="grid gap-6 py-8 md:grid-cols-[.4fr_1.6fr] md:items-end md:py-12">
@@ -237,8 +269,9 @@ export function HomeExperience({
         </div>
       </section>
 
-      {/* ─── 7. CONTACTO DIRECTO & FORMULARIO INTERACTIVO ─── */}
+      {/* ─── 9. CONTACTO DIRECTO & FORMULARIO INTERACTIVO ─── */}
       <section id="contacto" className="scroll-mt-20 relative isolate overflow-hidden border-t border-white/10 bg-card/40 px-5 py-20 sm:px-8 sm:py-28 lg:px-12 light:border-[rgb(var(--ink-rgb)/0.1)] light:bg-card/20">
+        <MotionBackdrop asset={MOTION_ASSETS.opening} intensity={0.28} scrim="center" />
         <div className="relative z-10 mx-auto max-w-3xl text-center">
           <Reveal as="p" className="font-mono text-[10px] uppercase tracking-[0.2em] text-signal">
             {c.contactEyebrow}

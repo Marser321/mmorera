@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
+import { usePathname } from "next/navigation";
 import { SiWhatsapp } from "react-icons/si";
 import { useLanguage } from "@/context/LanguageContext";
 import { SITE_IDENTITY } from "@/config/site";
@@ -10,9 +11,14 @@ import { SITE_IDENTITY } from "@/config/site";
  * Reemplaza al antiguo asistente: sin intermediarios, conversación real.
  */
 export function WhatsAppFab() {
+  const pathname = usePathname();
   const { language } = useLanguage();
   const reduceMotion = useReducedMotion();
   const label = language === "es" ? "Escribir por WhatsApp" : "Chat on WhatsApp";
+
+  // En la home opera IslandBar con su propio acceso a WhatsApp para no duplicar ni solapar en mobile
+  const isHome = pathname === "/" || pathname === "/en";
+  if (isHome) return null;
 
   return (
     <motion.a

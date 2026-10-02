@@ -99,8 +99,8 @@ export function SistemasBlueprint() {
 
                     {/* Video de fondo técnico (líneas de circuito) */}
                     <BackgroundVideo
-                        src="/videos/circuit-lines.mp4"
-                        poster="/videos/posters/circuit-lines.jpg"
+                        src="/videos/ai-circuits.mp4"
+                        poster="/videos/posters/ai-circuits.jpg"
                         intensity="medium"
                         scrim="radial"
                         tint="cyan"
