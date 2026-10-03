@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Palette,
@@ -38,6 +38,13 @@ export function InteractiveDesignTokenStudio() {
   const [selectedGlassId, setSelectedGlassId] = useState<GlassPreset["id"]>("frosted");
   const [codeTab, setCodeTab] = useState<"tailwind" | "css">("tailwind");
   const [copied, setCopied] = useState<boolean>(false);
+  const copyTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    };
+  }, []);
 
   // Active tokens
   const activeTheme = useMemo(
@@ -68,8 +75,15 @@ export function InteractiveDesignTokenStudio() {
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(activeSnippet);
+      if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+        try { navigator.vibrate(10); } catch {}
+      }
       setCopied(true);
-      setTimeout(() => setCopied(false), 2400);
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+      copyTimerRef.current = setTimeout(() => {
+        setCopied(false);
+        copyTimerRef.current = null;
+      }, 2400);
     } catch {
       // fallback
     }
