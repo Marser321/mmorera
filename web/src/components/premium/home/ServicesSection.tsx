@@ -5,7 +5,6 @@ import { SERVICE_SOLUTIONS } from "@/data/solutionsData";
 import { Check, ArrowUpRight } from "lucide-react";
 import { Reveal } from "@/components/scroll/Reveal";
 import { SplitReveal } from "@/components/motion/SplitReveal";
-import { InteractiveEcosystemConfigurator } from "@/components/premium/home/InteractiveEcosystemConfigurator";
 
 export function ServicesSection() {
   const { language } = useLanguage();
@@ -100,9 +99,6 @@ export function ServicesSection() {
             </Reveal>
           ))}
         </div>
-
-        {/* Configurador Táctil de Ecosistema B2B */}
-        <InteractiveEcosystemConfigurator />
       </div>
     </section>
   );

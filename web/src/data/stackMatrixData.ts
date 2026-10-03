@@ -22,7 +22,7 @@ export const STACK_LAYERS: StackLayerConfig[] = [
     options: [
       {
         id: "nextjs",
-        name: "Next.js 15 (Código Propio)",
+        name: "Next.js 16 (Código Propio)",
         category: "web",
         isRecommended: true,
         frictionScore: 1,

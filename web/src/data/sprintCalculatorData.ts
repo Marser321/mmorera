@@ -13,7 +13,7 @@ export interface ProjectScopeTier {
 export const SCOPE_TIERS: ProjectScopeTier[] = [
   {
     id: "web",
-    name: { es: "Plataforma Web en Next.js 15", en: "Next.js 15 Web Platform" },
+    name: { es: "Plataforma Web en Next.js 16", en: "Next.js 16 Web Platform" },
     sprintDurationWeeks: 2,
     badge: { es: "Sprint de 1 a 2 semanas", en: "1 to 2 week sprint" },
     description: {
@@ -21,7 +21,7 @@ export const SCOPE_TIERS: ProjectScopeTier[] = [
       en: "Custom visual design, proprietary codebase, 95+ PageSpeed, and architecture built to convert visits into leads.",
     },
     deliverablesSummary: [
-      { es: "Frontend en Next.js 15 con Turbopack", en: "Next.js 15 frontend with Turbopack" },
+      { es: "Frontend en Next.js 16 con Turbopack", en: "Next.js 16 frontend with Turbopack" },
       { es: "SEO técnico y OpenGraph dinámico", en: "Technical SEO & dynamic OpenGraph" },
       { es: "Integración de tracking y formularios", en: "Tracking and lead forms integration" },
     ],

@@ -52,7 +52,7 @@ export function IslandBar() {
 
   return (
     /* Contenedor exterior fixed con flex justify-center: garantiza centrado absoluto e inmune al override de transform */
-    <div className="fixed inset-x-0 bottom-3 sm:bottom-6 z-50 flex justify-center pointer-events-none px-2 sm:px-4">
+    <div className="fixed inset-x-0 bottom-3 sm:bottom-6 z-50 flex justify-center pointer-events-none px-2 sm:px-4 pb-[env(safe-area-inset-bottom)]">
       <motion.nav
         initial={{ y: 50, opacity: 0, scale: 0.96 }}
         animate={{ y: 0, opacity: 1, scale: 1 }}

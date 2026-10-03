@@ -20,8 +20,8 @@ export const SERVICE_SOLUTIONS: ServiceSolution[] = [
     title: t("Desarrollo Web & E-commerce Next.js", "Next.js Web & E-commerce Development"),
     headline: t("Sitios ultrarrápidos diseñados para vender, no para lucir en una plantilla.", "Ultra-fast sites built to convert, not just look like a template."),
     description: t(
-      "Desarrollo a medida con Next.js 15, TypeScript y TailwindCSS. Carga instantánea en móviles, SEO técnico impecable y dirección de arte que proyecta autoridad inmediata.",
-      "Custom development with Next.js 15, TypeScript, and TailwindCSS. Instant mobile loading, clean technical SEO, and art direction that commands authority."
+      "Desarrollo a medida con Next.js 16, TypeScript y TailwindCSS. Carga instantánea en móviles, SEO técnico impecable y dirección de arte que proyecta autoridad inmediata.",
+      "Custom development with Next.js 16, TypeScript, and TailwindCSS. Instant mobile loading, clean technical SEO, and art direction that commands authority."
     ),
     deliverables: [
       t("Arquitectura a medida sin plantillas genéricas", "Tailored architecture with zero generic templates"),
@@ -269,8 +269,8 @@ export const WORKFLOW_STAGES = [
     step: "03",
     title: t("Construcción en Producción (Next.js)", "Production Build (Next.js)"),
     description: t(
-      "Desarrollo de alto rendimiento con Next.js 15, bases de datos y pasarelas conectadas. Entregas en sprints ágiles para que veas el sistema funcionando en días, no en meses.",
-      "High-performance build with Next.js 15, databases, and connected payment/WhatsApp workflows. Shipped in fast sprints so you see real software in days, not months."
+      "Desarrollo de alto rendimiento con Next.js 16, bases de datos y pasarelas conectadas. Entregas en sprints ágiles para que veas el sistema funcionando en días, no en meses.",
+      "High-performance build with Next.js 16, databases, and connected payment/WhatsApp workflows. Shipped in fast sprints so you see real software in days, not months."
     ),
     badge: t("Velocidad Extrema", "Extreme Speed"),
   },

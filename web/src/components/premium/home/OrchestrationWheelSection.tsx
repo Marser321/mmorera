@@ -35,7 +35,7 @@ const FLOATING_TECH_BADGES = [
   { name: "GoHighLevel", Icon: GhlMark, category: "CRM" as Family, accent: "#FFBA08" },
   { name: "HubSpot", Icon: SiHubspot, category: "CRM" as Family, accent: "#FF7A59" },
   { name: "Pipedrive", Icon: PipedriveMark, category: "CRM" as Family, accent: "#06AC38" },
-  { name: "Next.js 15", Icon: SiNextdotjs, category: "Web" as Family, accent: "#55D8FF" },
+  { name: "Next.js 16", Icon: SiNextdotjs, category: "Web" as Family, accent: "#55D8FF" },
   { name: "OpenAI & Claude", Icon: SiOpenai, category: "AI" as Family, accent: "#B68CFF" },
   { name: "n8n Workflows", Icon: SiN8N, category: "Automation" as Family, accent: "#EA4B71" },
   { name: "Supabase & SQL", Icon: SiSupabase, category: "Backend" as Family, accent: "#3ECF8E" },

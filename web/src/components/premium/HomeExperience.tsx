@@ -45,7 +45,7 @@ const copy = {
     contactBody: "Completá el formulario en 2 minutos para evaluar tu caso o escribime directo por WhatsApp para una respuesta inmediata.",
     badges: [
       { icon: Zap, text: "95+ Google PageSpeed" },
-      { icon: Shield, text: "Código Propio en Next.js 15" },
+      { icon: Shield, text: "Código Propio en Next.js 16" },
       { icon: CheckCircle2, text: "Sprints de 1 a 3 semanas" },
     ],
   },
@@ -65,7 +65,7 @@ const copy = {
     contactBody: "Fill out the 2-minute brief to evaluate your setup or text me directly on WhatsApp for an express response.",
     badges: [
       { icon: Zap, text: "95+ Google PageSpeed" },
-      { icon: Shield, text: "Custom Next.js 15 Codebase" },
+      { icon: Shield, text: "Custom Next.js 16 Codebase" },
       { icon: CheckCircle2, text: "1 to 3 Week Sprints" },
     ],
   },
