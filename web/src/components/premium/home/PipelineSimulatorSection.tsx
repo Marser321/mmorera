@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { Reveal } from "@/components/scroll/Reveal";
@@ -41,6 +41,14 @@ export function PipelineSimulatorSection() {
   const [activeStepSimulation, setActiveStepSimulation] = useState<number>(-1);
   const [isSimulating, setIsSimulating] = useState<boolean>(false);
   const [showConsoleTab, setShowConsoleTab] = useState<boolean>(false);
+  const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
+
+  // Cleanup pending timeouts on unmount
+  useEffect(() => {
+    return () => {
+      timeoutsRef.current.forEach(clearTimeout);
+    };
+  }, []);
 
   const activeNiche = useMemo(
     () => NICHES.find((n) => n.id === selectedNicheId) ?? NICHES[0],
@@ -53,18 +61,25 @@ export function PipelineSimulatorSection() {
     [isAutomatedMode, leadVolume]
   );
 
-  // Simulation runner
+  // Simulation runner with timer cleanup and mobile haptics
   const runLiveSimulation = () => {
     if (isSimulating) return;
     setIsSimulating(true);
     setActiveStepSimulation(0);
 
-    setTimeout(() => setActiveStepSimulation(1), 700);
-    setTimeout(() => setActiveStepSimulation(2), 1500);
-    setTimeout(() => setActiveStepSimulation(3), 2300);
-    setTimeout(() => {
-      setIsSimulating(false);
-    }, 3200);
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+      try { navigator.vibrate([15, 30, 15]); } catch {}
+    }
+
+    timeoutsRef.current.forEach(clearTimeout);
+    timeoutsRef.current = [
+      setTimeout(() => setActiveStepSimulation(1), 700),
+      setTimeout(() => setActiveStepSimulation(2), 1500),
+      setTimeout(() => setActiveStepSimulation(3), 2300),
+      setTimeout(() => {
+        setIsSimulating(false);
+      }, 3200),
+    ];
   };
 
   const whatsappPrefilledUrl = useMemo(() => {
