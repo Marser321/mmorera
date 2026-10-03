@@ -79,6 +79,16 @@ export function TechRadarBackstageStudio() {
   const [isRecordingTimerRunning, setIsRecordingTimerRunning] = useState<boolean>(false);
   const [completedAnchors, setCompletedAnchors] = useState<number[]>([]);
   const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const sweepIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const copyTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
+      if (sweepIntervalRef.current) clearInterval(sweepIntervalRef.current);
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    };
+  }, []);
 
   const [copied, setCopied] = useState<boolean>(false);
 
@@ -117,15 +127,24 @@ export function TechRadarBackstageStudio() {
     if (isScanning) return;
     setIsScanning(true);
     setScanProgress(10);
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+      try {
+        navigator.vibrate([15, 30, 15]);
+      } catch {
+        // ignore
+      }
+    }
 
     setCrawlerAgents((prev) =>
       prev.map((agent) => ({ ...agent, status: "scanning" }))
     );
 
-    const interval = setInterval(() => {
+    if (sweepIntervalRef.current) clearInterval(sweepIntervalRef.current);
+    sweepIntervalRef.current = setInterval(() => {
       setScanProgress((prev) => {
         if (prev >= 100) {
-          clearInterval(interval);
+          if (sweepIntervalRef.current) clearInterval(sweepIntervalRef.current);
+          sweepIntervalRef.current = null;
           setIsScanning(false);
           setCrawlerAgents((current) =>
             current.map((agent) => ({ ...agent, status: "synced" }))
@@ -162,7 +181,18 @@ export function TechRadarBackstageStudio() {
     try {
       await navigator.clipboard.writeText(formattedBlueprint);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2400);
+      if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+        try {
+          navigator.vibrate(10);
+        } catch {
+          // ignore
+        }
+      }
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+      copyTimerRef.current = setTimeout(() => {
+        setCopied(false);
+        copyTimerRef.current = null;
+      }, 2400);
     } catch {
       // fallback
     }

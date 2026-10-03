@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { Reveal } from "@/components/scroll/Reveal";
@@ -44,6 +44,14 @@ export function CaseArchitectureBlueprint({
   const [activeNodeIndex, setActiveNodeIndex] = useState<number>(0);
   const [isSimulating, setIsSimulating] = useState<boolean>(false);
   const [simulatedNode, setSimulatedNode] = useState<number | null>(null);
+  const pulseTimersRef = useRef<number[]>([]);
+
+  useEffect(() => {
+    return () => {
+      pulseTimersRef.current.forEach((t) => window.clearTimeout(t));
+      pulseTimersRef.current = [];
+    };
+  }, []);
 
   const activeNode: TopologyNode = topology.nodes[activeNodeIndex] ?? topology.nodes[0];
 
@@ -53,27 +61,37 @@ export function CaseArchitectureBlueprint({
     setSimulatedNode(0);
     setActiveNodeIndex(0);
 
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+      try {
+        navigator.vibrate(15);
+      } catch {
+        // ignore
+      }
+    }
+
+    pulseTimersRef.current.forEach((t) => window.clearTimeout(t));
+    pulseTimersRef.current = [];
+
     const stepInterval = 800; // ms per node
 
-    setTimeout(() => {
-      setSimulatedNode(1);
-      setActiveNodeIndex(1);
-    }, stepInterval);
-
-    setTimeout(() => {
-      setSimulatedNode(2);
-      setActiveNodeIndex(2);
-    }, stepInterval * 2);
-
-    setTimeout(() => {
-      setSimulatedNode(3);
-      setActiveNodeIndex(3);
-    }, stepInterval * 3);
-
-    setTimeout(() => {
-      setIsSimulating(false);
-      setSimulatedNode(null);
-    }, stepInterval * 4);
+    pulseTimersRef.current.push(
+      window.setTimeout(() => {
+        setSimulatedNode(1);
+        setActiveNodeIndex(1);
+      }, stepInterval),
+      window.setTimeout(() => {
+        setSimulatedNode(2);
+        setActiveNodeIndex(2);
+      }, stepInterval * 2),
+      window.setTimeout(() => {
+        setSimulatedNode(3);
+        setActiveNodeIndex(3);
+      }, stepInterval * 3),
+      window.setTimeout(() => {
+        setIsSimulating(false);
+        setSimulatedNode(null);
+      }, stepInterval * 4)
+    );
   };
 
   const whatsappPrefillUrl = useMemo(() => {

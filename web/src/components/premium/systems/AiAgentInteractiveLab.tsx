@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { Reveal } from "@/components/scroll/Reveal";
@@ -33,8 +33,15 @@ export function AiAgentInteractiveLab() {
   const [selectedAgentId, setSelectedAgentId] = useState<string>("qualifier");
   const [activeScenarioId, setActiveScenarioId] = useState<string>("high-ticket");
   const [isCopied, setIsCopied] = useState<boolean>(false);
+  const copyTimerRef = useRef<NodeJS.Timeout | null>(null);
   const [simulatedTyping, setSimulatedTyping] = useState<boolean>(false);
   const [displayedReply, setDisplayedReply] = useState<string>("");
+
+  useEffect(() => {
+    return () => {
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    };
+  }, []);
 
   const currentAgent = useMemo<AgentTypeConfig>(
     () => AI_AGENT_PRESETS.find((a) => a.id === selectedAgentId) ?? AI_AGENT_PRESETS[0],
@@ -77,7 +84,14 @@ export function AiAgentInteractiveLab() {
   const handleCopyPayload = () => {
     navigator.clipboard.writeText(JSON.stringify(currentScenario.webhookPayload, null, 2));
     setIsCopied(true);
-    setTimeout(() => setIsCopied(false), 2000);
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+      try { navigator.vibrate(10); } catch {}
+    }
+    if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    copyTimerRef.current = setTimeout(() => {
+      setIsCopied(false);
+      copyTimerRef.current = null;
+    }, 2000);
   };
 
   const whatsappPrefilledUrl = useMemo(() => {

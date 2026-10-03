@@ -50,6 +50,14 @@ export function InteractiveTelephonyDialpad() {
   // Web Audio Context for authentic DTMF sound
   const audioCtxRef = useRef<AudioContext | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const transitionTimersRef = useRef<NodeJS.Timeout[]>([]);
+
+  useEffect(() => {
+    return () => {
+      transitionTimersRef.current.forEach((t) => clearTimeout(t));
+      transitionTimersRef.current = [];
+    };
+  }, []);
 
   // Play DTMF dual-tone
   const playDtmfSound = useCallback((key: string) => {
@@ -129,21 +137,39 @@ export function InteractiveTelephonyDialpad() {
     setCallSeconds(0);
     setDialogueStep(0);
 
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+      try { navigator.vibrate(20); } catch {}
+    }
+
+    transitionTimersRef.current.forEach((t) => clearTimeout(t));
+    transitionTimersRef.current = [];
+
     // Simulated SIP connection (1.2s ringing -> connected)
-    setTimeout(() => {
-      setCallState("connected");
-      setDialogueStep(1); // First message
-    }, 1200);
+    transitionTimersRef.current.push(
+      setTimeout(() => {
+        setCallState("connected");
+        setDialogueStep(1); // First message
+      }, 1200)
+    );
   };
 
   const endCall = () => {
     setCallState("ended");
     if (timerRef.current) clearInterval(timerRef.current);
-    setTimeout(() => {
-      setCallState("idle");
-      setCallSeconds(0);
-      setDialogueStep(0);
-    }, 1800);
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+      try { navigator.vibrate(12); } catch {}
+    }
+
+    transitionTimersRef.current.forEach((t) => clearTimeout(t));
+    transitionTimersRef.current = [];
+
+    transitionTimersRef.current.push(
+      setTimeout(() => {
+        setCallState("idle");
+        setCallSeconds(0);
+        setDialogueStep(0);
+      }, 1800)
+    );
   };
 
   // Call timer and dialogue progression
