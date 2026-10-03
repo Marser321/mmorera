@@ -15,6 +15,7 @@ import { MOTION_ASSETS } from "@/data/motionAssets";
 import { MagicBento, type BentoItem } from "@/components/ui/magic-bento";
 import { AiAgentInteractiveLab } from "@/components/premium/systems/AiAgentInteractiveLab";
 import { VoiceAgentInteractiveSandbox } from "@/components/premium/systems/VoiceAgentInteractiveSandbox";
+import { InteractiveTelephonyDialpad } from "@/components/premium/systems/InteractiveTelephonyDialpad";
 import { OmnichannelInboxSimulator } from "@/components/premium/systems/OmnichannelInboxSimulator";
 import { LiveAutomationPipelinePlayground } from "@/components/premium/systems/LiveAutomationPipelinePlayground";
 import { EdgeResilienceStressTester } from "@/components/premium/systems/EdgeResilienceStressTester";
@@ -283,6 +284,9 @@ export function SystemsExperience() {
 
       {/* ─── 01.6 TELEFONÍA & SANDBOX DE VOZ IA EN TIEMPO REAL ─── */}
       <VoiceAgentInteractiveSandbox />
+
+      {/* ─── 01.65 HARDWARE DIALPAD & TELEFONÍA DE VOZ IA ─── */}
+      <InteractiveTelephonyDialpad />
 
       {/* ─── 01.7 BANDEJA OMNICANAL & SPEED-TO-LEAD EN TIEMPO REAL ─── */}
       <OmnichannelInboxSimulator />
