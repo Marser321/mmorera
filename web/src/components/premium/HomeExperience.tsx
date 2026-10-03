@@ -16,19 +16,11 @@ import { CaseBento } from "@/components/premium/CaseBento";
 import { FEATURED_CASES } from "@/data/projectCases";
 import { ServicesSection } from "@/components/premium/home/ServicesSection";
 import { IntegralValueSection } from "@/components/premium/home/IntegralValueSection";
-import { RotaryLeverageCockpit } from "@/components/premium/home/RotaryLeverageCockpit";
 import { PipelineSimulatorSection } from "@/components/premium/home/PipelineSimulatorSection";
 import { ExclusivitySection } from "@/components/premium/home/ExclusivitySection";
 import { OrchestrationWheelSection } from "@/components/premium/home/OrchestrationWheelSection";
-import { DecisionHubSection } from "@/components/premium/home/DecisionHubSection";
-import { OperationalFrictionDiagnostic } from "@/components/premium/home/OperationalFrictionDiagnostic";
-import { LeadVelocityDecayArena } from "@/components/premium/home/LeadVelocityDecayArena";
 import { WorkflowSection } from "@/components/premium/home/WorkflowSection";
-import { AsyncSprintDeliveryRadar } from "@/components/premium/home/AsyncSprintDeliveryRadar";
-import { StackMatrixPlayground } from "@/components/premium/home/StackMatrixPlayground";
-import { SprintRoiCalculator } from "@/components/premium/home/SprintRoiCalculator";
 import { TransformationDiffViewer } from "@/components/premium/home/TransformationDiffViewer";
-import { InteractiveWhatsAppScopeStudio } from "@/components/premium/application/InteractiveWhatsAppScopeStudio";
 import { IslandBar } from "@/components/layout/IslandBar";
 import { AplicarOS } from "@/components/portfolio-isolated/AplicarOS";
 import { BackgroundVideo } from "@/components/shared/BackgroundVideo";
@@ -231,16 +223,13 @@ export function HomeExperience({
       {/* ─── 4. LA TESIS CONTRA-CORRIENTE: EL OPERADOR INTEGRAL ─── */}
       <IntegralValueSection />
 
-      {/* ─── 4.05 COCKPIT TÁCTIL DE PALANCA OPERATIVA CON DIAL GIRATORIO ─── */}
-      <RotaryLeverageCockpit />
-
       {/* ─── 4.1 SANDBOX TÁCTIL B2B: SIMULADOR DE PIPELINE & TELEMETRÍA ─── */}
       <PipelineSimulatorSection />
 
       {/* ─── 5. EXCLUSIVIDAD: 4 A 5 PROYECTOS POR TRIMESTRE (Cero Juniors) ─── */}
       <ExclusivitySection />
 
-      {/* ─── 5.1 CINEMÁTICA Y MANIFIESTO PERSONAL (Scroll-Scrubbed Author Film) ─── */}
+      {/* ─── 6. CINEMÁTICA Y PERFIL PERSONAL (Scroll-Scrubbed Author Experience) ─── */}
       <div id="perfil" className="scroll-mt-20">
         <AuthorManifestoScene
           language={language}
@@ -248,26 +237,8 @@ export function HomeExperience({
         />
       </div>
 
-      {/* ─── 6. CENTRO DE CRITERIO (Dilemas CRM y Estrategia Visual) ─── */}
-      <DecisionHubSection />
-
-      {/* ─── 6.1 AUDITORÍA TÁCTIL DE FRICCIÓN & DEUDA OPERATIVA ─── */}
-      <OperationalFrictionDiagnostic />
-
-      {/* ─── 6.2 AUDITORÍA DE VELOCIDAD & CURVA DE DECADENCIA DEL LEAD ─── */}
-      <LeadVelocityDecayArena />
-
       {/* ─── 7. BLUEPRINT DE METODOLOGÍA (4 Fases claras) ─── */}
       <WorkflowSection />
-
-      {/* ─── 7.05 RADAR DE ENTREGA ASÍNCRONA & LIVE CLIENT STREAM ─── */}
-      <AsyncSprintDeliveryRadar />
-
-      {/* ─── 7.1 MATRIZ INTERACTIVA DE CONECTORES & DIAGNÓSTICO DE FRICCIÓN ─── */}
-      <StackMatrixPlayground />
-
-      {/* ─── 7.2 CALCULADORA TÁCTIL DE SPRINTS & RETORNO B2B ─── */}
-      <SprintRoiCalculator />
 
       {/* ─── 8. CATÁLOGO DE CASOS REALES (Bento de proyectos en producción) ─── */}
       <section id="proyectos" className="scroll-mt-20 bg-background px-5 py-20 sm:px-8 sm:py-28 lg:px-12 border-t border-white/10 light:border-[rgb(var(--ink-rgb)/0.1)]">
@@ -301,13 +272,6 @@ export function HomeExperience({
           <Reveal y={24}>
             <CaseBento projects={FEATURED_CASES} featureFirst className="pt-6 pb-12" />
           </Reveal>
-        </div>
-      </section>
-
-      {/* ─── 8.5 ESTUDIO TÁCTIL DE ALCANCE & HANDOFF DIRECTO A WHATSAPP ─── */}
-      <section id="cotizador" className="scroll-mt-20 border-t border-white/10 px-5 py-12 sm:px-8 sm:py-16 lg:px-12 light:border-[rgb(var(--ink-rgb)/0.1)]">
-        <div className="mx-auto max-w-[1480px]">
-          <InteractiveWhatsAppScopeStudio />
         </div>
       </section>
 

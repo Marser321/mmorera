@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { AplicarOS } from "@/components/portfolio-isolated/AplicarOS";
-import { SprintRoadmapDiagnostic } from "@/components/premium/application/SprintRoadmapDiagnostic";
 import { InteractiveWhatsAppScopeStudio } from "@/components/premium/application/InteractiveWhatsAppScopeStudio";
 import { SITE_IDENTITY } from "@/config/site";
 import { MotionBackdrop } from "@/components/shared/MotionBackdrop";
@@ -35,7 +34,6 @@ export default function ApplicationPage() {
           Tres pasos. Contexto suficiente para entender el proyecto y responder con criterio.
         </p>
       </header>
-      <SprintRoadmapDiagnostic />
       <div className="mx-auto max-w-[1180px]">
         <InteractiveWhatsAppScopeStudio />
       </div>
