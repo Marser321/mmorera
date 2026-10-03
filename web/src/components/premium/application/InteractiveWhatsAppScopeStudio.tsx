@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useId } from "react";
+import { useState, useMemo, useId, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Globe,
@@ -52,6 +52,13 @@ export function InteractiveWhatsAppScopeStudio() {
   const [selectedVelocityId, setSelectedVelocityId] = useState<string>("full");
   const [monthlyVolume, setMonthlyVolume] = useState<number>(500);
   const [copied, setCopied] = useState<boolean>(false);
+  const copyTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    };
+  }, []);
 
   // Toggle module selection
   const handleToggleModule = (id: string) => {
@@ -79,8 +86,15 @@ export function InteractiveWhatsAppScopeStudio() {
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(summary.formattedMessage);
+      if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+        try { navigator.vibrate(10); } catch {}
+      }
       setCopied(true);
-      setTimeout(() => setCopied(false), 2400);
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+      copyTimerRef.current = setTimeout(() => {
+        setCopied(false);
+        copyTimerRef.current = null;
+      }, 2400);
     } catch {
       // fallback
     }
