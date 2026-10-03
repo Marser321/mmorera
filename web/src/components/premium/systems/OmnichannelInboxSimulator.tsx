@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { Reveal } from "@/components/scroll/Reveal";
@@ -33,6 +33,13 @@ export function OmnichannelInboxSimulator() {
   const [selectedLeadId, setSelectedLeadId] = useState<string>("lead-1");
   const [triggeredAction, setTriggeredAction] = useState<string | null>(null);
   const [actionFeedbackText, setActionFeedbackText] = useState<string | null>(null);
+  const actionTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (actionTimerRef.current) clearTimeout(actionTimerRef.current);
+    };
+  }, []);
 
   const activeLead = useMemo<OmnichannelLead>(
     () => OMNICHANNEL_LEADS.find((l) => l.id === selectedLeadId) ?? OMNICHANNEL_LEADS[0],
@@ -40,11 +47,16 @@ export function OmnichannelInboxSimulator() {
   );
 
   const handleTriggerAction = (actionId: string, feedback: string) => {
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+      try { navigator.vibrate(12); } catch {}
+    }
+    if (actionTimerRef.current) clearTimeout(actionTimerRef.current);
     setTriggeredAction(actionId);
     setActionFeedbackText(feedback);
-    setTimeout(() => {
+    actionTimerRef.current = setTimeout(() => {
       setTriggeredAction(null);
       setActionFeedbackText(null);
+      actionTimerRef.current = null;
     }, 4000);
   };
 
