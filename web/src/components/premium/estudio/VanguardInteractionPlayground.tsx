@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useMemo } from "react";
+import { useState, useRef, useMemo, useEffect } from "react";
 import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
 import {
   Sparkles,
@@ -34,6 +34,15 @@ export function VanguardInteractionPlayground() {
 
   const [activePatternId, setActivePatternId] = useState<string>("morphing-dock");
   const [copied, setCopied] = useState<boolean>(false);
+  const copyTimerRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (copyTimerRef.current !== null) {
+        window.clearTimeout(copyTimerRef.current);
+      }
+    };
+  }, []);
 
   // Pattern 1: Dock state
   const [activeDockItem, setActiveDockItem] = useState<string>("Home");
@@ -64,7 +73,20 @@ export function VanguardInteractionPlayground() {
     try {
       await navigator.clipboard.writeText(activePattern.snippet);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2400);
+      if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+        try {
+          navigator.vibrate(10);
+        } catch {
+          // ignore
+        }
+      }
+      if (copyTimerRef.current !== null) {
+        window.clearTimeout(copyTimerRef.current);
+      }
+      copyTimerRef.current = window.setTimeout(() => {
+        setCopied(false);
+        copyTimerRef.current = null;
+      }, 2400);
     } catch {
       // fallback
     }

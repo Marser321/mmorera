@@ -17,7 +17,6 @@ import { FEATURED_CASES } from "@/data/projectCases";
 import { ServicesSection } from "@/components/premium/home/ServicesSection";
 import { IntegralValueSection } from "@/components/premium/home/IntegralValueSection";
 import { PipelineSimulatorSection } from "@/components/premium/home/PipelineSimulatorSection";
-import { ExclusivitySection } from "@/components/premium/home/ExclusivitySection";
 import { OrchestrationWheelSection } from "@/components/premium/home/OrchestrationWheelSection";
 import { WorkflowSection } from "@/components/premium/home/WorkflowSection";
 import { TransformationDiffViewer } from "@/components/premium/home/TransformationDiffViewer";
@@ -76,19 +75,19 @@ const authorManifestoCopy = {
     eyebrow: "Perfil & Filosofía",
     convergence: "Una sola dirección",
     headline: "Una sola dirección para todo lo que una idea necesita.",
-    body: "Trabajo entre diseño de alto impacto, arquitectura de software y automatización con IA. Acompaño cada proyecto hasta que opera y factura de verdad.",
+    body: "Diseño de alto impacto, arquitectura en Next.js 16 y automatización con IA. Sin intermediarios, directo a producción.",
     principleLabel: "Principio",
-    principle: "Proyectos con algo propio que proteger y una ambición clara.",
-    signature: "Mario Morera — Del concepto a la operación",
+    principle: "Sistemas propios con identidad clara, construidos para operar y facturar.",
+    signature: "Mario Morera",
   },
   en: {
     eyebrow: "Profile & Philosophy",
     convergence: "One direction",
     headline: "One direction for everything an idea needs.",
-    body: "I work across high-impact design, software architecture, and AI automation. I stay with an idea until it truly operates and delivers value.",
+    body: "High-impact design, Next.js 16 architecture, and AI automation. Zero intermediaries, shipped straight to production.",
     principleLabel: "Principle",
-    principle: "Projects with their own identity to defend and a clear ambition.",
-    signature: "Mario Morera — From concept to live operation",
+    principle: "Proprietary systems with clear identity, engineered to operate and generate revenue.",
+    signature: "Mario Morera",
   },
 } satisfies Record<"es" | "en", AuthorManifestoCopy>;
 
@@ -220,16 +219,13 @@ export function HomeExperience({
       {/* ─── 3. LA RUEDA INTERACTIVA DE ORQUESTACIÓN (Menú con atmósfera reactiva) ─── */}
       <OrchestrationWheelSection />
 
-      {/* ─── 4. LA TESIS CONTRA-CORRIENTE: EL OPERADOR INTEGRAL ─── */}
+      {/* ─── 4. EL OPERADOR INTEGRAL & CAPACIDAD EXCLUSIVA ─── */}
       <IntegralValueSection />
 
       {/* ─── 4.1 SANDBOX TÁCTIL B2B: SIMULADOR DE PIPELINE & TELEMETRÍA ─── */}
       <PipelineSimulatorSection />
 
-      {/* ─── 5. EXCLUSIVIDAD: 4 A 5 PROYECTOS POR TRIMESTRE (Cero Juniors) ─── */}
-      <ExclusivitySection />
-
-      {/* ─── 6. CINEMÁTICA Y PERFIL PERSONAL (Scroll-Scrubbed Author Experience) ─── */}
+      {/* ─── 5. PERFIL & FILOSOFÍA (Cinemática interactiva) ─── */}
       <div id="perfil" className="scroll-mt-20">
         <AuthorManifestoScene
           language={language}
@@ -237,7 +233,7 @@ export function HomeExperience({
         />
       </div>
 
-      {/* ─── 7. BLUEPRINT DE METODOLOGÍA (4 Fases claras) ─── */}
+      {/* ─── 6. BLUEPRINT DE METODOLOGÍA (4 Fases claras) ─── */}
       <WorkflowSection />
 
       {/* ─── 8. CATÁLOGO DE CASOS REALES (Bento de proyectos en producción) ─── */}

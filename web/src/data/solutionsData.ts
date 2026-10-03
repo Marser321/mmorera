@@ -251,8 +251,8 @@ export const WORKFLOW_STAGES = [
     step: "01",
     title: t("Diagnóstico & Criterio", "Diagnosis & Strategic Alignment"),
     description: t(
-      "Analizamos qué tiene tu negocio hoy, dónde se traban los clientes y si necesitás una web visual, un sistema de reservas o automatización en WhatsApp. Cero humo: números y objetivos claros.",
-      "We analyze what exists today, where prospects drop off, and whether you need a visual website, self-service booking, or WhatsApp automation. Zero hype: clear KPIs and scope."
+      "Analizamos tu flujo actual, detectamos cuellos de botella y definimos el alcance exacto sin humo.",
+      "We analyze your current flow, isolate bottlenecks, and define the exact scope without hype."
     ),
     badge: t("Sin Compromiso", "No Commitment"),
   },
@@ -260,8 +260,8 @@ export const WORKFLOW_STAGES = [
     step: "02",
     title: t("Dirección de Arte & Arquitectura", "Art Direction & Architecture"),
     description: t(
-      "Diseñamos la estructura completa, la jerarquía visual y el recorrido del cliente. Todo pensado para que la persona entienda de inmediato y actúe sin dudar.",
-      "We design the complete structure, visual hierarchy, and customer journey. Engineered so visitors instantly understand and act with certainty."
+      "Estructura visual, experiencia de usuario y arquitectura técnica creadas a medida de tu negocio.",
+      "Tailored visual hierarchy, user journey, and technical architecture designed for conversions."
     ),
     badge: t("Diseño a Medida", "Custom Design"),
   },
@@ -269,8 +269,8 @@ export const WORKFLOW_STAGES = [
     step: "03",
     title: t("Construcción en Producción (Next.js)", "Production Build (Next.js)"),
     description: t(
-      "Desarrollo de alto rendimiento con Next.js 16, bases de datos y pasarelas conectadas. Entregas en sprints ágiles para que veas el sistema funcionando en días, no en meses.",
-      "High-performance build with Next.js 16, databases, and connected payment/WhatsApp workflows. Shipped in fast sprints so you see real software in days, not months."
+      "Desarrollo en Next.js 16 y automatizaciones conectadas en sprints ágiles de 1 a 3 semanas.",
+      "Next.js 16 build and connected automations shipped in agile 1-3 week sprints."
     ),
     badge: t("Velocidad Extrema", "Extreme Speed"),
   },
@@ -278,8 +278,8 @@ export const WORKFLOW_STAGES = [
     step: "04",
     title: t("Despliegue & Operación Continua", "Deployment & Active Operations"),
     description: t(
-      "Lanzamos tu sistema en servidores globales (CDN) con monitoreo continuo, optimización de conversión y soporte directo por WhatsApp conmigo sin intermediarios.",
-      "We deploy to global CDN edge servers with 24/7 uptime monitoring, conversion optimization, and direct WhatsApp support with me—no intermediaries."
+      "Despliegue en producción con monitoreo en vivo y comunicación directa por WhatsApp sin intermediarios.",
+      "Live production launch with real-time telemetry and direct WhatsApp communication."
     ),
     badge: t("Acompañamiento Real", "Real Support"),
   },

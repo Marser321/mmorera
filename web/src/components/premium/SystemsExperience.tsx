@@ -13,8 +13,6 @@ import { DecodeText } from "@/components/motion/DecodeText";
 import { TickerNumber } from "@/components/motion/TickerNumber";
 import { MOTION_ASSETS } from "@/data/motionAssets";
 import { MagicBento, type BentoItem } from "@/components/ui/magic-bento";
-import { AiAgentInteractiveLab } from "@/components/premium/systems/AiAgentInteractiveLab";
-import { InteractiveTelephonyDialpad } from "@/components/premium/systems/InteractiveTelephonyDialpad";
 import { OmnichannelInboxSimulator } from "@/components/premium/systems/OmnichannelInboxSimulator";
 import { LiveAutomationPipelinePlayground } from "@/components/premium/systems/LiveAutomationPipelinePlayground";
 
@@ -276,16 +274,10 @@ export function SystemsExperience() {
         </div>
       </section>
 
-      {/* ─── 01.5 LABORATORIO INTERACTIVO DE AGENTES DE IA ─── */}
-      <AiAgentInteractiveLab />
-
-      {/* ─── 01.6 HARDWARE DIALPAD & TELEFONÍA DE VOZ IA ─── */}
-      <InteractiveTelephonyDialpad />
-
-      {/* ─── 01.7 BANDEJA OMNICANAL & SPEED-TO-LEAD EN TIEMPO REAL ─── */}
+      {/* ─── 01.5 BANDEJA OMNICANAL & SPEED-TO-LEAD EN TIEMPO REAL ─── */}
       <OmnichannelInboxSimulator />
 
-      {/* ─── 01.8 PIPELINE DE AUTOMATIZACIÓN & WEBHOOKS EN VIVO ─── */}
+      {/* ─── 01.6 PIPELINE DE AUTOMATIZACIÓN & WEBHOOKS EN VIVO ─── */}
       <LiveAutomationPipelinePlayground />
 
       {/* ─── 01.9 ENLACE AL RADAR DE INTELIGENCIA TECNOLÓGICA ─── */}
