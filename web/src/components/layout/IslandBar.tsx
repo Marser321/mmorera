@@ -43,11 +43,29 @@ export function IslandBar() {
   }, []);
 
   const scrollTo = (id: string) => {
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+      try {
+        navigator.vibrate(8);
+      } catch {
+        // ignore
+      }
+    }
     const el = document.getElementById(id);
     if (el) {
       el.scrollIntoView({ behavior: "smooth", block: "start" });
       setActiveSection(id);
     }
+  };
+
+  const handleToggleTheme = () => {
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+      try {
+        navigator.vibrate(10);
+      } catch {
+        // ignore
+      }
+    }
+    toggleTheme();
   };
 
   return (
@@ -154,7 +172,7 @@ export function IslandBar() {
           {/* Toggle Modo Oscuro/Claro */}
           <motion.button
             type="button"
-            onClick={toggleTheme}
+            onClick={handleToggleTheme}
             whileHover={{ y: -3, scale: 1.08 }}
             whileTap={{ scale: 0.92 }}
             transition={{ type: "spring", stiffness: 450, damping: 25 }}

@@ -11,12 +11,12 @@ import { useTheme } from "@/context/ThemeContext";
 
 const labels = {
   es: {
-    work: "Trabajo", systems: "Sistemas", studio: "Estudio", profile: "Perfil",
+    work: "Trabajo", systems: "Sistemas", studio: "Estudio", radar: "Radar", profile: "Perfil",
     cta: "Hablemos", menu: "Abrir menú", close: "Cerrar menú", utility: "Abrir utilidades",
     toLight: "Cambiar a modo claro", toDark: "Cambiar a modo oscuro", language: "Idioma", theme: "Tema",
   },
   en: {
-    work: "Work", systems: "Systems", studio: "Studio", profile: "Profile",
+    work: "Work", systems: "Systems", studio: "Studio", radar: "Radar", profile: "Profile",
     cta: "Let’s talk", menu: "Open menu", close: "Close menu", utility: "Open utilities",
     toLight: "Switch to light mode", toDark: "Switch to dark mode", language: "Language", theme: "Theme",
   },
@@ -39,8 +39,9 @@ export function Navbar() {
     { label: copy.systems, href: localePath(language, "/sistemas") },
     { label: copy.studio, href: localePath(language, "/estudio") },
   ];
+  const radarLink = { label: copy.radar, href: localePath(language, "/radar") };
   const profileLink = { label: copy.profile, href: `${localePath(language, "/")}#perfil` };
-  const mobileLinks = [...primaryLinks, profileLink];
+  const mobileLinks = [...primaryLinks, radarLink, profileLink];
 
   useEffect(() => {
     if (!mobileOpen) return;
@@ -118,12 +119,13 @@ export function Navbar() {
           </Link>
 
           <div ref={utilityRef} className="relative hidden lg:block">
-            <button ref={utilityButtonRef} type="button" onClick={() => setUtilityOpen((value) => !value)} aria-expanded={utilityOpen} aria-controls="desktop-utility-menu" aria-label={copy.utility} className="grid h-10 w-10 place-items-center rounded-full border border-white/12 text-foreground/62 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring light:border-[rgb(var(--ink-rgb)/0.12)]">
+            <button ref={utilityButtonRef} type="button" onClick={() => { if (typeof navigator !== "undefined" && "vibrate" in navigator) { try { navigator.vibrate(8); } catch {} } setUtilityOpen((value) => !value); }} aria-expanded={utilityOpen} aria-controls="desktop-utility-menu" aria-label={copy.utility} className="grid h-10 w-10 place-items-center rounded-full border border-white/12 text-foreground/62 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring light:border-[rgb(var(--ink-rgb)/0.12)]">
               <MoreHorizontal aria-hidden="true" className="h-5 w-5" />
             </button>
             {utilityOpen && (
               <div id="desktop-utility-menu" className="absolute right-0 top-12 w-64 rounded-2xl border border-white/12 bg-popover p-2 text-popover-foreground shadow-[0_24px_64px_rgba(0,0,0,.32)] light:border-[rgb(var(--ink-rgb)/0.12)]">
                 <Link href={profileLink.href} onClick={() => setUtilityOpen(false)} className="flex rounded-xl px-3 py-3 text-sm transition-colors hover:bg-white/[.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring light:hover:bg-[rgb(var(--ink-rgb)/0.06)]">{profileLink.label}</Link>
+                <Link href={radarLink.href} onClick={() => setUtilityOpen(false)} className="flex rounded-xl px-3 py-3 text-sm transition-colors hover:bg-white/[.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring light:hover:bg-[rgb(var(--ink-rgb)/0.06)]">{radarLink.label}</Link>
                 <div className="my-2 h-px bg-white/10 light:bg-[rgb(var(--ink-rgb)/0.1)]" />
                 <div className="flex items-center justify-between gap-4 px-3 py-2">
                   <span className="font-mono text-[9px] uppercase tracking-[.16em] text-foreground/42">{copy.language}</span>
@@ -141,7 +143,7 @@ export function Navbar() {
             )}
           </div>
 
-          <button ref={mobileButtonRef} type="button" onClick={() => setMobileOpen((value) => !value)} aria-expanded={mobileOpen} aria-controls="mobile-menu" aria-label={mobileOpen ? copy.close : copy.menu} className="grid h-10 w-10 place-items-center rounded-full border border-white/12 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring light:border-[rgb(var(--ink-rgb)/0.12)] lg:hidden">
+          <button ref={mobileButtonRef} type="button" onClick={() => { if (typeof navigator !== "undefined" && "vibrate" in navigator) { try { navigator.vibrate(10); } catch {} } setMobileOpen((value) => !value); }} aria-expanded={mobileOpen} aria-controls="mobile-menu" aria-label={mobileOpen ? copy.close : copy.menu} className="grid h-10 w-10 place-items-center rounded-full border border-white/12 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring light:border-[rgb(var(--ink-rgb)/0.12)] lg:hidden">
             {mobileOpen ? <X aria-hidden="true" className="h-5 w-5" /> : <Menu aria-hidden="true" className="h-5 w-5" />}
           </button>
         </div>
