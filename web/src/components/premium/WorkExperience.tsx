@@ -14,8 +14,6 @@ import { TickerNumber } from "@/components/motion/TickerNumber";
 import { DrawRule } from "@/components/motion/DrawRule";
 import { Reveal } from "@/components/scroll/Reveal";
 import { ScrollProgressBar } from "@/components/scroll/ScrollProgressBar";
-import { MotionBackdrop } from "@/components/shared/MotionBackdrop";
-import { MOTION_ASSETS } from "@/data/motionAssets";
 
 /**
  * WorkExperience — /casos-de-exito: header compacto, reel cinematográfico de
@@ -62,20 +60,16 @@ export function WorkExperience() {
       {/* Matriz Táctil de Casos por Industria & Solución */}
       <CaseSolutionMatcher />
 
-      <section className="relative isolate flex min-h-[74svh] items-end overflow-hidden border-y border-white/10 bg-background px-5 pb-14 sm:px-8 lg:min-h-[82svh] lg:px-12 lg:pb-20 light:border-[rgb(var(--ink-rgb)/0.1)]" aria-labelledby="archive-work">
-        <MotionBackdrop asset={MOTION_ASSETS.archive} intensity={0.9} />
-        <div className="relative z-10 mx-auto w-full max-w-[1480px]">
-          <p className="font-mono text-[9px] uppercase tracking-[.16em] text-foreground/46">
-            {isEs ? "Archivo" : "Archive"} · {String(ARCHIVE_CASES.length).padStart(2, "0")}
+      {/* Archivo de Proyectos & Sistemas */}
+      <section className="mx-auto w-full max-w-[1480px] px-5 pt-16 sm:px-8 sm:pt-24 lg:px-12" aria-labelledby="archive-work">
+        <div className="mb-10">
+          <p className="font-mono text-[9px] uppercase tracking-[.16em] text-accent">
+            {isEs ? "Archivo Completo" : "Complete Archive"} · {String(ARCHIVE_CASES.length).padStart(2, "0")}
           </p>
-          <h2 id="archive-work" className="mt-4 max-w-3xl text-[clamp(2.8rem,5.4vw,6rem)] font-medium leading-[.94] tracking-[-.055em] text-foreground">
+          <h2 id="archive-work" className="mt-3 max-w-3xl text-[clamp(2.2rem,4.5vw,4.2rem)] font-medium leading-[.96] tracking-[-.055em] text-foreground">
             {isEs ? "Experiencias, productos y sistemas." : "Experiences, products and systems."}
           </h2>
         </div>
-      </section>
-
-      {/* Archivo */}
-      <section className="mx-auto w-full max-w-[1480px] px-5 pt-20 sm:px-8 lg:px-12" aria-labelledby="archive-work">
         <DrawRule className="mb-10 block h-px w-full bg-white/10 light:bg-[rgb(var(--ink-rgb)/0.1)]" />
         <Reveal y={24}>
           <CaseBento projects={ARCHIVE_CASES} />

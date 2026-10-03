@@ -53,42 +53,48 @@ export function IntegralValueSection() {
           </Reveal>
         </div>
 
-        {/* 3 Pillars Cards */}
-        <div className="mt-12 grid gap-6 sm:grid-cols-3">
-          <Reveal y={16} delay={0.05} className="rounded-2xl border border-white/10 bg-background/80 p-6 backdrop-blur-sm light:border-[rgb(var(--ink-rgb)/0.1)]">
-            <Zap className="h-6 w-6 text-signal mb-4" />
-            <h3 className="text-lg font-medium text-foreground">
-              {isEs ? "Dedicación Total, Cero Juniors" : "Craftsman Focus, Zero Juniors"}
-            </h3>
-            <p className="mt-2 text-sm leading-relaxed text-foreground/60">
-              {isEs
-                ? "Hablas y trabajas directamente conmigo. Cada decisión de diseño y cada línea de código pasa por mi criterio personal, sin delegar a terceros."
-                : "You collaborate directly with me. Every design decision and line of code is shaped by my personal standards, never delegated to contractors."}
-            </p>
+        {/* 3 Pillars Compact Cards */}
+        <div className="mt-8 grid gap-4 sm:grid-cols-3">
+          <Reveal y={12} delay={0.05} className="flex items-center gap-3.5 rounded-xl border border-white/10 bg-background/80 p-4 backdrop-blur-sm light:border-[rgb(var(--ink-rgb)/0.1)]">
+            <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-signal/10 text-signal">
+              <Zap className="h-5 w-5" />
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-foreground">
+                {isEs ? "Dedicación 1 a 1" : "1-on-1 Focus"}
+              </h3>
+              <p className="text-xs text-foreground/60">
+                {isEs ? "Cero juniors ni terceros delegados." : "Zero juniors or outsourced contractors."}
+              </p>
+            </div>
           </Reveal>
 
-          <Reveal y={16} delay={0.1} className="rounded-2xl border border-white/10 bg-background/80 p-6 backdrop-blur-sm light:border-[rgb(var(--ink-rgb)/0.1)]">
-            <Clock className="h-6 w-6 text-accent mb-4" />
-            <h3 className="text-lg font-medium text-foreground">
-              {isEs ? "Sprints Ágiles de 1 a 3 Semanas" : "1 to 3 Week Agile Sprints"}
-            </h3>
-            <p className="mt-2 text-sm leading-relaxed text-foreground/60">
-              {isEs
-                ? "Avanzamos con productos desplegados reales en días, no con presentaciones estáticas de diapositivas que tardan meses."
-                : "We move fast by shipping real deployed preview URLs in days, rather than static slide decks taking months."}
-            </p>
+          <Reveal y={12} delay={0.1} className="flex items-center gap-3.5 rounded-xl border border-white/10 bg-background/80 p-4 backdrop-blur-sm light:border-[rgb(var(--ink-rgb)/0.1)]">
+            <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-accent/10 text-accent">
+              <Clock className="h-5 w-5" />
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-foreground">
+                {isEs ? "Sprints de 1 a 3 Semanas" : "1 to 3 Week Sprints"}
+              </h3>
+              <p className="text-xs text-foreground/60">
+                {isEs ? "Entregas reales en días, no meses." : "Real deployments in days, not months."}
+              </p>
+            </div>
           </Reveal>
 
-          <Reveal y={16} delay={0.15} className="rounded-2xl border border-white/10 bg-background/80 p-6 backdrop-blur-sm light:border-[rgb(var(--ink-rgb)/0.1)]">
-            <ShieldCheck className="h-6 w-6 text-track-create mb-4" />
-            <h3 className="text-lg font-medium text-foreground">
-              {isEs ? "Arquitectura Lista para Escalar" : "Architecture Ready to Scale"}
-            </h3>
-            <p className="mt-2 text-sm leading-relaxed text-foreground/60">
-              {isEs
-                ? "Código Next.js 16 de alto rendimiento, bases de datos y CRM integrados que acompañan el crecimiento de tu facturación."
-                : "High-performance Next.js 16 codebases, databases, and integrated CRMs built to support growing revenue."}
-            </p>
+          <Reveal y={12} delay={0.15} className="flex items-center gap-3.5 rounded-xl border border-white/10 bg-background/80 p-4 backdrop-blur-sm light:border-[rgb(var(--ink-rgb)/0.1)]">
+            <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-track-create/10 text-track-create">
+              <ShieldCheck className="h-5 w-5" />
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-foreground">
+                {isEs ? "Código Propio Next.js 16" : "Custom Next.js 16"}
+              </h3>
+              <p className="text-xs text-foreground/60">
+                {isEs ? "Arquitectura sólida para facturar y crecer." : "Solid codebase built to scale revenue."}
+              </p>
+            </div>
           </Reveal>
         </div>
 

@@ -78,6 +78,13 @@ export function OrchestrationWheelSection() {
   );
 
   const handleActiveChange = useCallback((id: string | null) => {
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+      try {
+        navigator.vibrate(8);
+      } catch {
+        // ignore
+      }
+    }
     setActiveFamily(id ? (id as Family) : null);
   }, []);
 

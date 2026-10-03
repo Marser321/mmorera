@@ -31,11 +31,40 @@ export function StudioExperience() {
       <CapabilitiesOrbit language={language} />
       <InteractiveDesignTokenStudio />
       <VanguardInteractionPlayground />
-      <section className="relative isolate flex min-h-[100svh] items-end overflow-hidden px-5 py-24 sm:px-8 lg:px-12 lg:py-32">
-        <MotionBackdrop asset={MOTION_ASSETS.pulse} intensity={0.88} />
-        <div className="relative z-10 mx-auto grid w-full max-w-[1480px] gap-12 lg:grid-cols-[1fr_1fr] lg:items-end">
-          <div><p className="font-mono text-[10px] uppercase tracking-[.18em] text-accent">02 · {isEs ? "Del concepto al navegador" : "From concept to browser"}</p><h2 className="mt-5 text-[clamp(2.8rem,5vw,5.8rem)] font-medium leading-[.95] tracking-[-.055em] text-foreground">{isEs ? "Una sola intención, de la dirección al código." : "One intent, from direction to code."}</h2></div>
-          <div className="border-l border-white/14 bg-background/[.78] p-6 backdrop-blur-md light:border-[rgb(var(--ink-rgb)/0.14)] lg:justify-self-end"><p className="max-w-xl text-lg leading-7 text-foreground/68">{isEs ? "Puedo explorar la forma, prototipar la interacción y construir la experiencia final. Eso reduce la distancia entre lo que se imagina y lo que realmente llega a producción." : "I can explore the form, prototype the interaction and build the experience. That reduces the distance between what is imagined and what actually ships."}</p><div className="mt-7 flex flex-wrap gap-6"><Link href={localePath(language, "/casos-de-exito")} className="inline-flex items-center gap-2 border-b border-white/20 light:border-[rgb(var(--ink-rgb)/0.2)] pb-1 text-sm text-foreground">{isEs ? "Ver archivo creativo" : "View creative archive"}<ArrowUpRight className="h-4 w-4" /></Link><Link href={localePath(language, "/aplicar")} className="inline-flex items-center gap-2 text-sm text-foreground/64">{isEs ? "Proponer una experiencia" : "Propose an experience"}<ArrowUpRight className="h-4 w-4" /></Link></div></div>
+      <section className="relative isolate overflow-hidden border-t border-white/10 px-5 py-14 sm:px-8 sm:py-20 lg:px-12 light:border-[rgb(var(--ink-rgb)/0.1)]">
+        <MotionBackdrop asset={MOTION_ASSETS.pulse} intensity={0.4} />
+        <div className="relative z-10 mx-auto grid w-full max-w-[1480px] gap-8 lg:grid-cols-[1.2fr_.8fr] lg:items-center">
+          <div>
+            <p className="font-mono text-[10px] uppercase tracking-[.18em] text-accent">
+              02 · {isEs ? "Del concepto al navegador" : "From concept to browser"}
+            </p>
+            <h2 className="mt-3 text-[clamp(2.2rem,4.5vw,4.5rem)] font-medium leading-[.98] tracking-[-.055em] text-foreground">
+              {isEs ? "Una sola intención, de la dirección al código." : "One intent, from direction to code."}
+            </h2>
+          </div>
+          <div className="rounded-2xl border border-white/12 bg-background/80 p-6 backdrop-blur-md light:border-[rgb(var(--ink-rgb)/0.12)]">
+            <p className="text-base leading-relaxed text-foreground/70">
+              {isEs
+                ? "Dirección de arte, prototipado e ingeniería frontend en una sola pasada. Cero intermediarios, 100% fiel a lo diseñado."
+                : "Art direction, prototyping, and frontend engineering in a single pass. Zero handoff friction, shipped straight to production."}
+            </p>
+            <div className="mt-6 flex flex-wrap gap-5 border-t border-white/8 pt-4 light:border-[rgb(var(--ink-rgb)/0.08)]">
+              <Link
+                href={localePath(language, "/casos-de-exito")}
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-signal hover:underline"
+              >
+                {isEs ? "Ver archivo de trabajo" : "View work archive"}
+                <ArrowUpRight className="h-3.5 w-3.5" />
+              </Link>
+              <Link
+                href={localePath(language, "/aplicar")}
+                className="inline-flex items-center gap-1.5 text-xs font-medium text-foreground/65 hover:text-foreground"
+              >
+                {isEs ? "Proponer un proyecto" : "Propose a project"}
+                <ArrowUpRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
     </main>

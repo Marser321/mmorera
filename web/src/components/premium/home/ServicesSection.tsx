@@ -55,26 +55,20 @@ export function ServicesSection() {
                   <span className="font-mono text-xs text-foreground/30">0{index + 1}</span>
                 </div>
 
-                {/* Title & Headline */}
-                <h3 className="mt-6 text-xl sm:text-2xl font-medium tracking-tight text-foreground transition-colors group-hover:text-signal">
+                {/* Title & Direct Value */}
+                <h3 className="mt-5 text-xl sm:text-2xl font-medium tracking-tight text-foreground transition-colors group-hover:text-signal">
                   {service.title[language]}
                 </h3>
-                <p className="mt-2 text-sm font-medium text-foreground/75 sm:text-base leading-snug">
+                <p className="mt-2 text-sm text-foreground/70 sm:text-base leading-snug">
                   {service.headline[language]}
                 </p>
-                <p className="mt-4 text-sm leading-relaxed text-foreground/55">
-                  {service.description[language]}
-                </p>
 
-                {/* Deliverables List */}
-                <div className="mt-6 border-t border-white/8 pt-5 light:border-[rgb(var(--ink-rgb)/0.08)]">
-                  <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-foreground/40 mb-3">
-                    {isEs ? "Qué incluye:" : "What is included:"}
-                  </p>
-                  <ul className="space-y-2.5">
-                    {service.deliverables.map((item, idx) => (
-                      <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-foreground/70">
-                        <Check className="h-4 w-4 shrink-0 text-signal mt-0.5" />
+                {/* Deliverables List (Curated & Fast) */}
+                <div className="mt-5 border-t border-white/8 pt-4 light:border-[rgb(var(--ink-rgb)/0.08)]">
+                  <ul className="space-y-2">
+                    {service.deliverables.slice(0, 3).map((item, idx) => (
+                      <li key={idx} className="flex items-center gap-2 text-xs sm:text-sm text-foreground/75">
+                        <Check className="h-3.5 w-3.5 shrink-0 text-signal" />
                         <span>{item[language]}</span>
                       </li>
                     ))}
@@ -82,12 +76,11 @@ export function ServicesSection() {
                 </div>
               </div>
 
-              {/* Footer / Ideal For */}
-              <div className="mt-8 border-t border-white/8 pt-4 light:border-[rgb(var(--ink-rgb)/0.08)] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <p className="text-xs text-foreground/45 italic max-w-md">
-                  <strong className="not-italic text-foreground/60">{isEs ? "Ideal para: " : "Ideal for: "}</strong>
-                  {service.idealFor[language]}
-                </p>
+              {/* Footer */}
+              <div className="mt-6 border-t border-white/8 pt-4 light:border-[rgb(var(--ink-rgb)/0.08)] flex items-center justify-between gap-4">
+                <span className="text-xs text-foreground/50 font-mono">
+                  {service.idealFor[language].split(".")[0]}
+                </span>
                 <a
                   href="#contacto"
                   className="inline-flex items-center gap-1.5 text-xs font-semibold text-signal hover:underline shrink-0"
