@@ -16,9 +16,11 @@ export function Footer() {
           <p className="mt-3 max-w-md text-sm leading-6 text-foreground/50">{isEs ? "Diseño, producto y sistemas bajo una sola dirección." : "Design, product and systems under one direction."}</p>
         </div>
         <div className="flex flex-col items-start gap-3 text-sm">
-          <Link href={localePath(language, "/casos-de-exito")} className="text-foreground/55 hover:text-foreground">{isEs ? "Trabajo" : "Work"}</Link>
-          <Link href={localePath(language, "/sistemas")} className="text-foreground/55 hover:text-foreground">{isEs ? "Sistemas" : "Systems"}</Link>
-          <Link href={localePath(language, "/estudio")} className="text-foreground/55 hover:text-foreground">{isEs ? "Estudio" : "Studio"}</Link>
+          <Link href={localePath(language, "/casos-de-exito")} className="text-foreground/55 hover:text-foreground">{isEs ? "Casos de Éxito" : "Case Studies"}</Link>
+          <Link href={localePath(language, "/sistemas")} className="text-foreground/55 hover:text-foreground">{isEs ? "Sistemas & CRM" : "Systems & CRM"}</Link>
+          <Link href={localePath(language, "/estudio")} className="text-foreground/55 hover:text-foreground">{isEs ? "Estudio de Diseño" : "Design Studio"}</Link>
+          <Link href={localePath(language, "/radar")} className="text-foreground/55 hover:text-foreground">{isEs ? "Radar Tecnológico" : "Tech Radar"}</Link>
+          <Link href={localePath(language, "/aplicar")} className="text-foreground/55 hover:text-foreground">{isEs ? "Iniciar Proyecto" : "Start Project"}</Link>
           <Link href={localePath(language, "/privacidad")} className="text-foreground/55 hover:text-foreground">{isEs ? "Privacidad" : "Privacy"}</Link>
         </div>
         <div className="flex flex-col items-start gap-3 text-sm">
