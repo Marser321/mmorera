@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { Reveal } from "@/components/scroll/Reveal";
@@ -38,6 +38,14 @@ export function LighthouseBenchmarkArena() {
   const [simulating, setSimulating] = useState<boolean>(false);
   const [legacyLoaded, setLegacyLoaded] = useState<boolean>(false);
   const [modernLoaded, setModernLoaded] = useState<boolean>(false);
+  const timersRef = useRef<NodeJS.Timeout[]>([]);
+
+  // Cleanup pending timers on unmount
+  useEffect(() => {
+    return () => {
+      timersRef.current.forEach(clearTimeout);
+    };
+  }, []);
 
   const stack = useMemo<LegacyStackPreset>(
     () => LEGACY_STACKS.find((s) => s.id === selectedStackId) ?? LEGACY_STACKS[0],
@@ -54,16 +62,20 @@ export function LighthouseBenchmarkArena() {
     setModernLoaded(false);
     setLegacyLoaded(false);
 
-    // Modern stack loads in 400ms
-    setTimeout(() => {
-      setModernLoaded(true);
-    }, 400);
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+      try { navigator.vibrate([10, 20, 10]); } catch {}
+    }
 
-    // Legacy stack loads in 3200ms
-    setTimeout(() => {
-      setLegacyLoaded(true);
-      setSimulating(false);
-    }, 3200);
+    timersRef.current.forEach(clearTimeout);
+    timersRef.current = [
+      setTimeout(() => {
+        setModernLoaded(true);
+      }, 400),
+      setTimeout(() => {
+        setLegacyLoaded(true);
+        setSimulating(false);
+      }, 3200),
+    ];
   };
 
   const whatsappPrefillUrl = useMemo(() => {
