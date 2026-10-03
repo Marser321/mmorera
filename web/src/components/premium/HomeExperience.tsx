@@ -22,6 +22,7 @@ import { ExclusivitySection } from "@/components/premium/home/ExclusivitySection
 import { OrchestrationWheelSection } from "@/components/premium/home/OrchestrationWheelSection";
 import { DecisionHubSection } from "@/components/premium/home/DecisionHubSection";
 import { OperationalFrictionDiagnostic } from "@/components/premium/home/OperationalFrictionDiagnostic";
+import { LeadVelocityDecayArena } from "@/components/premium/home/LeadVelocityDecayArena";
 import { WorkflowSection } from "@/components/premium/home/WorkflowSection";
 import { AsyncSprintDeliveryRadar } from "@/components/premium/home/AsyncSprintDeliveryRadar";
 import { StackMatrixPlayground } from "@/components/premium/home/StackMatrixPlayground";
@@ -252,6 +253,9 @@ export function HomeExperience({
 
       {/* ─── 6.1 AUDITORÍA TÁCTIL DE FRICCIÓN & DEUDA OPERATIVA ─── */}
       <OperationalFrictionDiagnostic />
+
+      {/* ─── 6.2 AUDITORÍA DE VELOCIDAD & CURVA DE DECADENCIA DEL LEAD ─── */}
+      <LeadVelocityDecayArena />
 
       {/* ─── 7. BLUEPRINT DE METODOLOGÍA (4 Fases claras) ─── */}
       <WorkflowSection />
