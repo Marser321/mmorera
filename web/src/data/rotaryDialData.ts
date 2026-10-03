@@ -37,8 +37,8 @@ export const DIAL_TIERS: DialTier[] = [
       es: "Costos ocultos en horas hombre y fugas constantes de prospectos",
       en: "Hidden labor costs and high prospect leakage",
     },
-    color: "#F43F5E", // Rose red
-    glowRgba: "rgba(244,63,94,0.35)",
+    color: "#FF5555", // Deep Space destructive
+    glowRgba: "rgba(255,85,85,0.35)",
     stack: ["WordPress / PHP", "Excel Manual", "Chats Privados", "Cero CRM"],
   },
   {

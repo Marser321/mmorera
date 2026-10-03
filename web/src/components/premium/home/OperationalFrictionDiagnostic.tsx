@@ -34,6 +34,9 @@ export function OperationalFrictionDiagnostic() {
   ]);
 
   const toggleSymptom = (id: string) => {
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+      try { navigator.vibrate(10); } catch {}
+    }
     setSelectedIds((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
@@ -48,6 +51,9 @@ export function OperationalFrictionDiagnostic() {
   const [isModernized, setIsModernized] = useState(false);
 
   const handleSimulateModernization = useCallback(() => {
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+      try { navigator.vibrate([15, 50, 25]); } catch {}
+    }
     setIsModernized(true);
     setTimeout(() => {
       setSelectedIds([]);
@@ -79,10 +85,10 @@ export function OperationalFrictionDiagnostic() {
       label: { es: "Fricción Moderada", en: "Moderate Friction" },
     },
     critical: {
-      text: "text-rose-400",
-      bg: "bg-rose-400/15",
-      border: "border-rose-400/40",
-      glow: "rgba(244,63,94,0.25)",
+      text: "text-destructive",
+      bg: "bg-destructive/15",
+      border: "border-destructive/40",
+      glow: "rgba(255,85,85,0.25)",
       label: { es: "Fricción Crítica", en: "Critical Friction" },
     },
   }[report.severity];
@@ -143,7 +149,10 @@ export function OperationalFrictionDiagnostic() {
                 <button
                   key={symptom.id}
                   onClick={() => toggleSymptom(symptom.id)}
-                  className={`group relative w-full text-left rounded-2xl p-5 sm:p-6 border transition-all duration-300 flex items-start gap-4 ${
+                  role="checkbox"
+                  aria-checked={isChecked}
+                  aria-label={symptom.title[language]}
+                  className={`group relative w-full text-left rounded-2xl p-5 sm:p-6 border transition-all duration-300 flex items-start gap-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal ${
                     isChecked
                       ? "border-white/30 bg-card/80 shadow-[0_8px_30px_rgba(0,0,0,0.45)]"
                       : "border-white/8 bg-white/[0.02] opacity-75 hover:opacity-100 hover:border-white/18"
@@ -153,7 +162,7 @@ export function OperationalFrictionDiagnostic() {
                   <div
                     className={`mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border transition-all ${
                       isChecked
-                        ? "bg-rose-500/20 border-rose-500 text-rose-400 shadow-[0_0_12px_rgba(244,63,94,0.35)]"
+                        ? "bg-destructive/20 border-destructive text-destructive shadow-[0_0_12px_rgba(255,85,85,0.35)]"
                         : "border-white/20 bg-white/5 text-transparent group-hover:border-white/40"
                     }`}
                   >
@@ -162,7 +171,7 @@ export function OperationalFrictionDiagnostic() {
 
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap items-center justify-between gap-2">
-                      <span className="font-mono text-[10px] uppercase tracking-wider font-semibold text-rose-400/90">
+                      <span className="font-mono text-[10px] uppercase tracking-wider font-semibold text-destructive">
                         {symptom.badge[language]}
                       </span>
 
@@ -232,7 +241,7 @@ export function OperationalFrictionDiagnostic() {
                   <motion.div
                     className={`h-full ${
                       report.severity === "critical"
-                        ? "bg-rose-500 shadow-[0_0_12px_#f43f5e]"
+                        ? "bg-destructive shadow-[0_0_12px_#FF5555]"
                         : report.severity === "moderate"
                         ? "bg-amber-400 shadow-[0_0_12px_#fbbf24]"
                         : "bg-signal shadow-[0_0_12px_#71F3A2]"
@@ -250,7 +259,7 @@ export function OperationalFrictionDiagnostic() {
                   <span className="text-[10px] font-mono uppercase text-foreground/40 block">
                     {isEs ? "Fuga Mensual" : "Monthly Leak"}
                   </span>
-                  <span className="text-xl font-bold font-mono text-rose-400">
+                  <span className="text-xl font-bold font-mono text-destructive">
                     -${report.totalMonthlyDollarsLost} <span className="text-xs">USD</span>
                   </span>
                 </div>

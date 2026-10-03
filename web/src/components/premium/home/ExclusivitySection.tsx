@@ -55,7 +55,7 @@ export function ExclusivitySection() {
 
           <Reveal y={20} delay={0.1} className="rounded-2xl border border-white/10 bg-background/80 p-7 backdrop-blur-sm light:border-[rgb(var(--ink-rgb)/0.1)] flex flex-col justify-between">
             <div>
-              <div className="h-10 w-10 rounded-xl bg-cyan-400/15 border border-cyan-400/30 flex items-center justify-center text-cyan-400 mb-5">
+              <div className="h-10 w-10 rounded-xl bg-accent/15 border border-accent/30 flex items-center justify-center text-accent mb-5">
                 <ShieldCheck className="h-5 w-5" />
               </div>
               <h3 className="text-xl font-medium text-foreground">
@@ -68,7 +68,7 @@ export function ExclusivitySection() {
               </p>
             </div>
             <div className="mt-6 pt-4 border-t border-white/8 light:border-[rgb(var(--ink-rgb)/0.08)]">
-              <span className="font-mono text-[10px] text-cyan-400 font-semibold uppercase tracking-wider">
+              <span className="font-mono text-[10px] text-accent font-semibold uppercase tracking-wider">
                 {isEs ? "Arquitectura a largo plazo" : "Long-term architecture"}
               </span>
             </div>
@@ -76,7 +76,7 @@ export function ExclusivitySection() {
 
           <Reveal y={20} delay={0.15} className="rounded-2xl border border-white/10 bg-background/80 p-7 backdrop-blur-sm light:border-[rgb(var(--ink-rgb)/0.1)] flex flex-col justify-between">
             <div>
-              <div className="h-10 w-10 rounded-xl bg-violet-400/15 border border-violet-400/30 flex items-center justify-center text-violet-400 mb-5">
+              <div className="h-10 w-10 rounded-xl bg-track-create/15 border border-track-create/30 flex items-center justify-center text-track-create mb-5">
                 <Sparkles className="h-5 w-5" />
               </div>
               <h3 className="text-xl font-medium text-foreground">
@@ -89,7 +89,7 @@ export function ExclusivitySection() {
               </p>
             </div>
             <div className="mt-6 pt-4 border-t border-white/8 light:border-[rgb(var(--ink-rgb)/0.08)]">
-              <span className="font-mono text-[10px] text-violet-400 font-semibold uppercase tracking-wider">
+              <span className="font-mono text-[10px] text-track-create font-semibold uppercase tracking-wider">
                 {isEs ? "Resultados verificables" : "Verifiable outcomes"}
               </span>
             </div>

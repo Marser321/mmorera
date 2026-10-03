@@ -54,8 +54,43 @@ export function RotaryLeverageCockpit() {
     if (degrees < 0) degrees += 360;
 
     const closest = snapToNearestDialTier(degrees);
-    setActiveTierId(closest.id);
+    setActiveTierId((prev) => {
+      if (prev !== closest.id && typeof navigator !== "undefined" && "vibrate" in navigator) {
+        try { navigator.vibrate(10); } catch {}
+      }
+      return closest.id;
+    });
   }, []);
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      const currentIndex = DIAL_TIERS.findIndex((t) => t.id === activeTierId);
+      if (currentIndex === -1) return;
+
+      if (e.key === "ArrowRight" || e.key === "ArrowUp") {
+        e.preventDefault();
+        const nextIndex = (currentIndex + 1) % DIAL_TIERS.length;
+        setActiveTierId(DIAL_TIERS[nextIndex].id);
+        if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+          try { navigator.vibrate(10); } catch {}
+        }
+      } else if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
+        e.preventDefault();
+        const prevIndex = (currentIndex - 1 + DIAL_TIERS.length) % DIAL_TIERS.length;
+        setActiveTierId(DIAL_TIERS[prevIndex].id);
+        if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+          try { navigator.vibrate(10); } catch {}
+        }
+      } else if (e.key === "Home") {
+        e.preventDefault();
+        setActiveTierId(DIAL_TIERS[0].id);
+      } else if (e.key === "End") {
+        e.preventDefault();
+        setActiveTierId(DIAL_TIERS[DIAL_TIERS.length - 1].id);
+      }
+    },
+    [activeTierId]
+  );
 
   const whatsappInquiryUrl = useMemo(() => {
     const text = isEs
@@ -187,13 +222,30 @@ export function RotaryLeverageCockpit() {
                 ref={dialRef}
                 onPointerDown={(e) => {
                   setIsDragging(true);
+                  try {
+                    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+                  } catch {}
                   handlePointerMove(e);
                 }}
                 onPointerMove={(e) => {
                   if (isDragging) handlePointerMove(e);
                 }}
-                onPointerUp={() => setIsDragging(false)}
-                className="relative h-64 w-64 sm:h-72 sm:w-72 rounded-full border border-white/15 bg-gradient-to-br from-[#12171C] via-[#0A0D10] to-[#12171C] p-4 flex items-center justify-center cursor-grab active:cursor-grabbing shadow-[0_15px_50px_rgba(0,0,0,0.8)] select-none"
+                onPointerUp={(e) => {
+                  setIsDragging(false);
+                  try {
+                    (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
+                  } catch {}
+                }}
+                onPointerCancel={() => setIsDragging(false)}
+                tabIndex={0}
+                role="slider"
+                aria-label={isEs ? "Selector de Palanca Operativa" : "Operational Leverage Selector"}
+                aria-valuemin={0}
+                aria-valuemax={3}
+                aria-valuenow={activeTier.level - 1}
+                aria-valuetext={`${activeTier.name[language]} - ${activeTier.multiplier}x`}
+                onKeyDown={handleKeyDown}
+                className="relative h-64 w-64 sm:h-72 sm:w-72 rounded-full border border-white/15 bg-gradient-to-br from-[#12171C] via-[#0A0D10] to-[#12171C] p-4 flex items-center justify-center cursor-grab active:cursor-grabbing shadow-[0_15px_50px_rgba(0,0,0,0.8)] select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal"
               >
                 {/* 24 Radial Notch Ticks */}
                 {notches.map((notch) => {
@@ -315,7 +367,7 @@ export function RotaryLeverageCockpit() {
                     className={`text-base font-bold font-mono mt-1 block ${
                       activeTier.monthlyLeakUsd === 0
                         ? "text-signal font-bold"
-                        : "text-rose-400"
+                        : "text-destructive font-bold"
                     }`}
                   >
                     {activeTier.monthlyLeakUsd === 0

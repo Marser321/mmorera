@@ -357,7 +357,7 @@ export function LiveAutomationPipelinePlayground() {
 
             <div className="rounded-xl border border-white/8 bg-white/[0.02] p-3 text-center">
               <span className="text-[10px] font-mono uppercase text-foreground/40 block">Cierre de Ventas Adicional</span>
-              <span className="text-lg font-bold font-mono text-cyan-400">+{scenario.conversionLiftPct}% lift</span>
+              <span className="text-lg font-bold font-mono text-accent">+{scenario.conversionLiftPct}% lift</span>
             </div>
           </div>
 

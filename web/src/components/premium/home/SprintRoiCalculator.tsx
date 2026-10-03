@@ -115,10 +115,17 @@ export function SprintRoiCalculator() {
                 <motion.button
                   key={tier.id}
                   type="button"
-                  onClick={() => setSelectedScopeId(tier.id)}
+                  onClick={() => {
+                    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+                      try { navigator.vibrate(10); } catch {}
+                    }
+                    setSelectedScopeId(tier.id);
+                  }}
+                  aria-pressed={isSelected}
+                  aria-label={tier.name[language]}
                   whileHover={{ y: -2 }}
                   whileTap={{ scale: 0.98 }}
-                  className={`text-left rounded-3xl border p-5 sm:p-6 transition-all backdrop-blur-md flex flex-col justify-between ${
+                  className={`text-left rounded-3xl border p-5 sm:p-6 transition-all backdrop-blur-md flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal ${
                     isSelected
                       ? "border-opacity-70 bg-card/90 shadow-2xl"
                       : "border-white/10 bg-card/40 text-foreground/75 hover:border-white/20 hover:text-foreground light:border-[rgb(var(--ink-rgb)/0.1)] light:bg-card/70"
@@ -191,6 +198,7 @@ export function SprintRoiCalculator() {
                 min={1}
                 max={20}
                 value={teamSize}
+                aria-label={isEs ? "Equipo Comercial / Operativo" : "Sales / Ops Team Size"}
                 onChange={(e) => setTeamSize(Number(e.target.value))}
                 className="w-full h-2 rounded-lg appearance-none cursor-pointer bg-white/15 accent-signal mt-3"
                 style={{ accentColor: activeScope.accentColor }}
@@ -206,7 +214,7 @@ export function SprintRoiCalculator() {
             <div>
               <div className="flex items-center justify-between text-xs font-mono">
                 <span className="flex items-center gap-1.5 text-foreground/70">
-                  <DollarSign className="h-3.5 w-3.5 text-emerald-400" />
+                  <DollarSign className="h-3.5 w-3.5 text-signal" />
                   {isEs ? "Ticket Promedio de Venta" : "Average Deal Ticket"}
                 </span>
                 <span className="text-base font-bold text-signal font-mono">
@@ -219,6 +227,7 @@ export function SprintRoiCalculator() {
                 max={4000}
                 step={50}
                 value={avgTicket}
+                aria-label={isEs ? "Ticket Promedio de Venta" : "Average Deal Ticket"}
                 onChange={(e) => setAvgTicket(Number(e.target.value))}
                 className="w-full h-2 rounded-lg appearance-none cursor-pointer bg-white/15 accent-signal mt-3"
                 style={{ accentColor: activeScope.accentColor }}
@@ -234,7 +243,7 @@ export function SprintRoiCalculator() {
             <div>
               <div className="flex items-center justify-between text-xs font-mono">
                 <span className="flex items-center gap-1.5 text-foreground/70">
-                  <Sliders className="h-3.5 w-3.5 text-cyan-400" />
+                  <Sliders className="h-3.5 w-3.5 text-accent" />
                   {isEs ? "Consultas / Leads por Mes" : "Inquiries / Leads per Mo"}
                 </span>
                 <span className="text-base font-bold text-foreground font-mono">
@@ -247,6 +256,7 @@ export function SprintRoiCalculator() {
                 max={1000}
                 step={10}
                 value={monthlyLeads}
+                aria-label={isEs ? "Consultas / Leads por Mes" : "Inquiries / Leads per Mo"}
                 onChange={(e) => setMonthlyLeads(Number(e.target.value))}
                 className="w-full h-2 rounded-lg appearance-none cursor-pointer bg-white/15 accent-signal mt-3"
                 style={{ accentColor: activeScope.accentColor }}
@@ -284,7 +294,7 @@ export function SprintRoiCalculator() {
                 <span className="text-foreground/50 block text-[10px] uppercase">
                   {isEs ? "Horas Recuperadas / Mes" : "Hours Saved / Month"}
                 </span>
-                <span className="mt-2 block text-2xl font-bold text-cyan-400">
+                <span className="mt-2 block text-2xl font-bold text-accent">
                   +{roiMetrics.hoursSavedPerMonth}h
                 </span>
                 <span className="text-[10px] text-foreground/40 mt-1 block">
@@ -310,7 +320,7 @@ export function SprintRoiCalculator() {
                 <span className="text-foreground/50 block text-[10px] uppercase">
                   {isEs ? "Facturación Proyectada / Mes" : "Projected Gain / Month"}
                 </span>
-                <span className="mt-2 block text-2xl font-bold text-emerald-400">
+                <span className="mt-2 block text-2xl font-bold text-signal">
                   +${roiMetrics.recoveredRevenuePerMonth.toLocaleString()} USD
                 </span>
                 <span className="text-[10px] text-signal mt-1 block">

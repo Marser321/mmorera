@@ -254,7 +254,7 @@ export function VanguardInteractionPlayground() {
                   <button
                     type="button"
                     onClick={() => setBeamColor(beamColor === "cyan" ? "signal" : "cyan")}
-                    className="text-cyan-400 hover:underline"
+                    className="text-accent hover:underline"
                   >
                     Color: {beamColor.toUpperCase()}
                   </button>
@@ -304,11 +304,11 @@ export function VanguardInteractionPlayground() {
                   style={{ x: cardX, rotate: cardRotate, opacity: cardOpacity }}
                   whileTap={{ cursor: "grabbing", scale: 0.98 }}
                   transition={{ type: "spring", stiffness: 450, damping: 25 }}
-                  className="relative w-72 h-80 rounded-3xl border-2 border-cyan-400/40 bg-[#0e141d] p-6 shadow-2xl cursor-grab flex flex-col justify-between"
+                  className="relative w-72 h-80 rounded-3xl border-2 border-accent/40 bg-[#0e141d] p-6 shadow-2xl cursor-grab flex flex-col justify-between"
                 >
-                  <div className="flex items-center justify-between text-xs font-mono text-cyan-300">
+                  <div className="flex items-center justify-between text-xs font-mono text-accent">
                     <span>GESTURE SPRING</span>
-                    <span className="h-2 w-2 rounded-full bg-cyan-400 animate-ping" />
+                    <span className="h-2 w-2 rounded-full bg-accent animate-ping" />
                   </div>
                   <div>
                     <h4 className="text-lg font-bold text-white">
@@ -339,10 +339,11 @@ export function VanguardInteractionPlayground() {
                   max="10"
                   step="1"
                   value={beamDuration}
+                  aria-label={isEs ? "Velocidad del rayo perimetral" : "Border beam velocity"}
                   onChange={(e) => setBeamDuration(Number(e.target.value))}
-                  className="h-1.5 w-28 cursor-pointer accent-cyan-400"
+                  className="h-1.5 w-28 cursor-pointer accent-accent"
                 />
-                <span className="text-cyan-400 font-bold">{beamDuration}s</span>
+                <span className="text-accent font-bold">{beamDuration}s</span>
               </div>
             </div>
           )}

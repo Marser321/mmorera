@@ -31,6 +31,9 @@ export function InteractiveEcosystemConfigurator() {
   const [selectedIds, setSelectedIds] = useState<string[]>(["web", "whatsapp_ai", "crm"]);
 
   const toggleModule = (id: string) => {
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+      try { navigator.vibrate(10); } catch {}
+    }
     setSelectedIds((prev) =>
       prev.includes(id) ? prev.filter((m) => m !== id) : [...prev, id]
     );
@@ -92,7 +95,9 @@ export function InteractiveEcosystemConfigurator() {
               <button
                 key={mod.id}
                 onClick={() => toggleModule(mod.id)}
-                className={`group relative text-left rounded-2xl p-4 border transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 ${
+                aria-pressed={isSelected}
+                aria-label={mod.name[language]}
+                className={`group relative text-left rounded-2xl p-4 border transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal ${
                   isSelected
                     ? "border-white/40 bg-card/90 shadow-[0_8px_30px_rgba(0,0,0,0.5)] scale-[1.02] light:bg-card"
                     : "border-white/8 bg-white/[0.02] hover:bg-white/[0.06] hover:border-white/20 opacity-70 hover:opacity-100"
@@ -202,14 +207,14 @@ export function InteractiveEcosystemConfigurator() {
 
             <div className="rounded-xl border border-white/8 bg-white/[0.02] p-3">
               <span className="text-[10px] font-mono uppercase text-foreground/40 block">Lift Conversión</span>
-              <span className="text-xl font-bold font-mono text-cyan-400">
+              <span className="text-xl font-bold font-mono text-accent">
                 +{report.projectedConversionLiftPct}%
               </span>
             </div>
 
             <div className="rounded-xl border border-white/8 bg-white/[0.02] p-3">
               <span className="text-[10px] font-mono uppercase text-foreground/40 block">Fricción Menos</span>
-              <span className="text-xl font-bold font-mono text-violet-400">
+              <span className="text-xl font-bold font-mono text-track-create">
                 -{report.frictionReductionPct}%
               </span>
             </div>

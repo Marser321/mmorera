@@ -140,10 +140,17 @@ export function AiAgentInteractiveLab() {
               <motion.button
                 key={agent.id}
                 type="button"
-                onClick={() => setSelectedAgentId(agent.id)}
+                onClick={() => {
+                  if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+                    try { navigator.vibrate(10); } catch {}
+                  }
+                  setSelectedAgentId(agent.id);
+                }}
+                aria-pressed={isActive}
+                aria-label={agent.name[language]}
                 whileHover={{ y: -2, scale: 1.02 }}
                 whileTap={{ scale: 0.96 }}
-                className={`relative flex items-center gap-2.5 rounded-full px-5 py-3 text-xs sm:text-sm font-semibold transition-all min-h-[46px] ${
+                className={`relative flex items-center gap-2.5 rounded-full px-5 py-3 text-xs sm:text-sm font-semibold transition-all min-h-[46px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal ${
                   isActive
                     ? "text-neutral-950 shadow-lg font-bold"
                     : "border border-white/12 bg-card/60 text-foreground/75 hover:border-white/25 hover:text-foreground light:border-[rgb(var(--ink-rgb)/0.12)]"
@@ -182,8 +189,15 @@ export function AiAgentInteractiveLab() {
               <button
                 key={sc.id}
                 type="button"
-                onClick={() => setActiveScenarioId(sc.id)}
-                className={`rounded-xl px-4 py-2 text-xs font-mono transition-all ${
+                onClick={() => {
+                  if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+                    try { navigator.vibrate(8); } catch {}
+                  }
+                  setActiveScenarioId(sc.id);
+                }}
+                aria-pressed={isScActive}
+                aria-label={sc.title[language]}
+                className={`rounded-xl px-4 py-2 text-xs font-mono transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal ${
                   isScActive
                     ? "border border-white/30 bg-white/15 text-foreground shadow-sm font-semibold"
                     : "border border-white/8 bg-white/[0.03] text-foreground/60 hover:border-white/15 hover:text-foreground"
@@ -211,7 +225,7 @@ export function AiAgentInteractiveLab() {
             <div>
               <div className="flex items-center justify-between pb-4 border-b border-white/10 text-xs font-mono text-foreground/60">
                 <span className="flex items-center gap-2 text-foreground font-semibold">
-                  <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="h-2 w-2 rounded-full bg-signal animate-pulse" />
                   {isEs ? "WhatsApp Business API · En Vivo" : "WhatsApp Business API · Live"}
                 </span>
                 <span className="text-[10px]">Latency: ~180ms</span>
@@ -280,7 +294,7 @@ export function AiAgentInteractiveLab() {
               {/* Header de telemetría */}
               <div className="flex items-center justify-between pb-4 border-b border-white/10">
                 <div className="flex items-center gap-2">
-                  <Terminal className="h-4 w-4 text-cyan-400" />
+                  <Terminal className="h-4 w-4 text-accent" />
                   <span className="font-mono text-xs font-semibold text-foreground">
                     {isEs ? "Telemetría & Payload de Ejecución" : "Telemetry & Execution Payload"}
                   </span>
@@ -330,7 +344,7 @@ export function AiAgentInteractiveLab() {
                   </div>
                   <div className="rounded-xl border border-white/8 bg-white/[0.03] p-2.5">
                     <span className="text-[10px] text-foreground/45 block">DECISION MAKER</span>
-                    <span className="text-cyan-400 font-medium truncate block">
+                    <span className="text-accent font-medium truncate block">
                       {currentScenario.extractedEntities.decisionMaker}
                     </span>
                   </div>
@@ -342,7 +356,7 @@ export function AiAgentInteractiveLab() {
                 <span className="font-mono text-[10px] uppercase tracking-wider text-foreground/50 block mb-2">
                   {isEs ? "Webhook Disparado al CRM en Milisegundos:" : "Webhook Fired to CRM in Milliseconds:"}
                 </span>
-                <pre className="rounded-xl border border-white/10 bg-neutral-950 p-3.5 text-[11px] font-mono text-cyan-300 overflow-x-auto leading-relaxed max-h-[190px]">
+                <pre className="rounded-xl border border-white/10 bg-neutral-950 p-3.5 text-[11px] font-mono text-accent overflow-x-auto leading-relaxed max-h-[190px]">
                   <code>{JSON.stringify(currentScenario.webhookPayload, null, 2)}</code>
                 </pre>
               </div>

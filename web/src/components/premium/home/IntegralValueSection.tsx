@@ -67,7 +67,7 @@ export function IntegralValueSection() {
           </Reveal>
 
           <Reveal y={16} delay={0.1} className="rounded-2xl border border-white/10 bg-background/80 p-6 backdrop-blur-sm light:border-[rgb(var(--ink-rgb)/0.1)]">
-            <Clock className="h-6 w-6 text-cyan-400 mb-4" />
+            <Clock className="h-6 w-6 text-accent mb-4" />
             <h3 className="text-lg font-medium text-foreground">
               {isEs ? "Sprints Ágiles en Vivo" : "Live Agile Sprints"}
             </h3>
@@ -79,7 +79,7 @@ export function IntegralValueSection() {
           </Reveal>
 
           <Reveal y={16} delay={0.15} className="rounded-2xl border border-white/10 bg-background/80 p-6 backdrop-blur-sm light:border-[rgb(var(--ink-rgb)/0.1)]">
-            <ShieldCheck className="h-6 w-6 text-violet-400 mb-4" />
+            <ShieldCheck className="h-6 w-6 text-track-create mb-4" />
             <h3 className="text-lg font-medium text-foreground">
               {isEs ? "Respaldo Agéntico de IA" : "AI Agent Orchestration"}
             </h3>

@@ -42,6 +42,9 @@ export function StackMatrixPlayground() {
   const isOptimal = frictionReport.rating === "optimal";
 
   const handleSelectTool = (layerId: string, toolId: string) => {
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+      try { navigator.vibrate(10); } catch {}
+    }
     setSelectedTools((prev) => ({
       ...prev,
       [layerId]: toolId,
@@ -49,6 +52,9 @@ export function StackMatrixPlayground() {
   };
 
   const handleApplyOptimal = () => {
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+      try { navigator.vibrate([15, 40, 20]); } catch {}
+    }
     setSelectedTools({
       web: "nextjs",
       messaging: "whatsapp-ai",
@@ -173,9 +179,11 @@ export function StackMatrixPlayground() {
                           key={tool.id}
                           type="button"
                           onClick={() => handleSelectTool(layer.id, tool.id)}
+                          aria-pressed={isSelected}
+                          aria-label={`${layer.title[language]}: ${tool.name}`}
                           whileHover={{ scale: 1.01 }}
                           whileTap={{ scale: 0.98 }}
-                          className={`w-full text-left rounded-2xl border p-3.5 transition-all ${
+                          className={`w-full text-left rounded-2xl border p-3.5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal ${
                             isSelected
                               ? tool.isRecommended
                                 ? "border-signal/60 bg-signal/15 text-foreground shadow-[0_0_18px_rgba(113,243,162,0.18)]"
@@ -263,7 +271,7 @@ export function StackMatrixPlayground() {
                 </span>
                 <span
                   className={`mt-1.5 block text-lg font-bold ${
-                    isOptimal ? "text-cyan-400" : "text-red-400"
+                    isOptimal ? "text-accent" : "text-destructive"
                   }`}
                 >
                   {isOptimal ? "100% Unificada" : "Fragmentada"}
@@ -279,7 +287,7 @@ export function StackMatrixPlayground() {
                 </span>
                 <span
                   className={`mt-1.5 block text-lg font-bold ${
-                    isOptimal ? "text-emerald-400" : "text-amber-400"
+                    isOptimal ? "text-signal" : "text-amber-400"
                   }`}
                 >
                   {isOptimal ? "Inmediato" : "Manual"}

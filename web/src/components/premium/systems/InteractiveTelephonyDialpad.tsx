@@ -64,7 +64,7 @@ export function InteractiveTelephonyDialpad() {
 
       const ctx = audioCtxRef.current;
       if (ctx.state === "suspended") {
-        ctx.resume();
+        ctx.resume().catch(() => {});
       }
 
       const now = ctx.currentTime;
@@ -99,6 +99,9 @@ export function InteractiveTelephonyDialpad() {
   }, []);
 
   const handleKeyPress = (key: string) => {
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+      try { navigator.vibrate(10); } catch {}
+    }
     playDtmfSound(key);
     if (callState === "idle" || callState === "ended") {
       setDialedNumber((prev) => (prev.length < 18 ? prev + key : prev));
@@ -106,10 +109,16 @@ export function InteractiveTelephonyDialpad() {
   };
 
   const handleBackspace = () => {
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+      try { navigator.vibrate(8); } catch {}
+    }
     setDialedNumber((prev) => prev.slice(0, -1));
   };
 
   const handleSelectPreset = (preset: TelephonyPreset) => {
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+      try { navigator.vibrate(12); } catch {}
+    }
     setActivePreset(preset);
     setDialedNumber(preset.phoneNumber);
   };

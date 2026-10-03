@@ -416,14 +416,14 @@ export function PipelineSimulatorSection() {
                   <div className="mt-4 pt-3 border-t border-white/8 light:border-[rgb(var(--ink-rgb)/0.08)]">
                     <p
                       className={`text-xs leading-snug font-sans ${
-                        status.bad ? "text-red-400 font-medium" : "text-foreground/80"
+                        status.bad ? "text-destructive font-medium" : "text-foreground/80"
                       }`}
                     >
                       {status[language]}
                     </p>
                     <div className="mt-2 flex items-center gap-1.5 font-mono text-[10px]">
                       <Clock className="h-3 w-3 text-foreground/40" />
-                      <span className={status.bad ? "text-red-400 font-semibold" : "text-signal font-semibold"}>
+                      <span className={status.bad ? "text-destructive font-semibold" : "text-signal font-semibold"}>
                         {status.time}
                       </span>
                     </div>
@@ -462,7 +462,7 @@ export function PipelineSimulatorSection() {
                 </div>
                 <div
                   className={`mt-2 text-2xl sm:text-3xl font-bold tracking-tight font-mono ${
-                    isAutomatedMode ? "text-signal" : "text-red-400"
+                    isAutomatedMode ? "text-signal" : "text-destructive"
                   }`}
                 >
                   {metrics.dropOffRate}
@@ -475,7 +475,7 @@ export function PipelineSimulatorSection() {
               {/* Métrica 3: Horas de equipo ahorradas */}
               <div className="rounded-2xl border border-white/8 bg-white/[0.02] p-4 sm:p-5 light:border-[rgb(var(--ink-rgb)/0.08)] light:bg-white/[0.6]">
                 <div className="flex items-center gap-2 text-foreground/50 text-xs font-mono">
-                  <Zap className="h-4 w-4 text-cyan-400" />
+                  <Zap className="h-4 w-4 text-accent" />
                   <span>{isEs ? "Horas Ahorradas / Mes" : "Hours Saved / Month"}</span>
                 </div>
                 <div className="mt-2 text-2xl sm:text-3xl font-bold tracking-tight text-foreground font-mono">
@@ -489,7 +489,7 @@ export function PipelineSimulatorSection() {
               {/* Métrica 4: Citas / Clientes cerrados proyectados */}
               <div className="rounded-2xl border border-white/8 bg-white/[0.02] p-4 sm:p-5 light:border-[rgb(var(--ink-rgb)/0.08)] light:bg-white/[0.6]">
                 <div className="flex items-center gap-2 text-foreground/50 text-xs font-mono">
-                  <DollarSign className="h-4 w-4 text-emerald-400" />
+                  <DollarSign className="h-4 w-4 text-signal" />
                   <span>{isEs ? "Cierres Proyectados" : "Projected Bookings"}</span>
                 </div>
                 <div className="mt-2 text-2xl sm:text-3xl font-bold tracking-tight text-signal font-mono">

@@ -55,6 +55,9 @@ export function InteractiveWhatsAppScopeStudio() {
 
   // Toggle module selection
   const handleToggleModule = (id: string) => {
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+      try { navigator.vibrate(10); } catch {}
+    }
     setSelectedModuleIds((prev) =>
       prev.includes(id) ? prev.filter((m) => m !== id) : [...prev, id]
     );
@@ -146,9 +149,11 @@ export function InteractiveWhatsAppScopeStudio() {
                     key={mod.id}
                     type="button"
                     onClick={() => handleToggleModule(mod.id)}
+                    aria-pressed={isSelected}
+                    aria-label={mod.name[language]}
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.99 }}
-                    className={`relative flex items-start gap-4 rounded-xl border p-4 text-left transition-all duration-200 ${
+                    className={`relative flex items-start gap-4 rounded-xl border p-4 text-left transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal ${
                       isSelected
                         ? "border-signal/50 bg-signal/[0.08] shadow-[0_0_24px_rgba(113,243,162,0.12)]"
                         : "border-white/10 bg-white/[0.02] hover:border-white/20 light:border-[rgb(var(--ink-rgb)/0.1)] light:bg-white/40"
@@ -203,7 +208,7 @@ export function InteractiveWhatsAppScopeStudio() {
                   ? "Paso 2: Velocidad de Entrega"
                   : "Step 2: Delivery Velocity"}
               </label>
-              <span className="font-mono text-xs text-cyan-400">
+              <span className="font-mono text-xs text-accent">
                 {summary.velocity.durationLabel[language]}
               </span>
             </div>
@@ -215,16 +220,23 @@ export function InteractiveWhatsAppScopeStudio() {
                   <button
                     key={tier.id}
                     type="button"
-                    onClick={() => setSelectedVelocityId(tier.id)}
-                    className={`flex flex-col justify-between rounded-xl border p-4 text-left transition-all ${
+                    onClick={() => {
+                      if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+                        try { navigator.vibrate(8); } catch {}
+                      }
+                      setSelectedVelocityId(tier.id);
+                    }}
+                    aria-pressed={isSelected}
+                    aria-label={tier.name[language]}
+                    className={`flex flex-col justify-between rounded-xl border p-4 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal ${
                       isSelected
-                        ? "border-cyan-400/60 bg-cyan-400/[0.08] shadow-[0_0_20px_rgba(85,216,255,0.12)]"
+                        ? "border-accent/60 bg-accent/[0.08] shadow-[0_0_20px_rgba(85,216,255,0.12)]"
                         : "border-white/10 bg-white/[0.02] hover:border-white/20 light:border-[rgb(var(--ink-rgb)/0.1)] light:bg-white/40"
                     }`}
                   >
                     <div>
                       <div className="flex items-center justify-between gap-1">
-                        <span className="text-xs font-mono font-medium text-cyan-400">
+                        <span className="text-xs font-mono font-medium text-accent">
                           {tier.tag[language]}
                         </span>
                         <Clock className="h-3.5 w-3.5 text-foreground/50" />

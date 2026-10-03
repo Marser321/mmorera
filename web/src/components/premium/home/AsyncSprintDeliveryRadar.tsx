@@ -160,9 +160,9 @@ export function AsyncSprintDeliveryRadar() {
             {/* Terminal Header */}
             <div className="flex items-center justify-between border-b border-white/10 bg-[#141b24] px-4 py-3">
               <div className="flex items-center gap-2">
-                <span className="h-2.5 w-2.5 rounded-full bg-rose-500/80" />
-                <span className="h-2.5 w-2.5 rounded-full bg-amber-500/80" />
-                <span className="h-2.5 w-2.5 rounded-full bg-emerald-500/80" />
+                <span className="h-2.5 w-2.5 rounded-full bg-destructive/80" />
+                <span className="h-2.5 w-2.5 rounded-full bg-amber-400/80" />
+                <span className="h-2.5 w-2.5 rounded-full bg-signal/80" />
                 <span className="ml-2 font-mono text-xs text-foreground/60 flex items-center gap-1.5">
                   <Terminal className="h-3.5 w-3.5 text-signal" />
                   client-stream.mmorera.agency
