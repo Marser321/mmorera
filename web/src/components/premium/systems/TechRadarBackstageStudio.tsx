@@ -203,7 +203,7 @@ export function TechRadarBackstageStudio() {
       {/* Background glowing gradients */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-40 -right-40 h-[480px] w-[480px] rounded-full bg-cyan-500/10 blur-[140px]"
+        className="pointer-events-none absolute -top-40 -right-40 h-[480px] w-[480px] rounded-full bg-accent/10 blur-[140px]"
       />
       <div
         aria-hidden="true"
@@ -212,7 +212,7 @@ export function TechRadarBackstageStudio() {
 
       {/* Header */}
       <div className="relative z-10 max-w-4xl">
-        <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3.5 py-1 text-xs font-mono text-cyan-400">
+        <div className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-3.5 py-1 text-xs font-mono text-accent">
           <Radio className="h-3.5 w-3.5 animate-pulse" />
           <span>
             {isEs
@@ -248,7 +248,7 @@ export function TechRadarBackstageStudio() {
           {activeTab === "radar" && (
             <motion.div
               layoutId="backstage-tab-pill"
-              className="absolute inset-0 rounded-xl bg-gradient-to-r from-cyan-400 to-signal"
+              className="absolute inset-0 rounded-xl bg-gradient-to-r from-accent to-signal"
               transition={{ type: "spring", stiffness: 450, damping: 30 }}
             />
           )}
@@ -270,7 +270,7 @@ export function TechRadarBackstageStudio() {
           {activeTab === "arbitrage" && (
             <motion.div
               layoutId="backstage-tab-pill"
-              className="absolute inset-0 rounded-xl bg-gradient-to-r from-cyan-400 to-signal"
+              className="absolute inset-0 rounded-xl bg-gradient-to-r from-accent to-signal"
               transition={{ type: "spring", stiffness: 450, damping: 30 }}
             />
           )}
@@ -292,7 +292,7 @@ export function TechRadarBackstageStudio() {
           {activeTab === "studio" && (
             <motion.div
               layoutId="backstage-tab-pill"
-              className="absolute inset-0 rounded-xl bg-gradient-to-r from-cyan-400 to-signal"
+              className="absolute inset-0 rounded-xl bg-gradient-to-r from-accent to-signal"
               transition={{ type: "spring", stiffness: 450, damping: 30 }}
             />
           )}
@@ -316,7 +316,7 @@ export function TechRadarBackstageStudio() {
           className="relative z-10 mt-8 space-y-8"
         >
           {/* Autonomous Crawler Sweeper Terminal */}
-          <div className="rounded-2xl border border-cyan-500/20 bg-[#090d14] p-5 shadow-2xl">
+          <div className="rounded-2xl border border-accent/20 bg-[#090d14] p-5 shadow-2xl">
             <div className="flex flex-col justify-between gap-4 border-b border-white/10 pb-4 sm:flex-row sm:items-center">
               <div className="flex items-center gap-3">
                 <div className="flex h-3 w-3 items-center justify-center">
@@ -340,9 +340,9 @@ export function TechRadarBackstageStudio() {
                 type="button"
                 onClick={triggerParallelSweep}
                 disabled={isScanning}
-                className="inline-flex items-center gap-2 rounded-xl border border-cyan-400/40 bg-cyan-500/10 px-4 py-2 text-xs font-mono font-medium text-cyan-300 transition-all hover:bg-cyan-500/20 active:scale-95 disabled:opacity-50"
+                className="inline-flex items-center gap-2 rounded-xl border border-accent/40 bg-accent/10 px-4 py-2 text-xs font-mono font-medium text-accent transition-all hover:bg-accent/20 active:scale-95 disabled:opacity-50"
               >
-                <RefreshCw className={`h-3.5 w-3.5 ${isScanning ? "animate-spin text-cyan-400" : ""}`} />
+                <RefreshCw className={`h-3.5 w-3.5 ${isScanning ? "animate-spin text-accent" : ""}`} />
                 {isScanning
                   ? isEs
                     ? `Escaneando Fuentes (${scanProgress}%)`
@@ -357,7 +357,7 @@ export function TechRadarBackstageStudio() {
             {isScanning && (
               <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-white/5">
                 <motion.div
-                  className="h-full bg-gradient-to-r from-cyan-400 to-signal"
+                  className="h-full bg-gradient-to-r from-accent to-signal"
                   style={{ width: `${scanProgress}%` }}
                   transition={{ ease: "linear" }}
                 />
@@ -431,20 +431,20 @@ export function TechRadarBackstageStudio() {
             {filteredAlerts.map((alert) => (
               <div
                 key={alert.id}
-                className="group relative flex flex-col justify-between rounded-2xl border border-white/10 bg-[#0b1017] p-6 shadow-xl transition-all duration-300 hover:border-cyan-400/40 hover:bg-[#0e141d]"
+                className="group relative flex flex-col justify-between rounded-2xl border border-white/10 bg-[#0b1017] p-6 shadow-xl transition-all duration-300 hover:border-accent/40 hover:bg-[#0e141d]"
               >
                 <div>
                   <div className="flex items-center justify-between gap-2">
-                    <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-2.5 py-0.5 text-[11px] font-mono text-cyan-300">
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-accent/20 bg-accent/10 px-2.5 py-0.5 text-[11px] font-mono text-accent">
                       {isEs ? alert.badge.es : alert.badge.en}
                     </span>
                     <span
                       className={`rounded px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider ${
                         alert.impactScore === "critical"
-                          ? "bg-red-500/20 text-red-300 border border-red-500/30 font-bold"
+                          ? "bg-destructive/20 text-destructive border border-destructive/30 font-bold"
                           : alert.impactScore === "high"
                           ? "bg-amber-500/20 text-amber-300 border border-amber-500/30"
-                          : "bg-blue-500/20 text-blue-300 border border-blue-500/30"
+                          : "bg-accent/20 text-accent border border-accent/30"
                       }`}
                     >
                       {alert.impactScore === "critical"
@@ -496,7 +496,7 @@ export function TechRadarBackstageStudio() {
                     <button
                       type="button"
                       onClick={() => convertNewsToBlueprint(alert)}
-                      className="inline-flex items-center gap-1.5 rounded-lg border border-cyan-400/40 bg-cyan-400/10 px-3 py-1.5 text-xs font-mono font-medium text-cyan-300 transition-all hover:bg-cyan-400/20 active:scale-95"
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-accent/40 bg-accent/10 px-3 py-1.5 text-xs font-mono font-medium text-accent transition-all hover:bg-accent/20 active:scale-95"
                     >
                       <Video className="h-3.5 w-3.5" />
                       <span>{isEs ? "Crear Blueprint con esto" : "Create Blueprint from this"}</span>
@@ -552,7 +552,7 @@ export function TechRadarBackstageStudio() {
                     ? "Volumen mensual de operaciones (mensajes, leads, consultas RAG):"
                     : "Monthly operations volume (messages, leads, RAG queries):"}
                 </label>
-                <span className="font-mono text-lg font-bold text-cyan-400">
+                <span className="font-mono text-lg font-bold text-accent">
                   {monthlyOps.toLocaleString()} {isEs ? "ops/mes" : "ops/mo"}
                 </span>
               </div>
@@ -565,7 +565,7 @@ export function TechRadarBackstageStudio() {
                 step="5000"
                 value={monthlyOps}
                 onChange={(e) => setMonthlyOps(Number(e.target.value))}
-                className="mt-3 h-2 w-full cursor-pointer appearance-none rounded-lg bg-white/10 accent-cyan-400"
+                className="mt-3 h-2 w-full cursor-pointer appearance-none rounded-lg bg-white/10 accent-accent"
               />
 
               {/* Quick Presets */}
@@ -575,9 +575,9 @@ export function TechRadarBackstageStudio() {
                     key={preset}
                     type="button"
                     onClick={() => setMonthlyOps(preset)}
-                    className={`rounded-lg px-2.5 py-1 text-[11px] font-mono transition-all ${
+                    className={`rounded-xl px-3 py-1.5 min-h-[38px] flex items-center justify-center text-[11px] font-mono transition-all ${
                       monthlyOps === preset
-                        ? "bg-cyan-500/20 text-cyan-300 border border-cyan-400/40"
+                        ? "bg-accent/20 text-accent border border-accent/40 font-semibold"
                         : "bg-white/5 text-white/50 hover:bg-white/10 hover:text-white"
                     }`}
                   >
@@ -590,12 +590,12 @@ export function TechRadarBackstageStudio() {
             {/* Side-by-Side Comparison Duel */}
             <div className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-2">
               {/* Monolithic Naive Stack */}
-              <div className="rounded-2xl border border-red-500/20 bg-red-950/10 p-5">
+              <div className="rounded-2xl border border-destructive/20 bg-destructive/10 p-5">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono font-semibold text-red-400">
+                  <span className="text-xs font-mono font-semibold text-destructive">
                     {isEs ? "ENFOQUE TRADICIONAL MONOLÍTICO" : "TRADITIONAL MONOLITHIC STACK"}
                   </span>
-                  <span className="rounded bg-red-500/20 px-2 py-0.5 text-[10px] font-mono text-red-300">
+                  <span className="rounded bg-destructive/20 px-2 py-0.5 text-[10px] font-mono text-destructive">
                     100% GPT-4o / Claude Opus
                   </span>
                 </div>
@@ -607,15 +607,15 @@ export function TechRadarBackstageStudio() {
 
                 <ul className="mt-4 space-y-2 text-xs text-white/70">
                   <li className="flex items-center gap-2">
-                    <AlertCircle className="h-4 w-4 text-red-400 shrink-0" />
+                    <AlertCircle className="h-4 w-4 text-destructive shrink-0" />
                     <span>{isEs ? "Latencia promedio alta: ~2,400ms" : "High average latency: ~2,400ms"}</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <AlertCircle className="h-4 w-4 text-red-400 shrink-0" />
+                    <AlertCircle className="h-4 w-4 text-destructive shrink-0" />
                     <span>{isEs ? "Cero redundancia: si la API cae, tu negocio frena" : "Zero fallback redundancy: single point of failure"}</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <AlertCircle className="h-4 w-4 text-red-400 shrink-0" />
+                    <AlertCircle className="h-4 w-4 text-destructive shrink-0" />
                     <span>{isEs ? "Quemás presupuesto pagando razonamiento caro para un simple 'hola'" : "Burning margin using frontier reasoning for simple greetings"}</span>
                   </li>
                 </ul>
@@ -637,7 +637,7 @@ export function TechRadarBackstageStudio() {
                   <span className="text-xs font-normal text-white/40">/{isEs ? "mes" : "mo"}</span>
                 </div>
 
-                <div className="mt-1 flex items-center gap-2 text-xs font-mono text-cyan-400">
+                <div className="mt-1 flex items-center gap-2 text-xs font-mono text-accent">
                   <TrendingUp className="h-3.5 w-3.5" />
                   <span>
                     {isEs
@@ -669,22 +669,22 @@ export function TechRadarBackstageStudio() {
                 {isEs ? "Distribución Óptima del Tráfico Operativo:" : "Optimal Operational Traffic Breakdown:"}
               </div>
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
-                <div className="rounded-xl border border-cyan-400/20 bg-cyan-400/5 p-3">
-                  <div className="text-cyan-300 font-bold">65% · Gemini 2.5 Flash</div>
+                <div className="rounded-xl border border-accent/20 bg-accent/5 p-3">
+                  <div className="text-accent font-bold">65% · Gemini 2.5 Flash</div>
                   <div className="text-[11px] text-white/50 mt-1">
                     {isEs ? "Triaje de leads, WhatsApp, chats veloces sub-400ms" : "Lead triage, WhatsApp chats, sub-400ms speed"}
                   </div>
-                  <div className="text-cyan-400 text-sm font-semibold mt-2">
+                  <div className="text-accent text-sm font-semibold mt-2">
                     ${arbitrageData.breakdown.triageCost} USD
                   </div>
                 </div>
 
-                <div className="rounded-xl border border-purple-400/20 bg-purple-400/5 p-3">
-                  <div className="text-purple-300 font-bold">25% · DeepSeek R1 / V3</div>
+                <div className="rounded-xl border border-track-create/20 bg-track-create/5 p-3">
+                  <div className="text-track-create font-bold">25% · DeepSeek R1 / V3</div>
                   <div className="text-[11px] text-white/50 mt-1">
                     {isEs ? "RAG, análisis de PDFs, extracción de bases de datos" : "RAG pipelines, bulk PDF parsing, DB queries"}
                   </div>
-                  <div className="text-purple-400 text-sm font-semibold mt-2">
+                  <div className="text-track-create text-sm font-semibold mt-2">
                     ${arbitrageData.breakdown.ragCost} USD
                   </div>
                 </div>
@@ -705,7 +705,7 @@ export function TechRadarBackstageStudio() {
           {/* Interactive Tactical Use Cases ("¿Qué usar para qué?") */}
           <div>
             <div className="flex items-center gap-2 text-xs font-mono text-white/60">
-              <Layers className="h-4 w-4 text-cyan-400" />
+              <Layers className="h-4 w-4 text-accent" />
               <span>{isEs ? "GUÍA TÁCTICA: ¿QUÉ MODELO USAR PARA CADA CASO?" : "TACTICAL MATRIX: WHAT MODEL FOR WHAT TASK?"}</span>
             </div>
 
@@ -717,14 +717,14 @@ export function TechRadarBackstageStudio() {
                   onClick={() => setSelectedUseCaseId(useCase.id)}
                   className={`rounded-2xl border p-4 text-left transition-all ${
                     selectedUseCaseId === useCase.id
-                      ? "border-cyan-400/60 bg-cyan-400/10 shadow-lg"
+                      ? "border-accent/60 bg-accent/10 shadow-lg"
                       : "border-white/10 bg-[#0b1017] hover:border-white/20 hover:bg-[#0e141d]"
                   }`}
                 >
                   <div className="text-xs font-bold text-white">
                     {isEs ? useCase.taskTitle.es : useCase.taskTitle.en}
                   </div>
-                  <div className="mt-2 text-xs font-mono font-semibold text-cyan-300">
+                  <div className="mt-2 text-xs font-mono font-semibold text-accent">
                     {useCase.recommendedModel}
                   </div>
                   <div className="mt-2 flex items-center justify-between text-[11px] font-mono text-white/50">
@@ -739,7 +739,7 @@ export function TechRadarBackstageStudio() {
             <div className="mt-4 rounded-2xl border border-white/10 bg-[#0b1017] p-6 shadow-xl">
               <div className="flex flex-col justify-between gap-2 border-b border-white/10 pb-4 sm:flex-row sm:items-center">
                 <div>
-                  <span className="text-xs font-mono text-cyan-400">
+                  <span className="text-xs font-mono text-accent">
                     {isEs ? "Modelo Recomendado" : "Recommended Model"}
                   </span>
                   <h4 className="text-lg font-bold text-white">
@@ -767,8 +767,8 @@ export function TechRadarBackstageStudio() {
                   </p>
                 </div>
 
-                <div className="rounded-xl border border-red-500/20 bg-red-500/[0.04] p-4">
-                  <div className="flex items-center gap-1.5 text-xs font-mono font-semibold text-red-400">
+                <div className="rounded-xl border border-destructive/20 bg-destructive/[0.04] p-4">
+                  <div className="flex items-center gap-1.5 text-xs font-mono font-semibold text-destructive">
                     <AlertCircle className="h-4 w-4" />
                     <span>{isEs ? "¿Qué evitar terminantemente?" : "What to avoid?"}</span>
                   </div>
@@ -826,7 +826,7 @@ export function TechRadarBackstageStudio() {
           <div className="rounded-3xl border border-white/10 bg-[#090d14] p-6 shadow-2xl sm:p-8">
             <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
               <div>
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-0.5 text-xs font-mono text-cyan-400">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-accent/30 bg-accent/10 px-3 py-0.5 text-xs font-mono text-accent">
                   <Video className="h-3.5 w-3.5" />
                   {isEs ? "Generador de Blueprints Anti-Dispersión" : "Anti-Dispersion Blueprint Studio"}
                 </span>
@@ -848,8 +848,8 @@ export function TechRadarBackstageStudio() {
                 onClick={() => setIsRecordingHudOpen(!isRecordingHudOpen)}
                 className={`inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-mono font-bold transition-all ${
                   isRecordingHudOpen
-                    ? "border border-red-500 bg-red-500/20 text-red-300 animate-pulse"
-                    : "border border-cyan-400/40 bg-cyan-500/15 text-cyan-300 hover:bg-cyan-500/25"
+                    ? "border border-destructive bg-destructive/20 text-destructive animate-pulse"
+                    : "border border-accent/40 bg-accent/15 text-accent hover:bg-accent/25"
                 }`}
               >
                 <Target className="h-4 w-4" />
@@ -879,7 +879,7 @@ export function TechRadarBackstageStudio() {
                   value={customTopic}
                   onChange={(e) => setCustomTopic(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleGenerateCustom()}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 py-2.5 pl-10 pr-4 text-xs font-mono text-white placeholder-white/40 focus:border-cyan-400 focus:outline-none"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 py-2.5 pl-10 pr-4 text-xs font-mono text-white placeholder-white/40 focus:border-accent focus:outline-none"
                 />
               </div>
 
@@ -892,7 +892,7 @@ export function TechRadarBackstageStudio() {
                     onClick={() => setActiveFormat(fmt)}
                     className={`rounded-lg px-3 py-1.5 uppercase transition-all ${
                       activeFormat === fmt
-                        ? "bg-cyan-500/30 text-cyan-300 font-bold"
+                        ? "bg-accent/30 text-accent font-bold"
                         : "text-white/60 hover:text-white"
                     }`}
                   >
@@ -904,7 +904,7 @@ export function TechRadarBackstageStudio() {
               <button
                 type="button"
                 onClick={handleGenerateCustom}
-                className="rounded-xl border border-cyan-400/40 bg-cyan-400/20 px-4 py-2.5 text-xs font-mono font-semibold text-cyan-300 hover:bg-cyan-400/30"
+                className="rounded-xl border border-accent/40 bg-accent/20 px-4 py-2.5 text-xs font-mono font-semibold text-accent hover:bg-accent/30"
               >
                 {isEs ? "Generar" : "Generate"}
               </button>
@@ -925,7 +925,7 @@ export function TechRadarBackstageStudio() {
                   }}
                   className={`rounded-lg px-3 py-1.5 text-xs font-mono transition-all ${
                     !customBlueprint && selectedBlueprintId === bp.id
-                      ? "border border-cyan-400/50 bg-cyan-400/20 text-cyan-300 font-semibold"
+                      ? "border border-accent/50 bg-accent/20 text-accent font-semibold"
                       : "border border-white/10 bg-white/5 text-white/60 hover:text-white"
                   }`}
                 >
@@ -942,16 +942,16 @@ export function TechRadarBackstageStudio() {
                 initial={{ opacity: 0, scale: 0.96 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.96 }}
-                className="rounded-3xl border-2 border-red-500/50 bg-[#070b12] p-6 shadow-2xl sm:p-8"
+                className="rounded-3xl border-2 border-destructive/50 bg-[#070b12] p-6 shadow-2xl sm:p-8"
               >
                 {/* HUD Header with Timer */}
                 <div className="flex flex-col justify-between gap-4 border-b border-white/10 pb-4 sm:flex-row sm:items-center">
                   <div className="flex items-center gap-3">
                     <span className="flex h-3 w-3 items-center justify-center">
-                      <span className="h-2.5 w-2.5 rounded-full bg-red-500 animate-ping" />
+                      <span className="h-2.5 w-2.5 rounded-full bg-destructive animate-ping" />
                     </span>
                     <div>
-                      <span className="text-xs font-mono uppercase tracking-wider text-red-400 font-bold">
+                      <span className="text-xs font-mono uppercase tracking-wider text-destructive font-bold">
                         {isEs ? "HUD DE GRABACIÓN EN VIVO · PANTALLA SECUNDARIA" : "LIVE RECORDING HUD · SECONDARY DISPLAY"}
                       </span>
                       <h4 className="text-base font-bold text-white">
@@ -962,13 +962,14 @@ export function TechRadarBackstageStudio() {
 
                   {/* Stopwatch Controls */}
                   <div className="flex items-center gap-3">
-                    <div className="font-mono text-2xl font-black text-red-400 bg-red-950/40 border border-red-500/40 px-3 py-1 rounded-xl">
+                    <div className="font-mono text-2xl font-black text-destructive bg-destructive/10 border border-destructive/40 px-3 py-1 rounded-xl">
                       {formatTimer(recordingSeconds)}
                     </div>
 
                     <button
                       type="button"
                       onClick={() => setIsRecordingTimerRunning(!isRecordingTimerRunning)}
+                      aria-label={isRecordingTimerRunning ? "Pausar temporizador" : "Iniciar temporizador"}
                       className="rounded-xl border border-white/20 bg-white/10 p-2 text-white hover:bg-white/20"
                     >
                       {isRecordingTimerRunning ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
@@ -981,6 +982,7 @@ export function TechRadarBackstageStudio() {
                         setRecordingSeconds(0);
                         setCompletedAnchors([]);
                       }}
+                      aria-label="Reiniciar temporizador"
                       className="rounded-xl border border-white/20 bg-white/10 p-2 text-white/60 hover:text-white"
                     >
                       <RotateCcw className="h-4 w-4" />
@@ -990,7 +992,7 @@ export function TechRadarBackstageStudio() {
 
                 {/* Anchor Points Checklist Cards (Large high-contrast display) */}
                 <div className="mt-6">
-                  <div className="text-xs font-mono text-cyan-400 mb-3">
+                  <div className="text-xs font-mono text-accent mb-3">
                     {isEs
                       ? "TOCA CADA ANCLA MIENTRAS GRABÁS PARA NO SALIRTE DEL GUION:"
                       : "CLICK EACH ANCHOR POINT AS YOU SPEAK TO MAINTAIN FOCUS:"}
@@ -1007,7 +1009,7 @@ export function TechRadarBackstageStudio() {
                           className={`rounded-2xl border p-4 text-left transition-all ${
                             isDone
                               ? "border-signal/50 bg-signal/15 opacity-60 line-through"
-                              : "border-cyan-400/40 bg-cyan-950/20 hover:border-cyan-400"
+                              : "border-accent/40 bg-accent/10 hover:border-accent"
                           }`}
                         >
                           <div className="flex items-center justify-between text-xs font-mono">
@@ -1015,7 +1017,7 @@ export function TechRadarBackstageStudio() {
                             {isDone ? (
                               <CheckCircle2 className="h-4 w-4 text-signal" />
                             ) : (
-                              <span className="h-2 w-2 rounded-full bg-cyan-400 animate-pulse" />
+                              <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
                             )}
                           </div>
                           <div className="mt-2 text-sm font-bold text-white leading-snug">
@@ -1034,7 +1036,7 @@ export function TechRadarBackstageStudio() {
                     <p className="mt-1 text-white/80">{isEs ? activeBlueprint.hook.es : activeBlueprint.hook.en}</p>
                   </div>
                   <div className="rounded-xl border border-white/10 bg-white/5 p-3">
-                    <span className="text-cyan-400 font-bold">{isEs ? "🛠️ QUÉ MOSTRAR:" : "🛠️ SCREEN CUE:"}</span>
+                    <span className="text-accent font-bold">{isEs ? "🛠️ QUÉ MOSTRAR:" : "🛠️ SCREEN CUE:"}</span>
                     <p className="mt-1 text-white/80">{isEs ? activeBlueprint.coreArchitecture.es : activeBlueprint.coreArchitecture.en}</p>
                   </div>
                 </div>
@@ -1046,7 +1048,7 @@ export function TechRadarBackstageStudio() {
           <div className="rounded-3xl border border-white/10 bg-[#0b1017] p-6 shadow-xl sm:p-8">
             <div className="flex flex-col justify-between gap-4 border-b border-white/10 pb-5 sm:flex-row sm:items-center">
               <div>
-                <span className="rounded bg-cyan-400/20 px-2.5 py-0.5 text-xs font-mono font-semibold text-cyan-300">
+                <span className="rounded bg-accent/20 px-2.5 py-0.5 text-xs font-mono font-semibold text-accent">
                   {isEs ? activeBlueprint.durationLabel.es : activeBlueprint.durationLabel.en}
                 </span>
                 <h3 className="mt-2 text-xl font-bold text-white sm:text-2xl">
@@ -1080,9 +1082,9 @@ export function TechRadarBackstageStudio() {
             {/* Blueprint Sections Breakdown */}
             <div className="mt-6 space-y-4">
               {/* Section 1: Hook */}
-              <div className="rounded-2xl border border-cyan-400/20 bg-cyan-400/[0.03] p-5">
-                <div className="flex items-center gap-2 text-xs font-mono font-bold text-cyan-300">
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-cyan-400/20 text-cyan-300">1</span>
+              <div className="rounded-2xl border border-accent/20 bg-accent/[0.03] p-5">
+                <div className="flex items-center gap-2 text-xs font-mono font-bold text-accent">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-accent/20 text-accent">1</span>
                   <span>{isEs ? "EL GANCHO (0:00 - 0:05)" : "THE HOOK (0:00 - 0:05)"}</span>
                 </div>
                 <p className="mt-2 text-sm font-semibold italic text-white sm:text-base">
@@ -1102,9 +1104,9 @@ export function TechRadarBackstageStudio() {
               </div>
 
               {/* Section 3: Screen Architecture */}
-              <div className="rounded-2xl border border-purple-400/20 bg-purple-400/[0.03] p-5">
-                <div className="flex items-center gap-2 text-xs font-mono font-bold text-purple-300">
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-purple-400/20 text-purple-300">3</span>
+              <div className="rounded-2xl border border-track-create/20 bg-track-create/[0.03] p-5">
+                <div className="flex items-center gap-2 text-xs font-mono font-bold text-track-create">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-track-create/20 text-track-create">3</span>
                   <span>{isEs ? "DEMOSTRACIÓN EN PANTALLA / CÓDIGO" : "ON-SCREEN ARCHITECTURE / CODE DEMO"}</span>
                 </div>
                 <p className="mt-2 text-sm text-white/80 font-mono">

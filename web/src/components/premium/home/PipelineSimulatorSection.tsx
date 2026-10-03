@@ -233,7 +233,7 @@ export function PipelineSimulatorSection() {
                 onClick={() => setIsAutomatedMode(false)}
                 className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-medium transition-all ${
                   !isAutomatedMode
-                    ? "bg-red-500/20 text-red-300 border border-red-500/40 shadow-md font-semibold"
+                    ? "bg-destructive/20 text-destructive border border-destructive/40 shadow-md font-semibold"
                     : "text-foreground/60 hover:text-foreground"
                 }`}
               >

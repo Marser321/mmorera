@@ -326,7 +326,7 @@ export function VoiceAgentInteractiveSandbox() {
               ) : (
                 <button
                   onClick={handleEndCall}
-                  className="pressable flex-1 inline-flex items-center justify-center gap-2.5 rounded-full bg-red-500/20 border border-red-500/40 px-6 py-4 text-sm font-semibold text-red-400 hover:bg-red-500/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
+                  className="pressable flex-1 inline-flex items-center justify-center gap-2.5 rounded-full bg-destructive/20 border border-destructive/40 px-6 py-4 text-sm font-semibold text-destructive hover:bg-destructive/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive"
                 >
                   <PhoneOff className="h-4 w-4" />
                   {isEs ? "Colgar Llamada" : "Hang Up Call"}
@@ -388,7 +388,7 @@ export function VoiceAgentInteractiveSandbox() {
                           className={`max-w-[85%] rounded-2xl px-4 py-3 text-xs sm:text-sm leading-relaxed ${
                             isAgent
                               ? "bg-white/[0.07] border border-white/10 text-foreground"
-                              : "bg-blue-500/15 border border-blue-500/25 text-foreground/90 ml-auto"
+                              : "bg-accent/15 border border-accent/25 text-foreground/90 ml-auto"
                           } ${isLatest && isPlaying ? "ring-1 ring-white/30" : ""}`}
                         >
                           <div className="text-[10px] font-mono opacity-50 mb-1">

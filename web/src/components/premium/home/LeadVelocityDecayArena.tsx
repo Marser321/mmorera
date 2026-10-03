@@ -99,7 +99,7 @@ export function LeadVelocityDecayArena() {
       {/* Background ambient glows */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-40 -right-40 h-[500px] w-[500px] rounded-full bg-cyan-500/10 blur-[150px]"
+        className="pointer-events-none absolute -top-40 -right-40 h-[500px] w-[500px] rounded-full bg-accent/10 blur-[150px]"
       />
       <div
         aria-hidden="true"
@@ -108,13 +108,13 @@ export function LeadVelocityDecayArena() {
             ? "bg-signal/15"
             : activeTier.zone === "warning"
             ? "bg-amber-500/15"
-            : "bg-red-500/15"
+            : "bg-destructive/15"
         }`}
       />
 
       {/* Eyebrow and Header */}
       <div className="relative z-10 max-w-4xl">
-        <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3.5 py-1 text-xs font-mono text-cyan-400">
+        <div className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-3.5 py-1 text-xs font-mono text-accent">
           <Activity className="h-3.5 w-3.5 animate-pulse" />
           <span>
             {isEs
@@ -143,7 +143,7 @@ export function LeadVelocityDecayArena() {
           {/* Sliders Card */}
           <div className="rounded-3xl border border-white/10 bg-[#090d14] p-6 shadow-xl sm:p-7">
             <h3 className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-white/50">
-              <DollarSign className="h-4 w-4 text-cyan-400" />
+              <DollarSign className="h-4 w-4 text-accent" />
               <span>{isEs ? "Parámetros de tu Negocio" : "Your Business Parameters"}</span>
             </h3>
 
@@ -153,7 +153,7 @@ export function LeadVelocityDecayArena() {
                 <label htmlFor="ad-spend-slider" className="text-white/70">
                   {isEs ? "Inversión Mensual en Pauta (Meta / Google):" : "Monthly Paid Ad Spend (Meta / Google):"}
                 </label>
-                <span className="text-base font-bold text-cyan-400 font-mono">
+                <span className="text-base font-bold text-accent font-mono">
                   ${adSpend.toLocaleString()} USD
                 </span>
               </div>
@@ -165,18 +165,18 @@ export function LeadVelocityDecayArena() {
                 step="500"
                 value={adSpend}
                 onChange={(e) => setAdSpend(Number(e.target.value))}
-                className="mt-2.5 h-2 w-full cursor-pointer appearance-none rounded-lg bg-white/10 accent-cyan-400"
+                className="mt-2.5 h-2 w-full cursor-pointer appearance-none rounded-lg bg-white/10 accent-accent"
               />
-              <div className="mt-2 flex flex-wrap gap-2">
+              <div className="mt-2.5 flex flex-wrap gap-2">
                 {[1000, 3000, 5000, 10000, 20000].map((preset) => (
                   <button
                     key={preset}
                     type="button"
                     onClick={() => setAdSpend(preset)}
-                    className={`rounded-lg px-2.5 py-0.5 text-[11px] font-mono transition-all ${
+                    className={`rounded-xl px-3 py-1.5 min-h-[38px] flex items-center justify-center text-[11px] font-mono transition-all ${
                       adSpend === preset
-                        ? "bg-cyan-500/20 text-cyan-300 border border-cyan-400/40"
-                        : "bg-white/5 text-white/40 hover:text-white"
+                        ? "bg-accent/20 text-accent border border-accent/40 font-semibold"
+                        : "bg-white/5 text-white/50 hover:text-white"
                     }`}
                   >
                     ${preset.toLocaleString()}
@@ -228,7 +228,7 @@ export function LeadVelocityDecayArena() {
           <div className="rounded-3xl border border-white/10 bg-[#090d14] p-6 shadow-xl sm:p-7">
             <div className="flex items-center justify-between">
               <h3 className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-white/50">
-                <Clock className="h-4 w-4 text-cyan-400" />
+                <Clock className="h-4 w-4 text-accent" />
                 <span>{isEs ? "Tiempo de Respuesta Actual de tu Equipo:" : "Your Current Response Time:"}</span>
               </h3>
               <span
@@ -237,7 +237,7 @@ export function LeadVelocityDecayArena() {
                     ? "bg-signal/20 text-signal"
                     : activeTier.zone === "warning"
                     ? "bg-amber-400/20 text-amber-300"
-                    : "bg-red-500/20 text-red-300"
+                    : "bg-destructive/20 text-destructive"
                 }`}
               >
                 {activeTier.zone === "optimal"
@@ -267,7 +267,7 @@ export function LeadVelocityDecayArena() {
                         ? "border-signal/60 bg-signal/15 shadow-[0_0_15px_rgba(113,243,162,0.15)]"
                         : tier.zone === "warning"
                         ? "border-amber-400/60 bg-amber-400/15"
-                        : "border-red-500/60 bg-red-500/15 shadow-[0_0_15px_rgba(255,85,85,0.15)]"
+                        : "border-destructive/60 bg-destructive/15 shadow-[0_0_15px_rgba(255,85,85,0.15)]"
                       : "border-white/5 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.04]"
                   }`}
                 >
@@ -281,7 +281,7 @@ export function LeadVelocityDecayArena() {
                           ? "text-signal"
                           : tier.contactRatePct >= 30
                           ? "text-amber-400"
-                          : "text-red-400"
+                          : "text-destructive"
                       }`}
                     >
                       {tier.contactRatePct}%
@@ -315,7 +315,7 @@ export function LeadVelocityDecayArena() {
               <span className="text-white/50 uppercase tracking-wider">
                 {isEs ? "Curva de Sobrevivencia del Prospecto" : "Lead Survivability Curve"}
               </span>
-              <span className="text-cyan-400 font-bold">
+              <span className="text-accent font-bold">
                 {activeTier.contactRatePct}% {isEs ? "Tasa de Contacto" : "Contact Rate"}
               </span>
             </div>
@@ -355,7 +355,7 @@ export function LeadVelocityDecayArena() {
                   animate={{ cx: markerX, cy: markerY }}
                   transition={{ type: "spring", stiffness: 450, damping: 28 }}
                   r="7"
-                  className={activeTier.zone === "optimal" ? "fill-signal" : activeTier.zone === "warning" ? "fill-amber-400" : "fill-red-500"}
+                  className={activeTier.zone === "optimal" ? "fill-signal" : activeTier.zone === "warning" ? "fill-amber-400" : "fill-destructive"}
                 />
                 <motion.circle
                   animate={{ cx: markerX, cy: markerY }}
@@ -366,7 +366,7 @@ export function LeadVelocityDecayArena() {
                       ? "fill-signal"
                       : activeTier.zone === "warning"
                       ? "fill-amber-400"
-                      : "fill-red-500"
+                      : "fill-destructive"
                   }`}
                 />
               </svg>
@@ -375,7 +375,7 @@ export function LeadVelocityDecayArena() {
               <div className="absolute bottom-2 left-3 text-[10px] font-mono text-signal">
                 18s (94%)
               </div>
-              <div className="absolute bottom-2 right-3 text-[10px] font-mono text-red-400">
+              <div className="absolute bottom-2 right-3 text-[10px] font-mono text-destructive">
                 24h+ (2.5%)
               </div>
             </div>
@@ -383,13 +383,13 @@ export function LeadVelocityDecayArena() {
             {/* Three Critical Impact Meters */}
             <div className="mt-6 space-y-3 font-mono">
               {/* Stat 1: Burned Ad Spend */}
-              <div className="rounded-2xl border border-red-500/20 bg-red-950/15 p-4">
-                <div className="flex items-center justify-between text-xs text-red-400">
+              <div className="rounded-2xl border border-destructive/20 bg-destructive/10 p-4">
+                <div className="flex items-center justify-between text-xs text-destructive">
                   <span className="flex items-center gap-1.5">
                     <Flame className="h-4 w-4" />
                     {isEs ? "Pauta Incinerada / Desperdiciada:" : "Incinerated Ad Spend:"}
                   </span>
-                  <span className="font-bold text-red-300">
+                  <span className="font-bold text-destructive">
                     {metrics.adSpendBurnedPct}% {isEs ? "perdido" : "lost"}
                   </span>
                 </div>
@@ -536,12 +536,12 @@ export function LeadVelocityDecayArena() {
           </div>
 
           {/* Lane 2: Traditional Human Team (2 Hours) */}
-          <div className="rounded-2xl border border-red-500/30 bg-red-950/10 p-5">
+          <div className="rounded-2xl border border-destructive/30 bg-destructive/10 p-5">
             <div className="flex items-center justify-between text-xs font-mono">
-              <span className="font-bold text-red-400">
+              <span className="font-bold text-destructive">
                 {isEs ? "CARRIL B · PROCESO MANUAL TRADICIONAL" : "LANE B · TRADITIONAL MANUAL PROCESS"}
               </span>
-              <span className="rounded bg-red-500/20 px-2 py-0.5 text-[10px] text-red-300 font-bold">
+              <span className="rounded bg-destructive/20 px-2 py-0.5 text-[10px] text-destructive font-bold">
                 2h+ DELAY
               </span>
             </div>
@@ -556,18 +556,18 @@ export function LeadVelocityDecayArena() {
                 <AlertTriangle className={`h-4 w-4 shrink-0 ${raceStepSlow >= 2 ? "text-amber-400" : "text-white/20"}`} />
                 <span>15m · Equipo no disponible (fuera de horario comercial)</span>
               </div>
-              <div className={`flex items-center gap-2.5 ${raceStepSlow >= 3 ? "text-red-400" : "text-white/30"}`}>
-                <AlertTriangle className={`h-4 w-4 shrink-0 ${raceStepSlow >= 3 ? "text-red-400" : "text-white/20"}`} />
+              <div className={`flex items-center gap-2.5 ${raceStepSlow >= 3 ? "text-destructive" : "text-white/30"}`}>
+                <AlertTriangle className={`h-4 w-4 shrink-0 ${raceStepSlow >= 3 ? "text-destructive" : "text-white/20"}`} />
                 <span>45m · Lead entra a Google y contacta al competidor</span>
               </div>
-              <div className={`flex items-center gap-2.5 ${raceStepSlow >= 4 ? "text-red-300 font-bold" : "text-white/30"}`}>
-                <ShieldAlert className={`h-4 w-4 shrink-0 ${raceStepSlow >= 4 ? "text-red-400" : "text-white/20"}`} />
+              <div className={`flex items-center gap-2.5 ${raceStepSlow >= 4 ? "text-destructive font-bold" : "text-white/30"}`}>
+                <ShieldAlert className={`h-4 w-4 shrink-0 ${raceStepSlow >= 4 ? "text-destructive" : "text-white/20"}`} />
                 <span>+2.5h · Vendedor responde al día siguiente: "Ya compré"</span>
               </div>
             </div>
 
             {raceStepSlow === 4 && (
-              <div className="mt-4 rounded-xl border border-red-500/40 bg-red-500/20 p-2.5 text-center text-xs font-mono font-bold text-red-300">
+              <div className="mt-4 rounded-xl border border-destructive/40 bg-destructive/20 p-2.5 text-center text-xs font-mono font-bold text-destructive">
                 {isEs ? "🛑 LEAD PERDIDO · 100% PAUTA INCINERADA" : "🛑 LEAD LOST · 100% AD SPEND INCINERATED"}
               </div>
             )}

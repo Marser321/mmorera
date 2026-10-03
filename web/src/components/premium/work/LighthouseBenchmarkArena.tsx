@@ -120,12 +120,12 @@ export function LighthouseBenchmarkArena() {
                   onClick={() => setSelectedStackId(s.id)}
                   className={`group relative text-left rounded-2xl p-5 border transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
                     isSelected
-                      ? "border-red-500/50 bg-card/90 shadow-[0_8px_30px_rgba(239,68,68,0.15)] light:bg-card"
+                      ? "border-destructive/50 bg-card/90 shadow-[0_8px_30px_rgba(255,85,85,0.15)] light:bg-card"
                       : "border-white/10 bg-card/30 hover:border-white/20 hover:bg-card/50 light:bg-card/20"
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider bg-red-500/10 text-red-400 border border-red-500/20">
+                    <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider bg-destructive/10 text-destructive border border-destructive/20">
                       <AlertTriangle className="h-3 w-3" />
                       Lighthouse {s.lighthouseScore}/100
                     </span>
@@ -136,7 +136,7 @@ export function LighthouseBenchmarkArena() {
                     {s.name[language]}
                   </h3>
                   <p className="mt-1 text-xs text-foreground/60 leading-relaxed">{s.subtitle[language]}</p>
-                  <div className="mt-3 flex items-center justify-between border-t border-white/8 pt-2.5 text-[11px] font-mono text-red-400/80">
+                  <div className="mt-3 flex items-center justify-between border-t border-white/8 pt-2.5 text-[11px] font-mono text-destructive/80">
                     <span>Fuga de tráfico:</span>
                     <span className="font-bold">{(s.trafficLossPct * 100).toFixed(0)}%</span>
                   </div>
@@ -164,15 +164,15 @@ export function LighthouseBenchmarkArena() {
               {/* Diales lado a lado */}
               <div className="grid grid-cols-2 gap-4 text-center">
                 {/* Dial Legacy */}
-                <div className="rounded-2xl border border-red-500/20 bg-red-500/[0.03] p-5 flex flex-col items-center">
-                  <div className="relative flex h-24 w-24 items-center justify-center rounded-full border-4 border-red-500/30">
-                    <span className="text-3xl font-black font-mono text-red-400">{stack.lighthouseScore}</span>
+                <div className="rounded-2xl border border-destructive/20 bg-destructive/[0.03] p-5 flex flex-col items-center">
+                  <div className="relative flex h-24 w-24 items-center justify-center rounded-full border-4 border-destructive/30">
+                    <span className="text-3xl font-black font-mono text-destructive">{stack.lighthouseScore}</span>
                   </div>
                   <h4 className="mt-3 text-sm font-semibold text-foreground/80">{stack.name[language]}</h4>
-                  <span className="text-[11px] font-mono text-red-400 mt-1">
+                  <span className="text-[11px] font-mono text-destructive mt-1">
                     {isEs ? "Deficiente / Lento" : "Poor / Slow"}
                   </span>
-                  <div className="mt-3 w-full border-t border-red-500/10 pt-2 text-[10px] font-mono text-foreground/50 space-y-1">
+                  <div className="mt-3 w-full border-t border-destructive/10 pt-2 text-[10px] font-mono text-foreground/50 space-y-1">
                     <div>LCP: {stack.lcpSeconds}s</div>
                     <div>FCP: {stack.fcpSeconds}s</div>
                     <div>CLS: {stack.clsScore}</div>
@@ -231,7 +231,7 @@ export function LighthouseBenchmarkArena() {
                 <div
                   className={`rounded-lg p-2 border transition-colors ${
                     legacyLoaded
-                      ? "border-red-500/40 bg-red-500/10 text-red-400"
+                      ? "border-destructive/40 bg-destructive/10 text-destructive"
                       : simulating
                       ? "border-white/20 bg-white/5 text-foreground/60 animate-pulse"
                       : "border-white/5 text-foreground/40"
@@ -259,10 +259,10 @@ export function LighthouseBenchmarkArena() {
             <div className="rounded-3xl border border-white/14 bg-card/60 p-6 backdrop-blur-xl">
               <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-5">
                 <span className="text-[11px] font-mono uppercase tracking-wider text-foreground/50 flex items-center gap-1.5">
-                  <Flame className="h-3.5 w-3.5 text-red-400" />
+                  <Flame className="h-3.5 w-3.5 text-destructive" />
                   {isEs ? "Calculador de Dinero Quemado en Pauta" : "Ad Spend Burn Calculator"}
                 </span>
-                <span className="text-[10px] font-mono text-red-400 bg-red-500/10 px-2 py-0.5 rounded">
+                <span className="text-[10px] font-mono text-destructive bg-destructive/10 px-2 py-0.5 rounded">
                   {isEs ? "Fuga Silenciosa" : "Silent Leak"}
                 </span>
               </div>
@@ -294,24 +294,24 @@ export function LighthouseBenchmarkArena() {
 
               {/* Métricas de Pérdida Financiera */}
               <div className="mt-6 grid grid-cols-2 gap-3.5">
-                <div className="rounded-2xl border border-red-500/30 bg-red-500/[0.08] p-4 text-center">
-                  <span className="text-[10px] font-mono uppercase text-red-300 block">
+                <div className="rounded-2xl border border-destructive/30 bg-destructive/[0.08] p-4 text-center">
+                  <span className="text-[10px] font-mono uppercase text-destructive/90 block">
                     {isEs ? "Pérdida Mensual Estimada" : "Estimated Monthly Loss"}
                   </span>
-                  <span className="text-2xl sm:text-3xl font-black font-mono text-red-400 mt-1 block">
+                  <span className="text-2xl sm:text-3xl font-black font-mono text-destructive mt-1 block">
                     -${report.wastedSpendMonthly.toLocaleString()}
                   </span>
-                  <span className="text-[10px] font-mono text-red-400/80">USD / mes</span>
+                  <span className="text-[10px] font-mono text-destructive/80">USD / mes</span>
                 </div>
 
-                <div className="rounded-2xl border border-red-500/30 bg-red-500/[0.08] p-4 text-center">
-                  <span className="text-[10px] font-mono uppercase text-red-300 block">
+                <div className="rounded-2xl border border-destructive/30 bg-destructive/[0.08] p-4 text-center">
+                  <span className="text-[10px] font-mono uppercase text-destructive/90 block">
                     {isEs ? "Pérdida Anual Proyectada" : "Projected Annual Loss"}
                   </span>
-                  <span className="text-2xl sm:text-3xl font-black font-mono text-red-400 mt-1 block">
+                  <span className="text-2xl sm:text-3xl font-black font-mono text-destructive mt-1 block">
                     -${report.wastedSpendAnnual.toLocaleString()}
                   </span>
-                  <span className="text-[10px] font-mono text-red-400/80">USD / año</span>
+                  <span className="text-[10px] font-mono text-destructive/80">USD / año</span>
                 </div>
               </div>
 

@@ -95,7 +95,7 @@ export function InteractiveWhatsAppScopeStudio() {
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-cyan-500/10 blur-[100px]"
+        className="pointer-events-none absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-accent/10 blur-[100px]"
       />
 
       {/* Header */}
@@ -373,7 +373,7 @@ export function InteractiveWhatsAppScopeStudio() {
                 <div className="text-foreground/50 text-[10px]">
                   {isEs ? "ENTREGA" : "DELIVERY"}
                 </div>
-                <div className="text-cyan-400 font-semibold text-sm">
+                <div className="text-accent font-semibold text-sm">
                   {summary.velocity.days} {isEs ? "días" : "days"}
                 </div>
               </div>
@@ -381,7 +381,7 @@ export function InteractiveWhatsAppScopeStudio() {
                 <div className="text-foreground/50 text-[10px]">
                   {isEs ? "PALANCA" : "LEVERAGE"}
                 </div>
-                <div className="text-purple-400 font-semibold text-sm">
+                <div className="text-track-create font-semibold text-sm">
                   {summary.estimatedEfficiencyFactor}
                 </div>
               </div>

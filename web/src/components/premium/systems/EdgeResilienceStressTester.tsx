@@ -65,7 +65,7 @@ export function EdgeResilienceStressTester() {
         aria-hidden="true"
         className={`pointer-events-none absolute -top-48 -left-48 h-[500px] w-[500px] rounded-full blur-[140px] transition-colors duration-700 ${
           isLegacyCritical
-            ? "bg-rose-500/15"
+            ? "bg-destructive/15"
             : isLegacyDegraded
             ? "bg-amber-500/15"
             : "bg-signal/10"
@@ -73,12 +73,12 @@ export function EdgeResilienceStressTester() {
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-48 -right-48 h-[500px] w-[500px] rounded-full bg-cyan-500/15 blur-[140px]"
+        className="pointer-events-none absolute -bottom-48 -right-48 h-[500px] w-[500px] rounded-full bg-accent/15 blur-[140px]"
       />
 
       {/* Header */}
       <div className="relative z-10 max-w-3xl">
-        <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3.5 py-1 text-xs font-mono text-cyan-400">
+        <div className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-3.5 py-1 text-xs font-mono text-accent">
           <Activity className="h-3.5 w-3.5" />
           <span>
             {isEs
@@ -111,7 +111,7 @@ export function EdgeResilienceStressTester() {
                 : "Concurrent Traffic Throttle"}
             </label>
             <div className="mt-1 flex items-baseline gap-2">
-              <span className="font-mono text-3xl font-bold tracking-tight text-cyan-400 sm:text-4xl">
+              <span className="font-mono text-3xl font-bold tracking-tight text-accent sm:text-4xl">
                 {requestsPerSec.toLocaleString(isEs ? "es-AR" : "en-US")}
               </span>
               <span className="font-mono text-xs text-foreground/60">req / seg</span>
@@ -125,9 +125,9 @@ export function EdgeResilienceStressTester() {
                 key={preset.id}
                 type="button"
                 onClick={() => setRequestsPerSec(preset.requestsPerSec)}
-                className={`rounded-xl px-3 py-1.5 font-mono text-xs transition-all ${
+                className={`rounded-xl px-3.5 py-2 font-mono text-xs transition-all min-h-[40px] flex items-center justify-center ${
                   requestsPerSec === preset.requestsPerSec
-                    ? "bg-cyan-400 text-black font-semibold shadow-[0_0_16px_rgba(85,216,255,0.35)]"
+                    ? "bg-accent text-black font-semibold shadow-[0_0_16px_rgba(85,216,255,0.35)]"
                     : "border border-white/10 bg-white/5 text-foreground/70 hover:border-white/20 hover:text-foreground light:border-[rgb(var(--ink-rgb)/0.1)]"
                 }`}
               >
@@ -147,7 +147,7 @@ export function EdgeResilienceStressTester() {
             step="250"
             value={requestsPerSec}
             onChange={(e) => setRequestsPerSec(Number(e.target.value))}
-            className="h-2.5 w-full cursor-pointer appearance-none rounded-lg bg-white/10 accent-cyan-400 transition-all hover:bg-white/20"
+            className="h-2.5 w-full cursor-pointer appearance-none rounded-lg bg-white/10 accent-accent transition-all hover:bg-white/20"
             aria-label={
               isEs
                 ? "Control deslizante de solicitudes por segundo"
@@ -168,7 +168,7 @@ export function EdgeResilienceStressTester() {
         <div
           className={`relative overflow-hidden rounded-2xl border p-6 transition-all duration-500 ${
             isLegacyCritical
-              ? "border-rose-500/60 bg-rose-950/20 shadow-[0_0_40px_rgba(244,63,94,0.15)]"
+              ? "border-destructive/60 bg-destructive/15 shadow-[0_0_40px_rgba(255,85,85,0.15)]"
               : isLegacyDegraded
               ? "border-amber-500/50 bg-amber-950/15"
               : "border-white/10 bg-white/[0.02]"
@@ -180,7 +180,7 @@ export function EdgeResilienceStressTester() {
               <div
                 className={`flex h-10 w-10 items-center justify-center rounded-xl border ${
                   isLegacyCritical
-                    ? "border-rose-500/50 bg-rose-500/20 text-rose-400 animate-pulse"
+                    ? "border-destructive/50 bg-destructive/20 text-destructive animate-pulse"
                     : isLegacyDegraded
                     ? "border-amber-500/50 bg-amber-500/20 text-amber-400"
                     : "border-white/10 bg-white/5 text-foreground/60"
@@ -202,10 +202,10 @@ export function EdgeResilienceStressTester() {
             <span
               className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-wider ${
                 isLegacyCritical
-                  ? "bg-rose-500/20 text-rose-300 border border-rose-500/50 animate-bounce"
+                  ? "bg-destructive/20 text-destructive border border-destructive/50 animate-bounce"
                   : isLegacyDegraded
                   ? "bg-amber-500/20 text-amber-300 border border-amber-500/40"
-                  : "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+                  : "bg-signal/20 text-signal border border-signal/30"
               }`}
             >
               {isLegacyCritical ? (
@@ -231,7 +231,7 @@ export function EdgeResilienceStressTester() {
                 <span
                   className={
                     telemetry.legacy.cpuUsage > 90
-                      ? "text-rose-400 font-bold"
+                      ? "text-destructive font-bold"
                       : "text-foreground/80"
                   }
                 >
@@ -242,7 +242,7 @@ export function EdgeResilienceStressTester() {
                 <motion.div
                   className={`h-full rounded-full transition-colors ${
                     telemetry.legacy.cpuUsage > 90
-                      ? "bg-rose-500"
+                      ? "bg-destructive"
                       : telemetry.legacy.cpuUsage > 60
                       ? "bg-amber-400"
                       : "bg-signal"
@@ -262,7 +262,7 @@ export function EdgeResilienceStressTester() {
                 <div
                   className={`mt-1 font-mono text-xl font-bold ${
                     telemetry.legacy.latencyMs > 1000
-                      ? "text-rose-400"
+                      ? "text-destructive"
                       : telemetry.legacy.latencyMs > 400
                       ? "text-amber-400"
                       : "text-foreground"
@@ -279,7 +279,7 @@ export function EdgeResilienceStressTester() {
                 <div
                   className={`mt-1 font-mono text-xl font-bold ${
                     telemetry.legacy.errorRatePercent > 5
-                      ? "text-rose-400"
+                      ? "text-destructive"
                       : "text-foreground"
                   }`}
                 >
@@ -293,7 +293,7 @@ export function EdgeResilienceStressTester() {
           <div className="mt-5 rounded-xl border border-white/10 bg-black/40 p-3">
             <div className="flex items-center justify-between font-mono text-[10px] text-foreground/50 mb-2">
               <span>{isEs ? "TELEMETRÍA DE RED" : "NETWORK OSCILLOSCOPE"}</span>
-              <span className={isLegacyCritical ? "text-rose-400 animate-pulse" : ""}>
+              <span className={isLegacyCritical ? "text-destructive animate-pulse" : ""}>
                 {isLegacyCritical ? "PACKET LOSS SEVERO" : "PULSO REGULAR"}
               </span>
             </div>
@@ -312,7 +312,7 @@ export function EdgeResilienceStressTester() {
                     : "M0,30 Q50,22 100,38 T200,24 T300,36 T400,30"
                 }
                 fill="none"
-                stroke={isLegacyCritical ? "#f43f5e" : isLegacyDegraded ? "#fbbf24" : "#71F3A2"}
+                stroke={isLegacyCritical ? "#FF5555" : isLegacyDegraded ? "#fbbf24" : "#71F3A2"}
                 strokeWidth={isLegacyCritical ? "3" : "2"}
                 strokeDasharray={isLegacyCritical ? "4 2" : "none"}
                 animate={{
@@ -329,9 +329,9 @@ export function EdgeResilienceStressTester() {
 
           {/* Revenue Risk Alert */}
           {telemetry.estimatedLostRevenuePerHour > 0 && (
-            <div className="mt-4 rounded-xl border border-rose-500/30 bg-rose-500/10 p-3 text-xs font-mono text-rose-300 flex items-center justify-between">
+            <div className="mt-4 rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-xs font-mono text-destructive flex items-center justify-between">
               <span className="flex items-center gap-1.5">
-                <Flame className="h-4 w-4 text-rose-400 shrink-0" />
+                <Flame className="h-4 w-4 text-destructive shrink-0" />
                 {isEs ? "Riesgo de fuga en pauta:" : "Ad spend hemorrhage:"}
               </span>
               <span className="font-bold">
@@ -343,7 +343,7 @@ export function EdgeResilienceStressTester() {
         </div>
 
         {/* Right: Mario Morera Next.js 16 Edge Architecture */}
-        <div className="relative overflow-hidden rounded-2xl border border-signal/40 bg-gradient-to-br from-signal/[0.05] via-[#0b141a] to-cyan-500/[0.05] p-6 shadow-[0_0_40px_rgba(113,243,162,0.1)]">
+        <div className="relative overflow-hidden rounded-2xl border border-signal/40 bg-gradient-to-br from-signal/[0.05] via-[#0b141a] to-accent/[0.05] p-6 shadow-[0_0_40px_rgba(113,243,162,0.1)]">
           {/* Header */}
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3">
@@ -411,7 +411,7 @@ export function EdgeResilienceStressTester() {
                 <span className="font-mono text-[10px] uppercase text-foreground/50">
                   {isEs ? "Tasa Errores" : "Error Rate"}
                 </span>
-                <div className="mt-1 font-mono text-xl font-bold text-cyan-400">
+                <div className="mt-1 font-mono text-xl font-bold text-accent">
                   {telemetry.edge.errorRatePercent.toFixed(2)}%
                 </div>
               </div>

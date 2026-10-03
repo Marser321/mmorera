@@ -180,9 +180,9 @@ export function ProjectCaseDialog({ project }: { project: ProjectData }) {
                     {/* Navegador Simulado */}
                     <div className="flex shrink-0 select-none items-center gap-3 border-b border-white/5 bg-neutral-900 px-4 py-1.5 font-mono text-[10px] text-zinc-500">
                         <div className="flex gap-1.5">
-                            <span className="h-2 w-2 rounded-full bg-red-500/20" />
-                            <span className="h-2 w-2 rounded-full bg-yellow-500/20" />
-                            <span className="h-2 w-2 rounded-full bg-green-500/20" />
+                            <span className="h-2 w-2 rounded-full bg-destructive/40" />
+                            <span className="h-2 w-2 rounded-full bg-amber-400/40" />
+                            <span className="h-2 w-2 rounded-full bg-signal/40" />
                         </div>
                         <div className="mx-auto min-w-0 flex-1 truncate rounded border border-white/5 bg-black/40 px-3 py-1 text-center text-zinc-400 max-w-[280px]">
                             mariomorera.dev/work/{project.filename.split('.')[0].toLowerCase()}
@@ -191,7 +191,7 @@ export function ProjectCaseDialog({ project }: { project: ProjectData }) {
                             href={project.iframeUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex shrink-0 items-center gap-1 text-violet-400 transition-colors hover:text-white"
+                            className="flex shrink-0 items-center gap-1 text-track-create transition-colors hover:text-white"
                         >
                             <span>OPEN</span>
                             <ExternalLink className="h-3 w-3" />

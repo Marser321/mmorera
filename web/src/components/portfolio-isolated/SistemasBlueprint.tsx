@@ -67,19 +67,19 @@ export function SistemasBlueprint() {
     return (
         <section id="sistemas-blueprint" className="relative overflow-hidden bg-transparent py-16 md:py-32">
             {/* Luces de Fondo (Deep Space) */}
-            <div className="absolute top-1/2 left-1/3 w-[500px] h-[500px] bg-cyan-500/5 blur-[150px] rounded-full -translate-y-1/2 pointer-events-none" />
-            <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-emerald-500/5 blur-[120px] rounded-full pointer-events-none" />
+            <div className="absolute top-1/2 left-1/3 w-[500px] h-[500px] bg-accent/5 blur-[150px] rounded-full -translate-y-1/2 pointer-events-none" />
+            <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-signal/5 blur-[120px] rounded-full pointer-events-none" />
 
             <div className="container mx-auto px-4 relative z-10">
                 
                 {/* Encabezado */}
                 <div className="mx-auto mb-12 max-w-3xl text-center md:mb-20">
-                    <span className="text-emerald-500 font-bold tracking-[0.4em] uppercase text-[10px] block mb-3">
+                    <span className="text-signal font-bold tracking-[0.4em] uppercase text-[10px] block mb-3">
                         {language === 'es' ? 'AUTOMATIZACIONES · BLUEPRINT' : 'AUTOMATIONS · BLUEPRINT'}
                     </span>
                     <h2 className="text-3xl md:text-6xl font-black text-white uppercase tracking-tight md:tracking-tighter leading-tight md:leading-none mb-5 md:mb-6">
                         {language === 'es' ? 'Flujo de Datos' : 'Data Pipeline'}{' '}
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-emerald-400 to-violet-500">
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent via-signal to-track-create">
                             {language === 'es' ? 'Operativo' : 'In Action'}
                         </span>
                     </h2>

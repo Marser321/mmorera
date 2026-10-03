@@ -192,6 +192,7 @@ export function LiveAutomationPipelinePlayground() {
             <button
               onClick={handleReset}
               title={isEs ? "Reiniciar" : "Reset"}
+              aria-label={isEs ? "Reiniciar simulación" : "Reset simulation"}
               className="inline-flex items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] p-2.5 text-foreground hover:bg-white/10 transition-colors"
             >
               <RotateCcw className="h-3.5 w-3.5" />
@@ -227,7 +228,7 @@ export function LiveAutomationPipelinePlayground() {
                       isActive
                         ? "bg-signal/20 text-signal"
                         : isCompleted
-                        ? "bg-emerald-500/15 text-emerald-400"
+                        ? "bg-signal/15 text-signal"
                         : "bg-white/5 text-foreground/40"
                     }`}
                   >

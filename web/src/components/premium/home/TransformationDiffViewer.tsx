@@ -62,7 +62,7 @@ export function TransformationDiffViewer() {
             onClick={() => setActiveMode("before")}
             className={`py-2 px-4 rounded-xl text-xs sm:text-sm font-medium transition-all ${
               !isAfter
-                ? "bg-red-500/20 text-red-300 border border-red-500/40 shadow-md font-semibold"
+                ? "bg-destructive/20 text-destructive border border-destructive/40 shadow-md font-semibold"
                 : "text-foreground/60 hover:text-foreground"
             }`}
           >
@@ -122,8 +122,8 @@ export function TransformationDiffViewer() {
           transition={{ duration: 0.25 }}
           className="mt-8 rounded-2xl border p-6 sm:p-8 backdrop-blur-md"
           style={{
-            borderColor: isAfter ? `${currentCase.accentColor}40` : "rgba(239,68,68,0.3)",
-            backgroundColor: isAfter ? `${currentCase.accentColor}08` : "rgba(239,68,68,0.04)",
+            borderColor: isAfter ? `${currentCase.accentColor}40` : "rgba(255,85,85,0.3)",
+            backgroundColor: isAfter ? `${currentCase.accentColor}08` : "rgba(255,85,85,0.04)",
           }}
         >
           <div className="flex flex-wrap items-center justify-between gap-4">
@@ -131,7 +131,7 @@ export function TransformationDiffViewer() {
               className={`inline-block rounded-full px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-wider ${
                 isAfter
                   ? "bg-signal/15 text-signal border border-signal/30"
-                  : "bg-red-500/15 text-red-400 border border-red-500/30"
+                  : "bg-destructive/15 text-destructive border border-destructive/30"
               }`}
             >
               {isAfter

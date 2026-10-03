@@ -26,6 +26,7 @@ function walk(dir) {
     const fullPath = path.join(dir, entry);
     const stat = statSync(fullPath);
     if (stat.isDirectory()) return walk(fullPath);
+    if (entry.includes(".test.") || entry.includes(".spec.")) return [];
     if (!allowedExtensions.has(path.extname(entry))) return [];
     return [fullPath];
   });

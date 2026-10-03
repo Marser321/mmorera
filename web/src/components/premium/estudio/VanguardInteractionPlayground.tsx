@@ -87,16 +87,16 @@ export function VanguardInteractionPlayground() {
       {/* Background ambient light */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-40 -right-40 h-[480px] w-[480px] rounded-full bg-purple-500/10 blur-[140px]"
+        className="pointer-events-none absolute -top-40 -right-40 h-[480px] w-[480px] rounded-full bg-track-create/10 blur-[140px]"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-40 -left-40 h-[480px] w-[480px] rounded-full bg-cyan-500/10 blur-[140px]"
+        className="pointer-events-none absolute -bottom-40 -left-40 h-[480px] w-[480px] rounded-full bg-accent/10 blur-[140px]"
       />
 
       {/* Header */}
       <div className="relative z-10 max-w-4xl">
-        <div className="inline-flex items-center gap-2 rounded-full border border-purple-400/30 bg-purple-400/10 px-3.5 py-1 text-xs font-mono text-purple-300">
+        <div className="inline-flex items-center gap-2 rounded-full border border-track-create/30 bg-track-create/10 px-3.5 py-1 text-xs font-mono text-track-create">
           <Sparkles className="h-3.5 w-3.5 animate-pulse" />
           <span>
             {isEs
@@ -134,7 +134,7 @@ export function VanguardInteractionPlayground() {
             {activePatternId === p.id && (
               <motion.div
                 layoutId="vanguard-pill"
-                className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-400 via-cyan-400 to-signal"
+                className="absolute inset-0 rounded-xl bg-gradient-to-r from-track-create via-accent to-signal"
                 transition={{ type: "spring", stiffness: 450, damping: 28 }}
               />
             )}
@@ -155,7 +155,7 @@ export function VanguardInteractionPlayground() {
         <div className="flex flex-col justify-between rounded-3xl border border-white/10 bg-[#090d14] p-6 shadow-2xl sm:p-8 lg:col-span-7">
           <div>
             <div className="flex items-center justify-between">
-              <span className="rounded bg-purple-400/20 px-2.5 py-0.5 text-xs font-mono font-bold text-purple-300">
+              <span className="rounded bg-track-create/20 px-2.5 py-0.5 text-xs font-mono font-bold text-track-create">
                 {activePattern.inspiration}
               </span>
               <div className="flex gap-1.5">
@@ -367,7 +367,7 @@ export function VanguardInteractionPlayground() {
             </div>
 
             {/* Code Block */}
-            <div className="mt-4 max-h-[380px] overflow-x-auto rounded-2xl border border-white/5 bg-black/60 p-4 font-mono text-xs text-cyan-300/90 leading-relaxed">
+            <div className="mt-4 max-h-[380px] overflow-x-auto rounded-2xl border border-white/5 bg-black/60 p-4 font-mono text-xs text-accent/90 leading-relaxed">
               <pre>
                 <code>{activePattern.snippet}</code>
               </pre>
@@ -384,7 +384,7 @@ export function VanguardInteractionPlayground() {
               )}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-purple-400/40 bg-purple-500/20 py-3.5 text-center font-mono text-xs font-bold text-purple-200 transition-all hover:bg-purple-500/30 active:scale-95 shadow-lg"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-track-create/40 bg-track-create/20 py-3.5 text-center font-mono text-xs font-bold text-track-create transition-all hover:bg-track-create/30 active:scale-95 shadow-lg"
             >
               <MessageCircle className="h-4 w-4" />
               <span>{isEs ? "Cotizar Interacciones a Medida" : "Commission Custom Interactions"}</span>

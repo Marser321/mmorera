@@ -145,7 +145,7 @@ export function FinanceMetricsPanel() {
     });
   }, [sales]);
 
-  if (error) return <div className="text-red-500">Failed to fetch telemetry</div>;
+  if (error) return <div className="text-destructive">Failed to fetch telemetry</div>;
   if (!processedMetrics) return <div className="animate-pulse">Streaming data...</div>;
 
   return (

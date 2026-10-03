@@ -170,7 +170,7 @@ export function InteractiveTelephonyDialpad() {
       {/* Background ambient glows */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-40 -left-40 h-[480px] w-[480px] rounded-full bg-cyan-500/10 blur-[140px]"
+        className="pointer-events-none absolute -top-40 -left-40 h-[480px] w-[480px] rounded-full bg-accent/10 blur-[140px]"
       />
       <div
         aria-hidden="true"
@@ -179,7 +179,7 @@ export function InteractiveTelephonyDialpad() {
 
       {/* Header */}
       <div className="relative z-10 max-w-3xl">
-        <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3.5 py-1 text-xs font-mono text-cyan-400">
+        <div className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-3.5 py-1 text-xs font-mono text-accent">
           <PhoneCall className="h-3.5 w-3.5 animate-pulse" />
           <span>
             {isEs
@@ -206,8 +206,8 @@ export function InteractiveTelephonyDialpad() {
         {/* Left Column: Physical Phone Hardware Dialpad (5 Cols) */}
         <div className="rounded-3xl border border-white/10 bg-[#090d14] p-6 shadow-2xl sm:p-7 lg:col-span-5">
           {/* OLED Digital Display */}
-          <div className="relative rounded-2xl border border-cyan-500/30 bg-black/60 p-4 font-mono shadow-inner">
-            <div className="flex items-center justify-between text-[10px] text-cyan-400/60 uppercase tracking-wider">
+          <div className="relative rounded-2xl border border-accent/30 bg-black/60 p-4 font-mono shadow-inner">
+            <div className="flex items-center justify-between text-[10px] text-accent/70 uppercase tracking-wider">
               <span>SIP TRUNK · WEBRTC OPUS</span>
               <span className="flex items-center gap-1.5">
                 <span className="h-1.5 w-1.5 rounded-full bg-signal animate-ping" />
@@ -230,7 +230,8 @@ export function InteractiveTelephonyDialpad() {
                 <button
                   type="button"
                   onClick={handleBackspace}
-                  className="rounded-lg p-1 text-white/40 hover:text-white"
+                  aria-label={isEs ? "Borrar último dígito" : "Delete last digit"}
+                  className="rounded-lg p-1 text-white/40 hover:text-white transition-colors"
                 >
                   <Delete className="h-4 w-4" />
                 </button>
@@ -253,12 +254,13 @@ export function InteractiveTelephonyDialpad() {
                 key={btn.key}
                 type="button"
                 onClick={() => handleKeyPress(btn.key)}
-                className="group relative flex flex-col items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] py-3.5 transition-all hover:border-cyan-400/40 hover:bg-cyan-500/10 active:scale-95 active:bg-cyan-500/20"
+                aria-label={isEs ? `Marcar dígito ${btn.key}` : `Dial digit ${btn.key}`}
+                className="group relative flex flex-col items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] py-3.5 transition-all hover:border-accent/40 hover:bg-accent/10 active:scale-95 active:bg-accent/20"
               >
-                <span className="font-mono text-xl font-bold text-white group-hover:text-cyan-300">
+                <span className="font-mono text-xl font-bold text-white group-hover:text-accent">
                   {btn.key}
                 </span>
-                <span className="h-3 text-[10px] font-mono text-white/40 group-hover:text-cyan-400/70">
+                <span className="h-3 text-[10px] font-mono text-white/40 group-hover:text-accent/70">
                   {btn.sublabel}
                 </span>
               </button>
@@ -280,7 +282,7 @@ export function InteractiveTelephonyDialpad() {
               <button
                 type="button"
                 onClick={endCall}
-                className="flex w-full items-center justify-center gap-2 rounded-2xl border border-red-500/50 bg-red-500/20 py-4 font-mono text-sm font-bold text-red-300 shadow-lg transition-all hover:bg-red-500/30 active:scale-95 animate-pulse"
+                className="flex w-full items-center justify-center gap-2 rounded-2xl border border-destructive/50 bg-destructive/20 py-4 font-mono text-sm font-bold text-destructive shadow-lg transition-all hover:bg-destructive/30 active:scale-95 animate-pulse"
               >
                 <PhoneOff className="h-5 w-5" />
                 <span>{isEs ? "Finalizar Llamada" : "Hang Up"}</span>
@@ -306,14 +308,14 @@ export function InteractiveTelephonyDialpad() {
                   disabled={callState === "connected" || callState === "calling"}
                   className={`rounded-2xl border p-3.5 text-left transition-all ${
                     activePreset.id === preset.id
-                      ? "border-cyan-400/60 bg-cyan-400/10 shadow-lg"
+                      ? "border-accent/60 bg-accent/10 shadow-lg"
                       : "border-white/5 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.04]"
                   } disabled:opacity-50`}
                 >
                   <div className="text-xs font-bold text-white">
                     {isEs ? preset.name.es : preset.name.en}
                   </div>
-                  <div className="mt-1 text-xs font-mono text-cyan-300">
+                  <div className="mt-1 text-xs font-mono text-accent">
                     {preset.phoneNumber}
                   </div>
                   <div className="mt-2 flex items-center justify-between text-[10px] font-mono text-white/40">
@@ -371,7 +373,7 @@ export function InteractiveTelephonyDialpad() {
               )}
 
               {callState === "calling" && (
-                <div className="flex items-center justify-center gap-2 py-6 text-cyan-400 font-bold animate-pulse">
+                <div className="flex items-center justify-center gap-2 py-6 text-accent font-bold animate-pulse">
                   <Activity className="h-4 w-4 animate-spin" />
                   <span>{isEs ? "Conectando SIP Trunk a Cartesia Audio Stream..." : "Bridging SIP Trunk to Cartesia Audio Stream..."}</span>
                 </div>
@@ -399,9 +401,9 @@ export function InteractiveTelephonyDialpad() {
                 <motion.div
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="rounded-2xl border border-cyan-400/30 bg-cyan-400/[0.04] p-4 text-right"
+                  className="rounded-2xl border border-accent/30 bg-accent/[0.04] p-4 text-right"
                 >
-                  <div className="text-[11px] text-cyan-300 font-bold mb-1">
+                  <div className="text-[11px] text-accent font-bold mb-1">
                     {isEs ? "Vos (Cliente Llamador)" : "You (Caller)"}
                   </div>
                   <p className="text-white/90 leading-relaxed">

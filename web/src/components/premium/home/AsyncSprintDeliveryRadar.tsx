@@ -60,7 +60,7 @@ export function AsyncSprintDeliveryRadar() {
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-40 -right-40 h-[480px] w-[480px] rounded-full bg-cyan-500/10 blur-[130px]"
+        className="pointer-events-none absolute -bottom-40 -right-40 h-[480px] w-[480px] rounded-full bg-accent/10 blur-[130px]"
       />
 
       {/* Header */}
@@ -235,13 +235,13 @@ export function AsyncSprintDeliveryRadar() {
               </div>
               <div className="border-r border-white/10">
                 <div className="text-[10px] text-foreground/50">LIGHTHOUSE</div>
-                <div className="text-cyan-400 font-bold text-sm">
+                <div className="text-accent font-bold text-sm">
                   {activeMilestone.telemetry.lighthouseScore} / 100
                 </div>
               </div>
               <div>
                 <div className="text-[10px] text-foreground/50">TESTS PASSING</div>
-                <div className="text-purple-400 font-bold text-sm">
+                <div className="text-track-create font-bold text-sm">
                   {activeMilestone.telemetry.testPassingCount} / {activeMilestone.telemetry.testPassingCount}
                 </div>
               </div>
@@ -281,7 +281,7 @@ export function AsyncSprintDeliveryRadar() {
         </div>
 
         <div className="border-b border-white/5 pb-3 sm:border-b-0 sm:border-r sm:pb-0">
-          <div className="text-2xl font-bold text-cyan-400">
+          <div className="text-2xl font-bold text-accent">
             &lt;{ASYNC_LEVERAGE_METRICS.stagingAvailabilityHours}h
           </div>
           <div className="mt-1 text-xs text-foreground/60">
@@ -292,7 +292,7 @@ export function AsyncSprintDeliveryRadar() {
         </div>
 
         <div>
-          <div className="text-2xl font-bold text-purple-400">100%</div>
+          <div className="text-2xl font-bold text-track-create">100%</div>
           <div className="mt-1 text-xs text-foreground/60">
             {isEs
               ? "Código propio transferido en GitHub"
