@@ -93,7 +93,7 @@ export function OmnichannelInboxSimulator() {
               className="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] transition-colors duration-500"
               style={{ color: activeLead.channelColor }}
             >
-              {isEs ? "01.7 · Bandeja Omnicanal & Speed-to-Lead" : "01.7 · Omnichannel Inbox & Speed-to-Lead"}
+              {isEs ? "03 · Bandeja Omnicanal & Speed-to-Lead" : "03 · Omnichannel Inbox & Speed-to-Lead"}
             </p>
           </div>
           <SplitReveal

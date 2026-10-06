@@ -110,6 +110,13 @@ export function RadialOrbitalTimeline({
         (id: string | null) => {
             const next = id === null || activeId === id ? null : id;
             if (next === activeId) return;
+            if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+                try {
+                    navigator.vibrate(8);
+                } catch {
+                    // ignore
+                }
+            }
             setActiveId(next);
             if (next) {
                 const index = nodes.findIndex((node) => node.id === next);
@@ -123,11 +130,27 @@ export function RadialOrbitalTimeline({
     useEffect(() => {
         if (!activeId) return;
         const onKeyDown = (event: KeyboardEvent) => {
-            if (event.key === "Escape") select(null);
+            if (event.key === "Escape") {
+                select(null);
+            } else if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+                event.preventDefault();
+                const currentIndex = nodes.findIndex((n) => n.id === activeId);
+                if (currentIndex >= 0) {
+                    const nextIndex = (currentIndex + 1) % nodes.length;
+                    select(nodes[nextIndex].id);
+                }
+            } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+                event.preventDefault();
+                const currentIndex = nodes.findIndex((n) => n.id === activeId);
+                if (currentIndex >= 0) {
+                    const prevIndex = (currentIndex - 1 + nodes.length) % nodes.length;
+                    select(nodes[prevIndex].id);
+                }
+            }
         };
         window.addEventListener("keydown", onKeyDown);
         return () => window.removeEventListener("keydown", onKeyDown);
-    }, [activeId, select]);
+    }, [activeId, nodes, select]);
 
     const positions = useMemo(
         () =>

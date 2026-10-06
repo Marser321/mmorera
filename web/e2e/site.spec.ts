@@ -173,6 +173,42 @@ test("rota secuencias lentas de tecnología en sistemas y estudio", async ({ pag
   await expect(page.locator('[data-particle-canvas="global"]')).toHaveAttribute("data-particle-current", /Figma|Three.js|Blender|After Effects|DaVinci Resolve/);
 });
 
+test("sistemas narra casos de uso con films interactivos", async ({ page }) => {
+  await page.goto("/sistemas");
+  await expect(page.getByRole("heading", { name: "De herramientas sueltas a un sistema." })).toBeVisible();
+  await expect(page.locator('[data-film-stage="opening"]')).toHaveCount(1);
+
+  const tabs = page.getByRole("tab");
+  await expect(tabs).toHaveCount(3);
+  await expect(tabs.first()).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByRole("link", { name: /Ver el caso New Brothers/ })).toBeVisible();
+
+  // Un flujo de ejemplo se rotula como tal y sus etapas abren el inspector.
+  await page.getByRole("tab", { name: /El lead de las 23:45/ }).click();
+  await expect(page.getByRole("tab", { name: /El lead de las 23:45/ })).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByText("Flujo de ejemplo con datos de muestra")).toBeVisible();
+  await page.getByRole("button", { name: /01 · Edge Worker Ingesta/ }).click();
+  const inspector = page.getByRole("dialog", { name: /Etapa 1/ });
+  await expect(inspector).toBeVisible();
+  await expect(inspector).toContainText("Next.js 16 Edge Route");
+  await inspector.getByRole("button", { name: "Cerrar inspector" }).click();
+  await expect(inspector).toHaveCount(0);
+
+  // Los capítulos son texto real (subtítulos) y se pueden recorrer.
+  await page.getByRole("button", { name: /Resultado/ }).click();
+  await expect(page.getByText("En la muestra, el lead recibe respuesta en menos de un segundo", { exact: false })).toBeVisible();
+});
+
+test("sin movimiento, el film de apertura no fija el scroll", async ({ browser }) => {
+  const context = await browser.newContext({ baseURL: BASE_URL, viewport: { width: 1440, height: 900 }, reducedMotion: "reduce" });
+  const page = await context.newPage();
+  await page.goto("/sistemas");
+  const opening = page.locator('section[aria-labelledby="opening-film-title"]');
+  await expect(opening).toHaveCount(1);
+  await expect(opening).not.toHaveClass(/h-\[420vh\]/);
+  await context.close();
+});
+
 test("cambia idioma y mantiene el modo elegido en la URL", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "Construir", exact: true }).first().click();
@@ -518,7 +554,6 @@ test("alterna al modo claro, lo persiste y mantiene la home legible", async ({ p
 test("monta los MP4 locales de forma diferida en las cinco escenas", async ({ page }) => {
   const integrations = [
     { path: "/", assets: [{ id: "nucleo-decision", source: "graphite-desktop.mp4" }, { id: "apertura-protegida", source: "minimalist-desktop.mp4" }] },
-    { path: "/sistemas", assets: [{ id: "cinta-continuidad", source: "minimalist-desktop.mp4" }] },
     { path: "/estudio", assets: [{ id: "telar-pulso", source: "graphite-desktop.mp4" }] },
     { path: "/casos-de-exito", assets: [{ id: "archivo-estratos", source: "minimalist-desktop.mp4" }] },
     { path: "/aplicar", assets: [{ id: "apertura-protegida", source: "minimalist-desktop.mp4" }] },
@@ -571,7 +606,6 @@ test("mantiene posters estaticos sin montar videos con movimiento reducido", asy
 
   for (const { path, asset } of [
     { path: "/", asset: "nucleo-decision" },
-    { path: "/sistemas", asset: "cinta-continuidad" },
     { path: "/estudio", asset: "telar-pulso" },
     { path: "/casos-de-exito", asset: "archivo-estratos" },
     { path: "/aplicar", asset: "apertura-protegida" },
