@@ -5,7 +5,7 @@ import type { Box } from "@/lib/filmLayout";
 import { EASE_IN_OUT, progress, useFilmLayout } from "../theme";
 import { alpha, useBrand } from "./context";
 import { boxStyle, BoxText, Glyph, Plate, SampleTag, type GlyphKind } from "./dataKit";
-import { evidenceLedgerLayout, type EvidenceLedgerData, type EvidenceTier, type EvidenceTierId } from "./layout/evidenceLedger";
+import { EVIDENCE_TONES, evidenceLedgerLayout, type EvidenceLedgerData, type EvidenceTier, type EvidenceTierId } from "./layout/evidenceLedger";
 
 export type EvidenceLedgerProps = {
   box: Box;
@@ -16,17 +16,6 @@ export type EvidenceLedgerProps = {
   wording?: EvidenceLedgerData["wording"];
   language: FilmLanguage;
   sampleLabel?: string;
-};
-
-/**
- * Colores de nivel: semánticos y apagados. Nunca dorado sobre contenido
- * biológico (el dorado de la marca no "aprueba" nada); lo prohibido va en un
- * rojo apagado.
- */
-const TIER_TONE: Record<Exclude<EvidenceTierId, "not-established">, string> = {
-  approved: "#6FA88A",
-  signal: "#86A3C3",
-  prohibited: "#C4645C",
 };
 
 const TIER_GLYPH: Record<EvidenceTierId, GlyphKind> = {
@@ -46,7 +35,7 @@ export function EvidenceLedger({ box, duration, tiers, total, breakdown, wording
   const brand = useBrand();
   const { portrait } = useFilmLayout();
   const layout = evidenceLedgerLayout(box, { tiers, total, breakdown, wording, language, sampleLabel }, portrait ? "portrait" : "landscape");
-  const tone = (id: EvidenceTierId) => (id === "not-established" ? brand.palette.muted : TIER_TONE[id]);
+  const tone = (id: EvidenceTierId) => EVIDENCE_TONES[id] ?? brand.palette.muted;
 
   const rowsFrom = 46 + (breakdown?.length ?? 0) * 8;
   const rowStep = Math.max(22, Math.min(50, (duration * 0.64 - rowsFrom) / Math.max(1, tiers.length)));

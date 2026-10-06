@@ -30,8 +30,8 @@ export type ManifestoBeatsLayout = { band: Box; beats: ManifestoBeatBoxes[] };
 export const MANIFESTO_KICKER_TRACKING = 0.24;
 
 const DEFAULTS = {
-  landscape: { maxLines: 3, maxSize: 84, minSize: 34, measure: 1180, kicker: 17 },
-  portrait: { maxLines: 4, maxSize: 92, minSize: 42, measure: 936, kicker: 22 },
+  landscape: { maxLines: 3, maxSize: 84, minSize: 34, measure: 1180, kicker: 18 },
+  portrait: { maxLines: 4, maxSize: 92, minSize: 42, measure: 936, kicker: 24 },
 } as const;
 
 export function manifestoBeatsLayout(box: Box, data: ManifestoBeatsData, format: FilmFormatName): ManifestoBeatsLayout {
