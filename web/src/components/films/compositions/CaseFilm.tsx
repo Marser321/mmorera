@@ -34,7 +34,7 @@ export function CaseFilm({ script, language }: CaseFilmProps) {
 
   return (
     <AbsoluteFill style={{ overflow: "hidden", fontFamily: FILM_FONTS.body, color: FILM_COLORS.fg, ...(brand ? brandCssVars(brand) : {}), background: brand?.palette.bg }}>
-      {brand ? (brand.texture === "gold-dust" ? <DustField color={brand.palette.accentSoft} opacity={0.3} /> : null) : <FilmBackdrop />}
+      {brand ? (brand.texture === "gold-dust" ? <DustField color={brand.palette.accentSoft} /> : null) : <FilmBackdrop />}
 
       <Sequence name="Apertura" from={timeline.coldOpen.from} durationInFrames={timeline.coldOpen.duration} premountFor={fps}>
         <ColdOpen {...shared} duration={timeline.coldOpen.duration} />

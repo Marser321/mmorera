@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "tsx --test src/**/*.test.ts",
+    "test": "tsx --test \"src/**/*.test.ts\"",
     "test:e2e": "playwright test",
     "audit:multiagent": "node scripts/multiagent-static-audit.mjs"
   },

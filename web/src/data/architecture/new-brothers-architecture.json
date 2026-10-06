@@ -68,7 +68,7 @@
       "sublabel": "/reservar · wizard",
       "tag": "Next.js 16",
       "pos": [
-        230,
+        260,
         130
       ],
       "size": [
@@ -82,7 +82,7 @@
       "label": "Panel admin",
       "sublabel": "14 secciones",
       "pos": [
-        230,
+        260,
         300
       ],
       "size": [
@@ -96,7 +96,7 @@
       "label": "Portal del barbero",
       "sublabel": "/barbero/mi-agenda",
       "pos": [
-        230,
+        260,
         470
       ],
       "size": [
@@ -110,7 +110,7 @@
       "label": "Roles y permisos",
       "sublabel": "has_permission() · 4 roles",
       "pos": [
-        450,
+        520,
         130
       ],
       "size": [
@@ -124,7 +124,7 @@
       "label": "Row Level Security",
       "sublabel": "26 tablas con RLS",
       "pos": [
-        450,
+        520,
         300
       ],
       "size": [
@@ -138,7 +138,7 @@
       "label": "book_appointment",
       "sublabel": "Agenda sin solapes",
       "pos": [
-        670,
+        780,
         130
       ],
       "size": [
@@ -152,7 +152,7 @@
       "label": "close_cash_day",
       "sublabel": "POS y cierre de caja",
       "pos": [
-        670,
+        780,
         300
       ],
       "size": [
@@ -166,7 +166,7 @@
       "label": "close_barber_settlement",
       "sublabel": "Liquidaciones",
       "pos": [
-        670,
+        780,
         470
       ],
       "size": [
@@ -180,7 +180,7 @@
       "label": "Supabase Postgres",
       "sublabel": "26 tablas · historial",
       "pos": [
-        900,
+        1050,
         300
       ],
       "size": [
@@ -194,7 +194,7 @@
       "label": "Reactivación",
       "sublabel": "send-reminders → WhatsApp",
       "pos": [
-        1120,
+        1290,
         130
       ],
       "size": [
@@ -208,7 +208,7 @@
       "label": "Asistente IA",
       "sublabel": "Gemini → OpenAI → reglas",
       "pos": [
-        1120,
+        1290,
         300
       ],
       "size": [
@@ -297,7 +297,8 @@
       "from": "rpc_booking",
       "to": "db",
       "label": "Row lock",
-      "variant": "emphasis"
+      "variant": "emphasis",
+      "labelSegment": 0
     },
     {
       "from": "rpc_cash",

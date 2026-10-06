@@ -20,17 +20,19 @@ Estado y reglas del sistema de "films de lanzamiento" del portfolio, para seguir
   - `scenes/brand/`: motor de marca.
     - `ParticleLogo`: partículas que forman el logo del cliente.
     - `DustField`
-    - `camera.tsx`: `BlurTravel`, `CameraShot` con notas, `BrandTitle` y `Fade`.
+    - `camera.tsx`: `BlurTravel`, `CameraReel`, `BrandTitle` (acepta `\n` para fijar el corte) y `Fade`.
+      - `CameraReel`: una sola ventana; las capturas se empujan (nunca se superponen), el rótulo de cada nota va en la barra de la ventana y el zoom se limita a la resolución nativa (`lib/filmCamera.ts`).
     - `flat.tsx`: pantallas planas con la piel de la marca.
-    - `ArchitectureScene`: recorre JSON de Archify con vistas guiadas.
+    - `ArchitectureScene`: recorre JSON de Archify con vistas guiadas. Dibuja las rutas y placas de etiqueta que calculó Archify (`*.layout.json`), recorta el diagrama a su área y pone la leyenda de cada vista en su propia banda.
 - `web/src/data/brands/caseBrands.ts`: tokens reales por cliente. `brandCssVars()` redefine las variables CSS dentro del film.
 - `web/src/data/films/`: guiones puros, sin Remotion.
-- `web/src/data/architecture/`: JSON de Archify (New Brothers, Fénix) y `archify.ts` (tipos y geometría).
+- `web/src/data/architecture/`: JSON de Archify (New Brothers, Fénix), su geometría congelada `*.layout.json` y `archify.ts` (tipos). `archify.test.ts` falla si el layout quedó viejo o si una etiqueta toca una caja, otra etiqueta o el borde de un grupo.
 - `web/docs/films/dossiers/`: datos verificados de cada cliente (sus repos locales no están en la nube).
 - **Scripts:**
   - `capture-case-reels.ts`: reels y capturas del sitio en vivo.
   - `capture-panel-shots.ts`: paneles por acceso demo público.
   - `build-film-backdrops.ts`: fondos pre-difuminados con sharp.
+  - `build-archify-layouts.mjs`: valida cada diagrama con Archify (`showcase`) y congela sus rutas en `*.layout.json`. Correrlo después de tocar un JSON de arquitectura.
   - `measure-cases.ts`: Lighthouse.
 
 ## Reglas (no negociables)
@@ -53,21 +55,30 @@ Estado y reglas del sistema de "films de lanzamiento" del portfolio, para seguir
 
 ## Cómo verificar
 - `cd web && npm run test && npm run lint && npx tsc --noEmit && npm run build`
+  - `npm run test` corre todos los `src/**/*.test.ts` (el glob va entre comillas para que lo expanda Node; antes `sh` salteaba los tests anidados, como los de `data/films/`).
 - **En dev**, cada Player queda en `window.__films[kind]`. Por ejemplo, `window.__films.flagship.seekTo(900)` permite revisar cuadro por cuadro. Kinds: `opening`, `use-case`, `case`, `flagship`, `logo`.
 - **e2e:** `PLAYWRIGHT_BASE_URL=http://localhost:3000 npx playwright test --project chromium --grep "caso profundo|monograma|films interactivos|no fija el scroll"`
 - **Skills de Remotion:** no están en el repo (`.claude/` está en `.gitignore`). Se instalan con `npx skills add remotion-dev/skills --skill '*' --agent claude-code --copy -y` (`skills-lock.json` lista las versiones).
 - **Archify:** `npx skills add tt-a1i/archify`. Valida con `node <archify>/bin/archify.mjs validate architecture <json> --quality showcase --json`.
 
-## Feedback de Mario sobre New Brothers (a resolver)
-- **Solapes:** las líneas y los efectos no se pueden pisar entre sí ni con los textos (revisar notas de cámara, etiquetas del diagrama, carriles del chat y títulos sobre ventanas).
-- **Resolución:**
-  - Recapturar paneles con `deviceScaleFactor: 2` y JPEG de mayor calidad.
-  - Evitar zooms de cámara que amplíen la captura más allá de su resolución nativa (escala máxima ≈ resolución de captura / ancho de ventana).
-- **Menos ruido:** bajar la opacidad y la cantidad de `DustField` y reducir el brillo de las partículas una vez formado el logo.
-- **Personalidad por caso:** los films se parecen demasiado. Cada caso necesita un análisis profundo, estilo Archify (flujos, arquitectura, decisiones), y una estructura de escenas propia, no solo otra paleta.
+## Feedback de Mario sobre New Brothers
+- **Solapes (resuelto):**
+  - Notas de cámara: el rótulo vive en la barra de la ventana; sobre la captura solo queda el marco de la zona.
+  - Diagrama: rutas y placas de Archify; columnas separadas para que ninguna placa cruce un grupo; recorte con bordes suaves; leyenda fuera del dibujo.
+  - Chat del problema: las burbujas se achican en su lugar (dos líneas, sin cortar texto) y viajan de derecha a izquierda por columnas vacías.
+  - Asistente de reserva: la línea de progreso pasa por detrás de los pasos.
+  - Entre capturas del panel, empuje en vez de fundido (dos pantallas con texto nunca se superponen). Cada escena termina antes de que entre la siguiente.
+  - Títulos con aire respecto de las barras de cine; resultado en una sola columna (el dominio ya no pisa las cifras en 4:5).
+- **Resolución (parcial):**
+  - Hecho: `CameraReel` nunca amplía más allá de la resolución nativa; `NB_PANEL_CAPTURE` declara el tamaño real y un test lo compara con los JPEG.
+  - Hecho: `capture-panel-shots.ts` ya captura a `deviceScaleFactor: 2` y JPEG 92.
+  - **Pendiente:** recapturar. La red del entorno en la nube bloquea `nb-barber.vercel.app`. Correr localmente `npx tsx scripts/capture-panel-shots.ts new-brothers-barberia`, después `npx tsx scripts/build-film-backdrops.ts`, y subir `NB_PANEL_CAPTURE` a 2880×1800. El mismo guion de cámara se acerca más solo.
+- **Menos ruido (resuelto):** `DustField` con 56 motas y opacidad 0,2; el logo en partículas baja su brillo y su titileo una vez formado.
+- **Personalidad por caso:** sigue en pie para los próximos films (ver abajo).
+- **Conocido:** en 4:5 el diagrama de New Brothers se lee chico (el layout es horizontal). Una variante vertical del JSON resolvería eso.
 
 ## Siguiente trabajo
-1. **Refinar New Brothers** según el feedback de arriba.
+1. ~~Refinar New Brothers~~ (hecho, salvo recapturar a 2×).
 2. **Film insignia de Fénix** con `docs/films/dossiers/fenix.md` y el kit en `public/portfolio/brands/fenix-medical-center/`:
    - partículas del fénix sobre el corredor cinemático;
    - investigación (mecanismo HBOT, "la dosis es el claim");
