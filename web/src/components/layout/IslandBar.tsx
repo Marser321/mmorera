@@ -2,17 +2,16 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Home, Layers, Sparkles, Cpu, User, Briefcase, MessageCircle, Moon, Sun } from "lucide-react";
+import { Home, Layers, Sparkles, User, Briefcase, MessageCircle, Moon, Sun } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
 
 const NAV_ITEMS = [
   { id: "hero", icon: Home, es: "Inicio", en: "Home" },
   { id: "servicios", icon: Layers, es: "Servicios", en: "Services" },
-  { id: "orquestacion", icon: Sparkles, es: "Órbita", en: "Orbit" },
-  { id: "simulador", icon: Cpu, es: "Simulador", en: "Simulator" },
-  { id: "perfil", icon: User, es: "Perfil", en: "Profile" },
   { id: "proyectos", icon: Briefcase, es: "Casos", en: "Cases" },
+  { id: "orquestacion", icon: Sparkles, es: "Stack", en: "Stack" },
+  { id: "perfil", icon: User, es: "Perfil", en: "Profile" },
   { id: "contacto", icon: MessageCircle, es: "Contacto", en: "Contact" },
 ];
 

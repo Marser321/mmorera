@@ -43,6 +43,9 @@ export function CaseBento({
                 // Sin destacada, si sobra una sola tarjeta en la última fila
                 // se ensancha en vez de quedar huérfana.
                 wide: !featureFirst && projects.length % 3 === 1 && index === projects.length - 1,
+                // Con destacada (4 celdas en desktop), si la última fila queda
+                // con un hueco, la última tarjeta lo cubre solo en desktop.
+                wideLg: featureFirst && (projects.length + 3) % 3 === 2 && index === projects.length - 1,
                 footer: project.year ?? project.client?.[language],
             })),
         [projects, language, theme, featureFirst],

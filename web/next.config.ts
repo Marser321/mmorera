@@ -1,6 +1,12 @@
 import type { NextConfig } from "next";
+import { PHASE_DEVELOPMENT_SERVER } from "next/constants";
 
-const nextConfig: NextConfig = {
+// Herramientas internas (Radar/Backstage de contenido, portfolio-preview) viven
+// en archivos `*.dev.tsx`: solo existen con `next dev`, nunca en el build público.
+const PAGE_EXTENSIONS = ["tsx", "ts", "jsx", "js"];
+
+const createConfig = (phase: string): NextConfig => ({
+  pageExtensions: phase === PHASE_DEVELOPMENT_SERVER ? ["dev.tsx", ...PAGE_EXTENSIONS] : PAGE_EXTENSIONS,
   serverExternalPackages: ['@insforge/sdk', '@insforge/shared-schemas'],
   allowedDevOrigins: ['127.0.0.1'],
   images: {
@@ -23,6 +29,6 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-};
+});
 
-export default nextConfig;
+export default createConfig;

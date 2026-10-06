@@ -66,8 +66,8 @@ export const OMNICHANNEL_LEADS: OmnichannelLead[] = [
         id: "m-1",
         sender: "customer",
         text: {
-          es: "Hola, vi tu caso de estudio de AD Media y me interesa implementar el mismo sistema para nuestros brokers.",
-          en: "Hi, I saw your AD Media case study and want to deploy the same system for our brokers.",
+          es: "Hola, vi tu web y me interesa implementar un sistema así para nuestros brokers.",
+          en: "Hi, I saw your website and want to deploy a system like this for our brokers.",
         },
         timestamp: "10:14 AM",
       },
@@ -75,8 +75,8 @@ export const OMNICHANNEL_LEADS: OmnichannelLead[] = [
         id: "m-2",
         sender: "ai_agent",
         text: {
-          es: "¡Hola Carlos! Un gusto. En AD Media logramos respuesta sub-30s y +65% de agendas. ¿Cuántos leads promedio reciben por mes?",
-          en: "Hi Carlos! Great to connect. In AD Media we achieved sub-30s speed and +65% bookings. How many monthly leads do you average?",
+          es: "¡Hola Carlos! Un gusto. Con este flujo cada lead recibe respuesta en menos de 30 segundos. ¿Cuántos leads promedio reciben por mes?",
+          en: "Hi Carlos! Great to connect. With this flow every lead gets a reply in under 30 seconds. How many monthly leads do you average?",
         },
         timestamp: "10:14 AM",
       },

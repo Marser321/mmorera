@@ -33,6 +33,8 @@ export interface BentoItem {
     featured?: boolean;
     /** Ocupa 2 columnas × 1 fila: sirve para cerrar una fila huérfana. */
     wide?: boolean;
+    /** Como `wide`, pero solo en la grilla de 3 columnas (desktop). */
+    wideLg?: boolean;
     /** Línea de pie (cliente, año, etc.). */
     footer?: string;
     /** Chips de tecnologías/herramientas asociadas. */
@@ -375,6 +377,7 @@ function BentoCard({
         enableBorderGlow && "bento-ring",
         item.featured && "sm:col-span-2 lg:row-span-2",
         item.wide && !item.featured && "sm:col-span-2",
+        item.wideLg && !item.featured && !item.wide && "lg:col-span-2",
         item.href &&
         "transition-colors hover:border-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring light:hover:border-[rgb(var(--ink-rgb)/0.25)]",
     );

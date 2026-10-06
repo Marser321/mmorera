@@ -11,12 +11,12 @@ import { useTheme } from "@/context/ThemeContext";
 
 const labels = {
   es: {
-    work: "Trabajo", systems: "Sistemas", studio: "Estudio", radar: "Radar", profile: "Perfil",
+    work: "Trabajo", systems: "Sistemas", studio: "Estudio", profile: "Perfil",
     cta: "Hablemos", menu: "Abrir menú", close: "Cerrar menú", utility: "Abrir utilidades",
     toLight: "Cambiar a modo claro", toDark: "Cambiar a modo oscuro", language: "Idioma", theme: "Tema",
   },
   en: {
-    work: "Work", systems: "Systems", studio: "Studio", radar: "Radar", profile: "Profile",
+    work: "Work", systems: "Systems", studio: "Studio", profile: "Profile",
     cta: "Let’s talk", menu: "Open menu", close: "Close menu", utility: "Open utilities",
     toLight: "Switch to light mode", toDark: "Switch to dark mode", language: "Language", theme: "Theme",
   },
@@ -39,9 +39,8 @@ export function Navbar() {
     { label: copy.systems, href: localePath(language, "/sistemas") },
     { label: copy.studio, href: localePath(language, "/estudio") },
   ];
-  const radarLink = { label: copy.radar, href: localePath(language, "/radar") };
   const profileLink = { label: copy.profile, href: `${localePath(language, "/")}#perfil` };
-  const mobileLinks = [...primaryLinks, radarLink, profileLink];
+  const mobileLinks = [...primaryLinks, profileLink];
 
   useEffect(() => {
     if (!mobileOpen) return;
@@ -125,7 +124,6 @@ export function Navbar() {
             {utilityOpen && (
               <div id="desktop-utility-menu" className="absolute right-0 top-12 w-64 rounded-2xl border border-white/12 bg-popover p-2 text-popover-foreground shadow-[0_24px_64px_rgba(0,0,0,.32)] light:border-[rgb(var(--ink-rgb)/0.12)]">
                 <Link href={profileLink.href} onClick={() => setUtilityOpen(false)} className="flex rounded-xl px-3 py-3 text-sm transition-colors hover:bg-white/[.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring light:hover:bg-[rgb(var(--ink-rgb)/0.06)]">{profileLink.label}</Link>
-                <Link href={radarLink.href} onClick={() => setUtilityOpen(false)} className="flex rounded-xl px-3 py-3 text-sm transition-colors hover:bg-white/[.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring light:hover:bg-[rgb(var(--ink-rgb)/0.06)]">{radarLink.label}</Link>
                 <div className="my-2 h-px bg-white/10 light:bg-[rgb(var(--ink-rgb)/0.1)]" />
                 <div className="flex items-center justify-between gap-4 px-3 py-2">
                   <span className="font-mono text-[9px] uppercase tracking-[.16em] text-foreground/42">{copy.language}</span>

@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowDownRight, ArrowUpRight, MessageCircle, CheckCircle2, Shield, Zap } from "lucide-react";
+import { ArrowUpRight, MessageCircle } from "lucide-react";
 import { localePath } from "@/config/site";
 import { useLanguage } from "@/context/LanguageContext";
 import { DURATION, EASE_OUT } from "@/lib/motion";
@@ -15,11 +15,8 @@ import { Reveal } from "@/components/scroll/Reveal";
 import { CaseBento } from "@/components/premium/CaseBento";
 import { FEATURED_CASES } from "@/data/projectCases";
 import { ServicesSection } from "@/components/premium/home/ServicesSection";
-import { IntegralValueSection } from "@/components/premium/home/IntegralValueSection";
-import { PipelineSimulatorSection } from "@/components/premium/home/PipelineSimulatorSection";
 import { OrchestrationWheelSection } from "@/components/premium/home/OrchestrationWheelSection";
 import { WorkflowSection } from "@/components/premium/home/WorkflowSection";
-import { TransformationDiffViewer } from "@/components/premium/home/TransformationDiffViewer";
 import { IslandBar } from "@/components/layout/IslandBar";
 import { AplicarOS } from "@/components/portfolio-isolated/AplicarOS";
 import { BackgroundVideo } from "@/components/shared/BackgroundVideo";
@@ -31,42 +28,34 @@ const copy = {
   es: {
     eyebrow: "Mario Morera · Creative Technologist & Systems Builder",
     title: "Todo tu ecosistema digital, resuelto por una sola persona.",
-    intro: "Diseño web de alto impacto en Next.js, sistemas de automatización con IA y CRM a medida. Sin intermediarios, sin burocracia y orientado a resultados medibles.",
-    viewWork: "Ver Proyectos",
+    intro: "Webs que venden, reservas y cobros automáticos, CRM e inteligencia artificial aplicada. Diseño y desarrollo de punta a punta, sin intermediarios.",
+    services: ["Webs & E-commerce", "Reservas & Cobros", "CRM & Automatización", "IA a medida"],
     talkWhatsapp: "Hablar por WhatsApp",
     startProject: "Iniciar Proyecto",
-    archiveEyebrow: "Portafolio & Evidencia Viva",
-    archiveTitle: "Casos de Estudio & Proyectos en Producción",
-    archiveBody: "Sistemas reales operando hoy. Hacé clic para abrir la web en vivo y ver el desglose técnico de cada solución.",
-    archiveCta: "Explorar todos los casos",
+    archiveEyebrow: "Proyectos",
+    archiveTitle: "Trabajo real, en producción.",
+    archiveBody: "Sitios y sistemas operando hoy. Abrí cada caso para verlo en vivo.",
+    archiveCta: "Ver todos los casos",
     contactEyebrow: "Contacto Directo",
     contactTitle: "¿Qué querés construir o automatizar?",
-    contactBody: "Completá el formulario en 2 minutos para evaluar tu caso o escribime directo por WhatsApp para una respuesta inmediata.",
-    badges: [
-      { icon: Zap, text: "95+ Google PageSpeed" },
-      { icon: Shield, text: "Código Propio en Next.js 16" },
-      { icon: CheckCircle2, text: "Sprints de 1 a 3 semanas" },
-    ],
+    contactBody: "Completá el brief en 2 minutos o escribime directo por WhatsApp.",
+    capacity: "Cupos limitados · 4 a 5 proyectos por trimestre",
   },
   en: {
     eyebrow: "Mario Morera · Creative Technologist & Systems Builder",
     title: "Your entire digital ecosystem, engineered by one person.",
-    intro: "High-performance Next.js web development, custom CRM and AI automation workflows. Zero intermediaries, zero bureaucracy, built for real business outcomes.",
-    viewWork: "View Projects",
+    intro: "Websites that sell, automated bookings and payments, CRM and applied AI. Design and development end to end, with no intermediaries.",
+    services: ["Websites & E-commerce", "Bookings & Payments", "CRM & Automation", "Custom AI"],
     talkWhatsapp: "Chat on WhatsApp",
     startProject: "Start Project",
-    archiveEyebrow: "Portfolio & Live Evidence",
-    archiveTitle: "Case Studies & Live Production Deployments",
-    archiveBody: "Real systems operating in production today. Click to explore the live website and technical breakdown of each solution.",
-    archiveCta: "Explore all cases",
+    archiveEyebrow: "Projects",
+    archiveTitle: "Real work, in production.",
+    archiveBody: "Sites and systems running today. Open each case to see it live.",
+    archiveCta: "See all cases",
     contactEyebrow: "Direct Contact",
     contactTitle: "What do you want to build or automate?",
-    contactBody: "Fill out the 2-minute brief to evaluate your setup or text me directly on WhatsApp for an express response.",
-    badges: [
-      { icon: Zap, text: "95+ Google PageSpeed" },
-      { icon: Shield, text: "Custom Next.js 16 Codebase" },
-      { icon: CheckCircle2, text: "1 to 3 Week Sprints" },
-    ],
+    contactBody: "Fill out the 2-minute brief or message me directly on WhatsApp.",
+    capacity: "Limited spots · 4 to 5 projects per quarter",
   },
 };
 
@@ -152,23 +141,25 @@ export function HomeExperience({
               {c.intro}
             </motion.p>
 
-            {/* Badges Rápidos */}
-            <motion.div
+            {/* Servicios en una línea */}
+            <motion.ul
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: DURATION.base, ease: EASE_OUT, delay: 0.45 }}
-              className="mt-6 flex flex-wrap gap-4 pt-2 border-t border-white/8 light:border-[rgb(var(--ink-rgb)/0.08)]"
+              className="mt-6 flex flex-wrap gap-2"
             >
-              {c.badges.map((b, idx) => {
-                const Icon = b.icon;
-                return (
-                  <div key={idx} className="flex items-center gap-2 text-xs font-mono text-foreground/60">
-                    <Icon className="h-3.5 w-3.5 text-signal" />
-                    <span>{b.text}</span>
-                  </div>
-                );
-              })}
-            </motion.div>
+              {c.services.map((service) => (
+                <li key={service}>
+                  <a
+                    href="#servicios"
+                    className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-card/50 px-3.5 py-1.5 text-xs font-medium text-foreground/75 backdrop-blur-md transition-colors hover:border-signal/40 hover:text-foreground light:border-[rgb(var(--ink-rgb)/0.1)]"
+                  >
+                    <span className="h-1.5 w-1.5 rounded-full bg-signal" />
+                    {service}
+                  </a>
+                </li>
+              ))}
+            </motion.ul>
 
             {/* Action Buttons */}
             <motion.div
@@ -179,11 +170,11 @@ export function HomeExperience({
             >
               <Magnetic>
                 <a
-                  href="#proyectos"
+                  href="#contacto"
                   className="pressable inline-flex items-center gap-2.5 rounded-full bg-foreground px-6 py-3.5 text-sm font-semibold text-background transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
-                  {c.viewWork}
-                  <ArrowDownRight className="h-4 w-4" />
+                  {c.startProject}
+                  <ArrowUpRight className="h-4 w-4" />
                 </a>
               </Magnetic>
 
@@ -198,45 +189,15 @@ export function HomeExperience({
                   {c.talkWhatsapp}
                 </a>
               </Magnetic>
-
-              <Magnetic>
-                <a
-                  href="#contacto"
-                  className="pressable inline-flex items-center gap-2 rounded-full border border-white/14 bg-background/50 px-5 py-3.5 text-sm font-medium text-foreground/80 transition-colors hover:border-white/30 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground light:border-[rgb(var(--ink-rgb)/0.14)]"
-                >
-                  {c.startProject}
-                  <ArrowUpRight className="h-4 w-4" />
-                </a>
-              </Magnetic>
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* ─── 2. SERVICIOS Y SOLUCIONES (Cards limpias estilo AD Media) ─── */}
+      {/* ─── 2. SERVICIOS Y SOLUCIONES (4 servicios claros) ─── */}
       <ServicesSection />
 
-      {/* ─── 3. LA RUEDA INTERACTIVA DE ORQUESTACIÓN (Menú con atmósfera reactiva) ─── */}
-      <OrchestrationWheelSection />
-
-      {/* ─── 4. EL OPERADOR INTEGRAL & CAPACIDAD EXCLUSIVA ─── */}
-      <IntegralValueSection />
-
-      {/* ─── 4.1 SANDBOX TÁCTIL B2B: SIMULADOR DE PIPELINE & TELEMETRÍA ─── */}
-      <PipelineSimulatorSection />
-
-      {/* ─── 5. PERFIL & FILOSOFÍA (Cinemática interactiva) ─── */}
-      <div id="perfil" className="scroll-mt-20">
-        <AuthorManifestoScene
-          language={language}
-          copy={authorManifestoCopy[language]}
-        />
-      </div>
-
-      {/* ─── 6. BLUEPRINT DE METODOLOGÍA (4 Fases claras) ─── */}
-      <WorkflowSection />
-
-      {/* ─── 8. CATÁLOGO DE CASOS REALES (Bento de proyectos en producción) ─── */}
+      {/* ─── 3. PROYECTOS EN PRODUCCIÓN (Bento de casos destacados) ─── */}
       <section id="proyectos" className="scroll-mt-20 bg-background px-5 py-20 sm:px-8 sm:py-28 lg:px-12 border-t border-white/10 light:border-[rgb(var(--ink-rgb)/0.1)]">
         <div className="mx-auto max-w-[1480px]">
           <div className="grid gap-6 py-8 md:grid-cols-[.4fr_1.6fr] md:items-end md:py-12">
@@ -260,18 +221,27 @@ export function HomeExperience({
             </div>
           </div>
 
-          {/* Inspector Interactivo de Transformación Operativa Antes vs Después */}
-          <Reveal y={20}>
-            <TransformationDiffViewer />
-          </Reveal>
-
           <Reveal y={24}>
-            <CaseBento projects={FEATURED_CASES} featureFirst className="pt-6 pb-12" />
+            <CaseBento projects={FEATURED_CASES} featureFirst className="pb-4" />
           </Reveal>
         </div>
       </section>
 
-      {/* ─── 9. CONTACTO DIRECTO & FORMULARIO INTERACTIVO ─── */}
+      {/* ─── 4. LA RUEDA INTERACTIVA DE ORQUESTACIÓN (Stack conectado) ─── */}
+      <OrchestrationWheelSection />
+
+      {/* ─── 5. PERFIL & FILOSOFÍA (Cinemática interactiva) ─── */}
+      <div id="perfil" className="scroll-mt-20">
+        <AuthorManifestoScene
+          language={language}
+          copy={authorManifestoCopy[language]}
+        />
+      </div>
+
+      {/* ─── 6. METODOLOGÍA (4 fases claras) ─── */}
+      <WorkflowSection />
+
+      {/* ─── 7. CONTACTO DIRECTO & FORMULARIO INTERACTIVO ─── */}
       <section id="contacto" className="scroll-mt-20 relative isolate overflow-hidden border-t border-white/10 bg-card/40 px-5 py-20 sm:px-8 sm:py-28 lg:px-12 light:border-[rgb(var(--ink-rgb)/0.1)] light:bg-card/20">
         <MotionBackdrop asset={MOTION_ASSETS.opening} intensity={0.28} scrim="center" />
         <div className="relative z-10 mx-auto max-w-3xl text-center">
@@ -286,6 +256,9 @@ export function HomeExperience({
           <Reveal as="p" className="mx-auto mt-4 max-w-xl text-sm sm:text-base leading-relaxed text-foreground/60">
             {c.contactBody}
           </Reveal>
+          <Reveal as="p" className="mt-5 inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3.5 py-1 font-mono text-[11px] text-amber-400">
+            {c.capacity}
+          </Reveal>
         </div>
 
         {/* Embedded Brief Form */}
@@ -294,7 +267,7 @@ export function HomeExperience({
         </div>
       </section>
 
-      {/* ─── 8. ISLAND BAR (Barra flotante inferior de acceso rápido) ─── */}
+      {/* ─── ISLAND BAR (Barra flotante inferior de acceso rápido) ─── */}
       <IslandBar />
     </main>
   );

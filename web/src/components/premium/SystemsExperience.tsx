@@ -12,7 +12,6 @@ import { DecodeText } from "@/components/motion/DecodeText";
 import { TickerNumber } from "@/components/motion/TickerNumber";
 
 import { OmnichannelInboxSimulator } from "@/components/premium/systems/OmnichannelInboxSimulator";
-import { LiveAutomationPipelinePlayground } from "@/components/premium/systems/LiveAutomationPipelinePlayground";
 
 const stages = [
   { id: "capture", title: { es: "Captación", en: "Acquisition" }, text: { es: "Formularios, pauta, WhatsApp y fuentes que ya existen.", en: "Forms, paid media, WhatsApp and the sources already in use." } },
@@ -206,43 +205,6 @@ export function SystemsExperience() {
 
       {/* ─── 01.5 BANDEJA OMNICANAL & SPEED-TO-LEAD EN TIEMPO REAL ─── */}
       <OmnichannelInboxSimulator />
-
-      {/* ─── 01.6 PIPELINE DE AUTOMATIZACIÓN & WEBHOOKS EN VIVO ─── */}
-      <LiveAutomationPipelinePlayground />
-
-      {/* ─── 01.9 ENLACE AL RADAR DE INTELIGENCIA TECNOLÓGICA ─── */}
-      <section className="px-5 py-12 sm:px-8 lg:px-12">
-        <div className="mx-auto max-w-[1480px] rounded-3xl border border-white/10 bg-gradient-to-r from-card/80 via-background to-card/60 p-8 sm:p-12 backdrop-blur-xl light:border-[rgb(var(--ink-rgb)/0.1)]">
-          <div className="grid gap-6 md:grid-cols-[1.5fr_1fr] md:items-center">
-            <div>
-              <p className="font-mono text-[10px] uppercase tracking-[.18em] text-accent">
-                {isEs ? "Telemetría & Modelos" : "Telemetry & Models"}
-              </p>
-              <h3 className="mt-3 text-2xl font-medium tracking-tight text-foreground sm:text-3xl">
-                {isEs
-                  ? "Radar de Inteligencia Tecnológica en Vivo"
-                  : "Live Technology Intelligence Radar"}
-              </h3>
-              <p className="mt-3 max-w-xl text-sm leading-relaxed text-foreground/60">
-                {isEs
-                  ? "Monitoreo en tiempo real del estado de WhatsApp API, latencia de LLMs (Claude 3.5 Sonnet, GPT-4o, DeepSeek, Gemini), CRMs y blueprints de arquitectura."
-                  : "Real-time health monitoring of WhatsApp API, LLM inference latency (Claude 3.5 Sonnet, GPT-4o, DeepSeek, Gemini), CRMs and architecture blueprints."}
-              </p>
-            </div>
-            <div className="md:justify-self-end">
-              <Link
-                href={localePath(language, "/radar")}
-                className="group inline-flex items-center gap-2.5 rounded-full border border-white/20 bg-foreground/5 px-6 py-3.5 text-sm font-semibold text-foreground backdrop-blur-md transition-all hover:border-signal/50 hover:bg-signal/10 hover:text-signal"
-              >
-                <span>{isEs ? "Explorar Radar & Backstage" : "Explore Radar & Backstage"}</span>
-                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-
 
       <section className="px-5 pt-4 sm:px-8 lg:px-12">
         <div className="mx-auto grid max-w-[1480px] gap-8 border-y border-white/10 light:border-[rgb(var(--ink-rgb)/0.1)] py-10 md:grid-cols-[1fr_auto] md:items-center md:py-14"><h2 className="max-w-4xl text-[clamp(2.4rem,4.5vw,5rem)] font-medium leading-[.98] tracking-[-.05em] text-foreground">{isEs ? "El sistema correcto se nota porque el trabajo deja de romperse entre herramientas." : "The right system is visible when work stops breaking between tools."}</h2><Link href={localePath(language, "/aplicar")} className="inline-flex items-center gap-2 text-sm text-foreground md:justify-self-end">{isEs ? "Revisar un flujo" : "Review a workflow"}<ArrowUpRight className="h-4 w-4" /></Link></div>

@@ -7,10 +7,8 @@ export const metadata: Metadata = {
   title: "Tech Intelligence Radar & Backstage Studio | Mario Morera",
   description:
     "Live ecosystem intelligence for WhatsApp API, LLMs (Claude, GPT-4o, Gemini, DeepSeek), CRMs, and anti-dispersion video recording blueprints.",
-  alternates: {
-    canonical: "/en/radar",
-    languages: { es: "/radar", en: "/en/radar" },
-  },
+  // Herramienta interna (solo `next dev`): nunca indexable.
+  robots: { index: false, follow: false },
 };
 
 export default function EnglishRadarPage() {

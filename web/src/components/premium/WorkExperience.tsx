@@ -4,8 +4,6 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { WorkReel } from "./WorkReel";
 import { CaseBento } from "./CaseBento";
-import { LighthouseBenchmarkArena } from "@/components/premium/work/LighthouseBenchmarkArena";
-import { CaseSolutionMatcher } from "@/components/premium/work/CaseSolutionMatcher";
 import { ARCHIVE_CASES, FEATURED_CASES } from "@/data/projectCases";
 import { useLanguage } from "@/context/LanguageContext";
 import { localePath } from "@/config/site";
@@ -17,7 +15,7 @@ import { ScrollProgressBar } from "@/components/scroll/ScrollProgressBar";
 
 /**
  * WorkExperience — /casos-de-exito: header compacto, reel cinematográfico de
- * los seis destacados y archivo del resto. Framing: demos de capacidad, no
+ * los destacados y archivo del resto. Framing: demos de capacidad, no
  * vitrinas infladas.
  */
 export function WorkExperience() {
@@ -53,12 +51,6 @@ export function WorkExperience() {
 
       {/* Reel cinematográfico (full-bleed) */}
       <WorkReel projects={FEATURED_CASES} />
-
-      {/* Arena de Rendimiento & Auditoría de Velocidad B2B */}
-      <LighthouseBenchmarkArena />
-
-      {/* Matriz Táctil de Casos por Industria & Solución */}
-      <CaseSolutionMatcher />
 
       {/* Archivo de Proyectos & Sistemas */}
       <section className="mx-auto w-full max-w-[1480px] px-5 pt-16 sm:px-8 sm:pt-24 lg:px-12" aria-labelledby="archive-work">

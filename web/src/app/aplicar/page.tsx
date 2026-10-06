@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { AplicarOS } from "@/components/portfolio-isolated/AplicarOS";
-import { InteractiveWhatsAppScopeStudio } from "@/components/premium/application/InteractiveWhatsAppScopeStudio";
 import { SITE_IDENTITY } from "@/config/site";
 import { MotionBackdrop } from "@/components/shared/MotionBackdrop";
 import { MOTION_ASSETS } from "@/data/motionAssets";
@@ -34,9 +33,6 @@ export default function ApplicationPage() {
           Tres pasos. Contexto suficiente para entender el proyecto y responder con criterio.
         </p>
       </header>
-      <div className="mx-auto max-w-[1180px]">
-        <InteractiveWhatsAppScopeStudio />
-      </div>
       <div id="brief-form">
         <AplicarOS />
       </div>
