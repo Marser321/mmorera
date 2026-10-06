@@ -42,16 +42,16 @@ export const SERVICE_SOLUTIONS: ServiceSolution[] = [
     id: "booking-payments",
     tag: t("Operación Autoservicio", "Self-Service Operations"),
     title: t("Sistemas de Reserva, Cobros & WhatsApp", "Booking, Payment & WhatsApp Systems"),
-    headline: t("Tus clientes reservan y pagan su seña solos, sin llamadas ni pérdidas de tiempo.", "Clients book and pay deposits on their own, no phone calls or back-and-forth."),
+    headline: t("Tus clientes reservan solos y tu negocio se ordena en un panel propio.", "Clients book on their own and your business runs from its own panel."),
     description: t(
-      "Flujos interactivos de contratación donde el cliente elige el servicio, confirma disponibilidad, abona la seña con tarjeta y recibe su confirmación automática por WhatsApp.",
-      "Interactive booking flows where customers choose services, check availability, pay deposits, and receive instant WhatsApp notifications."
+      "Reserva online paso a paso, agenda sin solapes, ficha de cliente, cobro y cierre de caja, y contacto por WhatsApp desde el mismo sistema. Si el negocio necesita cobrar online, se integra la pasarela.",
+      "Step-by-step online booking, no double booking, client files, checkout and cash close, and WhatsApp contact from the same system. If the business needs online payments, the gateway is integrated."
     ),
     deliverables: [
-      t("Calendario de disponibilidad en tiempo real", "Real-time calendar & availability management"),
-      t("Cobro de señas automáticas (Stripe / pasarelas)", "Automated deposit checkout (Stripe / local gateways)"),
-      t("Notificaciones y recordatorios por WhatsApp API", "Instant WhatsApp API reminders & confirmations"),
-      t("Reducción de cancelaciones de último momento", "Significant reduction in no-shows and cancellations"),
+      t("Reserva online y agenda sin solapes", "Online booking with no double booking"),
+      t("Cobro en mostrador, caja y cierre diario", "Counter checkout, cash register and daily close"),
+      t("Ficha de cliente, historial y reactivación por WhatsApp", "Client files, history and WhatsApp reactivation"),
+      t("Pasarela de pago online cuando hace falta (Stripe / Mercado Pago)", "Online payment gateway when needed (Stripe / Mercado Pago)"),
     ],
     idealFor: t(
       "Barberías, clínicas, detailing, consultorios y negocios de servicios con agenda activa.",

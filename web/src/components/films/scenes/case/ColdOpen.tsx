@@ -48,7 +48,7 @@ export function ColdOpen({ script, language, portrait, width, height, duration }
         }}
       />
 
-      <div style={{ position: "absolute", left: 0, right: 0, top: height * 0.56 - titleSize * 1.12, textAlign: "center", fontFamily: FILM_FONTS.body, fontSize: titleSize, fontWeight: 500, letterSpacing: "-0.065em", lineHeight: 1, whiteSpace: "nowrap", color: FILM_COLORS.fg }}>
+      <div style={{ position: "absolute", left: 0, right: 0, top: height * 0.56 - titleSize * 1.12, textAlign: "center", fontFamily: FILM_FONTS.display, fontSize: titleSize, fontWeight: 500, letterSpacing: "-0.065em", lineHeight: 1, whiteSpace: "nowrap", color: FILM_COLORS.fg }}>
         {title.split("").map((char, index) => (
           <span key={`${char}-${index}`} style={{ display: "inline-block", overflow: "hidden", verticalAlign: "top", paddingBottom: "0.1em" }}>
             <span style={{ display: "inline-block", whiteSpace: "pre", translate: `0 ${interpolate(frame, [26 + index * 2, 26 + index * 2 + 32], [110, 0], { ...CLAMP, easing: EASE_OUT })}%` }}>{char}</span>

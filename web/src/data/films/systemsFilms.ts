@@ -80,73 +80,83 @@ export function scenarioTotalMs(id: PipelineScenarioId): number {
   return PIPELINE_SCENARIOS.find((item) => item.id === id)?.totalDurationMs ?? 0;
 }
 
-const bookingDeposit: UseCaseFilmScript = {
-  id: "booking-deposit",
+/* Fuente: D:\Barberia (nb-barber). Wizard de 6 pasos en src/app/(main)/reservar,
+   26 tablas y funciones en supabase/migrations/999_FULL_SETUP.sql, 14 secciones
+   en src/app/admin/layout.tsx. Sin pasarela de pago ni recordatorios
+   automáticos: el cobro se registra en mostrador (POS) y WhatsApp es click-to-chat. */
+const barberCrm: UseCaseFilmScript = {
+  id: "barber-crm",
   kind: "real",
   caseSlug: "new-brothers-barberia",
   caseTitle: { es: "New Brothers Barbería", en: "New Brothers Barbershop" },
-  category: { es: "Automatización", en: "Automation" },
-  title: { es: "Reserva con seña, sin idas y vueltas", en: "Booking with a deposit, no back-and-forth" },
+  category: { es: "CRM propio", en: "Own CRM" },
+  title: { es: "Un CRM propio para una barbería", en: "Its own CRM for a barbershop" },
   problem: {
-    headline: { es: "Reservar era una conversación.", en: "Booking used to be a conversation." },
+    headline: { es: "Toda la operación pasaba por mensajes sueltos.", en: "The whole operation ran on loose messages." },
     visual: "chat",
     signals: [
       { es: "¿Hay lugar el sábado?", en: "Any slot on Saturday?" },
       { es: "¿Con qué barbero?", en: "Which barber?" },
-      { es: "¿Me confirmás el horario?", en: "Can you confirm the time?" },
-      { es: "¿Cómo pago la seña?", en: "How do I pay the deposit?" },
-      { es: "¿Sigue en pie?", en: "Is it still on?" },
+      { es: "¿Cuánto se cobró hoy?", en: "How much came in today?" },
+      { es: "¿Cuánto le toca a cada barbero?", en: "What does each barber get?" },
+      { es: "¿Cuándo vino por última vez?", en: "When did they last come in?" },
     ],
   },
   diagnosis: {
-    headline: { es: "Disponibilidad, confirmación y seña vivían en el mismo chat.", en: "Availability, confirmation and deposit lived in the same chat." },
-    breakpoint: { es: "Tres decisiones mezcladas en un solo hilo.", en: "Three decisions mixed into one thread." },
+    headline: { es: "Agenda, caja y clientes vivían en lugares distintos.", en: "Schedule, cash and clients lived in different places." },
+    breakpoint: { es: "Nadie veía el negocio completo.", en: "Nobody saw the whole business." },
     lanes: [
-      { label: { es: "Disponibilidad", en: "Availability" }, signals: [0, 1] },
-      { label: { es: "Confirmación", en: "Confirmation" }, signals: [2, 4] },
-      { label: { es: "Seña", en: "Deposit" }, signals: [3] },
+      { label: { es: "Agenda", en: "Schedule" }, signals: [0, 1] },
+      { label: { es: "Caja", en: "Cash" }, signals: [2, 3] },
+      { label: { es: "Clientes", en: "Clients" }, signals: [4] },
     ],
   },
   stages: [
     {
-      id: "selector",
-      title: { es: "Barbero y servicio", en: "Barber and service" },
-      technology: "Next.js · PWA",
-      summary: { es: "Una decisión por paso, pensada para el teléfono.", en: "One decision per step, designed for mobile." },
+      id: "booking-wizard",
+      title: { es: "Reserva en 6 pasos", en: "6-step booking" },
+      technology: "Next.js · wizard",
+      summary: { es: "Sucursal, servicio, referencia, barbero, fecha y hora, confirmar.", en: "Branch, service, reference, barber, date and time, confirm." },
     },
     {
-      id: "slot-lock",
-      title: { es: "Turno bloqueado", en: "Slot on hold" },
-      technology: "PostgreSQL · row lock",
-      summary: { es: "El turno queda reservado mientras se paga: nadie más lo puede tomar.", en: "The slot is held while paying: nobody else can take it." },
+      id: "no-overlap",
+      title: { es: "Agenda sin solapes", en: "No double booking" },
+      technology: "Supabase · book_appointment",
+      summary: { es: "La reserva se valida en la base con bloqueo de fila: nadie toma el mismo turno.", en: "Booking is validated in the database with a row lock: nobody takes the same slot." },
     },
     {
-      id: "deposit",
-      title: { es: "Seña confirmada", en: "Deposit confirmed" },
-      technology: "Stripe · webhook",
-      summary: { es: "El webhook confirma el pago y cambia el estado de la reserva.", en: "The webhook confirms the payment and updates the booking state." },
+      id: "client-file",
+      title: { es: "Ficha del cliente", en: "Client file" },
+      technology: "PostgreSQL · haircut_history",
+      summary: { es: "Historial de cortes, notas y última visita de cada cliente.", en: "Haircut history, notes and last visit for every client." },
     },
     {
-      id: "reminder",
-      title: { es: "Recordatorio", en: "Reminder" },
-      technology: "Cron · WhatsApp",
-      summary: { es: "Aviso previo con ubicación y opción de reagendar.", en: "Advance notice with location and a reschedule option." },
+      id: "cash-payouts",
+      title: { es: "Caja y liquidaciones", en: "Cash and payouts" },
+      technology: "POS · close_cash_day",
+      summary: { es: "Cobro en mostrador, cierre diario y liquidación de cada barbero.", en: "Counter checkout, daily close and each barber's payout." },
+    },
+    {
+      id: "reactivation",
+      title: { es: "Reactivación", en: "Reactivation" },
+      technology: "Edge function · WhatsApp",
+      summary: { es: "Detecta clientes inactivos y deja listo el mensaje para volver a contactarlos.", en: "Finds inactive clients and prepares the message to reach them again." },
     },
   ],
   result: {
-    headline: { es: "La reserva se vuelve autoservicio y deja claro qué está confirmado.", en: "Booking becomes self-service and makes clear what is confirmed." },
+    headline: { es: "La barbería se gestiona desde su propio panel, sin depender de un CRM externo.", en: "The barbershop runs from its own panel, without depending on an external CRM." },
     facts: [
-      { value: { es: "1", en: "1" }, label: { es: "decisión por paso", en: "decision per step" } },
-      { value: { es: "Seña", en: "Deposit" }, label: { es: "antes de ocupar la silla", en: "before the chair is taken" } },
-      { value: { es: "Estado", en: "State" }, label: { es: "explícito en cada cambio", en: "explicit at every change" } },
+      { value: { es: "6", en: "6" }, label: { es: "pasos de reserva", en: "booking steps" } },
+      { value: { es: "26", en: "26" }, label: { es: "tablas propias", en: "own tables" } },
+      { value: { es: "4", en: "4" }, label: { es: "roles con permisos", en: "roles with permissions" } },
     ],
     screenshot: "/portfolio/shots/new-brothers-barberia-mobile-1.jpg",
   },
   chapters: buildChapters({
-    problem: { es: "Cada reserva arrancaba con un ida y vuelta por chat: horario, barbero, confirmación y seña.", en: "Every booking started with back-and-forth chat: time, barber, confirmation and deposit." },
-    diagnosis: { es: "El problema no era el chat: eran tres decisiones distintas mezcladas en un mismo hilo.", en: "The chat was not the problem: three different decisions were mixed in one thread." },
-    system: { es: "Separé el recorrido en pasos: elegir, bloquear el turno, pagar la seña y recibir el recordatorio.", en: "I split the journey into steps: choose, hold the slot, pay the deposit and get the reminder." },
-    result: { es: "La reserva se vuelve autoservicio y deja claro qué está confirmado y qué falta.", en: "Booking becomes self-service and clearly shows what is confirmed and what remains." },
+    problem: { es: "Reservas, cobros y clientes se resolvían por mensajes sueltos y anotaciones aparte.", en: "Bookings, payments and clients were handled through loose messages and separate notes." },
+    diagnosis: { es: "El problema no era el canal: agenda, caja y clientes vivían en lugares distintos y nadie veía el negocio completo.", en: "The channel was not the problem: schedule, cash and clients lived apart and nobody saw the whole business." },
+    system: { es: "Un CRM propio sobre Supabase: reserva en seis pasos, agenda sin solapes, ficha de cliente, caja con cierre diario, liquidaciones y reactivación de inactivos.", en: "Its own CRM on Supabase: six-step booking, no double booking, client file, cash with daily close, payouts and inactive-client reactivation." },
+    result: { es: "La reserva se vuelve autoservicio y el negocio se gestiona desde un solo panel, con 26 tablas propias y 4 roles.", en: "Booking becomes self-service and the business runs from one panel, with 26 own tables and 4 roles." },
   }),
   durationInFrames: USE_CASE_DURATION,
 };
@@ -223,4 +233,4 @@ const coldLeadRevival: UseCaseFilmScript = {
   durationInFrames: USE_CASE_DURATION,
 };
 
-export const USE_CASE_FILMS: UseCaseFilmScript[] = [bookingDeposit, afterHoursLead, coldLeadRevival];
+export const USE_CASE_FILMS: UseCaseFilmScript[] = [barberCrm, afterHoursLead, coldLeadRevival];

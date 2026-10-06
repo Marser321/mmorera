@@ -1,4 +1,5 @@
 import { AbsoluteFill, Sequence } from "remotion";
+import { brandCssVars, getCaseBrand } from "@/data/brands/caseBrands";
 import type { CaseFilmScript } from "@/data/films/caseFilms";
 import type { FilmLanguage } from "@/data/films/filmTypes";
 import { BlueprintDevices, ConstraintsText, DecisionsText } from "../scenes/case/BlueprintScenes";
@@ -7,6 +8,7 @@ import { OutcomeScene, ProofScene, SignatureScene } from "../scenes/case/Closing
 import { ColdOpen } from "../scenes/case/ColdOpen";
 import { ProductScene } from "../scenes/case/ProductScene";
 import { Letterbox } from "../scenes/case/shared";
+import { DustField } from "../scenes/brand/ParticleLogo";
 import { ChapterTicks, FilmBackdrop } from "../scenes/primitives";
 import { FILM_COLORS, FILM_FONTS, useFilmLayout } from "../scenes/theme";
 
@@ -27,10 +29,12 @@ export function CaseFilm({ script, language }: CaseFilmProps) {
   const layout = { portrait, width, height };
   const shared = { script, language, portrait, width, height };
   const blueprintSpan = timeline.constraints.duration + timeline.decisions.duration;
+  // Con marca registrada, el film toma la paleta y la tipografía del cliente (estilo plano).
+  const brand = getCaseBrand(script.slug);
 
   return (
-    <AbsoluteFill style={{ overflow: "hidden", fontFamily: FILM_FONTS.body, color: FILM_COLORS.fg }}>
-      <FilmBackdrop />
+    <AbsoluteFill style={{ overflow: "hidden", fontFamily: FILM_FONTS.body, color: FILM_COLORS.fg, ...(brand ? brandCssVars(brand) : {}), background: brand?.palette.bg }}>
+      {brand ? (brand.texture === "gold-dust" ? <DustField color={brand.palette.accentSoft} opacity={0.3} /> : null) : <FilmBackdrop />}
 
       <Sequence name="Apertura" from={timeline.coldOpen.from} durationInFrames={timeline.coldOpen.duration} premountFor={fps}>
         <ColdOpen {...shared} duration={timeline.coldOpen.duration} />

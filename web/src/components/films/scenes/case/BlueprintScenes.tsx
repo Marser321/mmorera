@@ -6,6 +6,17 @@ import { BrowserFrame, ChapterKicker, PhoneFrame, SceneFade } from "./shared";
 
 type Layout = { portrait: boolean; width: number; height: number };
 
+/** Posición vertical de cada ítem según cuántas líneas ocupa (las fuentes de marca son más anchas). */
+function stackOffsets(texts: string[], size: number, blockWidth: number, gap: number) {
+  const charsPerLine = Math.max(10, Math.floor(blockWidth / (size * 0.56)));
+  let y = 0;
+  return texts.map((text) => {
+    const top = y;
+    y += Math.ceil(text.length / charsPerLine) * size * 1.18 + gap;
+    return top;
+  });
+}
+
 function deviceLayout({ portrait }: Layout) {
   return portrait
     ? { browser: { x: 72, y: 780, w: 700, h: 440 }, phone: { x: 812, y: 720, w: 196 } }
@@ -107,13 +118,15 @@ export function ConstraintsText({ script, language, layout, duration }: { script
   const left = portrait ? 72 : 120;
   const top = portrait ? height * 0.22 : height * 0.3;
   const size = portrait ? 40 : 30;
+  const blockWidth = portrait ? width - left * 2 : 600;
+  const offsets = stackOffsets(script.constraints.map((item) => item[language]), size, blockWidth - size * 2, size * 1.4);
   return (
     <SceneFade duration={duration}>
       <ChapterKicker index={2} label={CASE_CHAPTER_LABELS.constraints[language]} portrait={portrait} style={{ left, top: top - (portrait ? 90 : 76) }} />
       {script.constraints.map((constraint, index) => {
         const enter = progress(frame, 34 + index * 45, 70 + index * 45);
         return (
-          <div key={constraint.es} style={{ position: "absolute", left, top: top + index * (size * 3.2), width: portrait ? width - left * 2 : 600, display: "flex", gap: size * 0.7, alignItems: "flex-start", opacity: enter, translate: `${(1 - enter) * -24}px 0` }}>
+          <div key={constraint.es} style={{ position: "absolute", left, top: top + offsets[index], width: blockWidth, display: "flex", gap: size * 0.7, alignItems: "flex-start", opacity: enter, translate: `${(1 - enter) * -24}px 0` }}>
             <span style={{ flexShrink: 0, width: size * 1.1, height: size * 1.1, marginTop: size * 0.05, borderRadius: 99, border: `1px solid ${tint(FILM_COLORS.accent, 60)}`, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: FILM_FONTS.mono, fontSize: size * 0.5, color: FILM_COLORS.accent }}>
               {index + 1}
             </span>
@@ -133,6 +146,8 @@ export function DecisionsText({ script, language, layout, duration }: { script: 
   const top = portrait ? height * 0.22 : height * 0.3;
   const size = portrait ? 44 : 34;
   const step = 80;
+  const blockWidth = portrait ? width - left * 2 : 620;
+  const offsets = stackOffsets(script.decisions.map((item) => item[language]), size, blockWidth, size * 2.3);
   return (
     <SceneFade duration={duration}>
       <ChapterKicker index={3} label={CASE_CHAPTER_LABELS.decisions[language]} portrait={portrait} style={{ left, top: top - (portrait ? 90 : 76) }} />
@@ -140,7 +155,7 @@ export function DecisionsText({ script, language, layout, duration }: { script: 
         const enter = progress(frame, 30 + index * step, 70 + index * step);
         const next = index < script.decisions.length - 1 ? progress(frame, 30 + (index + 1) * step, 60 + (index + 1) * step) : 0;
         return (
-          <div key={decision.es} style={{ position: "absolute", left, top: top + index * (size * 3), width: portrait ? width - left * 2 : 620, opacity: enter * (1 - next * 0.55), translate: `0 ${(1 - enter) * 22}px` }}>
+          <div key={decision.es} style={{ position: "absolute", left, top: top + offsets[index], width: blockWidth, opacity: enter * (1 - next * 0.55), translate: `0 ${(1 - enter) * 22}px` }}>
             <div style={{ fontFamily: FILM_FONTS.mono, fontSize: size * 0.45, letterSpacing: "0.16em", color: FILM_COLORS.signal }}>{String(index + 1).padStart(2, "0")}</div>
             <div style={{ marginTop: size * 0.25, fontFamily: FILM_FONTS.body, fontSize: size, fontWeight: 500, lineHeight: 1.12, letterSpacing: "-0.035em", color: FILM_COLORS.fg }}>
               {decision[language]}

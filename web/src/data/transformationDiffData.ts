@@ -31,71 +31,39 @@ export const TRANSFORMATION_CASES: TransformationCase[] = [
     id: "new-brothers",
     clientName: "New Brothers Barbería",
     industry: { es: "Servicios & Cuidado Personal", en: "Services & Personal Care" },
-    accentColor: "#55D8FF",
+    accentColor: "#D4AF37",
     liveUrl: "https://nb-barber.vercel.app/",
+    // Sin métricas de negocio medidas: los deltas describen capacidades verificables en el código (D:\Barberia).
     beforeState: {
       title: {
-        es: "Coordinación manual por WhatsApp e idas y vueltas de horarios",
-        en: "Manual WhatsApp booking and endless scheduling back-and-forth",
+        es: "Reservas, cobros y clientes repartidos en mensajes y anotaciones",
+        en: "Bookings, payments and clients scattered across messages and notes",
       },
       frictionPoints: [
-        {
-          es: "El barbero cortando el pelo mientras suena el teléfono sin poder atender.",
-          en: "Barber cutting hair while phone rings with unanswered appointment requests.",
-        },
-        {
-          es: "40% de ausencias (no-shows) por falta de señas y recordatorios automáticos.",
-          en: "40% no-show rate due to lack of upfront deposits and automated reminders.",
-        },
-        {
-          es: "Caja desordenada con transferencias bancarias no conciliadas.",
-          en: "Chaotic cashflow with unverified manual bank transfer screenshots.",
-        },
+        { es: "Los turnos se coordinaban por mensajes, uno por uno.", en: "Slots were coordinated by message, one at a time." },
+        { es: "La caja y lo que le toca a cada barbero se calculaban aparte.", en: "Cash and each barber's share were worked out separately." },
+        { es: "No había un historial único de cada cliente.", en: "There was no single history for each client." },
       ],
-      responseLatency: "2 a 4 horas",
-      conversionRate: "28% de consultas",
+      responseLatency: "Manual",
+      conversionRate: "Sin registro",
     },
     afterState: {
       title: {
-        es: "App web de reserva self-service con cobro de seña en vivo",
-        en: "Self-service web booking with live deposit checkout",
+        es: "Reserva autoservicio y un CRM propio en un solo panel",
+        en: "Self-service booking and its own CRM in one panel",
       },
       systemHighlights: [
-        {
-          es: "Reserva 24/7 en 45 segundos eligiendo barbero, servicio y horario exacto.",
-          en: "24/7 booking in 45s choosing barber, service, and exact available slot.",
-        },
-        {
-          es: "Cobro automático de seña vía Stripe / Webhook con confirmación inmediata.",
-          en: "Instant deposit checkout via Stripe / Webhook with instant verification.",
-        },
-        {
-          es: "Recordatorio por WhatsApp 2h antes que redujo el no-show a menos del 4%.",
-          en: "Automated WhatsApp reminder 2h prior dropping no-shows to under 4%.",
-        },
+        { es: "Reserva guiada en 6 pasos, con agenda sin solapes validada en la base.", en: "Guided 6-step booking, with no double booking enforced in the database." },
+        { es: "Punto de venta, caja con cierre diario y liquidaciones de barberos.", en: "Point of sale, cash with daily close and barber payouts." },
+        { es: "Ficha de cliente con historial de cortes y reactivación de inactivos por WhatsApp.", en: "Client file with haircut history and WhatsApp reactivation of inactive clients." },
       ],
-      responseLatency: "Instantánea (0 seg)",
-      conversionRate: "76% de reservas completas",
+      responseLatency: "Autoservicio",
+      conversionRate: "Panel único",
     },
     metrics: [
-      {
-        label: { es: "Tasa de No-Shows", en: "No-Show Rate" },
-        before: "40%",
-        after: "3.8%",
-        improvement: "-90%",
-      },
-      {
-        label: { es: "Horas de Coordinación / Mes", en: "Coordination Hours / Mo" },
-        before: "35 hrs",
-        after: "0 hrs",
-        improvement: "100% Autónomo",
-      },
-      {
-        label: { es: "Cobros de Seña Asegurados", en: "Secured Upfront Deposits" },
-        before: "0%",
-        after: "100%",
-        improvement: "+100%",
-      },
+      { label: { es: "Pasos para reservar", en: "Booking steps" }, before: "Conversación", after: "6 pasos", improvement: "Autoservicio" },
+      { label: { es: "Lugares para operar", en: "Places to operate" }, before: "Varios", after: "1 panel", improvement: "Centralizado" },
+      { label: { es: "Roles con permisos", en: "Roles with permissions" }, before: "—", after: "4", improvement: "Acceso por rol" },
     ],
   },
   {

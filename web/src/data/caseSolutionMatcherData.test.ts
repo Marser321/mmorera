@@ -31,7 +31,8 @@ test("case solution matcher data model", async (t) => {
       assert.ok(proj.title.es && proj.title.en, "project must have bilingual titles");
       assert.ok(proj.summary.es && proj.summary.en, "project must have bilingual summaries");
       assert.ok(proj.metricBadge.es && proj.metricBadge.en, "project must have metric badge");
-      assert.ok(proj.pageSpeedScore >= 95, "project must achieve elite PageSpeed");
+      // Puntaje real medido (no un objetivo): solo se valida que sea un score válido.
+      assert.ok(proj.pageSpeedScore >= 0 && proj.pageSpeedScore <= 100, "PageSpeed must be a valid score");
       assert.ok(proj.sprintWeeks >= 1 && proj.sprintWeeks <= 3, "sprint must be 1 to 3 weeks");
       assert.ok(proj.liveUrl.startsWith("https://"), "liveUrl must be valid https URL");
     }
@@ -41,7 +42,7 @@ test("case solution matcher data model", async (t) => {
     // All filters
     const all = filterProjects("all", "all");
     assert.equal(all.projects.length, MATCHED_PROJECTS.length);
-    assert.ok(all.averagePageSpeed >= 95);
+    assert.ok(all.averagePageSpeed > 0 && all.averagePageSpeed <= 100);
 
     // Automotive only
     const automotive = filterProjects("automotive", "all");

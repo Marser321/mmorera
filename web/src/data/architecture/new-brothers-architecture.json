@@ -1,0 +1,352 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "New Brothers · CRM propio de barbería",
+    "output": "new-brothers-architecture.html",
+    "visual_preset": "editorial",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "booking-path",
+        "label": "Reserva sin solapes",
+        "focus": [
+          "users",
+          "booking_ui",
+          "auth",
+          "rls",
+          "rpc_booking",
+          "db"
+        ],
+        "note": "El cliente reserva en seis pasos y la función book_appointment valida el turno con bloqueo de fila antes de confirmarlo."
+      },
+      {
+        "id": "cash-path",
+        "label": "Caja y liquidaciones",
+        "focus": [
+          "admin_ui",
+          "auth",
+          "rls",
+          "rpc_cash",
+          "rpc_settle",
+          "db"
+        ],
+        "note": "El mostrador cobra, cierra la caja del día y liquida lo que le corresponde a cada barbero, todo con permisos por rol."
+      },
+      {
+        "id": "clients-path",
+        "label": "Clientes y reactivación",
+        "focus": [
+          "admin_ui",
+          "db",
+          "edge",
+          "ai"
+        ],
+        "note": "La ficha guarda el historial de cada cliente; una edge function detecta inactivos y el equipo los contacta por WhatsApp."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "users",
+      "type": "external",
+      "label": "Clientes y equipo",
+      "sublabel": "Web y móvil",
+      "pos": [
+        20,
+        300
+      ],
+      "size": [
+        150,
+        60
+      ]
+    },
+    {
+      "id": "booking_ui",
+      "type": "frontend",
+      "label": "Reserva en 6 pasos",
+      "sublabel": "/reservar · wizard",
+      "tag": "Next.js 16",
+      "pos": [
+        230,
+        130
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "admin_ui",
+      "type": "frontend",
+      "label": "Panel admin",
+      "sublabel": "14 secciones",
+      "pos": [
+        230,
+        300
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "barber_ui",
+      "type": "frontend",
+      "label": "Portal del barbero",
+      "sublabel": "/barbero/mi-agenda",
+      "pos": [
+        230,
+        470
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "auth",
+      "type": "security",
+      "label": "Roles y permisos",
+      "sublabel": "has_permission() · 4 roles",
+      "pos": [
+        450,
+        130
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "rls",
+      "type": "security",
+      "label": "Row Level Security",
+      "sublabel": "26 tablas con RLS",
+      "pos": [
+        450,
+        300
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "rpc_booking",
+      "type": "backend",
+      "label": "book_appointment",
+      "sublabel": "Agenda sin solapes",
+      "pos": [
+        670,
+        130
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "rpc_cash",
+      "type": "backend",
+      "label": "close_cash_day",
+      "sublabel": "POS y cierre de caja",
+      "pos": [
+        670,
+        300
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "rpc_settle",
+      "type": "backend",
+      "label": "close_barber_settlement",
+      "sublabel": "Liquidaciones",
+      "pos": [
+        670,
+        470
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "db",
+      "type": "database",
+      "label": "Supabase Postgres",
+      "sublabel": "26 tablas · historial",
+      "pos": [
+        900,
+        300
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "edge",
+      "type": "cloud",
+      "label": "Reactivación",
+      "sublabel": "send-reminders → WhatsApp",
+      "pos": [
+        1120,
+        130
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "ai",
+      "type": "backend",
+      "label": "Asistente IA",
+      "sublabel": "Gemini → OpenAI → reglas",
+      "pos": [
+        1120,
+        300
+      ],
+      "size": [
+        160,
+        60
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Front (Next.js 16)",
+      "wraps": [
+        "booking_ui",
+        "admin_ui",
+        "barber_ui"
+      ],
+      "pad": 20
+    },
+    {
+      "kind": "security-group",
+      "label": "Seguridad (roles + RLS)",
+      "wraps": [
+        "auth",
+        "rls"
+      ],
+      "pad": 20
+    },
+    {
+      "kind": "region",
+      "label": "Supabase",
+      "wraps": [
+        "rpc_booking",
+        "rpc_cash",
+        "rpc_settle",
+        "db"
+      ],
+      "pad": 20
+    }
+  ],
+  "connections": [
+    {
+      "from": "users",
+      "to": "booking_ui",
+      "label": "HTTPS",
+      "variant": "emphasis"
+    },
+    {
+      "from": "users",
+      "to": "admin_ui"
+    },
+    {
+      "from": "booking_ui",
+      "to": "auth",
+      "label": "Sesión"
+    },
+    {
+      "from": "admin_ui",
+      "to": "rls",
+      "label": "Permisos"
+    },
+    {
+      "from": "barber_ui",
+      "to": "rls"
+    },
+    {
+      "from": "auth",
+      "to": "rls",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "from": "auth",
+      "to": "rpc_booking",
+      "label": "RPC"
+    },
+    {
+      "from": "rls",
+      "to": "rpc_cash"
+    },
+    {
+      "from": "rls",
+      "to": "rpc_settle"
+    },
+    {
+      "from": "rpc_booking",
+      "to": "db",
+      "label": "Row lock",
+      "variant": "emphasis"
+    },
+    {
+      "from": "rpc_cash",
+      "to": "db"
+    },
+    {
+      "from": "rpc_settle",
+      "to": "db"
+    },
+    {
+      "from": "db",
+      "to": "ai"
+    },
+    {
+      "from": "db",
+      "to": "edge",
+      "label": "Inactivos",
+      "variant": "dashed",
+      "fromSide": "top",
+      "toSide": "left"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "Reserva y agenda",
+      "items": [
+        "Wizard de seis pasos con borrador guardado",
+        "book_appointment valida el turno con bloqueo de fila",
+        "Cancelación hasta dos horas antes"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Operación del local",
+      "items": [
+        "Punto de venta con efectivo, tarjeta y transferencia",
+        "Cierre de caja diario y liquidación por barbero",
+        "Stock por sucursal y pedidos de la tienda"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Clientes",
+      "items": [
+        "Ficha con historial de cortes y notas",
+        "Detección de clientes inactivos",
+        "Asistente IA con respaldo de reglas locales"
+      ]
+    }
+  ]
+}

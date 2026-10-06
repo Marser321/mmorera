@@ -95,11 +95,14 @@ export function OutcomeScene({ script, language, portrait, width, height, durati
   );
 }
 
-/** Firma: la doble M entra girada (código), se endereza y cierra el anillo. */
+/** Firma: las dos flechas de código se unen, giran hasta la M y se cierra el anillo. */
 export function SignatureScene({ portrait, width, height, duration }: Omit<SceneProps, "script" | "language">) {
   const frame = useCurrentFrame();
   const size = portrait ? 320 : 230;
-  const turn = progress(frame, 22, 62, EASE_IN_OUT);
+  const crownShift = interpolate(progress(frame, 2, 34, EASE_IN_OUT), [0, 1], [-1.5, 0]);
+  const bodyShift = interpolate(progress(frame, 8, 38, EASE_IN_OUT), [0, 1], [1.5, 0]);
+  const flash = interpolate(frame, [36, 40, 60], [0, 1, 0], CLAMP);
+  const turn = progress(frame, 46, 82, EASE_IN_OUT);
   const signalShare = Math.round(100 * (1 - turn));
   return (
     <SceneFade duration={duration + 20}>
@@ -107,14 +110,15 @@ export function SignatureScene({ portrait, width, height, duration }: Omit<Scene
         <LogoMark
           id="case-signature"
           size={size}
-          interior={progress(frame, 4, 34, EASE_IN_OUT)}
+          crownShift={crownShift}
+          bodyShift={bodyShift}
           rotation={interpolate(turn, [0, 1], [-90, 0])}
-          ring={progress(frame, 48, 96, EASE_IN_OUT)}
+          ring={progress(frame, 66, 106, EASE_IN_OUT)}
           interiorColor={`color-mix(in srgb, var(--color-signal) ${signalShare}%, var(--color-foreground))`}
-          glow={0.6 * (1 - turn)}
+          glow={0.5 * (1 - turn) + flash * 0.9}
         />
       </div>
-      <div style={{ position: "absolute", left: 0, right: 0, top: height * 0.44 + size * 0.58, textAlign: "center", opacity: progress(frame, 80, 110) }}>
+      <div style={{ position: "absolute", left: 0, right: 0, top: height * 0.44 + size * 0.58, textAlign: "center", opacity: progress(frame, 96, 122) }}>
         <div style={{ fontFamily: FILM_FONTS.body, fontSize: portrait ? 56 : 40, fontWeight: 500, letterSpacing: "-0.05em", color: FILM_COLORS.fg }}>Mario Morera</div>
         <div style={{ marginTop: 12, fontFamily: FILM_FONTS.mono, fontSize: portrait ? 20 : 13, letterSpacing: "0.2em", textTransform: "uppercase", color: ink(0.5) }}>Creative Technologist & Systems Builder</div>
       </div>
