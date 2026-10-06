@@ -5,7 +5,7 @@ import { CLAMP, EASE_IN_OUT, EASE_OUT, FILM_COLORS, FILM_FONTS, ink, progress } 
 
 /**
  * Apertura en frío: oscuridad, una línea de luz y el nombre del cliente
- * letra por letra sobre el sitio real, apenas visible detrás.
+ * letra por letra sobre el sitio real, difuminado detrás.
  */
 export function ColdOpen({ script, language, portrait, width, height, duration }: { script: CaseFilmScript; language: FilmLanguage; portrait: boolean; width: number; height: number; duration: number }) {
   const frame = useCurrentFrame();
@@ -13,20 +13,23 @@ export function ColdOpen({ script, language, portrait, width, height, duration }
   const titleSize = Math.min(portrait ? 132 : 150, (width * (portrait ? 1.5 : 1.45)) / Math.max(8, title.length));
   const exit = progress(frame, duration - 26, duration, EASE_IN_OUT);
   const line = progress(frame, 6, 44, EASE_IN_OUT);
+  const backdrop = portrait ? script.backdrops.portrait : script.backdrops.landscape;
 
   return (
     <AbsoluteFill style={{ opacity: 1 - exit, translate: `0 ${-24 * exit}px` }}>
-      {(portrait ? script.shots.mobile[0] : script.reel?.poster) ? (
+      {/* El sitio real detrás, ya difuminado: color y clima, nunca un titular legible bajo el nombre. */}
+      {backdrop ? (
         <Img
-          src={(portrait ? script.shots.mobile[0] : script.reel?.poster) ?? ""}
+          src={backdrop}
           style={{
             position: "absolute",
             inset: 0,
             width: "100%",
             height: "100%",
+            maxWidth: "none",
             objectFit: "cover",
             objectPosition: "top center",
-            opacity: interpolate(frame, [10, 70], [0, portrait ? 0.07 : 0.1], CLAMP),
+            opacity: interpolate(frame, [10, 70], [0, portrait ? 0.26 : 0.3], CLAMP),
             scale: `${interpolate(frame, [0, duration], [1.14, 1.05], CLAMP)}`,
           }}
         />
