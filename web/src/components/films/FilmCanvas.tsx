@@ -5,7 +5,6 @@ import type React from "react";
 import { FILM_FORMATS, FILM_FPS, type FilmFormat, type FilmLanguage } from "@/data/films/filmTypes";
 import { CaseFilm, type CaseFilmProps } from "./compositions/CaseFilm";
 import { LogoOverture, type LogoOvertureProps } from "./compositions/LogoOverture";
-import { NewBrothersFilm } from "./compositions/NewBrothersFilm";
 import { SystemsOpening, type SystemsOpeningProps } from "./compositions/SystemsOpening";
 import { UseCaseFilm, type UseCaseFilmProps } from "./compositions/UseCaseFilm";
 
@@ -18,15 +17,16 @@ export type FilmSource =
 
 export type FlagshipProps = { slug: string; language: FilmLanguage };
 
-/** Composición de cada film insignia, por caso. */
-const FLAGSHIP_COMPONENTS: Record<string, React.ComponentType<{ language: FilmLanguage }>> = {
-  "new-brothers-barberia": NewBrothersFilm,
-};
+type FlagshipModule = { default: React.ComponentType<{ language: FilmLanguage }> };
 
-function FlagshipComposition({ slug, language }: FlagshipProps) {
-  const Component = FLAGSHIP_COMPONENTS[slug];
-  return Component ? <Component language={language} /> : null;
-}
+/**
+ * Composición de cada film insignia, por caso, cargada recién cuando su
+ * Player se monta: cada página de caso baja solo el film que muestra. Las
+ * funciones viven a nivel de módulo (referencia estable para el Player).
+ */
+const FLAGSHIP_LOADERS: Record<string, () => Promise<FlagshipModule>> = {
+  "new-brothers-barberia": () => import("./compositions/NewBrothersFilm").then((module) => ({ default: module.NewBrothersFilm })),
+};
 
 export interface FilmCanvasProps {
   source: FilmSource;
@@ -67,8 +67,10 @@ export function FilmCanvas({ source, format, onPlayer, initialFrame = 0 }: FilmC
       return <Player {...shared} component={CaseFilm} inputProps={source.props} />;
     case "logo":
       return <Player {...shared} component={LogoOverture} inputProps={source.props} />;
-    case "flagship":
-      return <Player {...shared} component={FlagshipComposition} inputProps={source.props} />;
+    case "flagship": {
+      const loader = FLAGSHIP_LOADERS[source.props.slug];
+      return loader ? <Player {...shared} lazyComponent={loader} inputProps={{ language: source.props.language }} /> : null;
+    }
     default:
       return <Player {...shared} component={UseCaseFilm} inputProps={source.props} />;
   }

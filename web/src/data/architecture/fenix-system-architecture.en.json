@@ -1,0 +1,46 @@
+{
+  "title": "Fenix Medical Center · Site, CRM and compliance boundary",
+  "components": {
+    "visitor": { "label": "Visitor", "sublabel": "Bilingual site ES / EN" },
+    "site": { "label": "Next.js 16 site", "sublabel": "next-intl · 40 pages" },
+    "media": { "label": "Cinematic engine", "sublabel": "Pre-rendered video + CSS" },
+    "form": { "label": "Contact form", "sublabel": "Lead without health data" },
+    "booking": { "label": "3-step booking", "sublabel": "Day → time → details" },
+    "waf": { "label": "Vercel WAF", "sublabel": "5 requests / 10 min per IP" },
+    "api_lead": { "label": "POST /api/lead", "sublabel": "Fail-closed switch" },
+    "validate": { "label": "Strict validation", "sublabel": "7 fields · no free text" },
+    "ghl_api": { "label": "ghl.ts", "sublabel": "GHL REST API" },
+    "capi": { "label": "Meta Conversions API", "sublabel": "No personal data" },
+    "webhook": { "label": "GHL Inbound Webhook", "sublabel": "Lead intake" },
+    "workflow": { "label": "Website Intake workflow", "sublabel": "Contact → tags → opportunity" },
+    "crm": { "label": "Website Leads pipeline", "sublabel": "New → Scheduled · 6 fields" }
+  },
+  "boundaries": {
+    "Sitio (Next.js 16)": "Site (Next.js 16)",
+    "Frontera de compliance": "Compliance boundary",
+    "Servidor": "Server",
+    "GoHighLevel": "GoHighLevel"
+  },
+  "connections": {
+    "visitor>site": "HTTPS",
+    "form>waf": "POST",
+    "validate>webhook": "7 fields",
+    "workflow>crm": "New",
+    "booking>ghl_api": "Slots",
+    "ghl_api>crm": "Booking"
+  },
+  "views": {
+    "lead-path": {
+      "label": "Lead capture",
+      "note": "The form goes through the WAF (5 requests per 10 min per IP) and the fail-closed switch; only 7 fields, no free text, reach GHL."
+    },
+    "booking-path": {
+      "label": "3-step booking",
+      "note": "Booking checks free slots in GHL, records the contact and creates the appointment, which moves to Scheduled in the pipeline."
+    },
+    "compliance": {
+      "label": "Compliance boundary",
+      "note": "Health data stays out: 7 fields with no free text, no pixel on treatment pages and a Conversions API without personal data."
+    }
+  }
+}

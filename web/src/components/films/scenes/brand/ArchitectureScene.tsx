@@ -2,8 +2,11 @@ import type { CSSProperties } from "react";
 import { interpolate, useCurrentFrame } from "remotion";
 import {
   componentBox,
+  edgeKey,
   polylinePath,
+  typeRole,
   unionBox,
+  viewFocus,
   type ArchifyArchitecture,
   type ArchifyComponentType,
   type ArchifyLayout,
@@ -52,7 +55,8 @@ export function ArchitectureScene({
   const viewIndex = frame < buildFrames ? -1 : Math.min(views.length - 1, Math.floor((frame - buildFrames) / viewFrames));
   const view = viewIndex >= 0 ? views[viewIndex] : null;
   const viewLocal = viewIndex >= 0 ? frame - buildFrames - viewIndex * viewFrames : 0;
-  const focus = new Set(view?.focus ?? []);
+  const focused = viewFocus(diagram, view?.id ?? null);
+  const focus = focused?.nodes ?? new Set<string>();
 
   // Cámara: encuadre de la panorámica o de los nodos de la vista (zoom
   // contenido respecto de la panorámica, así se lee el contexto).
@@ -74,20 +78,8 @@ export function ArchitectureScene({
     return { scale: a.scale + (b.scale - a.scale) * t, x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
   })();
 
-  const typeColor = (type: ArchifyComponentType) => {
-    switch (type) {
-      case "security":
-        return "#e5484d";
-      case "database":
-      case "frontend":
-        return brand.palette.accent;
-      case "backend":
-      case "cloud":
-        return brand.palette.accentSoft;
-      default:
-        return brand.palette.muted;
-    }
-  };
+  const roleColor = { danger: "#e5484d", accent: brand.palette.accent, accentSoft: brand.palette.accentSoft, muted: brand.palette.muted } as const;
+  const typeColor = (type: ArchifyComponentType) => roleColor[typeRole(type)];
   const order = [...diagram.components].sort((a, b) => a.pos[0] - b.pos[0]);
   const dimFor = (id: string) => (view && !focus.has(id) ? 0.22 : 1);
   const paths = layout.connections.map((connection, index) => {
@@ -97,7 +89,7 @@ export function ArchitectureScene({
       d: polylinePath(connection.points),
       variant: source?.variant,
       draw: progress(frame, 30 + index * 4, 70 + index * 4, EASE_IN_OUT),
-      inFocus: view ? focus.has(connection.from) && focus.has(connection.to) : true,
+      inFocus: focused ? focused.edges.has(edgeKey(connection.from, connection.to)) : true,
     };
   });
   // Bordes suaves: lo que sale del área se desvanece en vez de cortarse en seco.
@@ -112,7 +104,7 @@ export function ArchitectureScene({
             const source = diagram.boundaries?.find((item) => item.label === boundary.label);
             const security = boundary.kind === "security-group";
             const enter = progress(frame, 10, 40);
-            const dim = view && !source?.wraps.some((id) => focus.has(id)) ? 0.3 : 1;
+            const dim = focused && !focused.boundaries.has(source?.label ?? "") ? 0.3 : 1;
             return (
               <div key={boundary.label} style={{ position: "absolute", left: boundary.x, top: boundary.y, width: boundary.w, height: boundary.h, boxSizing: "border-box", borderRadius: brand.radius, border: `1.5px ${security ? "dashed" : "solid"} ${security ? alpha("#e5484d", 60) : alpha(brand.palette.accent, 26)}`, background: alpha(brand.palette.surface, 55), opacity: enter * dim }}>
                 <span style={{ position: "absolute", left: 12, top: 5, fontFamily: brand.fonts.label, fontSize: 10, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", whiteSpace: "nowrap", color: security ? "#e5484d" : brand.palette.muted }}>{boundary.label}</span>

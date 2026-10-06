@@ -26,11 +26,12 @@ describe("premium site experience", () => {
     assert.deepEqual(Object.values(TRACK_MODE_QUERY), ["crear", "construir", "escalar"]);
   });
 
-  test("curates five featured demos ahead of the archive", () => {
-    assert.equal(FEATURED_CASES.length, 5);
+  test("curates six featured demos ahead of the archive, Fenix first", () => {
+    assert.equal(FEATURED_CASES.length, 6);
     assert.equal(ARCHIVE_CASES.length, 8);
-    assert.equal(PROJECT_CASES.length, 13);
-    assert.deepEqual(PROJECT_CASES.slice(0, 5).map(({ status }) => status), Array(5).fill("featured"));
+    assert.equal(PROJECT_CASES.length, 14);
+    assert.equal(PROJECT_CASES[0].slug, "fenix-medical-center");
+    assert.deepEqual(PROJECT_CASES.slice(0, 6).map(({ status }) => status), Array(6).fill("featured"));
     assert.ok(!FEATURED_CASES.some(({ slug }) => slug === "ad-media-solution"));
   });
 

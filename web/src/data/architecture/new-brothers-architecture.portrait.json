@@ -3,7 +3,7 @@
   "diagram_type": "architecture",
   "meta": {
     "title": "New Brothers · CRM propio de barbería",
-    "output": "new-brothers-architecture.html",
+    "output": "new-brothers-architecture.portrait.html",
     "visual_preset": "editorial",
     "quality_profile": "showcase",
     "views": [
@@ -53,8 +53,8 @@
       "label": "Clientes y equipo",
       "sublabel": "Web y móvil",
       "pos": [
-        20,
-        300
+        370,
+        20
       ],
       "size": [
         150,
@@ -68,8 +68,8 @@
       "sublabel": "/reservar · wizard",
       "tag": "Next.js 16",
       "pos": [
-        260,
-        130
+        150,
+        150
       ],
       "size": [
         160,
@@ -82,8 +82,8 @@
       "label": "Panel admin",
       "sublabel": "14 secciones",
       "pos": [
-        260,
-        300
+        370,
+        150
       ],
       "size": [
         160,
@@ -96,8 +96,8 @@
       "label": "Portal del barbero",
       "sublabel": "/barbero/mi-agenda",
       "pos": [
-        260,
-        470
+        590,
+        150
       ],
       "size": [
         160,
@@ -110,8 +110,8 @@
       "label": "Roles y permisos",
       "sublabel": "has_permission() · 4 roles",
       "pos": [
-        544,
-        130
+        260,
+        300
       ],
       "size": [
         160,
@@ -124,7 +124,7 @@
       "label": "Row Level Security",
       "sublabel": "26 tablas con RLS",
       "pos": [
-        544,
+        480,
         300
       ],
       "size": [
@@ -138,8 +138,8 @@
       "label": "book_appointment",
       "sublabel": "Agenda sin solapes",
       "pos": [
-        804,
-        130
+        150,
+        450
       ],
       "size": [
         160,
@@ -152,8 +152,8 @@
       "label": "close_cash_day",
       "sublabel": "POS y cierre de caja",
       "pos": [
-        804,
-        300
+        370,
+        450
       ],
       "size": [
         160,
@@ -166,8 +166,8 @@
       "label": "close_barber_settlement",
       "sublabel": "Liquidaciones",
       "pos": [
-        804,
-        470
+        590,
+        450
       ],
       "size": [
         160,
@@ -180,8 +180,8 @@
       "label": "Supabase Postgres",
       "sublabel": "26 tablas · historial",
       "pos": [
-        1074,
-        300
+        370,
+        580
       ],
       "size": [
         160,
@@ -194,8 +194,8 @@
       "label": "Reactivación",
       "sublabel": "send-reminders → WhatsApp",
       "pos": [
-        1314,
-        130
+        840,
+        450
       ],
       "size": [
         160,
@@ -208,8 +208,8 @@
       "label": "Asistente IA",
       "sublabel": "Gemini → OpenAI → reglas",
       "pos": [
-        1314,
-        300
+        840,
+        580
       ],
       "size": [
         160,
@@ -276,9 +276,7 @@
     },
     {
       "from": "auth",
-      "to": "rls",
-      "fromSide": "bottom",
-      "toSide": "top"
+      "to": "rls"
     },
     {
       "from": "auth",
@@ -297,8 +295,7 @@
       "from": "rpc_booking",
       "to": "db",
       "label": "Row lock",
-      "variant": "emphasis",
-      "labelSegment": 0
+      "variant": "emphasis"
     },
     {
       "from": "rpc_cash",
@@ -316,9 +313,7 @@
       "from": "db",
       "to": "edge",
       "label": "Inactivos",
-      "variant": "dashed",
-      "fromSide": "top",
-      "toSide": "left"
+      "variant": "dashed"
     }
   ],
   "cards": [

@@ -1,6 +1,6 @@
 import type { CameraShotSpec } from "@/lib/filmCamera";
-import { FILM_FPS, type FilmLanguage, type Localized } from "../filmTypes";
-import type { CaseFilmChapter } from "../caseFilms";
+import type { FilmLanguage, Localized } from "../filmTypes";
+import { timelineFrom, type FlagshipChapter, type FlagshipScene } from "./types";
 
 /**
  * Film insignia de New Brothers: "Un CRM propio, sin depender de ningún CRM".
@@ -14,19 +14,23 @@ import type { CaseFilmChapter } from "../caseFilms";
  * Los montos de caja y liquidaciones son de ejemplo y se rotulan así.
  */
 
-const s = (seconds: number) => Math.round(seconds * FILM_FPS);
+/**
+ * Estructura del film (el tipo de cada escena lo usa el test de flagships para
+ * exigir que cada cliente tenga su propio armado).
+ */
+export const NB_SCENES = [
+  { id: "opening", kind: "particle-open", seconds: 8 },
+  { id: "problem", kind: "problem-chat", seconds: 9.5 },
+  { id: "booking", kind: "booking-wizard", seconds: 14 },
+  { id: "panel", kind: "camera-reel", seconds: 21 },
+  { id: "architecture", kind: "architecture", seconds: 14 },
+  { id: "outcome", kind: "outcome-facts", seconds: 6 },
+  { id: "signature", kind: "signature", seconds: 4.5 },
+] as const satisfies ReadonlyArray<FlagshipScene>;
 
-export const NB_TIMELINE = {
-  opening: { from: 0, duration: s(8) },
-  problem: { from: s(8), duration: s(9.5) },
-  booking: { from: s(17.5), duration: s(14) },
-  panel: { from: s(31.5), duration: s(21) },
-  architecture: { from: s(52.5), duration: s(14) },
-  outcome: { from: s(66.5), duration: s(6) },
-  signature: { from: s(72.5), duration: s(4.5) },
-} as const;
-
-export const NB_DURATION = NB_TIMELINE.signature.from + NB_TIMELINE.signature.duration;
+const nbTimeline = timelineFrom(NB_SCENES);
+export const NB_TIMELINE = nbTimeline.slots;
+export const NB_DURATION = nbTimeline.durationInFrames;
 
 export const NB_FACTS = {
   bookingSteps: 6,
@@ -99,7 +103,7 @@ export const NB_PANEL_SHOTS: CameraShotSpec[] = [
 
 const L = (es: string, en: string): Localized => ({ es, en });
 
-export const NB_CHAPTERS: CaseFilmChapter[] = [
+export const NB_CHAPTERS: FlagshipChapter[] = [
   {
     id: "challenge",
     label: L("El problema", "The problem"),
