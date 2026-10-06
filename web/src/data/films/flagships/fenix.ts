@@ -176,6 +176,8 @@ export interface FenixCopy {
   sublines: string[];
   mechanismKicker: string;
   mechanismTitle: string;
+  mechanismLawKicker: string;
+  /** `*palabra*` se pinta en el acento. */
   mechanismLaw: string;
   mechanismCaptions: [string, string, string];
   doseBeats: Array<{ text: string; kicker?: string }>;
@@ -222,7 +224,8 @@ export const FENIX_COPY: Record<FilmLanguage, FenixCopy> = {
     sublines: ["Atención primaria", "Longevidad", "Recuperación"],
     mechanismKicker: "La investigación",
     mechanismTitle: "Cómo funciona el oxígeno hiperbárico.",
-    mechanismLaw: "Ley de Henry: bajo presión, el oxígeno se disuelve en el plasma.",
+    mechanismLawKicker: "Ley de Henry",
+    mechanismLaw: "Bajo presión, el oxígeno se disuelve en el *plasma*.",
     mechanismCaptions: ["Plasma saturado", "Difusión en el tejido", "Angiogénesis"],
     doseBeats: [
       { kicker: "La conclusión", text: "La dosis es el claim." },
@@ -308,7 +311,8 @@ export const FENIX_COPY: Record<FilmLanguage, FenixCopy> = {
     sublines: ["Primary care", "Longevity", "Recovery"],
     mechanismKicker: "The research",
     mechanismTitle: "How hyperbaric oxygen works.",
-    mechanismLaw: "Henry's law: under pressure, oxygen dissolves into plasma.",
+    mechanismLawKicker: "Henry's law",
+    mechanismLaw: "Under pressure, oxygen dissolves into *plasma*.",
     mechanismCaptions: ["Saturated plasma", "Tissue diffusion", "Angiogenesis"],
     doseBeats: [
       { kicker: "The conclusion", text: "The dose is the claim." },

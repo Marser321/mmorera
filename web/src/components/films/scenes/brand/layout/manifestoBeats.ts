@@ -56,18 +56,19 @@ export function manifestoBeatsLayout(box: Box, data: ManifestoBeatsData, format:
   const uniform = Math.min(...fitted);
   const x = data.align === "center" ? box.x + (box.w - measure) / 2 : box.x;
 
-  const beats = data.beats.map((beat, index) => {
+  const sized = data.beats.map((beat, index) => {
     const size = data.uniformSize === false ? fitted[index] : uniform;
     const lines = Math.min(maxLines, lineCount(beat.text, size, measure, GLYPH_EM.display, maxLines));
-    const textH = blockHeight(size, lines, LINE_HEIGHT.display);
-    const groupH = (beat.kicker ? kickerBlock : 0) + textH;
-    let y = centerY(box, groupH);
-    let kicker: Box | null = null;
-    if (beat.kicker) {
-      kicker = { x, y, w: measure, h: blockHeight(kickerSize, 1, LINE_HEIGHT.label) };
-      y += kickerBlock;
-    }
-    return { kicker, text: { x, y, w: measure, h: textH }, size, kickerSize, lines };
+    return { size, lines, textH: blockHeight(size, lines, LINE_HEIGHT.display) };
+  });
+  // Todas las frases arrancan en la misma línea (la del beat más alto, centrado en
+  // la banda): el ojo no salta de un beat al otro.
+  const tallest = Math.max(...sized.map((item) => item.textH)) + (anyKicker ? kickerBlock : 0);
+  const top = centerY(box, tallest);
+  const beats = data.beats.map((beat, index) => {
+    const { size, lines, textH } = sized[index];
+    const kicker = beat.kicker ? { x, y: top, w: measure, h: blockHeight(kickerSize, 1, LINE_HEIGHT.label) } : null;
+    return { kicker, text: { x, y: top + (anyKicker ? kickerBlock : 0), w: measure, h: textH }, size, kickerSize, lines };
   });
 
   return { band: box, beats };

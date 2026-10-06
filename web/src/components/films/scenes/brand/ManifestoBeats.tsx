@@ -47,12 +47,14 @@ export function ManifestoBeats({ box, beats, duration, maxLines, align = "left",
   const boxes = layout.beats[index];
   const local = frame - slot.from;
   const length = slot.to - slot.from;
-  const exitLen = Math.max(4, Math.min(16, Math.floor(length / 4)));
-  const leave = progress(frame, slot.to - exitLen, slot.to, EASE_IN_OUT);
-  const kickerIn = progress(local, 0, 16);
+  const exitLen = Math.max(4, Math.min(18, Math.floor(length / 4)));
+  const exitAt = slot.to - exitLen;
+  // Sale por las mismas máscaras por las que entró: nada se mueve fuera de la banda.
+  const leave = progress(frame, slot.to - Math.min(8, exitLen), slot.to, EASE_IN_OUT);
+  const kickerIn = progress(local, 0, 16) * (1 - progress(frame, exitAt, exitAt + 10));
 
   return (
-    <div style={{ position: "absolute", inset: 0, opacity: 1 - leave, translate: `0 ${-leave * 14}px` }}>
+    <div style={{ position: "absolute", inset: 0, opacity: 1 - leave }}>
       {beat.kicker && boxes.kicker ? (
         <div
           style={{
@@ -88,6 +90,8 @@ export function ManifestoBeats({ box, beats, duration, maxLines, align = "left",
         color={brand.palette.text}
         emphasis={brand.palette.accentSoft}
         uppercase={brand.uppercaseDisplay}
+        exitAt={exitAt}
+        exitFrames={exitLen}
       />
     </div>
   );
@@ -135,6 +139,8 @@ export function RevealWords({
   uppercase = false,
   stagger = 3,
   lineHeight = LINE_HEIGHT.display,
+  exitAt,
+  exitFrames = 16,
   style,
 }: {
   text: string;
@@ -149,6 +155,9 @@ export function RevealWords({
   uppercase?: boolean;
   stagger?: number;
   lineHeight?: number;
+  /** Frame en que las palabras empiezan a salir hacia arriba por su máscara (opcional). */
+  exitAt?: number;
+  exitFrames?: number;
   style?: CSSProperties;
 }) {
   const frame = useCurrentFrame();
@@ -158,6 +167,8 @@ export function RevealWords({
   const count = offsets[offsets.length - 1] + segments[segments.length - 1].length;
   // La frase entera se asienta en ~30 frames aunque sea larga.
   const gap = Math.min(stagger, Math.max(1, (30 - REVEAL_FRAMES) / Math.max(1, count - 1)));
+  const exitEach = Math.min(10, exitFrames);
+  const exitGap = Math.max(0, (exitFrames - exitEach) / Math.max(1, count - 1));
   return (
     <div
       style={{
@@ -173,6 +184,8 @@ export function RevealWords({
         lineHeight,
         letterSpacing: uppercase ? "0.01em" : "-0.015em",
         textTransform: uppercase ? "uppercase" : "none",
+        // Reparte las palabras entre las mismas líneas (sin viudas); nunca suma líneas.
+        textWrap: "balance",
         color,
         ...style,
       }}
@@ -183,11 +196,12 @@ export function RevealWords({
           {words.map(({ word, emphasized }, position) => {
             const order = offsets[segment] + position;
             const reveal = interpolate(frame, [from + order * gap, from + order * gap + REVEAL_FRAMES], [0, 1], { ...CLAMP, easing: EASE_IN_OUT });
+            const out = exitAt === undefined ? 0 : interpolate(frame, [exitAt + order * exitGap, exitAt + order * exitGap + exitEach], [0, 1], { ...CLAMP, easing: EASE_IN_OUT });
             return (
               <span key={`${word}-${order}`}>
                 {/* Máscara con aire arriba y abajo (tildes y descendentes), compensada con márgenes negativos para no alterar el interlineado. */}
                 <span style={{ display: "inline-block", overflow: "hidden", verticalAlign: "top", padding: "0.16em 0.04em 0.14em", margin: "-0.16em -0.04em -0.14em" }}>
-                  <span style={{ display: "inline-block", translate: `0 ${(1 - reveal) * 110}%`, opacity: 0.2 + reveal * 0.8, color: emphasized && emphasis ? emphasis : undefined }}>{word}</span>
+                  <span style={{ display: "inline-block", translate: `0 ${(1 - reveal - out) * 110}%`, opacity: (0.2 + reveal * 0.8) * (1 - out), color: emphasized && emphasis ? emphasis : undefined }}>{word}</span>
                 </span>
                 {position < words.length - 1 ? " " : null}
               </span>

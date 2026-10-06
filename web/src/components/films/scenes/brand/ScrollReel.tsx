@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { Html5Video, Img, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
 import type { FilmAsset } from "@/data/films/flagships/types";
 import type { Box } from "@/lib/filmLayout";
+import { playableAsset } from "@/lib/videoSource";
 import { CLAMP, EASE_IN_OUT, progress, useFilmLayout } from "../theme";
 import { alpha, useBrand } from "./context";
 import { isVideoSrc } from "./layout/mediaShared";
@@ -31,11 +33,14 @@ export type ScrollReelProps = {
  * larga, con scroll guiado por el frame y pausas en cada parada, o un reel
  * grabado. Nunca se dibuja por encima de la resolución nativa del medio.
  */
-export function ScrollReel({ box, asset, poster, host, path, duration, stops = [0, 1], maxWidth, align, startAt = 0 }: ScrollReelProps) {
+export function ScrollReel({ box, asset: source, poster, host, path, duration, stops = [0, 1], maxWidth, align, startAt = 0 }: ScrollReelProps) {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const brand = useBrand();
   const { portrait } = useFilmLayout();
+  // AV1/WebM si el navegador lo decodifica; si el video igual falla, queda el póster.
+  const asset = playableAsset(source);
+  const [failed, setFailed] = useState(false);
   const video = isVideoSrc(asset.src);
   const layout = scrollReelLayout(box, { asset, kind: video ? "video" : "image", host, path, maxWidth, align }, portrait ? "portrait" : "landscape");
   const { frame: win, chrome, pill, lock, url, view, media } = layout;
@@ -72,7 +77,8 @@ export function ScrollReel({ box, asset, poster, host, path, duration, stops = [
           overflow: "hidden",
           background: brand.palette.surface,
           boxShadow: `0 0 0 1px ${alpha(brand.palette.accent, 22)}, 0 50px 120px ${alpha("#000000", 55)}`,
-          translate: `0 ${(1 - enter) * 28}px`,
+          // Entra creciendo apenas desde su centro: nunca sale de su caja.
+          scale: `${0.965 + enter * 0.035}`,
         }}
       >
         {/* Barra del navegador: tres puntos y la dirección en su píldora. */}
@@ -95,15 +101,16 @@ export function ScrollReel({ box, asset, poster, host, path, duration, stops = [
           {video ? (
             <>
               {poster ? <Img src={poster} style={{ position: "absolute", left: 0, top: 0, width: media.w, height: media.h, maxWidth: "none" }} /> : null}
-              <Html5Video
+              {failed ? null : <Html5Video
                 src={asset.src}
+                onError={() => setFailed(true)}
                 muted
                 loop={loop}
                 pauseWhenBuffering={false}
                 acceptableTimeShiftInSeconds={0.6}
                 trimBefore={startAt > 0 ? Math.round(startAt * fps) : undefined}
                 style={{ position: "absolute", left: 0, top: 0, width: media.w, height: media.h, maxWidth: "none" }}
-              />
+              />}
             </>
           ) : (
             <Img src={asset.src} style={{ position: "absolute", left: 0, top: -offset, width: media.w, height: media.h, maxWidth: "none" }} />

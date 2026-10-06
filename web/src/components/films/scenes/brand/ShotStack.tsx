@@ -49,6 +49,10 @@ export function ShotStack({ box, shots, duration, frame: frameKind = "card", sta
   const radius = frameKind === "phone" ? 40 : brand.radius * 0.8;
   const screenRadius = frameKind === "phone" ? 28 : brand.radius * 0.8;
   const edgeMask = "linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent)";
+  // Recorte de la fila: deja aire para las sombras sin salir nunca de la caja de la escena
+  // (la entrada sube desde abajo y lo que asoma queda recortado).
+  const clipTop = Math.max(layout.stepper.y + layout.stepper.h + 2, layout.viewport.y - 24);
+  const clipBottom = Math.min(box.y + box.h, layout.viewport.y + layout.viewport.h + 24);
 
   return (
     <div style={{ position: "absolute", inset: 0, opacity: enter * (1 - leave) }}>
@@ -92,7 +96,22 @@ export function ShotStack({ box, shots, duration, frame: frameKind = "card", sta
               {index + 1}
             </div>
             {shot?.label && chip.label ? (
-              <div style={{ position: "absolute", left: chip.label.x, top: chip.label.y, width: chip.label.w, height: chip.label.h, fontFamily: brand.fonts.body, fontSize: layout.labelSize, lineHeight: LINE_HEIGHT.label, fontWeight: isActive ? 600 : 500, whiteSpace: "nowrap", color: isActive ? brand.palette.text : brand.palette.muted }}>
+              <div
+                style={{
+                  position: "absolute",
+                  left: chip.label.x,
+                  top: chip.label.y,
+                  width: chip.label.w,
+                  height: chip.label.h,
+                  fontFamily: brand.fonts.body,
+                  fontSize: layout.labelSize,
+                  lineHeight: LINE_HEIGHT.label,
+                  fontWeight: isActive ? 600 : 500,
+                  // En fila, una línea; apilado, centrado debajo del número (hasta dos líneas parejas).
+                  ...(layout.chipStyle === "stacked" ? { textAlign: "center", textWrap: "balance" } : { whiteSpace: "nowrap" }),
+                  color: isActive ? brand.palette.text : brand.palette.muted,
+                }}
+              >
                 {shot.label}
               </div>
             ) : null}
@@ -105,14 +124,14 @@ export function ShotStack({ box, shots, duration, frame: frameKind = "card", sta
         style={{
           position: "absolute",
           left: layout.viewport.x,
-          top: layout.viewport.y - 24,
+          top: clipTop,
           width: layout.viewport.w,
-          height: layout.viewport.h + 48,
+          height: clipBottom - clipTop,
           overflow: "hidden",
           ...(layout.carousel ? ({ maskImage: edgeMask, WebkitMaskImage: edgeMask } as CSSProperties) : {}),
         }}
       >
-        <div style={{ position: "absolute", left: 0, top: 24, width: "100%", height: layout.viewport.h, translate: `${track}px ${(1 - enter) * 24}px` }}>
+        <div style={{ position: "absolute", left: 0, top: layout.viewport.y - clipTop, width: "100%", height: layout.viewport.h, translate: `${track}px ${(1 - enter) * 24}px` }}>
           {layout.cards.map((card, index) => {
             const shot = shots[index];
             // Peso del paso activo (entra y sale con fundido de opacidad; las tarjetas no se mueven entre sí).
@@ -132,7 +151,7 @@ export function ShotStack({ box, shots, duration, frame: frameKind = "card", sta
                   boxSizing: "border-box",
                   borderRadius: radius,
                   padding: layout.bezel,
-                  background: frameKind === "phone" ? "#05070b" : brand.palette.surface,
+                  background: frameKind === "phone" ? brand.palette.bg : brand.palette.surface,
                   // Filo por fuera (box-shadow): no le quita espacio a la pantalla.
                   boxShadow: `0 0 0 1px ${weight > 0.01 ? alpha(brand.palette.accent, Math.round(20 + weight * 45)) : brand.palette.line}, 0 34px 90px ${alpha("#000000", 50)}`,
                   opacity: 0.42 + 0.58 * lit,

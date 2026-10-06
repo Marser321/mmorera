@@ -1,6 +1,7 @@
 import { Img, interpolate, useCurrentFrame } from "remotion";
 import { CASE_CHAPTER_LABELS, type CaseFilmScript } from "@/data/films/caseFilms";
 import type { FilmLanguage } from "@/data/films/filmTypes";
+import { RollingFigure } from "../brand/RollingFigure";
 import { LogoMark } from "../LogoMark";
 import { CLAMP, EASE_IN_OUT, FILM_COLORS, FILM_FONTS, ink, progress, tint } from "../theme";
 import { ChapterKicker, SceneFade, SlowWords } from "./shared";
@@ -36,7 +37,8 @@ export function ProofScene({ script, language, portrait, width, height, duration
                   <circle cx={50} cy={50} r={44} fill="none" stroke={FILM_COLORS.signal} strokeWidth={5} strokeLinecap="round" pathLength={100} strokeDasharray="100 100" strokeDashoffset={100 - score.value * fill} />
                 </svg>
                 <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: FILM_FONTS.body, fontSize: gauge * 0.32, fontWeight: 500, letterSpacing: "-0.04em", color: FILM_COLORS.signal }}>
-                  {Math.round(score.value * fill)}
+                  {/* La nota entra con su valor final (un cuadro pausado nunca muestra una nota que no se midió). */}
+                  <RollingFigure text={String(score.value)} progress={fill} />
                 </div>
               </div>
               <div style={{ marginTop: 18, fontFamily: FILM_FONTS.mono, fontSize: portrait ? 22 : 15, letterSpacing: "0.12em", textTransform: "uppercase", color: ink(0.6) }}>{score.name}</div>
