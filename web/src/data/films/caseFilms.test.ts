@@ -1,5 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
+import path from "node:path";
 import { PROJECT_CASES } from "../projectCases";
 import { getCaseMedia } from "../caseMedia";
 import { getCaseMetrics, isShowcaseWorthy } from "../caseMetrics";
@@ -41,6 +43,17 @@ test("films de casos de éxito", async (t) => {
       const worthy = Boolean(metrics && isShowcaseWorthy(metrics));
       assert.equal(film.chapters.some((chapter) => chapter.id === "proof"), worthy, `${project.slug}: capítulo de prueba incorrecto`);
       assert.equal(film.metrics !== null, worthy);
+    }
+  });
+
+  await t.test("los fondos con texto encima están difuminados y existen", () => {
+    for (const { project, film } of films) {
+      for (const backdrop of [film.backdrops.landscape, film.backdrops.portrait]) {
+        if (!backdrop) continue;
+        assert.match(backdrop, /^\/portfolio\/backdrops\/.+-blur\.jpg$/, `${project.slug}: ${backdrop}`);
+        assert.ok(existsSync(path.join(process.cwd(), "public", backdrop)), `${project.slug}: falta ${backdrop} (correr build-film-backdrops)`);
+      }
+      if (film.reel) assert.ok(existsSync(path.join(process.cwd(), "public", film.reel.webm)), `${project.slug}: falta el WebM del reel`);
     }
   });
 

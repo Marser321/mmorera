@@ -44,8 +44,14 @@ export interface CaseFilmScript {
   result: Localized;
   stack: string[];
   hostname: string | null;
-  reel: { mp4: string; poster: string } | null;
+  reel: { mp4: string; webm: string; poster: string } | null;
   shots: { desktop: string[]; mobile: string[] };
+  /**
+   * Fondos ya difuminados (scripts/build-film-backdrops.ts) para las escenas
+   * con texto encima: así el titular del sitio nunca se lee detrás del texto
+   * del film.
+   */
+  backdrops: { landscape: string | null; portrait: string | null };
   metrics: Pick<CaseMetrics, "performance" | "accessibility" | "bestPractices" | "seo" | "measuredAt"> | null;
   timeline: CaseFilmTimeline;
   chapters: CaseFilmChapter[];
@@ -53,6 +59,12 @@ export interface CaseFilmScript {
 }
 
 const s = (seconds: number) => Math.round(seconds * FILM_FPS);
+
+/** "/portfolio/reels/x-poster.jpg" → "/portfolio/backdrops/x-poster-blur.jpg" (misma convención que build-film-backdrops). */
+export function blurredBackdrop(src: string) {
+  const file = src.slice(src.lastIndexOf("/") + 1).replace(/\.(jpg|webp|png)$/, "");
+  return `/portfolio/backdrops/${file}-blur.jpg`;
+}
 
 export const CASE_SCENE_FRAMES = {
   coldOpen: s(5),
@@ -97,6 +109,7 @@ const joinLocalized = (items: Localized[], separator: string): Localized => ({
 export function buildCaseFilm(project: ProjectCase, media?: CaseMedia, metrics?: CaseMetrics): CaseFilmScript {
   const showProof = Boolean(metrics && isShowcaseWorthy(metrics));
   const hostname = hostnameOf(project.liveUrl);
+  const mobileFirst = media?.gallery.find((shot) => shot.device === "mobile")?.src;
 
   // Timeline contiguo; la prueba solo existe si las métricas están en verde.
   let cursor = 0;
@@ -153,7 +166,11 @@ export function buildCaseFilm(project: ProjectCase, media?: CaseMedia, metrics?:
     result: project.result,
     stack: project.stack,
     hostname,
-    reel: media ? { mp4: media.reel.mp4, poster: media.reel.poster } : null,
+    reel: media ? { mp4: media.reel.mp4, webm: media.reel.webm, poster: media.reel.poster } : null,
+    backdrops: {
+      landscape: media ? blurredBackdrop(media.reel.poster) : null,
+      portrait: mobileFirst ? blurredBackdrop(mobileFirst) : null,
+    },
     shots: {
       desktop: media?.gallery.filter((shot) => shot.device === "desktop").map((shot) => shot.src) ?? [],
       mobile: media?.gallery.filter((shot) => shot.device === "mobile").map((shot) => shot.src) ?? [],

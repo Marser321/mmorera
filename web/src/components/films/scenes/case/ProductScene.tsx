@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { Html5Video, Img, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
 import { CASE_CHAPTER_LABELS, type CaseFilmScript } from "@/data/films/caseFilms";
 import type { FilmLanguage } from "@/data/films/filmTypes";
+import { playableAsset } from "@/lib/videoSource";
 import { CLAMP, EASE_IN_OUT, FILM_COLORS, FILM_FONTS, ink, progress, tint } from "../theme";
 import { BrowserFrame, ChapterKicker, LightSweep, PhoneFrame, SceneFade } from "./shared";
 
@@ -19,6 +21,9 @@ export function ProductScene({ script, language, portrait, width, height, durati
   const phone = portrait ? { x: width - 72 - phoneWidth, y: 640 } : { x: 1170, y: 300 };
   const float = Math.sin(frame / 28) * (portrait ? 8 : 6);
   const mobileShot = script.shots.mobile[1] ?? script.shots.mobile[0];
+  // AV1/WebM si el navegador lo decodifica; si el reel igual falla, queda su póster.
+  const reel = script.reel ? playableAsset({ src: script.reel.mp4, webm: script.reel.webm, w: 1280, h: 800 }) : null;
+  const [failed, setFailed] = useState(false);
 
   return (
     <SceneFade duration={duration}>
@@ -36,15 +41,21 @@ export function ProductScene({ script, language, portrait, width, height, durati
           }}
         >
           <BrowserFrame width={browser.w} height={browser.h} hostname={script.hostname} style={{ left: browser.x, top: browser.y }}>
-            {script.reel ? (
-              <Html5Video
-                src={script.reel.mp4}
-                muted
-                loop
-                pauseWhenBuffering={false}
-                acceptableTimeShiftInSeconds={0.6}
-                style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center" }}
-              />
+            {script.reel && reel ? (
+              <>
+                <Img src={script.reel.poster} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", maxWidth: "none", objectFit: "cover", objectPosition: "top center" }} />
+                {failed ? null : (
+                  <Html5Video
+                    src={reel.src}
+                    muted
+                    loop
+                    pauseWhenBuffering={false}
+                    acceptableTimeShiftInSeconds={0.6}
+                    onError={() => setFailed(true)}
+                    style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center" }}
+                  />
+                )}
+              </>
             ) : script.shots.desktop[0] ? (
               <Img src={script.shots.desktop[0]} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center", scale: `${interpolate(dolly, [0, 1], [1, 1.08])}` }} />
             ) : null}

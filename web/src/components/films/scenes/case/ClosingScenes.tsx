@@ -62,10 +62,12 @@ export function OutcomeScene({ script, language, portrait, width, height, durati
   const typedFrom = 30 + words * 4 + 20;
   const typed = Math.floor(interpolate(frame, [typedFrom, typedFrom + host.length * 2], [0, host.length], CLAMP));
   const left = portrait ? 72 : 160;
+  // Fondo difuminado: el titular del sitio no se lee detrás de la frase final.
+  const backdrop = portrait ? script.backdrops.portrait : script.backdrops.landscape;
   return (
     <SceneFade duration={duration}>
-      {script.reel ? (
-        <Img src={script.reel.poster} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center", opacity: 0.05, scale: `${interpolate(frame, [0, duration], [1.02, 1.1], CLAMP)}` }} />
+      {backdrop ? (
+        <Img src={backdrop} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", maxWidth: "none", objectFit: "cover", objectPosition: "top center", opacity: 0.16, scale: `${interpolate(frame, [0, duration], [1.02, 1.1], CLAMP)}` }} />
       ) : null}
       <ChapterKicker index={script.metrics ? 6 : 5} label={CASE_CHAPTER_LABELS.outcome[language]} portrait={portrait} style={{ left, top: height * (portrait ? 0.26 : 0.27) - (portrait ? 90 : 76) }} />
       <SlowWords text={text} from={24} size={portrait ? 80 : 70} style={{ left, top: height * (portrait ? 0.26 : 0.27), width: width - left * 2 }} />
