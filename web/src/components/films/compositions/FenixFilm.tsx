@@ -5,7 +5,6 @@ import { brandCssVars, CASE_BRANDS } from "@/data/brands/caseBrands";
 import { FENIX_ASSETS, FENIX_CHAPTERS, FENIX_COPY, FENIX_FACTS, FENIX_HOST, FENIX_TIMELINE, fx } from "@/data/films/flagships/fenix";
 import type { FilmLanguage } from "@/data/films/filmTypes";
 import { safeArea, splitColumns, stackBands, type Box } from "@/lib/filmLayout";
-import { playableAsset } from "@/lib/videoSource";
 import { ArchitectureScene } from "../scenes/brand/ArchitectureScene";
 import { BrandTitle, Fade } from "../scenes/brand/camera";
 import { ChecklistGrid } from "../scenes/brand/ChecklistGrid";
@@ -115,7 +114,7 @@ function Opening({ language, width, height, portrait, duration }: SceneProps & {
   const frame = useCurrentFrame();
   const copy = FENIX_COPY[language];
   const format = portrait ? "portrait" : "landscape";
-  const corridor = playableAsset(FENIX_ASSETS.corridor);
+  const corridor = FENIX_ASSETS.corridor;
   // Placa y leyenda en bandas propias: el texto nunca va sobre el video.
   const box = portrait ? { x: 0, y: 0, w: width, h: 620 } : { x: 60, y: 84, w: width - 120, h: 600 };
   const plate = cinematicPlateLayout(box, { asset: corridor, align: "top" }, format).plate;
@@ -220,7 +219,7 @@ function Mechanism({ language, bands, portrait, duration }: SceneProps & { bands
           box={bands.body}
           stills={[FENIX_ASSETS.mechanismPlasma, FENIX_ASSETS.mechanismDiffusion, FENIX_ASSETS.mechanismAngiogenesis]}
           captions={copy.mechanismCaptions.map((title) => ({ title }))}
-          formula={{ kicker: language === "es" ? "Ley de Henry" : "Henry's law", text: copy.mechanismLaw }}
+          formula={{ kicker: copy.mechanismLawKicker, text: copy.mechanismLaw }}
           duration={triptych}
         />
       </Sequence>
@@ -342,7 +341,7 @@ function Positioning({ language, safe, portrait, duration }: SceneProps & { safe
   const slot = Math.floor(duration / copy.positioningBeats.length);
   return (
     <Fade duration={duration}>
-      <CinematicPlate box={plateBox} asset={playableAsset(FENIX_ASSETS.chamber)} poster={FENIX_ASSETS.chamberPoster.src} duration={duration} veilOpacity={0.35} push={0.04} align="center" />
+      <CinematicPlate box={plateBox} asset={FENIX_ASSETS.chamber} poster={FENIX_ASSETS.chamberPoster.src} duration={duration} veilOpacity={0.35} push={0.04} align="center" />
       <ManifestoBeats
         box={textBox}
         beats={copy.positioningBeats.map((beat, index) => ({ ...beat, from: index * slot + (index === 0 ? 10 : 0), to: (index + 1) * slot }))}
@@ -354,33 +353,24 @@ function Positioning({ language, safe, portrait, duration }: SceneProps & { safe
   );
 }
 
-/** 5 · El sitio real y la reserva en 3 pasos (capturas reales, formulario vacío). */
+/** 5 · El sitio real y después la reserva en 3 pasos (capturas reales, formulario vacío). */
 function SiteAndBooking({ language, bands, portrait, duration }: SceneProps & { bands: Bands }) {
   const b = useBrand();
   const copy = FENIX_COPY[language];
   const body = stackBands(bands.body, [{ id: "main", flex: 1 }, { id: "note", h: portrait ? 44 : 34 }], portrait ? 18 : 14);
   const shots = [FENIX_ASSETS.bookingDay, FENIX_ASSETS.bookingTime, FENIX_ASSETS.bookingDetails].map((shot, index) => ({ ...shot, label: copy.bookingSteps[index] }));
-  const half = Math.round(duration * 0.44);
-  const noteShow = progress(useCurrentFrame(), portrait ? half + 30 : 90, portrait ? half + 50 : 110);
-  const [left, right] = splitColumns(body.main, [1.25, 1], 40);
+  // Una cosa por vez y a su tamaño: primero el sitio, después los tres pasos de la reserva.
+  const half = Math.round(duration * 0.42);
+  const noteShow = progress(useCurrentFrame(), half + 30, half + 50);
   return (
     <Fade duration={duration}>
       <SceneTitle kicker={copy.siteKicker} title={copy.siteTitle} box={bands.title} portrait={portrait} />
-      {portrait ? (
-        <>
-          <Sequence name="Sitio" durationInFrames={half}>
-            <ScrollReel box={body.main} asset={FENIX_ASSETS.siteHbot} host={FENIX_HOST} path="" duration={half} stops={[0, 0.6]} />
-          </Sequence>
-          <Sequence name="Reserva" from={half} durationInFrames={duration - half}>
-            <ShotStack box={body.main} shots={shots} duration={duration - half} frame="card" startAt={16} />
-          </Sequence>
-        </>
-      ) : (
-        <>
-          <ScrollReel box={left} asset={FENIX_ASSETS.siteHbot} host={FENIX_HOST} path="" duration={duration} stops={[0, 0.6]} />
-          <ShotStack box={right} shots={shots} duration={duration} frame="card" startAt={40} />
-        </>
-      )}
+      <Sequence name="Sitio" durationInFrames={half}>
+        <ScrollReel box={body.main} asset={FENIX_ASSETS.siteHbot} host={FENIX_HOST} path="" duration={half} stops={[0, 0.6]} />
+      </Sequence>
+      <Sequence name="Reserva" from={half} durationInFrames={duration - half}>
+        <ShotStack box={body.main} shots={shots} duration={duration - half} frame="card" startAt={16} />
+      </Sequence>
       <div style={{ position: "absolute", left: body.note.x, top: body.note.y, width: body.note.w, height: body.note.h, display: "flex", alignItems: "center", gap: 12, fontFamily: b.fonts.body, fontSize: portrait ? 24 : 18, color: b.palette.muted, opacity: noteShow }}>
         <span style={{ width: portrait ? 10 : 8, height: portrait ? 10 : 8, borderRadius: 99, background: b.palette.accent }} />
         {copy.bookingNote}

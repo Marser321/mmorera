@@ -1,7 +1,8 @@
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { Html5Video, Img, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
 import type { FilmAsset } from "@/data/films/flagships/types";
 import type { Box } from "@/lib/filmLayout";
+import { playableAsset } from "@/lib/videoSource";
 import { CLAMP, EASE_IN_OUT, progress, useFilmLayout } from "../theme";
 import { alpha, useBrand } from "./context";
 import { cinematicPlateLayout, PLATE_KICKER_TRACKING, type PlateCaption } from "./layout/cinematicPlate";
@@ -40,11 +41,14 @@ export type CinematicPlateProps = {
  * cubre la caja (recorte anamórfico como mucho) y en 4:5 queda como banda
  * con letterbox. La leyenda, si la hay, vive debajo (nunca sobre el medio).
  */
-export function CinematicPlate({ box, asset, poster, focal = { x: 0.5, y: 0.5 }, veilOpacity = 0.55, duration, push = 0.045, caption, captionFrom = 22, align, startAt = 0, children }: CinematicPlateProps) {
+export function CinematicPlate({ box, asset: source, poster, focal = { x: 0.5, y: 0.5 }, veilOpacity = 0.55, duration, push = 0.045, caption, captionFrom = 22, align, startAt = 0, children }: CinematicPlateProps) {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const { portrait } = useFilmLayout();
   const brand = useBrand();
+  // AV1/WebM si el navegador lo decodifica; si el video igual falla, queda el póster.
+  const asset = playableAsset(source);
+  const [failed, setFailed] = useState(false);
   const layout = cinematicPlateLayout(box, { asset, caption, focal, align }, portrait ? "portrait" : "landscape");
   const { plate, media } = layout;
   const video = isVideoSrc(asset.src);
@@ -77,7 +81,7 @@ export function CinematicPlate({ box, asset, poster, focal = { x: 0.5, y: 0.5 },
         <div style={{ position: "absolute", left: media.x - plate.x, top: media.y - plate.y, width: media.w, height: media.h, scale: `${scale}`, transformOrigin: `${focal.x * 100}% ${focal.y * 100}%` }}>
           {poster && video ? <Img src={poster} style={fill} /> : null}
           {video ? (
-            <Html5Video src={asset.src} muted loop={loop} pauseWhenBuffering={false} acceptableTimeShiftInSeconds={0.6} trimBefore={startAt > 0 ? Math.round(startAt * fps) : undefined} style={fill} />
+            failed ? null : <Html5Video src={asset.src} muted loop={loop} pauseWhenBuffering={false} acceptableTimeShiftInSeconds={0.6} trimBefore={startAt > 0 ? Math.round(startAt * fps) : undefined} onError={() => setFailed(true)} style={fill} />
           ) : (
             <Img src={asset.src} style={fill} />
           )}

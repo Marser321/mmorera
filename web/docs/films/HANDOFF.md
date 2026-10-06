@@ -28,7 +28,7 @@ Estado y reglas del sistema de "films de lanzamiento" del portfolio, para seguir
 - `web/src/data/films/`: guiones puros, sin Remotion.
   - `flagships/types.ts`: cada film insignia declara su lista de escenas con un tipo (`SceneKind`) y su línea de tiempo sale de `timelineFrom()`. `flagships.test.ts` exige 70–80 s, firma al final y que dos clientes nunca compartan estructura (subsecuencia común ≤ 0,6) ni escena protagonista.
   - `flagships/fenix.ts`: cifras con su línea del dossier (`FENIX_FACTS`), assets con su medida nativa (`FENIX_ASSETS`, el test la lee de las cabeceras con `lib/mediaSize.ts`) y copia ES/EN. `fenix.test.ts` prohíbe %, precios, testimonios, FENIX OS y números que no estén en `FENIX_FACTS`.
-- `web/src/lib/videoSource.ts`: `playableAsset()` elige la versión AV1/WebM de un clip cuando el navegador la reproduce (el Chromium de código abierto de Playwright no trae H.264; Safari se queda con el MP4).
+- `web/src/lib/videoSource.ts`: `playableAsset()` elige la versión AV1/WebM de un clip cuando el navegador la reproduce (el Chromium de código abierto de Playwright no trae H.264; Safari se queda con el MP4). `CinematicPlate` y `ScrollReel` lo aplican solos y, si el video igual falla, dejan el póster en lugar de romper el film.
 - `web/src/lib/filmLayout.ts`: zona útil por formato, bandas, columnas y grillas. Las escenas nuevas calculan sus cajas ahí (texto en bandas propias, medios en placas propias) y cada una tiene un layout puro en `scenes/brand/layout/` con su test de "nada se pisa".
 - **Laboratorio de escenas** (`/films-lab`, solo `next dev`): cada escena de la biblioteca aislada, con marca, formato e idioma por query string y `window.__films.lab` para recorrerla cuadro por cuadro.
 - `web/src/data/architecture/`: diagramas de Archify por caso.
@@ -96,3 +96,21 @@ Estado y reglas del sistema de "films de lanzamiento" del portfolio, para seguir
    - **Hub Profesional AI** tiene el mismo problema: el reel guardado de `profecionalcv.vercel.app` muestra un taller ("Mecánica Premium"), no una herramienta de CV con IA. Confirmar con Mario qué hay hoy en esa URL antes de armar su film.
 5. **Resto de los casos (requiere red):** análisis en vivo, marca real del CSS, JSON de Archify si hay sistema y film insignia con estructura propia (el test de estructura distinta los cubre a todos).
 6. **Red del entorno:** los `liveUrl` responden 000 desde la nube. Hace falta Network access "Full", o "Custom" con `fenixmedicalcenters.com`, `www.mrstudiotattoo.com`, `*.vercel.app`, `fonts.googleapis.com` y `fonts.gstatic.com`.
+
+### Propuesta de estructura por caso (a confirmar con el análisis en vivo)
+Sale de lo que muestran los reels guardados en `public/portfolio/reels/` (1280×800, 6,2 s). Cada film necesita una escena protagonista propia (`flagships.test.ts`); varias son tipos nuevos de escena.
+
+| Caso | Lo que muestra el reel | Escena protagonista |
+|---|---|---|
+| AD Media Solution | (tapado por el popup; recapturar) | `pipeline-board` (datos de ejemplo) |
+| L&B Elite Wash & Detail | "Detailing móvil que llega a ti", "Arma tu cotización", grilla por tipo de vehículo | cotizador por tipo de vehículo (nuevo) |
+| Truckers Choice | "Insurance + Permits. One roof.", sitio bilingüe | cambio de idioma lado a lado (nuevo) |
+| Rangel Oviedo Group | "Invierte, compra o múdate a Texas…", tono editorial | recorridos por objetivo: comprar, invertir, vender, mudarse (nuevo) |
+| Mr. Studio Tattoo | portfolio oscuro, "Perforaciones exclusivas" | muro de piezas por artista (nuevo) |
+| AutoHub 360 | "Tu próximo auto te espera acá", inventario | giro 360° del vehículo (nuevo; necesita los cuadros del sitio) |
+| EvoWrap | "Reinventa tu vehículo": cerámico, PPF, interior | selector de acabados sobre el vehículo (nuevo) |
+| Punta 360 | "Bienvenido a Punta360": propietarios, agencias, equipo | paneo panorámico (nuevo; necesita la imagen 360°) |
+| América Trámites | formularios guiados, "¿Qué necesita lograr hoy?" | formulario por etapas con validación (nuevo) |
+| DOGE.S.M | "Limpieza de élite Miami", oferta por servicios | oferta por niveles (nuevo) |
+| Hub Profesional AI | taller "Mecánica Premium" (no coincide con el caso) | en espera de confirmar |
+| LNB | La Nueva Brasil (no coincide con el caso) | en espera de la carpeta |

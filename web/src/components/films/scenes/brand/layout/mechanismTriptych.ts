@@ -46,9 +46,19 @@ function formulaBlock(formula: MechanismFormula | undefined, width: number, form
   return { size, lines, kickerH, kickerGap, textH, h: kickerH + kickerGap + textH, kickerSize: m.kicker };
 }
 
-function uniformSize(texts: string[], width: number, spec: { max: number; min: number; lines: number }, lineHeight: number) {
-  const size = Math.min(...texts.map((text) => fitFontSize(text, { width, maxLines: spec.lines, max: spec.max, min: spec.min, lineHeight, glyphEm: GLYPH_EM.body, step: 1 })));
-  const lines = Math.max(1, ...texts.map((text) => Math.min(spec.lines, lineCount(text, size, width, GLYPH_EM.body, spec.lines))));
+/**
+ * Un solo tamaño para los tres textos del mismo rol (el más grande que les
+ * sirve a todos). Con `preferOne`, si achicando hasta un 18 % entran todos en
+ * una línea, se prefiere eso: así no queda un hueco reservado de más.
+ */
+function uniformSize(texts: string[], width: number, spec: { max: number; min: number; lines: number }, lineHeight: number, glyphEm: number, preferOne = false) {
+  const oneLineMin = Math.max(spec.min, Math.ceil(spec.max * 0.82));
+  if (preferOne && texts.every((text) => lineCount(text, oneLineMin, width, glyphEm, 1) <= 1)) {
+    const size = Math.min(...texts.map((text) => fitFontSize(text, { width, maxLines: 1, max: spec.max, min: oneLineMin, lineHeight, glyphEm, step: 1 })));
+    return { size, lines: 1 };
+  }
+  const size = Math.min(...texts.map((text) => fitFontSize(text, { width, maxLines: spec.lines, max: spec.max, min: spec.min, lineHeight, glyphEm, step: 1 })));
+  const lines = Math.max(1, ...texts.map((text) => Math.min(spec.lines, lineCount(text, size, width, glyphEm, spec.lines))));
   return { size, lines };
 }
 
@@ -68,8 +78,8 @@ export function mechanismTriptychLayout(box: Box, data: MechanismData, format: F
   if (format === "landscape") {
     const cols = splitColumns({ ...box, h: 0 }, Array.from({ length: n }, () => 1), m.colGap);
     const colW = cols[0]?.w ?? box.w;
-    title = uniformSize(titles, colW, m.title, LINE_HEIGHT.display);
-    body = bodies.length ? uniformSize(bodies, colW, m.body, LINE_HEIGHT.body) : { size: m.body.min, lines: 0 };
+    title = uniformSize(titles, colW, m.title, LINE_HEIGHT.display, GLYPH_EM.display, true);
+    body = bodies.length ? uniformSize(bodies, colW, m.body, LINE_HEIGHT.body, GLYPH_EM.body) : { size: m.body.min, lines: 0 };
     const titleH = blockHeight(title.size, title.lines, LINE_HEIGHT.display);
     const bodyH = body.lines ? blockHeight(body.size, body.lines, LINE_HEIGHT.body) : 0;
     const captionH = 22 + m.chip + 16 + titleH + (bodyH ? 10 + bodyH : 0);
@@ -97,8 +107,8 @@ export function mechanismTriptychLayout(box: Box, data: MechanismData, format: F
     const textW = (imageW: number) => box.x + box.w - textX(imageW);
     let imageW = imageW0;
     const measure = () => {
-      title = uniformSize(titles, textW(imageW), m.title, LINE_HEIGHT.display);
-      body = bodies.length ? uniformSize(bodies, textW(imageW), m.body, LINE_HEIGHT.body) : { size: m.body.min, lines: 0 };
+      title = uniformSize(titles, textW(imageW), m.title, LINE_HEIGHT.display, GLYPH_EM.display, true);
+      body = bodies.length ? uniformSize(bodies, textW(imageW), m.body, LINE_HEIGHT.body, GLYPH_EM.body) : { size: m.body.min, lines: 0 };
       const titleH = blockHeight(title.size, title.lines, LINE_HEIGHT.display);
       const bodyH = body.lines ? blockHeight(body.size, body.lines, LINE_HEIGHT.body) : 0;
       const captionH = Math.max(m.chip, titleH) + (bodyH ? 12 + bodyH : 0);

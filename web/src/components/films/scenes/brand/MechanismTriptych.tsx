@@ -72,9 +72,11 @@ export function MechanismTriptych({ box, stills, captions, formula, duration, st
       {/* Carril de las líneas: van primero (debajo) y nacen/terminan fuera de las fichas. */}
       {layout.connectors.map((line, index) => {
         const draw = progress(frame, at(index + 1) - 8, at(index + 1) + 16, EASE_IN_OUT);
+        // El carril aparece con la ficha de la que sale (no antes).
+        const track = progress(frame, at(index) + 12, at(index) + 26);
         const horizontal = line.w >= line.h;
         return (
-          <div key={`line-${index}`} style={{ position: "absolute", left: line.x, top: line.y, width: line.w, height: line.h, background: brand.palette.line }}>
+          <div key={`line-${index}`} style={{ position: "absolute", left: line.x, top: line.y, width: line.w, height: line.h, background: brand.palette.line, opacity: track }}>
             <div style={{ width: "100%", height: "100%", background: alpha(brand.palette.accent, 70), transformOrigin: horizontal ? "left center" : "center top", scale: horizontal ? `${draw} 1` : `1 ${draw}` }} />
           </div>
         );
@@ -151,9 +153,9 @@ export function MechanismTriptych({ box, stills, captions, formula, duration, st
                   fontFamily: brand.fonts.body,
                   fontSize: layout.sizes.body,
                   lineHeight: LINE_HEIGHT.body,
+                  textWrap: "balance",
                   color: brand.palette.muted,
                   opacity: bodyIn,
-                  translate: `0 ${(1 - bodyIn) * 8}px`,
                 }}
               >
                 {caption.body}
