@@ -93,6 +93,9 @@ export function ManifestoBeats({ box, beats, duration, maxLines, align = "left",
   );
 }
 
+/** Frames que tarda cada palabra en subir. */
+const REVEAL_FRAMES = 18;
+
 /** Divide una frase en palabras, marcando las que van entre asteriscos. */
 export function emphasisWords(text: string) {
   let open = false;
@@ -152,6 +155,9 @@ export function RevealWords({
   // "\n" fija el corte de línea; el orden de revelado sigue de un tramo al otro.
   const segments = text.split("\n").map(emphasisWords);
   const offsets = segments.map((_, index) => segments.slice(0, index).reduce((total, words) => total + words.length, 0));
+  const count = offsets[offsets.length - 1] + segments[segments.length - 1].length;
+  // La frase entera se asienta en ~30 frames aunque sea larga.
+  const gap = Math.min(stagger, Math.max(1, (30 - REVEAL_FRAMES) / Math.max(1, count - 1)));
   return (
     <div
       style={{
@@ -176,7 +182,7 @@ export function RevealWords({
           {segment > 0 ? <br /> : null}
           {words.map(({ word, emphasized }, position) => {
             const order = offsets[segment] + position;
-            const reveal = interpolate(frame, [from + order * stagger, from + order * stagger + 26], [0, 1], { ...CLAMP, easing: EASE_IN_OUT });
+            const reveal = interpolate(frame, [from + order * gap, from + order * gap + REVEAL_FRAMES], [0, 1], { ...CLAMP, easing: EASE_IN_OUT });
             return (
               <span key={`${word}-${order}`}>
                 {/* Máscara con aire arriba y abajo (tildes y descendentes), compensada con márgenes negativos para no alterar el interlineado. */}

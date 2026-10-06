@@ -51,6 +51,18 @@ export type EvidenceLedgerLayout = {
   blocks: LayoutBlock[];
 };
 
+/**
+ * Colores de nivel: semánticos y apagados. Nunca dorado sobre contenido
+ * biológico (el dorado de una marca no "aprueba" nada); lo prohibido va en un
+ * rojo apagado. "No establecido" usa el gris de la marca (null).
+ */
+export const EVIDENCE_TONES: Record<EvidenceTierId, string | null> = {
+  approved: "#6FA88A",
+  signal: "#86A3C3",
+  "not-established": null,
+  prohibited: "#C4645C",
+};
+
 /** Rótulo de redacción de cada nivel (solo aprobado y prohibido lo llevan). */
 export function tierTag(id: EvidenceTierId, wording: EvidenceLedgerData["wording"]) {
   if (!wording) return null;
