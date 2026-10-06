@@ -2,6 +2,13 @@
  * Tipos y geometría de los diagramas de arquitectura en formato Archify
  * (tt-a1i/archify, MIT). El JSON es la fuente: el mismo archivo se valida con
  * la CLI de Archify, se recorre en los films y se muestra interactivo.
+ *
+ * Variantes por diagrama `<nombre>`:
+ * - `<nombre>.json` (español, apaisado) y `<nombre>.portrait.json` (mismo
+ *   contenido, posiciones para 4:5 y pantallas angostas);
+ * - `<nombre>.en.json`: traducción (no repite posiciones);
+ * - `*.layout.json`: geometría que congela scripts/build-archify-layouts.ts
+ *   para cada combinación de orientación e idioma.
  */
 
 export type ArchifyComponentType = "external" | "frontend" | "backend" | "security" | "database" | "cloud" | string;
@@ -71,6 +78,63 @@ export interface ArchifyLayout {
 /** Ruta SVG de una polilínea de Archify. */
 export function polylinePath(points: Array<[number, number]>) {
   return points.map(([x, y], index) => `${index === 0 ? "M" : "L"} ${x} ${y}`).join(" ");
+}
+
+/** Traducción de un diagrama: textos por id (componentes, vistas) o por clave (grupos, conexiones). */
+export interface ArchifyTranslation {
+  title: string;
+  components: Record<string, { label: string; sublabel?: string; tag?: string }>;
+  /** Etiqueta de grupo en español → etiqueta traducida. */
+  boundaries: Record<string, string>;
+  /** `from>to` → etiqueta de la conexión. */
+  connections: Record<string, string>;
+  views: Record<string, { label: string; note?: string }>;
+}
+
+export const edgeKey = (from: string, to: string) => `${from}>${to}`;
+
+/** Aplica una traducción al diagrama (las posiciones no cambian). */
+export function localizeDiagram(diagram: ArchifyArchitecture, translation: ArchifyTranslation): ArchifyArchitecture {
+  return {
+    ...diagram,
+    meta: {
+      ...diagram.meta,
+      title: translation.title,
+      views: diagram.meta.views?.map((view) => ({ ...view, ...translation.views[view.id] })),
+    },
+    components: diagram.components.map((component) => ({ ...component, ...translation.components[component.id] })),
+    boundaries: diagram.boundaries?.map((boundary) => ({ ...boundary, label: translation.boundaries[boundary.label] ?? boundary.label })),
+    connections: diagram.connections.map((connection) =>
+      connection.label ? { ...connection, label: translation.connections[edgeKey(connection.from, connection.to)] ?? connection.label } : connection,
+    ),
+    cards: undefined,
+  };
+}
+
+/** Qué queda en foco en una vista (null = todo): mismo criterio en el film y en el diagrama interactivo. */
+export function viewFocus(diagram: ArchifyArchitecture, viewId: string | null) {
+  const view = viewId ? diagram.meta.views?.find((item) => item.id === viewId) : undefined;
+  if (!view) return null;
+  const nodes = new Set(view.focus);
+  const edges = new Set(diagram.connections.filter((connection) => nodes.has(connection.from) && nodes.has(connection.to)).map((connection) => edgeKey(connection.from, connection.to)));
+  const boundaries = new Set((diagram.boundaries ?? []).filter((boundary) => boundary.wraps.some((id) => nodes.has(id))).map((boundary) => boundary.label));
+  return { view, nodes, edges, boundaries };
+}
+
+/** Rol de color por tipo de componente (la paleta concreta la pone cada marca). */
+export function typeRole(type: ArchifyComponentType): "danger" | "accent" | "accentSoft" | "muted" {
+  switch (type) {
+    case "security":
+      return "danger";
+    case "database":
+    case "frontend":
+      return "accent";
+    case "backend":
+    case "cloud":
+      return "accentSoft";
+    default:
+      return "muted";
+  }
 }
 
 export interface Box {

@@ -29,6 +29,22 @@ describe("case topology data model", () => {
     }
   });
 
+  it("no promete cifras: ninguna métrica inventada en topologías ni en la de respaldo", () => {
+    // Porcentajes, multiplicadores, tiempos, "24/7", puntajes y "+N": nada de eso está verificado.
+    const FORBIDDEN = [/\d+\s?%/, /\+\s?\d/, /<\s?\d/, /\b\d+(\.\d+)?\s?(s|seg|ms|x)\b/i, /24\/7/, /pagespeed/i, /speed-to-lead/i, /\b100\b/, /zero/i, /stripe/i];
+    const strings: string[] = [];
+    const collect = (value: unknown) => {
+      if (typeof value === "string") strings.push(value);
+      else if (Array.isArray(value)) value.forEach(collect);
+      else if (value && typeof value === "object") Object.values(value).forEach(collect);
+    };
+    collect(CASE_TOPOLOGIES);
+    collect(getCaseTopology("sin-topologia"));
+    for (const text of strings) {
+      for (const pattern of FORBIDDEN) assert.ok(!pattern.test(text), `"${text}" coincide con ${pattern}`);
+    }
+  });
+
   it("returns fallback default topology for unmapped case slugs safely", () => {
     const fallback = getCaseTopology("unknown-case-slug", "#FFB86C");
     assert.equal(fallback.projectSlug, "unknown-case-slug");

@@ -1,5 +1,5 @@
 {
-  "source": "fenix-system-architecture.json (es)",
+  "source": "fenix-system-architecture.json (en)",
   "generatedBy": "archify validate architecture --layout-json --quality showcase",
   "viewBox": [
     1650,
@@ -100,7 +100,7 @@
   ],
   "boundaries": [
     {
-      "label": "Sitio (Next.js 16)",
+      "label": "Site (Next.js 16)",
       "kind": "region",
       "x": 250,
       "y": 24,
@@ -108,7 +108,7 @@
       "h": 348
     },
     {
-      "label": "Frontera de compliance",
+      "label": "Compliance boundary",
       "kind": "security-group",
       "x": 720,
       "y": 144,
@@ -116,7 +116,7 @@
       "h": 108
     },
     {
-      "label": "Servidor",
+      "label": "Server",
       "kind": "region",
       "x": 720,
       "y": 304,
@@ -279,7 +279,7 @@
         ]
       ],
       "label": {
-        "text": "7 campos",
+        "text": "7 fields",
         "x": 1351,
         "y": 181,
         "w": 48,
@@ -372,10 +372,10 @@
         ]
       ],
       "label": {
-        "text": "Cita",
-        "x": 1162,
+        "text": "Booking",
+        "x": 1155,
         "y": 421,
-        "w": 30,
+        "w": 44,
         "h": 14
       }
     },

@@ -1,5 +1,5 @@
 {
-  "source": "new-brothers-architecture.json (es)",
+  "source": "new-brothers-architecture.json (en)",
   "generatedBy": "archify validate architecture --layout-json --quality showcase",
   "viewBox": [
     1514,
@@ -101,7 +101,7 @@
       "h": 445
     },
     {
-      "label": "Seguridad (roles + RLS)",
+      "label": "Security (roles + RLS)",
       "kind": "security-group",
       "x": 524,
       "y": 105,
@@ -175,10 +175,10 @@
         ]
       ],
       "label": {
-        "text": "Sesión",
-        "x": 463,
+        "text": "Session",
+        "x": 460,
         "y": 140,
-        "w": 39,
+        "w": 44,
         "h": 14
       }
     },
@@ -196,10 +196,10 @@
         ]
       ],
       "label": {
-        "text": "Permisos",
-        "x": 458,
+        "text": "Permissions",
+        "x": 451,
         "y": 303,
-        "w": 48,
+        "w": 63,
         "h": 14
       }
     },
@@ -413,10 +413,10 @@
         ]
       ],
       "label": {
-        "text": "Inactivos",
-        "x": 1195,
+        "text": "Inactive",
+        "x": 1198,
         "y": 256,
-        "w": 53,
+        "w": 48,
         "h": 14
       }
     }

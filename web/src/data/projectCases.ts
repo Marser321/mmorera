@@ -5,6 +5,50 @@ const liveEvidence = t("Producto desplegado y captura del trabajo.", "Deployed p
 
 export const PROJECT_CASES: ProjectCase[] = [
   {
+    // Fuente: docs/films/dossiers/fenix.md (verificado contra el repo del cliente).
+    // Publicable por autorización de Mario: sitio, arquitectura + GHL,
+    // investigación, fábrica de contenido e ingeniería. Sin testimonios,
+    // datos de pacientes, FENIX OS ni costos.
+    slug: "fenix-medical-center",
+    title: t("Fenix Medical Center", "Fenix Medical Center"),
+    summary: t(
+      "Atención primaria, longevidad y recuperación bajo supervisión médica: sitio bilingüe, reserva conectada al CRM y una fábrica de contenido que respeta la evidencia.",
+      "Primary care, longevity and recovery under medical supervision: a bilingual site, booking connected to the CRM and a content factory that respects the evidence.",
+    ),
+    tracks: ["create", "build", "scale"],
+    role: t(
+      "Investigación, posicionamiento, sitio, arquitectura del CRM y fábrica de contenido.",
+      "Research, positioning, website, CRM architecture and content factory.",
+    ),
+    challenge: t(
+      "Comunicar terapias médicas sin prometer más de lo que la evidencia sostiene y convertir visitas en citas sin exponer datos de salud.",
+      "Communicate medical therapies without promising more than the evidence supports, and turn visits into appointments without exposing health data.",
+    ),
+    constraints: [
+      t("Cada afirmación médica con redacción permitida y prohibida.", "Every medical claim with permitted and prohibited wording."),
+      t("Datos de salud fuera del formulario y de la publicidad.", "Health data kept out of the form and out of advertising."),
+      t("Pacientes hispanos: sitio bilingüe y precios claros.", "Hispanic patients: a bilingual site and clear prices."),
+    ],
+    decisions: [
+      t("Un registro de 109 afirmaciones antes de escribir la primera página.", "A registry of 109 claims before writing the first page."),
+      t("Formulario de 7 campos sin texto libre, con llave fail-closed hacia GoHighLevel.", "A 7-field form with no free text and a fail-closed switch into GoHighLevel."),
+      t("Reserva en 3 pasos contra la agenda real del CRM.", "A 3-step booking against the CRM's real calendar."),
+      t("Una base de 1.096 videos médicos públicos para escribir guiones con búsqueda por palabras clave.", "A base of 1,096 public medical videos to write scripts with keyword search."),
+    ],
+    result: t(
+      "Un sitio de 40 páginas en dos idiomas, con reserva conectada al CRM y una fábrica de contenido que no promete de más.",
+      "A 40-page site in two languages, with booking connected to the CRM and a content factory that never overpromises.",
+    ),
+    evidence: [liveEvidence],
+    stack: ["Next.js 16", "GoHighLevel", "next-intl", "Playwright"],
+    media: [{ src: "/portfolio/brands/fenix-medical-center/shots/site-hbot.jpg", alt: t("Página de oxígeno hiperbárico de Fenix Medical Center", "Fenix Medical Center hyperbaric oxygen page") }],
+    liveUrl: "https://fenixmedicalcenters.com",
+    accent: "#cb9334",
+    client: t("Fenix Medical Group Inc · Duluth, Georgia (EE. UU.)", "Fenix Medical Group Inc · Duluth, Georgia (USA)"),
+    kind: t("Salud y longevidad", "Health and longevity"),
+    status: "featured",
+  },
+  {
     slug: "lb-elite-wash-detail",
     title: t("L&B Elite Wash & Detail", "L&B Elite Wash & Detail"),
     summary: t("Detailing móvil premium en el suroeste de Florida: marca de alta gama y pedido de servicio sin fricción.", "Premium mobile detailing in Southwest Florida: a high-end brand with a frictionless service request."),

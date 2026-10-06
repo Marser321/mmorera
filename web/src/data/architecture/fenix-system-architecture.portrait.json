@@ -3,7 +3,7 @@
   "diagram_type": "architecture",
   "meta": {
     "title": "Fenix Medical Center · Sitio, CRM y frontera de compliance",
-    "output": "fenix-system-architecture.html",
+    "output": "fenix-system-architecture.portrait.html",
     "visual_preset": "editorial",
     "quality_profile": "showcase",
     "views": [
@@ -57,8 +57,8 @@
       "label": "Visitante",
       "sublabel": "Sitio bilingüe ES / EN",
       "pos": [
-        20,
-        170
+        230,
+        20
       ],
       "size": [
         170,
@@ -71,8 +71,8 @@
       "label": "Sitio Next.js 16",
       "sublabel": "next-intl · 40 páginas",
       "pos": [
-        270,
-        170
+        230,
+        150
       ],
       "size": [
         170,
@@ -85,8 +85,8 @@
       "label": "Motor cinemático",
       "sublabel": "Video pre-renderizado + CSS",
       "pos": [
-        490,
-        50
+        20,
+        150
       ],
       "size": [
         170,
@@ -99,8 +99,8 @@
       "label": "Formulario de contacto",
       "sublabel": "Lead sin datos de salud",
       "pos": [
-        490,
-        170
+        440,
+        150
       ],
       "size": [
         170,
@@ -113,7 +113,7 @@
       "label": "Reserva en 3 pasos",
       "sublabel": "Día → hora → datos",
       "pos": [
-        490,
+        230,
         290
       ],
       "size": [
@@ -127,8 +127,8 @@
       "label": "WAF de Vercel",
       "sublabel": "5 pedidos / 10 min por IP",
       "pos": [
-        740,
-        170
+        710,
+        150
       ],
       "size": [
         170,
@@ -141,8 +141,8 @@
       "label": "POST /api/lead",
       "sublabel": "Llave fail-closed",
       "pos": [
-        950,
-        170
+        710,
+        290
       ],
       "size": [
         170,
@@ -155,8 +155,8 @@
       "label": "Validación estricta",
       "sublabel": "7 campos · sin texto libre",
       "pos": [
-        1160,
-        170
+        710,
+        430
       ],
       "size": [
         170,
@@ -169,8 +169,8 @@
       "label": "ghl.ts",
       "sublabel": "API REST de GHL",
       "pos": [
-        740,
-        330
+        230,
+        450
       ],
       "size": [
         170,
@@ -183,8 +183,8 @@
       "label": "Meta Conversions API",
       "sublabel": "Sin datos personales",
       "pos": [
-        950,
-        330
+        20,
+        450
       ],
       "size": [
         170,
@@ -197,8 +197,8 @@
       "label": "GHL Inbound Webhook",
       "sublabel": "Entrada de leads",
       "pos": [
-        1420,
-        170
+        710,
+        600
       ],
       "size": [
         170,
@@ -211,8 +211,8 @@
       "label": "Workflow Website Intake",
       "sublabel": "Contacto → tags → oportunidad",
       "pos": [
-        1420,
-        290
+        470,
+        600
       ],
       "size": [
         170,
@@ -225,8 +225,8 @@
       "label": "Pipeline Website Leads",
       "sublabel": "New → Scheduled · 6 campos",
       "pos": [
-        1420,
-        410
+        230,
+        600
       ],
       "size": [
         170,
@@ -332,8 +332,7 @@
     {
       "from": "ghl_api",
       "to": "crm",
-      "label": "Cita",
-      "labelSegment": 2
+      "label": "Cita"
     },
     {
       "from": "site",

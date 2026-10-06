@@ -1,7 +1,6 @@
 import { AbsoluteFill, Img, Sequence, interpolate, useCurrentFrame } from "remotion";
-import nbArchitectureJson from "@/data/architecture/new-brothers-architecture.json";
-import nbArchitectureLayout from "@/data/architecture/new-brothers-architecture.layout.json";
-import type { ArchifyArchitecture, ArchifyLayout } from "@/data/architecture/archify";
+import { resolveArchitecture } from "@/data/architecture/bundle";
+import { bundle as nbArchitecture } from "@/data/architecture/bundles/new-brothers-barberia";
 import { brandCssVars, CASE_BRANDS } from "@/data/brands/caseBrands";
 import { NB_CHAPTERS, NB_COPY, NB_PANEL_CAPTURE, NB_PANEL_SHOTS, NB_TIMELINE } from "@/data/films/flagships/newBrothers";
 import type { FilmLanguage } from "@/data/films/filmTypes";
@@ -21,8 +20,6 @@ export type NewBrothersFilmProps = {
 };
 
 const brand = CASE_BRANDS["new-brothers-barberia"];
-const architecture = nbArchitectureJson as unknown as ArchifyArchitecture;
-const architectureLayout = nbArchitectureLayout as unknown as ArchifyLayout;
 const PANELS = "/portfolio/panels/new-brothers-barberia";
 const BACKDROPS = "/portfolio/backdrops/new-brothers-barberia";
 
@@ -36,6 +33,7 @@ export function NewBrothersFilm({ language }: NewBrothersFilmProps) {
   const { fps, portrait, width, height } = useFilmLayout();
   const copy = NB_COPY[language];
   const T = NB_TIMELINE;
+  const architecture = resolveArchitecture(nbArchitecture, language, portrait ? "portrait" : "landscape");
 
   return (
     <BrandProvider brand={brand}>
@@ -74,9 +72,9 @@ export function NewBrothersFilm({ language }: NewBrothersFilmProps) {
           <Fade duration={T.architecture.duration}>
             <BrandTitle kicker={copy.archKicker} title={copy.archTitle} size={portrait ? 60 : 44} style={portrait ? { left: 72, top: 110, width: 936 } : { left: 110, top: 92, width: 1100 }} />
             <ArchitectureScene
-              diagram={architecture}
-              layout={architectureLayout}
-              area={portrait ? { x: 20, y: 330, w: 1040, h: 720 } : { x: 70, y: 176, w: 1460, h: 536 }}
+              diagram={architecture.diagram}
+              layout={architecture.layout}
+              area={portrait ? { x: 20, y: 300, w: 1040, h: 760 } : { x: 70, y: 176, w: 1460, h: 536 }}
               caption={portrait ? { x: 72, y: 1076, w: 936, size: 30 } : { x: 110, y: 728, w: 1380, size: 22 }}
               maxZoom={portrait ? 2.2 : 1.6}
               buildFrames={90}

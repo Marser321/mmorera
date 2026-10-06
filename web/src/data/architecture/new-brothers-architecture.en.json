@@ -1,0 +1,44 @@
+{
+  "title": "New Brothers · A barbershop's own CRM",
+  "components": {
+    "users": { "label": "Clients and team", "sublabel": "Web and mobile" },
+    "booking_ui": { "label": "6-step booking", "sublabel": "/reservar · wizard" },
+    "admin_ui": { "label": "Admin panel", "sublabel": "14 sections" },
+    "barber_ui": { "label": "Barber portal", "sublabel": "/barbero/mi-agenda" },
+    "auth": { "label": "Roles and permissions", "sublabel": "has_permission() · 4 roles" },
+    "rls": { "label": "Row Level Security", "sublabel": "26 tables with RLS" },
+    "rpc_booking": { "label": "book_appointment", "sublabel": "No double booking" },
+    "rpc_cash": { "label": "close_cash_day", "sublabel": "POS and cash close" },
+    "rpc_settle": { "label": "close_barber_settlement", "sublabel": "Payouts" },
+    "db": { "label": "Supabase Postgres", "sublabel": "26 tables · history" },
+    "edge": { "label": "Reactivation", "sublabel": "send-reminders → WhatsApp" },
+    "ai": { "label": "AI assistant", "sublabel": "Gemini → OpenAI → rules" }
+  },
+  "boundaries": {
+    "Front (Next.js 16)": "Front (Next.js 16)",
+    "Seguridad (roles + RLS)": "Security (roles + RLS)",
+    "Supabase": "Supabase"
+  },
+  "connections": {
+    "users>booking_ui": "HTTPS",
+    "booking_ui>auth": "Session",
+    "admin_ui>rls": "Permissions",
+    "auth>rpc_booking": "RPC",
+    "rpc_booking>db": "Row lock",
+    "db>edge": "Inactive"
+  },
+  "views": {
+    "booking-path": {
+      "label": "Booking without double booking",
+      "note": "Clients book in six steps and the book_appointment function checks the slot with a row lock before confirming it."
+    },
+    "cash-path": {
+      "label": "Cash and payouts",
+      "note": "The counter charges, closes the day's cash and settles what each barber is owed, all with role-based permissions."
+    },
+    "clients-path": {
+      "label": "Clients and reactivation",
+      "note": "Each client record keeps their history; an edge function flags inactive clients and the team reaches out on WhatsApp."
+    }
+  }
+}

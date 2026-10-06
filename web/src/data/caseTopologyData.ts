@@ -26,104 +26,114 @@ export interface CaseTopologyBlueprint {
   nodes: TopologyNode[];
 }
 
+/**
+ * Topología genérica (casos sin una propia). Describe etapas, no promete
+ * cifras: `metricHighlight` es una etiqueta técnica, nunca una métrica.
+ */
 const DEFAULT_TOPOLOGY_NODES: TopologyNode[] = [
   {
     id: "ingest",
-    name: { es: "Captación Web Next.js 16", en: "Next.js 16 Web Capture" },
+    name: { es: "Captación en el sitio", en: "On-site capture" },
     category: "ingestion",
-    statusBadge: { es: "Edge CDN · 95+ Score", en: "Edge CDN · 95+ Score" },
-    metricHighlight: "0.4s FCP",
+    statusBadge: { es: "Next.js", en: "Next.js" },
+    metricHighlight: "Formulario",
     payloadSummary: {
-      es: "Captura de prospecto con validación Zod en Server Action sin plugins pesados.",
-      en: "Lead capture with Zod validation in Server Action with zero bloated plugins.",
+      es: "El sitio recoge el pedido con los datos justos y los valida antes de enviarlos.",
+      en: "The site collects the request with just the right fields and validates them before sending.",
     },
   },
   {
     id: "logic",
-    name: { es: "Motor de Reglas & Triaje", en: "Rules Engine & Triage" },
+    name: { es: "Reglas del negocio", en: "Business rules" },
     category: "logic",
-    statusBadge: { es: "Serverless Function", en: "Serverless Function" },
-    metricHighlight: "< 120ms",
+    statusBadge: { es: "Servidor", en: "Server" },
+    metricHighlight: "Validación",
     payloadSummary: {
-      es: "Clasificación de urgencia, cálculo de presupuesto y asignación automática.",
-      en: "Urgency classification, quote calculation, and automated assignment.",
+      es: "Las reglas del negocio deciden qué se acepta y a dónde va cada pedido.",
+      en: "Business rules decide what is accepted and where each request goes.",
     },
   },
   {
     id: "action",
-    name: { es: "Acción / Agenda / Cobro", en: "Action / Booking / Checkout" },
+    name: { es: "Agenda o pedido", en: "Booking or order" },
     category: "action",
-    statusBadge: { es: "Sync en Tiempo Real", en: "Realtime Sync" },
-    metricHighlight: "100% Trazable",
+    statusBadge: { es: "Agenda", en: "Scheduling" },
+    metricHighlight: "Confirmación",
     payloadSummary: {
-      es: "Confirmación instantánea de disponibilidad y bloqueo de horario sin solapamiento.",
-      en: "Instant availability confirmation and slot lock with zero double-booking.",
+      es: "El pedido se convierte en una cita o en una orden concreta.",
+      en: "The request becomes a concrete appointment or order.",
     },
   },
   {
     id: "crm",
-    name: { es: "WhatsApp & Sincronización CRM", en: "WhatsApp & CRM Sync" },
+    name: { es: "Seguimiento", en: "Follow-up" },
     category: "crm",
-    statusBadge: { es: "Webhook Activo 24/7", en: "Active Webhook 24/7" },
-    metricHighlight: "Sub-30s Dispatch",
+    statusBadge: { es: "CRM", en: "CRM" },
+    metricHighlight: "Historial",
     payloadSummary: {
-      es: "Disparo de confirmación por WhatsApp Business API y actualización de pipeline.",
-      en: "Confirmation dispatch via WhatsApp Business API and sales pipeline update.",
+      es: "El contacto queda registrado para el seguimiento del equipo.",
+      en: "The contact is recorded for the team's follow-up.",
     },
   },
 ];
 
+/**
+ * Topologías por caso. Solo afirman lo que publica el caso (projectCases) o lo
+ * verificado en su código o sitio (docs/films/dossiers). `metricHighlight` es
+ * una etiqueta técnica, nunca una métrica: el test prohíbe cifras inventadas.
+ */
 export const CASE_TOPOLOGIES: Record<string, CaseTopologyBlueprint> = {
   "lb-elite-wash-detail": {
     projectSlug: "lb-elite-wash-detail",
     accentColor: "#B68CFF",
+    // Fuente: projectCases (desafío, restricciones y decisiones del caso).
     headline: {
-      es: "Arquitectura del Flujo de Cotización Móvil & Asignación de Detailing",
-      en: "Mobile Detailing Quote & Service Dispatch Architecture",
+      es: "Pedido de detailing por tipo de vehículo, sin llamadas",
+      en: "Detailing request by vehicle type, no phone calls",
     },
     nodes: [
       {
         id: "ingest",
-        name: { es: "Selector de Vehículo (Auto/Bote/Flota)", en: "Vehicle Type Selector (Car/Boat/Fleet)" },
+        name: { es: "Servicio por tipo de vehículo", en: "Service by vehicle type" },
         category: "ingestion",
-        statusBadge: { es: "Next.js UI Móvil", en: "Mobile Next.js UI" },
-        metricHighlight: "Sub-minuto",
+        statusBadge: { es: "Next.js · móvil", en: "Next.js · mobile" },
+        metricHighlight: "Autos · botes · flotas",
         payloadSummary: {
-          es: "El cliente elige tipo de vehículo y nivel de servicio con precios transparentes.",
-          en: "Customer selects vehicle type and service tier with transparent pricing.",
+          es: "El catálogo se recorre por tipo de vehículo: autos, botes, jet skis y flotas.",
+          en: "The catalogue is browsed by vehicle type: cars, boats, jet skis and fleets.",
         },
       },
       {
         id: "logic",
-        name: { es: "Calculador Dinámico de Cotización", en: "Dynamic Quote Calculation Engine" },
+        name: { es: "Precios claros", en: "Clear pricing" },
         category: "logic",
-        statusBadge: { es: "Algoritmo Serverless", en: "Serverless Algorithm" },
-        metricHighlight: "-99% Espera",
+        statusBadge: { es: "Decisión rápida", en: "Quick decision" },
+        metricHighlight: "Precio visible",
         payloadSummary: {
-          es: "Estimación matemática del costo según tamaño del vehículo y dirección del servicio.",
-          en: "Mathematical cost estimation based on vehicle footprint and service location.",
+          es: "Cada servicio muestra su precio para decidir desde el teléfono.",
+          en: "Each service shows its price so the decision can be made on the phone.",
         },
       },
       {
         id: "action",
-        name: { es: "Bloqueo de Slot Móvil & Ruta", en: "Mobile Slot & Route Hold" },
+        name: { es: "Pedido directo y breve", en: "Short, direct request" },
         category: "action",
-        statusBadge: { es: "Geocodificación", en: "Geocoding Sync" },
-        metricHighlight: "Zero Fricción",
+        statusBadge: { es: "Sin llamadas", en: "No calls" },
+        metricHighlight: "Pedido",
         payloadSummary: {
-          es: "Asignación de móvil de detailing más cercano en el suroeste de Florida.",
-          en: "Nearest mobile detailing unit dispatch across Southwest Florida.",
+          es: "El contacto se reduce a un pedido corto con el vehículo y el servicio elegidos.",
+          en: "Contact is reduced to one short request with the chosen vehicle and service.",
         },
       },
       {
         id: "crm",
-        name: { es: "Confirmación Instantánea por WhatsApp", en: "Instant WhatsApp Confirmation" },
+        name: { es: "Marca de alta gama", en: "High-end brand" },
         category: "crm",
-        statusBadge: { es: "WhatsApp Business API", en: "WhatsApp Business API" },
-        metricHighlight: "24/7 Activo",
+        statusBadge: { es: "Dirección visual", en: "Visual direction" },
+        metricHighlight: "Premium",
         payloadSummary: {
-          es: "Envío de recordatorio y confirmación sin exigir llamadas telefónicas al cliente.",
-          en: "Dispatch of reminder and service confirmation without requiring phone calls.",
+          es: "La marca transmite un servicio premium en cada paso del pedido.",
+          en: "The brand conveys a premium service at every step of the request.",
         },
       },
     ],
@@ -185,54 +195,56 @@ export const CASE_TOPOLOGIES: Record<string, CaseTopologyBlueprint> = {
   },
   "ad-media-solution": {
     projectSlug: "ad-media-solution",
-    accentColor: "#71F3A2",
+    accentColor: "#0066FF",
+    // Fuente: projectCases (decisiones del caso) y docs/films/dossiers/otros-casos.md
+    // (servicios y páginas del sitio). Sin métricas: no hay ninguna verificada.
     headline: {
-      es: "Arquitectura del Circuito Comercial de Pauta a CRM",
-      en: "Paid Media to CRM Commercial Pipeline Architecture",
+      es: "Formularios, CRM y agenda en un mismo recorrido",
+      en: "Forms, CRM and booking on a single journey",
     },
     nodes: [
       {
         id: "ingest",
-        name: { es: "Ingesta de Pauta Meta & Google Ads", en: "Meta & Google Ads Campaign Ingest" },
+        name: { es: "Servicios y casos", en: "Services and cases" },
         category: "ingestion",
-        statusBadge: { es: "Next.js Edge Landing", en: "Next.js Edge Landing" },
-        metricHighlight: "98 PageSpeed",
+        statusBadge: { es: "Next.js", en: "Next.js" },
+        metricHighlight: "/servicios · /casos",
         payloadSummary: {
-          es: "Landing page hiper-optimizada que captura datos de contacto en 3 campos clave.",
-          en: "Hyper-optimized landing page capturing lead data in 3 key fields.",
+          es: "Cada servicio (CRM y automatización, pauta, redes y web) tiene su página y lleva al mismo recorrido.",
+          en: "Each service (CRM and automation, paid media, social and web) has its own page and leads to the same journey.",
         },
       },
       {
         id: "logic",
-        name: { es: "Speed-to-Lead Webhook Router", en: "Speed-to-Lead Webhook Router" },
+        name: { es: "Formularios alineados", en: "Aligned forms" },
         category: "logic",
-        statusBadge: { es: "Respuesta en < 30s", en: "Sub-30s Reply" },
-        metricHighlight: "Sub-30 seg",
+        statusBadge: { es: "Un solo recorrido", en: "One journey" },
+        metricHighlight: "Formulario",
         payloadSummary: {
-          es: "Enrutamiento inmediato del prospecto caliente hacia el asesor comercial disponible.",
-          en: "Immediate routing of warm prospect to available commercial advisor.",
+          es: "Los formularios del sitio responden a un mismo recorrido comercial, no a piezas sueltas.",
+          en: "The site's forms follow one commercial journey instead of isolated pieces.",
         },
       },
       {
         id: "action",
-        name: { es: "Agendador de Llamada en Google Meet", en: "Google Meet Booking Scheduler" },
+        name: { es: "Agenda de reuniones", en: "Meeting scheduling" },
         category: "action",
-        statusBadge: { es: "Calendar API Sync", en: "Calendar API Sync" },
-        metricHighlight: "+65% Citas",
+        statusBadge: { es: "Agenda", en: "Scheduling" },
+        metricHighlight: "/planificacion",
         payloadSummary: {
-          es: "Sincronización bidireccional de calendario para evitar reuniones fantasma.",
-          en: "Bi-directional calendar synchronization avoiding ghost meetings.",
+          es: "La página de planificación concentra la agenda de reuniones con la agencia.",
+          en: "The planning page concentrates meeting scheduling with the agency.",
         },
       },
       {
         id: "crm",
-        name: { es: "Pipeline GoHighLevel / Supabase", en: "GoHighLevel / Supabase Pipeline" },
+        name: { es: "CRM y automatización", en: "CRM and automation" },
         category: "crm",
-        statusBadge: { es: "Trazabilidad Total", en: "Total Traceability" },
-        metricHighlight: "100% Auditable",
+        statusBadge: { es: "GoHighLevel", en: "GoHighLevel" },
+        metricHighlight: "Seguimiento",
         payloadSummary: {
-          es: "Trazabilidad completa desde el clic en el anuncio hasta el cierre del contrato.",
-          en: "Full attribution from initial ad click to final signed contract.",
+          es: "El seguimiento vive en el CRM, el servicio central de la agencia.",
+          en: "Follow-up lives in the CRM, the agency's core service.",
         },
       },
     ],
