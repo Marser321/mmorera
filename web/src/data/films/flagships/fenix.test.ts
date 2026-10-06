@@ -101,6 +101,7 @@ test("film insignia de Fénix", async (t) => {
       assert.equal(size.width, asset.w, `${asset.src}: ancho`);
       assert.equal(size.height, asset.h, `${asset.src}: alto`);
       if ("seconds" in asset) assert.ok(Math.abs((size.seconds ?? 0) - asset.seconds) < 0.2, `${asset.src}: duración ${size.seconds}`);
+      if ("webm" in asset) assert.ok(readFileSync(path.join(process.cwd(), "public", asset.webm)).length > 0, `${asset.webm} no existe`);
     }
   });
 });
