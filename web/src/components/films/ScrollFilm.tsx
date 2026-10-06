@@ -119,7 +119,7 @@ function PinnedFilm({ source, player, setPlayer, chapterIndex, barsRef, isEs }: 
   };
 
   return (
-    <section ref={trackRef} className="relative h-[420vh]" aria-labelledby="opening-film-title">
+    <section ref={trackRef} className="relative h-[520vh]" aria-labelledby="opening-film-title">
       <div className="sticky top-0 flex h-[100svh] flex-col justify-center px-5 pt-20 sm:px-8 lg:px-12">
         <div className="mx-auto w-full max-w-[1480px]">
           <Header isEs={isEs} />

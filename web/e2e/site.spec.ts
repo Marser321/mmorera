@@ -205,7 +205,7 @@ test("sin movimiento, el film de apertura no fija el scroll", async ({ browser }
   await page.goto("/sistemas");
   const opening = page.locator('section[aria-labelledby="opening-film-title"]');
   await expect(opening).toHaveCount(1);
-  await expect(opening).not.toHaveClass(/h-\[420vh\]/);
+  await expect(opening).not.toHaveClass(/h-\[520vh\]/);
   await context.close();
 });
 
@@ -399,8 +399,23 @@ test("abre un caso profundo sin modal ni iframe", async ({ page }) => {
   await expect(page).toHaveURL(/\/casos-de-exito\/autohub-360$/);
   await expect(page.getByRole("heading", { level: 1, name: "AutoHub 360" })).toBeVisible();
   await expect(page.locator("iframe")).toHaveCount(0);
+
+  // El film "Cómo lo resolví" narra el caso con sus capítulos reales.
+  await expect(page.locator('[data-film-stage="case"]')).toHaveCount(1);
+  await expect(page.getByRole("button", { name: /El reto/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Resultado/ })).toBeVisible();
+
+  // El relato completo sigue disponible como texto.
+  await page.getByText("Leer el caso en texto").click();
   await expect(page.getByText("El desafío")).toBeVisible();
-  await expect(page.getByText("Resultado")).toBeVisible();
+});
+
+test("el perfil abre con la entrada del monograma", async ({ page }) => {
+  await page.goto("/");
+  const overture = page.locator('#perfil [data-film-stage="logo"]');
+  await expect(overture).toHaveCount(1);
+  await overture.scrollIntoViewIfNeeded();
+  await expect(overture.locator("svg").first()).toBeAttached({ timeout: 10_000 });
 });
 
 async function completeBrief(page: Page) {

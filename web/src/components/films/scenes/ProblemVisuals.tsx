@@ -85,7 +85,7 @@ export function ChatPile(props: ProblemVisualProps) {
       <div style={{ position: "absolute", left: 28, top: 22, right: 28, display: "flex", justifyContent: "space-between", fontFamily: FILM_FONTS.mono, fontSize: portrait ? 24 : 16, letterSpacing: "0.14em", textTransform: "uppercase", color: ink(0.5), opacity: chrome }}>
         <span>WhatsApp</span>
         <span style={{ color: FILM_COLORS.danger }}>
-          {Math.round(interpolate(frame, [18, 18 + signals.length * 24], [0, signals.length], CLAMP))} {language === "es" ? "sin responder" : "unanswered"}
+          {Math.round(interpolate(frame, [24, 24 + signals.length * 30], [0, signals.length], CLAMP))} {language === "es" ? "sin responder" : "unanswered"}
         </span>
       </div>
 
@@ -110,7 +110,7 @@ export function ChatPile(props: ProblemVisualProps) {
       ))}
 
       {signals.map((signal, index) => {
-        const appear = 18 + index * 24;
+        const appear = 24 + index * 30;
         const pop = progress(frame, appear, appear + 14);
         const chatX = 28;
         const chatY = (portrait ? 96 : 70) + index * rowGap;
@@ -175,7 +175,7 @@ function formatClock(totalMinutes: number) {
 export function NightClock(props: ProblemVisualProps) {
   const frame = useCurrentFrame();
   const { signals, portrait, diagnosisAt, language } = props;
-  const elapsed = interpolate(frame, [24, 165], [0, NIGHT_MINUTES], { ...CLAMP, easing: EASE_IN_OUT });
+  const elapsed = interpolate(frame, [30, 195], [0, NIGHT_MINUTES], { ...CLAMP, easing: EASE_IN_OUT });
   const late = progress(frame, diagnosisAt, diagnosisAt + 20);
   const unread = 0.35 + 0.65 * Math.abs(Math.sin(frame / 10));
   const clockSize = portrait ? 190 : 150;
@@ -237,7 +237,7 @@ const STALE_COLUMNS: Localized[] = [
 export function StaleCard(props: ProblemVisualProps) {
   const frame = useCurrentFrame();
   const { box, signals, portrait, diagnosisAt, language } = props;
-  const hours = interpolate(frame, [30, 165], [0, 24], { ...CLAMP, easing: EASE_IN_OUT });
+  const hours = interpolate(frame, [30, 195], [0, 24], { ...CLAMP, easing: EASE_IN_OUT });
   const flagged = progress(frame, diagnosisAt + 6, diagnosisAt + 24);
   const colWidth = box.w / 3;
   const label = portrait ? 22 : 15;

@@ -93,7 +93,7 @@ export function FilmChapters({
             {playing ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
           </button>
         ) : null}
-        <ol className="grid flex-1 grid-cols-4 gap-2">
+        <ol className="grid flex-1 gap-2" style={{ gridTemplateColumns: `repeat(${chapters.length}, minmax(0, 1fr))` }}>
           {chapters.map((chapter, index) => (
             <li key={chapter.id}>
               <button

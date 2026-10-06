@@ -40,7 +40,7 @@ export function Headline({
 }) {
   const frame = useCurrentFrame();
   const words = text.split(" ");
-  const exit = exitAt === undefined ? 0 : interpolate(frame, [exitAt, exitAt + 12], [0, 1], { ...CLAMP, easing: EASE_OUT });
+  const exit = exitAt === undefined ? 0 : interpolate(frame, [exitAt, exitAt + 18], [0, 1], { ...CLAMP, easing: EASE_OUT });
 
   return (
     <div
@@ -62,7 +62,7 @@ export function Headline({
           <span
             style={{
               display: "inline-block",
-              translate: `0px ${interpolate(frame, [from + index * 2, from + index * 2 + 16], [110, 0], { ...CLAMP, easing: EASE_OUT })}%`,
+              translate: `0px ${interpolate(frame, [from + index * 3, from + index * 3 + 26], [110, 0], { ...CLAMP, easing: EASE_OUT })}%`,
             }}
           >
             {word}

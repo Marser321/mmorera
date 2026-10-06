@@ -1,14 +1,20 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
-import dynamic from "next/dynamic";
+import { useCallback, useEffect, useRef, useState, type ComponentType, type ReactNode } from "react";
 import type { PlayerRef } from "@remotion/player";
 import type { FilmFormat } from "@/data/films/filmTypes";
 import { useResolvedMediaQuery } from "@/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
-import type { FilmSource } from "./FilmCanvas";
+import type { FilmCanvasProps, FilmSource } from "./FilmCanvas";
 
-const FilmCanvas = dynamic(() => import("./FilmCanvas").then((mod) => mod.FilmCanvas), { ssr: false });
+/* Import manual (no next/dynamic): Next precarga los chunks de dynamic() en el
+   HTML y el runtime de Remotion competiría con la carga inicial. Así el chunk
+   se pide recién cuando el film va a montarse. */
+let canvasModule: Promise<ComponentType<FilmCanvasProps>> | null = null;
+function loadFilmCanvas() {
+  canvasModule ??= import("./FilmCanvas").then((mod) => mod.FilmCanvas);
+  return canvasModule;
+}
 
 /** 16:9 desde md; 4:5 en teléfonos. null mientras el breakpoint no resolvió. */
 export function useFilmFormat(): FilmFormat | null {
@@ -45,6 +51,28 @@ export function FilmStage({
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
+  const [Canvas, setCanvas] = useState<ComponentType<FilmCanvasProps> | null>(null);
+
+  useEffect(() => {
+    if (!mounted) return;
+    let alive = true;
+    void loadFilmCanvas().then((component) => {
+      if (alive) setCanvas(() => component);
+    });
+    return () => {
+      alive = false;
+    };
+  }, [mounted]);
+
+  // En desarrollo, cada Player queda en window.__films para inspeccionar cuadros.
+  const kind = source.kind;
+  const handlePlayer = useCallback((player: PlayerRef | null) => {
+    onPlayer(player);
+    if (process.env.NODE_ENV !== "production" && typeof window !== "undefined") {
+      const registry = ((window as unknown as { __films?: Record<string, PlayerRef | null> }).__films ??= {});
+      registry[kind] = player;
+    }
+  }, [kind, onPlayer]);
   const visibleRef = useRef(onVisibleChange);
 
   useEffect(() => {
@@ -101,9 +129,9 @@ export function FilmStage({
       style={{ aspectRatio: aspect }}
     >
       {poster ? <div className="absolute inset-0">{poster}</div> : null}
-      {mounted && format ? (
+      {mounted && format && Canvas ? (
         <div className="absolute inset-0" aria-hidden="true">
-          <FilmCanvas key={format} source={source} format={format} onPlayer={onPlayer} initialFrame={initialFrame} />
+          <Canvas key={format} source={source} format={format} onPlayer={handlePlayer} initialFrame={initialFrame} />
         </div>
       ) : null}
       {children}

@@ -27,6 +27,7 @@ import { MotionBackdrop } from "@/components/shared/MotionBackdrop";
 const ServicesSection = dynamic(() => import("@/components/premium/home/ServicesSection").then((m) => m.ServicesSection));
 const ProjectIndex = dynamic(() => import("@/components/premium/ProjectIndex").then((m) => m.ProjectIndex));
 const OrchestrationWheelSection = dynamic(() => import("@/components/premium/home/OrchestrationWheelSection").then((m) => m.OrchestrationWheelSection));
+const LogoOvertureSection = dynamic(() => import("@/components/films/LogoOvertureSection").then((m) => m.LogoOvertureSection));
 const AuthorManifestoScene = dynamic(() => import("@/components/premium/AuthorManifestoScene").then((m) => m.AuthorManifestoScene));
 const WorkflowSection = dynamic(() => import("@/components/premium/home/WorkflowSection").then((m) => m.WorkflowSection));
 const AplicarOS = dynamic(() => import("@/components/portfolio-isolated/AplicarOS").then((m) => m.AplicarOS));
@@ -271,6 +272,8 @@ export function HomeExperience() {
 
       {/* ─── 5. PERFIL & FILOSOFÍA (Cinemática interactiva) ─── */}
       <div id="perfil" className="scroll-mt-20">
+        {/* Entrada del monograma: el prompt de código que gira hasta ser la doble M */}
+        <LogoOvertureSection />
         <AuthorManifestoScene
           language={language}
           copy={authorManifestoCopy[language]}

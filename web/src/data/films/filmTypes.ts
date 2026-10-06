@@ -29,10 +29,10 @@ export interface FilmChapter {
 
 /** Duración de cada capítulo en frames (30 fps). */
 export const CHAPTER_FRAMES: Record<FilmChapterId, number> = {
-  problem: 6 * FILM_FPS,
-  diagnosis: 5 * FILM_FPS,
-  system: 12 * FILM_FPS,
-  result: 6 * FILM_FPS,
+  problem: 7 * FILM_FPS,
+  diagnosis: 6 * FILM_FPS,
+  system: 15 * FILM_FPS,
+  result: 8 * FILM_FPS,
 };
 
 export const CHAPTER_ORDER: FilmChapterId[] = ["problem", "diagnosis", "system", "result"];
@@ -117,10 +117,10 @@ export const USE_CASE_DURATION = CHAPTER_ORDER.reduce((total, id) => total + CHA
 
 /** Ventanas del capítulo "Sistema" (frames relativos al inicio del capítulo). */
 export const FLOW_TIMING = {
-  nodesIn: 18,
-  cablesIn: 54,
-  travelStart: 110,
-  travelEnd: 290,
+  nodesIn: 24,
+  cablesIn: 72,
+  travelStart: 150,
+  travelEnd: 400,
 } as const;
 
 /** Frame (relativo al capítulo "Sistema") en el que el paquete enciende la etapa. */

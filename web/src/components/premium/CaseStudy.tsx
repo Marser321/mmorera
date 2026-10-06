@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -10,8 +11,8 @@ import type { ProjectCase } from "@/types/site";
 import { PROJECT_CASES } from "@/data/projectCases";
 import { getCaseMedia } from "@/data/caseMedia";
 import { getCaseMetrics, isShowcaseWorthy, pageSpeedReportUrl, type CaseMetrics } from "@/data/caseMetrics";
-import { CaseReel } from "@/components/shared/CaseReel";
-import { CaseArchitectureBlueprint } from "@/components/premium/work/CaseArchitectureBlueprint";
+import { CaseFilmSection } from "@/components/films/CaseFilmSection";
+import { buildCaseFilm } from "@/data/films/caseFilms";
 import { Reveal } from "@/components/scroll/Reveal";
 import { SplitReveal } from "@/components/motion/SplitReveal";
 import { Magnetic } from "@/components/motion/Magnetic";
@@ -109,6 +110,7 @@ export function CaseStudy({ project }: { project: ProjectCase }) {
   const isEs = language === "es";
   const media = getCaseMedia(project.slug);
   const metrics = getCaseMetrics(project.slug);
+  const film = useMemo(() => buildCaseFilm(project, media, metrics), [project, media, metrics]);
   const index = PROJECT_CASES.findIndex((item) => item.slug === project.slug);
   const next = PROJECT_CASES[(index + 1) % PROJECT_CASES.length];
   const nextMedia = getCaseMedia(next.slug);
@@ -150,48 +152,31 @@ export function CaseStudy({ project }: { project: ProjectCase }) {
           </div>
         </header>
 
-        {/* Reel en marco de navegador */}
-        <motion.div
-          className="mx-auto mt-16 max-w-[1680px] px-3 sm:px-6"
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: EASE_OUT, delay: 0.25 }}
-        >
-          <div className="overflow-hidden rounded-[1.5rem] border border-white/10 bg-card shadow-[0_50px_140px_-50px_rgba(0,0,0,0.85)] light:border-[rgb(var(--ink-rgb)/0.1)]">
-            {project.liveUrl && (
-              <div className="flex items-center gap-3 border-b border-white/10 px-4 py-3 light:border-[rgb(var(--ink-rgb)/0.1)]">
-                <div className="flex gap-1.5" aria-hidden="true"><span className="h-2.5 w-2.5 rounded-full bg-foreground/15" /><span className="h-2.5 w-2.5 rounded-full bg-foreground/15" /><span className="h-2.5 w-2.5 rounded-full bg-foreground/15" /></div>
-                <div className="flex-1 truncate rounded-full bg-foreground/[0.06] px-3 py-1 text-center font-mono text-[11px] text-foreground/55">{hostname(project.liveUrl)}</div>
-                <span className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider text-signal"><span className="h-1.5 w-1.5 animate-pulse rounded-full bg-signal" />Live</span>
-              </div>
-            )}
-            {media ? (
-              <CaseReel reel={media.reel} alt={project.media[0]?.alt[language] ?? project.title[language]} priority sizes="100vw" className="aspect-[16/10]" />
-            ) : (
-              <div className="relative aspect-[16/9]"><Image src={project.media[0].src} alt={project.media[0].alt[language]} fill priority sizes="100vw" className="object-cover" /></div>
-            )}
-          </div>
-        </motion.div>
+        {/* Film "Cómo lo resolví": el tráiler del caso con el sitio real */}
+        <CaseFilmSection script={film} language={language} />
 
         {metrics && project.liveUrl && isShowcaseWorthy(metrics) && <MetricsBand metrics={metrics} liveUrl={project.liveUrl} isEs={isEs} />}
 
-        {/* Narrativa */}
-        <div className="mx-auto mt-20 grid max-w-[1480px] gap-14 px-5 sm:px-8 lg:grid-cols-[.55fr_1.45fr] lg:px-12">
-          <aside className="space-y-8 lg:sticky lg:top-28 lg:self-start">
+        {/* Ficha del caso: datos y el relato completo en texto */}
+        <div className="mx-auto mt-20 grid max-w-[1480px] gap-10 px-5 sm:px-8 lg:grid-cols-[.55fr_1.45fr] lg:px-12">
+          <aside className="grid gap-8 sm:grid-cols-2 lg:grid-cols-1 lg:self-start">
             {project.client && <div><p className={label}>{isEs ? "Cliente" : "Client"}</p><p className="mt-3 text-sm leading-6 text-[#F3F0E8]/65 light:text-muted-foreground">{project.client[language]}</p></div>}
             <div><p className={label}>{isEs ? "Rol" : "Role"}</p><p className="mt-3 text-sm leading-6 text-[#F3F0E8]/65 light:text-muted-foreground">{project.role[language]}</p></div>
             <div><p className={label}>Stack</p><div className="mt-3 flex flex-wrap gap-2">{project.stack.map((item) => <span key={item} className="rounded-full border border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)] px-3 py-1.5 text-xs text-[#F3F0E8]/55 light:text-muted-foreground">{item}</span>)}</div></div>
             {project.liveUrl && <div><p className={label}>{isEs ? "En producción" : "In production"}</p><a href={project.liveUrl} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-1.5 text-sm text-signal hover:underline">{hostname(project.liveUrl)}<ArrowUpRight className="h-3.5 w-3.5" /></a></div>}
           </aside>
-          <div>
-            <section className="border-t border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)] py-8"><p className="font-mono text-[9px] uppercase tracking-[.16em] text-track-create">01 · {isEs ? "El desafío" : "The challenge"}</p><h2 className="mt-5 max-w-3xl text-3xl font-medium leading-tight tracking-[-.04em] text-foreground sm:text-5xl">{project.challenge[language]}</h2></section>
-            <section className="border-t border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)] py-8"><p className="font-mono text-[9px] uppercase tracking-[.16em] text-accent">02 · {isEs ? "Restricciones" : "Constraints"}</p><ul className="mt-6 space-y-3">{project.constraints.map((item) => <li key={item[language]} className="flex gap-4 text-lg leading-7 text-[#F3F0E8]/55 light:text-muted-foreground"><span className="mt-3 h-1 w-1 shrink-0 rounded-full bg-accent" />{item[language]}</li>)}</ul></section>
-            <section className="border-t border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)] py-8"><p className="font-mono text-[9px] uppercase tracking-[.16em] text-signal">03 · {isEs ? "Decisiones" : "Decisions"}</p><ol className="mt-6 space-y-5">{project.decisions.map((item, i) => <li key={item[language]} className="grid grid-cols-[38px_1fr] gap-3 text-lg leading-7 text-[#F3F0E8]/65 light:text-muted-foreground"><span className="font-mono text-[10px] text-[#F3F0E8]/50 light:text-muted-foreground">0{i + 1}</span>{item[language]}</li>)}</ol></section>
-            <section className="border-y border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)] py-8"><p className="font-mono text-[9px] uppercase tracking-[.16em] text-[#F3F0E8]/55 light:text-muted-foreground">04 · {isEs ? "Resultado" : "Outcome"}</p><p className="mt-5 max-w-3xl text-3xl font-medium leading-tight tracking-[-.04em] text-foreground sm:text-5xl">{project.result[language]}</p></section>
-
-            {/* 05 · Topología Interactiva del Sistema */}
-            <CaseArchitectureBlueprint projectSlug={project.slug} projectTitle={project.title[language]} accentColor={project.accent} />
-          </div>
+          <details className="group border-y border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)]">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+              <span className="text-2xl font-medium tracking-[-.035em] text-foreground sm:text-3xl">{isEs ? "Leer el caso en texto" : "Read the case as text"}</span>
+              <span className="font-mono text-[10px] uppercase tracking-[.16em] text-signal transition-transform group-open:rotate-45" aria-hidden="true">+</span>
+            </summary>
+            <div className="pb-6">
+              <section className="border-t border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)] py-8"><p className="font-mono text-[9px] uppercase tracking-[.16em] text-track-create">01 · {isEs ? "El desafío" : "The challenge"}</p><h3 className="mt-5 max-w-3xl text-3xl font-medium leading-tight tracking-[-.04em] text-foreground sm:text-4xl">{project.challenge[language]}</h3></section>
+              <section className="border-t border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)] py-8"><p className="font-mono text-[9px] uppercase tracking-[.16em] text-accent">02 · {isEs ? "Restricciones" : "Constraints"}</p><ul className="mt-6 space-y-3">{project.constraints.map((item) => <li key={item[language]} className="flex gap-4 text-lg leading-7 text-[#F3F0E8]/55 light:text-muted-foreground"><span className="mt-3 h-1 w-1 shrink-0 rounded-full bg-accent" />{item[language]}</li>)}</ul></section>
+              <section className="border-t border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)] py-8"><p className="font-mono text-[9px] uppercase tracking-[.16em] text-signal">03 · {isEs ? "Decisiones" : "Decisions"}</p><ol className="mt-6 space-y-5">{project.decisions.map((item, i) => <li key={item[language]} className="grid grid-cols-[38px_1fr] gap-3 text-lg leading-7 text-[#F3F0E8]/65 light:text-muted-foreground"><span className="font-mono text-[10px] text-[#F3F0E8]/50 light:text-muted-foreground">0{i + 1}</span>{item[language]}</li>)}</ol></section>
+              <section className="border-t border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)] pt-8"><p className="font-mono text-[9px] uppercase tracking-[.16em] text-[#F3F0E8]/55 light:text-muted-foreground">04 · {isEs ? "Resultado" : "Outcome"}</p><p className="mt-5 max-w-3xl text-3xl font-medium leading-tight tracking-[-.04em] text-foreground sm:text-4xl">{project.result[language]}</p></section>
+            </div>
+          </details>
         </div>
 
         {/* Galería desktop + mobile (capturas del sitio en vivo) */}
