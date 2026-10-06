@@ -61,7 +61,8 @@ export function FlatWizard({ steps, from, stepFrames, renderStep, width }: { ste
         <div style={{ position: "absolute", left: 22, right: 22, top: 22, height: 3, background: brand.palette.line, borderRadius: 9 }}>
           <div style={{ width: "100%", height: "100%", background: brand.palette.accent, transformOrigin: "left", scale: `${fill} 1`, borderRadius: 9 }} />
         </div>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
+        {/* Los pasos van por encima de la línea de progreso: la línea nunca cruza un número. */}
+        <div style={{ position: "relative", zIndex: 1, display: "flex", justifyContent: "space-between" }}>
           {steps.map((step, index) => {
             const done = index < current || (index === current && raw >= steps.length - 1 + 0.6);
             const active = index === current;
@@ -130,8 +131,6 @@ export function SlotGrid({ slots, taken, attempt, chosen, local, busyLabel }: { 
 export function FlatTicket({ items, method, from, width, labels }: { items: Array<{ name: string; price: number }>; method: string; from: number; width: number; labels: { total: string; methods: string[]; charge: string; charged: string } }) {
   const frame = useCurrentFrame();
   const brand = useBrand();
-  const shown = items.filter((_, index) => frame >= from + index * 22).length;
-  const total = items.slice(0, shown).reduce((sum, item) => sum + item.price, 0);
   const paidAt = from + items.length * 22 + 30;
   const paid = progress(frame, paidAt, paidAt + 14);
   return (
@@ -147,7 +146,8 @@ export function FlatTicket({ items, method, from, width, labels }: { items: Arra
       })}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginTop: 22, fontFamily: brand.fonts.display, color: brand.palette.text }}>
         <span style={{ fontSize: 24, color: brand.palette.muted }}>{labels.total}</span>
-        <span style={{ fontSize: 56, fontWeight: 700 }}>$ {Math.round(interpolate(frame, [from, from + items.length * 22], [0, total], CLAMP))}</span>
+        {/* El total suma cada ítem cuando entra (no cuenta desde cero toda la venta). */}
+        <span style={{ fontSize: 56, fontWeight: 700 }}>$ {Math.round(items.reduce((sum, item, index) => sum + item.price * progress(frame, from + index * 22, from + index * 22 + 12), 0))}</span>
       </div>
       <div style={{ display: "flex", gap: 12, marginTop: 18 }}>
         {labels.methods.map((option) => (

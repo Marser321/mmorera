@@ -1,11 +1,12 @@
 import { AbsoluteFill, Img, Sequence, interpolate, useCurrentFrame } from "remotion";
 import nbArchitectureJson from "@/data/architecture/new-brothers-architecture.json";
-import type { ArchifyArchitecture } from "@/data/architecture/archify";
+import nbArchitectureLayout from "@/data/architecture/new-brothers-architecture.layout.json";
+import type { ArchifyArchitecture, ArchifyLayout } from "@/data/architecture/archify";
 import { brandCssVars, CASE_BRANDS } from "@/data/brands/caseBrands";
-import { NB_CHAPTERS, NB_COPY, NB_TIMELINE } from "@/data/films/flagships/newBrothers";
+import { NB_CHAPTERS, NB_COPY, NB_PANEL_CAPTURE, NB_PANEL_SHOTS, NB_TIMELINE } from "@/data/films/flagships/newBrothers";
 import type { FilmLanguage } from "@/data/films/filmTypes";
 import { ArchitectureScene } from "../scenes/brand/ArchitectureScene";
-import { BlurTravel, BrandTitle, CameraShot, Fade } from "../scenes/brand/camera";
+import { BlurTravel, BrandTitle, CameraReel, Fade } from "../scenes/brand/camera";
 import { alpha, BrandProvider, useBrand } from "../scenes/brand/context";
 import { ChoiceRow, FlatPanel, FlatRows, FlatTicket, FlatWizard, SampleBadge, SlotGrid } from "../scenes/brand/flat";
 import { DustField, ParticleLogo } from "../scenes/brand/ParticleLogo";
@@ -21,6 +22,7 @@ export type NewBrothersFilmProps = {
 
 const brand = CASE_BRANDS["new-brothers-barberia"];
 const architecture = nbArchitectureJson as unknown as ArchifyArchitecture;
+const architectureLayout = nbArchitectureLayout as unknown as ArchifyLayout;
 const PANELS = "/portfolio/panels/new-brothers-barberia";
 const BACKDROPS = "/portfolio/backdrops/new-brothers-barberia";
 
@@ -38,7 +40,7 @@ export function NewBrothersFilm({ language }: NewBrothersFilmProps) {
   return (
     <BrandProvider brand={brand}>
       <AbsoluteFill style={{ ...brandCssVars(brand), background: brand.palette.bg, overflow: "hidden", fontFamily: brand.fonts.body, color: brand.palette.text }}>
-        <DustField color={brand.palette.accentSoft} opacity={0.35} />
+        <DustField color={brand.palette.accentSoft} />
 
         <Sequence name="Apertura" from={T.opening.from} durationInFrames={T.opening.duration} premountFor={fps}>
           <Opening portrait={portrait} width={width} height={height} tagline={copy.tagline} duration={T.opening.duration} />
@@ -52,7 +54,8 @@ export function NewBrothersFilm({ language }: NewBrothersFilmProps) {
               signals={copy.problemSignals}
               language={language}
               portrait={portrait}
-              diagnosisAt={130}
+              diagnosisAt={140}
+              appearEvery={22}
               breakpoint={copy.problemBreakpoint}
               lanes={copy.lanes.map((label, index) => ({ label: { es: label, en: label }, signals: [[0, 1], [2, 3], [4]][index] }))}
             />
@@ -69,10 +72,13 @@ export function NewBrothersFilm({ language }: NewBrothersFilmProps) {
 
         <Sequence name="Arquitectura" from={T.architecture.from} durationInFrames={T.architecture.duration} premountFor={fps}>
           <Fade duration={T.architecture.duration}>
-            <BrandTitle kicker={copy.archKicker} title={copy.archTitle} size={portrait ? 60 : 44} style={portrait ? { left: 72, top: 130, width: 936 } : { left: 110, top: 70, width: 1100 }} />
+            <BrandTitle kicker={copy.archKicker} title={copy.archTitle} size={portrait ? 60 : 44} style={portrait ? { left: 72, top: 110, width: 936 } : { left: 110, top: 92, width: 1100 }} />
             <ArchitectureScene
               diagram={architecture}
-              area={portrait ? { x: 30, y: 300, w: 1020, h: 760 } : { x: 70, y: 170, w: 1460, h: 560 }}
+              layout={architectureLayout}
+              area={portrait ? { x: 20, y: 330, w: 1040, h: 720 } : { x: 70, y: 176, w: 1460, h: 536 }}
+              caption={portrait ? { x: 72, y: 1076, w: 936, size: 30 } : { x: 110, y: 728, w: 1380, size: 22 }}
+              maxZoom={portrait ? 2.2 : 1.6}
               buildFrames={90}
               viewFrames={Math.floor((T.architecture.duration - 90) / 3)}
             />
@@ -128,23 +134,24 @@ function BookingScene({ portrait, duration, language }: { portrait: boolean; dur
   const b = useBrand();
   const copy = NB_COPY[language];
   const stepFrames = 58;
-  const panelBox = portrait ? { x: 40, y: 290, w: 1000, h: 860 } : { x: 520, y: 150, w: 1000, h: 640 };
+  const panelBox = portrait ? { x: 40, y: 330, w: 1000, h: 640 } : { x: 520, y: 190, w: 1000, h: 590 };
+  const current = Math.min(copy.steps.length - 1, Math.max(0, Math.floor((frame - 40) / stepFrames)));
   const tap = progress(frame, 18, 30) * (1 - progress(frame, 34, 48));
 
   return (
     <Fade duration={duration}>
       <BlurTravel src={`${BACKDROPS}-mobile-1-blur.jpg`} duration={duration} opacity={0.25} />
-      <BrandTitle kicker={copy.bookingKicker} title={copy.bookingTitle} size={portrait ? 64 : 46} style={portrait ? { left: 72, top: 120, width: 936 } : { left: 110, top: 70, width: 900 }} />
+      <BrandTitle kicker={copy.bookingKicker} title={copy.bookingTitle} size={portrait ? 64 : 46} style={portrait ? { left: 72, top: 140, width: 936 } : { left: 110, top: 92, width: 900 }} />
 
       {!portrait ? (
-        <PhoneFrame width={250} style={{ left: 150, top: 200 + Math.sin(frame / 30) * 6 }}>
+        <PhoneFrame width={250} style={{ left: 150, top: 226 + Math.sin(frame / 30) * 6 }}>
           <Img src="/portfolio/shots/new-brothers-barberia-mobile-1.jpg" style={{ width: "100%", height: "auto" }} />
           {/* Toque en "Reservar Turno" (botón real del sitio) */}
           <div style={{ position: "absolute", left: "50%", top: "59.5%", width: 60, height: 60, translate: "-50% -50%", borderRadius: 99, border: `3px solid ${b.palette.accentSoft}`, opacity: tap, scale: `${0.6 + tap * 0.8}` }} />
         </PhoneFrame>
       ) : null}
 
-      <FlatPanel kicker={copy.bookingKicker} title={copy.steps[Math.min(5, Math.max(0, Math.floor((frame - 40) / stepFrames)))]} width={panelBox.w} height={panelBox.h} style={{ left: panelBox.x, top: panelBox.y }}>
+      <FlatPanel kicker={copy.stepOf.replace("{n}", String(current + 1)).replace("{total}", String(copy.steps.length))} title={copy.steps[current]} width={panelBox.w} height={panelBox.h} style={{ left: panelBox.x, top: panelBox.y }}>
         <FlatWizard
           steps={copy.steps}
           from={40}
@@ -176,7 +183,7 @@ function BookingScene({ portrait, duration, language }: { portrait: boolean; dur
           }}
         />
       </FlatPanel>
-      <SampleBadge label={copy.sample} style={{ left: panelBox.x, top: panelBox.y + panelBox.h + 18 }} />
+      <SampleBadge label={copy.sample} style={{ left: panelBox.x, top: panelBox.y + panelBox.h + 16 }} />
     </Fade>
   );
 }
@@ -184,73 +191,32 @@ function BookingScene({ portrait, duration, language }: { portrait: boolean; dur
 function PanelScene({ portrait, duration, language }: { portrait: boolean; duration: number; language: FilmLanguage }) {
   const frame = useCurrentFrame();
   const copy = NB_COPY[language];
-  const frameBox = portrait ? { x: 40, y: 260, w: 1000, h: 880 } : { x: 110, y: 150, w: 1380, h: 660 };
-  const shots = [
-    {
-      name: "dashboard",
-      from: 0,
-      duration: 150,
-      keys: [
-        { at: 0, scale: 1, fx: 0.5, fy: 0.45 },
-        { at: 70, scale: 1.5, fx: 0.6, fy: 0.3 },
-        { at: 150, scale: 1.25, fx: 0.2, fy: 0.5 },
-      ],
-      notes: [
-        { from: 40, to: 104, rect: [0.22, 0.11, 0.56, 0.25] as [number, number, number, number], label: copy.notes.kpis },
-        { from: 106, to: 150, rect: [0.01, 0.1, 0.18, 0.76] as [number, number, number, number], label: copy.notes.sections },
-      ],
-    },
-    {
-      name: "citas",
-      from: 150,
-      duration: 120,
-      keys: [
-        { at: 0, scale: 1.1, fx: 0.55, fy: 0.3 },
-        { at: 120, scale: 1.45, fx: 0.62, fy: 0.38 },
-      ],
-      notes: [{ from: 30, to: 120, rect: [0.23, 0.32, 0.74, 0.14] as [number, number, number, number], label: copy.notes.agenda }],
-    },
-    {
-      name: "pos",
-      from: 270,
-      duration: 150,
-      keys: [
-        { at: 0, scale: 1.2, fx: 0.4, fy: 0.55 },
-        { at: 80, scale: 1.35, fx: 0.45, fy: 0.6 },
-        { at: 150, scale: 1.4, fx: 0.83, fy: 0.5 },
-      ],
-      notes: [
-        { from: 24, to: 80, rect: [0.22, 0.4, 0.48, 0.4] as [number, number, number, number], label: copy.notes.catalog },
-        { from: 92, to: 150, rect: [0.72, 0.3, 0.27, 0.42] as [number, number, number, number], label: copy.notes.checkout },
-      ],
-    },
-  ];
-  const flatFrom = 420;
+  const frameBox = portrait ? { x: 40, y: 250, w: 1000, h: 900 } : { x: 110, y: 172, w: 1380, h: 620 };
+  const last = NB_PANEL_SHOTS[NB_PANEL_SHOTS.length - 1];
+  const reelEnd = last.from + last.duration;
   const titleShow = interpolate(frame, [0, 16, 120, 140], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
   return (
     <Fade duration={duration}>
-      {shots.map((shot) => (
-        <Sequence key={shot.name} from={shot.from} durationInFrames={shot.duration}>
-          <Fade duration={shot.duration}>
-            <CameraShot
-              src={`${PANELS}-${shot.name}.jpg`}
-              blurSrc={`${BACKDROPS}-${shot.name}-blur.jpg`}
-              frameBox={frameBox}
-              imageAspect={1440 / 900}
-              keys={shot.keys}
-              notes={shot.notes}
-              duration={shot.duration}
-              chrome="nb-barber.vercel.app/admin"
-            />
-          </Fade>
-        </Sequence>
-      ))}
+      <Sequence name="Recorrido del panel" durationInFrames={reelEnd}>
+        <Fade duration={reelEnd}>
+          <CameraReel
+            shots={NB_PANEL_SHOTS}
+            frameBox={frameBox}
+            imageAspect={NB_PANEL_CAPTURE.width / NB_PANEL_CAPTURE.height}
+            nativeWidth={NB_PANEL_CAPTURE.width}
+            host="nb-barber.vercel.app"
+            noteLabels={copy.notes}
+            srcFor={(shot) => `${PANELS}-${shot.name}.jpg`}
+            blurFor={(shot) => `${BACKDROPS}-${shot.name}-blur.jpg`}
+          />
+        </Fade>
+      </Sequence>
       <div style={{ opacity: titleShow }}>
-        <BrandTitle kicker={copy.panelKicker} title={copy.panelTitle} size={portrait ? 58 : 40} style={portrait ? { left: 72, top: 120, width: 936 } : { left: 110, top: 66, width: 1000 }} />
+        <BrandTitle kicker={copy.panelKicker} title={copy.panelTitle} size={portrait ? 58 : 40} style={portrait ? { left: 72, top: 96, width: 936 } : { left: 110, top: 92, width: 1000 }} />
       </div>
-      <Sequence from={flatFrom} durationInFrames={duration - flatFrom}>
-        <CounterSequence portrait={portrait} duration={duration - flatFrom} language={language} />
+      <Sequence from={reelEnd} durationInFrames={duration - reelEnd}>
+        <CounterSequence portrait={portrait} duration={duration - reelEnd} language={language} />
       </Sequence>
     </Fade>
   );
@@ -293,23 +259,27 @@ function OutcomeScene({ portrait, duration, language }: { portrait: boolean; dur
   const b = useBrand();
   const copy = NB_COPY[language];
   const facts = copy.facts;
+  const titleSize = portrait ? 80 : 64;
   return (
     <Fade duration={duration + 20}>
       <BlurTravel src={`${BACKDROPS}-desktop-1-blur.jpg`} duration={duration} opacity={0.22} />
-      <BrandTitle kicker={copy.outcomeKicker} title={copy.outcomeTitle} size={portrait ? 80 : 64} style={portrait ? { left: 72, top: 170, width: 936 } : { left: 110, top: 150, width: 1100 }} />
-      <div style={{ position: "absolute", left: portrait ? 72 : 110, top: portrait ? 560 : 470, display: "grid", gridTemplateColumns: portrait ? "1fr 1fr" : "repeat(4, 1fr)", gap: 22, width: portrait ? 936 : 1380 }}>
-        {facts.map((fact, index) => {
-          const enter = progress(frame, 40 + index * 10, 66 + index * 10);
-          return (
-            <div key={fact.label} style={{ padding: "26px 28px", borderRadius: b.radius, background: b.palette.surface, border: `1px solid ${b.palette.line}`, opacity: enter, translate: `0 ${(1 - enter) * 24}px` }}>
-              <div style={{ fontFamily: b.fonts.display, fontSize: portrait ? 84 : 72, fontWeight: 700, color: b.palette.accent }}>{fact.value}</div>
-              <div style={{ marginTop: 6, fontFamily: b.fonts.body, fontSize: portrait ? 26 : 20, color: b.palette.muted }}>{fact.label}</div>
-            </div>
-          );
-        })}
-      </div>
-      <div style={{ position: "absolute", left: portrait ? 72 : 110, top: portrait ? 1000 : 700, padding: "12px 22px", borderRadius: 999, border: `1px solid ${alpha(b.palette.accent, 50)}`, fontFamily: b.fonts.body, fontSize: portrait ? 26 : 20, color: b.palette.text, opacity: progress(frame, 90, 110) }}>
-        ● nb-barber.vercel.app
+      {/* Título, cifras y dominio en una sola columna: cada bloque empuja al siguiente, nada se pisa. */}
+      <div style={{ position: "absolute", left: portrait ? 72 : 110, top: portrait ? 170 : 140, width: portrait ? 936 : 1380, display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+        <BrandTitle kicker={copy.outcomeKicker} title={copy.outcomeTitle} size={titleSize} style={{ position: "relative" }} />
+        <div style={{ marginTop: portrait ? 70 : 56, display: "grid", gridTemplateColumns: portrait ? "1fr 1fr" : "repeat(4, 1fr)", gap: 22, width: "100%" }}>
+          {facts.map((fact, index) => {
+            const enter = progress(frame, 40 + index * 10, 66 + index * 10);
+            return (
+              <div key={fact.label} style={{ padding: "26px 28px", borderRadius: b.radius, background: b.palette.surface, border: `1px solid ${b.palette.line}`, opacity: enter, translate: `0 ${(1 - enter) * 24}px` }}>
+                <div style={{ fontFamily: b.fonts.display, fontSize: portrait ? 84 : 72, fontWeight: 700, lineHeight: 1, color: b.palette.accent }}>{fact.value}</div>
+                <div style={{ marginTop: 10, fontFamily: b.fonts.body, fontSize: portrait ? 26 : 20, color: b.palette.muted }}>{fact.label}</div>
+              </div>
+            );
+          })}
+        </div>
+        <div style={{ marginTop: portrait ? 44 : 36, padding: "12px 22px", borderRadius: 999, border: `1px solid ${alpha(b.palette.accent, 50)}`, fontFamily: b.fonts.body, fontSize: portrait ? 26 : 20, color: b.palette.text, opacity: progress(frame, 90, 110) }}>
+          ● nb-barber.vercel.app
+        </div>
       </div>
     </Fade>
   );

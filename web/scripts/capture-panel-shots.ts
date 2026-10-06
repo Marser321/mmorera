@@ -5,6 +5,11 @@
  * No escribe credenciales. Las capturas se revisan a mano antes de publicarse:
  * si aparecen datos personales reales, no se usan.
  *
+ * Se capturan a deviceScaleFactor 2 (2880×1800): los films pueden acercarse
+ * hasta 2× sin ampliar píxeles. Después de recapturar, actualizar
+ * NB_PANEL_CAPTURE (el test del guion compara las medidas reales) y regenerar
+ * los fondos con scripts/build-film-backdrops.ts.
+ *
  * Uso:
  *   npx tsx scripts/capture-panel-shots.ts new-brothers-barberia
  */
@@ -42,6 +47,8 @@ const TARGETS: Record<string, PanelTarget> = {
 
 const OUT_DIR = path.join(process.cwd(), "public/portfolio/panels");
 const DESKTOP = { width: 1440, height: 900 };
+/** Píxeles por punto CSS: 2 = capturas de 2880×1800. */
+const SCALE = 2;
 
 async function main() {
   const slug = process.argv[2];
@@ -51,7 +58,7 @@ async function main() {
 
   const browser = await chromium.launch();
   try {
-    const context = await browser.newContext({ viewport: DESKTOP, deviceScaleFactor: 1, colorScheme: "dark" });
+    const context = await browser.newContext({ viewport: DESKTOP, deviceScaleFactor: SCALE, colorScheme: "dark" });
     const page = await context.newPage();
     await page.goto(target.entryUrl, { waitUntil: "networkidle", timeout: 60_000 }).catch(() => page.waitForLoadState("load"));
     // Popups de bienvenida tapan el sitio: se cierran como lo haría una visita.
@@ -76,7 +83,7 @@ async function main() {
       await page.keyboard.press("Escape").catch(() => {});
       await page.waitForTimeout(600);
       const file = path.join(OUT_DIR, `${slug}-${route.name}.jpg`);
-      await page.screenshot({ path: file, type: "jpeg", quality: 86 });
+      await page.screenshot({ path: file, type: "jpeg", quality: 92 });
       console.log(`  ✓ ${route.name} → ${path.relative(process.cwd(), file)}`);
     }
   } finally {

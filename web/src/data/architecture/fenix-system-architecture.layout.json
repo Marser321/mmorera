@@ -1,0 +1,362 @@
+{
+  "source": "fenix-system-architecture.json",
+  "generatedBy": "archify validate architecture --layout-json --quality showcase",
+  "viewBox": [
+    1500,
+    618
+  ],
+  "components": [
+    {
+      "id": "users",
+      "x": 30,
+      "y": 300,
+      "w": 130,
+      "h": 60
+    },
+    {
+      "id": "media_engine",
+      "x": 270,
+      "y": 130,
+      "w": 140,
+      "h": 60
+    },
+    {
+      "id": "client_ui",
+      "x": 270,
+      "y": 300,
+      "w": 140,
+      "h": 60
+    },
+    {
+      "id": "booking_ui",
+      "x": 270,
+      "y": 470,
+      "w": 140,
+      "h": 60
+    },
+    {
+      "id": "sec_flag",
+      "x": 540,
+      "y": 300,
+      "w": 140,
+      "h": 60
+    },
+    {
+      "id": "sec_sanitizer",
+      "x": 540,
+      "y": 470,
+      "w": 140,
+      "h": 60
+    },
+    {
+      "id": "edge_platform",
+      "x": 810,
+      "y": 130,
+      "w": 140,
+      "h": 60
+    },
+    {
+      "id": "api_lead",
+      "x": 810,
+      "y": 300,
+      "w": 140,
+      "h": 60
+    },
+    {
+      "id": "api_booking",
+      "x": 810,
+      "y": 470,
+      "w": 140,
+      "h": 60
+    },
+    {
+      "id": "ghl_service",
+      "x": 1060,
+      "y": 385,
+      "w": 140,
+      "h": 60
+    },
+    {
+      "id": "ghl_crm",
+      "x": 1330,
+      "y": 385,
+      "w": 130,
+      "h": 60
+    }
+  ],
+  "boundaries": [
+    {
+      "label": "Sitio (Next.js 16, ES/EN)",
+      "kind": "region",
+      "x": 250,
+      "y": 105,
+      "w": 180,
+      "h": 445
+    },
+    {
+      "label": "Compliance (ADR-058 / ADR-189)",
+      "kind": "security-group",
+      "x": 514,
+      "y": 275,
+      "w": 192,
+      "h": 275
+    },
+    {
+      "label": "Backend Serverless (App Router)",
+      "kind": "region",
+      "x": 790,
+      "y": 105,
+      "w": 430,
+      "h": 445
+    }
+  ],
+  "connections": [
+    {
+      "from": "users",
+      "to": "client_ui",
+      "points": [
+        [
+          160,
+          330
+        ],
+        [
+          270,
+          330
+        ]
+      ],
+      "label": {
+        "text": "HTTPS",
+        "x": 198,
+        "y": 310,
+        "w": 34,
+        "h": 14
+      }
+    },
+    {
+      "from": "client_ui",
+      "to": "media_engine",
+      "points": [
+        [
+          340,
+          300
+        ],
+        [
+          340,
+          190
+        ]
+      ],
+      "label": {
+        "text": "Cinemática",
+        "x": 311,
+        "y": 280,
+        "w": 58,
+        "h": 14
+      }
+    },
+    {
+      "from": "client_ui",
+      "to": "booking_ui",
+      "points": [
+        [
+          340,
+          360
+        ],
+        [
+          340,
+          470
+        ]
+      ],
+      "label": {
+        "text": "Interacción",
+        "x": 309,
+        "y": 365,
+        "w": 63,
+        "h": 14
+      }
+    },
+    {
+      "from": "edge_platform",
+      "to": "api_lead",
+      "points": [
+        [
+          880,
+          190
+        ],
+        [
+          880,
+          300
+        ]
+      ],
+      "label": {
+        "text": "Edge Runtime",
+        "x": 846,
+        "y": 195,
+        "w": 68,
+        "h": 14
+      }
+    },
+    {
+      "from": "client_ui",
+      "to": "sec_flag",
+      "points": [
+        [
+          410,
+          330
+        ],
+        [
+          540,
+          330
+        ]
+      ],
+      "label": {
+        "text": "Envío Lead",
+        "x": 446,
+        "y": 310,
+        "w": 58,
+        "h": 14
+      }
+    },
+    {
+      "from": "booking_ui",
+      "to": "sec_sanitizer",
+      "points": [
+        [
+          410,
+          500
+        ],
+        [
+          540,
+          500
+        ]
+      ],
+      "label": {
+        "text": "Reserva Cita",
+        "x": 441,
+        "y": 480,
+        "w": 68,
+        "h": 14
+      }
+    },
+    {
+      "from": "sec_flag",
+      "to": "api_lead",
+      "points": [
+        [
+          680,
+          330
+        ],
+        [
+          810,
+          330
+        ]
+      ],
+      "label": {
+        "text": "Fail-Closed",
+        "x": 714,
+        "y": 310,
+        "w": 63,
+        "h": 14
+      }
+    },
+    {
+      "from": "sec_sanitizer",
+      "to": "api_booking",
+      "points": [
+        [
+          680,
+          500
+        ],
+        [
+          810,
+          500
+        ]
+      ],
+      "label": {
+        "text": "7 Campos",
+        "x": 721,
+        "y": 480,
+        "w": 48,
+        "h": 14
+      }
+    },
+    {
+      "from": "api_lead",
+      "to": "ghl_service",
+      "points": [
+        [
+          950,
+          330
+        ],
+        [
+          1005,
+          330
+        ],
+        [
+          1005,
+          405.9
+        ],
+        [
+          1060,
+          405.9
+        ]
+      ],
+      "label": {
+        "text": "deliverLead()",
+        "x": 969,
+        "y": 348,
+        "w": 72,
+        "h": 14
+      }
+    },
+    {
+      "from": "api_booking",
+      "to": "ghl_service",
+      "points": [
+        [
+          950,
+          500
+        ],
+        [
+          1005,
+          500
+        ],
+        [
+          1005,
+          422
+        ],
+        [
+          1060,
+          422
+        ]
+      ],
+      "label": {
+        "text": "upsertContact()",
+        "x": 964,
+        "y": 441,
+        "w": 82,
+        "h": 14
+      }
+    },
+    {
+      "from": "ghl_service",
+      "to": "ghl_crm",
+      "points": [
+        [
+          1200,
+          415
+        ],
+        [
+          1330,
+          415
+        ]
+      ],
+      "label": {
+        "text": "Webhook & REST",
+        "x": 1226,
+        "y": 395,
+        "w": 77,
+        "h": 14
+      }
+    }
+  ]
+}

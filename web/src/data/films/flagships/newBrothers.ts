@@ -1,3 +1,4 @@
+import type { CameraShotSpec } from "@/lib/filmCamera";
 import { FILM_FPS, type FilmLanguage, type Localized } from "../filmTypes";
 import type { CaseFilmChapter } from "../caseFilms";
 
@@ -17,12 +18,12 @@ const s = (seconds: number) => Math.round(seconds * FILM_FPS);
 
 export const NB_TIMELINE = {
   opening: { from: 0, duration: s(8) },
-  problem: { from: s(8), duration: s(8) },
-  booking: { from: s(16), duration: s(14) },
-  panel: { from: s(30), duration: s(21) },
-  architecture: { from: s(51), duration: s(14) },
-  outcome: { from: s(65), duration: s(6) },
-  signature: { from: s(71), duration: s(4.5) },
+  problem: { from: s(8), duration: s(9.5) },
+  booking: { from: s(17.5), duration: s(14) },
+  panel: { from: s(31.5), duration: s(21) },
+  architecture: { from: s(52.5), duration: s(14) },
+  outcome: { from: s(66.5), duration: s(6) },
+  signature: { from: s(72.5), duration: s(4.5) },
 } as const;
 
 export const NB_DURATION = NB_TIMELINE.signature.from + NB_TIMELINE.signature.duration;
@@ -33,6 +34,68 @@ export const NB_FACTS = {
   roles: 4,
   panelSections: 14,
 } as const;
+
+/**
+ * Capturas del panel demo público (scripts/capture-panel-shots.ts). El test
+ * del guion compara estas medidas con los JPEG reales: la cámara nunca amplía
+ * más allá de este ancho nativo.
+ */
+export const NB_PANEL_CAPTURE = { width: 1440, height: 900 } as const;
+
+/**
+ * Recorrido de cámara por el panel (frames relativos a la escena "El panel").
+ * Rectángulos en fracciones de la captura de 1440×900, medidos sobre los JPEG.
+ * Las escalas piden un acercamiento; CameraReel las limita a la resolución
+ * nativa, así que con capturas a 2× el mismo guion se acerca más.
+ */
+export const NB_PANEL_SHOTS: CameraShotSpec[] = [
+  {
+    name: "dashboard",
+    path: "/admin/dashboard",
+    from: 0,
+    duration: 150,
+    keys: [
+      { at: 0, scale: 1, fx: 0.5, fy: 0.3 },
+      { at: 70, scale: 1.35, fx: 0.6, fy: 0.3 },
+      { at: 150, scale: 1.2, fx: 0.2, fy: 0.5 },
+    ],
+    notes: [
+      // Fila de indicadores: "Citas hoy", "Barberos", "Sucursales" (x 330–1132, y 234–324).
+      { key: "kpis", from: 30, to: 92, rect: [0.225, 0.253, 0.566, 0.114] },
+      // Navegación lateral del panel (x 10–280, y 98–770).
+      { key: "sections", from: 100, to: 146, rect: [0.007, 0.105, 0.19, 0.75] },
+    ],
+  },
+  {
+    name: "citas",
+    path: "/admin/citas",
+    from: 150,
+    duration: 120,
+    keys: [
+      { at: 0, scale: 1.1, fx: 0.55, fy: 0.3 },
+      { at: 120, scale: 1.4, fx: 0.62, fy: 0.38 },
+    ],
+    // Indicadores de la agenda del día (x 337–1391, y 290–408).
+    notes: [{ key: "agenda", from: 26, to: 112, rect: [0.226, 0.312, 0.744, 0.144] }],
+  },
+  {
+    name: "pos",
+    path: "/admin/pos",
+    from: 270,
+    duration: 150,
+    keys: [
+      { at: 0, scale: 1.15, fx: 0.45, fy: 0.55 },
+      { at: 80, scale: 1.3, fx: 0.45, fy: 0.6 },
+      { at: 150, scale: 1.35, fx: 0.84, fy: 0.55 },
+    ],
+    notes: [
+      // Selector de sucursal + catálogo con stock (x 312–1012, y 271–718).
+      { key: "catalog", from: 20, to: 78, rect: [0.212, 0.295, 0.49, 0.505] },
+      // Columna "Venta actual" (x 1036–1416, y 272–800).
+      { key: "checkout", from: 90, to: 146, rect: [0.716, 0.296, 0.268, 0.59] },
+    ],
+  },
+];
 
 const L = (es: string, en: string): Localized => ({ es, en });
 
@@ -98,6 +161,8 @@ export interface NewBrothersCopy {
   lanes: string[];
   bookingKicker: string;
   bookingTitle: string;
+  /** Rótulo del paso actual; {n} y {total} se reemplazan. */
+  stepOf: string;
   steps: string[];
   branch: string;
   branchMeta: string;
@@ -134,6 +199,7 @@ export const NB_COPY: Record<FilmLanguage, NewBrothersCopy> = {
     lanes: ["Agenda", "Caja", "Clientes"],
     bookingKicker: "La reserva",
     bookingTitle: "Seis pasos. Una decisión por paso.",
+    stepOf: "Paso {n} de {total}",
     steps: ["Sucursal", "Servicio", "Referencia", "Barbero", "Fecha y hora", "Confirmar"],
     branch: "Casa Central",
     branchMeta: "Sucursal principal",
@@ -183,7 +249,7 @@ export const NB_COPY: Record<FilmLanguage, NewBrothersCopy> = {
     archKicker: "Arquitectura",
     archTitle: "Las reglas del negocio viven en la base.",
     outcomeKicker: "Resultado",
-    outcomeTitle: "Un CRM propio, sin depender de ningún CRM.",
+    outcomeTitle: "Un CRM propio,\nsin depender de ningún CRM.",
     facts: [
       { value: "6", label: "pasos de reserva" },
       { value: "26", label: "tablas con RLS" },
@@ -200,6 +266,7 @@ export const NB_COPY: Record<FilmLanguage, NewBrothersCopy> = {
     lanes: ["Schedule", "Cash", "Clients"],
     bookingKicker: "Booking",
     bookingTitle: "Six steps. One decision per step.",
+    stepOf: "Step {n} of {total}",
     steps: ["Branch", "Service", "Reference", "Barber", "Date & time", "Confirm"],
     branch: "Casa Central",
     branchMeta: "Main branch",
@@ -249,7 +316,7 @@ export const NB_COPY: Record<FilmLanguage, NewBrothersCopy> = {
     archKicker: "Architecture",
     archTitle: "Business rules live in the database.",
     outcomeKicker: "Outcome",
-    outcomeTitle: "Its own CRM, without depending on any CRM.",
+    outcomeTitle: "Its own CRM,\nwithout depending on any CRM.",
     facts: [
       { value: "6", label: "booking steps" },
       { value: "26", label: "tables with RLS" },

@@ -19,6 +19,8 @@ interface ProblemVisualProps {
   diagnosisAt: number;
   breakpoint: string;
   lanes?: Array<{ label: Localized; signals: number[] }>;
+  /** Frames entre un mensaje y el siguiente (por defecto 30). */
+  appearEvery?: number;
 }
 
 /** Empuje de cámara + rótulo de quiebre que comparten los tres visuales. */
@@ -66,18 +68,45 @@ function DiagnosisFrame({ box, frame, diagnosisAt, breakpoint, portrait, childre
 
 /* ─── Chat: los mensajes se apilan y el diagnóstico los ordena en carriles ─── */
 
+/**
+ * El orden de los carriles está coreografiado para que ninguna burbuja pase
+ * por encima de otra: primero todas se achican en su lugar al ancho del carril
+ * (cabe en dos líneas, sin cortar el texto); después viajan de a una, de
+ * derecha a izquierda, en horizontal por su propia fila y en vertical por una
+ * columna que todavía está vacía.
+ */
 export function ChatPile(props: ProblemVisualProps) {
   const frame = useCurrentFrame();
-  const { box, signals, portrait, diagnosisAt, lanes, language } = props;
-  const bubbleWidth = portrait ? 440 : 360;
-  const font = portrait ? 32 : 23;
-  const bubbleHeight = font * 2.5;
+  const { box, signals, portrait, diagnosisAt, lanes, language, appearEvery = 30 } = props;
+  const chatFont = portrait ? 32 : 23;
+  const bubbleHeight = chatFont * 2.5;
+  const chatX = 28;
+  const chatTop = portrait ? 96 : 70;
   const rowGap = portrait ? 92 : 76;
-  const colWidth = box.w / Math.max(1, lanes?.length ?? 1);
-  // La burbuja entra entera en su carril, con margen.
-  const laneScale = Math.min(portrait ? 0.68 : 0.62, (colWidth - 24) / bubbleWidth);
+  const chatWidth = Math.min(box.w - chatX * 2, portrait ? 680 : 500);
+  const laneCount = Math.max(1, lanes?.length ?? 1);
+  const colWidth = box.w / laneCount;
+  const laneWidth = colWidth - 24;
+  // Dos líneas de texto del carril ocupan el mismo alto que una burbuja del chat.
+  const laneFont = Math.min(chatFont * 0.7, (bubbleHeight - 20) / 2.5);
+  const laneTop = portrait ? 96 : 72;
+  const laneGap = 12;
   const chrome = 1 - progress(frame, diagnosisAt, diagnosisAt + 24);
   const typingDots = [0, 1, 2].map((dot) => 0.25 + 0.75 * Math.abs(Math.sin((frame + dot * 6) / 9)));
+
+  // Destino de cada burbuja y orden de viaje (carriles de derecha a izquierda).
+  const placement = signals.map((_, index) => {
+    const lane = lanes?.findIndex((item) => item.signals.includes(index)) ?? -1;
+    const row = lane >= 0 ? [...lanes![lane].signals].sort((a, b) => a - b).indexOf(index) : 0;
+    return { lane, row };
+  });
+  const travelOrder = signals
+    .map((_, index) => index)
+    .filter((index) => placement[index].lane >= 0)
+    .sort((a, b) => placement[b].lane - placement[a].lane || placement[a].row - placement[b].row);
+  const sortAt = diagnosisAt + 8;
+  const shrink = progress(frame, sortAt, sortAt + 16, EASE_IN_OUT);
+  const travelFrom = sortAt + 18;
 
   return (
     <DiagnosisFrame {...props} frame={frame}>
@@ -86,7 +115,7 @@ export function ChatPile(props: ProblemVisualProps) {
       <div style={{ position: "absolute", left: 28, top: 22, right: 28, display: "flex", justifyContent: "space-between", fontFamily: FILM_FONTS.mono, fontSize: portrait ? 24 : 16, letterSpacing: "0.14em", textTransform: "uppercase", color: ink(0.5), opacity: chrome }}>
         <span>WhatsApp</span>
         <span style={{ color: FILM_COLORS.danger }}>
-          {Math.round(interpolate(frame, [24, 24 + signals.length * 30], [0, signals.length], CLAMP))} {language === "es" ? "sin responder" : "unanswered"}
+          {signals.filter((_, index) => frame >= 24 + index * appearEvery).length} {language === "es" ? "sin responder" : "unanswered"}
         </span>
       </div>
 
@@ -95,8 +124,8 @@ export function ChatPile(props: ProblemVisualProps) {
           key={lane.label.es}
           style={{
             position: "absolute",
-            left: laneIndex * colWidth + 12,
-            width: colWidth - 24,
+            left: laneIndex * colWidth + 8,
+            width: colWidth - 16,
             top: portrait ? 30 : 24,
             bottom: portrait ? 90 : 70,
             borderRadius: 22,
@@ -111,18 +140,22 @@ export function ChatPile(props: ProblemVisualProps) {
       ))}
 
       {signals.map((signal, index) => {
-        const appear = 24 + index * 30;
+        const appear = 24 + index * appearEvery;
         const pop = progress(frame, appear, appear + 14);
-        const chatX = 28;
-        const chatY = (portrait ? 96 : 70) + index * rowGap;
-        const laneIndex = lanes?.findIndex((lane) => lane.signals.includes(index)) ?? -1;
-        const laneRow = laneIndex >= 0 ? lanes![laneIndex].signals.indexOf(index) : 0;
-        const laneX = laneIndex * colWidth + (colWidth - bubbleWidth * laneScale) / 2;
-        const laneY = (portrait ? 96 : 72) + laneRow * (bubbleHeight * laneScale + (portrait ? 22 : 16));
-        const sort = laneIndex >= 0 ? progress(frame, diagnosisAt + 8 + index * 5, diagnosisAt + 44 + index * 5, EASE_IN_OUT) : 0;
-        const x = interpolate(sort, [0, 1], [chatX, laneX]);
-        const y = interpolate(sort, [0, 1], [chatY, laneY]);
-        const scale = interpolate(sort, [0, 1], [1, laneScale]);
+        const { lane, row } = placement[index];
+        const chatY = chatTop + index * rowGap;
+        const step = travelOrder.indexOf(index);
+        const start = travelFrom + Math.max(0, step) * 12;
+        const across = lane >= 0 ? progress(frame, start, start + 10, EASE_IN_OUT) : 0;
+        const up = lane >= 0 ? progress(frame, start + 10, start + 22, EASE_IN_OUT) : 0;
+        const laneX = lane * colWidth + 12;
+        const laneY = laneTop + row * (bubbleHeight + laneGap);
+        // Achicarse lleva la burbuja al borde de la primera columna; después viaja.
+        const x = interpolate(shrink, [0, 1], [chatX, 12]) + across * (laneX - 12);
+        const y = chatY + up * (laneY - chatY);
+        const font = interpolate(shrink, [0, 1], [chatFont, laneFont]);
+        const width = interpolate(shrink, [0, 1], [chatWidth, laneWidth]);
+        const padX = font * 0.9;
         return (
           <div
             key={signal}
@@ -130,33 +163,32 @@ export function ChatPile(props: ProblemVisualProps) {
               position: "absolute",
               left: 0,
               top: 0,
-              width: bubbleWidth,
+              width,
               height: bubbleHeight,
+              boxSizing: "border-box",
               display: "flex",
               alignItems: "center",
-              padding: `0 ${font * 0.9}px`,
-              borderRadius: `${font * 0.9}px ${font * 0.9}px ${font * 0.9}px 6px`,
+              padding: `0 ${padX}px`,
+              borderRadius: `${chatFont * 0.9}px ${chatFont * 0.9}px ${chatFont * 0.9}px 6px`,
               background: ink(0.07),
               border: `1px solid ${ink(0.1)}`,
               color: FILM_COLORS.fg,
               fontFamily: FILM_FONTS.body,
               fontSize: font,
-              whiteSpace: "nowrap",
+              lineHeight: 1.25,
               overflow: "hidden",
-              textOverflow: "ellipsis",
-              transformOrigin: "0 0",
               translate: `${x}px ${y + (1 - pop) * 18}px`,
-              scale: `${scale * (0.94 + pop * 0.06)}`,
-              opacity: pop,
+              scale: `${0.94 + pop * 0.06}`,
+              opacity: lane >= 0 ? pop : pop * (1 - shrink),
             }}
           >
-            {signal}
+            <span style={{ display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{signal}</span>
           </div>
         );
       })}
 
       {/* "Escribiendo…" que nunca llega */}
-      <div style={{ position: "absolute", right: 28, top: (portrait ? 96 : 70) + signals.length * rowGap, display: "flex", gap: 8, padding: "16px 20px", borderRadius: 999, background: tint(FILM_COLORS.signal, 10), opacity: chrome * progress(frame, 30, 44) }}>
+      <div style={{ position: "absolute", right: 28, top: chatTop + signals.length * rowGap, display: "flex", gap: 8, padding: "16px 20px", borderRadius: 999, background: tint(FILM_COLORS.signal, 10), opacity: chrome * progress(frame, 30, 44) }}>
         {typingDots.map((opacity, dot) => (
           <span key={dot} style={{ width: portrait ? 14 : 10, height: portrait ? 14 : 10, borderRadius: 99, background: FILM_COLORS.signal, opacity }} />
         ))}

@@ -22,6 +22,7 @@ export function ParticleLogo({
   dissolveAt,
   seed = 11,
   count = 2400,
+  restAlpha = 0.68,
 }: {
   src: string;
   mode: ImageSampleMode;
@@ -36,6 +37,8 @@ export function ParticleLogo({
   dissolveAt?: number;
   seed?: number;
   count?: number;
+  /** Brillo relativo del logo ya formado (1 = sin bajar). */
+  restAlpha?: number;
 }) {
   const frame = useCurrentFrame();
   const { width, height } = useVideoConfig();
@@ -85,6 +88,7 @@ export function ParticleLogo({
     if (!canvas || !ctx) return;
     ctx.clearRect(0, 0, width, height);
     const span = Math.max(1, formTo - formFrom);
+    const settle = Math.min(1, Math.max(0, (frame - formTo) / 40));
     for (const p of particles) {
       const raw = (frame - formFrom) / span;
       const t = easeInOutCubic(Math.min(1, Math.max(0, (raw - p.delay) / (1 - p.delay))));
@@ -92,29 +96,34 @@ export function ParticleLogo({
       const bend = Math.sin(Math.PI * t) * p.swirl;
       let x = p.sx + (p.tx - p.sx) * t + bend * 0.6;
       let y = p.sy + (p.ty - p.sy) * t - bend * 0.4;
-      // Respiración cuando ya está formado.
-      x += Math.sin(frame / 22 + p.phase) * 0.6 * t;
-      y += Math.cos(frame / 26 + p.phase) * 0.6 * t;
-      let fade = 0.18 + 0.82 * t;
+      // Respiración cuando ya está formado: casi imperceptible, el logo queda quieto.
+      x += Math.sin(frame / 30 + p.phase) * 0.35 * t;
+      y += Math.cos(frame / 34 + p.phase) * 0.35 * t;
+      // Formado el logo, el brillo baja y se asienta (menos ruido detrás de los textos).
+      let fade = (0.18 + 0.82 * t) * (1 - settle * (1 - restAlpha));
       if (dissolveAt !== undefined && frame > dissolveAt) {
         const out = Math.min(1, (frame - dissolveAt) / 40);
         y -= p.rise * out * out;
         x += p.swirl * 0.2 * out;
         fade *= 1 - out;
       }
-      const twinkle = 0.78 + 0.22 * Math.sin(frame / 9 + p.phase);
+      const sparkle = 0.22 - settle * 0.16;
+      const twinkle = 1 - sparkle + sparkle * Math.sin(frame / 12 + p.phase);
       ctx.globalAlpha = Math.max(0, fade * twinkle);
       ctx.fillStyle = p.color;
       ctx.fillRect(x, y, p.dot, p.dot);
     }
     ctx.globalAlpha = 1;
-  }, [dissolveAt, formFrom, formTo, frame, height, particles, width]);
+  }, [dissolveAt, formFrom, formTo, frame, height, particles, restAlpha, width]);
 
   return <canvas ref={canvasRef} width={width} height={height} style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} />;
 }
 
-/** Polvo de luz que flota despacio (textura de marcas doradas). */
-export function DustField({ color, count = 140, seed = 3, opacity = 0.5 }: { color: string; count?: number; seed?: number; opacity?: number }) {
+/**
+ * Polvo de luz que flota despacio (textura de marcas doradas). Es fondo, no
+ * protagonista: pocas motas, chicas y tenues.
+ */
+export function DustField({ color, count = 56, seed = 3, opacity = 0.2 }: { color: string; count?: number; seed?: number; opacity?: number }) {
   const frame = useCurrentFrame();
   const { width, height } = useVideoConfig();
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -123,8 +132,8 @@ export function DustField({ color, count = 140, seed = 3, opacity = 0.5 }: { col
     return Array.from({ length: count }, () => ({
       x: random() * width,
       y: random() * height,
-      r: 0.6 + random() * 1.8,
-      speed: 0.08 + random() * 0.25,
+      r: 0.5 + random() * 1.2,
+      speed: 0.05 + random() * 0.15,
       phase: random() * Math.PI * 2,
     }));
   }, [count, height, seed, width]);
@@ -137,7 +146,7 @@ export function DustField({ color, count = 140, seed = 3, opacity = 0.5 }: { col
     for (const mote of motes) {
       const y = (mote.y - frame * mote.speed + height) % height;
       const x = mote.x + Math.sin(frame / 60 + mote.phase) * 12;
-      ctx.globalAlpha = opacity * (0.35 + 0.65 * Math.abs(Math.sin(frame / 40 + mote.phase)));
+      ctx.globalAlpha = opacity * (0.55 + 0.45 * Math.abs(Math.sin(frame / 60 + mote.phase)));
       ctx.beginPath();
       ctx.arc(x, y, mote.r, 0, Math.PI * 2);
       ctx.fill();
