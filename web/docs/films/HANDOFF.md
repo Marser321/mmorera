@@ -7,7 +7,7 @@ Estado y reglas del sistema de "films de lanzamiento" del portfolio, para seguir
   - Film de apertura con scroll (`ScrollFilm`).
   - Sala de casos de uso (`UseCaseFilmRoom`): New Brothers como caso real; IA y CRM como ejemplos rotulados.
 - **Casos de éxito (`/casos-de-exito/[slug]`):** `CaseFilmSection` elige el film:
-  - **Insignia** si el slug está en `web/src/data/films/flagships/index.ts`. Hoy solo New Brothers: `NewBrothersFilm`.
+  - **Insignia** si el slug está en `web/src/data/films/flagships/index.ts` (datos) y en `FLAGSHIP_LOADERS` de `FilmCanvas.tsx` (composición, cargada de forma diferida con `lazyComponent`: cada página baja solo su film). Hoy: New Brothers (`NewBrothersFilm`) y Fénix (en construcción).
   - **Genérico** (`CaseFilm`) en los demás. Si el caso tiene marca en `caseBrands.ts`, se pinta con ella. Hoy: New Brothers, Fénix y AD Media.
 - **Home:** entrada del monograma (`LogoOvertureSection`) dentro de `#perfil`. Las flechas ">" y "Σ" se unen y giran hasta formar la M; la misma firma cierra cada film.
 
@@ -26,13 +26,21 @@ Estado y reglas del sistema de "films de lanzamiento" del portfolio, para seguir
     - `ArchitectureScene`: recorre JSON de Archify con vistas guiadas. Dibuja las rutas y placas de etiqueta que calculó Archify (`*.layout.json`), recorta el diagrama a su área y pone la leyenda de cada vista en su propia banda.
 - `web/src/data/brands/caseBrands.ts`: tokens reales por cliente. `brandCssVars()` redefine las variables CSS dentro del film.
 - `web/src/data/films/`: guiones puros, sin Remotion.
-- `web/src/data/architecture/`: JSON de Archify (New Brothers, Fénix), su geometría congelada `*.layout.json` y `archify.ts` (tipos). `archify.test.ts` falla si el layout quedó viejo o si una etiqueta toca una caja, otra etiqueta o el borde de un grupo.
+  - `flagships/types.ts`: cada film insignia declara su lista de escenas con un tipo (`SceneKind`) y su línea de tiempo sale de `timelineFrom()`. `flagships.test.ts` exige 70–80 s, firma al final y que dos clientes nunca compartan estructura (subsecuencia común ≤ 0,6) ni escena protagonista.
+  - `flagships/fenix.ts`: cifras con su línea del dossier (`FENIX_FACTS`), assets con su medida nativa (`FENIX_ASSETS`, el test la lee de las cabeceras con `lib/mediaSize.ts`) y copia ES/EN. `fenix.test.ts` prohíbe %, precios, testimonios, FENIX OS y números que no estén en `FENIX_FACTS`.
+- `web/src/lib/filmLayout.ts`: zona útil por formato, bandas, columnas y grillas. Las escenas nuevas calculan sus cajas ahí (texto en bandas propias, medios en placas propias) y cada una tiene un layout puro en `scenes/brand/layout/` con su test de "nada se pisa".
+- **Laboratorio de escenas** (`/films-lab`, solo `next dev`): cada escena de la biblioteca aislada, con marca, formato e idioma por query string y `window.__films.lab` para recorrerla cuadro por cuadro.
+- `web/src/data/architecture/`: diagramas de Archify por caso.
+  - `<nombre>.json` (apaisado, español), `<nombre>.portrait.json` (mismo contenido para 4:5), `<nombre>.en.json` (traducción) y la geometría congelada de las cuatro variantes (`*.layout.json`).
+  - `bundles/<slug>.ts` junta todo; `registry.ts` lo carga de forma diferida; `bundle.ts` resuelve idioma y orientación.
+  - `archify.test.ts` falla si un layout quedó viejo, si una etiqueta toca una caja, otra etiqueta, el borde de un grupo o una ruta ajena, si la vertical no dice lo mismo que la apaisada o si falta una traducción.
 - `web/docs/films/dossiers/`: datos verificados de cada cliente (sus repos locales no están en la nube).
 - **Scripts:**
   - `capture-case-reels.ts`: reels y capturas del sitio en vivo.
   - `capture-panel-shots.ts`: paneles por acceso demo público.
   - `build-film-backdrops.ts`: fondos pre-difuminados con sharp.
-  - `build-archify-layouts.mjs`: valida cada diagrama con Archify (`showcase`) y congela sus rutas en `*.layout.json`. Correrlo después de tocar un JSON de arquitectura.
+  - `build-archify-layouts.ts` (`npx tsx`): valida las cuatro variantes de cada diagrama con Archify (`showcase`) y congela sus rutas. Correrlo después de tocar un JSON de arquitectura o su traducción.
+  - `analyze-live-site.ts <slug>`: recorrido en vivo (rutas, formularios, integraciones como GoHighLevel, fuentes y colores servidos) → `docs/films/dossiers/live/<slug>.{json,md}`. No envía formularios ni inicia sesión.
   - `measure-cases.ts`: Lighthouse.
 
 ## Reglas (no negociables)
