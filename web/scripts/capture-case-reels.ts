@@ -55,19 +55,61 @@ async function settle(page: Page) {
   await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
 }
 
-// Popups de bienvenida/cookies tapan el sitio y bloquean el scroll del reel.
+// Popups de bienvenida/cookies tapan el sitio y bloquean el scroll del reel
+// (el reel de AD Media quedó entero detrás de "Diagnóstico gratis").
+const CLOSERS = [
+  'button[aria-label*="cerrar" i]',
+  'button[aria-label*="close" i]',
+  '[role="dialog"] button:has-text("Cerrar")',
+  '[role="dialog"] button:has-text("Close")',
+  'button:text-is("×")',
+  'button:text-is("✕")',
+  ':is(button, a):has-text("No, gracias")',
+  ':is(button, a):has-text("Quizás más tarde")',
+  ':is(button, a):has-text("Ahora no")',
+  ':is(button, a):has-text("No thanks")',
+  ':is(button, a):has-text("Maybe later")',
+  ':is(button, a):has-text("Not now")',
+].join(", ");
+
+/**
+ * Capa fija que tapa más de la mitad de la ventana y se puede cliquear (un
+ * modal), o null. Los fondos fijos decorativos no cuentan: no reciben clics o
+ * están por debajo del contenido.
+ */
+async function coveringOverlay(page: Page) {
+  return page.evaluate(() => {
+    const viewport = window.innerWidth * window.innerHeight;
+    for (const element of Array.from(document.querySelectorAll<HTMLElement>("body *"))) {
+      const style = getComputedStyle(element);
+      if (style.position !== "fixed" || style.display === "none" || style.visibility === "hidden" || Number(style.opacity) < 0.1) continue;
+      if (style.pointerEvents === "none" || !(Number(style.zIndex) >= 10)) continue;
+      const rect = element.getBoundingClientRect();
+      const w = Math.max(0, Math.min(rect.right, window.innerWidth) - Math.max(rect.left, 0));
+      const h = Math.max(0, Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0));
+      const modal = element.matches('[role="dialog"], [aria-modal="true"]') || element.querySelector('[role="dialog"], [aria-modal="true"], button, a') !== null;
+      if (modal && (w * h) / viewport > 0.5) return `${element.tagName.toLowerCase()}.${String(element.className).slice(0, 60)}`;
+    }
+    return null;
+  });
+}
+
 async function dismissOverlays(page: Page) {
-  await page.keyboard.press("Escape").catch(() => {});
-  const closer = page
-    .locator('button[aria-label*="cerrar" i], button[aria-label*="close" i], [role="dialog"] button:has-text("Cerrar"), [role="dialog"] button:has-text("Close")')
-    .filter({ visible: true });
-  if (await closer.count()) await closer.first().click({ timeout: 2000 }).catch(() => {});
-  await page.waitForTimeout(800);
+  for (let attempt = 0; attempt < 3; attempt++) {
+    await page.keyboard.press("Escape").catch(() => {});
+    const closer = page.locator(CLOSERS).filter({ visible: true });
+    if (await closer.count()) await closer.first().click({ timeout: 2000 }).catch(() => {});
+    await page.waitForTimeout(800);
+    if (!(await coveringOverlay(page))) return;
+  }
+  // Mejor no grabar que publicar un reel tapado: el caso queda con el material anterior.
+  throw new Error(`un modal sigue tapando la página (${await coveringOverlay(page)})`);
 }
 
 async function open(page: Page, url: string) {
   await page.goto(url, { waitUntil: "networkidle", timeout: 60_000 }).catch(() => page.waitForLoadState("load"));
-  await page.waitForTimeout(2500);
+  // Algunos popups aparecen a los pocos segundos: se espera antes de cerrarlos.
+  await page.waitForTimeout(4000);
   await dismissOverlays(page);
 }
 
@@ -94,6 +136,12 @@ async function captureReel(page: Page, slug: string) {
     await page.evaluate((top) => window.scrollTo({ top, behavior: "instant" as ScrollBehavior }), y);
     await shoot();
   }
+  // Un popup que entró a mitad del recorrido arruina el reel: se descarta.
+  const late = await coveringOverlay(page);
+  if (late) {
+    rmSync(frames, { recursive: true, force: true });
+    throw new Error(`un modal apareció durante el reel (${late})`);
+  }
 
   const input = ["-framerate", String(FPS), "-i", path.join(frames, "f%04d.jpg")];
   const scale = ["-vf", "scale=1280:-2:flags=lanczos"];
@@ -112,6 +160,7 @@ async function captureGallery(page: Page, slug: string, device: "desktop" | "mob
     const top = Math.min(maxScroll, Math.round(factor * viewportHeight));
     await page.evaluate((y) => window.scrollTo({ top: y, behavior: "instant" as ScrollBehavior }), top);
     await page.waitForTimeout(900);
+    if (await coveringOverlay(page)) await dismissOverlays(page);
     const file = `${slug}-${device}-${i + 1}.jpg`;
     await page.screenshot({ path: path.join(SHOTS_DIR, file), type: "jpeg", quality: 84 });
     shots.push({ src: `/portfolio/shots/${file}`, device });
@@ -128,13 +177,16 @@ async function main() {
   mkdirSync(SHOTS_DIR, { recursive: true });
   const manifest: Manifest = existsSync(MANIFEST) ? JSON.parse(readFileSync(MANIFEST, "utf8")) : {};
 
-  const browser = await chromium.launch();
+  // CHROMIUM_PATH permite usar un Chromium ya instalado (p. ej. /opt/pw-browsers/chromium).
+  const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || undefined });
   try {
     for (const project of targets) {
       const url = project.liveUrl!;
       console.log(`▶ ${project.slug}  ${url}`);
       try {
         const desktop = await browser.newContext({ viewport: DESKTOP, deviceScaleFactor: 1, reducedMotion: "no-preference" });
+        // tsx agrega __name() a las funciones con nombre; dentro del navegador no existe.
+        await desktop.addInitScript("window.__name = (fn) => fn;");
         const page = await desktop.newPage();
         await open(page, url);
         await captureReel(page, project.slug);
@@ -143,6 +195,7 @@ async function main() {
         await desktop.close();
 
         const mobile = await browser.newContext({ viewport: MOBILE, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
+        await mobile.addInitScript("window.__name = (fn) => fn;");
         const mobilePage = await mobile.newPage();
         await open(mobilePage, url);
         const mobileShots = await captureGallery(mobilePage, project.slug, "mobile", [0, 1.2]);

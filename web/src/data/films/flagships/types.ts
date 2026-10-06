@@ -58,6 +58,8 @@ export interface FilmAsset {
   h: number;
   fps?: number;
   seconds?: number;
+  /** Solo video: versión AV1/WebM (más liviana); `src` queda como H.264 para Safari. */
+  webm?: string;
 }
 
 export interface FlagshipFilm {

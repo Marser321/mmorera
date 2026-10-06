@@ -13,11 +13,11 @@ import { formatFact, timelineFrom, type FilmAsset, type FilmFact, type FlagshipC
 
 export const FENIX_SCENES = [
   { id: "opening", kind: "particle-open", seconds: 7 },
-  { id: "mechanism", kind: "mechanism", seconds: 11 },
-  { id: "evidence", kind: "evidence-ledger", seconds: 9 },
-  { id: "positioning", kind: "manifesto", seconds: 6 },
-  { id: "site", kind: "site-booking", seconds: 10 },
-  { id: "architecture", kind: "architecture", seconds: 12 },
+  { id: "mechanism", kind: "mechanism", seconds: 13 },
+  { id: "evidence", kind: "evidence-ledger", seconds: 8.5 },
+  { id: "positioning", kind: "manifesto", seconds: 9 },
+  { id: "site", kind: "site-booking", seconds: 9.5 },
+  { id: "architecture", kind: "architecture", seconds: 11.5 },
   { id: "brain", kind: "keyword-search", seconds: 10 },
   { id: "engineering", kind: "fact-wall", seconds: 6.5 },
   { id: "signature", kind: "signature", seconds: 4.5 },
@@ -78,9 +78,9 @@ const BRAND = "/portfolio/brands/fenix-medical-center";
 
 /** Medidas nativas medidas con ffprobe / sharp (el film nunca las amplía). */
 export const FENIX_ASSETS = {
-  corridor: { src: `${BRAND}/scenes/amb-00-umbral-apertura-v2--16x9.mp4`, w: 1920, h: 1080, fps: 24, seconds: 10 },
+  corridor: { src: `${BRAND}/scenes/amb-00-umbral-apertura-v2--16x9.mp4`, webm: `${BRAND}/scenes/amb-00-umbral-apertura-v2--16x9.webm`, w: 1920, h: 1080, fps: 24, seconds: 10 },
   corridorPoster: { src: `${BRAND}/scenes/amb-00-umbral-apertura-v2--16x9-poster.webp`, w: 1920, h: 1080 },
-  chamber: { src: `${BRAND}/scenes/hdr-v1-tratamientos-camara-hiperbarica--16x9.mp4`, w: 1920, h: 1080, fps: 30, seconds: 10 },
+  chamber: { src: `${BRAND}/scenes/hdr-v1-tratamientos-camara-hiperbarica--16x9.mp4`, webm: `${BRAND}/scenes/hdr-v1-tratamientos-camara-hiperbarica--16x9.webm`, w: 1920, h: 1080, fps: 30, seconds: 10 },
   chamberPoster: { src: `${BRAND}/scenes/hdr-v1-tratamientos-camara-hiperbarica--16x9-poster.webp`, w: 1920, h: 1080 },
   mechanismPlasma: { src: `${BRAND}/scenes/mec-hbot-02-plasma-saturado.webp`, w: 1280, h: 720 },
   mechanismDiffusion: { src: `${BRAND}/scenes/mec-hbot-05-difusion-tisular.webp`, w: 1280, h: 720 },
@@ -179,11 +179,14 @@ export interface FenixCopy {
   mechanismLaw: string;
   mechanismCaptions: [string, string, string];
   doseBeats: Array<{ text: string; kicker?: string }>;
+  /** Unidad de la tira de sesiones ("protocolos de 40–60 sesiones", dossier · HBOT). */
+  doseUnit: string;
   evidenceKicker: string;
   evidenceTitle: string;
   evidenceTotalLabel: string;
   evidenceBreakdown: Array<{ label: string; key: FenixFactKey }>;
   evidenceTiers: Array<{ id: EvidenceTier; label: string; items: string[]; note?: string }>;
+  evidenceWording: { allowed: string; prohibited: string };
   positioningBeats: Array<{ text: string; kicker?: string }>;
   siteKicker: string;
   siteTitle: string;
@@ -198,8 +201,10 @@ export interface FenixCopy {
   brainTokens: string[];
   brainResults: Array<{ title: string; fragment: string }>;
   brainStats: Array<{ key: FenixFactKey; label: string }>;
+  scriptTitle: string;
   scriptSegments: Array<{ label: string; timing?: string }>;
   scriptChecklist: string;
+  scriptChecklistItems: string[];
   scriptBreakdown: Array<{ key: FenixFactKey; label: string }>;
   hooksLabel: string;
   engineeringKicker: string;
@@ -224,6 +229,7 @@ export const FENIX_COPY: Record<FilmLanguage, FenixCopy> = {
       { kicker: "Por qué", text: "La señal aparece en protocolos de 40 a 60 sesiones." },
       { kicker: "Entonces", text: "Por eso la membresía es un requisito clínico." },
     ],
+    doseUnit: "sesiones",
     evidenceKicker: "Registro de afirmaciones",
     evidenceTitle: "Qué se puede decir y qué no.",
     evidenceTotalLabel: "afirmaciones con redacción permitida y prohibida",
@@ -238,11 +244,11 @@ export const FENIX_COPY: Record<FilmLanguage, FenixCopy> = {
       { id: "not-established", label: "No establecido", items: ["Energía general", "Longevidad"] },
       { id: "prohibited", label: "Prohibido afirmar", items: ["Autismo", "COVID agudo"] },
     ],
+    evidenceWording: { allowed: "Redacción permitida", prohibited: "Redacción prohibida" },
     positioningBeats: [
       { kicker: "El titular", text: "Tu médico de cabecera, que también conoce tu plan de longevidad." },
       { kicker: "La ética", text: "Normal es un rango.\nTu salud necesita contexto." },
-      { kicker: "La confianza", text: "Precios claros y un sitio en tu idioma." },
-      { kicker: "La tecnología", text: "El compliance define la tecnología." },
+      { kicker: "La confianza", text: "Precios claros, un sitio en tu idioma y el compliance antes que la tecnología." },
     ],
     siteKicker: "El sitio y la reserva",
     siteTitle: "40 páginas, dos idiomas, una agenda real.",
@@ -266,6 +272,7 @@ export const FENIX_COPY: Record<FilmLanguage, FenixCopy> = {
       { key: "wordsM", label: "M de palabras" },
       { key: "channels", label: "canales públicos" },
     ],
+    scriptTitle: "28 guiones con revisión de cumplimiento.",
     scriptSegments: [
       { label: "Hook", timing: "0–4 s" },
       { label: "Biología" },
@@ -274,7 +281,8 @@ export const FENIX_COPY: Record<FilmLanguage, FenixCopy> = {
       { label: "Solución Fenix" },
       { label: "CTA" },
     ],
-    scriptChecklist: "Revisión de cumplimiento contra el registro de afirmaciones",
+    scriptChecklist: "Revisión de cumplimiento",
+    scriptChecklistItems: ["Contra el registro de 109 afirmaciones", "Solo redacción permitida"],
     scriptBreakdown: [
       { key: "scriptsReels", label: "reels" },
       { key: "scriptsEducational", label: "educativos" },
@@ -307,6 +315,7 @@ export const FENIX_COPY: Record<FilmLanguage, FenixCopy> = {
       { kicker: "Why", text: "The signal shows up in protocols of 40 to 60 sessions." },
       { kicker: "So", text: "That is why membership is a clinical requirement." },
     ],
+    doseUnit: "sessions",
     evidenceKicker: "Claims registry",
     evidenceTitle: "What can be said and what can't.",
     evidenceTotalLabel: "claims with permitted and prohibited wording",
@@ -321,11 +330,11 @@ export const FENIX_COPY: Record<FilmLanguage, FenixCopy> = {
       { id: "not-established", label: "Not established", items: ["General energy", "Longevity"] },
       { id: "prohibited", label: "Never claim", items: ["Autism", "Acute COVID"] },
     ],
+    evidenceWording: { allowed: "Permitted wording", prohibited: "Prohibited wording" },
     positioningBeats: [
       { kicker: "The headline", text: "Your family doctor, who also knows your longevity plan." },
       { kicker: "The ethics", text: "Normal is a range.\nYour health needs context." },
-      { kicker: "The trust", text: "Clear prices and a site in your language." },
-      { kicker: "The technology", text: "Compliance shapes the technology." },
+      { kicker: "The trust", text: "Clear prices, a site in your language and compliance before technology." },
     ],
     siteKicker: "The site and booking",
     siteTitle: "40 pages, two languages, a real calendar.",
@@ -349,6 +358,7 @@ export const FENIX_COPY: Record<FilmLanguage, FenixCopy> = {
       { key: "wordsM", label: "M words" },
       { key: "channels", label: "public channels" },
     ],
+    scriptTitle: "28 scripts with a compliance review.",
     scriptSegments: [
       { label: "Hook", timing: "0–4 s" },
       { label: "Biology" },
@@ -357,7 +367,8 @@ export const FENIX_COPY: Record<FilmLanguage, FenixCopy> = {
       { label: "Fenix solution" },
       { label: "CTA" },
     ],
-    scriptChecklist: "Compliance review against the claims registry",
+    scriptChecklist: "Compliance review",
+    scriptChecklistItems: ["Against the registry of 109 claims", "Permitted wording only"],
     scriptBreakdown: [
       { key: "scriptsReels", label: "reels" },
       { key: "scriptsEducational", label: "educational" },
