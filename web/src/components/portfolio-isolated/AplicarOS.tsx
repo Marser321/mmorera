@@ -10,6 +10,7 @@ import { useDevMode } from './DevModeContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { useTrack } from '@/context/TrackContext';
 import { isTrackId, type TrackId } from '@/data/tracks';
+import { getProjectCase } from '@/data/projectCases';
 
 type BriefData = {
     name: string;
@@ -60,6 +61,16 @@ export function AplicarOS() {
             setTrackId(contextTrack);
         }
     }, [contextTrack, setContextTrack]);
+
+    // Llegó desde un caso (?caso=slug): el mensaje arranca con esa referencia.
+    useEffect(() => {
+        const project = getProjectCase(new URLSearchParams(window.location.search).get('caso') ?? '');
+        if (!project) return;
+        const reference = isEs
+            ? `Quiero algo como ${project.title.es}. `
+            : `I want something like ${project.title.en}. `;
+        setFormData((current) => (current.challenge ? current : { ...current, challenge: reference }));
+    }, [isEs]);
 
     useEffect(() => {
         if (!touched || submitted) return;

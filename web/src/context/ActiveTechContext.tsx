@@ -27,6 +27,9 @@ interface ActiveTechValue {
     setHeroVisible: (visible: boolean) => void;
     activeTechName: string | null;
     setActiveTechName: (name: string | null) => void;
+    /** Ícono que una sección pide dibujar ya (p. ej. un servicio enfocado en el hero). */
+    focusTechName: string | null;
+    setFocusTechName: (name: string | null) => void;
 }
 
 const ActiveTechContext = createContext<ActiveTechValue | null>(null);
@@ -36,6 +39,7 @@ export function ActiveTechProvider({ children }: { children: ReactNode }) {
     const [override, setOverride] = useState<{ pathname: string; families: Family[] } | null>(null);
     const [visibility, setVisibility] = useState<{ pathname: string; visible: boolean } | null>(null);
     const [activeTech, setActiveTech] = useState<{ pathname: string; name: string | null } | null>(null);
+    const [focusTech, setFocusTech] = useState<{ pathname: string; name: string | null } | null>(null);
 
     const activeFamilies = useMemo<Family[]>(
         () => override?.pathname === pathname ? override.families : ROUTE_FAMILIES[pathname] ?? [],
@@ -54,10 +58,14 @@ export function ActiveTechProvider({ children }: { children: ReactNode }) {
     const setActiveTechName = useCallback((name: string | null) => {
         setActiveTech({ pathname, name });
     }, [pathname]);
+    const focusTechName = focusTech?.pathname === pathname ? focusTech.name : null;
+    const setFocusTechName = useCallback((name: string | null) => {
+        setFocusTech({ pathname, name });
+    }, [pathname]);
 
     const value = useMemo(
-        () => ({ activeFamilies, setActiveFamilies, heroVisible, setHeroVisible, activeTechName, setActiveTechName }),
-        [activeFamilies, setActiveFamilies, heroVisible, setHeroVisible, activeTechName, setActiveTechName],
+        () => ({ activeFamilies, setActiveFamilies, heroVisible, setHeroVisible, activeTechName, setActiveTechName, focusTechName, setFocusTechName }),
+        [activeFamilies, setActiveFamilies, heroVisible, setHeroVisible, activeTechName, setActiveTechName, focusTechName, setFocusTechName],
     );
 
     return <ActiveTechContext.Provider value={value}>{children}</ActiveTechContext.Provider>;
@@ -73,6 +81,8 @@ export function useActiveTech(): ActiveTechValue {
         setHeroVisible: () => {},
         activeTechName: null,
         setActiveTechName: () => {},
+        focusTechName: null,
+        setFocusTechName: () => {},
     };
 }
 

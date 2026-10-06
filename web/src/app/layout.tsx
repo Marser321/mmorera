@@ -7,6 +7,8 @@ import { GlobalBackground } from "@/components/shared/GlobalBackground";
 import { Navbar } from "@/components/sections/navbar";
 import { Footer } from "@/components/sections/footer";
 import { WhatsAppFab } from "@/components/shared/WhatsAppFab";
+import { CursorLabel } from "@/components/motion/CursorLabel";
+import { PageCurtain } from "@/components/motion/PageCurtain";
 
 const displayFont = Unbounded({
   subsets: ["latin"], display: "swap", variable: "--ff-display", weight: ["400", "500", "700", "900"],
@@ -76,6 +78,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <div className="relative z-10 flex min-h-screen flex-col">{children}</div>
           <Footer />
           <WhatsAppFab />
+          <CursorLabel />
+          <PageCurtain />
         </AppProviders>
       </body>
     </html>

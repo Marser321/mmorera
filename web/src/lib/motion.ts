@@ -26,7 +26,9 @@ export const SPRING = {
 
 /**
  * Reglas de contención del sistema de motion (no negociables):
- * 1. Un solo momento "pinned" por página (home = manifesto; work = reel).
+ * 1. Un solo momento "pinned" con scroll-scrub por página (home = manifesto;
+ *    work = reel). Los escenarios `sticky` CSS sin motion values atados al
+ *    scroll (home = escenario de servicios) no cuentan.
  * 2. Solo transform + opacity; nunca blur/filter/clip-path sobre contenedores
  *    grandes encima del canvas WebGL.
  * 3. Las entradas disparan una sola vez (VIEWPORT.once).

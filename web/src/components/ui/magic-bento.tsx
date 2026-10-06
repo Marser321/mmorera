@@ -487,6 +487,7 @@ function BentoCard({
                 href={item.href}
                 ref={ref as React.Ref<HTMLAnchorElement>}
                 data-bento-card
+                data-cursor-label={ctaLabel}
                 style={style}
                 className={className}
             >

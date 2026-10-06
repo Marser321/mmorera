@@ -1,15 +1,46 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { ArrowUpRight, MessageCircle } from "lucide-react";
 import { SITE_IDENTITY, localePath } from "@/config/site";
 import { useLanguage } from "@/context/LanguageContext";
+import { Magnetic } from "@/components/motion/Magnetic";
+
+// El Home y /aplicar ya terminan en el formulario: ahí no se repite el cierre.
+const CTA_HIDDEN = new Set(["/", "/en", "/aplicar", "/en/aplicar"]);
 
 export function Footer() {
   const { language } = useLanguage();
   const isEs = language === "es";
+  const pathname = usePathname();
+  const showCta = !CTA_HIDDEN.has(pathname);
   return (
     <footer className="relative z-20 border-t border-white/10 bg-background/92 px-5 py-12 backdrop-blur-xl light:border-[rgb(var(--ink-rgb)/0.1)] sm:px-8 lg:px-12">
+      {showCta && (
+        <div className="mx-auto mb-16 max-w-[1480px] border-b border-white/10 pb-16 pt-8 light:border-[rgb(var(--ink-rgb)/0.1)] sm:pt-12">
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-signal">
+            {isEs ? "Cupos limitados · 4 a 5 proyectos por trimestre" : "Limited spots · 4 to 5 projects per quarter"}
+          </p>
+          <p className="mt-5 text-[clamp(3.2rem,10vw,10.5rem)] font-medium leading-[0.85] tracking-[-0.075em] text-foreground">
+            {isEs ? "¿Qué construimos?" : "What do we build?"}
+          </p>
+          <div className="mt-10 flex flex-wrap items-center gap-3.5">
+            <Magnetic>
+              <Link href={localePath(language, "/aplicar")} className="pressable inline-flex items-center gap-2.5 rounded-full bg-foreground px-7 py-4 text-sm font-semibold text-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                {isEs ? "Contame tu proyecto" : "Tell me about your project"}
+                <ArrowUpRight className="h-4 w-4" />
+              </Link>
+            </Magnetic>
+            <Magnetic>
+              <a href={SITE_IDENTITY.contact.whatsapp} target="_blank" rel="noopener noreferrer" className="pressable inline-flex items-center gap-2.5 rounded-full border border-[#25D366]/40 bg-[#25D366]/15 px-7 py-4 text-sm font-semibold text-[#25D366] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366]">
+                <MessageCircle className="h-4 w-4" />
+                WhatsApp
+              </a>
+            </Magnetic>
+          </div>
+        </div>
+      )}
       <div className="mx-auto grid max-w-[1480px] gap-10 md:grid-cols-[1.5fr_1fr_1fr]">
         <div>
           <p className="text-xl font-semibold tracking-[-0.03em] text-foreground">{SITE_IDENTITY.brand}</p>

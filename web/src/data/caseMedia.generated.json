@@ -1,0 +1,392 @@
+{
+  "lb-elite-wash-detail": {
+    "reel": {
+      "mp4": "/portfolio/reels/lb-elite-wash-detail.mp4",
+      "webm": "/portfolio/reels/lb-elite-wash-detail.webm",
+      "poster": "/portfolio/reels/lb-elite-wash-detail-poster.jpg"
+    },
+    "gallery": [
+      {
+        "src": "/portfolio/shots/lb-elite-wash-detail-desktop-1.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/lb-elite-wash-detail-desktop-2.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/lb-elite-wash-detail-desktop-3.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/lb-elite-wash-detail-mobile-1.jpg",
+        "device": "mobile"
+      },
+      {
+        "src": "/portfolio/shots/lb-elite-wash-detail-mobile-2.jpg",
+        "device": "mobile"
+      }
+    ],
+    "capturedAt": "2026-10-06"
+  },
+  "new-brothers-barberia": {
+    "reel": {
+      "mp4": "/portfolio/reels/new-brothers-barberia.mp4",
+      "webm": "/portfolio/reels/new-brothers-barberia.webm",
+      "poster": "/portfolio/reels/new-brothers-barberia-poster.jpg"
+    },
+    "gallery": [
+      {
+        "src": "/portfolio/shots/new-brothers-barberia-desktop-1.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/new-brothers-barberia-desktop-2.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/new-brothers-barberia-desktop-3.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/new-brothers-barberia-mobile-1.jpg",
+        "device": "mobile"
+      },
+      {
+        "src": "/portfolio/shots/new-brothers-barberia-mobile-2.jpg",
+        "device": "mobile"
+      }
+    ],
+    "capturedAt": "2026-10-06"
+  },
+  "truckers-choice": {
+    "reel": {
+      "mp4": "/portfolio/reels/truckers-choice.mp4",
+      "webm": "/portfolio/reels/truckers-choice.webm",
+      "poster": "/portfolio/reels/truckers-choice-poster.jpg"
+    },
+    "gallery": [
+      {
+        "src": "/portfolio/shots/truckers-choice-desktop-1.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/truckers-choice-desktop-2.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/truckers-choice-desktop-3.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/truckers-choice-mobile-1.jpg",
+        "device": "mobile"
+      },
+      {
+        "src": "/portfolio/shots/truckers-choice-mobile-2.jpg",
+        "device": "mobile"
+      }
+    ],
+    "capturedAt": "2026-10-06"
+  },
+  "rangel-oviedo-group": {
+    "reel": {
+      "mp4": "/portfolio/reels/rangel-oviedo-group.mp4",
+      "webm": "/portfolio/reels/rangel-oviedo-group.webm",
+      "poster": "/portfolio/reels/rangel-oviedo-group-poster.jpg"
+    },
+    "gallery": [
+      {
+        "src": "/portfolio/shots/rangel-oviedo-group-desktop-1.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/rangel-oviedo-group-desktop-2.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/rangel-oviedo-group-desktop-3.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/rangel-oviedo-group-mobile-1.jpg",
+        "device": "mobile"
+      },
+      {
+        "src": "/portfolio/shots/rangel-oviedo-group-mobile-2.jpg",
+        "device": "mobile"
+      }
+    ],
+    "capturedAt": "2026-10-06"
+  },
+  "mr-studio-tattoo": {
+    "reel": {
+      "mp4": "/portfolio/reels/mr-studio-tattoo.mp4",
+      "webm": "/portfolio/reels/mr-studio-tattoo.webm",
+      "poster": "/portfolio/reels/mr-studio-tattoo-poster.jpg"
+    },
+    "gallery": [
+      {
+        "src": "/portfolio/shots/mr-studio-tattoo-desktop-1.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/mr-studio-tattoo-desktop-2.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/mr-studio-tattoo-desktop-3.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/mr-studio-tattoo-mobile-1.jpg",
+        "device": "mobile"
+      },
+      {
+        "src": "/portfolio/shots/mr-studio-tattoo-mobile-2.jpg",
+        "device": "mobile"
+      }
+    ],
+    "capturedAt": "2026-10-06"
+  },
+  "autohub-360": {
+    "reel": {
+      "mp4": "/portfolio/reels/autohub-360.mp4",
+      "webm": "/portfolio/reels/autohub-360.webm",
+      "poster": "/portfolio/reels/autohub-360-poster.jpg"
+    },
+    "gallery": [
+      {
+        "src": "/portfolio/shots/autohub-360-desktop-1.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/autohub-360-desktop-2.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/autohub-360-desktop-3.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/autohub-360-mobile-1.jpg",
+        "device": "mobile"
+      },
+      {
+        "src": "/portfolio/shots/autohub-360-mobile-2.jpg",
+        "device": "mobile"
+      }
+    ],
+    "capturedAt": "2026-10-06"
+  },
+  "lnb-saas": {
+    "reel": {
+      "mp4": "/portfolio/reels/lnb-saas.mp4",
+      "webm": "/portfolio/reels/lnb-saas.webm",
+      "poster": "/portfolio/reels/lnb-saas-poster.jpg"
+    },
+    "gallery": [
+      {
+        "src": "/portfolio/shots/lnb-saas-desktop-1.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/lnb-saas-desktop-2.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/lnb-saas-desktop-3.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/lnb-saas-mobile-1.jpg",
+        "device": "mobile"
+      },
+      {
+        "src": "/portfolio/shots/lnb-saas-mobile-2.jpg",
+        "device": "mobile"
+      }
+    ],
+    "capturedAt": "2026-10-06"
+  },
+  "hub-profesional-ai": {
+    "reel": {
+      "mp4": "/portfolio/reels/hub-profesional-ai.mp4",
+      "webm": "/portfolio/reels/hub-profesional-ai.webm",
+      "poster": "/portfolio/reels/hub-profesional-ai-poster.jpg"
+    },
+    "gallery": [
+      {
+        "src": "/portfolio/shots/hub-profesional-ai-desktop-1.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/hub-profesional-ai-desktop-2.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/hub-profesional-ai-desktop-3.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/hub-profesional-ai-mobile-1.jpg",
+        "device": "mobile"
+      },
+      {
+        "src": "/portfolio/shots/hub-profesional-ai-mobile-2.jpg",
+        "device": "mobile"
+      }
+    ],
+    "capturedAt": "2026-10-06"
+  },
+  "evowrap": {
+    "reel": {
+      "mp4": "/portfolio/reels/evowrap.mp4",
+      "webm": "/portfolio/reels/evowrap.webm",
+      "poster": "/portfolio/reels/evowrap-poster.jpg"
+    },
+    "gallery": [
+      {
+        "src": "/portfolio/shots/evowrap-desktop-1.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/evowrap-desktop-2.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/evowrap-desktop-3.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/evowrap-mobile-1.jpg",
+        "device": "mobile"
+      },
+      {
+        "src": "/portfolio/shots/evowrap-mobile-2.jpg",
+        "device": "mobile"
+      }
+    ],
+    "capturedAt": "2026-10-06"
+  },
+  "ad-media-solution": {
+    "reel": {
+      "mp4": "/portfolio/reels/ad-media-solution.mp4",
+      "webm": "/portfolio/reels/ad-media-solution.webm",
+      "poster": "/portfolio/reels/ad-media-solution-poster.jpg"
+    },
+    "gallery": [
+      {
+        "src": "/portfolio/shots/ad-media-solution-desktop-1.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/ad-media-solution-desktop-2.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/ad-media-solution-desktop-3.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/ad-media-solution-mobile-1.jpg",
+        "device": "mobile"
+      },
+      {
+        "src": "/portfolio/shots/ad-media-solution-mobile-2.jpg",
+        "device": "mobile"
+      }
+    ],
+    "capturedAt": "2026-10-06"
+  },
+  "punta-360": {
+    "reel": {
+      "mp4": "/portfolio/reels/punta-360.mp4",
+      "webm": "/portfolio/reels/punta-360.webm",
+      "poster": "/portfolio/reels/punta-360-poster.jpg"
+    },
+    "gallery": [
+      {
+        "src": "/portfolio/shots/punta-360-desktop-1.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/punta-360-desktop-2.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/punta-360-desktop-3.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/punta-360-mobile-1.jpg",
+        "device": "mobile"
+      },
+      {
+        "src": "/portfolio/shots/punta-360-mobile-2.jpg",
+        "device": "mobile"
+      }
+    ],
+    "capturedAt": "2026-10-06"
+  },
+  "america-tramites": {
+    "reel": {
+      "mp4": "/portfolio/reels/america-tramites.mp4",
+      "webm": "/portfolio/reels/america-tramites.webm",
+      "poster": "/portfolio/reels/america-tramites-poster.jpg"
+    },
+    "gallery": [
+      {
+        "src": "/portfolio/shots/america-tramites-desktop-1.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/america-tramites-desktop-2.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/america-tramites-desktop-3.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/america-tramites-mobile-1.jpg",
+        "device": "mobile"
+      },
+      {
+        "src": "/portfolio/shots/america-tramites-mobile-2.jpg",
+        "device": "mobile"
+      }
+    ],
+    "capturedAt": "2026-10-06"
+  },
+  "doge-sm": {
+    "reel": {
+      "mp4": "/portfolio/reels/doge-sm.mp4",
+      "webm": "/portfolio/reels/doge-sm.webm",
+      "poster": "/portfolio/reels/doge-sm-poster.jpg"
+    },
+    "gallery": [
+      {
+        "src": "/portfolio/shots/doge-sm-desktop-1.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/doge-sm-desktop-2.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/doge-sm-desktop-3.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/doge-sm-mobile-1.jpg",
+        "device": "mobile"
+      },
+      {
+        "src": "/portfolio/shots/doge-sm-mobile-2.jpg",
+        "device": "mobile"
+      }
+    ],
+    "capturedAt": "2026-10-06"
+  }
+}

@@ -29,6 +29,22 @@ export function SplitReveal({ text, as = 'h2', mode = 'inView', delay = 0, class
     const words = text.split(' ').filter(Boolean);
     const perWord = Math.min(STAGGER.words, words.length > 1 ? 0.6 / (words.length - 1) : STAGGER.words);
 
+    // Above the fold: animación CSS (.split-word en globals.css). Corre desde el
+    // primer paint, así el titular —casi siempre el LCP— no espera al JS.
+    if (mode === 'load') {
+        return (
+            <Tag className={className} aria-label={text}>
+                {words.map((word, index) => (
+                    <span key={`${word}-${index}`} aria-hidden className="inline-block overflow-hidden pb-[0.12em] -mb-[0.12em] align-baseline">
+                        <span className="split-word inline-block" style={{ animationDelay: `${delay + index * perWord}s` }}>
+                            {word}
+                        </span>
+                    </span>
+                )).flatMap((node, index) => (index < words.length - 1 ? [node, ' '] : [node]))}
+            </Tag>
+        );
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const MotionTag = (motion as any)[as as string] ?? motion.h2;
 
@@ -38,9 +54,8 @@ export function SplitReveal({ text, as = 'h2', mode = 'inView', delay = 0, class
             className={className}
             aria-label={text}
             initial="hidden"
-            {...(mode === 'load'
-                ? { animate: 'visible' }
-                : { whileInView: 'visible', viewport: { once: true, margin: VIEWPORT.margin } })}
+            whileInView="visible"
+            viewport={{ once: true, margin: VIEWPORT.margin }}
         >
             {words.map((word, index) => (
                 <span

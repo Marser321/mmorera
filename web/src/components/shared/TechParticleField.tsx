@@ -17,6 +17,8 @@ import { useTheme } from "@/context/ThemeContext";
 import { PARTICLE_SCENE_LIMITS } from "@/data/particleSceneConfig";
 import { resolveParticleScene, themedAccent } from "@/data/particleScenes";
 import { TECH_STACK, type Tech } from "@/data/techStack";
+import { SERVICE_GLYPH_TECHS } from "@/data/serviceGlyphs";
+import { particleScatter } from "@/lib/particleScatter";
 import {
   PARTICLE_IDENTIFIABLE_PROGRESS,
   createParticleSequenceState,
@@ -30,6 +32,9 @@ import { sampleIcon, sampleText, type IconPoint } from "@/lib/sampleIcon";
 import type { ParticleSceneDefinition } from "@/types/site";
 
 const LOGO_COUNT = { desktop: 16000, tablet: 8200, mobile: 2600 } as const;
+// Un glifo pedido por foco (hover en un servicio) tiene que responder rápido.
+const FOCUS_TIMING = { assembleMs: 650, holdMs: 4200, dissolveMs: 420 } as const;
+const DRAWABLE_TECHS: Tech[] = [...TECH_STACK, ...SERVICE_GLYPH_TECHS];
 type PointerState = { x: number; y: number; active: boolean; pressed: boolean };
 type Environment = {
   mode: "webgl" | "fallback";
@@ -143,6 +148,7 @@ uniform float uAspect;
 uniform float uPixelRatio;
 uniform vec2 uCenter;
 uniform float uScale;
+uniform float uScatter;
 varying float vAlpha;
 ${SIMPLEX_NOISE}
 void main(){
@@ -165,9 +171,15 @@ void main(){
   float pull=mix(1.0,-0.72,uPressed);
   pos+=direction*influence*0.075*pull+tangent*influence*0.026;
 
+  // Dispersión guiada por scroll: el logo se abre hacia afuera y sube.
+  float scatter=smoothstep(0.0,1.0,uScatter);
+  vec2 outward=normalize(vec2((pos.x-uCenter.x)*uAspect,pos.y-uCenter.y)+vec2(0.0001));
+  outward.x/=uAspect;
+  pos+=outward*scatter*(0.22+aSeed*0.9)+vec2(0.0,scatter*(0.12+aSeed*0.28));
+
   float depthFade=mix(0.35,1.0,position.z);
-  vAlpha=(mix(0.055,0.62,formed)+influence*0.24)*uOpacity*depthFade;
-  gl_PointSize=aSize*(0.7+formed*0.85+influence)*uPixelRatio;
+  vAlpha=(mix(0.055,0.62,formed)+influence*0.24)*uOpacity*depthFade*(1.0-scatter*0.9);
+  gl_PointSize=aSize*(0.7+formed*0.85+influence)*uPixelRatio*(1.0+scatter*0.7);
   gl_Position=vec4(pos,0.0,1.0);
 }
 `;
@@ -302,6 +314,7 @@ function LogoFormation({
     uPixelRatio: { value: 1.5 },
     uCenter: { value: new THREE.Vector2(...anchor.center) },
     uScale: { value: anchor.scale },
+    uScatter: { value: 0 },
     uBase: { value: new THREE.Color(physics.base) },
     // eslint-disable-next-line react-hooks/exhaustive-deps -- uBase se sincroniza en useFrame
   }), [anchor.center, anchor.scale]);
@@ -320,6 +333,7 @@ function LogoFormation({
     values.uPressed.value += ((currentPointer.pressed ? 1 : 0) - values.uPressed.value) * Math.min(1, delta * 8);
     values.uFormation.value += (targetFormation - values.uFormation.value) * Math.min(1, delta * (targetFormation ? 4.2 : 5.2));
     values.uOpacity.value += (opacity - values.uOpacity.value) * Math.min(1, delta * 5);
+    values.uScatter.value += (particleScatter.get() - values.uScatter.value) * Math.min(1, delta * 7);
     values.uBase.value.set(physics.base);
   });
 
@@ -771,13 +785,37 @@ function ParticleCanvas({
 
 export function TechParticleField() {
   const pathname = usePathname();
-  const { activeFamilies, heroVisible, setActiveTechName } = useActiveTech();
+  const { activeFamilies, heroVisible, setActiveTechName, focusTechName } = useActiveTech();
   const [environment, setEnvironment] = useState<Environment | null>(null);
   const [pageVisible, setPageVisible] = useState(true);
+  const [scatteredAway, setScatteredAway] = useState(false);
   const pointer = useRef<PointerState>({ x: -10, y: -10, active: false, pressed: false });
-  const scene = useMemo(() => resolveParticleScene(pathname, activeFamilies), [activeFamilies, pathname]);
+
+  // Con el logo totalmente disperso (Home, pasado el hero) no hay nada que
+  // valga la pena dibujar: se congela el último frame hasta volver a subir.
+  // El margen deja que el lerp del shader llegue a su valor final.
+  useEffect(() => {
+    let timer: number | undefined;
+    const unsubscribe = particleScatter.subscribe((value) => {
+      window.clearTimeout(timer);
+      if (value >= 1) timer = window.setTimeout(() => setScatteredAway(true), 700);
+      else setScatteredAway(false);
+    });
+    return () => {
+      unsubscribe();
+      window.clearTimeout(timer);
+    };
+  }, []);
+  const routeScene = useMemo(() => resolveParticleScene(pathname, activeFamilies), [activeFamilies, pathname]);
+  // Un foco explícito (servicio enfocado) fija un solo glifo hasta que se suelta.
+  const scene = useMemo<ParticleSceneDefinition>(
+    () => focusTechName
+      ? { ...routeScene, mode: "locked", techNames: [focusTechName], timing: FOCUS_TIMING }
+      : routeScene,
+    [focusTechName, routeScene],
+  );
   const allTechs = useMemo(
-    () => scene.techNames.map((name) => TECH_STACK.find((tech) => tech.name === name)).filter((tech): tech is Tech => Boolean(tech)),
+    () => scene.techNames.map((name) => DRAWABLE_TECHS.find((tech) => tech.name === name)).filter((tech): tech is Tech => Boolean(tech)),
     [scene.techNames],
   );
   const techs = useMemo(
@@ -836,7 +874,7 @@ export function TechParticleField() {
       techs={techs}
       environment={environment}
       pointer={pointer}
-      pageVisible={pageVisible}
+      pageVisible={pageVisible && !scatteredAway}
       heroVisible={heroVisible}
       setActiveTechName={setActiveTechName}
     />

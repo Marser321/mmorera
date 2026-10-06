@@ -191,6 +191,39 @@ html.light {
   animation: motion-ambient-drift 9s cubic-bezier(0.65, 0, 0.35, 1) infinite;
 }
 
+/* Entradas above-the-fold en CSS puro: corren desde el primer paint sin
+   esperar la hidratación, así el titular (elemento LCP) no queda oculto
+   hasta que carga el JS. Mismo easing que EASE_OUT de lib/motion.ts. */
+@keyframes split-rise {
+  from {
+    transform: translateY(110%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+.split-word {
+  animation: split-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes fade-up-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.fade-up-in {
+  animation: fade-up-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 /* Pulso de corriente que recorre la pista del circuito (mapa de /sistemas) */
 @keyframes flow-pulse {
   from {
@@ -367,5 +400,11 @@ html.light {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  /* Sin movimiento: el contenido aparece en su estado final, sin delays. */
+  .split-word,
+  .fade-up-in {
+    animation: none !important;
   }
 }

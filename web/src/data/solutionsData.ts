@@ -11,6 +11,8 @@ export interface ServiceSolution {
   deliverables: LocalizedText[];
   idealFor: LocalizedText;
   accent: string;
+  /** Caso real que demuestra el servicio (slug de PROJECT_CASES). */
+  proofSlug: string;
 }
 
 export const SERVICE_SOLUTIONS: ServiceSolution[] = [
@@ -34,6 +36,7 @@ export const SERVICE_SOLUTIONS: ServiceSolution[] = [
       "Companies, studios, and brands wanting to replace slow sites with top-tier credibility."
     ),
     accent: "#55D8FF",
+    proofSlug: "lb-elite-wash-detail",
   },
   {
     id: "booking-payments",
@@ -55,6 +58,7 @@ export const SERVICE_SOLUTIONS: ServiceSolution[] = [
       "Barbershops, clinics, detailing services, practices, and appointment-based businesses."
     ),
     accent: "#71F3A2",
+    proofSlug: "new-brothers-barberia",
   },
   {
     id: "crm-automation",
@@ -76,6 +80,7 @@ export const SERVICE_SOLUTIONS: ServiceSolution[] = [
       "B2B firms and businesses running ads that cannot afford losing leads to slow replies."
     ),
     accent: "#B68CFF",
+    proofSlug: "rangel-oviedo-group",
   },
   {
     id: "ai-software",
@@ -97,6 +102,7 @@ export const SERVICE_SOLUTIONS: ServiceSolution[] = [
       "Growing companies that need to serve more clients without overwhelming their team."
     ),
     accent: "#E59500",
+    proofSlug: "lnb-saas",
   },
 ];
 

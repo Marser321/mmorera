@@ -170,7 +170,7 @@ export function OrchestrationWheelSection() {
                   boxShadow: isCategoryActive ? `0 0 15px ${b.accent}33` : undefined,
                 }}
               >
-                <Icon className="h-3.5 w-3.5 shrink-0" style={{ color: b.accent }} />
+                <Icon aria-hidden="true" className="h-3.5 w-3.5 shrink-0" style={{ color: b.accent }} />
                 <span>{b.name}</span>
               </motion.button>
             );
@@ -208,7 +208,7 @@ export function OrchestrationWheelSection() {
                         className="inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-white/5 px-2.5 py-1 font-mono text-[11px] text-foreground/85 transition-colors hover:border-white/20 hover:bg-white/10"
                       >
                         {tech.Icon ? (
-                          <tech.Icon className="h-3.5 w-3.5 shrink-0 opacity-80" />
+                          <tech.Icon aria-hidden="true" className="h-3.5 w-3.5 shrink-0 opacity-80" />
                         ) : (
                           <span className="font-mono text-[9px] font-semibold opacity-60">{tech.fallback}</span>
                         )}
