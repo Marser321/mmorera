@@ -39,6 +39,8 @@ export function UseCaseFilmRoom() {
   const userPausedRef = useRef(false);
   const visibleRef = useRef(false);
   const advanceTimerRef = useRef<number | null>(null);
+  /** Cuadro al que ir cuando el Player termine de cargar (un nodo tocado antes de tiempo). */
+  const pendingSeekRef = useRef<number | null>(null);
 
   const film = USE_CASE_FILMS[active];
   const systemChapter = film.chapters[2];
@@ -71,6 +73,7 @@ export function UseCaseFilmRoom() {
 
   const selectFilm = useCallback((index: number, fromUser: boolean) => {
     clearAdvance();
+    pendingSeekRef.current = null;
     setActive(index);
     setSelectedNodeId(null);
     if (fromUser) {
@@ -117,16 +120,16 @@ export function UseCaseFilmRoom() {
   }, [player]);
 
   const seekChapter = (index: number) => {
-    if (!player) return;
     setSelectedNodeId(null);
     clearAdvance();
     tap();
-    if (reducedMotion) {
-      player.seekTo(stillFrame(index));
+    const frame = reducedMotion ? stillFrame(index) : film.chapters[index].from;
+    if (!player) {
+      pendingSeekRef.current = frame;
       return;
     }
-    player.seekTo(film.chapters[index].from);
-    if (!userPausedRef.current) player.play();
+    player.seekTo(frame);
+    if (!reducedMotion && !userPausedRef.current) player.play();
   };
 
   const togglePlay = () => {
@@ -143,11 +146,20 @@ export function UseCaseFilmRoom() {
     player.play();
   };
 
+  // El inspector es HTML: abre aunque el film todavía esté cargando; el salto
+  // al nodo (o al capítulo) se hace cuando el Player está listo.
   const inspectStage = (index: number) => {
-    if (!player) return;
-    player.seekTo(systemChapter.from + Math.round(nodeActivationFrame(index, film.stages.length)) + 16);
+    const frame = systemChapter.from + Math.round(nodeActivationFrame(index, film.stages.length)) + 16;
+    if (player) player.seekTo(frame);
+    else pendingSeekRef.current = frame;
     selectNode(film.stages[index].id);
   };
+
+  useEffect(() => {
+    if (!player || pendingSeekRef.current === null) return;
+    player.seekTo(pendingSeekRef.current);
+    pendingSeekRef.current = null;
+  }, [player]);
 
   const resume = () => {
     userPausedRef.current = false;
