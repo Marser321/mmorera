@@ -4,7 +4,8 @@ import type { FilmLanguage } from "@/data/films/filmTypes";
 import type { Box } from "@/lib/filmLayout";
 import { EASE_IN_OUT, progress, useFilmLayout } from "../theme";
 import { alpha, useBrand } from "./context";
-import { boxStyle, BoxText, Glyph, Plate, SampleTag, type GlyphKind } from "./dataKit";
+import { boxStyle, BoxText, Figure, Glyph, type GlyphKind, Headline, Plate, SampleTag } from "./dataKit";
+import { scenePace } from "./layout/dataText";
 import { EVIDENCE_TONES, evidenceLedgerLayout, type EvidenceLedgerData, type EvidenceTier, type EvidenceTierId } from "./layout/evidenceLedger";
 
 export type EvidenceLedgerProps = {
@@ -16,6 +17,8 @@ export type EvidenceLedgerProps = {
   wording?: EvidenceLedgerData["wording"];
   language: FilmLanguage;
   sampleLabel?: string;
+  /** true: cuenta hasta el valor (solo para datos de ejemplo). Por defecto cada cifra entra con su valor final. */
+  countUp?: boolean;
 };
 
 const TIER_GLYPH: Record<EvidenceTierId, GlyphKind> = {
@@ -30,34 +33,41 @@ const TIER_GLYPH: Record<EvidenceTierId, GlyphKind> = {
  * el desglose; después cada nivel entra en orden: su marca de color crece, el
  * nombre, las afirmaciones de a una y la nota. Nada entra encima de nada.
  */
-export function EvidenceLedger({ box, duration, tiers, total, breakdown, wording, language, sampleLabel }: EvidenceLedgerProps) {
-  const frame = useCurrentFrame();
+export function EvidenceLedger({ box, duration, tiers, total, breakdown, wording, language, sampleLabel, countUp = false }: EvidenceLedgerProps) {
+  // Ritmo: por debajo de 300 frames la coreografía se comprime entera; por encima, el final se sostiene.
+  const { frame, span } = scenePace(useCurrentFrame(), duration, 300);
   const brand = useBrand();
   const { portrait } = useFilmLayout();
   const layout = evidenceLedgerLayout(box, { tiers, total, breakdown, wording, language, sampleLabel }, portrait ? "portrait" : "landscape");
   const tone = (id: EvidenceTierId) => EVIDENCE_TONES[id] ?? brand.palette.muted;
 
   const rowsFrom = 46 + (breakdown?.length ?? 0) * 8;
-  const rowStep = Math.max(22, Math.min(50, (duration * 0.64 - rowsFrom) / Math.max(1, tiers.length)));
+  const rowStep = Math.max(22, Math.min(50, (span * 0.64 - rowsFrom) / Math.max(1, tiers.length)));
   const rowsEnd = rowsFrom + rowStep * tiers.length;
 
   return (
     <AbsoluteFill>
-      {/* Total: cuenta una vez hasta la cifra exacta. */}
-      <BoxText block={layout.totalValue} style={{ fontFamily: brand.fonts.display, fontWeight: 600, color: brand.palette.text, fontVariantNumeric: "tabular-nums", letterSpacing: "-0.01em", opacity: progress(frame, 0, 12) }}>
-        {formatFact({ value: Math.round(total.value * progress(frame, 4, 50, EASE_IN_OUT)) }, language)}
-      </BoxText>
-      <BoxText block={layout.totalLabel} style={{ fontFamily: brand.fonts.body, fontWeight: 500, color: brand.palette.muted, opacity: progress(frame, 8, 24) }} />
+      {/* Total: cuenta una vez hasta la cifra exacta; el rótulo va pegado a la cifra. */}
+      <Headline
+        value={layout.totalValue}
+        label={layout.totalLabel}
+        valueStyle={{ fontFamily: brand.fonts.display, fontWeight: 600, color: brand.palette.text, fontVariantNumeric: "tabular-nums", letterSpacing: "-0.01em", opacity: progress(frame, 0, 12) }}
+        labelStyle={{ fontFamily: brand.fonts.body, fontWeight: 500, color: brand.palette.muted, opacity: progress(frame, 8, 24) }}
+      >
+        <Figure final={layout.totalValue.text} t={progress(frame, 4, 50, EASE_IN_OUT)} countUp={countUp} format={(t) => formatFact({ value: Math.round(total.value * t) }, language)} />
+      </Headline>
 
       {layout.breakdown.map((chip, index) => {
         const enter = 22 + index * 8;
         const value = breakdown?.[index]?.value ?? 0;
         return (
-          <div key={chip.label.id} style={{ opacity: progress(frame, enter, enter + 14) }}>
+          <div key={chip.text.id} style={{ opacity: progress(frame, enter, enter + 14) }}>
             <div style={{ ...boxStyle(chip.frame), boxSizing: "border-box", borderRadius: 999, border: `1px solid ${brand.palette.line}`, background: alpha(brand.palette.surface, 85) }} />
-            <BoxText block={chip.label} style={{ fontFamily: brand.fonts.body, color: brand.palette.muted }} />
-            <BoxText block={chip.value} align="right" style={{ fontFamily: brand.fonts.body, fontWeight: 700, color: brand.palette.text, fontVariantNumeric: "tabular-nums" }}>
-              {formatFact({ value: Math.round(value * progress(frame, enter + 4, enter + 36, EASE_IN_OUT)) }, language)}
+            <BoxText block={chip.text} align="center" style={{ fontFamily: brand.fonts.body, color: brand.palette.muted }}>
+              {chip.label}
+              <span style={{ marginLeft: "0.45em", fontWeight: 700, color: brand.palette.text, fontVariantNumeric: "tabular-nums" }}>
+                <Figure final={formatFact({ value }, language)} t={progress(frame, enter + 4, enter + 36, EASE_IN_OUT)} countUp={countUp} format={(t) => formatFact({ value: Math.round(value * t) }, language)} />
+              </span>
             </BoxText>
           </div>
         );

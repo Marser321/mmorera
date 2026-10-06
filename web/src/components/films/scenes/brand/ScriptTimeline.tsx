@@ -4,7 +4,8 @@ import type { FilmLanguage } from "@/data/films/filmTypes";
 import type { Box } from "@/lib/filmLayout";
 import { EASE_IN_OUT, progress, useFilmLayout } from "../theme";
 import { alpha, useBrand } from "./context";
-import { boxStyle, BoxText, Glyph, Plate, SampleTag } from "./dataKit";
+import { boxStyle, BoxText, Figure, Glyph, Headline, Plate, SampleTag } from "./dataKit";
+import { scenePace } from "./layout/dataText";
 import { scriptTimelineLayout, type ScriptTimelineData } from "./layout/scriptTimeline";
 
 export type ScriptTimelineProps = {
@@ -16,6 +17,8 @@ export type ScriptTimelineProps = {
   checklist?: ScriptTimelineData["checklist"];
   language: FilmLanguage;
   sampleLabel?: string;
+  /** true: cuenta hasta el valor (solo para datos de ejemplo). Por defecto cada cifra entra con su valor final. */
+  countUp?: boolean;
 };
 
 /**
@@ -24,8 +27,9 @@ export type ScriptTimelineProps = {
  * después se tilda la checklist. El cabezal vive en su riel: nunca cruza un
  * rótulo.
  */
-export function ScriptTimeline({ box, duration, segments, counter, breakdown, checklist, language, sampleLabel }: ScriptTimelineProps) {
-  const frame = useCurrentFrame();
+export function ScriptTimeline({ box, duration, segments, counter, breakdown, checklist, language, sampleLabel, countUp = false }: ScriptTimelineProps) {
+  // Ritmo: por debajo de 300 frames la coreografía se comprime entera; por encima, el final se sostiene.
+  const { frame, span } = scenePace(useCurrentFrame(), duration, 300);
   const brand = useBrand();
   const { portrait } = useFilmLayout();
   const layout = scriptTimelineLayout(box, { segments, counter, breakdown, checklist, language, sampleLabel }, portrait ? "portrait" : "landscape");
@@ -34,7 +38,7 @@ export function ScriptTimeline({ box, duration, segments, counter, breakdown, ch
 
   const segmentsAt = 28;
   const sweepFrom = segmentsAt + n * 6 + 16;
-  const sweepTo = sweepFrom + Math.round(Math.max(60, Math.min(150, duration * 0.42)));
+  const sweepTo = sweepFrom + Math.round(Math.max(60, Math.min(150, span * 0.36)));
   const sweep = progress(frame, sweepFrom, sweepTo, EASE_IN_OUT);
   const active = sweep <= 0 ? -1 : sweep >= 1 ? n : Math.min(n - 1, Math.floor(sweep * n));
   const checkFrom = sweepTo + 4;
@@ -46,17 +50,23 @@ export function ScriptTimeline({ box, duration, segments, counter, breakdown, ch
   return (
     <AbsoluteFill>
       {/* Contador y desglose */}
-      {layout.counterValue && counter ? (
-        <BoxText block={layout.counterValue} style={{ fontFamily: brand.fonts.display, fontWeight: 600, color: brand.palette.text, fontVariantNumeric: "tabular-nums", letterSpacing: "-0.01em", opacity: progress(frame, 0, 12) }}>
-          {formatFact({ value: Math.round(counter.value * progress(frame, 4, 50, EASE_IN_OUT)) }, language)}
-        </BoxText>
+      {layout.counterValue && layout.counterLabel && counter ? (
+        <Headline
+          value={layout.counterValue}
+          label={layout.counterLabel}
+          valueStyle={{ fontFamily: brand.fonts.display, fontWeight: 600, color: brand.palette.text, fontVariantNumeric: "tabular-nums", letterSpacing: "-0.01em", opacity: progress(frame, 0, 12) }}
+          labelStyle={{ fontFamily: brand.fonts.body, fontWeight: 500, color: brand.palette.muted, opacity: progress(frame, 8, 24) }}
+        >
+          <Figure final={layout.counterValue.text} t={progress(frame, 4, 50, EASE_IN_OUT)} countUp={countUp} format={(t) => formatFact({ value: Math.round(counter.value * t) }, language)} />
+        </Headline>
       ) : null}
-      {layout.counterLabel ? <BoxText block={layout.counterLabel} style={{ fontFamily: brand.fonts.body, fontWeight: 500, color: brand.palette.muted, opacity: progress(frame, 8, 24) }} /> : null}
       {layout.breakdown.map((chip, index) => (
-        <div key={chip.label.id} style={{ opacity: progress(frame, 16 + index * 6, 30 + index * 6) }}>
+        <div key={chip.text.id} style={{ opacity: progress(frame, 16 + index * 6, 30 + index * 6) }}>
           <div style={{ ...boxStyle(chip.frame), boxSizing: "border-box", borderRadius: 999, border: `1px solid ${brand.palette.line}`, background: alpha(brand.palette.surface, 85) }} />
-          <BoxText block={chip.value} style={{ fontFamily: brand.fonts.body, fontWeight: 700, color: brand.palette.text }} />
-          <BoxText block={chip.label} style={{ fontFamily: brand.fonts.body, color: brand.palette.muted }} />
+          <BoxText block={chip.text} align="center" style={{ fontFamily: brand.fonts.body, color: brand.palette.muted }}>
+            <span style={{ marginRight: "0.4em", fontWeight: 700, color: brand.palette.text }}>{chip.value}</span>
+            {chip.label}
+          </BoxText>
         </div>
       ))}
 

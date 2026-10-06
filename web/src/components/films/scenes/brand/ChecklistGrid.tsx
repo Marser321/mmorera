@@ -4,7 +4,8 @@ import type { FilmLanguage } from "@/data/films/filmTypes";
 import type { Box } from "@/lib/filmLayout";
 import { progress, useFilmLayout } from "../theme";
 import { alpha, useBrand } from "./context";
-import { boxStyle, BoxText, Glyph, SampleTag } from "./dataKit";
+import { boxStyle, BoxText, Figure, Glyph, SampleTag } from "./dataKit";
+import { scenePace } from "./layout/dataText";
 import { checklistGridLayout } from "./layout/checklistGrid";
 
 export type ChecklistGridProps = {
@@ -18,6 +19,11 @@ export type ChecklistGridProps = {
   legendTitle?: string;
   language: FilmLanguage;
   sampleLabel?: string;
+  /**
+   * Por defecto no muestra cuentas parciales: el "98/98" entra con su valor
+   * final cuando termina el llenado. true: el contador sigue a las celdas.
+   */
+  countUp?: boolean;
 };
 
 /**
@@ -25,13 +31,14 @@ export type ChecklistGridProps = {
  * mientras el contador avanza en su banda hasta el "98/98" final. Si quedan
  * chequeos sin pasar, sus celdas quedan punteadas: no se dibuja lo que no hay.
  */
-export function ChecklistGrid({ box, duration, total, passed, groups, unitLabel, legendTitle, language, sampleLabel }: ChecklistGridProps) {
-  const frame = useCurrentFrame();
+export function ChecklistGrid({ box, duration, total, passed, groups, unitLabel, legendTitle, language, sampleLabel, countUp = false }: ChecklistGridProps) {
+  // Ritmo: por debajo de 240 frames la coreografía se comprime entera; por encima, el final se sostiene.
+  const { frame, span } = scenePace(useCurrentFrame(), duration, 240);
   const brand = useBrand();
   const { portrait } = useFilmLayout();
   const layout = checklistGridLayout(box, { total, passed, groups, unitLabel, legendTitle, language, sampleLabel }, portrait ? "portrait" : "landscape");
   const fillFrom = 34;
-  const fillTo = Math.max(fillFrom + 60, Math.min(fillFrom + 150, Math.round(duration * 0.6)));
+  const fillTo = Math.max(fillFrom + 60, Math.min(fillFrom + 150, Math.round(span * 0.6)));
   const filled = Math.floor(passed * progress(frame, fillFrom, fillTo, Easing.linear));
   const complete = progress(frame, fillTo, fillTo + 18);
   const cellAt = (index: number) => fillFrom + (index / Math.max(1, passed)) * (fillTo - fillFrom);
@@ -59,13 +66,22 @@ export function ChecklistGrid({ box, duration, total, passed, groups, unitLabel,
         );
       })}
 
-      <BoxText
-        block={layout.counter}
-        style={{ fontFamily: brand.fonts.display, fontWeight: 600, color: complete > 0.5 ? brand.palette.accentSoft : brand.palette.text, fontVariantNumeric: "tabular-nums", letterSpacing: "-0.01em", opacity: progress(frame, 0, 16) }}
+      {/* Contador y tilde final en una fila: la tilde va pegada a la cifra real, dentro de la banda del contador. */}
+      <div
+        style={{
+          ...boxStyle(layout.done ? { ...layout.counter.box, w: layout.done.x + layout.done.w - layout.counter.box.x } : layout.counter.box),
+          display: "flex",
+          alignItems: "center",
+          gap: layout.done ? layout.done.x - (layout.counter.box.x + layout.counter.box.w) : 0,
+          overflow: "hidden",
+          opacity: progress(frame, 0, 16),
+        }}
       >
-        {`${formatFact({ value: filled }, language)}/${formatFact({ value: total }, language)}`}
-      </BoxText>
-      {layout.done ? <Glyph kind="check" box={layout.done} color={brand.palette.accentSoft} draw={complete} weight={2.8} /> : null}
+        <span style={{ flex: "none", fontFamily: brand.fonts.display, fontSize: layout.counter.size, lineHeight: 1.04, fontWeight: 600, whiteSpace: "nowrap", color: complete > 0.5 ? brand.palette.accentSoft : brand.palette.text, fontVariantNumeric: "tabular-nums", letterSpacing: "-0.01em" }}>
+          <Figure final={layout.counter.text} t={countUp ? 1 : progress(frame, fillTo - 6, fillTo + 14)} countUp={countUp} format={() => `${formatFact({ value: filled }, language)}/${formatFact({ value: total }, language)}`} />
+        </span>
+        {layout.done ? <Glyph kind="check" box={layout.done} color={brand.palette.accentSoft} draw={complete} weight={2.8} inline /> : null}
+      </div>
       <BoxText block={layout.unit} style={{ fontFamily: brand.fonts.body, fontWeight: 500, color: brand.palette.muted, opacity: progress(frame, 6, 22) }} />
 
       {layout.legendTitle ? (

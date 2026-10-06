@@ -1,7 +1,7 @@
 import { splitColumns, type Box, type FilmFormatName } from "@/lib/filmLayout";
 import type { FilmLanguage } from "@/data/films/filmTypes";
 import { sampleBadgeBox } from "./factWall";
-import { chipWidth, countLines, flowBoxes, flowHeight, GLYPH, largestFit, textBlock, textHeight, type LayoutBlock, type TextBlock } from "./dataText";
+import { chipWidth, countLines, flowBoxes, flowHeight, GLYPH, largestFit, MIN_TEXT, textBlock, textHeight, type LayoutBlock, type TextBlock } from "./dataText";
 
 /**
  * Búsqueda por palabras clave (BM25, no vectorial): el campo con la consulta,
@@ -55,7 +55,7 @@ const WORD = /[A-Za-z0-9À-ɏ]+(?:-[A-Za-z0-9À-ɏ]+)*/g;
 /**
  * Parte un texto en tramos y marca las palabras que empiezan con alguno de los
  * términos (sin distinguir mayúsculas ni tildes), como hace un índice de
- * palabras clave con raíces.
+ * palabras clave con raíces. Palabras marcadas contiguas quedan en un tramo.
  */
 export function highlightSegments(text: string, tokens: string[]) {
   const keys = tokens.map(fold).filter(Boolean);
@@ -70,7 +70,17 @@ export function highlightSegments(text: string, tokens: string[]) {
     last = start + word.length;
   }
   if (last < text.length) out.push({ text: text.slice(last), hit: false });
-  return out;
+  // Dos palabras marcadas seguidas ("adultos mayores") forman un solo tramo: un único fondo, sin costura.
+  const merged: typeof out = [];
+  for (const segment of out) {
+    const previous = merged[merged.length - 1];
+    const beforePrevious = merged[merged.length - 2];
+    if (segment.hit && previous && !previous.hit && /^\s+$/.test(previous.text) && beforePrevious?.hit) {
+      merged.pop();
+      beforePrevious.text += previous.text + segment.text;
+    } else merged.push({ ...segment });
+  }
+  return merged;
 }
 
 type Step = { title: number; fragment: number };
@@ -119,15 +129,31 @@ const SPEC = {
   },
 } as const;
 
+/** Escalas de densidad: se prueban de la más generosa a la más compacta. */
+const SCALES = [1.16, 1.08, 1, 0.9, 0.82, 0.75];
+
 export function keywordSearchLayout(box: Box, data: KeywordSearchData, format: FilmFormatName): KeywordSearchLayout {
+  for (const scale of SCALES) {
+    const layout = tryLayout(box, data, format, scale, false);
+    if (layout) return layout;
+  }
+  // Ninguna entra: la más compacta igual (el test de layout lo marca).
+  return tryLayout(box, data, format, SCALES[SCALES.length - 1], true)!;
+}
+
+function tryLayout(box: Box, data: KeywordSearchData, format: FilmFormatName, scale: number, force: boolean): KeywordSearchLayout | null {
   const spec = SPEC[format];
+  // Escalera escalada a la densidad (nunca baja del mínimo legible) y respiro proporcional.
+  const min = MIN_TEXT[format];
+  const cap = (ladder: readonly number[]) => [...new Set(ladder.map((size) => Math.max(min, Math.round(size * scale))))];
+  const g = (value: number) => Math.round(value * scale);
   const portrait = format === "portrait";
   const chrome = KEYWORD_CHROME[data.language];
   const [left, right] = portrait ? [box, box] : splitColumns(box, [0.34, 0.66], 56);
 
   // ── Método e índice ──
   const methodLines = portrait ? 2 : 3;
-  const methodSize = largestFit([data.methodLabel], left.w, methodLines, [...spec.method]);
+  const methodSize = largestFit([data.methodLabel], left.w, methodLines, cap(spec.method));
   const methodUsed = Math.min(methodLines, countLines(data.methodLabel, methodSize, left.w));
   const method = textBlock("method", { x: left.x, y: left.y, w: left.w, h: textHeight(methodSize, methodUsed) }, data.methodLabel, methodSize, methodUsed);
 
@@ -137,10 +163,10 @@ export function keywordSearchLayout(box: Box, data: KeywordSearchData, format: F
   if (portrait) {
     const columns = splitColumns({ x: box.x, y: 0, w: box.w, h: 0 }, data.stats.map(() => 1), 28);
     const colW = columns[0]?.w ?? box.w;
-    const valueSize = largestFit(data.stats.map((stat) => stat.value), colW, 1, [...spec.statValue], GLYPH.digits);
-    const labelSize = largestFit(data.stats.map((stat) => stat.label), colW, 2, [...spec.statLabel]);
+    const valueSize = largestFit(data.stats.map((stat) => stat.value), colW, 1, cap(spec.statValue), GLYPH.digits);
+    const labelSize = largestFit(data.stats.map((stat) => stat.label), colW, 2, cap(spec.statLabel));
     const labelLines = Math.max(1, ...data.stats.map((stat) => Math.min(2, countLines(stat.label, labelSize, colW))));
-    const top = leftBottom + 30;
+    const top = leftBottom + g(30);
     const valueH = textHeight(valueSize, 1, 1.06);
     data.stats.forEach((stat, index) => {
       const col = columns[index];
@@ -151,14 +177,14 @@ export function keywordSearchLayout(box: Box, data: KeywordSearchData, format: F
     });
     leftBottom = top + valueH + 4 + textHeight(labelSize, labelLines);
   } else {
-    const valueSize = largestFit(data.stats.map((stat) => stat.value), left.w, 1, [...spec.statValue], GLYPH.digits);
-    const labelSize = largestFit(data.stats.map((stat) => stat.label), left.w, 2, [...spec.statLabel]);
+    const valueSize = largestFit(data.stats.map((stat) => stat.value), left.w, 1, cap(spec.statValue), GLYPH.digits);
+    const labelSize = largestFit(data.stats.map((stat) => stat.label), left.w, 2, cap(spec.statLabel));
     const valueH = textHeight(valueSize, 1, 1.06);
-    let y = leftBottom + 40;
+    let y = leftBottom + g(40);
     data.stats.forEach((stat, index) => {
       if (index > 0) {
-        statRules.push({ x: left.x, y: y + 2, w: Math.min(left.w, 200), h: 1 });
-        y += 24;
+        statRules.push({ x: left.x, y: y + g(14), w: Math.min(left.w, 200), h: 1 });
+        y += g(30);
       }
       const labelLines = Math.min(2, countLines(stat.label, labelSize, left.w));
       stats.push({
@@ -168,13 +194,15 @@ export function keywordSearchLayout(box: Box, data: KeywordSearchData, format: F
       y += valueH + 2 + textHeight(labelSize, labelLines);
     });
     leftBottom = y;
+    // La columna del índice también tiene que entrar en la escena.
+    if (leftBottom > box.y + box.h + 0.5 && !force) return null;
   }
 
   // ── Campo de búsqueda ──
-  const fieldTop = portrait ? leftBottom + 40 : right.y;
+  const fieldTop = portrait ? leftBottom + g(40) : right.y;
   const iconGap = 18;
   const fieldPad = portrait ? 26 : 22;
-  const querySize = largestFit([data.query], right.w - fieldPad * 2 - spec.query[0] - iconGap - 20, 1, [...spec.query]);
+  const querySize = largestFit([data.query], right.w - fieldPad * 2 - spec.query[0] - iconGap - 20, 1, cap(spec.query));
   const iconSize = Math.round(querySize * 1.05);
   const fieldH = Math.round(querySize * 2.4);
   const field = { x: right.x, y: fieldTop, w: right.w, h: fieldH };
@@ -183,12 +211,12 @@ export function keywordSearchLayout(box: Box, data: KeywordSearchData, format: F
   const query = textBlock("query", { x: queryX, y: field.y + (fieldH - textHeight(querySize, 1)) / 2, w: field.x + field.w - fieldPad - queryX, h: textHeight(querySize, 1) }, data.query, querySize, 1);
 
   // ── Términos ──
-  const termsTop = field.y + fieldH + 18;
+  const termsTop = field.y + fieldH + g(18);
   const termsW = chipWidth(chrome.terms, spec.terms, 0, GLYPH.upper);
   const tokenArea = { x: right.x + termsW + 16, y: termsTop, w: right.w - termsW - 16, h: 9999 };
   let tokenSize: number = spec.token[spec.token.length - 1];
   let tokenBoxes: Box[] = [];
-  for (const size of spec.token) {
+  for (const size of cap(spec.token)) {
     const pad = Math.round(size * 0.7);
     const placed = flowBoxes(tokenArea, data.tokens.map((token) => chipWidth(token, size, pad)), textHeight(size, 1) + Math.round(size * 0.6), 10);
     if (placed && flowHeight(placed) <= (textHeight(size, 1) + Math.round(size * 0.6)) * 2 + 10) {
@@ -204,7 +232,7 @@ export function keywordSearchLayout(box: Box, data: KeywordSearchData, format: F
   const termsBottom = termsTop + Math.max(tokenRowH, flowHeight(tokenBoxes));
 
   // ── Cabecera de resultados: rótulo a la izquierda, "Datos de ejemplo" a la derecha ──
-  const headTop = termsBottom + (portrait ? 34 : 28);
+  const headTop = termsBottom + g(portrait ? 34 : 28);
   const sampleBox = sampleBadgeBox(data.sampleLabel, spec.sample, 0, 0);
   const headH = Math.max(sampleBox.h, textHeight(spec.resultsLabel, 1));
   const sample = textBlock("sample", { ...sampleBox, x: right.x + right.w - sampleBox.w, y: headTop + (headH - sampleBox.h) / 2 }, data.sampleLabel, spec.sample, 1);
@@ -214,26 +242,34 @@ export function keywordSearchLayout(box: Box, data: KeywordSearchData, format: F
   const listTop = headTop + headH + 14;
   const listH = box.y + box.h - listTop;
   const results: KeywordResultLayout[] = [];
-  for (let stepIndex = 0; stepIndex < spec.steps.length; stepIndex++) {
-    const step = spec.steps[stepIndex];
+  const steps = spec.steps.map((step) => ({ title: Math.max(min, Math.round(step.title * scale)), fragment: Math.max(min, Math.round(step.fragment * scale)) }));
+  const padY = g(spec.padY);
+  for (let stepIndex = 0; stepIndex < steps.length; stepIndex++) {
+    const step = steps[stepIndex];
     const rankSize = Math.round(step.title * 0.95);
     const rankD = Math.round(rankSize * 1.7);
     const textX = right.x + spec.padX + rankD + 20;
     const textW = right.x + right.w - spec.padX - textX;
     const fragmentLines = data.results.map((result) => countLines(result.fragment, step.fragment, textW));
     const titleOk = data.results.every((result) => countLines(result.title, step.title, textW) === 1);
-    const last = stepIndex === spec.steps.length - 1;
-    if ((!titleOk || fragmentLines.some((lines) => lines > spec.fragmentLines)) && !last) continue;
-    const heights = fragmentLines.map((lines) => spec.padY * 2 + textHeight(step.title, 1) + 8 + textHeight(step.fragment, Math.min(lines, spec.fragmentLines)));
+    const last = stepIndex === steps.length - 1;
+    if (!titleOk || fragmentLines.some((lines) => lines > spec.fragmentLines)) {
+      if (!last) continue;
+      if (!force) return null;
+    }
+    const heights = fragmentLines.map((lines) => padY * 2 + textHeight(step.title, 1) + 8 + textHeight(step.fragment, Math.min(lines, spec.fragmentLines)));
     const minGap = 12;
     const used = heights.reduce((sum, h) => sum + h, 0) + minGap * Math.max(0, heights.length - 1);
-    if (used > listH && !last) continue;
-    const gap = heights.length > 1 ? Math.min(22, Math.max(minGap, (listH - heights.reduce((sum, h) => sum + h, 0)) / (heights.length - 1))) : 0;
+    if (used > listH) {
+      if (!last) continue;
+      if (!force) return null;
+    }
+    const gap = heights.length > 1 ? Math.min(g(26), Math.max(minGap, (listH - heights.reduce((sum, h) => sum + h, 0)) / (heights.length - 1))) : 0;
     let y = listTop;
     data.results.forEach((result, index) => {
       const card = { x: right.x, y, w: right.w, h: heights[index] };
       const lines = Math.min(fragmentLines[index], spec.fragmentLines);
-      const titleBox = { x: textX, y: y + spec.padY, w: textW, h: textHeight(step.title, 1) };
+      const titleBox = { x: textX, y: y + padY, w: textW, h: textHeight(step.title, 1) };
       const rankFrame = { x: right.x + spec.padX, y: titleBox.y + (titleBox.h - rankD) / 2, w: rankD, h: rankD };
       results.push({
         card,

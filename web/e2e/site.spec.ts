@@ -414,6 +414,28 @@ test("abre un caso profundo sin modal ni iframe", async ({ page }) => {
   await expect(page.getByText("El desafío")).toBeVisible();
 });
 
+test("el caso insignia de Fénix reproduce su film sin errores", async ({ page }) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(String(error)));
+  page.on("console", (message) => {
+    if (message.type() === "error" && /remotion|MediaPlayback|player/i.test(message.text())) errors.push(message.text());
+  });
+  await page.goto("/casos-de-exito/fenix-medical-center");
+  await expect(page.getByRole("heading", { level: 1, name: "Fenix Medical Center" })).toBeVisible();
+
+  // El film insignia (no el genérico) con sus capítulos reales.
+  const stage = page.locator('[data-film-stage="flagship"]');
+  await expect(stage).toHaveCount(1);
+  await stage.scrollIntoViewIfNeeded();
+  await expect(page.getByRole("button", { name: /Renacer/ })).toBeVisible();
+
+  // Saltar a un capítulo con video ejercita la carga de medios: si el
+  // navegador no decodifica un clip, queda el póster en lugar de un error.
+  await page.getByRole("button", { name: /Posicionamiento/ }).click();
+  await page.waitForTimeout(3_000);
+  expect(errors).toEqual([]);
+});
+
 test("el perfil abre con la entrada del monograma", async ({ page }) => {
   await page.goto("/");
   const overture = page.locator('#perfil [data-film-stage="logo"]');
