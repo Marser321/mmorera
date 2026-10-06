@@ -39,7 +39,7 @@ export type ChecklistGridLayout = {
 export const counterText = (passed: number, total: number, language: FilmLanguage) => `${formatFact({ value: passed }, language)}/${formatFact({ value: total }, language)}`;
 
 /** Celdas cuadradas lo más grandes posible para `count` chequeos dentro del área. */
-export function cellGrid(area: Box, count: number, maxCell: number, gapRatio = 0.22) {
+export function cellGrid(area: Box, count: number, maxCell: number, align: "center" | "start" = "center", gapRatio = 0.22) {
   let best = { cols: 1, rows: count, cell: 0 };
   for (let cols = 1; cols <= count; cols++) {
     const rows = Math.ceil(count / cols);
@@ -50,7 +50,7 @@ export function cellGrid(area: Box, count: number, maxCell: number, gapRatio = 0
   const gap = Math.max(3, Math.floor(cell * gapRatio));
   const w = best.cols * cell + (best.cols - 1) * gap;
   const h = best.rows * cell + (best.rows - 1) * gap;
-  const plate = { x: area.x + (area.w - w) / 2, y: area.y + (area.h - h) / 2, w, h };
+  const plate = { x: align === "start" ? area.x : area.x + (area.w - w) / 2, y: area.y + (area.h - h) / 2, w, h };
   const cells = Array.from({ length: count }, (_, index) => ({
     x: plate.x + (index % best.cols) * (cell + gap),
     y: plate.y + Math.floor(index / best.cols) * (cell + gap),
@@ -73,7 +73,7 @@ export function checklistGridLayout(box: Box, data: ChecklistGridData, format: F
   const blocks: LayoutBlock[] = [];
 
   // Contador + tilde.
-  const counterSize = largestFit([final], infoCol.w * 0.76, 1, [...spec.counter], GLYPH.digits);
+  const counterSize = largestFit([final], infoCol.w * 0.72, 1, [...spec.counter], GLYPH.digits);
   const counterH = textHeight(counterSize, 1, 1.06);
   const counterW = Math.min(infoCol.w, chipWidth(final, counterSize, 0, GLYPH.digits));
   const doneSize = Math.round(counterSize * 0.46);
@@ -127,16 +127,36 @@ export function checklistGridLayout(box: Box, data: ChecklistGridData, format: F
     gridArea = gridCol;
   }
 
-  const { plate, cells } = cellGrid(inset(gridArea, 0, 0), data.total, spec.maxCell);
+  const { plate, cells } = cellGrid(gridArea, data.total, spec.maxCell, portrait ? "start" : "center");
+
+  // Apaisado: el bloque de contador y leyenda se centra a la altura de la grilla
+  // (sin bajar del borde superior ni pisar el badge de abajo).
+  let counterBox = counter.box;
+  let doneBox = done;
+  let unitBox = unit.box;
+  if (!portrait) {
+    const contentBottom = chipBoxes.length ? Math.max(...chipBoxes.map((chip) => chip.y + chip.h)) : unit.box.y + unit.box.h;
+    const contentH = contentBottom - counter.box.y;
+    const limit = (sample ? sample.box.y - spec.gap : box.y + box.h) - contentBottom;
+    const shift = Math.max(0, Math.min(limit, plate.y + (plate.h - contentH) / 2 - counter.box.y));
+    const move = (target: Box) => ({ ...target, y: target.y + shift });
+    counterBox = move(counterBox);
+    doneBox = doneBox ? move(doneBox) : null;
+    unitBox = move(unitBox);
+    if (legendTitle) legendTitle = { ...legendTitle, box: move(legendTitle.box) };
+    chipBoxes = chipBoxes.map(move);
+  }
+  const counterAt = { ...counter, box: counterBox };
+  const unitAt = { ...unit, box: unitBox };
   const chips = chipBoxes.map((frame, index) => ({
     frame,
     text: textBlock(`chip.${index}`, inset(frame, chipPad - 2, 0), data.groups[index], chipSize, 1),
   }));
 
-  blocks.push({ kind: "media", id: "grid", box: plate }, counter, unit);
-  if (done) blocks.push({ kind: "media", id: "done", box: done });
+  blocks.push({ kind: "media", id: "grid", box: plate }, counterAt, unitAt);
+  if (doneBox) blocks.push({ kind: "media", id: "done", box: doneBox });
   if (legendTitle) blocks.push(legendTitle);
   for (const chip of chips) blocks.push({ kind: "frame", id: `${chip.text.id}.frame`, box: chip.frame }, chip.text);
   if (sample) blocks.push(sample);
-  return { plate, cells, counter, done, unit, legendTitle, chips, sample, blocks };
+  return { plate, cells, counter: counterAt, done: doneBox, unit: unitAt, legendTitle, chips, sample, blocks };
 }

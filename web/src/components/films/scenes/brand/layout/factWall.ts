@@ -69,26 +69,38 @@ export function factWallLayout(box: Box, data: FactWallData, format: FilmFormatN
   const rows = Math.ceil(facts.length / cols);
   const tileW = (grid.w - spec.gap * (cols - 1)) / cols;
   const innerW = tileW - spec.padX * 2;
-  const labelSize = largestFit(facts.map((fact) => fact.label), innerW, 2, [...spec.label]);
-  const sourceSize = largestFit(sources, innerW, 2, [...spec.source]);
-  const labelLines = Math.max(1, ...facts.map((fact) => countLines(fact.label, labelSize, innerW)));
-  const sourceLines = Math.max(1, ...sources.map((source) => countLines(source, sourceSize, innerW)));
+  // Alto disponible por baldosa (tope para que una sola fila no quede hueca).
+  const freeTileH = (grid.h - spec.gap * (rows - 1)) / rows;
+  const tileH = Math.min(freeTileH, spec.maxTile);
+  const valueMin = spec.value[spec.value.length - 1];
+
+  // De lo más generoso a lo más compacto: relleno, rótulo y fuente bajan hasta que entra el valor.
+  const plan = (() => {
+    let fallback: { padY: number; labelSize: number; sourceSize: number; labelLines: number; sourceLines: number; fixedH: number } | null = null;
+    for (const padY of [spec.padY, Math.round(spec.padY * 0.7), Math.round(spec.padY * 0.5)])
+      for (const labelSize of spec.label.filter((size) => facts.every((fact) => countLines(fact.label, size, innerW) <= 2)))
+        for (const sourceSize of spec.source.filter((size) => sources.every((source) => countLines(source, size, innerW) <= 2))) {
+          const labelLines = Math.max(1, ...facts.map((fact) => countLines(fact.label, labelSize, innerW)));
+          const sourceLines = Math.max(1, ...sources.map((source) => countLines(source, sourceSize, innerW)));
+          const fixedH = Math.round(labelSize * 0.5) + textHeight(labelSize, labelLines) + Math.round(sourceSize * 0.9) * 2 + 1 + textHeight(sourceSize, sourceLines);
+          const candidate = { padY, labelSize, sourceSize, labelLines, sourceLines, fixedH };
+          fallback = candidate;
+          if (fixedH + textHeight(valueMin, 1, 1.06) <= tileH - padY * 2) return candidate;
+        }
+    return fallback ?? { padY: spec.padY, labelSize: spec.label[spec.label.length - 1], sourceSize: spec.source[spec.source.length - 1], labelLines: 2, sourceLines: 2, fixedH: 0 };
+  })();
+  const { padY, labelSize, sourceSize, labelLines, sourceLines, fixedH } = plan;
   const labelH = textHeight(labelSize, labelLines);
   const sourceH = textHeight(sourceSize, sourceLines);
   const gapValue = Math.round(labelSize * 0.5);
   const gapRule = Math.round(sourceSize * 0.9);
-
-  // Alto disponible por baldosa (tope para que una sola fila no quede hueca).
-  const freeTileH = (grid.h - spec.gap * (rows - 1)) / rows;
-  const tileH = Math.min(freeTileH, spec.maxTile);
-  const innerH = tileH - spec.padY * 2;
-  const fixedH = gapValue + labelH + gapRule * 2 + 1 + sourceH;
+  const innerH = tileH - padY * 2;
   const valueLadder = spec.value.filter((size) => textHeight(size, 1, 1.06) + fixedH <= innerH);
   const valueSize = largestFit(
     facts.map((fact) => fact.value),
     innerW,
     1,
-    valueLadder.length ? valueLadder : [spec.value[spec.value.length - 1]],
+    valueLadder.length ? valueLadder : [valueMin],
     GLYPH.digits,
   );
   const valueH = textHeight(valueSize, 1, 1.06);
@@ -103,7 +115,7 @@ export function factWallLayout(box: Box, data: FactWallData, format: FilmFormatN
   const tiles = facts.map((fact, index): FactTileLayout => {
     const cell = cells[index];
     const tile = index >= (rows - 1) * cols ? { ...cell, x: cell.x + lastShift } : cell;
-    const inner = inset(tile, spec.padX, spec.padY);
+    const inner = inset(tile, spec.padX, padY);
     const sourceBox: Box = { x: inner.x, y: inner.y + inner.h - sourceH, w: inner.w, h: sourceH };
     const rule: Box = { x: inner.x, y: sourceBox.y - gapRule - 1, w: inner.w, h: 1 };
     return {

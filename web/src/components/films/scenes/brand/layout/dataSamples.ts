@@ -1,5 +1,6 @@
 import type { FilmLanguage } from "@/data/films/filmTypes";
 import { safeArea, type Box, type FilmFormatName } from "@/lib/filmLayout";
+import { MIN_TEXT } from "./dataText";
 import type { ChecklistGridData } from "./checklistGrid";
 import type { EvidenceLedgerData } from "./evidenceLedger";
 import type { FactWallFact } from "./factWall";
@@ -151,5 +152,5 @@ export function dataTestBoxes(format: FilmFormatName): Box[] {
   return [safe, { x: safe.x, y: safe.y + title, w: safe.w, h: safe.h - title }];
 }
 
-/** Tamaño mínimo legible de texto por formato (el 4:5 se ve en un teléfono). */
-export const MIN_TEXT_SIZE: Record<FilmFormatName, number> = { landscape: 15, portrait: 20 };
+/** Tamaño mínimo legible de texto por formato (el mismo que usan los layouts). */
+export const MIN_TEXT_SIZE = MIN_TEXT;

@@ -4,8 +4,8 @@ import type { FilmLanguage } from "@/data/films/filmTypes";
 import type { Box } from "@/lib/filmLayout";
 import { EASE_IN_OUT, progress, useFilmLayout } from "../theme";
 import { alpha, useBrand } from "./context";
-import { boxStyle, BoxText, Glyph, Plate, SampleTag } from "./dataKit";
-import { countUpText } from "./layout/dataText";
+import { boxStyle, BoxText, Figure, Glyph, Plate, SampleTag } from "./dataKit";
+import { countUpText, isGoldTone, scenePace } from "./layout/dataText";
 import { highlightSegments, keywordSearchLayout, type KeywordResult, type KeywordStat } from "./layout/keywordSearch";
 
 export type KeywordSearchProps = {
@@ -18,8 +18,14 @@ export type KeywordSearchProps = {
   methodLabel: string;
   sampleLabel: string;
   language: FilmLanguage;
-  /** Color del resaltado (por defecto el acento de la marca; en contenido médico conviene uno neutro). */
+  /**
+   * Color del resaltado. Por defecto, el acento de la marca, salvo que sea
+   * dorado: los fragmentos suelen ser médicos y el dorado no va sobre
+   * contenido biológico, así que se usa el gris de la marca.
+   */
   highlightTone?: string;
+  /** true: cuenta hasta el valor (solo para datos de ejemplo). Por defecto cada cifra entra con su valor final. */
+  countUp?: boolean;
 };
 
 /**
@@ -27,12 +33,13 @@ export type KeywordSearchProps = {
  * marcan sus términos y aparecen los fragmentos en orden de relevancia con
  * las mismas palabras resaltadas. Sin puntajes ni imaginería de vectores.
  */
-export function KeywordSearch({ box, duration, query, tokens, results, stats, methodLabel, sampleLabel, language, highlightTone }: KeywordSearchProps) {
-  const frame = useCurrentFrame();
+export function KeywordSearch({ box, duration, query, tokens, results, stats, methodLabel, sampleLabel, language, highlightTone, countUp = false }: KeywordSearchProps) {
+  // Ritmo: por debajo de 300 frames la coreografía se comprime entera; por encima, el final se sostiene.
+  const { frame, span } = scenePace(useCurrentFrame(), duration, 300);
   const brand = useBrand();
   const { portrait } = useFilmLayout();
   const layout = keywordSearchLayout(box, { query, tokens, results, stats, methodLabel, sampleLabel, language }, portrait ? "portrait" : "landscape");
-  const tone = highlightTone ?? brand.palette.accent;
+  const tone = highlightTone ?? (isGoldTone(brand.palette.accent) ? brand.palette.muted : brand.palette.accent);
 
   // Guion: índice → campo → escritura → términos → resultados de a uno.
   const fieldAt = 26;
@@ -43,7 +50,7 @@ export function KeywordSearch({ box, duration, query, tokens, results, stats, me
   const markAt = typeFrom + typeFrames + 6;
   const tokensAt = markAt + 8;
   const resultsAt = tokensAt + tokens.length * 6 + 16;
-  const resultStep = Math.max(14, Math.min(30, (duration * 0.78 - resultsAt) / Math.max(1, results.length)));
+  const resultStep = Math.max(14, Math.min(30, (span * 0.78 - resultsAt) / Math.max(1, results.length)));
   const caretOn = !typingDone || (frame < resultsAt && Math.floor(frame / 15) % 2 === 0);
 
   const mark = (show: number): CSSProperties => ({
@@ -61,7 +68,7 @@ export function KeywordSearch({ box, duration, query, tokens, results, stats, me
   return (
     <AbsoluteFill>
       {/* Método e índice */}
-      <BoxText block={layout.method} style={{ fontFamily: brand.fonts.display, fontWeight: 600, color: brand.palette.text, opacity: progress(frame, 0, 16) }} />
+      <BoxText block={layout.method} style={{ fontFamily: brand.fonts.display, fontWeight: 600, color: brand.palette.text, textWrap: "balance", opacity: progress(frame, 0, 16) }} />
       {layout.statRules.map((rule, index) => (
         <div key={index} style={{ ...boxStyle(rule), background: brand.palette.line, opacity: progress(frame, 14 + index * 8, 28 + index * 8) }} />
       ))}
@@ -70,7 +77,7 @@ export function KeywordSearch({ box, duration, query, tokens, results, stats, me
         return (
           <div key={stat.value.id} style={{ opacity: progress(frame, at, at + 14) }}>
             <BoxText block={stat.value} style={{ fontFamily: brand.fonts.display, fontWeight: 600, color: brand.palette.text, fontVariantNumeric: "tabular-nums", letterSpacing: "-0.01em" }}>
-              {countUpText(stat.value.text, progress(frame, at + 2, at + 40, EASE_IN_OUT), language)}
+              <Figure final={stat.value.text} t={progress(frame, at + 2, at + 40, EASE_IN_OUT)} countUp={countUp} format={(t) => countUpText(stat.value.text, t, language)} />
             </BoxText>
             <BoxText block={stat.label} style={{ fontFamily: brand.fonts.body, color: brand.palette.muted }} />
           </div>
@@ -124,7 +131,7 @@ export function KeywordSearch({ box, duration, query, tokens, results, stats, me
             <div style={{ ...boxStyle(result.rankFrame), boxSizing: "border-box", borderRadius: 999, border: `1px solid ${index === 0 ? alpha(tone, 70) : brand.palette.line}` }} />
             <BoxText block={result.rank} align="center" style={{ fontFamily: brand.fonts.display, fontWeight: 600, color: index === 0 ? brand.palette.text : brand.palette.muted }} />
             <BoxText block={result.title} style={{ fontFamily: brand.fonts.display, fontWeight: 600, color: brand.palette.text }} />
-            <BoxText block={result.fragment} style={{ fontFamily: brand.fonts.body, color: brand.palette.muted }}>
+            <BoxText block={result.fragment} style={{ fontFamily: brand.fonts.body, color: brand.palette.muted, textWrap: "pretty" }}>
               {segments.map((segment, segmentIndex) =>
                 segment.hit ? (
                   <span key={segmentIndex} style={{ ...mark(lit), color: brand.palette.text, fontWeight: 700 }}>

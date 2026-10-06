@@ -23,6 +23,12 @@ export const DEMOS_DATA: Record<string, LabDemo> = {
     brand: "ad-media-solution",
     render: ({ language, format }) => <FactWall box={safeArea(format)} duration={240} facts={DEMO_FACTS[language]} language={language} sampleLabel={DATA_SAMPLE_LABEL[language]} />,
   },
+  /** La misma escena con `countUp`: cuenta hasta cada valor (solo para datos de ejemplo). */
+  FactWallConConteo: {
+    duration: 240,
+    brand: "ad-media-solution",
+    render: ({ language, format }) => <FactWall box={safeArea(format)} duration={240} facts={DEMO_FACTS[language]} language={language} sampleLabel={DATA_SAMPLE_LABEL[language]} countUp />,
+  },
   ChecklistGrid: {
     duration: 240,
     brand: "ad-media-solution",
