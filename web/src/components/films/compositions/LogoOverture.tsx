@@ -21,7 +21,10 @@ export function LogoOverture({ language }: LogoOvertureProps) {
   const { width, height, portrait } = useFilmLayout();
   const codeLine = language === "es" ? "> diseño + código + sistemas" : "> design + code + systems";
 
-  const interior = progress(frame, 18, 92, EASE_IN_OUT);
+  // Las dos flechas de código entran desde lados opuestos y se unen en el centro.
+  const crownShift = interpolate(progress(frame, 12, 80, EASE_IN_OUT), [0, 1], [-1.7, 0]);
+  const bodyShift = interpolate(progress(frame, 20, 86, EASE_IN_OUT), [0, 1], [1.7, 0]);
+  const flash = interpolate(frame, [84, 88, 116], [0, 1, 0], CLAMP);
   const turn = progress(frame, 150, 218, EASE_IN_OUT);
   const ring = progress(frame, 198, 268, EASE_IN_OUT);
   const lockup = progress(frame, 232, 292, EASE_IN_OUT);
@@ -39,7 +42,7 @@ export function LogoOverture({ language }: LogoOvertureProps) {
     y: interpolate(lockup, [0, 1], [centered.y, lockupPoint.y]),
   };
   const logoScale = interpolate(lockup, [0, 1], [1, portrait ? 0.78 : 0.82]);
-  const typed = Math.floor(interpolate(frame, [44, 44 + codeLine.length * 2], [0, codeLine.length], CLAMP));
+  const typed = Math.floor(interpolate(frame, [96, 96 + codeLine.length * 2], [0, codeLine.length], CLAMP));
   const cursorOn = Math.floor(frame / 15) % 2 === 0;
   const signalShare = Math.round(100 * (1 - turn));
 
@@ -68,10 +71,26 @@ export function LogoOverture({ language }: LogoOvertureProps) {
           id="overture"
           size={logoSize}
           ring={ring}
-          interior={interior}
+          crownShift={crownShift}
+          bodyShift={bodyShift}
           rotation={interpolate(turn, [0, 1], [-90, 0])}
           interiorColor={`color-mix(in srgb, var(--color-signal) ${signalShare}%, var(--color-foreground))`}
-          glow={0.7 * (1 - turn)}
+          glow={0.55 * (1 - turn) + flash * 0.9}
+        />
+        {/* Destello de unión: una onda que se abre cuando las flechas se tocan */}
+        <div
+          style={{
+            position: "absolute",
+            left: "47%",
+            top: "51%",
+            width: logoSize * 0.7,
+            height: logoSize * 0.7,
+            translate: "-50% -50%",
+            borderRadius: 999,
+            border: `2px solid ${tint(FILM_COLORS.signal, 80)}`,
+            scale: `${interpolate(frame, [84, 116], [0.4, 1.7], CLAMP)}`,
+            opacity: flash,
+          }}
         />
         {/* Cursor del prompt */}
         <div
@@ -83,7 +102,7 @@ export function LogoOverture({ language }: LogoOvertureProps) {
             height: logoSize * 0.13,
             translate: "0 -50%",
             background: FILM_COLORS.signal,
-            opacity: (cursorOn ? 1 : 0.15) * progress(frame, 6, 20) * codeOut,
+            opacity: (cursorOn ? 1 : 0.15) * progress(frame, 2, 14) * codeOut,
           }}
         />
       </div>
@@ -100,7 +119,7 @@ export function LogoOverture({ language }: LogoOvertureProps) {
           fontSize: portrait ? 40 : 26,
           letterSpacing: "0.04em",
           color: FILM_COLORS.signal,
-          opacity: codeOut,
+          opacity: codeOut * progress(frame, 90, 100),
         }}
       >
         {codeLine.slice(0, typed)}

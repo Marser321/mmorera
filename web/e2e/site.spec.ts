@@ -184,8 +184,12 @@ test("sistemas narra casos de uso con films interactivos", async ({ page }) => {
   await expect(page.getByRole("link", { name: /Ver el caso New Brothers/ })).toBeVisible();
 
   // Un flujo de ejemplo se rotula como tal y sus etapas abren el inspector.
-  await page.getByRole("tab", { name: /El lead de las 23:45/ }).click();
-  await expect(page.getByRole("tab", { name: /El lead de las 23:45/ })).toHaveAttribute("aria-selected", "true");
+  // La sala es un chunk propio: se reintenta el clic hasta que hidrata.
+  const leadTab = page.getByRole("tab", { name: /El lead de las 23:45/ });
+  await expect(async () => {
+    await leadTab.click();
+    await expect(leadTab).toHaveAttribute("aria-selected", "true", { timeout: 1_000 });
+  }).toPass({ timeout: 15_000 });
   await expect(page.getByText("Flujo de ejemplo con datos de muestra")).toBeVisible();
   await page.getByRole("button", { name: /01 · Edge Worker Ingesta/ }).click();
   const inspector = page.getByRole("dialog", { name: /Etapa 1/ });

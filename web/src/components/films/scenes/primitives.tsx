@@ -46,7 +46,7 @@ export function Headline({
     <div
       style={{
         position: "absolute",
-        fontFamily: FILM_FONTS.body,
+        fontFamily: FILM_FONTS.display,
         fontSize: size,
         fontWeight: 500,
         lineHeight: 0.98,

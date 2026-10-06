@@ -69,12 +69,13 @@ function DiagnosisFrame({ box, frame, diagnosisAt, breakpoint, portrait, childre
 export function ChatPile(props: ProblemVisualProps) {
   const frame = useCurrentFrame();
   const { box, signals, portrait, diagnosisAt, lanes, language } = props;
-  const bubbleWidth = portrait ? 420 : 330;
+  const bubbleWidth = portrait ? 440 : 360;
   const font = portrait ? 32 : 23;
   const bubbleHeight = font * 2.5;
   const rowGap = portrait ? 92 : 76;
-  const laneScale = portrait ? 0.68 : 0.62;
   const colWidth = box.w / Math.max(1, lanes?.length ?? 1);
+  // La burbuja entra entera en su carril, con margen.
+  const laneScale = Math.min(portrait ? 0.68 : 0.62, (colWidth - 24) / bubbleWidth);
   const chrome = 1 - progress(frame, diagnosisAt, diagnosisAt + 24);
   const typingDots = [0, 1, 2].map((dot) => 0.25 + 0.75 * Math.abs(Math.sin((frame + dot * 6) / 9)));
 
@@ -141,6 +142,8 @@ export function ChatPile(props: ProblemVisualProps) {
               fontFamily: FILM_FONTS.body,
               fontSize: font,
               whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
               transformOrigin: "0 0",
               translate: `${x}px ${y + (1 - pop) * 18}px`,
               scale: `${scale * (0.94 + pop * 0.06)}`,

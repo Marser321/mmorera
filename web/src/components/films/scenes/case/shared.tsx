@@ -27,7 +27,7 @@ export function ChapterKicker({ index, label, portrait, from = 8, style }: { ind
 export function SlowWords({ text, from, size, style, stagger = 4, duration = 30, color = FILM_COLORS.fg, weight = 500 }: { text: string; from: number; size: number; style?: CSSProperties; stagger?: number; duration?: number; color?: string; weight?: number }) {
   const frame = useCurrentFrame();
   return (
-    <div style={{ position: "absolute", fontFamily: FILM_FONTS.body, fontSize: size, fontWeight: weight, lineHeight: 1.04, letterSpacing: "-0.045em", color, ...style }}>
+    <div style={{ position: "absolute", fontFamily: FILM_FONTS.display, fontSize: size, fontWeight: weight, lineHeight: 1.04, letterSpacing: "-0.045em", color, ...style }}>
       {text.split(" ").map((word, index) => {
         const reveal = interpolate(frame, [from + index * stagger, from + index * stagger + duration], [0, 1], { ...CLAMP, easing: EASE_OUT });
         return (

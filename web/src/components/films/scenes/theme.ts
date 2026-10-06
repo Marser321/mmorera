@@ -24,6 +24,8 @@ export const ink = (alpha: number) => `rgb(var(--ink-rgb) / ${alpha})`;
 export const tint = (color: string, percent: number) => `color-mix(in srgb, ${color} ${percent}%, transparent)`;
 
 export const FILM_FONTS = {
+  /** Títulos: la tipografía de la marca del cliente si la hay, si no la del sitio. */
+  display: "var(--ff-film-display, var(--ff-body)), system-ui, sans-serif",
   body: "var(--ff-body), system-ui, sans-serif",
   mono: "var(--ff-mono), ui-monospace, monospace",
 } as const;

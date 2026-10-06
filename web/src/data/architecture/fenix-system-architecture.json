@@ -1,0 +1,248 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Fenix Medical Center · Arquitectura del Sistema",
+    "output": "fenix-system-architecture.html",
+    "visual_preset": "editorial",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "lead-capture-path",
+        "label": "Ruta de Captación de Leads",
+        "focus": ["users", "client_ui", "sec_flag", "api_lead", "ghl_service", "ghl_crm"],
+        "note": "Traza el envío de leads desde el cliente web hasta GoHighLevel atravesando la frontera fail-closed."
+      },
+      {
+        "id": "booking-schedule-path",
+        "label": "Reserva de Citas en Calendario",
+        "focus": ["users", "booking_ui", "sec_sanitizer", "api_booking", "ghl_service", "ghl_crm"],
+        "note": "Valida slots libres en hora local de la clínica antes de persistir la cita y el contacto en el CRM."
+      },
+      {
+        "id": "compliance-boundary",
+        "label": "Frontera de Seguridad y Compliance",
+        "focus": ["sec_flag", "sec_sanitizer", "api_lead", "api_booking"],
+        "note": "Aislamiento estricto de PII: 7 campos permitidos, sin texto libre y sin logs en servidor (ADR-058/189)."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "users",
+      "type": "external",
+      "label": "Pacientes",
+      "sublabel": "Navegador Web y Móvil",
+      "pos": [30, 300],
+      "size": [130, 60]
+    },
+    {
+      "id": "media_engine",
+      "type": "frontend",
+      "label": "Motor Cinemático",
+      "sublabel": "Vídeo y animación CSS",
+      "tag": "Framer Motion",
+      "pos": [250, 130],
+      "size": [140, 60]
+    },
+    {
+      "id": "client_ui",
+      "type": "frontend",
+      "label": "Next.js App",
+      "sublabel": "App Router (/es, /en)",
+      "brand": "next-js",
+      "pos": [250, 300],
+      "size": [140, 60]
+    },
+    {
+      "id": "booking_ui",
+      "type": "frontend",
+      "label": "Formulario & Agenda",
+      "sublabel": "Lead Form + Slots UI",
+      "pos": [250, 470],
+      "size": [140, 60]
+    },
+    {
+      "id": "sec_flag",
+      "type": "security",
+      "label": "Fail-Closed Flag",
+      "sublabel": "isLeadCaptureEnabled()",
+      "tag": "ADR-058",
+      "pos": [480, 300],
+      "size": [140, 60]
+    },
+    {
+      "id": "sec_sanitizer",
+      "type": "security",
+      "label": "Sanitizador PII",
+      "sublabel": "parseLead() 7 campos",
+      "tag": "ADR-189",
+      "pos": [480, 470],
+      "size": [140, 60]
+    },
+    {
+      "id": "edge_platform",
+      "type": "cloud",
+      "label": "Vercel Platform",
+      "sublabel": "Edge Middleware & CDN",
+      "brand": "vercel",
+      "pos": [710, 130],
+      "size": [140, 60]
+    },
+    {
+      "id": "api_lead",
+      "type": "backend",
+      "label": "Route /api/lead",
+      "sublabel": "Validación & Despacho",
+      "pos": [710, 300],
+      "size": [140, 60]
+    },
+    {
+      "id": "api_booking",
+      "type": "backend",
+      "label": "Route /api/booking",
+      "sublabel": "Validación Horarios",
+      "pos": [710, 470],
+      "size": [140, 60]
+    },
+    {
+      "id": "ghl_service",
+      "type": "backend",
+      "label": "Servicio Integración",
+      "sublabel": "src/lib/ghl.ts",
+      "pos": [940, 385],
+      "size": [140, 60]
+    },
+    {
+      "id": "ghl_crm",
+      "type": "external",
+      "label": "GoHighLevel CRM",
+      "sublabel": "Oportunidades & Citas",
+      "pos": [1170, 385],
+      "size": [130, 60]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Cliente Web (Next.js 16 bilingüe)",
+      "wraps": ["media_engine", "client_ui", "booking_ui"],
+      "pad": 20
+    },
+    {
+      "kind": "security-group",
+      "label": "Frontera de Seguridad y Compliance (ADR-058 / ADR-189)",
+      "wraps": ["sec_flag", "sec_sanitizer"],
+      "pad": 20
+    },
+    {
+      "kind": "region",
+      "label": "Backend Serverless (App Router)",
+      "wraps": ["edge_platform", "api_lead", "api_booking", "ghl_service"],
+      "pad": 20
+    }
+  ],
+  "connections": [
+    {
+      "from": "users",
+      "to": "client_ui",
+      "label": "HTTPS",
+      "variant": "emphasis"
+    },
+    {
+      "from": "client_ui",
+      "to": "media_engine",
+      "label": "Cinemática",
+      "variant": "dashed",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "from": "client_ui",
+      "to": "booking_ui",
+      "label": "Interacción",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDy": 25
+    },
+    {
+      "from": "edge_platform",
+      "to": "api_lead",
+      "label": "Edge Runtime",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDy": 25
+    },
+    {
+      "from": "client_ui",
+      "to": "sec_flag",
+      "label": "Envío Lead",
+      "variant": "emphasis"
+    },
+    {
+      "from": "booking_ui",
+      "to": "sec_sanitizer",
+      "label": "Reserva Cita",
+      "variant": "emphasis"
+    },
+    {
+      "from": "sec_flag",
+      "to": "api_lead",
+      "label": "Fail-Closed",
+      "variant": "security"
+    },
+    {
+      "from": "sec_sanitizer",
+      "to": "api_booking",
+      "label": "7 Campos",
+      "variant": "security"
+    },
+    {
+      "from": "api_lead",
+      "to": "ghl_service",
+      "label": "deliverLead()",
+      "variant": "emphasis"
+    },
+    {
+      "from": "api_booking",
+      "to": "ghl_service",
+      "label": "upsertContact()",
+      "variant": "emphasis"
+    },
+    {
+      "from": "ghl_service",
+      "to": "ghl_crm",
+      "label": "Webhook & REST",
+      "variant": "emphasis"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Capa Cliente & Cinemática",
+      "items": [
+        "Next.js 16 App Router con soporte bilingüe (/es, /en)",
+        "Vídeo optimizado y animación; sin WebGL ni Three",
+        "Formularios de contacto y selector de citas en vivo"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Frontera de Seguridad (ADR-058/189)",
+      "items": [
+        "Captación fail-closed: 503 inmediato si no está activado",
+        "Sanitización estricta de 7 campos permitidos sin texto libre",
+        "Cero logs de información personal identificable (PII)"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Backend & Integración CRM",
+      "items": [
+        "Endpoints serverless /api/lead y /api/booking",
+        "Validación de slots con zona horaria de la clínica",
+        "Despacho seguro a Webhook y API REST de GoHighLevel"
+      ]
+    }
+  ]
+}

@@ -5,6 +5,8 @@ import Image from "next/image";
 import { useReducedMotion } from "framer-motion";
 import type { PlayerRef } from "@remotion/player";
 import type { CaseFilmScript } from "@/data/films/caseFilms";
+import { getFlagshipFilm } from "@/data/films/flagships";
+import { BRAND_FONT_VARIABLES } from "./brandFonts";
 import type { FilmLanguage } from "@/data/films/filmTypes";
 import { FilmChapters, useFilmPlayback } from "./FilmChapters";
 import type { FilmSource } from "./FilmCanvas";
@@ -28,10 +30,14 @@ export function CaseFilmSection({ script, language }: { script: CaseFilmScript; 
   const [player, setPlayer] = useState<PlayerRef | null>(null);
   const [visible, setVisible] = useState(false);
   const userPausedRef = useRef(false);
-  const { chapterIndex, playing, barsRef } = useFilmPlayback(player, script.chapters);
-  const lastFrame = script.durationInFrames - 1;
+  // Film insignia (guion propio con la marca del cliente) o la plantilla de caso.
+  const flagship = getFlagshipFilm(script.slug);
+  const chapters = flagship?.chapters ?? script.chapters;
+  const durationInFrames = flagship?.durationInFrames ?? script.durationInFrames;
+  const { chapterIndex, playing, barsRef } = useFilmPlayback(player, chapters);
+  const lastFrame = durationInFrames - 1;
   const stillFrame = (index: number) => {
-    const chapter = script.chapters[index];
+    const chapter = chapters[index];
     return chapter.from + chapter.durationInFrames - 24;
   };
 
@@ -57,7 +63,7 @@ export function CaseFilmSection({ script, language }: { script: CaseFilmScript; 
       player.seekTo(stillFrame(index));
       return;
     }
-    player.seekTo(script.chapters[index].from);
+    player.seekTo(chapters[index].from);
     if (!userPausedRef.current) player.play();
   };
 
@@ -74,10 +80,16 @@ export function CaseFilmSection({ script, language }: { script: CaseFilmScript; 
     player.play();
   };
 
-  const source = useMemo<FilmSource>(() => ({ kind: "case", durationInFrames: script.durationInFrames, props: { script, language } }), [language, script]);
+  const source = useMemo<FilmSource>(
+    () =>
+      flagship
+        ? { kind: "flagship", durationInFrames: flagship.durationInFrames, props: { slug: script.slug, language } }
+        : { kind: "case", durationInFrames: script.durationInFrames, props: { script, language } },
+    [flagship, language, script],
+  );
 
   return (
-    <section className="mx-auto mt-16 max-w-[1680px] px-3 sm:px-6" aria-labelledby="case-film-title">
+    <section className={`mx-auto mt-16 max-w-[1680px] px-3 sm:px-6 ${BRAND_FONT_VARIABLES}`} aria-labelledby="case-film-title">
       <h2 id="case-film-title" className="sr-only">{isEs ? "Cómo lo resolví" : "How I solved it"}</h2>
       <FilmStage
         source={source}
@@ -94,7 +106,7 @@ export function CaseFilmSection({ script, language }: { script: CaseFilmScript; 
       />
       <div className="mx-auto max-w-[1480px] px-2 sm:px-6">
         <FilmChapters
-          chapters={script.chapters}
+          chapters={chapters}
           chapterIndex={chapterIndex}
           playing={playing}
           barsRef={barsRef}
