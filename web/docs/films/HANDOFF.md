@@ -8,7 +8,7 @@ Estado y reglas del sistema de "films de lanzamiento" del portfolio, para seguir
   - Sala de casos de uso (`UseCaseFilmRoom`): New Brothers como caso real; IA y CRM como ejemplos rotulados.
 - **Casos de éxito (`/casos-de-exito/[slug]`):** `CaseFilmSection` elige el film:
   - **Insignia** si el slug está en `web/src/data/films/flagships/index.ts` (datos) y en `FLAGSHIP_LOADERS` de `FilmCanvas.tsx` (composición, cargada de forma diferida con `lazyComponent`: cada página baja solo su film). Hoy: Fénix (`FenixFilm`) y New Brothers (`NewBrothersFilm`).
-  - **Genérico** (`CaseFilm`) en los demás. Si el caso tiene marca en `caseBrands.ts`, se pinta con ella. Hoy: New Brothers, Fénix y AD Media.
+  - **Genérico** (`CaseFilm`) en los demás. Si el caso tiene marca en `caseBrands.ts`, se pinta con ella. Hoy: New Brothers, Fénix y AD Media. Detrás de los textos usa el sitio ya difuminado (`public/portfolio/backdrops/`), nunca la captura nítida.
 - **Home:** entrada del monograma (`LogoOvertureSection`) dentro de `#perfil`. Las flechas ">" y "Σ" se unen y giran hasta formar la M; la misma firma cierra cada film.
 
 ## Dónde está cada cosa
