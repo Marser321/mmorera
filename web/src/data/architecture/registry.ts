@@ -7,6 +7,7 @@ import type { ArchitectureBundle } from "./bundle";
  */
 export const ARCHITECTURE_LOADERS: Record<string, () => Promise<ArchitectureBundle>> = {
   "fenix-medical-center": () => import("./bundles/fenix-medical-center").then((module) => module.bundle),
+  "lb-elite-wash-detail": () => import("./bundles/lb-elite-wash-detail").then((module) => module.bundle),
   "new-brothers-barberia": () => import("./bundles/new-brothers-barberia").then((module) => module.bundle),
 };
 

@@ -49,26 +49,44 @@ export const PROJECT_CASES: ProjectCase[] = [
     status: "featured",
   },
   {
+    // Fuente: docs/films/dossiers/lb-wash.md (verificado contra el repo del cliente).
+    // Operación: flota de 4 camionetas, catálogo de 88 productos y 142 precios,
+    // arquitectura database-less sobre GoHighLevel y app móvil de cuadrilla.
     slug: "lb-elite-wash-detail",
     title: t("L&B Elite Wash & Detail", "L&B Elite Wash & Detail"),
-    summary: t("Detailing móvil premium en el suroeste de Florida: marca de alta gama y pedido de servicio sin fricción.", "Premium mobile detailing in Southwest Florida: a high-end brand with a frictionless service request."),
-    tracks: ["create", "build"],
-    role: t("Dirección visual, diseño web y flujo de solicitud de servicio.", "Visual direction, web design and service-request flow."),
-    challenge: t("Transmitir un servicio de alta gama que atiende autos, botes y flotas sin complicar el pedido.", "Convey a high-end service covering cars, boats and fleets without complicating the request."),
+    summary: t(
+      "Detailing móvil a domicilio con flota de 4 camionetas: cotizador por vehículo con 88 servicios, balanceo determinista y CRM sin base de datos.",
+      "On-site mobile detailing with a 4-van fleet: dynamic vehicle quoter across 88 services, deterministic load balancing and a database-less CRM.",
+    ),
+    tracks: ["create", "build", "scale"],
+    role: t(
+      "Dirección de marca, cotizador interactivo, ruteo de flota y arquitectura sin base de datos.",
+      "Brand direction, interactive quoter, fleet routing and database-less architecture.",
+    ),
+    challenge: t(
+      "Coordinar 4 camionetas autónomas en domicilios simultáneos y cobrar sin depender de una base de datos propia ni desincronizaciones.",
+      "Coordinate 4 self-contained vans across concurrent home visits and bill without maintaining a dedicated database or desyncs.",
+    ),
     constraints: [
-      t("Catálogo de servicios amplio: autos, botes, jet skis y flotas.", "A wide service catalogue: cars, boats, jet skis and fleets."),
-      t("Decisión rápida desde el teléfono.", "Quick decisions on mobile."),
+      t("Una visita es una camioneta en una casa (duraciones acumuladas).", "A visit is one van at one address (additive durations)."),
+      t("Catálogo real de 88 productos y 142 precios por carrocería.", "A real catalogue of 88 products and 142 vehicle prices."),
+      t("Uso táctil por cuadrillas en exteriores con manos húmedas.", "Tactile usage by outdoor crews with wet hands."),
     ],
     decisions: [
-      t("Presentar el servicio por tipo de vehículo con precios claros.", "Present the service by vehicle type with clear pricing."),
-      t("Reducir el contacto a un pedido directo y breve.", "Reduce contact to one short, direct request."),
+      t("Arquitectura Database-less: GoHighLevel como único almacén de citas, contactos y facturas.", "Database-less architecture: GoHighLevel as the single store for appointments, contacts and invoices."),
+      t("Cotizador dinámico por carrocería con retención temporal de 15 minutos.", "Dynamic body-type quoter with 15-minute temporary holds."),
+      t("Ruteador determinista con balanceo entre las 4 camionetas y fallback ante colisiones.", "Deterministic router with 4-van load balancing and collision fallback."),
+      t("App móvil ligera para la cuadrilla con resolución de parada en un toque.", "Lightweight mobile crew app with one-tap stop resolution."),
     ],
-    result: t("Una marca que se percibe premium y un camino de reserva que no exige llamadas.", "A brand that reads premium and a booking path that does not require phone calls."),
+    result: t(
+      "Una operación de 4 camionetas sincronizada en tiempo real, con reserva autoservicio y cero sobrecoste de base de datos.",
+      "A 4-van operation synchronized in real time with self-service booking and zero database overhead.",
+    ),
     evidence: [liveEvidence],
-    stack: ["Next.js", "Brand Design", "Booking", "UX/UI"],
+    stack: ["Vanilla JS", "GoHighLevel", "Serverless API", "Webhooks"],
     media: [{ src: "/portfolio/lb-elite-cover.jpg", alt: t("Sitio de L&B Elite Wash & Detail", "L&B Elite Wash & Detail website") }],
     liveUrl: "https://l-b-five.vercel.app/",
-    accent: "#B68CFF",
+    accent: "#1E6FE6",
     status: "featured",
   },
   {

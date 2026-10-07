@@ -125,6 +125,36 @@ export const CASE_BRANDS: Record<string, CaseBrand> = {
     texture: "none",
     source: "D:\\1B Ecritorio Mac\\AD Media Solution: tailwind/globals (navy + electric blue, Montserrat)",
   },
+  "lb-elite-wash-detail": {
+    slug: "lb-elite-wash-detail",
+    name: "L&B Elite Wash & Detail",
+    palette: {
+      bg: "#06080D",
+      surface: "#0D1423",
+      raised: "#161E30",
+      line: "#262B33",
+      text: "#E6EDF3",
+      muted: "#9BA7B4",
+      accent: "#1E6FE6",
+      accentSoft: "#4A9AFF",
+      accentDeep: "#1659C7",
+      onAccent: "#FFFFFF",
+    },
+    fonts: {
+      display: "var(--ff-brand-outfit), Outfit, sans-serif",
+      body: "var(--ff-brand-inter), Inter, sans-serif",
+      label: "var(--ff-brand-inter), Inter, sans-serif",
+    },
+    uppercaseDisplay: false,
+    logo: {
+      mark: "/portfolio/brands/lb-elite-wash-detail/mark.png",
+      wordmark: "/portfolio/brands/lb-elite-wash-detail/wordmark.png",
+      particleMode: "alpha",
+    },
+    radius: 16,
+    texture: "none",
+    source: "LyB Elite Wash Details: site/styles.css (--accent #1E6FE6, Outfit + Inter)",
+  },
 };
 
 export function getCaseBrand(slug: string): CaseBrand | undefined {

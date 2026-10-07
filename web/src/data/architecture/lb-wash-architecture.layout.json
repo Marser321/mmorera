@@ -1,0 +1,384 @@
+{
+  "source": "lb-wash-architecture.json (es)",
+  "generatedBy": "archify validate architecture --layout-json --quality showcase",
+  "viewBox": [
+    1332,
+    518
+  ],
+  "components": [
+    {
+      "id": "users",
+      "x": 20,
+      "y": 240,
+      "w": 160,
+      "h": 60
+    },
+    {
+      "id": "quoter_ui",
+      "x": 260,
+      "y": 110,
+      "w": 160,
+      "h": 60
+    },
+    {
+      "id": "crew_ui",
+      "x": 260,
+      "y": 240,
+      "w": 160,
+      "h": 60
+    },
+    {
+      "id": "member_ui",
+      "x": 260,
+      "y": 370,
+      "w": 160,
+      "h": 60
+    },
+    {
+      "id": "van_router",
+      "x": 544,
+      "y": 110,
+      "w": 160,
+      "h": 60
+    },
+    {
+      "id": "agenda_hold",
+      "x": 544,
+      "y": 240,
+      "w": 160,
+      "h": 60
+    },
+    {
+      "id": "membership_engine",
+      "x": 544,
+      "y": 370,
+      "w": 160,
+      "h": 60
+    },
+    {
+      "id": "ghl_calendars",
+      "x": 828,
+      "y": 110,
+      "w": 160,
+      "h": 60
+    },
+    {
+      "id": "appointment_state",
+      "x": 828,
+      "y": 240,
+      "w": 160,
+      "h": 60
+    },
+    {
+      "id": "ghl_contacts",
+      "x": 828,
+      "y": 370,
+      "w": 160,
+      "h": 60
+    },
+    {
+      "id": "payment_webhook",
+      "x": 1112,
+      "y": 170,
+      "w": 160,
+      "h": 60
+    },
+    {
+      "id": "idempotency",
+      "x": 1112,
+      "y": 310,
+      "w": 160,
+      "h": 60
+    }
+  ],
+  "boundaries": [
+    {
+      "label": "Frontends y Webapps",
+      "kind": "region",
+      "x": 240,
+      "y": 86,
+      "w": 200,
+      "h": 364
+    },
+    {
+      "label": "Motor Serverless",
+      "kind": "region",
+      "x": 524,
+      "y": 86,
+      "w": 200,
+      "h": 364
+    },
+    {
+      "label": "HighLevel (Cero Postgres)",
+      "kind": "region",
+      "x": 808,
+      "y": 86,
+      "w": 200,
+      "h": 364
+    },
+    {
+      "label": "Seguridad y Pagos",
+      "kind": "security-group",
+      "x": 1092,
+      "y": 146,
+      "w": 200,
+      "h": 244
+    }
+  ],
+  "connections": [
+    {
+      "from": "users",
+      "to": "quoter_ui",
+      "points": [
+        [
+          180,
+          263
+        ],
+        [
+          220,
+          263
+        ],
+        [
+          220,
+          140
+        ],
+        [
+          260,
+          140
+        ]
+      ],
+      "label": {
+        "text": "Cotiza",
+        "x": 201,
+        "y": 182,
+        "w": 39,
+        "h": 14
+      }
+    },
+    {
+      "from": "users",
+      "to": "crew_ui",
+      "points": [
+        [
+          180,
+          277
+        ],
+        [
+          260,
+          277
+        ]
+      ]
+    },
+    {
+      "from": "quoter_ui",
+      "to": "van_router",
+      "points": [
+        [
+          420,
+          140
+        ],
+        [
+          544,
+          140
+        ]
+      ],
+      "label": {
+        "text": "Disponibilidad",
+        "x": 443,
+        "y": 120,
+        "w": 77,
+        "h": 14
+      }
+    },
+    {
+      "from": "crew_ui",
+      "to": "agenda_hold",
+      "points": [
+        [
+          420,
+          270
+        ],
+        [
+          544,
+          270
+        ]
+      ],
+      "label": {
+        "text": "Lee parada",
+        "x": 453,
+        "y": 250,
+        "w": 58,
+        "h": 14
+      }
+    },
+    {
+      "from": "member_ui",
+      "to": "membership_engine",
+      "points": [
+        [
+          420,
+          400
+        ],
+        [
+          544,
+          400
+        ]
+      ],
+      "label": {
+        "text": "Consulta saldo",
+        "x": 443,
+        "y": 380,
+        "w": 77,
+        "h": 14
+      }
+    },
+    {
+      "from": "van_router",
+      "to": "ghl_calendars",
+      "points": [
+        [
+          704,
+          140
+        ],
+        [
+          828,
+          140
+        ]
+      ],
+      "label": {
+        "text": "Asigna van",
+        "x": 737,
+        "y": 120,
+        "w": 58,
+        "h": 14
+      }
+    },
+    {
+      "from": "van_router",
+      "to": "agenda_hold",
+      "points": [
+        [
+          624,
+          170
+        ],
+        [
+          624,
+          240
+        ]
+      ]
+    },
+    {
+      "from": "agenda_hold",
+      "to": "appointment_state",
+      "points": [
+        [
+          704,
+          270
+        ],
+        [
+          828,
+          270
+        ]
+      ],
+      "label": {
+        "text": "Hold 15m",
+        "x": 742,
+        "y": 250,
+        "w": 48,
+        "h": 14
+      }
+    },
+    {
+      "from": "ghl_calendars",
+      "to": "appointment_state",
+      "points": [
+        [
+          908,
+          170
+        ],
+        [
+          908,
+          240
+        ]
+      ],
+      "label": {
+        "text": "Valida slot",
+        "x": 839,
+        "y": 198,
+        "w": 63,
+        "h": 14
+      }
+    },
+    {
+      "from": "membership_engine",
+      "to": "ghl_contacts",
+      "points": [
+        [
+          704,
+          400
+        ],
+        [
+          828,
+          400
+        ]
+      ],
+      "label": {
+        "text": "Cuenta citas",
+        "x": 732,
+        "y": 380,
+        "w": 68,
+        "h": 14
+      }
+    },
+    {
+      "from": "payment_webhook",
+      "to": "appointment_state",
+      "points": [
+        [
+          1112,
+          200
+        ],
+        [
+          1050,
+          200
+        ],
+        [
+          1050,
+          270
+        ],
+        [
+          988,
+          270
+        ]
+      ],
+      "label": {
+        "text": "Confirma",
+        "x": 1026,
+        "y": 215,
+        "w": 48,
+        "h": 14
+      }
+    },
+    {
+      "from": "payment_webhook",
+      "to": "idempotency",
+      "points": [
+        [
+          1192,
+          230
+        ],
+        [
+          1192,
+          310
+        ]
+      ],
+      "label": {
+        "text": "Verifica",
+        "x": 1138,
+        "y": 263,
+        "w": 48,
+        "h": 14
+      }
+    }
+  ]
+}
