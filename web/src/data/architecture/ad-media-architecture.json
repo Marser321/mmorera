@@ -1,0 +1,305 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "AD Media Solution · Arquitectura de CRM y Marca Blanca",
+    "output": "ad-media-architecture.html",
+    "visual_preset": "editorial",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "speed-to-lead",
+        "label": "Captación y Speed-to-Lead",
+        "focus": [
+          "traffic",
+          "landing_ui",
+          "diagnosis_ui",
+          "speed_to_lead",
+          "qualification_bot",
+          "ghl_contacts"
+        ],
+        "note": "Tráfico de anuncios filtrado por diagnóstico web; disparo instantáneo de Speed-to-Lead antes de 30 segundos."
+      },
+      {
+        "id": "pipeline-sales",
+        "label": "Pipeline de Ventas y Cierre",
+        "focus": [
+          "qualification_bot",
+          "ghl_pipeline",
+          "ghl_contacts",
+          "ghl_booking",
+          "stripe_billing"
+        ],
+        "note": "Oportunidades avanzan por el tablero Kanban; la agenda sincronizada conduce al cierre y cobro recurrente."
+      },
+      {
+        "id": "whitelabel-ops",
+        "label": "Marca Blanca y Reputación",
+        "focus": [
+          "whitelabel_ui",
+          "ghl_contacts",
+          "reputation_engine",
+          "client_reporting"
+        ],
+        "note": "El cliente opera bajo su propio dominio y logo; el motor de reseñas solicita estrellas en Google Maps tras el servicio."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "traffic",
+      "type": "external",
+      "label": "Tráfico y Ads",
+      "sublabel": "Meta, Google, SEO",
+      "pos": [
+        20,
+        240
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "landing_ui",
+      "type": "frontend",
+      "label": "Funnel de agencia",
+      "sublabel": "Next.js · Tailwind",
+      "pos": [
+        260,
+        110
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "diagnosis_ui",
+      "type": "frontend",
+      "label": "Scanner diagnóstico",
+      "sublabel": "Auditoría en vivo",
+      "pos": [
+        260,
+        240
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "whitelabel_ui",
+      "type": "frontend",
+      "label": "Portal cliente",
+      "sublabel": "Marca blanca 100%",
+      "pos": [
+        260,
+        370
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "speed_to_lead",
+      "type": "backend",
+      "label": "Speed-to-Lead",
+      "sublabel": "Disparador <30s",
+      "pos": [
+        544,
+        110
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "qualification_bot",
+      "type": "backend",
+      "label": "Filtro calificador",
+      "sublabel": "Scoring de prospectos",
+      "pos": [
+        544,
+        240
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "reputation_engine",
+      "type": "backend",
+      "label": "Motor reputación",
+      "sublabel": "Google Reviews auto",
+      "pos": [
+        544,
+        370
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "ghl_pipeline",
+      "type": "cloud",
+      "label": "Pipeline Kanban",
+      "sublabel": "5 etapas de venta",
+      "pos": [
+        828,
+        110
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "ghl_contacts",
+      "type": "database",
+      "label": "Smart CRM",
+      "sublabel": "HighLevel unificado",
+      "pos": [
+        828,
+        240
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "ghl_booking",
+      "type": "cloud",
+      "label": "Agenda inteligente",
+      "sublabel": "Llamadas de cierre",
+      "pos": [
+        828,
+        370
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "stripe_billing",
+      "type": "security",
+      "label": "Cobros y planes",
+      "sublabel": "Stripe recurrente",
+      "pos": [
+        1112,
+        170
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "client_reporting",
+      "type": "security",
+      "label": "Panel de métricas",
+      "sublabel": "Reportes en vivo",
+      "pos": [
+        1112,
+        310
+      ],
+      "size": [
+        160,
+        60
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Funnels y Portales",
+      "wraps": [
+        "landing_ui",
+        "diagnosis_ui",
+        "whitelabel_ui"
+      ],
+      "pad": 20
+    },
+    {
+      "kind": "region",
+      "label": "Motor de Automatización",
+      "wraps": [
+        "speed_to_lead",
+        "qualification_bot",
+        "reputation_engine"
+      ],
+      "pad": 20
+    },
+    {
+      "kind": "region",
+      "label": "GoHighLevel CRM Core",
+      "wraps": [
+        "ghl_pipeline",
+        "ghl_contacts",
+        "ghl_booking"
+      ],
+      "pad": 20
+    },
+    {
+      "kind": "security-group",
+      "label": "Monetización y Entrega",
+      "wraps": [
+        "stripe_billing",
+        "client_reporting"
+      ],
+      "pad": 20
+    }
+  ],
+  "connections": [
+    {
+      "from": "traffic",
+      "to": "landing_ui"
+    },
+    {
+      "from": "traffic",
+      "to": "diagnosis_ui"
+    },
+    {
+      "from": "landing_ui",
+      "to": "speed_to_lead"
+    },
+    {
+      "from": "diagnosis_ui",
+      "to": "qualification_bot"
+    },
+    {
+      "from": "speed_to_lead",
+      "to": "ghl_contacts"
+    },
+    {
+      "from": "qualification_bot",
+      "to": "ghl_pipeline"
+    },
+    {
+      "from": "ghl_pipeline",
+      "to": "ghl_booking"
+    },
+    {
+      "from": "ghl_booking",
+      "to": "stripe_billing"
+    },
+    {
+      "from": "stripe_billing",
+      "to": "whitelabel_ui"
+    },
+    {
+      "from": "ghl_contacts",
+      "to": "reputation_engine"
+    },
+    {
+      "from": "reputation_engine",
+      "to": "client_reporting"
+    }
+  ]
+}

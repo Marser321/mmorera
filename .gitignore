@@ -18,3 +18,10 @@ MMorera-Scrollytelling/
 # Cachés de build (nunca versionar)
 web - copia/
 .next/
+output/
+tmp/
+tmp-reel/
+public/_showreel/
+LyB Elite Wash Details/
+content-os/
+.vscode/

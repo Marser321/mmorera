@@ -1,0 +1,74 @@
+{
+  "title": "AD Media Solution · Revenue CRM & White-Label Architecture",
+  "components": {
+    "traffic": {
+      "label": "Traffic & Ads",
+      "sublabel": "Meta, Google, SEO"
+    },
+    "landing_ui": {
+      "label": "Agency funnel",
+      "sublabel": "Next.js · Tailwind"
+    },
+    "diagnosis_ui": {
+      "label": "Diagnostic scanner",
+      "sublabel": "Live audit tool"
+    },
+    "whitelabel_ui": {
+      "label": "Client portal",
+      "sublabel": "100% white-label"
+    },
+    "speed_to_lead": {
+      "label": "Speed-to-Lead",
+      "sublabel": "<30s instant trigger"
+    },
+    "qualification_bot": {
+      "label": "Qualifier filter",
+      "sublabel": "Lead scoring rules"
+    },
+    "reputation_engine": {
+      "label": "Reputation engine",
+      "sublabel": "Auto Google Reviews"
+    },
+    "ghl_pipeline": {
+      "label": "Kanban pipeline",
+      "sublabel": "5 deal stages"
+    },
+    "ghl_contacts": {
+      "label": "Smart CRM",
+      "sublabel": "Unified HighLevel"
+    },
+    "ghl_booking": {
+      "label": "Smart scheduling",
+      "sublabel": "Closing call slots"
+    },
+    "stripe_billing": {
+      "label": "Billing & plans",
+      "sublabel": "Recurring Stripe"
+    },
+    "client_reporting": {
+      "label": "Metrics dashboard",
+      "sublabel": "Live reporting"
+    }
+  },
+  "boundaries": {
+    "Funnels y Portales": "Funnels & Portals",
+    "Motor de Automatización": "Automation Engine",
+    "GoHighLevel CRM Core": "GoHighLevel CRM Core",
+    "Monetización y Entrega": "Monetization & Delivery"
+  },
+  "connections": {},
+  "views": {
+    "speed-to-lead": {
+      "label": "Acquisition and Speed-to-Lead",
+      "note": "Paid ad traffic filtered by web diagnosis; instant Speed-to-Lead trigger in under 30 seconds."
+    },
+    "pipeline-sales": {
+      "label": "Sales Pipeline & Closing",
+      "note": "Deals advance across the Kanban board; synchronized calendar drives calls to closing and recurring billing."
+    },
+    "whitelabel-ops": {
+      "label": "White-Label Ops & Reputation",
+      "note": "Clients operate on their own branded domain; automated review engine requests Google Maps ratings after delivery."
+    }
+  }
+}

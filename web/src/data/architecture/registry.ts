@@ -6,6 +6,7 @@ import type { ArchitectureBundle } from "./bundle";
  * viajan en el HTML inicial.
  */
 export const ARCHITECTURE_LOADERS: Record<string, () => Promise<ArchitectureBundle>> = {
+  "ad-media-solution": () => import("./bundles/ad-media-solution").then((module) => module.bundle),
   "fenix-medical-center": () => import("./bundles/fenix-medical-center").then((module) => module.bundle),
   "lb-elite-wash-detail": () => import("./bundles/lb-elite-wash-detail").then((module) => module.bundle),
   "new-brothers-barberia": () => import("./bundles/new-brothers-barberia").then((module) => module.bundle),

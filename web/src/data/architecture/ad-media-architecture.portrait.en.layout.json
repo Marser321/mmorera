@@ -1,0 +1,368 @@
+{
+  "source": "ad-media-architecture.portrait.json (en)",
+  "generatedBy": "archify validate architecture --layout-json --quality showcase",
+  "viewBox": [
+    854,
+    808
+  ],
+  "components": [
+    {
+      "id": "traffic",
+      "x": 370,
+      "y": 20,
+      "w": 160,
+      "h": 60
+    },
+    {
+      "id": "landing_ui",
+      "x": 110,
+      "y": 150,
+      "w": 160,
+      "h": 60
+    },
+    {
+      "id": "diagnosis_ui",
+      "x": 370,
+      "y": 150,
+      "w": 160,
+      "h": 60
+    },
+    {
+      "id": "whitelabel_ui",
+      "x": 630,
+      "y": 150,
+      "w": 160,
+      "h": 60
+    },
+    {
+      "id": "speed_to_lead",
+      "x": 110,
+      "y": 320,
+      "w": 160,
+      "h": 60
+    },
+    {
+      "id": "qualification_bot",
+      "x": 370,
+      "y": 320,
+      "w": 160,
+      "h": 60
+    },
+    {
+      "id": "reputation_engine",
+      "x": 630,
+      "y": 320,
+      "w": 160,
+      "h": 60
+    },
+    {
+      "id": "ghl_pipeline",
+      "x": 110,
+      "y": 490,
+      "w": 160,
+      "h": 60
+    },
+    {
+      "id": "ghl_contacts",
+      "x": 370,
+      "y": 490,
+      "w": 160,
+      "h": 60
+    },
+    {
+      "id": "ghl_booking",
+      "x": 630,
+      "y": 490,
+      "w": 160,
+      "h": 60
+    },
+    {
+      "id": "stripe_billing",
+      "x": 370,
+      "y": 660,
+      "w": 160,
+      "h": 60
+    },
+    {
+      "id": "client_reporting",
+      "x": 630,
+      "y": 660,
+      "w": 160,
+      "h": 60
+    }
+  ],
+  "boundaries": [
+    {
+      "label": "Funnels & Portals",
+      "kind": "region",
+      "x": 90,
+      "y": 126,
+      "w": 720,
+      "h": 104
+    },
+    {
+      "label": "Automation Engine",
+      "kind": "region",
+      "x": 90,
+      "y": 296,
+      "w": 720,
+      "h": 104
+    },
+    {
+      "label": "GoHighLevel CRM Core",
+      "kind": "region",
+      "x": 90,
+      "y": 466,
+      "w": 720,
+      "h": 104
+    },
+    {
+      "label": "Monetization & Delivery",
+      "kind": "security-group",
+      "x": 350,
+      "y": 636,
+      "w": 460,
+      "h": 104
+    }
+  ],
+  "connections": [
+    {
+      "from": "traffic",
+      "to": "landing_ui",
+      "points": [
+        [
+          370,
+          50
+        ],
+        [
+          320,
+          50
+        ],
+        [
+          320,
+          180
+        ],
+        [
+          270,
+          180
+        ]
+      ]
+    },
+    {
+      "from": "traffic",
+      "to": "diagnosis_ui",
+      "points": [
+        [
+          450,
+          80
+        ],
+        [
+          450,
+          150
+        ]
+      ]
+    },
+    {
+      "from": "landing_ui",
+      "to": "speed_to_lead",
+      "points": [
+        [
+          190,
+          210
+        ],
+        [
+          190,
+          320
+        ]
+      ]
+    },
+    {
+      "from": "diagnosis_ui",
+      "to": "qualification_bot",
+      "points": [
+        [
+          450,
+          210
+        ],
+        [
+          450,
+          320
+        ]
+      ]
+    },
+    {
+      "from": "speed_to_lead",
+      "to": "ghl_contacts",
+      "points": [
+        [
+          270,
+          350
+        ],
+        [
+          320,
+          350
+        ],
+        [
+          320,
+          520
+        ],
+        [
+          370,
+          520
+        ]
+      ]
+    },
+    {
+      "from": "qualification_bot",
+      "to": "ghl_pipeline",
+      "points": [
+        [
+          450,
+          380
+        ],
+        [
+          450,
+          476
+        ],
+        [
+          294,
+          476
+        ],
+        [
+          294,
+          513
+        ],
+        [
+          270,
+          513
+        ]
+      ]
+    },
+    {
+      "from": "ghl_pipeline",
+      "to": "ghl_booking",
+      "points": [
+        [
+          270,
+          527
+        ],
+        [
+          358,
+          527
+        ],
+        [
+          358,
+          553
+        ],
+        [
+          606,
+          553
+        ],
+        [
+          606,
+          513
+        ],
+        [
+          630,
+          513
+        ]
+      ]
+    },
+    {
+      "from": "ghl_booking",
+      "to": "stripe_billing",
+      "points": [
+        [
+          710,
+          550
+        ],
+        [
+          710,
+          574
+        ],
+        [
+          554,
+          574
+        ],
+        [
+          554,
+          690
+        ],
+        [
+          530,
+          690
+        ]
+      ]
+    },
+    {
+      "from": "stripe_billing",
+      "to": "whitelabel_ui",
+      "points": [
+        [
+          530,
+          676
+        ],
+        [
+          627,
+          676
+        ],
+        [
+          627,
+          234
+        ],
+        [
+          710,
+          234
+        ],
+        [
+          710,
+          210
+        ]
+      ]
+    },
+    {
+      "from": "ghl_contacts",
+      "to": "reputation_engine",
+      "points": [
+        [
+          530,
+          520
+        ],
+        [
+          580,
+          520
+        ],
+        [
+          580,
+          350
+        ],
+        [
+          630,
+          350
+        ]
+      ]
+    },
+    {
+      "from": "reputation_engine",
+      "to": "client_reporting",
+      "points": [
+        [
+          790,
+          350
+        ],
+        [
+          814,
+          350
+        ],
+        [
+          814,
+          690
+        ],
+        [
+          790,
+          690
+        ]
+      ]
+    }
+  ]
+}
