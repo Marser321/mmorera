@@ -436,6 +436,25 @@ test("el caso insignia de Fénix reproduce su film sin errores", async ({ page }
   expect(errors).toEqual([]);
 });
 
+test("el caso insignia de L&B Elite Wash reproduce su film sin errores", async ({ page }) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(String(error)));
+  page.on("console", (message) => {
+    if (message.type() === "error" && /remotion|MediaPlayback|player/i.test(message.text())) errors.push(message.text());
+  });
+  await page.goto("/casos-de-exito/lb-elite-wash-detail");
+  await expect(page.getByRole("heading", { level: 1, name: "L&B Elite Wash & Detail" })).toBeVisible();
+
+  const stage = page.locator('[data-film-stage="flagship"]');
+  await expect(stage).toHaveCount(1);
+  await stage.scrollIntoViewIfNeeded();
+  await expect(page.getByRole("button", { name: /Flota/ })).toBeVisible();
+
+  await page.getByRole("button", { name: /Cotizador/ }).click();
+  await page.waitForTimeout(3_000);
+  expect(errors).toEqual([]);
+});
+
 test("el perfil abre con la entrada del monograma", async ({ page }) => {
   await page.goto("/");
   const overture = page.locator('#perfil [data-film-stage="logo"]');
