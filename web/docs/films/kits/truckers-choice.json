@@ -1,0 +1,76 @@
+{
+  "slug": "truckers-choice",
+  "verifiedAt": "2026-10-07",
+  "liveUrl": "https://truckers-choice-web-site.vercel.app/",
+  "dossier": "truckers-choice.md",
+  "languages": ["en", "es"],
+  "brand": {
+    "palette": {
+      "bg": "#050810",
+      "surface": "#0F1626",
+      "raised": "#151E32",
+      "line": "#21242C",
+      "text": "#F2F5FA",
+      "muted": "#9CA3AF",
+      "accent": "#FFB020",
+      "accentSoft": "#FFC861",
+      "accentDeep": "#E89400",
+      "onAccent": "#050810"
+    },
+    "fonts": { "display": "Manrope", "body": "Inter" },
+    "logo": {
+      "mark": "/portfolio/brands/truckers-choice/mark.png",
+      "wordmark": "/portfolio/brands/truckers-choice/wordmark.png",
+      "particleMode": "alpha"
+    },
+    "source": "CSS servido (_next/static/css/bca9f2d9d4c0f233.css): clases compiladas bg #050810, superficie #0F1626, ámbar #FFB020; --primitive-amber 38 100% 56%; --font-display Manrope, --font-body Inter. Logo: /images/logo-white.png separado en dibujo y texto."
+  },
+  "facts": [
+    { "key": "filings", "value": 30, "label": { "es": "Trámites confirmados en el catálogo", "en": "Confirmed filings in the catalog" }, "source": "/en/services: 4 + 5 + 6 + 6 + 4 + 5 \"confirmed filings\" (texto de cada línea)" },
+    { "key": "lines", "value": 6, "label": { "es": "Líneas de servicio conectadas", "en": "Connected service lines" }, "source": "/en/services: 6 tarjetas de servicio" },
+    { "key": "steps", "value": 4, "label": { "es": "Pasos en la hoja de ruta", "en": "Steps on the roadmap" }, "source": "Home, sección \"Our roadmap\": 4 pasos" },
+    { "key": "packages", "value": 3, "label": { "es": "Paquetes que cotizan con su plan", "en": "Packages that quote with their plan" }, "source": "Home, sección de paquetes: 3 tarjetas con \"Quote this plan\"" },
+    { "key": "offices", "value": 3, "label": { "es": "Oficinas: Medley, Jersey City y Elizabeth", "en": "Offices: Medley, Jersey City and Elizabeth" }, "source": "Home, sección \"Three offices\" y /locations" },
+    { "key": "languages", "value": 2, "label": { "es": "Idiomas con rutas espejo: /en y /es", "en": "Languages with mirrored routes: /en and /es" }, "source": "/en y /es con los mismos segmentos (p. ej. /es/services/truck-insurance)" }
+  ],
+  "media": [
+    { "id": "hero", "src": "/portfolio/brands/truckers-choice/hero-loop.mp4", "webm": "/portfolio/brands/truckers-choice/hero-loop.webm", "poster": "/portfolio/brands/truckers-choice/hero-loop-poster.jpg", "w": 1280, "h": 720, "seconds": 6, "note": "Clip del hero del sitio (/media/hero-loop.mp4), recodificado" },
+    { "id": "storm", "src": "/portfolio/brands/truckers-choice/story-night-risk.mp4", "webm": "/portfolio/brands/truckers-choice/story-night-risk.webm", "poster": "/portfolio/brands/truckers-choice/story-night-risk-poster.jpg", "w": 1280, "h": 720, "seconds": 6, "note": "Capítulo 1 del relato (/media/story-night-risk.mp4)" },
+    { "id": "paperwork", "src": "/portfolio/brands/truckers-choice/story-cab-paperwork.jpg", "w": 1122, "h": 631, "note": "Capítulo 2: recorte 16:9 de /images/story-cab-paperwork.webp" },
+    { "id": "network", "src": "/portfolio/brands/truckers-choice/story-network.mp4", "webm": "/portfolio/brands/truckers-choice/story-network.webm", "poster": "/portfolio/brands/truckers-choice/story-network-poster.jpg", "w": 1280, "h": 720, "seconds": 6, "note": "Capítulo 3 del relato (/media/story-network.mp4)" },
+    { "id": "sunrise", "src": "/portfolio/brands/truckers-choice/story-sunrise.mp4", "webm": "/portfolio/brands/truckers-choice/story-sunrise.webm", "poster": "/portfolio/brands/truckers-choice/story-sunrise-poster.jpg", "w": 1280, "h": 720, "seconds": 6, "note": "Capítulo 4 del relato (/media/story-sunrise.mp4)" }
+  ],
+  "captures": [
+    { "id": "en-hero", "src": "/portfolio/brands/truckers-choice/shots/en-hero.jpg", "w": 1920, "h": 1200, "url": "https://truckers-choice-web-site.vercel.app/en", "language": "en", "what": "Hero en inglés (sección 0)" },
+    { "id": "es-hero", "src": "/portfolio/brands/truckers-choice/shots/es-hero.jpg", "w": 1920, "h": 1200, "url": "https://truckers-choice-web-site.vercel.app/es", "language": "es", "what": "Hero en español, mismo encuadre" },
+    { "id": "en-roof", "src": "/portfolio/brands/truckers-choice/shots/en-roof.jpg", "w": 1920, "h": 1200, "url": "https://truckers-choice-web-site.vercel.app/en", "language": "en", "what": "\"Everything under one roof\" (sección 2)" },
+    { "id": "es-roof", "src": "/portfolio/brands/truckers-choice/shots/es-roof.jpg", "w": 1920, "h": 1200, "url": "https://truckers-choice-web-site.vercel.app/es", "language": "es", "what": "\"Todo bajo un mismo techo\", mismo encuadre" },
+    { "id": "en-offices", "src": "/portfolio/brands/truckers-choice/shots/en-offices.jpg", "w": 1920, "h": 1200, "url": "https://truckers-choice-web-site.vercel.app/en", "language": "en", "what": "\"Three offices. One bilingual standard.\" (sección 7)" },
+    { "id": "es-offices", "src": "/portfolio/brands/truckers-choice/shots/es-offices.jpg", "w": 1920, "h": 1200, "url": "https://truckers-choice-web-site.vercel.app/es", "language": "es", "what": "\"Tres oficinas. El mismo equipo bilingüe.\"" },
+    { "id": "es-quote-0", "src": "/portfolio/brands/truckers-choice/shots/es-quote-0.jpg", "w": 1920, "h": 1080, "url": "https://truckers-choice-web-site.vercel.app/es", "language": "es", "what": "Paquetes", "highlights": [{ "label": { "es": "Paquete · Prepárate para Operar", "en": "Package · Prepare to Operate" }, "rect": [0.49, 0.455, 0.49, 0.43] }] },
+    { "id": "es-quote-1", "src": "/portfolio/brands/truckers-choice/shots/es-quote-1.jpg", "w": 1920, "h": 1080, "url": "https://truckers-choice-web-site.vercel.app/es/contact?package=prepare-to-operate", "language": "es", "what": "Cotización, paso 1", "highlights": [{ "label": { "es": "Paso 1 · Seguro de Camiones", "en": "Step 1 · Truck Insurance" }, "rect": [0.09, 0.535, 0.3, 0.11] }] },
+    { "id": "es-quote-2", "src": "/portfolio/brands/truckers-choice/shots/es-quote-2.jpg", "w": 1920, "h": 1080, "url": "https://truckers-choice-web-site.vercel.app/es/contact?package=prepare-to-operate", "language": "es", "what": "Cotización, paso 2 con datos de ejemplo", "highlights": [{ "label": { "es": "Paso 2 · la operación (ejemplo)", "en": "Step 2 · the operation (sample)" }, "rect": [0.09, 0.35, 0.585, 0.29] }] },
+    { "id": "es-quote-3", "src": "/portfolio/brands/truckers-choice/shots/es-quote-3.jpg", "w": 1920, "h": 1080, "url": "https://truckers-choice-web-site.vercel.app/es/contact?package=prepare-to-operate", "language": "es", "what": "Cotización, paso 3 vacío (modo vista previa)", "highlights": [{ "label": { "es": "Paso 3 · modo vista previa: no envía nada", "en": "Step 3 · preview mode: nothing is sent" }, "rect": [0.09, 0.6, 0.58, 0.105] }] }
+  ],
+  "captureTarget": "tc-site",
+  "architecture": { "bundle": null, "reason": "Sitio informativo con formulario en vista previa: no hay backend ni integraciones verificables que diagramar." },
+  "protagonist": {
+    "kind": "bilingual-split",
+    "idea": "La misma página en /en y /es partida por una cortina que la recorre; la barra cambia de ruta y se encienden las rutas espejo.",
+    "uses": ["en-hero", "es-hero", "en-roof", "es-roof", "en-offices", "es-offices"]
+  },
+  "storyboard": [
+    { "scene": "opening", "kind": "particle-open", "seconds": 8, "uses": ["hero"], "copy": { "es": "Seguros + permisos. Todo en un solo lugar.", "en": "Insurance + permits. One roof." } },
+    { "scene": "night", "kind": "manifesto", "seconds": 13, "uses": ["storm", "paperwork", "network", "sunrise"], "copy": { "es": "Una noche en la ruta, en cuatro capítulos.", "en": "One night on the road, in four chapters." } },
+    { "scene": "bilingual", "kind": "bilingual-split", "seconds": 20, "uses": ["en-hero", "es-hero", "en-roof", "es-roof", "en-offices", "es-offices"], "copy": { "es": "El mismo sitio, en inglés y en español.", "en": "The same site, in English and Spanish." } },
+    { "scene": "roof", "kind": "one-roof", "seconds": 12, "uses": [], "copy": { "es": "Seis líneas, treinta trámites, cuatro pasos.", "en": "Six lines, thirty filings, four steps." } },
+    { "scene": "quote", "kind": "camera-reel", "seconds": 10, "uses": ["es-quote-0", "es-quote-1", "es-quote-2", "es-quote-3"], "copy": { "es": "Del plan al formulario, en tres pasos.", "en": "From the plan to the form, in three steps." } },
+    { "scene": "engineering", "kind": "fact-wall", "seconds": 8, "uses": [], "copy": { "es": "Un catálogo ordenado, en dos idiomas.", "en": "An organized catalog, in two languages." } },
+    { "scene": "signature", "kind": "signature", "seconds": 4.5, "uses": [], "copy": { "es": "Firma", "en": "Signature" } }
+  ],
+  "doNotClaim": [
+    "Que el formulario envía solicitudes o crea contactos: está en modo vista previa.",
+    "Integraciones (CRM, email) que no se ven en el código servido.",
+    "Años en el rubro, clientes, tiempos de respuesta o ahorros."
+  ]
+}

@@ -15,26 +15,22 @@
  * Después de recapturar, actualizar las medidas en LB_ASSETS / AD_ASSETS (el
  * test de cada film las compara con los archivos).
  *
+ * Los casos nuevos suman su objetivo en scripts/capture-targets/<slug>.ts
+ * (ver scripts/lib/capture.ts); se cargan solos.
+ *
  * Uso:
  *   npx tsx scripts/capture-film-flows.ts            (todas)
  *   npx tsx scripts/capture-film-flows.ts lb-crew    (una)
  */
-import { mkdirSync, readFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
-import { chromium, type Browser, type BrowserContext, type Page } from "playwright";
+import { pathToFileURL } from "node:url";
+import { chromium, type Browser, type Page } from "playwright";
+import { HIDE_FIXED, HIDE_FLOATING, JPEG, PUBLIC_BRANDS as PUBLIC, readOnly, type CaptureTarget } from "./lib/capture";
 
-const PUBLIC = path.join(process.cwd(), "public/portfolio/brands");
 const LB_SITE = path.join(process.cwd(), "../LyB Elite Wash Details/site");
-const JPEG = { type: "jpeg", quality: 86 } as const;
 
-/** Burbujas de chat fijas: tapan la captura y no son parte del flujo. */
-const HIDE_FLOATING = "a[href*='wa.me'], a[href*='whatsapp'], .whatsapp-float, .wa-float { display: none !important; }";
 
-/** Oculta lo que tiene posición fija o sticky (header, burbujas): en una captura recortada aparecería donde quedó el viewport. */
-const HIDE_FIXED = `for (const element of document.querySelectorAll("body *")) {
-  const position = getComputedStyle(element).position;
-  if (position === "fixed" || position === "sticky") element.style.setProperty("display", "none", "important");
-}`;
 
 /** Paradas de ejemplo para la cuadrilla (precios del catálogo real: Basic Wash $55, Basic Wash Premium $85, Premium Detail $185; depósito estándar $30). */
 function crewDay(firstStatus: string) {
@@ -124,18 +120,6 @@ async function adSite(browser: Browser) {
   return [out];
 }
 
-/**
- * Solo lectura sobre un sitio en producción: ninguna petición que escriba
- * (POST, PUT…) ni llamada a CRM, pagos o funciones sale del navegador, así un
- * recorrido con datos de ejemplo no crea contactos ni cobra nada.
- */
-async function readOnly(context: BrowserContext) {
-  await context.route("**/*", (route) => {
-    const request = route.request();
-    if (request.method() !== "GET" || /leadconnector|msgsndr|gohighlevel|functions\/v1|stripe|zapier|make\.com/i.test(request.url())) return route.abort();
-    return route.continue();
-  });
-}
 
 /**
  * Reserva EN VIVO de Mr. Studio Tattoo (versión publicada), con datos de
@@ -269,16 +253,29 @@ async function tcSite(browser: Browser) {
 
 const TARGETS: Record<string, (browser: Browser) => Promise<string[]>> = { "lb-quoter": lbQuoter, "lb-crew": lbCrew, "ad-site": adSite, "mr-live-booking": mrLiveBooking, "tc-site": tcSite };
 
+/** Objetivos de cada caso en su propio archivo (scripts/capture-targets/*.ts). */
+async function kitTargets() {
+  const dir = path.join(process.cwd(), "scripts/capture-targets");
+  const targets: Record<string, (browser: Browser) => Promise<string[]>> = {};
+  if (!existsSync(dir)) return targets;
+  for (const file of readdirSync(dir).filter((name) => name.endsWith(".ts"))) {
+    const loaded = (await import(pathToFileURL(path.join(dir, file)).href)) as { target?: CaptureTarget };
+    if (loaded.target) targets[loaded.target.name] = loaded.target.capture;
+  }
+  return targets;
+}
+
 async function main() {
   const only = process.argv[2];
-  if (only && !TARGETS[only]) throw new Error(`Captura desconocida: ${only} (${Object.keys(TARGETS).join(", ")})`);
+  const all = { ...TARGETS, ...(await kitTargets()) };
+  if (only && !all[only]) throw new Error(`Captura desconocida: ${only} (${Object.keys(all).join(", ")})`);
   mkdirSync(path.join(PUBLIC, "lb-elite-wash-detail/shots"), { recursive: true });
   mkdirSync(path.join(PUBLIC, "ad-media-solution/shots"), { recursive: true });
   mkdirSync(path.join(PUBLIC, "mr-studio-tattoo/shots"), { recursive: true });
   mkdirSync(path.join(PUBLIC, "truckers-choice/shots"), { recursive: true });
   const browser = await chromium.launch();
   try {
-    for (const [name, capture] of Object.entries(TARGETS)) {
+    for (const [name, capture] of Object.entries(all)) {
       if (only && name !== only) continue;
       const files = await capture(browser);
       for (const file of files) console.log(`${name}: ${path.relative(process.cwd(), file)}`);

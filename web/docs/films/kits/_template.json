@@ -1,0 +1,46 @@
+{
+  "slug": "<slug del caso en projectCases.ts>",
+  "verifiedAt": "AAAA-MM-DD",
+  "liveUrl": "https://<sitio publicado>/",
+  "dossier": "<slug>.md",
+  "languages": ["es"],
+  "brand": {
+    "palette": {
+      "bg": "#000000",
+      "surface": "#000000",
+      "raised": "#000000",
+      "line": "#000000",
+      "text": "#FFFFFF",
+      "muted": "#999999",
+      "accent": "#000000",
+      "accentSoft": "#000000",
+      "accentDeep": "#000000",
+      "onAccent": "#FFFFFF"
+    },
+    "fonts": { "display": "<familia de títulos>", "body": "<familia de texto>" },
+    "logo": {
+      "mark": "/portfolio/brands/<slug>/mark.png",
+      "wordmark": "/portfolio/brands/<slug>/wordmark.png",
+      "particleMode": "alpha"
+    },
+    "source": "<de qué CSS o archivo sale cada color y cada fuente>"
+  },
+  "facts": [
+    { "key": "<clave>", "value": 0, "label": { "es": "<rótulo>", "en": "<label>" }, "source": "<URL y cómo se contó>" }
+  ],
+  "media": [
+    { "id": "hero", "src": "/portfolio/brands/<slug>/hero.mp4", "webm": "/portfolio/brands/<slug>/hero.webm", "poster": "/portfolio/brands/<slug>/hero-poster.jpg", "w": 1280, "h": 720, "seconds": 6, "note": "<qué es y de dónde sale>" }
+  ],
+  "captures": [
+    { "id": "es-hero", "src": "/portfolio/brands/<slug>/shots/es-hero.jpg", "w": 1920, "h": 1200, "url": "https://<sitio publicado>/", "language": "es", "what": "<qué muestra>", "highlights": [{ "label": { "es": "<nota>", "en": "<note>" }, "rect": [0.1, 0.1, 0.3, 0.1] }] }
+  ],
+  "captureTarget": "<slug>-site",
+  "architecture": { "bundle": null, "reason": "<por qué no hay diagrama, o el nombre del diagrama en bundle>" },
+  "protagonist": { "kind": "<kind-nuevo>", "idea": "<qué muestra la escena protagonista>", "uses": ["es-hero"] },
+  "storyboard": [
+    { "scene": "opening", "kind": "particle-open", "seconds": 8, "uses": ["hero"], "copy": { "es": "<frase>", "en": "<line>" } },
+    { "scene": "<protagonista>", "kind": "<kind-nuevo>", "seconds": 20, "uses": ["es-hero"], "copy": { "es": "<frase>", "en": "<line>" } },
+    { "scene": "signature", "kind": "signature", "seconds": 4.5, "uses": [], "copy": { "es": "Firma", "en": "Signature" } }
+  ],
+  "doNotClaim": ["<lo que el film no puede afirmar>"]
+}
