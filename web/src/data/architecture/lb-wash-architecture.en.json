@@ -1,0 +1,85 @@
+{
+  "title": "L&B Elite Wash · Schedule and Database-less CRM",
+  "components": {
+    "users": {
+      "label": "Clients and fleet",
+      "sublabel": "Web and mobile fleet"
+    },
+    "quoter_ui": {
+      "label": "Web quoter",
+      "sublabel": "88 prods · 142 prices"
+    },
+    "crew_ui": {
+      "label": "Crew mobile app",
+      "sublabel": "/cuadrilla · mobile"
+    },
+    "member_ui": {
+      "label": "Member portal",
+      "sublabel": "/mi-membresia"
+    },
+    "van_router": {
+      "label": "Fleet router",
+      "sublabel": "4-van rotation"
+    },
+    "agenda_hold": {
+      "label": "15-min hold",
+      "sublabel": "Lazy expiration"
+    },
+    "membership_engine": {
+      "label": "Membership engine",
+      "sublabel": "Credits from visits"
+    },
+    "ghl_calendars": {
+      "label": "4 GHL calendars",
+      "sublabel": "Vans 1 to 4"
+    },
+    "appointment_state": {
+      "label": "appointmentStatus",
+      "sublabel": "new → confirmed → showed"
+    },
+    "ghl_contacts": {
+      "label": "Contacts & deals",
+      "sublabel": "HighLevel CRM"
+    },
+    "payment_webhook": {
+      "label": "Payment webhook",
+      "sublabel": "Secret HMAC signature"
+    },
+    "idempotency": {
+      "label": "Idempotency-Key",
+      "sublabel": "Receipt in appointment"
+    }
+  },
+  "boundaries": {
+    "Frontends y Webapps": "Frontends & Webapps",
+    "Motor Serverless": "Serverless Engine",
+    "HighLevel (Cero Postgres)": "HighLevel (Zero Postgres)",
+    "Seguridad y Pagos": "Security & Payments"
+  },
+  "connections": {
+    "users>quoter_ui": "Quotes",
+    "quoter_ui>van_router": "Availability",
+    "crew_ui>agenda_hold": "Reads stop",
+    "member_ui>membership_engine": "Check balance",
+    "van_router>ghl_calendars": "Assigns van",
+    "agenda_hold>appointment_state": "15m hold",
+    "ghl_calendars>appointment_state": "Slot check",
+    "membership_engine>ghl_contacts": "Counts visits",
+    "payment_webhook>appointment_state": "Confirms",
+    "payment_webhook>idempotency": "Verifies"
+  },
+  "views": {
+    "quote-booking": {
+      "label": "Quoting and booking",
+      "note": "Quotes by body type; the agenda sums durations and finds a free van for the whole visit. Verified webhook confirms it."
+    },
+    "crew-ops": {
+      "label": "Field crew ops",
+      "note": "At each home the crew marks stop outcome with one hand (attended, cash, noshow). Directly updates HighLevel without a DB."
+    },
+    "database-less": {
+      "label": "Zero Postgres (Database-less)",
+      "note": "Zero SQL databases: state lives in HighLevel calendars and contacts. Concurrency resolved by slot checks and van rotation."
+    }
+  }
+}

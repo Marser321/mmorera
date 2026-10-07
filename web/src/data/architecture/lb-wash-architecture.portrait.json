@@ -1,0 +1,327 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "L&B Elite Wash · Agenda y CRM sin base de datos",
+    "output": "lb-wash-architecture.portrait.html",
+    "visual_preset": "editorial",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "quote-booking",
+        "label": "Cotización y reserva",
+        "focus": [
+          "users",
+          "quoter_ui",
+          "van_router",
+          "ghl_calendars",
+          "agenda_hold",
+          "appointment_state",
+          "payment_webhook"
+        ],
+        "note": "Cotiza por carrocería; la agenda suma tiempos y busca camioneta para la visita. El webhook de pago confirma la cita."
+      },
+      {
+        "id": "crew-ops",
+        "label": "Operación de cuadrilla",
+        "focus": [
+          "users",
+          "crew_ui",
+          "agenda_hold",
+          "appointment_state",
+          "membership_engine",
+          "ghl_contacts"
+        ],
+        "note": "En cada casa la cuadrilla marca el desenlace con una mano (atendida, cobro, no estaba). Impacta directo en HighLevel."
+      },
+      {
+        "id": "database-less",
+        "label": "Cero Postgres (Database-less)",
+        "focus": [
+          "van_router",
+          "agenda_hold",
+          "ghl_calendars",
+          "appointment_state",
+          "ghl_contacts",
+          "payment_webhook",
+          "idempotency"
+        ],
+        "note": "Cero Postgres: el estado vive en los calendarios y contactos de HighLevel. La concurrencia se resuelve por rotación."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "users",
+      "type": "external",
+      "label": "Clientes y flota",
+      "sublabel": "Web y domicilio",
+      "pos": [
+        370,
+        20
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "quoter_ui",
+      "type": "frontend",
+      "label": "Cotizador web",
+      "sublabel": "88 prods · 142 precios",
+      "pos": [
+        110,
+        150
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "crew_ui",
+      "type": "frontend",
+      "label": "App de cuadrilla",
+      "sublabel": "/cuadrilla · móvil",
+      "pos": [
+        370,
+        150
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "member_ui",
+      "type": "frontend",
+      "label": "Portal miembro",
+      "sublabel": "/mi-membresia",
+      "pos": [
+        630,
+        150
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "van_router",
+      "type": "backend",
+      "label": "Ruteador de flota",
+      "sublabel": "Rotación 4 camionetas",
+      "pos": [
+        110,
+        320
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "agenda_hold",
+      "type": "backend",
+      "label": "Hold 15 minutos",
+      "sublabel": "Lazy expiration",
+      "pos": [
+        370,
+        320
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "membership_engine",
+      "type": "backend",
+      "label": "Motor membresías",
+      "sublabel": "Saldo por entregas",
+      "pos": [
+        630,
+        320
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "ghl_calendars",
+      "type": "cloud",
+      "label": "4 Calendarios GHL",
+      "sublabel": "Camionetas 1 a 4",
+      "pos": [
+        110,
+        490
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "appointment_state",
+      "type": "database",
+      "label": "appointmentStatus",
+      "sublabel": "new → confirmed → showed",
+      "pos": [
+        370,
+        490
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "ghl_contacts",
+      "type": "cloud",
+      "label": "Contactos y ventas",
+      "sublabel": "HighLevel CRM",
+      "pos": [
+        630,
+        490
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "payment_webhook",
+      "type": "security",
+      "label": "Webhook de pago",
+      "sublabel": "Firma HMAC secreta",
+      "pos": [
+        260,
+        660
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "idempotency",
+      "type": "security",
+      "label": "Idempotency-Key",
+      "sublabel": "Cita como recibo",
+      "pos": [
+        480,
+        660
+      ],
+      "size": [
+        160,
+        60
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Frontends y Webapps",
+      "wraps": [
+        "quoter_ui",
+        "crew_ui",
+        "member_ui"
+      ],
+      "pad": 20
+    },
+    {
+      "kind": "region",
+      "label": "Motor Serverless",
+      "wraps": [
+        "van_router",
+        "agenda_hold",
+        "membership_engine"
+      ],
+      "pad": 20
+    },
+    {
+      "kind": "region",
+      "label": "HighLevel (Cero Postgres)",
+      "wraps": [
+        "ghl_calendars",
+        "appointment_state",
+        "ghl_contacts"
+      ],
+      "pad": 20
+    },
+    {
+      "kind": "security-group",
+      "label": "Seguridad y Pagos",
+      "wraps": [
+        "payment_webhook",
+        "idempotency"
+      ],
+      "pad": 20
+    }
+  ],
+  "connections": [
+    {
+      "from": "users",
+      "to": "quoter_ui",
+      "label": "Cotiza"
+    },
+    {
+      "from": "users",
+      "to": "crew_ui"
+    },
+    {
+      "from": "quoter_ui",
+      "to": "van_router",
+      "label": "Disponibilidad",
+      "variant": "emphasis"
+    },
+    {
+      "from": "crew_ui",
+      "to": "agenda_hold",
+      "label": "Lee parada"
+    },
+    {
+      "from": "member_ui",
+      "to": "membership_engine",
+      "label": "Consulta saldo"
+    },
+    {
+      "from": "van_router",
+      "to": "ghl_calendars",
+      "label": "Asigna van"
+    },
+    {
+      "from": "van_router",
+      "to": "agenda_hold"
+    },
+    {
+      "from": "agenda_hold",
+      "to": "appointment_state",
+      "label": "Hold 15m",
+      "variant": "emphasis"
+    },
+    {
+      "from": "ghl_calendars",
+      "to": "appointment_state",
+      "label": "Valida slot"
+    },
+    {
+      "from": "membership_engine",
+      "to": "ghl_contacts",
+      "label": "Cuenta citas"
+    },
+    {
+      "from": "payment_webhook",
+      "to": "appointment_state",
+      "label": "Confirma",
+      "variant": "emphasis"
+    },
+    {
+      "from": "payment_webhook",
+      "to": "idempotency",
+      "label": "Verifica"
+    }
+  ]
+}
