@@ -244,7 +244,7 @@ export function ArchitectureExplorerMount({
         </div>
       </div>
 
-      <div role="tabpanel" id={panelId} aria-labelledby={`${idPrefix}-tab-${activeIndex}`}>
+      <div role="tabpanel" id={panelId} tabIndex={0} aria-labelledby={`${idPrefix}-tab-${activeIndex}`}>
         <div className={styles.canvas}>
           <div className={cn(styles.layer, styles.posterLayer)} hidden={ready}>
             {children}
@@ -278,6 +278,7 @@ export function ArchitectureExplorerMount({
                 key={selectedId}
                 model={model}
                 id={selectedId}
+                idPrefix={idPrefix}
                 language={language}
                 titleRef={inspectorTitleRef}
                 onSelect={(id) => select(id, { focusInspector: true })}
@@ -297,6 +298,7 @@ export function ArchitectureExplorerMount({
 function Inspector({
   model,
   id,
+  idPrefix,
   language,
   titleRef,
   onSelect,
@@ -305,6 +307,7 @@ function Inspector({
 }: {
   model: ArchitectureModel;
   id: string;
+  idPrefix: string;
   language: FilmLanguage;
   titleRef: RefObject<HTMLHeadingElement | null>;
   onSelect: (id: string) => void;
@@ -343,7 +346,7 @@ function Inspector({
   );
 
   return (
-    <section className={styles.inspector} data-uth-inspector="" aria-labelledby={`uth-inspector-${id}`} style={{ "--role": ROLE_COLOR[spec.role] } as CSSProperties}>
+    <section className={styles.inspector} data-uth-inspector="" aria-labelledby={`${idPrefix}-inspector-${id}`} style={{ "--role": ROLE_COLOR[spec.role] } as CSSProperties}>
       <div className={styles.inspectorHead}>
         <span className={styles.typeDot} aria-hidden="true" />
         <span className={styles.kicker} style={{ color: "var(--uth-muted)" }}>
@@ -351,7 +354,7 @@ function Inspector({
         </span>
         {component.tag ? <span className={styles.pill}>{component.tag}</span> : null}
       </div>
-      <h3 ref={titleRef} id={`uth-inspector-${id}`} tabIndex={-1} className={styles.inspectorTitle}>
+      <h3 ref={titleRef} id={`${idPrefix}-inspector-${id}`} tabIndex={-1} className={styles.inspectorTitle}>
         {component.label}
       </h3>
       {component.sublabel ? <p className={styles.inspectorSub}>{component.sublabel}</p> : null}

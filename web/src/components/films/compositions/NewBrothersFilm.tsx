@@ -74,7 +74,7 @@ export function NewBrothersFilm({ language }: NewBrothersFilmProps) {
             <ArchitectureScene
               diagram={architecture.diagram}
               layout={architecture.layout}
-              area={portrait ? { x: 20, y: 300, w: 1040, h: 760 } : { x: 70, y: 176, w: 1460, h: 536 }}
+              area={portrait ? { x: 72, y: 296, w: 936, h: 760 } : { x: 110, y: 176, w: 1380, h: 536 }}
               caption={portrait ? { x: 72, y: 1076, w: 936, size: 30 } : { x: 110, y: 728, w: 1380, size: 22 }}
               maxZoom={portrait ? 2.2 : 1.6}
               buildFrames={90}

@@ -12,6 +12,15 @@ import {
   type ArchifyLayout,
   type Box,
 } from "@/data/architecture/archify";
+import {
+  boundaryTitles,
+  cardTextSizes,
+  DANGER,
+  PLATE_FONT,
+  plateTextLength,
+  roleColors,
+  visibleTag,
+} from "@/data/architecture/diagramModel";
 import { CLAMP, EASE_IN_OUT, progress } from "../theme";
 import { alpha, useBrand } from "./context";
 
@@ -78,10 +87,20 @@ export function ArchitectureScene({
     return { scale: a.scale + (b.scale - a.scale) * t, x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
   })();
 
-  const roleColor = { danger: "#e5484d", accent: brand.palette.accent, accentSoft: brand.palette.accentSoft, muted: brand.palette.muted } as const;
+  const isCut = (box: Box, isFocus = false) => {
+    if (viewIndex < 0 || isFocus) return false;
+    const x1 = cam.x + box.x * cam.scale;
+    const y1 = cam.y + box.y * cam.scale;
+    const x2 = x1 + box.w * cam.scale;
+    const y2 = y1 + box.h * cam.scale;
+    return x1 < 6 || y1 < 6 || x2 > area.w - 6 || y2 > area.h - 6;
+  };
+
+  const roleColor = roleColors(brand.palette);
   const typeColor = (type: ArchifyComponentType) => roleColor[typeRole(type)];
   const order = [...diagram.components].sort((a, b) => a.pos[0] - b.pos[0]);
   const dimFor = (id: string) => (view && !focus.has(id) ? 0.22 : 1);
+  const titles = boundaryTitles(layout);
   const paths = layout.connections.map((connection, index) => {
     const source = diagram.connections.find((item) => item.from === connection.from && item.to === connection.to);
     return {
@@ -106,9 +125,21 @@ export function ArchitectureScene({
             const enter = progress(frame, 10, 40);
             const dim = focused && !focused.boundaries.has(source?.label ?? "") ? 0.3 : 1;
             return (
-              <div key={boundary.label} style={{ position: "absolute", left: boundary.x, top: boundary.y, width: boundary.w, height: boundary.h, boxSizing: "border-box", borderRadius: brand.radius, border: `1.5px ${security ? "dashed" : "solid"} ${security ? alpha("#e5484d", 60) : alpha(brand.palette.accent, 26)}`, background: alpha(brand.palette.surface, 55), opacity: enter * dim }}>
-                <span style={{ position: "absolute", left: 12, top: 5, fontFamily: brand.fonts.label, fontSize: 10, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", whiteSpace: "nowrap", color: security ? "#e5484d" : brand.palette.muted }}>{boundary.label}</span>
-              </div>
+              <div
+                key={boundary.label}
+                style={{
+                  position: "absolute",
+                  left: boundary.x,
+                  top: boundary.y,
+                  width: boundary.w,
+                  height: boundary.h,
+                  boxSizing: "border-box",
+                  borderRadius: brand.radius,
+                  border: `1.5px ${security ? "dashed" : "solid"} ${security ? alpha(DANGER.dark, 60) : alpha(brand.palette.accent, 26)}`,
+                  background: alpha(brand.palette.surface, 55),
+                  opacity: enter * dim,
+                }}
+              />
             );
           })}
 
@@ -137,9 +168,12 @@ export function ArchitectureScene({
               </g>
             ))}
             {/* Placas de etiqueta encima de rutas y pulsos: la línea pasa por detrás, nunca sobre el texto. */}
-            {paths.map((path) =>
-              path.label && path.draw > 0.9 ? (
-                <g key={`label-${path.from}-${path.to}`} opacity={path.inFocus ? 1 : 0.3}>
+            {paths.map((path) => {
+              if (!path.label || path.draw <= 0.9) return null;
+              const plateBox = { x: path.label.x, y: path.label.y, w: path.label.w, h: path.label.h };
+              const cut = isCut(plateBox, path.inFocus);
+              return (
+                <g key={`label-${path.from}-${path.to}`} opacity={cut ? 0 : path.inFocus ? 1 : 0.3}>
                   <rect x={path.label.x} y={path.label.y} width={path.label.w} height={path.label.h} rx={4} fill={brand.palette.bg} stroke={alpha(brand.palette.accent, 30)} strokeWidth={0.75} />
                   <text
                     x={path.label.x + path.label.w / 2}
@@ -147,26 +181,58 @@ export function ArchitectureScene({
                     textAnchor="middle"
                     dominantBaseline="central"
                     fontFamily={brand.fonts.body}
-                    fontSize={9}
+                    fontSize={PLATE_FONT}
                     fill={brand.palette.muted}
-                    textLength={path.label.text.length * 5.4 > path.label.w - 6 ? path.label.w - 6 : undefined}
+                    textLength={plateTextLength(path.label)}
                     lengthAdjust="spacingAndGlyphs"
                   >
                     {path.label.text}
                   </text>
                 </g>
-              ) : null,
-            )}
+              );
+            })}
           </svg>
+
+          {/* Rótulos de grupo según boundaryTitles, por encima de las rutas */}
+          {titles.map((title) => {
+            const enter = progress(frame, 10, 40);
+            const inFocus = focused ? focused.boundaries.has(title.label) : true;
+            const dim = focused && !inFocus ? 0.3 : 1;
+            const titleBox = { x: title.x, y: title.y, w: title.w, h: title.h };
+            const cut = isCut(titleBox, inFocus);
+            return (
+              <span
+                key={title.label}
+                style={{
+                  position: "absolute",
+                  left: title.x,
+                  top: title.y,
+                  width: title.w,
+                  height: title.h,
+                  fontFamily: brand.fonts.label,
+                  fontSize: title.fontSize,
+                  fontWeight: 600,
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  whiteSpace: "nowrap",
+                  color: title.security ? DANGER.dark : brand.palette.muted,
+                  opacity: cut ? 0 : enter * dim,
+                  pointerEvents: "none",
+                }}
+              >
+                {title.label}
+              </span>
+            );
+          })}
 
           {order.map((component, index) => {
             const box = boxOf.get(component.id) ?? componentBox(component);
             const enter = progress(frame, index * 3, index * 3 + 22);
             const color = typeColor(component.type);
-            const isFocus = view && focus.has(component.id);
-            // La etiqueta técnica se omite si su grupo ya la nombra (p. ej. "Next.js 16").
-            const wrapper = diagram.boundaries?.find((boundary) => boundary.wraps.includes(component.id));
-            const tag = component.tag && !wrapper?.label.toLowerCase().includes(component.tag.toLowerCase()) ? component.tag : null;
+            const isFocus = Boolean(view && focus.has(component.id));
+            const tag = visibleTag(diagram, component);
+            const { labelSize, subSize } = cardTextSizes(component, tag, box.w, brand.fonts);
+            const cut = isCut(box, isFocus);
             return (
               <div
                 key={component.id}
@@ -182,7 +248,7 @@ export function ArchitectureScene({
                   background: brand.palette.raised,
                   border: `1.5px solid ${isFocus ? color : alpha(color, 45)}`,
                   boxShadow: isFocus ? `0 0 0 4px ${alpha(color, 16)}` : "none",
-                  opacity: enter * dimFor(component.id),
+                  opacity: cut ? 0 : enter * dimFor(component.id),
                   scale: `${0.94 + enter * 0.06}`,
                   display: "flex",
                   flexDirection: "column",
@@ -190,10 +256,10 @@ export function ArchitectureScene({
                 }}
               >
                 <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                  <span style={{ flex: 1, minWidth: 0, fontFamily: brand.fonts.display, fontSize: 13, fontWeight: 600, color: brand.palette.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{component.label}</span>
+                  <span style={{ flex: 1, minWidth: 0, fontFamily: brand.fonts.display, fontSize: labelSize, fontWeight: 600, color: brand.palette.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{component.label}</span>
                   {tag ? <span style={{ flexShrink: 0, padding: "1px 6px", borderRadius: 99, background: color, color: brand.palette.onAccent, fontFamily: brand.fonts.label, fontSize: 8, fontWeight: 700 }}>{tag}</span> : null}
                 </div>
-                {component.sublabel ? <div style={{ marginTop: 3, fontFamily: brand.fonts.body, fontSize: 9.5, color: brand.palette.muted, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{component.sublabel}</div> : null}
+                {component.sublabel ? <div style={{ marginTop: 3, fontFamily: brand.fonts.body, fontSize: subSize, color: brand.palette.muted, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{component.sublabel}</div> : null}
               </div>
             );
           })}

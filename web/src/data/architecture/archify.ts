@@ -11,6 +11,8 @@
  *   para cada combinación de orientación e idioma.
  */
 
+import type { Box } from "@/lib/filmLayout";
+
 export type ArchifyComponentType = "external" | "frontend" | "backend" | "security" | "database" | "cloud" | string;
 export type ArchifySide = "left" | "right" | "top" | "bottom";
 
@@ -137,12 +139,8 @@ export function typeRole(type: ArchifyComponentType): "danger" | "accent" | "acc
   }
 }
 
-export interface Box {
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-}
+/** El mismo `Box` de la geometría de los films (una sola definición). */
+export type { Box };
 
 export function componentBox(component: ArchifyComponent): Box {
   return { x: component.pos[0], y: component.pos[1], w: component.size[0], h: component.size[1] };
