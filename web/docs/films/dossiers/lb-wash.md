@@ -119,3 +119,20 @@ Para que el film no se sienta como una plantilla de New Brothers o Fénix:
 5. **Beat 4 — La Cuadrilla en Campo y Cierre (62 a 75 s)**:
    - Simulación del panel táctil de la cuadrilla (`cuadrilla.html`): resolución de paradas en un toque (atendida / cobro / entrega).
    - Cierre con monograma de L&B y métricas verificadas de ingeniería.
+
+---
+
+## 8. Material del Film (verificado, 2026-10-07)
+
+- **Cotizador en 5 pasos** (`#quoter` del sitio en vivo `l-b-five.vercel.app`): Servicio → Paquete → Extras → Agenda → Reservar, con "Estimado en vivo".
+  - Paso 2 de la ruta Autos y SUVs, precios reales del catálogo: Basic Wash desde $55, Basic Wash Premium desde $85, Premium Detail desde $185, VIP Detail desde $285, Protección de Pintura desde $299.
+  - Captura: `public/portfolio/brands/lb-elite-wash-detail/shots/quoter-paquetes.jpg` (1200×2104: la columna de contenido de la sección, tema oscuro, sin el header fijo), con `scripts/capture-film-flows.ts lb-quoter`. Solo se eligen opciones: no se agenda ni se envía nada.
+- **Depósito**: fijo por reserva, no un porcentaje. `DEPOSIT_SMALL = 30` (autos, carritos, ATV, jet ski) y `DEPOSIT_LARGE = 50` (camiones, botes, casas móviles, entradas) en `api/_lib/catalog.js`.
+- **Hold**: `HOLD_TTL_MS = 15 * 60 * 1000` en `api/_lib/agenda.js`.
+- **Autos**: 60 min de servicio + 30 min de traslado por visita (2 autos = 2h30 en bloque).
+- **App de la cuadrilla**: `cuadrilla.html` real servida en local con `/api/crew` reemplazado por paradas de ejemplo (2 visitas de la camioneta 1).
+  - Capturas: `shots/cuadrilla-hoy.jpg` y `shots/cuadrilla-atendida.jpg` (780×1688, 390×844 a 2×).
+  - El film las rotula "Datos de ejemplo".
+  - `api/crew.js` acepta una lista cerrada de 5 acciones: `attended` → `showed`, `no_show` → `noshow`, `cancel` → `cancelled`, `cash` (factura pagada en efectivo) y `payment_link` (factura enviada por SMS y email).
+  - El enlace firmado vale solo para hoy y solo para esa camioneta; nada se borra.
+- **Isotipo** (`mark.png`): RGB sin canal alfa, sobre blanco. Las partículas lo leen por tinta oscura (`particleMode: "dark"`); por opacidad formaban un cuadrado.

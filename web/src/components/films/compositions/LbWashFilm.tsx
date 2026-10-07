@@ -1,30 +1,25 @@
-import { AbsoluteFill, Sequence, useCurrentFrame, interpolate } from "remotion";
+import { AbsoluteFill, Img, Sequence, useCurrentFrame } from "remotion";
 import { resolveArchitecture } from "@/data/architecture/bundle";
 import { bundle as lbArchitecture } from "@/data/architecture/bundles/lb-elite-wash-detail";
 import { brandCssVars, CASE_BRANDS } from "@/data/brands/caseBrands";
-import {
-  LB_CHAPTERS,
-  LB_COPY,
-  LB_TIMELINE,
-  LB_VEHICLE_TIERS,
-} from "@/data/films/flagships/lbWash";
+import { LB_ASSETS, LB_CHAPTERS, LB_COPY, LB_CREW_TAP, LB_HOST, LB_TIMELINE, type LbCrewActionId } from "@/data/films/flagships/lbWash";
 import type { FilmLanguage } from "@/data/films/filmTypes";
-import { safeArea, stackBands, type Box, type FilmFormatName } from "@/lib/filmLayout";
+import { stackBands, type Box, type FilmFormatName } from "@/lib/filmLayout";
 import { ArchitectureScene } from "../scenes/brand/ArchitectureScene";
 import { BrandTitle, Fade } from "../scenes/brand/camera";
+import { CinematicPlate } from "../scenes/brand/CinematicPlate";
 import { alpha, BrandProvider, useBrand } from "../scenes/brand/context";
+import { boxStyle, BoxText, SampleTag } from "../scenes/brand/dataKit";
 import { FactWall } from "../scenes/brand/FactWall";
+import { MANIFESTO_KICKER_TRACKING } from "../scenes/brand/layout/manifestoBeats";
+import { ManifestoBeats, RevealWords } from "../scenes/brand/ManifestoBeats";
 import { DustField, ParticleLogo } from "../scenes/brand/ParticleLogo";
+import { ScrollReel } from "../scenes/brand/ScrollReel";
 import { SignatureScene } from "../scenes/case/ClosingScenes";
-import { Letterbox } from "../scenes/case/shared";
+import { Letterbox, PhoneFrame } from "../scenes/case/shared";
 import { ChapterTicks } from "../scenes/primitives";
-import { progress, useFilmLayout } from "../scenes/theme";
-import {
-  lbCrewLayout,
-  lbFleetLayout,
-  lbOpeningLayout,
-  lbQuoterLayout,
-} from "./lbWashFilmLayout";
+import { EASE_IN_OUT, progress, useFilmLayout, windowed } from "../scenes/theme";
+import { LB_TITLE, lbBands, lbCrewLayout, lbHeroLayout, lbQuoterLayout, PHONE } from "./lbWashFilmLayout";
 
 export type LbWashFilmProps = {
   language: FilmLanguage;
@@ -32,123 +27,254 @@ export type LbWashFilmProps = {
 
 const brand = CASE_BRANDS["lb-elite-wash-detail"];
 
-function SceneTitle({
-  kicker,
-  title,
-  box,
-  portrait,
-  from = 6,
-}: {
-  kicker?: string;
-  title: string;
-  box: Box;
-  portrait: boolean;
-  from?: number;
-}) {
-  return (
-    <BrandTitle
-      kicker={kicker}
-      title={title}
-      from={from}
-      size={portrait ? 48 : 38}
-      style={{ left: box.x, top: box.y, width: box.w }}
-    />
-  );
-}
+/** Colores de estado de la app de la cuadrilla (site/cuadrilla.html: --ok, --cash, --link, --warn). */
+const CREW_COLORS: Record<LbCrewActionId, string> = { attended: "#16A34A", cash: "#2563EB", link: "#7C3AED", noshow: "#B45309" };
 
 /**
- * "Detailing móvil de alta gama": L&B Elite Wash & Detail con su propia estructura
- * (azul eléctrico, Outfit e Inter).
- * 4 camionetas patrullando el suroeste de Florida, la regla rectora de una visita
- * por casa, cotizador por carrocería contra 88 servicios, arquitectura sin base de datos
- * sobre HighLevel CRM, la app móvil de la cuadrilla, ingeniería y firma.
+ * "Detailing móvil que llega a ti": L&B Elite Wash & Detail con su propia
+ * estructura (azul eléctrico, Outfit e Inter). La camioneta real y el monograma
+ * en partículas con la regla de la operación, el cotizador real del sitio y el
+ * webhook que crea la cita en HighLevel, la arquitectura sin base de datos, la
+ * app real de la cuadrilla, las cifras verificadas y la firma.
+ *
+ * Cada escena recibe cajas calculadas (lbWashFilmLayout): el título vive en su
+ * banda, los medios en sus placas y los paneles en sus columnas.
  */
 export function LbWashFilm({ language }: LbWashFilmProps) {
   const { fps, portrait, width, height } = useFilmLayout();
   const format: FilmFormatName = portrait ? "portrait" : "landscape";
-  const safe = safeArea(format);
-  const bands = stackBands(safe, [{ id: "title", h: portrait ? 180 : 110 }, { id: "body", flex: 1 }], 24);
   const T = LB_TIMELINE;
-  const copy = LB_COPY[language];
 
   return (
     <BrandProvider brand={brand}>
-      <AbsoluteFill
-        style={{
-          ...brandCssVars(brand),
-          background: brand.palette.bg,
-          overflow: "hidden",
-          fontFamily: brand.fonts.body,
-          color: brand.palette.text,
-        }}
-      >
-        <DustField color={brand.palette.accentSoft} count={60} opacity={0.22} />
+      <AbsoluteFill style={{ ...brandCssVars(brand), background: brand.palette.bg, overflow: "hidden", fontFamily: brand.fonts.body, color: brand.palette.text }}>
+        <DustField color={brand.palette.accentSoft} count={44} opacity={0.16} />
 
-        {/* 1. Apertura e Identidad */}
-        <Sequence name="Apertura" from={T.opening.from} durationInFrames={T.opening.duration} premountFor={fps}>
-          <OpeningScene copy={copy} format={format} duration={T.opening.duration} />
+        <Sequence name="Flota y regla" from={T.opening.from} durationInFrames={T.opening.duration} premountFor={fps}>
+          <Hero language={language} format={format} duration={T.opening.duration} width={width} height={height} />
         </Sequence>
 
-        {/* 2. Regla Operativa: "Una visita, una camioneta" */}
-        <Sequence name="Regla operativa" from={T.fleetRule.from} durationInFrames={T.fleetRule.duration} premountFor={fps}>
-          <FleetRuleScene copy={copy} format={format} duration={T.fleetRule.duration} />
-        </Sequence>
-
-        {/* 3. Cotizador Dinámico por Carrocería */}
         <Sequence name="Cotizador" from={T.quoter.from} durationInFrames={T.quoter.duration} premountFor={fps}>
-          <VehicleQuoterScene copy={copy} format={format} language={language} duration={T.quoter.duration} />
+          <Quoter language={language} format={format} duration={T.quoter.duration} />
         </Sequence>
 
-        {/* 4. Arquitectura Database-less en Archify */}
         <Sequence name="Arquitectura" from={T.architecture.from} durationInFrames={T.architecture.duration} premountFor={fps}>
-          <ArchitectureSection language={language} bands={bands} portrait={portrait} duration={T.architecture.duration} />
+          <Architecture language={language} format={format} duration={T.architecture.duration} />
         </Sequence>
 
-        {/* 5. La Cuadrilla en Campo */}
         <Sequence name="Cuadrilla" from={T.crew.from} durationInFrames={T.crew.duration} premountFor={fps}>
-          <FieldCrewScene copy={copy} format={format} duration={T.crew.duration} />
+          <Crew language={language} format={format} duration={T.crew.duration} />
         </Sequence>
 
-        {/* 6. Muro de Ingeniería y Verificación */}
         <Sequence name="Ingeniería" from={T.engineering.from} durationInFrames={T.engineering.duration} premountFor={fps}>
-          <EngineeringSection language={language} bands={bands} portrait={portrait} duration={T.engineering.duration} />
+          <Engineering language={language} format={format} duration={T.engineering.duration} />
         </Sequence>
 
-        {/* 7. Firma y Monograma Final */}
         <Sequence name="Firma" from={T.signature.from} durationInFrames={T.signature.duration} premountFor={fps}>
           <SignatureScene portrait={portrait} width={width} height={height} duration={T.signature.duration} />
         </Sequence>
 
         <Letterbox portrait={portrait} />
-        <ChapterTicks
-          chapters={LB_CHAPTERS}
-          size={portrait ? 8 : 6}
-          style={{ left: portrait ? 72 : 120, right: portrait ? 72 : 120, bottom: 26, zIndex: 21 }}
-        />
+        <ChapterTicks chapters={LB_CHAPTERS} size={portrait ? 8 : 6} style={{ left: portrait ? 72 : 120, right: portrait ? 72 : 120, bottom: 26, zIndex: 21 }} />
       </AbsoluteFill>
     </BrandProvider>
   );
 }
 
-function ArchitectureSection({
-  language,
-  bands,
-  portrait,
-  duration,
-}: {
-  language: FilmLanguage;
-  bands: Record<string, Box>;
-  portrait: boolean;
-  duration: number;
-}) {
+type SceneProps = { language: FilmLanguage; format: FilmFormatName; duration: number };
+
+function SceneTitle({ kicker, title, box, format, from = 6 }: { kicker: string; title: string; box: Box; format: FilmFormatName; from?: number }) {
+  return <BrandTitle kicker={kicker} title={title} from={from} size={LB_TITLE[format].size} style={{ left: box.x, top: box.y, width: box.w }} />;
+}
+
+/** Placa de panel con la piel de la marca. */
+function PanelPlate({ box, glow = 0 }: { box: Box; glow?: number }) {
+  const b = useBrand();
+  return (
+    <div
+      style={{
+        ...boxStyle(box),
+        boxSizing: "border-box",
+        borderRadius: b.radius,
+        background: `linear-gradient(160deg, ${alpha(b.palette.raised, 92)}, ${alpha(b.palette.surface, 96)} 65%)`,
+        border: `1px solid ${glow > 0 ? alpha(b.palette.accent, 30 + glow * 40) : b.palette.line}`,
+        boxShadow: `0 40px 90px ${alpha("#000000", 45)}${glow > 0 ? `, 0 0 ${40 * glow}px ${alpha(b.palette.accent, 22 * glow)}` : ""}`,
+      }}
+    />
+  );
+}
+
+/** Tiempos de la apertura: el monograma se forma a oscuras, la camioneta se enciende y después la regla. */
+const HERO = { formFrom: 8, formTo: 104, dissolve: 150, lightFrom: 138, lightTo: 214, taglineFrom: 176, taglineOut: 292, beatsFrom: 300 } as const;
+
+/** 1 · La camioneta real a oscuras, el monograma en partículas, "llega a ti" y la regla de la operación. */
+function Hero({ language, format, duration, width, height }: SceneProps & { width: number; height: number }) {
+  const b = useBrand();
+  const frame = useCurrentFrame();
   const copy = LB_COPY[language];
-  const architecture = resolveArchitecture(lbArchitecture, language, portrait ? "portrait" : "landscape");
-  const parts = stackBands(bands.body, [{ id: "diagram", flex: 1 }, { id: "caption", h: portrait ? 170 : 92 }], portrait ? 20 : 14);
-  const build = 75;
-  const viewsCount = architecture.diagram.meta.views?.length || 3;
+  const portrait = format === "portrait";
+  const layout = lbHeroLayout(format, copy.heroTagline, copy.heroKicker);
+  const align = portrait ? "center" : "left";
+  // A oscuras mientras se forma el monograma; la luz sube cuando se disuelve.
+  const night = 0.92 - 0.6 * progress(frame, HERO.lightFrom, HERO.lightTo);
+  const taglineShow = windowed(frame, HERO.taglineFrom, HERO.taglineFrom + 18, HERO.taglineOut - 18, HERO.taglineOut);
+  const beats = duration - HERO.beatsFrom;
+  const slot = Math.floor(beats / copy.ruleBeats.length);
   return (
     <Fade duration={duration}>
-      <SceneTitle kicker="Arquitectura de CRM & Agenda" title={copy.archTitle} box={bands.title} portrait={portrait} />
+      <CinematicPlate box={layout.plateBox} asset={layout.asset} duration={duration} veilOpacity={0.5} push={0.05} align="top">
+        <div style={{ position: "absolute", inset: 0, background: b.palette.bg, opacity: night }} />
+      </CinematicPlate>
+      {/* Las partículas viven dentro de la placa: nunca invaden la banda del texto. */}
+      <div style={{ ...boxStyle(layout.plate), overflow: "hidden", borderRadius: b.radius * 0.6 }}>
+        <div style={{ position: "absolute", left: -layout.plate.x, top: -layout.plate.y, width, height }}>
+          <ParticleLogo
+            src={b.logo.mark}
+            mode={b.logo.particleMode}
+            colors={[b.palette.accentSoft, b.palette.accent, b.palette.accentDeep]}
+            size={layout.logoSize}
+            center={layout.logoCenter}
+            formFrom={HERO.formFrom}
+            formTo={HERO.formTo}
+            dissolveAt={HERO.dissolve}
+            count={2400}
+            restAlpha={0.95}
+          />
+        </div>
+      </div>
+      <div style={{ opacity: taglineShow }}>
+        <div
+          style={{
+            ...boxStyle(layout.kicker),
+            textAlign: align,
+            fontFamily: b.fonts.label,
+            fontSize: layout.kickerSize,
+            lineHeight: 1.2,
+            fontWeight: 600,
+            letterSpacing: `${MANIFESTO_KICKER_TRACKING}em`,
+            textTransform: "uppercase",
+            whiteSpace: "nowrap",
+            color: b.palette.accent,
+            opacity: progress(frame, HERO.taglineFrom, HERO.taglineFrom + 18),
+          }}
+        >
+          {copy.heroKicker}
+        </div>
+        <RevealWords
+          text={copy.heroTagline}
+          from={HERO.taglineFrom + 6}
+          size={layout.taglineSize}
+          box={layout.tagline}
+          align={align}
+          fontFamily={b.fonts.display}
+          weight={600}
+          color={b.palette.text}
+          emphasis={b.palette.accentSoft}
+        />
+      </div>
+      <Sequence name="La regla" from={HERO.beatsFrom} durationInFrames={beats}>
+        <ManifestoBeats
+          box={layout.text}
+          beats={copy.ruleBeats.map((beat, index) => ({ ...beat, from: index * slot, to: (index + 1) * slot }))}
+          duration={beats}
+          maxLines={portrait ? 3 : 2}
+          maxSize={portrait ? 72 : 60}
+          align={align}
+          uniformSize
+        />
+      </Sequence>
+    </Fade>
+  );
+}
+
+/** Tiempos del cotizador: la cita se arma línea por línea, nace en `new` y se confirma con el pago. */
+const QUOTER = { panel: 18, visit: 52, lineFrom: 84, lineEvery: 24, hold: 246, confirm: 340, route: 392, assign: 430 } as const;
+
+/** 2 · El cotizador real (5 pasos) y, al lado, la cita que su webhook crea en HighLevel. */
+function Quoter({ language, format, duration }: SceneProps) {
+  const b = useBrand();
+  const frame = useCurrentFrame();
+  const copy = LB_COPY[language];
+  const { title, reel, panel } = lbQuoterLayout(format, copy);
+  const enter = progress(frame, QUOTER.panel, QUOTER.panel + 24);
+  const holdIn = progress(frame, QUOTER.hold, QUOTER.hold + 16);
+  const confirmIn = progress(frame, QUOTER.confirm, QUOTER.confirm + 16);
+  // El hold corre (15 minutos que se consumen) hasta que llega el pago.
+  const holdLeft = 1 - 0.18 * progress(frame, QUOTER.hold, QUOTER.confirm, EASE_IN_OUT);
+  const stateColor = [CREW_COLORS.noshow, CREW_COLORS.attended];
+  return (
+    <Fade duration={duration}>
+      <SceneTitle kicker={copy.quoterKicker} title={copy.quoterTitle} box={title} format={format} />
+      <ScrollReel box={reel} asset={LB_ASSETS.quoter} host={LB_HOST} path="/#quoter" duration={duration} stops={[0, 0.34, 1]} />
+
+      <div style={{ position: "absolute", inset: 0, opacity: enter, translate: `0 ${(1 - enter) * 14}px` }}>
+        <PanelPlate box={panel.frame} glow={confirmIn * (1 - progress(frame, QUOTER.confirm + 40, QUOTER.confirm + 90))} />
+        <BoxText block={panel.kicker} style={{ fontFamily: b.fonts.label, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase", color: b.palette.accent }} />
+        <SampleTag block={panel.sample} opacity={progress(frame, QUOTER.panel + 12, QUOTER.panel + 30)} />
+        <BoxText block={panel.visit} style={{ fontFamily: b.fonts.display, fontWeight: 600, color: b.palette.text, opacity: progress(frame, QUOTER.visit, QUOTER.visit + 18) }} />
+        {panel.lines.map((line, index) => {
+          const show = progress(frame, QUOTER.lineFrom + index * QUOTER.lineEvery, QUOTER.lineFrom + index * QUOTER.lineEvery + 16);
+          return (
+            <div key={line.key.id} style={{ opacity: show, translate: `${(1 - show) * 12}px 0` }}>
+              <BoxText block={line.key} style={{ fontFamily: b.fonts.label, fontWeight: 600, color: b.palette.accentSoft }} />
+              <BoxText block={line.value} style={{ fontFamily: b.fonts.body, color: b.palette.text, fontVariantNumeric: "tabular-nums" }} />
+            </div>
+          );
+        })}
+        {panel.pills.map((pill, index) => {
+          const show = index === 0 ? holdIn : confirmIn;
+          // Al confirmarse, el hold queda atrás (atenuado): es el mismo objeto en otro estado.
+          const dim = index === 0 ? 1 - 0.55 * confirmIn : 1;
+          const color = stateColor[index];
+          const multi = pill.text.lines > 1;
+          return (
+            <div key={pill.text.id} style={{ opacity: show * dim, scale: `${0.97 + show * 0.03}` }}>
+              <div style={{ ...boxStyle(pill.frame), boxSizing: "border-box", borderRadius: multi ? 14 : 999, background: alpha(color, 14), border: `1px solid ${alpha(color, 55)}`, overflow: "hidden" }}>
+                {index === 0 ? <div style={{ position: "absolute", left: 0, bottom: 0, height: 3, width: `${holdLeft * 100}%`, background: alpha(color, 70) }} /> : null}
+              </div>
+              <div style={{ ...boxStyle(pill.dot), borderRadius: 99, background: color, boxShadow: `0 0 ${10 + 8 * Math.abs(Math.sin(frame / 9))}px ${alpha(color, 60)}` }} />
+              <BoxText block={pill.text} style={{ fontFamily: b.fonts.label, fontWeight: 600, color: b.palette.text }} />
+            </div>
+          );
+        })}
+        <BoxText block={panel.route} style={{ fontFamily: b.fonts.label, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase", color: b.palette.muted, opacity: progress(frame, QUOTER.route, QUOTER.route + 16) }} />
+        {panel.vans.map((van, index) => {
+          const show = progress(frame, QUOTER.route + 8 + index * 5, QUOTER.route + 22 + index * 5);
+          // Rotación determinista (visitas del día % 4): esta visita cae en la camioneta 1, la misma de la cuadrilla.
+          const lit = index === 0 ? progress(frame, QUOTER.assign, QUOTER.assign + 16) : 0;
+          return (
+            <div key={van.text.id} style={{ opacity: show }}>
+              <div
+                style={{
+                  ...boxStyle(van.frame),
+                  boxSizing: "border-box",
+                  borderRadius: 10,
+                  background: lit > 0 ? alpha(b.palette.accent, 12 + lit * 70) : alpha(b.palette.bg, 60),
+                  border: `1px solid ${lit > 0 ? b.palette.accentSoft : b.palette.line}`,
+                  boxShadow: lit > 0 ? `0 0 ${24 * lit}px ${alpha(b.palette.accent, 45 * lit)}` : undefined,
+                }}
+              />
+              <BoxText block={van.text} align="center" style={{ fontFamily: b.fonts.label, fontWeight: 600, color: lit > 0.5 ? b.palette.onAccent : b.palette.muted }} />
+            </div>
+          );
+        })}
+      </div>
+    </Fade>
+  );
+}
+
+/** 3 · Arquitectura sin base de datos: tres vistas guiadas con el pulso de datos de Archify. */
+function Architecture({ language, format, duration }: SceneProps) {
+  const copy = LB_COPY[language];
+  const portrait = format === "portrait";
+  const { title, body } = lbBands(format);
+  const architecture = resolveArchitecture(lbArchitecture, language, format);
+  const parts = stackBands(body, [{ id: "diagram", flex: 1 }, { id: "caption", h: portrait ? 170 : 92 }], portrait ? 20 : 14);
+  const build = 75;
+  const views = architecture.diagram.meta.views?.length || 3;
+  return (
+    <Fade duration={duration}>
+      <SceneTitle kicker={copy.archKicker} title={copy.archTitle} box={title} format={format} />
       <ArchitectureScene
         diagram={architecture.diagram}
         layout={architecture.layout}
@@ -156,434 +282,93 @@ function ArchitectureSection({
         caption={{ x: parts.caption.x, y: parts.caption.y, w: parts.caption.w, size: portrait ? 28 : 20 }}
         maxZoom={1.6}
         buildFrames={build}
-        viewFrames={Math.floor((duration - build) / viewsCount)}
+        viewFrames={Math.floor((duration - build) / views)}
       />
     </Fade>
   );
 }
 
-function EngineeringSection({
-  language,
-  bands,
-  portrait,
-  duration,
-}: {
-  language: FilmLanguage;
-  bands: Record<string, Box>;
-  portrait: boolean;
-  duration: number;
-}) {
+/** Tiempos de la cuadrilla: el panel explica los botones, el dedo toca "Atendida" y la cita cambia. */
+const CREW = { rowsFrom: 34, tap: 176, swap: 188 } as const;
+
+/** 4 · La app real de la cuadrilla (paradas de ejemplo): un toque y la cita pasa a `showed`. */
+function Crew({ language, format, duration }: SceneProps) {
+  const b = useBrand();
+  const frame = useCurrentFrame();
   const copy = LB_COPY[language];
+  const { title, phone, panel } = lbCrewLayout(format, copy);
+  const enter = progress(frame, 6, 34);
+  const swap = progress(frame, CREW.swap, CREW.swap + 10);
+  const press = windowed(frame, CREW.tap - 12, CREW.tap - 4, CREW.tap + 4, CREW.tap + 14);
+  const ripple = progress(frame, CREW.tap, CREW.tap + 26);
+  const attended = progress(frame, CREW.swap, CREW.swap + 16);
+  const float = Math.sin(frame / 38) * 4;
+  const screen = { position: "absolute", inset: 0, width: "100%", height: "100%", maxWidth: "none", objectFit: "cover" } as const;
   return (
     <Fade duration={duration}>
-      <SceneTitle kicker="Ingeniería de Producción" title="Métricas Verificadas de Operación" box={bands.title} portrait={portrait} />
-      <FactWall
-        box={bands.body}
-        duration={duration}
-        language={language}
-        facts={copy.engineeringFacts.map((f) => ({ value: f.value, label: f.label, source: f.source }))}
-      />
-    </Fade>
-  );
-}
+      <SceneTitle kicker={copy.crewKicker} title={copy.crewTitle} box={title} format={format} />
 
-function OpeningScene({ copy, format, duration }: { copy: typeof LB_COPY["es"]; format: FilmFormatName; duration: number }) {
-  const frame = useCurrentFrame();
-  const b = useBrand();
-  const layout = lbOpeningLayout(format);
-  const enter = progress(frame, 0, 45);
-  const glow = interpolate(frame, [0, 45, duration], [0.1, 0.45, 0.25], { extrapolateRight: "clamp" });
-  const logoSize = Math.round(layout.markBox.w * 0.75);
-
-  return (
-    <AbsoluteFill>
-      <div
+      <PhoneFrame
+        width={phone.w}
         style={{
-          position: "absolute",
-          left: layout.markBox.x,
-          top: layout.markBox.y,
-          width: layout.markBox.w,
-          height: layout.markBox.h,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            width: layout.markBox.w * 0.9,
-            height: layout.markBox.h * 0.9,
-            borderRadius: "50%",
-            background: `radial-gradient(circle, ${b.palette.accentSoft} 0%, transparent 70%)`,
-            opacity: glow,
-          }}
-        />
-        <ParticleLogo
-          src={b.logo.mark}
-          mode={b.logo.particleMode}
-          colors={[b.palette.accentSoft, b.palette.accent, b.palette.accentDeep]}
-          size={logoSize}
-          center={{ x: layout.markBox.x + layout.markBox.w / 2, y: layout.markBox.y + layout.markBox.h / 2 }}
-          formFrom={6}
-          formTo={60}
-          dissolveAt={duration - 20}
-          count={2200}
-          restAlpha={0.95}
-        />
-      </div>
-
-      <div
-        style={{
-          position: "absolute",
-          left: layout.titleBox.x,
-          top: layout.titleBox.y,
-          width: layout.titleBox.w,
-          height: layout.titleBox.h,
+          left: phone.x,
+          top: phone.y + float,
           opacity: enter,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
+          scale: `${0.96 + enter * 0.04}`,
+          background: "#14171C",
+          boxShadow: `0 50px 110px ${alpha("#000000", 60)}, 0 0 0 1px ${alpha(b.palette.text, 16)}, 0 0 60px ${alpha(b.palette.accent, 14)}`,
         }}
       >
-        <div
-          style={{
-            fontSize: format === "portrait" ? 22 : 18,
-            color: b.palette.accentSoft,
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            fontFamily: b.fonts.label,
-            marginBottom: 16,
-          }}
-        >
-          {copy.heroTag}
-        </div>
-        <h1
-          style={{
-            fontSize: format === "portrait" ? 48 : 46,
-            fontWeight: 700,
-            lineHeight: 1.15,
-            color: b.palette.text,
-            fontFamily: b.fonts.display,
-            margin: 0,
-            marginBottom: 16,
-          }}
-        >
-          {copy.heroHeadline}
-        </h1>
-        <p
-          style={{
-            fontSize: format === "portrait" ? 24 : 20,
-            color: b.palette.muted,
-            lineHeight: 1.45,
-            margin: 0,
-          }}
-        >
-          {copy.heroSubline}
-        </p>
-      </div>
-    </AbsoluteFill>
-  );
-}
-
-function FleetRuleScene({ copy, format, duration }: { copy: typeof LB_COPY["es"]; format: FilmFormatName; duration: number }) {
-  const frame = useCurrentFrame();
-  const b = useBrand();
-  const layout = lbFleetLayout(format);
-
-  const vans = [
-    { id: "van-1", label: "Camioneta 01", location: "Cape Coral", status: "En servicio · 3h30", active: true },
-    { id: "van-2", label: "Camioneta 02", location: "Fort Myers", status: "En servicio · 2h00", active: true },
-    { id: "van-3", label: "Camioneta 03", location: "Naples", status: "Hold 15m · Espera pago", active: true },
-    { id: "van-4", label: "Camioneta 04", location: "Estero", status: "Disponible · Próx. turno", active: false },
-  ];
-
-  return (
-    <Fade duration={duration}>
-      <SceneTitle kicker="Regla Operativa Central" title={copy.rulePrinciple} box={layout.titleBox} portrait={format === "portrait"} />
-
-      <div style={{ position: "absolute", left: layout.vansBox.x, top: layout.vansBox.y, width: layout.vansBox.w, height: layout.vansBox.h }}>
-        <div style={{ display: "grid", gridTemplateColumns: format === "portrait" ? "1fr 1fr" : "1fr 1fr", gap: 14 }}>
-          {vans.map((van, i) => {
-            const vanEnter = progress(frame, 15 + i * 10, 35 + i * 10);
-            return (
-              <div
-                key={van.id}
-                style={{
-                  background: b.palette.surface,
-                  border: `1px solid ${van.active ? b.palette.accentDeep : b.palette.line}`,
-                  borderRadius: 14,
-                  padding: 16,
-                  opacity: vanEnter,
-                  transform: `translateY(${(1 - vanEnter) * 16}px)`,
-                }}
-              >
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                  <span style={{ fontSize: 16, fontWeight: 700, color: b.palette.accentSoft, fontFamily: b.fonts.label }}>
-                    {van.label}
-                  </span>
-                  <span
-                    style={{
-                      fontSize: 11,
-                      padding: "3px 8px",
-                      borderRadius: 999,
-                      background: van.active ? alpha(b.palette.accent, 0.2) : alpha(b.palette.muted, 0.15),
-                      color: van.active ? b.palette.accentSoft : b.palette.muted,
-                      fontWeight: 600,
-                    }}
-                  >
-                    {van.location}
-                  </span>
-                </div>
-                <div style={{ fontSize: 13, color: b.palette.text, fontWeight: 500 }}>{van.status}</div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      <div style={{ position: "absolute", left: layout.equationBox.x, top: layout.equationBox.y, width: layout.equationBox.w, height: layout.equationBox.h }}>
-        <div
-          style={{
-            background: alpha(b.palette.surface, 0.9),
-            border: `1px solid ${b.palette.accentSoft}`,
-            borderRadius: 16,
-            padding: 24,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-          }}
-        >
-          <div style={{ fontSize: 13, textTransform: "uppercase", letterSpacing: "0.12em", color: b.palette.accentSoft, marginBottom: 10 }}>
-            Cálculo de visita a domicilio
+        <div style={{ position: "absolute", inset: 0 }}>
+          <Img src={LB_ASSETS.crewToday.src} style={{ ...screen, opacity: 1 - swap }} />
+          <Img src={LB_ASSETS.crewAttended.src} style={{ ...screen, opacity: swap }} />
+          {/* El toque: un dedo que presiona y una onda que se abre sobre "Atendida". */}
+          <div style={{ position: "absolute", left: `${LB_CREW_TAP.x * 100}%`, top: `${LB_CREW_TAP.y * 100}%` }}>
+            <div style={{ position: "absolute", width: phone.w * 0.36, height: phone.w * 0.36, translate: "-50% -50%", borderRadius: 999, border: `2px solid ${alpha("#FFFFFF", 80)}`, scale: `${0.2 + ripple * 0.8}`, opacity: ripple > 0 && ripple < 1 ? 1 - ripple : 0 }} />
+            <div style={{ position: "absolute", width: phone.w * 0.12, height: phone.w * 0.12, translate: "-50% -50%", borderRadius: 999, background: alpha("#FFFFFF", 45), opacity: press }} />
           </div>
-          <div style={{ fontSize: format === "portrait" ? 22 : 24, fontWeight: 700, color: b.palette.text, fontFamily: b.fonts.display, marginBottom: 12 }}>
-            {copy.ruleEquation}
-          </div>
-          <p style={{ fontSize: 15, color: b.palette.muted, lineHeight: 1.5, margin: 0 }}>
-            Una sola camioneta cubre todos los vehículos de la propiedad en secuencia. El tiempo de viaje se cobra una sola vez al final y el horario se reserva en bloque.
-          </p>
         </div>
+        {/* Reflejo sutil del vidrio. */}
+        <div style={{ position: "absolute", inset: 0, background: `linear-gradient(118deg, ${alpha("#FFFFFF", 9)} 0%, transparent 32%)`, borderRadius: phone.w * PHONE.radius }} />
+      </PhoneFrame>
+
+      <div style={{ position: "absolute", inset: 0, opacity: progress(frame, 18, 42) }}>
+        <PanelPlate box={panel.frame} glow={attended * (1 - progress(frame, CREW.swap + 60, CREW.swap + 120))} />
+        <BoxText block={panel.title} style={{ fontFamily: b.fonts.label, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase", color: b.palette.accent }} />
+        <SampleTag block={panel.sample} />
+        {panel.rows.map((row, index) => {
+          const action = copy.crewActions[index];
+          const show = progress(frame, CREW.rowsFrom + index * 14, CREW.rowsFrom + index * 14 + 18);
+          const lit = action.id === "attended" ? progress(frame, CREW.tap, CREW.tap + 14) : 0;
+          // Después del toque, el resto queda en segundo plano.
+          const rest = action.id === "attended" ? 1 : 1 - 0.4 * attended;
+          const color = CREW_COLORS[action.id];
+          return (
+            <div key={action.id} style={{ opacity: show * rest, translate: `${(1 - show) * 14}px 0` }}>
+              <div style={{ ...boxStyle(row.button), borderRadius: 10, background: color, boxShadow: lit > 0 ? `0 0 0 ${4 * lit}px ${alpha(color, 35)}, 0 0 ${30 * lit}px ${alpha(color, 50)}` : undefined, scale: `${1 + 0.05 * windowed(frame, CREW.tap - 6, CREW.tap, CREW.tap + 4, CREW.tap + 16)}` }} />
+              <BoxText block={row.label} align="center" style={{ fontFamily: b.fonts.body, fontWeight: 650, color: "#FFFFFF" }} />
+              <svg viewBox="0 0 30 14" width={row.arrow.w} height={row.arrow.h} style={{ ...boxStyle(row.arrow), overflow: "visible" }}>
+                <path d="M1 7 H25 M19 1.5 L26 7 L19 12.5" fill="none" stroke={lit > 0.5 ? color : b.palette.muted} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <BoxText block={row.effect} style={{ fontFamily: b.fonts.label, color: lit > 0.5 ? b.palette.text : b.palette.muted }} />
+            </div>
+          );
+        })}
+        <BoxText block={panel.result} style={{ fontFamily: b.fonts.label, fontWeight: 600, color: CREW_COLORS.attended, opacity: attended, translate: `0 ${(1 - attended) * 8}px` }} />
+        <BoxText block={panel.note} style={{ fontFamily: b.fonts.body, color: b.palette.muted, opacity: progress(frame, 96, 120) }} />
       </div>
     </Fade>
   );
 }
 
-function VehicleQuoterScene({
-  copy,
-  format,
-  language,
-  duration,
-}: {
-  copy: typeof LB_COPY["es"];
-  format: FilmFormatName;
-  language: FilmLanguage;
-  duration: number;
-}) {
-  const frame = useCurrentFrame();
-  const b = useBrand();
-  const layout = lbQuoterLayout(format);
-
-  // Ciclo visual de selección automática entre tipos de vehículos
-  const selectedIndex = Math.min(Math.floor((frame / (duration * 0.8)) * LB_VEHICLE_TIERS.length), LB_VEHICLE_TIERS.length - 1);
-  const currentVehicle = LB_VEHICLE_TIERS[selectedIndex];
-
+/** 5 · Ingeniería: las cifras verificadas, cada una con su fuente. */
+function Engineering({ language, format, duration }: SceneProps) {
+  const copy = LB_COPY[language];
+  const { title, body } = lbBands(format);
   return (
     <Fade duration={duration}>
-      <SceneTitle kicker={copy.quoterTitle} title={copy.quoterSubtitle} box={layout.titleBox} portrait={format === "portrait"} />
-
-      {/* Grilla de tipos de vehículo */}
-      <div style={{ position: "absolute", left: layout.gridBox.x, top: layout.gridBox.y, width: layout.gridBox.w, height: layout.gridBox.h }}>
-        <div style={{ display: "grid", gridTemplateColumns: format === "portrait" ? "1fr 1fr" : "1fr 1fr", gap: 14 }}>
-          {LB_VEHICLE_TIERS.map((tier, idx) => {
-            const isSelected = idx === selectedIndex;
-            return (
-              <div
-                key={tier.id}
-                style={{
-                  background: isSelected ? alpha(b.palette.accentDeep, 0.35) : b.palette.surface,
-                  border: `2px solid ${isSelected ? b.palette.accentSoft : b.palette.line}`,
-                  borderRadius: 14,
-                  padding: 18,
-                  position: "relative",
-                }}
-              >
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 8 }}>
-                  <div style={{ fontSize: 18, fontWeight: 700, color: b.palette.text, fontFamily: b.fonts.display }}>
-                    {tier.name[language]}
-                  </div>
-                  <span
-                    style={{
-                      fontSize: 11,
-                      padding: "2px 8px",
-                      borderRadius: 999,
-                      background: alpha(b.palette.accent, 0.2),
-                      color: b.palette.accentSoft,
-                      fontWeight: 600,
-                    }}
-                  >
-                    {tier.badge[language]}
-                  </span>
-                </div>
-                <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
-                  <span style={{ fontSize: 24, fontWeight: 800, color: b.palette.accentSoft }}>
-                    ${tier.startingPrice}
-                  </span>
-                  <span style={{ fontSize: 13, color: b.palette.muted }}>base</span>
-                  <span style={{ fontSize: 12, color: b.palette.muted, marginLeft: "auto" }}>
-                    ~{tier.washDurationMin} min
-                  </span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Tarjeta de cálculo en vivo */}
-      <div style={{ position: "absolute", left: layout.summaryBox.x, top: layout.summaryBox.y, width: layout.summaryBox.w, height: layout.summaryBox.h }}>
-        <div
-          style={{
-            background: b.palette.surface,
-            border: `1px solid ${b.palette.accent}`,
-            borderRadius: 16,
-            padding: 24,
-            display: "flex",
-            flexDirection: "column",
-            gap: 14,
-          }}
-        >
-          <div style={{ fontSize: 13, textTransform: "uppercase", letterSpacing: "0.12em", color: b.palette.accentSoft }}>
-            {copy.quoterSummaryLabel}
-          </div>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <span style={{ fontSize: 16, color: b.palette.muted }}>{copy.quoterDurationLabel}</span>
-            <span style={{ fontSize: 18, fontWeight: 700, color: b.palette.text }}>
-              {currentVehicle.washDurationMin + 30} min (con traslado)
-            </span>
-          </div>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <span style={{ fontSize: 16, color: b.palette.muted }}>{copy.quoterDepositLabel}</span>
-            <span style={{ fontSize: 22, fontWeight: 800, color: b.palette.accentSoft }}>
-              ${Math.round(currentVehicle.startingPrice * 0.35)}
-            </span>
-          </div>
-          <div
-            style={{
-              padding: "10px 14px",
-              borderRadius: 10,
-              background: alpha(b.palette.accent, 0.15),
-              border: `1px dashed ${b.palette.accentSoft}`,
-              fontSize: 12,
-              color: b.palette.accentSoft,
-            }}
-          >
-            {copy.quoterHoldNotice}
-          </div>
-        </div>
-      </div>
-    </Fade>
-  );
-}
-
-function FieldCrewScene({ copy, format, duration }: { copy: typeof LB_COPY["es"]; format: FilmFormatName; duration: number }) {
-  const frame = useCurrentFrame();
-  const b = useBrand();
-  const layout = lbCrewLayout(format);
-
-  // Simulación de interacción de botón en la app de cuadrilla
-  const actionDone = frame > 110;
-
-  return (
-    <Fade duration={duration}>
-      <SceneTitle kicker={copy.crewTitle} title={copy.crewSubtitle} box={layout.titleBox} portrait={format === "portrait"} />
-
-      {/* Pantalla simulada de la app móvil cuadrilla.html */}
-      <div style={{ position: "absolute", left: layout.phoneBox.x, top: layout.phoneBox.y, width: layout.phoneBox.w, height: layout.phoneBox.h }}>
-        <div
-          style={{
-            background: "#0B0D10",
-            border: `2px solid ${b.palette.line}`,
-            borderRadius: 20,
-            padding: 20,
-            display: "flex",
-            flexDirection: "column",
-            gap: 12,
-            boxShadow: `0 16px 40px rgba(0,0,0,0.6)`,
-          }}
-        >
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <span style={{ fontSize: 16, fontWeight: 800, color: "#F2F4F7" }}>Hoy · Camioneta 01</span>
-            <span style={{ fontSize: 12, color: "#9AA4B2" }}>Enlace firmado /c/</span>
-          </div>
-          <div style={{ background: "#15181D", borderRadius: 12, padding: 14, border: "1px solid #262B33" }}>
-            <div style={{ fontSize: 15, fontWeight: 700, color: "#F2F4F7" }}>10:30am · 2 vehículos (SUV + Sedan)</div>
-            <div style={{ fontSize: 13, color: "#9AA4B2", marginTop: 4 }}>Pelican Bay Blvd, Naples · Saldo: $120</div>
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-            <div
-              style={{
-                background: actionDone ? "#16A34A" : alpha("#16A34A", 0.8),
-                borderRadius: 10,
-                padding: "12px 10px",
-                textAlign: "center",
-                fontWeight: 700,
-                fontSize: 14,
-                color: "#FFFFFF",
-              }}
-            >
-              {actionDone ? "✓ Atendida" : copy.crewActionAttend}
-            </div>
-            <div
-              style={{
-                background: "#2563EB",
-                borderRadius: 10,
-                padding: "12px 10px",
-                textAlign: "center",
-                fontWeight: 700,
-                fontSize: 14,
-                color: "#FFFFFF",
-              }}
-            >
-              {copy.crewActionCash}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Feed en vivo de GoHighLevel */}
-      <div style={{ position: "absolute", left: layout.crmFeedBox.x, top: layout.crmFeedBox.y, width: layout.crmFeedBox.w, height: layout.crmFeedBox.h }}>
-        <div
-          style={{
-            background: b.palette.surface,
-            border: `1px solid ${b.palette.accentDeep}`,
-            borderRadius: 16,
-            padding: 24,
-            display: "flex",
-            flexDirection: "column",
-            gap: 14,
-          }}
-        >
-          <div style={{ fontSize: 13, textTransform: "uppercase", letterSpacing: "0.12em", color: b.palette.accentSoft }}>
-            Sincronización en GoHighLevel CRM
-          </div>
-          <div style={{ fontSize: 14, fontFamily: "monospace", color: b.palette.text, lineHeight: 1.6 }}>
-            {actionDone ? (
-              <>
-                <div style={{ color: "#2BB673" }}>▶ appointmentStatus: &quot;showed&quot;</div>
-                <div>▶ Crédito consumido en contrato</div>
-                <div>▶ Contacto actualizado sin tocar DB</div>
-              </>
-            ) : (
-              <>
-                <div style={{ color: b.palette.accentSoft }}>▶ appointmentStatus: &quot;confirmed&quot;</div>
-                <div>▶ Esperando parada de la cuadrilla</div>
-                <div>▶ Cero Postgres · Estado en calendario</div>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
+      <SceneTitle kicker={copy.engineeringKicker} title={copy.engineeringTitle} box={title} format={format} />
+      <FactWall box={body} duration={duration} language={language} facts={copy.engineeringFacts.map((fact) => ({ value: fact.value, label: fact.label, source: fact.source }))} />
     </Fade>
   );
 }

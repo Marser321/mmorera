@@ -3,13 +3,14 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import { FILM_FPS, type FilmLanguage } from "@/data/films/filmTypes";
+import { mediaSize } from "@/lib/mediaSize";
 import {
+  LB_ASSETS,
   LB_CHAPTERS,
   LB_COPY,
   LB_DURATION,
   LB_FACTS,
   LB_SCENES,
-  LB_TIMELINE,
 } from "./lbWash";
 
 const DOSSIER_PATH = path.join(process.cwd(), "docs/films/dossiers/lb-wash.md");
@@ -82,5 +83,26 @@ test("L&B film: copia honesta sin métricas no verificadas ni cronología", () =
         `Fuente no transparente en fact wall: ${fact.source}`,
       );
     }
+  }
+});
+
+test("L&B film: los assets declarados miden lo que dicen (la cámara nunca los amplía)", () => {
+  for (const asset of Object.values(LB_ASSETS)) {
+    const size = mediaSize(fs.readFileSync(path.join(process.cwd(), "public", asset.src)), asset.src);
+    assert.equal(size.width, asset.w, `${asset.src}: ancho`);
+    assert.equal(size.height, asset.h, `${asset.src}: alto`);
+  }
+});
+
+test("L&B film: sin porcentajes y con la visita de ejemplo rotulada", () => {
+  for (const lang of ["es", "en"] as const) {
+    const copy = LB_COPY[lang];
+    assert.ok(!/\d\s?%/.test(JSON.stringify(copy)), `La copia en ${lang} trae un porcentaje`);
+    assert.ok(copy.sampleLabel.length > 0, "La visita de ejemplo necesita su rótulo");
+    // El depósito es fijo (DEPOSIT_SMALL), no un porcentaje del total.
+    const deposit = copy.payloadLines.find((line) => line.key === "deposito");
+    assert.equal(deposit?.value, `$${LB_FACTS.depositStandard.value}`);
+    // Las claves son las reales de la descripción de la cita (dossier §3).
+    for (const line of copy.payloadLines) assert.ok(["veh", "orden", "total", "deposito", "expira", "Idempotency-Key", "key"].includes(line.key), `Clave inventada: ${line.key}`);
   }
 });

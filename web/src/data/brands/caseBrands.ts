@@ -149,7 +149,8 @@ export const CASE_BRANDS: Record<string, CaseBrand> = {
     logo: {
       mark: "/portfolio/brands/lb-elite-wash-detail/mark.png",
       wordmark: "/portfolio/brands/lb-elite-wash-detail/wordmark.png",
-      particleMode: "alpha",
+      // El PNG no tiene canal alfa (logo sobre blanco): por opacidad las partículas formaban un cuadrado.
+      particleMode: "dark",
     },
     radius: 16,
     texture: "none",
