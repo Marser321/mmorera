@@ -13,8 +13,6 @@ import { alpha, BrandProvider, useBrand } from "../scenes/brand/context";
 import { EvidenceLedger } from "../scenes/brand/EvidenceLedger";
 import { FactWall } from "../scenes/brand/FactWall";
 import { KeywordSearch } from "../scenes/brand/KeywordSearch";
-import { cinematicPlateLayout } from "../scenes/brand/layout/cinematicPlate";
-import { fitFontSize, GLYPH_EM, LINE_HEIGHT } from "../scenes/brand/layout/mediaShared";
 import { ManifestoBeats, RevealWords } from "../scenes/brand/ManifestoBeats";
 import { MechanismTriptych } from "../scenes/brand/MechanismTriptych";
 import { DustField, ParticleLogo } from "../scenes/brand/ParticleLogo";
@@ -24,7 +22,14 @@ import { ShotStack } from "../scenes/brand/ShotStack";
 import { SignatureScene } from "../scenes/case/ClosingScenes";
 import { Letterbox } from "../scenes/case/shared";
 import { ChapterTicks } from "../scenes/primitives";
-import { progress, useFilmLayout } from "../scenes/theme";
+import { progress, useFilmLayout, windowed } from "../scenes/theme";
+import {
+  fenixOpeningLayout,
+  fenixMechanismLayout,
+  fenixDoseStripLayout,
+  fenixSiteNoteLayout,
+  fenixEngineeringLayout,
+} from "./fenixFilmLayout";
 
 export type FenixFilmProps = {
   language: FilmLanguage;
@@ -115,38 +120,23 @@ function Opening({ language, width, height, portrait, duration }: SceneProps & {
   const copy = FENIX_COPY[language];
   const format = portrait ? "portrait" : "landscape";
   const corridor = FENIX_ASSETS.corridor;
-  // Placa y leyenda en bandas propias: el texto nunca va sobre el video.
-  const box = portrait ? { x: 0, y: 0, w: width, h: 620 } : { x: 60, y: 84, w: width - 120, h: 600 };
-  const plate = cinematicPlateLayout(box, { asset: corridor, align: "top" }, format).plate;
-  const textX = portrait ? 72 : plate.x;
-  const textW = portrait ? width - 144 : plate.w;
-  const kickerSize = portrait ? 22 : 18;
-  const size = fitFontSize(copy.tagline, { width: textW, maxLines: 1, max: portrait ? 68 : 60, min: 40, lineHeight: LINE_HEIGHT.display, glyphEm: GLYPH_EM.display });
-  const kickerBlock = Math.ceil(kickerSize * LINE_HEIGHT.label) + Math.round(kickerSize * 0.9);
-  const textH = Math.ceil(size * LINE_HEIGHT.display);
-  const gap = portrait ? 40 : 28;
-  const top = portrait ? Math.round((height - (plate.h + gap + kickerBlock + textH)) / 2) : 0;
-  const plateBox = { ...box, y: box.y + top };
-  const placed = { ...plate, y: plate.y + top };
-  const kickerY = placed.y + placed.h + gap;
-  const textY = kickerY + kickerBlock;
-  const logoSize = Math.min(placed.h * 0.62, portrait ? 400 : 340);
+  const layout = fenixOpeningLayout(format, width, height, copy.tagline);
   // A oscuras mientras se forma el fénix; la luz sube cuando asciende.
   const night = 0.94 - 0.8 * progress(frame, OPENING.lightFrom, OPENING.lightTo);
   const kickerIn = progress(frame, OPENING.taglineFrom, OPENING.taglineFrom + 18);
   return (
     <Fade duration={duration + 20}>
-      <CinematicPlate box={plateBox} asset={corridor} poster={FENIX_ASSETS.corridorPoster.src} duration={duration + 20} veilOpacity={0.5} push={0.05} align="top">
+      <CinematicPlate box={layout.plateBox} asset={corridor} poster={FENIX_ASSETS.corridorPoster.src} duration={duration + 20} veilOpacity={0.5} push={0.05} align="top">
         <div style={{ position: "absolute", inset: 0, background: b.palette.bg, opacity: night }} />
       </CinematicPlate>
-      <div style={{ position: "absolute", left: placed.x, top: placed.y, width: placed.w, height: placed.h, overflow: "hidden" }}>
-        <div style={{ position: "absolute", left: -placed.x, top: -placed.y, width, height }}>
+      <div style={{ position: "absolute", left: layout.placed.x, top: layout.placed.y, width: layout.placed.w, height: layout.placed.h, overflow: "hidden" }}>
+        <div style={{ position: "absolute", left: -layout.placed.x, top: -layout.placed.y, width, height }}>
           <ParticleLogo
             src={b.logo.mark}
             mode={b.logo.particleMode}
-            colors={[b.palette.accentSoft, b.palette.accent, "#e3b556"]}
-            size={logoSize}
-            center={{ x: placed.x + placed.w / 2, y: placed.y + placed.h / 2 }}
+            colors={[b.palette.accentSoft, b.palette.accent, b.palette.accentDeep]}
+            size={layout.logoSize}
+            center={{ x: layout.placed.x + layout.placed.w / 2, y: layout.placed.y + layout.placed.h / 2 }}
             formFrom={OPENING.formFrom}
             formTo={OPENING.formTo}
             dissolveAt={OPENING.rise}
@@ -158,12 +148,12 @@ function Opening({ language, width, height, portrait, duration }: SceneProps & {
       <div
         style={{
           position: "absolute",
-          left: textX,
-          top: kickerY,
-          width: textW,
+          left: layout.textX,
+          top: layout.kickerY,
+          width: layout.textW,
           textAlign: portrait ? "center" : "left",
           fontFamily: b.fonts.label,
-          fontSize: kickerSize,
+          fontSize: layout.kickerSize,
           lineHeight: 1.2,
           fontWeight: 600,
           letterSpacing: "0.24em",
@@ -179,8 +169,8 @@ function Opening({ language, width, height, portrait, duration }: SceneProps & {
       <RevealWords
         text={copy.tagline}
         from={OPENING.taglineFrom + 6}
-        size={size}
-        box={{ x: textX, y: textY, w: textW, h: textH }}
+        size={layout.size}
+        box={{ x: layout.textX, y: layout.textY, w: layout.textW, h: layout.textH }}
         align={portrait ? "center" : "left"}
         fontFamily={b.fonts.display}
         weight={500}
@@ -193,22 +183,15 @@ function Opening({ language, width, height, portrait, duration }: SceneProps & {
 
 /** 2 · El mecanismo (tres láminas propias) y "la dosis es el claim". */
 function Mechanism({ language, bands, portrait, duration }: SceneProps & { bands: Bands }) {
+  const frame = useCurrentFrame();
   const copy = FENIX_COPY[language];
   const triptych = Math.round(duration * 0.46);
   const beats = duration - triptych;
   const slot = Math.floor(beats / copy.doseBeats.length);
-  const titleShow = useWindow(0, triptych);
+  const titleShow = windowed(frame, 2, 16, triptych - 16, triptych - 2);
   // Frases a un lado y tira de sesiones al otro (en 4:5, una sobre otra).
   const area = { ...bands.body, y: bands.title.y, h: bands.body.y + bands.body.h - bands.title.y };
-  const [doseText, doseStrip] = portrait
-    ? (() => {
-        // Grupo centrado: frase arriba y tira debajo, sin un hueco entre ambas.
-        const groupH = 520 + 40 + 320;
-        const group = { ...area, y: area.y + (area.h - groupH) / 2, h: groupH };
-        const stacked = stackBands(group, [{ id: "text", h: 520 }, { id: "strip", h: 320 }], 40);
-        return [stacked.text, stacked.strip];
-      })()
-    : splitColumns(area, [1.1, 1], 96);
+  const { doseText, doseStrip } = fenixMechanismLayout(area, portrait ? "portrait" : "landscape");
   return (
     <AbsoluteFill>
       <div style={{ opacity: titleShow }}>
@@ -250,50 +233,43 @@ function DoseStrip({ box, duration, slot, language, portrait }: { box: Box; dura
   const total = FENIX_FACTS.sessionsMax.value;
   const signalFrom = FENIX_FACTS.sessionsMin.value;
   const signal = copy.evidenceTiers.find((tier) => tier.id === "signal")?.label ?? "";
-  const labelSize = portrait ? 22 : 16;
-  const pitch = box.w / total;
-  const barW = Math.max(3, Math.round(pitch * 0.56));
-  const barsH = portrait ? 200 : 168;
-  const headH = labelSize * 3;
-  const groupH = headH + barsH + labelSize * 2.6;
-  const top = box.y + (box.h - groupH) / 2;
-  const barsY = top + headH;
+  const layout = fenixDoseStripLayout(box, portrait ? "portrait" : "landscape", total);
   const fill = { from: slot + 6, to: slot + 54 };
   const bracketIn = progress(frame, fill.to - 4, fill.to + 14);
   const exit = 1 - progress(frame, duration - 18, duration - 2);
-  const xOf = (session: number) => box.x + (session - 1) * pitch + (pitch - barW) / 2;
+  const xOf = (session: number) => box.x + (session - 1) * layout.pitch + (layout.pitch - layout.barW) / 2;
   const signalX = xOf(signalFrom);
-  const signalW = xOf(total) + barW - signalX;
+  const signalW = xOf(total) + layout.barW - signalX;
   const tick = (session: number, value: string) => (
-    <div key={session} style={{ position: "absolute", top: barsY + barsH + labelSize * 0.7, left: xOf(session), fontFamily: b.fonts.label, fontSize: labelSize, lineHeight: 1.2, color: session >= signalFrom ? b.palette.accentSoft : b.palette.muted, whiteSpace: "nowrap" }}>
+    <div key={session} style={{ position: "absolute", top: layout.barsY + layout.barsH + layout.labelSize * 0.7, left: xOf(session), fontFamily: b.fonts.label, fontSize: layout.labelSize, lineHeight: 1.2, color: session >= signalFrom ? b.palette.accentSoft : b.palette.muted, whiteSpace: "nowrap" }}>
       {value}
     </div>
   );
   return (
     <div style={{ position: "absolute", inset: 0, opacity: exit }}>
       {/* Corchete y rótulo del rango con señal, arriba de las barras. */}
-      <div style={{ position: "absolute", left: signalX, top: top, width: signalW, height: headH - labelSize * 0.6, opacity: bracketIn, translate: `0 ${(1 - bracketIn) * 8}px` }}>
-        <div style={{ fontFamily: b.fonts.label, fontSize: labelSize, lineHeight: 1.2, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase", color: b.palette.accent, whiteSpace: "nowrap", textAlign: "right" }}>
+      <div style={{ position: "absolute", left: signalX, top: layout.top, width: signalW, height: layout.headH - layout.labelSize * 0.6, opacity: bracketIn, translate: `0 ${(1 - bracketIn) * 8}px` }}>
+        <div style={{ fontFamily: b.fonts.label, fontSize: layout.labelSize, lineHeight: 1.2, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase", color: b.palette.accent, whiteSpace: "nowrap", textAlign: "right" }}>
           {signal}
         </div>
-        <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: labelSize * 0.6, borderTop: `2px solid ${b.palette.accent}`, borderLeft: `2px solid ${b.palette.accent}`, borderRight: `2px solid ${b.palette.accent}`, borderRadius: "4px 4px 0 0" }} />
+        <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: layout.labelSize * 0.6, borderTop: `2px solid ${b.palette.accent}`, borderLeft: `2px solid ${b.palette.accent}`, borderRight: `2px solid ${b.palette.accent}`, borderRadius: "4px 4px 0 0" }} />
       </div>
       {Array.from({ length: total }, (_, index) => {
         const session = index + 1;
         const appear = progress(frame, 4 + index * 0.5, 22 + index * 0.5);
         const lit = progress(frame, fill.from + ((fill.to - fill.from) * index) / total, fill.from + ((fill.to - fill.from) * index) / total + 8);
         const inSignal = session >= signalFrom;
-        const height = barsH * (0.25 + 0.75 * appear);
+        const height = layout.barsH * (0.25 + 0.75 * appear);
         return (
           <div
             key={session}
             style={{
               position: "absolute",
               left: xOf(session),
-              top: barsY + barsH - height,
-              width: barW,
+              top: layout.barsY + layout.barsH - height,
+              width: layout.barW,
               height,
-              borderRadius: barW / 2,
+              borderRadius: layout.barW / 2,
               background: inSignal ? b.palette.accent : b.palette.muted,
               opacity: appear * (0.16 + lit * (inSignal ? 0.84 : 0.4)),
               boxShadow: inSignal && lit > 0.5 ? `0 0 ${portrait ? 16 : 12}px ${alpha(b.palette.accent, 45)}` : undefined,
@@ -303,7 +279,7 @@ function DoseStrip({ box, duration, slot, language, portrait }: { box: Box; dura
       })}
       {tick(1, "1")}
       {tick(signalFrom, fx("sessionsMin", language))}
-      <div style={{ position: "absolute", top: barsY + barsH + labelSize * 0.7, left: box.x, width: box.w, textAlign: "right", fontFamily: b.fonts.label, fontSize: labelSize, lineHeight: 1.2, color: b.palette.accentSoft, whiteSpace: "nowrap" }}>
+      <div style={{ position: "absolute", top: layout.barsY + layout.barsH + layout.labelSize * 0.7, left: box.x, width: box.w, textAlign: "right", fontFamily: b.fonts.label, fontSize: layout.labelSize, lineHeight: 1.2, color: b.palette.accentSoft, whiteSpace: "nowrap" }}>
         {fx("sessionsMax", language)} {copy.doseUnit}
       </div>
     </div>
@@ -357,7 +333,7 @@ function Positioning({ language, safe, portrait, duration }: SceneProps & { safe
 function SiteAndBooking({ language, bands, portrait, duration }: SceneProps & { bands: Bands }) {
   const b = useBrand();
   const copy = FENIX_COPY[language];
-  const body = stackBands(bands.body, [{ id: "main", flex: 1 }, { id: "note", h: portrait ? 44 : 34 }], portrait ? 18 : 14);
+  const { main, note } = fenixSiteNoteLayout(bands.body, portrait ? "portrait" : "landscape");
   const shots = [FENIX_ASSETS.bookingDay, FENIX_ASSETS.bookingTime, FENIX_ASSETS.bookingDetails].map((shot, index) => ({ ...shot, label: copy.bookingSteps[index] }));
   // Una cosa por vez y a su tamaño: primero el sitio, después los tres pasos de la reserva.
   const half = Math.round(duration * 0.42);
@@ -366,12 +342,12 @@ function SiteAndBooking({ language, bands, portrait, duration }: SceneProps & { 
     <Fade duration={duration}>
       <SceneTitle kicker={copy.siteKicker} title={copy.siteTitle} box={bands.title} portrait={portrait} />
       <Sequence name="Sitio" durationInFrames={half}>
-        <ScrollReel box={body.main} asset={FENIX_ASSETS.siteHbot} host={FENIX_HOST} path="" duration={half} stops={[0, 0.6]} />
+        <ScrollReel box={main} asset={FENIX_ASSETS.siteHbot} host={FENIX_HOST} path="" duration={half} stops={[0, 0.6]} />
       </Sequence>
       <Sequence name="Reserva" from={half} durationInFrames={duration - half}>
-        <ShotStack box={body.main} shots={shots} duration={duration - half} frame="card" startAt={16} />
+        <ShotStack box={main} shots={shots} duration={duration - half} frame="card" startAt={16} />
       </Sequence>
-      <div style={{ position: "absolute", left: body.note.x, top: body.note.y, width: body.note.w, height: body.note.h, display: "flex", alignItems: "center", gap: 12, fontFamily: b.fonts.body, fontSize: portrait ? 24 : 18, color: b.palette.muted, opacity: noteShow }}>
+      <div style={{ position: "absolute", left: note.x, top: note.y, width: note.w, height: note.h, display: "flex", alignItems: "center", gap: 12, fontFamily: b.fonts.body, fontSize: portrait ? 24 : 18, color: b.palette.muted, opacity: noteShow }}>
         <span style={{ width: portrait ? 10 : 8, height: portrait ? 10 : 8, borderRadius: 99, background: b.palette.accent }} />
         {copy.bookingNote}
       </div>
@@ -392,7 +368,7 @@ function Architecture({ language, bands, portrait, duration }: SceneProps & { ba
       <ArchitectureScene
         diagram={architecture.diagram}
         layout={architecture.layout}
-        area={portrait ? parts.diagram : { ...parts.diagram, x: 50, w: 1500 }}
+        area={parts.diagram}
         caption={{ x: parts.caption.x, y: parts.caption.y, w: parts.caption.w, size: portrait ? 28 : 20 }}
         maxZoom={1.8}
         buildFrames={build}
@@ -405,11 +381,12 @@ function Architecture({ language, bands, portrait, duration }: SceneProps & { ba
 /** 7 · El Cerebro: búsqueda por palabras clave y la plantilla de guion. */
 function Brain({ language, bands, portrait, duration }: SceneProps & { bands: Bands }) {
   const b = useBrand();
+  const frame = useCurrentFrame();
   const copy = FENIX_COPY[language];
   const search = Math.round(duration * 0.55);
   const script = duration - search;
-  const firstTitle = useWindow(0, search);
-  const secondTitle = useWindow(search, duration);
+  const firstTitle = windowed(frame, 2, 16, search - 16, search - 2);
+  const secondTitle = windowed(frame, search + 2, search + 16, duration - 16, duration - 2);
   return (
     <AbsoluteFill>
       <div style={{ opacity: firstTitle }}>
@@ -453,28 +430,16 @@ function Brain({ language, bands, portrait, duration }: SceneProps & { bands: Ba
 function Engineering({ language, bands, portrait, duration }: SceneProps & { bands: Bands }) {
   const b = useBrand();
   const copy = FENIX_COPY[language];
-  const body = stackBands(bands.body, [{ id: "main", flex: 1 }, { id: "agents", h: portrait ? 44 : 32 }], portrait ? 18 : 14);
-  const [factsBox, gridBox] = portrait
-    ? (() => {
-        const stacked = stackBands(body.main, [{ id: "facts", flex: 1.1 }, { id: "grid", flex: 1 }], 28);
-        return [stacked.facts, stacked.grid];
-      })()
-    : splitColumns(body.main, [1.15, 1], 44);
+  const { agents, factsBox, gridBox } = fenixEngineeringLayout(bands.body, portrait ? "portrait" : "landscape");
   const agentsShow = progress(useCurrentFrame(), 80, 100);
   return (
     <Fade duration={duration + 20}>
       <SceneTitle kicker={copy.engineeringKicker} title={copy.engineeringTitle} box={bands.title} portrait={portrait} />
-      <FactWall box={factsBox} duration={duration} language={language} facts={copy.engineeringFacts.map((fact) => ({ value: fx(fact.key, language), label: fact.label, source: FENIX_FACTS[fact.key].source }))} />
+      <FactWall box={factsBox} duration={duration} language={language} facts={copy.engineeringFacts.map((fact) => ({ value: fx(fact.key, language), label: fact.label, source: fact.source }))} />
       <ChecklistGrid box={gridBox} duration={duration} language={language} total={FENIX_FACTS.qaChecks.value} passed={FENIX_FACTS.qaChecks.value} groups={copy.qaGroups} unitLabel={copy.qaLabel} />
-      <div style={{ position: "absolute", left: body.agents.x, top: body.agents.y, width: body.agents.w, height: body.agents.h, display: "flex", alignItems: "center", fontFamily: b.fonts.label, fontSize: portrait ? 22 : 16, letterSpacing: "0.04em", color: b.palette.muted, opacity: agentsShow, whiteSpace: "nowrap", overflow: "hidden" }}>
+      <div style={{ position: "absolute", left: agents.x, top: agents.y, width: agents.w, height: agents.h, display: "flex", alignItems: "center", fontFamily: b.fonts.label, fontSize: portrait ? 22 : 16, letterSpacing: "0.04em", color: b.palette.muted, opacity: agentsShow, whiteSpace: "nowrap", overflow: "hidden" }}>
         {copy.agentsLine}
       </div>
     </Fade>
   );
-}
-
-/** Visible entre dos frames, con entrada y salida suaves (sin cruzarse con el título siguiente). */
-function useWindow(from: number, to: number) {
-  const frame = useCurrentFrame();
-  return progress(frame, from + 2, from + 16) * (1 - progress(frame, to - 16, to - 2));
 }

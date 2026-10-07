@@ -83,8 +83,8 @@ Sitio + arquitectura + GHL · Investigación y evidencia · Fábrica de contenid
   - `amb-00-umbral-apertura-v2--16x9.mp4` (corredor a la recepción)
   - `hdr-v1-tratamientos-camara-hiperbarica--16x9.mp4` (cámara hiperbárica)
   - `svc-v12-hbot-consulta--16x9.mp4`
-  - estudios de mecanismo `mec-hbot-02/05/08.webp`
+  - estudios de mecanismo `mec-hbot-02/05/08.webp` (Mario confirmó retener las láminas de mecanismo: "Difusión en el tejido" y "Angiogénesis").
 - **Capturas:** `.../shots/booking-{1-dia,2-hora,3-datos}.png` (reserva en 3 pasos, formulario vacío) y `site-hbot.jpg` (página HBOT en producción).
 - **Fondos difuminados:** `web/public/portfolio/backdrops/*-blur.jpg`
-- **Diagramas Archify:** `web/src/data/architecture/fenix-system-architecture.json` (lead, reserva y frontera de compliance, con 3 vistas) y `fenix-visitor-journey.json`.
+- **Diagramas Archify:** `web/src/data/architecture/fenix-system-architecture.json` (lead, reserva y frontera de compliance, con 3 vistas).
 - **Reel y capturas del sitio en vivo:** generar con `npx tsx scripts/capture-case-reels.ts fenix-medical-center` después de agregar el caso a `projectCases.ts` con `liveUrl`.

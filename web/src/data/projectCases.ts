@@ -30,7 +30,7 @@ export const PROJECT_CASES: ProjectCase[] = [
       t("Pacientes hispanos: sitio bilingüe y precios claros.", "Hispanic patients: a bilingual site and clear prices."),
     ],
     decisions: [
-      t("Un registro de 109 afirmaciones antes de escribir la primera página.", "A registry of 109 claims before writing the first page."),
+      t("Un registro de 109 afirmaciones con redacción permitida y prohibida.", "A registry of 109 claims with permitted and prohibited wording."),
       t("Formulario de 7 campos sin texto libre, con llave fail-closed hacia GoHighLevel.", "A 7-field form with no free text and a fail-closed switch into GoHighLevel."),
       t("Reserva en 3 pasos contra la agenda real del CRM.", "A 3-step booking against the CRM's real calendar."),
       t("Una base de 1.096 videos médicos públicos para escribir guiones con búsqueda por palabras clave.", "A base of 1,096 public medical videos to write scripts with keyword search."),
