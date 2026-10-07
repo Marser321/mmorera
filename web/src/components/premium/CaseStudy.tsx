@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, type ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -105,7 +105,11 @@ function MetricsBand({ metrics, liveUrl, isEs }: { metrics: CaseMetrics; liveUrl
   );
 }
 
-export function CaseStudy({ project }: { project: ProjectCase }) {
+/**
+ * `underTheHood`: sección "Bajo el capó" (server component con el diagrama de
+ * arquitectura del caso), si el caso la tiene. Va después del film.
+ */
+export function CaseStudy({ project, underTheHood }: { project: ProjectCase; underTheHood?: ReactNode }) {
   const { language } = useLanguage();
   const isEs = language === "es";
   const media = getCaseMedia(project.slug);
@@ -154,6 +158,9 @@ export function CaseStudy({ project }: { project: ProjectCase }) {
 
         {/* Film "Cómo lo resolví": el tráiler del caso con el sitio real */}
         <CaseFilmSection script={film} language={language} />
+
+        {/* Bajo el capó: la arquitectura real del sistema, interactiva */}
+        {underTheHood}
 
         {metrics && project.liveUrl && isShowcaseWorthy(metrics) && <MetricsBand metrics={metrics} liveUrl={project.liveUrl} isEs={isEs} />}
 

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CaseStudy } from "@/components/premium/CaseStudy";
+import { UnderTheHood } from "@/components/premium/UnderTheHood";
+import { hasArchitecture } from "@/data/architecture/registry";
 import { getProjectCase, PROJECT_CASES } from "@/data/projectCases";
 
 export function generateStaticParams() { return PROJECT_CASES.map(({ slug }) => ({ slug })); }
@@ -21,5 +23,5 @@ export default async function CasePage({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const project = getProjectCase(slug);
   if (!project) notFound();
-  return <CaseStudy project={project} />;
+  return <CaseStudy project={project} underTheHood={hasArchitecture(slug) ? <UnderTheHood slug={slug} language="es" brandSlug={slug} /> : null} />;
 }

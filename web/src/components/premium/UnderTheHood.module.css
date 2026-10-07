@@ -1,0 +1,578 @@
+/*
+ * "Bajo el capó": el diagrama de arquitectura de un caso con la piel de su
+ * marca. El server escribe los tokens de los dos temas (--uth-d-* oscuro,
+ * --uth-l-* claro, ver underTheHoodModel.themeVars) y acá se elige según la
+ * clase `light` de <html>, igual que la variante `light:` de Tailwind.
+ *
+ * La orientación del diagrama se decide por el ancho del marco (container
+ * query `uth`): debajo de 960px va la versión vertical. El mismo umbral usa
+ * el explorador con ResizeObserver (LANDSCAPE_MIN_WIDTH).
+ */
+
+.theme {
+  --uth-canvas: var(--uth-d-canvas);
+  --uth-surface: var(--uth-d-surface);
+  --uth-raised: var(--uth-d-raised);
+  --uth-line: var(--uth-d-line);
+  --uth-text: var(--uth-d-text);
+  --uth-muted: var(--uth-d-muted);
+  --uth-accent: var(--uth-d-accent);
+  --uth-accent-soft: var(--uth-d-accent-soft);
+  --uth-accent-ink: var(--uth-d-accent-ink);
+  --uth-danger: var(--uth-d-danger);
+  --uth-route: var(--uth-d-route);
+  --uth-plate: var(--uth-d-plate);
+  --uth-pill-mix: var(--uth-d-pill-mix);
+  --uth-pill-ink: var(--uth-d-pill-ink);
+  --uth-border-mix: var(--uth-d-border-mix);
+  --uth-tab-bg: var(--uth-d-tab-bg);
+  --uth-tab-ink: var(--uth-d-tab-ink);
+}
+
+:global(html.light) .theme {
+  --uth-canvas: var(--uth-l-canvas);
+  --uth-surface: var(--uth-l-surface);
+  --uth-raised: var(--uth-l-raised);
+  --uth-line: var(--uth-l-line);
+  --uth-text: var(--uth-l-text);
+  --uth-muted: var(--uth-l-muted);
+  --uth-accent: var(--uth-l-accent);
+  --uth-accent-soft: var(--uth-l-accent-soft);
+  --uth-accent-ink: var(--uth-l-accent-ink);
+  --uth-danger: var(--uth-l-danger);
+  --uth-route: var(--uth-l-route);
+  --uth-plate: var(--uth-l-plate);
+  --uth-pill-mix: var(--uth-l-pill-mix);
+  --uth-pill-ink: var(--uth-l-pill-ink);
+  --uth-border-mix: var(--uth-l-border-mix);
+  --uth-tab-bg: var(--uth-l-tab-bg);
+  --uth-tab-ink: var(--uth-l-tab-ink);
+}
+
+/* ---------- Marco ---------- */
+
+.frame {
+  container: uth / inline-size;
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  background: var(--uth-canvas);
+  color: var(--uth-text);
+  box-shadow: 0 50px 140px -60px rgb(0 0 0 / 0.85);
+}
+
+:global(html.light) .frame {
+  border-color: rgb(var(--ink-rgb) / 0.1);
+  box-shadow: 0 30px 90px -60px rgb(var(--ink-rgb) / 0.4);
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid var(--uth-line);
+}
+
+.toolbarTitle {
+  margin: 0;
+  font-family: var(--uth-font-label);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--uth-muted);
+}
+
+.tablist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.tab,
+.chip {
+  appearance: none;
+  border: 1px solid var(--uth-line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--uth-muted);
+  font-family: var(--uth-font-label);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  line-height: 1.2;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.tab {
+  min-height: 2.25rem;
+  padding: 0.5rem 0.875rem;
+  font-size: 0.75rem;
+}
+
+.tab:hover,
+.chip:hover {
+  color: var(--uth-text);
+  border-color: color-mix(in srgb, var(--uth-accent) 55%, transparent);
+}
+
+.tab[aria-selected="true"] {
+  background: var(--uth-tab-bg);
+  border-color: var(--uth-tab-bg);
+  color: var(--uth-tab-ink);
+}
+
+.tab:focus-visible,
+.chip:focus-visible,
+.linkButton:focus-visible,
+.close:focus-visible,
+.inspectorTitle:focus-visible {
+  outline: 2px solid var(--uth-accent-ink);
+  outline-offset: 2px;
+}
+
+@container uth (width >= 640px) {
+  .toolbar {
+    padding: 1rem 1.5rem;
+  }
+}
+
+/* ---------- Lienzo: alto reservado por el viewBox (sin CLS) ---------- */
+
+/* Bordes suaves (como en el film): al encuadrar una vista, lo que queda
+   cortado por el lienzo se desvanece en vez de cortarse en seco. El
+   desvanecido es más angosto que el margen del marco, así en "Todo" no toca
+   nada. */
+.canvas {
+  --uth-fade: 8px;
+  position: relative;
+  aspect-ratio: var(--uth-ar-l);
+  container-type: inline-size;
+  overflow: hidden;
+  background: var(--uth-canvas);
+  -webkit-mask-image:
+    linear-gradient(90deg, transparent, #000 var(--uth-fade), #000 calc(100% - var(--uth-fade)), transparent),
+    linear-gradient(180deg, transparent, #000 var(--uth-fade), #000 calc(100% - var(--uth-fade)), transparent);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(90deg, transparent, #000 var(--uth-fade), #000 calc(100% - var(--uth-fade)), transparent),
+    linear-gradient(180deg, transparent, #000 var(--uth-fade), #000 calc(100% - var(--uth-fade)), transparent);
+  mask-composite: intersect;
+}
+
+@container uth (width >= 960px) {
+  .canvas {
+    --uth-fade: 16px;
+  }
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+}
+
+/* El póster va centrado: en teléfonos el lienzo es más alto que el marco. */
+.posterLayer {
+  display: flex;
+  align-items: center;
+}
+
+.posterLayer[hidden] {
+  display: none;
+}
+
+.posterPortrait {
+  display: none;
+}
+
+@container uth (width < 960px) {
+  .canvas {
+    aspect-ratio: var(--uth-ar-p);
+  }
+
+  .posterLandscape {
+    display: none;
+  }
+
+  .posterPortrait {
+    display: block;
+  }
+}
+
+/* Teléfonos: lienzo cuadrado (o más alto si el marco ya lo es), así una
+   vista puede acercarse más que la panorámica, que queda centrada. */
+@container uth (width < 640px) {
+  .canvas {
+    aspect-ratio: var(--uth-ar-n);
+  }
+}
+
+/* El póster escala con el ancho del lienzo: 1 unidad del diagrama = --u. */
+.poster {
+  position: relative;
+  flex: none;
+  width: 100%;
+  aspect-ratio: var(--uth-frame-ar);
+  --u: calc(100cqw / var(--uth-frame-w));
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+}
+
+.posterSvg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.posterNode {
+  position: absolute;
+}
+
+/* ---------- Caja de componente (póster y explorador) ---------- */
+
+.card {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: calc(var(--u) * 3);
+  width: 100%;
+  height: 100%;
+  padding: calc(var(--u) * 8) calc(var(--u) * 10);
+  border: calc(var(--u) * 1.5) solid color-mix(in srgb, var(--role) var(--uth-border-mix), transparent);
+  border-radius: calc(var(--u) * var(--uth-radius) * 0.6);
+  background: var(--uth-raised);
+  color: var(--uth-text);
+  text-align: left;
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 6);
+  min-width: 0;
+}
+
+.cardLabel {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  font-family: var(--uth-font-display);
+  font-size: calc(var(--u) * var(--size, 13));
+  font-weight: 600;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cardTag {
+  flex: 0 0 auto;
+  padding: calc(var(--u) * 1) calc(var(--u) * 6);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--role) var(--uth-pill-mix), var(--uth-raised));
+  color: var(--uth-pill-ink);
+  font-family: var(--uth-font-label);
+  font-size: calc(var(--u) * 8);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.cardSub {
+  overflow: hidden;
+  font-family: var(--uth-font-body);
+  font-size: calc(var(--u) * var(--sub-size, 9.5));
+  line-height: 1.25;
+  color: var(--uth-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---------- Explorador (React Flow) ---------- */
+
+.flow {
+  position: absolute;
+  inset: 0;
+  --uth-zoom: 1;
+}
+
+.flow :global(.react-flow) {
+  background: transparent;
+}
+
+.flow :global(.react-flow__node) {
+  cursor: default;
+}
+
+.flow :global(.react-flow__node-component) {
+  cursor: pointer;
+}
+
+.flow :global(.react-flow__node-component:focus-visible) {
+  outline: none;
+}
+
+.flow :global(.react-flow__node-component:focus-visible) .card {
+  box-shadow: inset 0 0 0 calc(2px / var(--uth-zoom)) var(--uth-text);
+}
+
+.flow :global(.react-flow__handle) {
+  width: 1px;
+  height: 1px;
+  min-width: 0;
+  min-height: 0;
+  border: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Placas y rótulos: SVG fuera del viewport de React Flow, encima de rutas y
+   cajas (nunca las tocan), sincronizado por viewBox. */
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.node {
+  --u: 1px;
+  width: 100%;
+  height: 100%;
+  transition: opacity 0.3s ease;
+}
+
+.node[data-dim="true"] {
+  opacity: 0.22;
+}
+
+.node:hover .card,
+.node[data-focus="true"] .card {
+  border-color: var(--role);
+}
+
+.node[data-focus="true"] .card {
+  box-shadow: inset 0 0 0 calc(var(--u) * 3) color-mix(in srgb, var(--role) 16%, transparent);
+}
+
+.node[data-selected="true"] .card {
+  border-color: var(--role);
+  background: color-mix(in srgb, var(--role) 12%, var(--uth-raised));
+  box-shadow: inset 0 0 0 calc(var(--u) * 3) color-mix(in srgb, var(--role) 32%, transparent);
+}
+
+.dimmable {
+  transition: opacity 0.3s ease;
+}
+
+/* ---------- Banda inferior: nota de la vista e inspector ---------- */
+
+.band {
+  display: grid;
+  gap: 1.25rem;
+  min-height: 9rem;
+  padding: 1.25rem 1rem 1.5rem;
+  border-top: 1px solid var(--uth-line);
+}
+
+@container uth (width >= 760px) {
+  .band {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 2.5rem;
+    padding: 1.5rem;
+  }
+}
+
+.kicker {
+  margin: 0;
+  font-family: var(--uth-font-label);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--uth-accent-ink);
+}
+
+.noteText {
+  margin: 0.5rem 0 0;
+  max-width: 62ch;
+  font-family: var(--uth-font-body);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--uth-text);
+}
+
+.hint {
+  margin: 0;
+  max-width: 48ch;
+  font-family: var(--uth-font-body);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--uth-muted);
+}
+
+.inspector {
+  container: inspector / inline-size;
+  position: relative;
+  padding: 1rem 1.125rem 1.125rem;
+  border: 1px solid var(--uth-line);
+  border-radius: 1rem;
+  background: var(--uth-raised);
+}
+
+.inspectorHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding-right: 2.5rem;
+}
+
+.typeDot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: var(--role);
+}
+
+.pill {
+  padding: 0.125rem 0.5rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--role) var(--uth-pill-mix), var(--uth-raised));
+  color: var(--uth-pill-ink);
+  font-family: var(--uth-font-label);
+  font-size: 0.6875rem;
+  font-weight: 700;
+}
+
+.inspectorTitle {
+  margin: 0.625rem 0 0;
+  font-family: var(--uth-font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+  color: var(--uth-text);
+}
+
+.inspectorSub {
+  margin: 0.25rem 0 0;
+  font-family: var(--uth-font-body);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--uth-muted);
+  overflow-wrap: anywhere;
+}
+
+.close {
+  position: absolute;
+  top: 0.625rem;
+  right: 0.625rem;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--uth-muted);
+  cursor: pointer;
+}
+
+.close:hover {
+  border-color: var(--uth-line);
+  color: var(--uth-text);
+}
+
+.section {
+  margin-top: 1rem;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin-top: 0.5rem;
+}
+
+.chip {
+  min-height: 2rem;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+}
+
+.links {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+@container inspector (width >= 420px) {
+  .links {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+.linkList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.linkButton {
+  padding: 0.125rem 0;
+  border: 0;
+  background: transparent;
+  color: var(--uth-text);
+  font-family: var(--uth-font-body);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-align: left;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--uth-accent) 50%, transparent);
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.linkButton:hover {
+  text-decoration-color: var(--uth-accent);
+}
+
+.via {
+  margin-left: 0.375rem;
+  font-family: var(--uth-font-body);
+  font-size: 0.75rem;
+  color: var(--uth-muted);
+}
+
+.empty {
+  margin: 0.5rem 0 0;
+  font-family: var(--uth-font-body);
+  font-size: 0.8125rem;
+  color: var(--uth-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .node,
+  .dimmable,
+  .tab,
+  .chip {
+    transition: none;
+  }
+}
