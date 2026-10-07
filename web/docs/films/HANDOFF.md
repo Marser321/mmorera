@@ -7,7 +7,7 @@ Estado y reglas del sistema de "films de lanzamiento" del portfolio, para seguir
   - Film de apertura con scroll (`ScrollFilm`).
   - Sala de casos de uso (`UseCaseFilmRoom`): New Brothers como caso real; IA y CRM como ejemplos rotulados.
 - **Casos de éxito (`/casos-de-exito/[slug]`):** `CaseFilmSection` elige el film:
-  - **Insignia** si el slug está en `web/src/data/films/flagships/index.ts` (datos) y en `FLAGSHIP_LOADERS` de `FilmCanvas.tsx` (composición, cargada de forma diferida con `lazyComponent`: cada página baja solo su film). Hoy: Fénix (`FenixFilm`) y New Brothers (`NewBrothersFilm`).
+  - **Insignia** si el slug está en `web/src/data/films/flagships/index.ts` (datos) y en `FLAGSHIP_LOADERS` de `FilmCanvas.tsx` (composición, cargada de forma diferida con `lazyComponent`: cada página baja solo su film). Hoy: Fénix (`FenixFilm`), New Brothers (`NewBrothersFilm`), L&B (`LbWashFilm`) y AD Media (`AdMediaFilm`).
   - **Genérico** (`CaseFilm`) en los demás. Si el caso tiene marca en `caseBrands.ts`, se pinta con ella. Hoy: New Brothers, Fénix y AD Media. Detrás de los textos usa el sitio ya difuminado (`public/portfolio/backdrops/`), nunca la captura nítida.
 - **Home:** entrada del monograma (`LogoOvertureSection`) dentro de `#perfil`. Las flechas ">" y "Σ" se unen y giran hasta formar la M; la misma firma cierra cada film.
 
@@ -39,6 +39,7 @@ Estado y reglas del sistema de "films de lanzamiento" del portfolio, para seguir
 - **Scripts:**
   - `capture-case-reels.ts`: reels y capturas del sitio en vivo.
   - `capture-panel-shots.ts`: paneles por acceso demo público.
+  - `capture-film-flows.ts`: el cotizador de L&B en vivo (paso 2), la app real de la cuadrilla con paradas de ejemplo y el sitio de AD Media de arriba abajo sin el popup. No agenda ni envía nada.
   - `build-film-backdrops.ts`: fondos pre-difuminados con sharp.
   - `build-archify-layouts.ts` (`npx tsx`): valida las cuatro variantes de cada diagrama con Archify (`showcase`) y congela sus rutas. Correrlo después de tocar un JSON de arquitectura o su traducción.
   - `analyze-live-site.ts <slug>`: recorrido en vivo (rutas, formularios, integraciones como GoHighLevel, fuentes y colores servidos) → `docs/films/dossiers/live/<slug>.{json,md}`. No envía formularios ni inicia sesión.
@@ -114,15 +115,26 @@ Estado y reglas del sistema de "films de lanzamiento" del portfolio, para seguir
 ## Siguiente trabajo
 1. ~~Refinar New Brothers~~ (hecho, salvo recapturar a 2×: necesita red).
 2. ~~Film insignia de Fénix~~ (`FenixFilm`, 79,5 s): hecho y verificado (PR #17).
-3. ~~Film insignia y arquitectura de L&B Elite Wash & Detail~~ (`LbWashFilm`, 73,0 s):
+3. ~~Film insignia y arquitectura de L&B Elite Wash & Detail~~ (`LbWashFilm`, 74,5 s desde el 2026-10-07):
    - Dossier exhaustivo en `docs/films/dossiers/lb-wash.md` extraído de `../LyB Elite Wash Details/`.
    - Topología Archify database-less compilada en 4 variantes (landscape/portrait, ES/EN) sin colisiones ni desbordes.
    - Visor "Bajo el capó" activo en `/casos-de-exito/lb-elite-wash-detail`.
-   - Remotion `LbWashFilm.tsx` con apertura ParticleLogo, regla de flota ("Una visita es una camioneta en una casa"), cotizador dinámico por carrocería, arquitectura guiada de 3 vistas, app móvil de cuadrilla con feed de HighLevel CRM en vivo, y muro de verificación de ingeniería.
-   - Cero desbordes probados en `lbWashFilmLayout.test.ts` y 874/874 tests pasando.
+   - `LbWashFilm.tsx`, elevado el 2026-10-07:
+     - Camioneta real (`CinematicPlate`) con el monograma en partículas y la regla de la flota en beats.
+     - El cotizador real (`ScrollReel` del paso 2) y, al lado, la cita que crea su webhook: claves reales, hold `new` → `confirmed` y camioneta asignada.
+     - La arquitectura guiada en 3 vistas.
+     - La app real de la cuadrilla (`PhoneFrame`, paradas de ejemplo): un toque en "Atendida" la pasa a `showed`.
+     - 6 cifras verificadas y la firma.
+   - Cero desbordes probados en `lbWashFilmLayout.test.ts`.
    - Verificado con Playwright e2e en producción.
-4. **AD Media:** ya no hay métricas sin fuente en `caseTopologyData.ts`. Con red: `npx tsx scripts/analyze-live-site.ts ad-media-solution`, dossier, JSON de Archify (+ vertical + EN) y `AdMediaFilm`.
-   - El reel y las capturas guardadas de AD Media muestran solo el popup "Diagnóstico gratis" (tapa todo el sitio). `capture-case-reels.ts` ahora cierra ese tipo de modal ("×", "No, gracias…") y, si alguno sigue tapando la página o aparece durante el reel, no graba ese caso (queda el material anterior).
+4. ~~Film insignia de AD Media~~ (`AdMediaFilm`, 72,5 s): hecho (2026-10-07).
+   - El isotipo se forma en partículas sobre su propia grilla de construcción (`brand-grid.jpg`, recortada del manual de marca).
+   - La alianza: el CEO en placa y la división de roles (la agencia vende; la ingeniería es de marca blanca).
+   - El sitio en vivo en `ScrollReel` y la protagonista `pipeline-board`: Speed-to-Lead con reloj y pipeline de 5 etapas.
+   - Datos de ejemplo rotulados; la ventana de 30 s se presenta como meta, no como métrica (ver dossier § 5).
+   - `ceo.jpg` era una copia de `banner.jpg`; ahora es la foto real del CEO.
+   - L&B se elevó en la misma tanda: camioneta real, cotizador real y app real de la cuadrilla. El isotipo de L&B no tiene alfa: `particleMode: "dark"`.
+   - Pendiente aparte: el reel y las capturas genéricas de AD Media (`reels/`, `shots/ad-media-solution-*`) siguen mostrando solo el popup "Diagnóstico gratis" (el film insignia ya usa `site-recorrido.jpg`). `capture-case-reels.ts` ahora cierra ese tipo de modal ("×", "No, gracias…") y, si alguno sigue tapando la página o aparece durante el reel, no graba ese caso (queda el material anterior).
 5. **LNB:** esperar la carpeta de Mario y corregir la descripción del caso.
    - **Hub Profesional AI** tiene el mismo problema: el reel guardado de `profecionalcv.vercel.app` muestra un taller ("Mecánica Premium"), no una herramienta de CV con IA. Confirmar con Mario qué hay hoy en esa URL antes de armar su film.
 6. **Resto de los casos (requiere red):** análisis en vivo, marca real del CSS, JSON de Archify si hay sistema y film insignia con estructura propia (el test de estructura distinta los cubre a todos).

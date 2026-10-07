@@ -27,9 +27,9 @@ Un film de marca en este portfolio **no es una demo genérica ni un wireframe co
 1. **Monotonía en interpolaciones:**
    - `interpolate(frame, inputRange, outputRange)` **exige** que `inputRange` sea estrictamente monótono creciente: `[0, 15, 60, 75]`.
    - **NUNCA** pasar valores donde el segundo sea menor que el primero (ej. `[0, duration, 20, 20]`).
-   - Para transiciones de entrada y salida de escenas completas, usar siempre el componente probado:
+   - Para transiciones de entrada y salida de escenas completas, usar siempre el componente probado (entra en 16 frames y sale en los últimos 20):
      ```tsx
-     <Fade duration={duration} lead={16} tail={16}>
+     <Fade duration={duration}>
        {/* Contenido de la escena */}
      </Fade>
      ```
@@ -142,8 +142,8 @@ Presentación de credenciales técnicas y métricas verificadas con fuentes de c
 |---|---|---|---|---|---|---|
 | **Fénix Medical Center** | `fenix-medical-center` | ✅ Completo | ✅ Compilado | ✅ Completos | ✅ Nivel Maestro (79.5s) | **Modelo de referencia terminado**. |
 | **New Brothers Barbería** | `new-brothers-barberia` | ✅ Completo | ✅ Compilado | ✅ Completos | ✅ Pulido (72.0s) | Terminado. |
-| **L&B Elite Wash & Detail** | `lb-elite-wash-detail` | ✅ Completo (`lb-wash.md`) | ✅ Compilado (`lb-wash-architecture*`) | ✅ `banner.jpg`, `van-real.jpg`, `van.webp`, `mark.png` | ⚠️ Estructura lista, visuales planos | **Elevar visuales**: Usar las fotos reales de camionetas con `CinematicPlate`, capturas del cotizador con `ScrollReel`, y enmarcar la app de cuadrilla. |
-| **AD Media Solution** | `ad-media-solution` | ✅ Completo (`ad-media.md`) | ✅ Compilado (`ad-media-architecture*`) | ✅ `banner.jpg`, `ceo.jpg`, `logo-crm.png`, `mark.png`, `wordmark.png` | ⏳ Estructura lista | **Crear composición `AdMediaFilm.tsx`** con escena protagonista `pipeline-board` (Speed-to-Lead <30s + Kanban de 5 etapas) siguiendo el patrón de `FenixFilm.tsx`. |
+| **L&B Elite Wash & Detail** | `lb-elite-wash-detail` | ✅ Completo (`lb-wash.md`) | ✅ Compilado (`lb-wash-architecture*`) | ✅ `van-real.jpg`, `van.webp`, `mark.png` + capturas del cotizador y de la cuadrilla (`shots/`) | ✅ Nivel Fénix (74,5 s) | Terminado: camioneta real + monograma en partículas, `ScrollReel` del cotizador real con el webhook de la cita, app real de la cuadrilla en `PhoneFrame`. |
+| **AD Media Solution** | `ad-media-solution` | ✅ Completo (`ad-media.md`) | ✅ Compilado (`ad-media-architecture*`) | ✅ `brand-grid.jpg` (de `banner.jpg`), `ceo.jpg`, `logo-crm.png`, `mark.png`, `wordmark.png`, `shots/site-recorrido.jpg` | ✅ Nivel Fénix (72,5 s) | Terminado: isotipo sobre su grilla, la alianza con el CEO, el sitio en `ScrollReel` y la protagonista `pipeline-board` (Speed-to-Lead + 5 etapas, datos de ejemplo). |
 | **Truckers Choice** | `truckers-choice` | 🟡 En carpeta | ⏳ Pendiente | ✅ `truckers-cover.png` | ⏳ Pendiente | Escena bilingüe lado a lado. |
 | **Rangel Oviedo Group** | `rangel-oviedo-group` | 🟡 En carpeta | ⏳ Pendiente | ✅ `rangel-oviedo-cover.jpg` | ⏳ Pendiente | Recorrido editorial de asesoría inmobiliaria. |
 | **Mr. Studio Tattoo** | `mr-studio-tattoo` | ✅ Completo (`mr-studio.md`) | ⏳ Pendiente | ✅ `mrstudio-tattoo-cover.jpg`, shots y reels | ⏳ Listo para diagramar | **Construir escena protagónica `body-selector`** (Lovable + selector corporal anatómico interactivo + agenda señada). |
