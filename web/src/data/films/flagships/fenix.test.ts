@@ -30,6 +30,63 @@ const FORBIDDEN = [
   /optimiz|óptimo|optimal/i, // reemplazado por "Normal es un rango" (por ética)
 ];
 
+function archTexts(filename: string): string[] {
+  const content = JSON.parse(readFileSync(path.join(process.cwd(), "src/data/architecture", filename), "utf8"));
+  const out: string[] = [];
+  if (content.meta?.title) out.push(content.meta.title);
+  if (content.title) out.push(content.title);
+  if (Array.isArray(content.meta?.views)) {
+    for (const v of content.meta.views) {
+      if (v.label) out.push(v.label);
+      if (v.note) out.push(v.note);
+    }
+  }
+  if (content.views && typeof content.views === "object") {
+    for (const v of Object.values(content.views) as Array<{ label?: string; note?: string }>) {
+      if (v.label) out.push(v.label);
+      if (v.note) out.push(v.note);
+    }
+  }
+  if (Array.isArray(content.components)) {
+    for (const c of content.components) {
+      if (c.label) out.push(c.label);
+      if (c.sublabel) out.push(c.sublabel);
+      if (c.tag) out.push(c.tag);
+    }
+  }
+  if (content.components && !Array.isArray(content.components) && typeof content.components === "object") {
+    for (const c of Object.values(content.components) as Array<{ label?: string; sublabel?: string }>) {
+      if (c.label) out.push(c.label);
+      if (c.sublabel) out.push(c.sublabel);
+    }
+  }
+  if (Array.isArray(content.boundaries)) {
+    for (const b of content.boundaries) if (b.label) out.push(b.label);
+  }
+  if (content.boundaries && !Array.isArray(content.boundaries) && typeof content.boundaries === "object") {
+    for (const label of Object.values(content.boundaries) as string[]) out.push(label);
+  }
+  if (Array.isArray(content.connections)) {
+    for (const c of content.connections) if (c.label) out.push(c.label);
+  }
+  if (content.connections && !Array.isArray(content.connections) && typeof content.connections === "object") {
+    for (const label of Object.values(content.connections) as string[]) out.push(label);
+  }
+  if (Array.isArray(content.cards)) {
+    for (const card of content.cards) {
+      if (card.title) out.push(card.title);
+      if (Array.isArray(card.items)) out.push(...card.items);
+    }
+  }
+  return out;
+}
+
+const fenixArchTexts = [
+  ...archTexts("fenix-system-architecture.json"),
+  ...archTexts("fenix-system-architecture.portrait.json"),
+  ...archTexts("fenix-system-architecture.en.json"),
+];
+
 test("film insignia de Fénix", async (t) => {
   await t.test("capítulos contiguos que cubren todo el film", () => {
     let expected = 0;
@@ -46,7 +103,8 @@ test("film insignia de Fénix", async (t) => {
     const dossierNumbers = dossier.replace(/\./g, "").replace(/,/g, ".");
     for (const [key, fact] of Object.entries(FENIX_FACTS)) {
       const asText = fact.value.toString();
-      assert.ok(dossierNumbers.includes(asText), `${key}=${asText} no aparece en el dossier`);
+      const pattern = new RegExp(`\\b${asText.replace('.', '\\.')}\\b`);
+      assert.ok(pattern.test(dossierNumbers), `${key}=${asText} no aparece en el dossier`);
       assert.ok(fact.source.startsWith("Dossier") || fact.source.startsWith("Capturas"), `${key}: fuente sin documentar`);
     }
   });
@@ -67,7 +125,7 @@ test("film insignia de Fénix", async (t) => {
     for (const language of ["es", "en"] as const) {
       const project = PROJECT_CASES.find((item) => item.slug === "fenix-medical-center");
       const projectTexts = strings(project).filter((text) => !text.startsWith("/") && !text.startsWith("http") && !text.startsWith("#"));
-      for (const text of [...strings(FENIX_COPY[language]), ...FENIX_CHAPTERS.flatMap((chapter) => [chapter.caption[language], chapter.label[language]]), ...projectTexts]) {
+      for (const text of [...strings(FENIX_COPY[language]), ...FENIX_CHAPTERS.flatMap((chapter) => [chapter.caption[language], chapter.label[language]]), ...projectTexts, ...fenixArchTexts]) {
         for (const number of text.match(/\d[\d.,]*/g) ?? []) {
           const clean = number.replace(/[.,]$/, "");
           assert.ok(allowed.has(clean), `"${clean}" en "${text}" no es un hecho de FENIX_FACTS`);
@@ -79,7 +137,7 @@ test("film insignia de Fénix", async (t) => {
   await t.test("nada de testimonios, pacientes, FENIX OS, costos, precios ni claims prohibidos", () => {
     const project = PROJECT_CASES.find((item) => item.slug === "fenix-medical-center");
     assert.ok(project, "Fénix no está en PROJECT_CASES");
-    for (const text of [...strings(FENIX_COPY), ...strings(FENIX_CHAPTERS), ...strings(project)]) {
+    for (const text of [...strings(FENIX_COPY), ...strings(FENIX_CHAPTERS), ...strings(project), ...fenixArchTexts]) {
       for (const pattern of FORBIDDEN) assert.ok(!pattern.test(text), `"${text}" coincide con ${pattern}`);
     }
   });

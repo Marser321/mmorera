@@ -110,8 +110,8 @@ export const FENIX_CHAPTERS: FlagshipChapter[] = [
     id: "research",
     label: L("La investigación", "The research"),
     caption: L(
-      "Antes del diseño, la evidencia: 25 prompts de investigación en 6 líneas y un registro de 109 afirmaciones con redacción permitida y prohibida.",
-      "Before design, the evidence: 25 research prompts across 6 lines and a registry of 109 claims with permitted and prohibited wording.",
+      "La base de evidencia: 25 prompts de investigación en 6 líneas y un registro de 109 afirmaciones con redacción permitida y prohibida.",
+      "The evidence base: 25 research prompts across 6 lines and a registry of 109 claims with permitted and prohibited wording.",
     ),
     from: FENIX_TIMELINE.mechanism.from,
     durationInFrames: FENIX_TIMELINE.positioning.from - FENIX_TIMELINE.mechanism.from,
@@ -211,7 +211,7 @@ export interface FenixCopy {
   hooksLabel: string;
   engineeringKicker: string;
   engineeringTitle: string;
-  engineeringFacts: Array<{ key: FenixFactKey; label: string }>;
+  engineeringFacts: Array<{ key: FenixFactKey; label: string; source: string }>;
   qaLabel: string;
   qaGroups: string[];
   agentsLine: string;
@@ -265,9 +265,9 @@ export const FENIX_COPY: Record<FilmLanguage, FenixCopy> = {
     brainQuery: "oxígeno hiperbárico presión",
     brainTokens: ["oxígeno", "hiperbárico", "presión"],
     brainResults: [
-      { title: "Canal médico público · fragmento", fragment: "…dentro de la cámara, la presión hace que más oxígeno se disuelva en el plasma…" },
-      { title: "Canal médico público · fragmento", fragment: "…el oxígeno hiperbárico se indica en protocolos con un número definido de sesiones…" },
-      { title: "Canal médico público · fragmento", fragment: "…la presión de la cámara se mide en atmósferas absolutas…" },
+      { title: "Archivo de divulgación · ejemplo", fragment: "…dentro de la cámara, la presión hace que más oxígeno se disuelva en el plasma…" },
+      { title: "Archivo de divulgación · ejemplo", fragment: "…los estudios de oxigenación hiperbárica registran la presión en atmósferas absolutas…" },
+      { title: "Archivo de divulgación · ejemplo", fragment: "…en la literatura científica, el oxígeno hiperbárico se describe a presiones controladas…" },
     ],
     brainStats: [
       { key: "videos", label: "videos" },
@@ -296,10 +296,10 @@ export const FENIX_COPY: Record<FilmLanguage, FenixCopy> = {
     engineeringKicker: "Ingeniería",
     engineeringTitle: "Cada decisión, documentada.",
     engineeringFacts: [
-      { key: "adr", label: "decisiones documentadas (ADR)" },
-      { key: "commits", label: "commits" },
-      { key: "specs", label: "specs de Playwright" },
-      { key: "pages", label: "páginas en dos idiomas" },
+      { key: "adr", label: "decisiones documentadas (ADR)", source: "repositorio del proyecto" },
+      { key: "commits", label: "commits", source: "repositorio del proyecto" },
+      { key: "specs", label: "specs de Playwright", source: "repositorio del proyecto" },
+      { key: "pages", label: "páginas en dos idiomas", source: "sitio en producción" },
     ],
     qaLabel: "chequeos de producción",
     qaGroups: ["Headers", "44 rutas", "SEO", "Redirects", "Endpoint de lead", "Calendario GHL"],
@@ -352,9 +352,9 @@ export const FENIX_COPY: Record<FilmLanguage, FenixCopy> = {
     brainQuery: "hyperbaric oxygen pressure",
     brainTokens: ["hyperbaric", "oxygen", "pressure"],
     brainResults: [
-      { title: "Public medical channel · fragment", fragment: "…inside the chamber, pressure makes more oxygen dissolve into plasma…" },
-      { title: "Public medical channel · fragment", fragment: "…hyperbaric oxygen is prescribed in protocols with a set number of sessions…" },
-      { title: "Public medical channel · fragment", fragment: "…chamber pressure is measured in atmospheres absolute…" },
+      { title: "Public archive transcript · sample", fragment: "…inside the chamber, pressure makes more oxygen dissolve into plasma…" },
+      { title: "Public archive transcript · sample", fragment: "…hyperbaric oxygenation studies record chamber pressure in atmospheres absolute…" },
+      { title: "Public archive transcript · sample", fragment: "…in scientific literature, hyperbaric oxygen is studied under controlled pressures…" },
     ],
     brainStats: [
       { key: "videos", label: "videos" },
@@ -383,10 +383,10 @@ export const FENIX_COPY: Record<FilmLanguage, FenixCopy> = {
     engineeringKicker: "Engineering",
     engineeringTitle: "Every decision, documented.",
     engineeringFacts: [
-      { key: "adr", label: "documented decisions (ADR)" },
-      { key: "commits", label: "commits" },
-      { key: "specs", label: "Playwright specs" },
-      { key: "pages", label: "pages in two languages" },
+      { key: "adr", label: "documented decisions (ADR)", source: "project repository" },
+      { key: "commits", label: "commits", source: "project repository" },
+      { key: "specs", label: "Playwright specs", source: "project repository" },
+      { key: "pages", label: "pages in two languages", source: "production site" },
     ],
     qaLabel: "production checks",
     qaGroups: ["Headers", "44 routes", "SEO", "Redirects", "Lead endpoint", "GHL calendar"],
