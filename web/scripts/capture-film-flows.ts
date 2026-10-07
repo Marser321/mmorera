@@ -21,7 +21,7 @@
  */
 import { mkdirSync, readFileSync } from "node:fs";
 import path from "node:path";
-import { chromium, type Browser, type Page } from "playwright";
+import { chromium, type Browser, type BrowserContext, type Page } from "playwright";
 
 const PUBLIC = path.join(process.cwd(), "public/portfolio/brands");
 const LB_SITE = path.join(process.cwd(), "../LyB Elite Wash Details/site");
@@ -124,13 +124,158 @@ async function adSite(browser: Browser) {
   return [out];
 }
 
-const TARGETS: Record<string, (browser: Browser) => Promise<string[]>> = { "lb-quoter": lbQuoter, "lb-crew": lbCrew, "ad-site": adSite };
+/**
+ * Solo lectura sobre un sitio en producción: ninguna petición que escriba
+ * (POST, PUT…) ni llamada a CRM, pagos o funciones sale del navegador, así un
+ * recorrido con datos de ejemplo no crea contactos ni cobra nada.
+ */
+async function readOnly(context: BrowserContext) {
+  await context.route("**/*", (route) => {
+    const request = route.request();
+    if (request.method() !== "GET" || /leadconnector|msgsndr|gohighlevel|functions\/v1|stripe|zapier|make\.com/i.test(request.url())) return route.abort();
+    return route.continue();
+  });
+}
+
+/**
+ * Reserva EN VIVO de Mr. Studio Tattoo (versión publicada), con datos de
+ * ejemplo y en solo lectura. Se detiene en el paso 7 ("Tus datos"): no se
+ * cargan datos de contacto ni se llega al calendario ni al depósito.
+ */
+async function mrLiveBooking(browser: Browser) {
+  // A 2×: la escena del selector se acerca a la figura sin ampliar píxeles.
+  const context = await browser.newContext({ viewport: { width: 1440, height: 1100 }, deviceScaleFactor: 2, colorScheme: "dark" });
+  await readOnly(context);
+  const page = await context.newPage();
+  await page.goto("https://www.mrstudiotattoo.com/booking", { waitUntil: "networkidle", timeout: 60_000 }).catch(() => page.waitForLoadState("load"));
+  await page.waitForTimeout(2000);
+  const dir = path.join(PUBLIC, "mr-studio-tattoo/shots");
+  const clip = { x: 240, y: 0, width: 960, height: 1100 };
+  const files: string[] = [];
+  const shot = async (name: string) => {
+    await page.waitForTimeout(600);
+    const out = path.join(dir, `live-${name}.jpg`);
+    await page.screenshot({ path: out, clip, ...JPEG });
+    files.push(out);
+  };
+  const advance = async () => {
+    await page.locator("button:visible").filter({ hasText: /Continuar|Elegir/i }).last().click();
+    await page.waitForTimeout(1300);
+  };
+  await page.locator("input[type=date]").fill("1995-06-15");
+  await shot("1-edad");
+  await advance();
+  await page.locator("button:visible").filter({ hasText: /^Tatuaje/ }).first().click();
+  await shot("2-servicio");
+  await advance();
+  await page.locator("button:visible").filter({ hasText: /Ramsés/ }).first().click();
+  await shot("3-artista");
+  await advance();
+  await page.locator("button:visible").filter({ hasText: /^Mediano/ }).first().click();
+  await shot("4-tamano");
+  await advance();
+  await shot("5-zona");
+  await page.locator('svg path[id="forearm"]').first().click({ force: true });
+  await shot("5-zona-antebrazo");
+  await page.getByRole("tab", { name: /Espalda/i }).click();
+  await shot("5-zona-espalda");
+  await page.getByRole("tab", { name: /Frente/i }).click();
+  await advance();
+  await page.locator("textarea:visible").first().fill("Rosa realista en el antebrazo, en negro y rojo (ejemplo).");
+  await shot("6-concepto");
+  await context.close();
+  return files;
+}
+
+/**
+ * Truckers Choice EN VIVO, en /en y en /es con el mismo encuadre:
+ * - Tres paradas del recorrido bilingüe (hero, "un solo techo" y oficinas) a
+ *   1920×1200. Las secciones tienen la misma estructura en los dos idiomas, así
+ *   que se ubican por índice.
+ * - Los paquetes y los tres pasos del formulario de cotización a 1920×1080: el servicio, la
+ *   operación con datos de ejemplo y el paso de contacto vacío (el sitio está
+ *   en modo vista previa y no envía nada; igual corre en solo lectura).
+ */
+async function tcSite(browser: Browser) {
+  const dir = path.join(PUBLIC, "truckers-choice/shots");
+  const files: string[] = [];
+  const stops = [
+    { id: "hero", section: 0 },
+    { id: "roof", section: 2 },
+    { id: "offices", section: 7 },
+  ];
+  for (const language of ["en", "es"] as const) {
+    const context = await browser.newContext({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 4 / 3, colorScheme: "dark" });
+    await readOnly(context);
+    for (const stop of stops) {
+      // Una carga por parada: el sitio suaviza el scroll por JS y, después de
+      // recorrerlo con la rueda, pisaría cualquier salto con su propio destino.
+      const page = await context.newPage();
+      await page.goto(`https://truckers-choice-web-site.vercel.app/${language}`, { waitUntil: "networkidle", timeout: 60_000 }).catch(() => page.waitForLoadState("load"));
+      await page.addStyleTag({ content: HIDE_FLOATING });
+      await page.waitForTimeout(800);
+      await page.evaluate(`(() => { const s = document.querySelectorAll("section")[${stop.section}]; window.scrollTo({ top: ${stop.section} === 0 ? 0 : s.getBoundingClientRect().top + window.scrollY - 72, behavior: "instant" }); })()`);
+      // Las secciones se revelan al entrar en vista.
+      await page.waitForTimeout(2500);
+      const out = path.join(dir, `${language}-${stop.id}.jpg`);
+      await page.screenshot({ path: out, ...JPEG });
+      files.push(out);
+      await page.close();
+    }
+    await context.close();
+  }
+  for (const language of ["en", "es"] as const) {
+    // 1280×720 a 1,5× = 1920×1080.
+    const context = await browser.newContext({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1.5, colorScheme: "dark" });
+    await readOnly(context);
+    const page = await context.newPage();
+    // Los paquetes: la sección se ubica por su título (cada uno lleva a la cotización).
+    await page.goto(`https://truckers-choice-web-site.vercel.app/${language}`, { waitUntil: "networkidle", timeout: 60_000 }).catch(() => page.waitForLoadState("load"));
+    await page.addStyleTag({ content: HIDE_FLOATING });
+    await page.waitForTimeout(800);
+    await page.evaluate(`(() => { const s = [...document.querySelectorAll("section")].find((el) => /pile of filings|comprar trámites/i.test(el.textContent)); window.scrollTo({ top: s.getBoundingClientRect().top + window.scrollY - 40, behavior: "instant" }); })()`);
+    await page.waitForTimeout(2500);
+    const packages = path.join(dir, `${language}-quote-0.jpg`);
+    await page.screenshot({ path: packages, clip: { x: 80, y: 60, width: 1280, height: 720 }, ...JPEG });
+    files.push(packages);
+    await page.goto(`https://truckers-choice-web-site.vercel.app/${language}/contact?package=prepare-to-operate`, { waitUntil: "networkidle", timeout: 60_000 }).catch(() => page.waitForLoadState("load"));
+    await page.addStyleTag({ content: HIDE_FLOATING });
+    const form = page.locator("form").first();
+    const quoteShot = async (step: number) => {
+      await page.waitForTimeout(700);
+      const box = await form.boundingBox();
+      if (!box) throw new Error("Truckers: no se encontró el formulario");
+      const out = path.join(dir, `${language}-quote-${step}.jpg`);
+      await page.screenshot({ path: out, clip: { x: Math.max(0, box.x - 88), y: Math.min(180, Math.max(0, box.y + box.height / 2 - 360)), width: 1280, height: 720 }, ...JPEG });
+      files.push(out);
+    };
+    const advance = () => page.getByRole("button", { name: /^(Continue|Continuar)/ }).click();
+    await form.locator("button").filter({ hasText: /^(Truck Insurance|Seguro de Camiones)/ }).first().click();
+    await quoteShot(1);
+    await advance();
+    await page.waitForTimeout(700);
+    await form.locator("select").first().selectOption({ index: 1 });
+    const inputs = form.locator("input:not([type=hidden]):not([type=checkbox]):not([type=radio])");
+    await inputs.nth(0).fill("FL");
+    await inputs.nth(1).fill("2");
+    await quoteShot(2);
+    await advance();
+    // Paso 3: datos de contacto. Se captura vacío; no se escribe nada.
+    await quoteShot(3);
+    await context.close();
+  }
+  return files;
+}
+
+const TARGETS: Record<string, (browser: Browser) => Promise<string[]>> = { "lb-quoter": lbQuoter, "lb-crew": lbCrew, "ad-site": adSite, "mr-live-booking": mrLiveBooking, "tc-site": tcSite };
 
 async function main() {
   const only = process.argv[2];
   if (only && !TARGETS[only]) throw new Error(`Captura desconocida: ${only} (${Object.keys(TARGETS).join(", ")})`);
   mkdirSync(path.join(PUBLIC, "lb-elite-wash-detail/shots"), { recursive: true });
   mkdirSync(path.join(PUBLIC, "ad-media-solution/shots"), { recursive: true });
+  mkdirSync(path.join(PUBLIC, "mr-studio-tattoo/shots"), { recursive: true });
+  mkdirSync(path.join(PUBLIC, "truckers-choice/shots"), { recursive: true });
   const browser = await chromium.launch();
   try {
     for (const [name, capture] of Object.entries(TARGETS)) {

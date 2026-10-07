@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { FILM_FPS } from "../filmTypes";
 import { FLAGSHIP_FILMS } from "./index";
+import { FLAGSHIP_SLUGS } from "./slugs";
 import { heroScene, type SceneKind } from "./types";
 
 /** Subsecuencia común más larga entre dos listas de tipos de escena. */
@@ -46,4 +47,8 @@ test("films insignia: cada cliente con su propia estructura", async (t) => {
       }
     }
   });
+});
+
+test("films insignia: la lista liviana de la navegación coincide con los films", () => {
+  assert.deepEqual([...FLAGSHIP_SLUGS].sort(), Object.keys(FLAGSHIP_FILMS).sort());
 });

@@ -3,7 +3,9 @@
 import { Player, type PlayerRef } from "@remotion/player";
 import type React from "react";
 import { FILM_FORMATS, FILM_FPS, type FilmFormat, type FilmLanguage } from "@/data/films/filmTypes";
+import { BrandLaunchReel, type BrandLaunchReelProps } from "./compositions/BrandLaunchReel";
 import { CaseFilm, type CaseFilmProps } from "./compositions/CaseFilm";
+import { LinkedInLaunchReel, type LinkedInLaunchReelProps } from "./compositions/LinkedInLaunchReel";
 import { LogoOverture, type LogoOvertureProps } from "./compositions/LogoOverture";
 import { SystemsOpening, type SystemsOpeningProps } from "./compositions/SystemsOpening";
 import { UseCaseFilm, type UseCaseFilmProps } from "./compositions/UseCaseFilm";
@@ -13,6 +15,8 @@ export type FilmSource =
   | { kind: "use-case"; props: UseCaseFilmProps; durationInFrames: number }
   | { kind: "case"; props: CaseFilmProps; durationInFrames: number }
   | { kind: "logo"; props: LogoOvertureProps; durationInFrames: number }
+  | { kind: "brand-launch"; props: BrandLaunchReelProps; durationInFrames: number }
+  | { kind: "linkedin-launch"; props: LinkedInLaunchReelProps; durationInFrames: number }
   | { kind: "flagship"; props: FlagshipProps; durationInFrames: number };
 
 export type FlagshipProps = { slug: string; language: FilmLanguage };
@@ -28,6 +32,8 @@ const FLAGSHIP_LOADERS: Record<string, () => Promise<FlagshipModule>> = {
   "ad-media-solution": () => import("./compositions/AdMediaFilm").then((module) => ({ default: module.AdMediaFilm })),
   "fenix-medical-center": () => import("./compositions/FenixFilm").then((module) => ({ default: module.FenixFilm })),
   "lb-elite-wash-detail": () => import("./compositions/LbWashFilm").then((module) => ({ default: module.LbWashFilm })),
+  "mr-studio-tattoo": () => import("./compositions/MrStudioFilm").then((module) => ({ default: module.MrStudioFilm })),
+  "truckers-choice": () => import("./compositions/TruckersFilm").then((module) => ({ default: module.TruckersFilm })),
   "new-brothers-barberia": () => import("./compositions/NewBrothersFilm").then((module) => ({ default: module.NewBrothersFilm })),
 };
 
@@ -70,6 +76,10 @@ export function FilmCanvas({ source, format, onPlayer, initialFrame = 0 }: FilmC
       return <Player {...shared} component={CaseFilm} inputProps={source.props} />;
     case "logo":
       return <Player {...shared} component={LogoOverture} inputProps={source.props} />;
+    case "brand-launch":
+      return <Player {...shared} component={BrandLaunchReel} inputProps={source.props} />;
+    case "linkedin-launch":
+      return <Player {...shared} component={LinkedInLaunchReel} inputProps={source.props} />;
     case "flagship": {
       const loader = FLAGSHIP_LOADERS[source.props.slug];
       return loader ? <Player {...shared} lazyComponent={loader} inputProps={{ language: source.props.language }} /> : null;

@@ -30,7 +30,11 @@ export type SceneKind =
   | "signature"
   | "vehicle-quote"
   | "fleet-routing"
-  | "field-crew";
+  | "field-crew"
+  | "body-selector"
+  | "consent-split"
+  | "bilingual-split"
+  | "one-roof";
 
 export interface FlagshipScene {
   id: string;
