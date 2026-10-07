@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, type KeyboardEvent } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import {
   BaseEdge,
   Handle,
@@ -149,28 +149,46 @@ const FLY_MS = 650;
  * encuadra sus nodos. Se anima solo al cambiar de vista; al cambiar el tamaño
  * del lienzo se reencuadra al instante.
  */
-function Camera({ model, viewId, reducedMotion, onReady, onZoom }: { model: ArchitectureModel; viewId: string | null; reducedMotion: boolean; onReady: () => void; onZoom: (zoom: number) => void }) {
+function Camera({
+  model,
+  viewId,
+  reducedMotion,
+  onReady,
+  onZoom,
+  onFramedZoom,
+  resetTrigger,
+}: {
+  model: ArchitectureModel;
+  viewId: string | null;
+  reducedMotion: boolean;
+  onReady: () => void;
+  onZoom: (zoom: number) => void;
+  onFramedZoom: (zoom: number) => void;
+  resetTrigger: number;
+}) {
   const { fitBounds, fitView, getViewport } = useReactFlow();
   const initialized = useNodesInitialized();
   const width = useStore((state) => state.width);
   const height = useStore((state) => state.height);
-  const last = useRef<{ viewId: string | null } | null>(null);
+  const last = useRef<{ viewId: string | null; resetTrigger: number } | null>(null);
 
   useEffect(() => {
     if (!initialized || !width || !height) return;
     const previous = last.current;
-    last.current = { viewId };
-    const duration = previous !== null && previous.viewId !== viewId && !reducedMotion ? FLY_MS : 0;
+    last.current = { viewId, resetTrigger };
+    const duration = previous !== null && (previous.viewId !== viewId || previous.resetTrigger !== resetTrigger) && !reducedMotion ? FLY_MS : 0;
     const focus = viewId ? (model.diagram.meta.views?.find((view) => view.id === viewId)?.focus ?? null) : null;
     const { frame } = model;
     const fit = focus?.length
       ? fitView({ nodes: focus.map((id) => ({ id })), padding: 0.08, maxZoom: FOCUS_ZOOM_MAX, duration })
       : fitBounds({ x: frame.x, y: frame.y, width: frame.w, height: frame.h }, { padding: 0, duration });
     void fit.then(() => {
-      onZoom(getViewport().zoom);
+      const z = getViewport().zoom;
+      onZoom(z);
+      onFramedZoom(z);
       if (previous === null) onReady();
     });
-  }, [fitBounds, fitView, getViewport, height, initialized, model, onReady, onZoom, reducedMotion, viewId, width]);
+  }, [fitBounds, fitView, getViewport, height, initialized, model, onFramedZoom, onReady, onZoom, reducedMotion, resetTrigger, viewId, width]);
 
   return null;
 }
@@ -178,6 +196,16 @@ function Camera({ model, viewId, reducedMotion, onReady, onZoom }: { model: Arch
 export function ArchitectureExplorer({ model, language, idPrefix, radius, viewId, selectedId, onSelect, onReady, reducedMotion }: ArchitectureExplorerProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const isEs = language === "es";
+
+  const [currentZoom, setCurrentZoom] = useState<number>(1);
+  const [framedZoom, setFramedZoom] = useState<number | null>(null);
+  const [resetTrigger, setResetTrigger] = useState<number>(0);
+
+  const isZoomed = Boolean(framedZoom && currentZoom > framedZoom * 1.05);
+
+  const resetFraming = useCallback(() => {
+    setResetTrigger((prev) => prev + 1);
+  }, []);
 
   // Nodos y aristas fijos por diagrama; foco y selección van por contexto.
   const nodes = useMemo<ExplorerNode[]>(() => {
@@ -273,8 +301,8 @@ export function ArchitectureExplorer({ model, language, idPrefix, radius, viewId
           autoPanOnNodeFocus
           zoomOnScroll={false}
           panOnScroll={false}
-          preventScrolling={false}
-          panOnDrag={false}
+          preventScrolling={isZoomed}
+          panOnDrag={isZoomed}
           zoomOnPinch
           zoomOnDoubleClick={false}
           deleteKeyCode={null}
@@ -288,10 +316,31 @@ export function ArchitectureExplorer({ model, language, idPrefix, radius, viewId
             if (node.type === "component") onSelect(node.id === selectedId ? null : node.id);
           }}
           onPaneClick={() => onSelect(null)}
-          onMove={(_, viewport) => setZoom(viewport.zoom)}
+          onMove={(_, viewport) => {
+            setZoom(viewport.zoom);
+            setCurrentZoom(viewport.zoom);
+          }}
         >
           <OverlayLayer model={model} />
-          <Camera model={model} viewId={viewId} reducedMotion={reducedMotion} onReady={ready} onZoom={setZoom} />
+          {isZoomed ? (
+            <button
+              type="button"
+              className={styles.resetButton}
+              onClick={resetFraming}
+              aria-label={isEs ? "Restablecer encuadre del diagrama" : "Reset diagram framing"}
+            >
+              {isEs ? "Restablecer" : "Reset"}
+            </button>
+          ) : null}
+          <Camera
+            model={model}
+            viewId={viewId}
+            reducedMotion={reducedMotion}
+            onReady={ready}
+            onZoom={setZoom}
+            onFramedZoom={setFramedZoom}
+            resetTrigger={resetTrigger}
+          />
         </ReactFlow>
       </StateContext.Provider>
     </div>

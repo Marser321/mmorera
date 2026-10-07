@@ -1,14 +1,26 @@
 /**
- * Modelo puro de "Bajo el capó": geometría, estados de foco, nodos y aristas
- * del diagrama interactivo y tokens de color. Sin React ni @xyflow/react: lo
- * usan el póster del server, el explorador del cliente y los tests.
+ * Modelo puro de "Bajo el capó": estados de foco, nodos y aristas del
+ * diagrama interactivo y tokens de color. Sin React ni @xyflow/react: lo usan
+ * el póster del server, el explorador del cliente y los tests.
  *
- * Todo sale de la geometría congelada por Archify (`*.layout.json`): las
- * cajas, rutas y placas se dibujan exactamente donde Archify las validó, así
- * nada se pisa en ninguna orientación ni idioma.
+ * La geometría compartida con los films (marco, rótulos de grupo, placas,
+ * tipografía de las cajas y colores por rol) vive en
+ * `@/data/architecture/diagramModel`: sitio y film dibujan lo mismo.
  */
 import { edgeKey, typeRole, viewFocus, type ArchifyArchitecture, type ArchifyComponent, type ArchifyComponentType, type ArchifyLayout, type Box } from "@/data/architecture/archify";
 import type { ArchitectureOrientation } from "@/data/architecture/bundle";
+import {
+  boundaryTitles,
+  cardTextSizes,
+  connectionPlates,
+  DANGER,
+  diagramFrame,
+  visibleTag,
+  type BoundaryTitle,
+  type CardFonts,
+  type ComponentRole,
+  type Plate,
+} from "@/data/architecture/diagramModel";
 import type { CaseBrand } from "@/data/brands/caseBrands";
 import type { FilmLanguage } from "@/data/films/filmTypes";
 
@@ -18,125 +30,19 @@ import type { FilmLanguage } from "@/data/films/filmTypes";
  * la vertical lo lleva a 9–13 px con el mismo ancho.
  */
 export const LANDSCAPE_MIN_WIDTH = 960;
-/** Margen (unidades del diagrama) alrededor de todo lo dibujado. */
-export const FRAME_PAD = 24;
 /** Opacidad de lo que queda fuera de foco en una vista. */
 export const DIM_OPACITY = 0.22;
-/** Rótulos de grupo: cuerpo, alto de la banda y ancho estimado por carácter (mayúsculas + tracking). */
-export const TITLE_FONT = 9;
-const TITLE_HEIGHT = 16;
-const TITLE_EM_PER_CHAR = 0.78;
-const TITLE_GAP = 3;
 
 export const boundaryNodeId = (index: number) => `__boundary-${index}`;
 
-export type ComponentRole = ReturnType<typeof typeRole>;
-
 export function orientationFor(width: number): ArchitectureOrientation {
   return width < LANDSCAPE_MIN_WIDTH ? "portrait" : "landscape";
-}
-
-/** Marco del dibujo: todo lo que se pinta (cajas, grupos, rutas y placas) más un margen. */
-export function diagramFrame(layout: ArchifyLayout, pad = FRAME_PAD): Box {
-  let minX = Infinity;
-  let minY = Infinity;
-  let maxX = -Infinity;
-  let maxY = -Infinity;
-  const add = (x: number, y: number, w = 0, h = 0) => {
-    minX = Math.min(minX, x);
-    minY = Math.min(minY, y);
-    maxX = Math.max(maxX, x + w);
-    maxY = Math.max(maxY, y + h);
-  };
-  layout.components.forEach((box) => add(box.x, box.y, box.w, box.h));
-  layout.boundaries.forEach((box) => add(box.x, box.y, box.w, box.h));
-  layout.connections.forEach((connection) => {
-    connection.points.forEach(([x, y]) => add(x, y));
-    if (connection.label) add(connection.label.x, connection.label.y, connection.label.w, connection.label.h);
-  });
-  if (!Number.isFinite(minX)) return { x: 0, y: 0, w: layout.viewBox[0], h: layout.viewBox[1] };
-  return { x: minX - pad, y: minY - pad, w: maxX - minX + pad * 2, h: maxY - minY + pad * 2 };
 }
 
 /** Proporción del lienzo en teléfonos (CSS aspect-ratio): cuadrado, o la del marco si ya es más alto. */
 export function narrowAspect(frame: Box) {
   return frame.w > frame.h ? "1 / 1" : `${frame.w} / ${frame.h}`;
 }
-
-const rectsTouch = (a: Box, b: Box, gap = 0) => a.x < b.x + b.w + gap && b.x < a.x + a.w + gap && a.y < b.y + b.h + gap && b.y < a.y + a.h + gap;
-
-/** ¿El tramo ortogonal a→b atraviesa la caja (con holgura)? */
-function segmentTouches(a: [number, number], b: [number, number], box: Box, gap = 0) {
-  const minX = Math.min(a[0], b[0]);
-  const maxX = Math.max(a[0], b[0]);
-  const minY = Math.min(a[1], b[1]);
-  const maxY = Math.max(a[1], b[1]);
-  return minX < box.x + box.w + gap && maxX > box.x - gap && minY < box.y + box.h + gap && maxY > box.y - gap;
-}
-
-export type Plate = { key: string; text: string; x: number; y: number; w: number; h: number };
-export type BoundaryTitle = { index: number; label: string; security: boolean; x: number; y: number; w: number; h: number; fontSize: number; fallback: boolean };
-
-export function connectionPlates(layout: ArchifyLayout): Plate[] {
-  return layout.connections.flatMap((connection) => (connection.label ? [{ key: edgeKey(connection.from, connection.to), ...connection.label }] : []));
-}
-
-/** Ancho reservado para un rótulo de grupo (mayúsculas con tracking, estimación generosa). */
-export function titleWidth(label: string, fontSize = TITLE_FONT) {
-  return Math.ceil(label.length * fontSize * TITLE_EM_PER_CHAR + 4);
-}
-
-/**
- * Rótulo de cada grupo en la banda superior de su marco, en el primer tramo
- * (de izquierda a derecha) que no toca rutas, cajas, placas ni otro rótulo.
- * Archify garantiza la banda libre de cajas; las rutas que entran por arriba
- * pueden cruzarla, así que se busca el hueco.
- */
-export function boundaryTitles(layout: ArchifyLayout): BoundaryTitle[] {
-  const plates = connectionPlates(layout);
-  const placed: BoundaryTitle[] = [];
-  layout.boundaries.forEach((boundary, index) => {
-    const y = boundary.y + 4;
-    const available = boundary.w - 12;
-    const w = Math.min(available, titleWidth(boundary.label));
-    const blocked = (candidate: Box) =>
-      layout.components.some((box) => rectsTouch(candidate, box, TITLE_GAP)) ||
-      plates.some((plate) => rectsTouch(candidate, plate, TITLE_GAP)) ||
-      placed.some((title) => rectsTouch(candidate, title, TITLE_GAP)) ||
-      layout.connections.some((connection) => connection.points.slice(1).some((point, step) => segmentTouches(connection.points[step], point, candidate, TITLE_GAP)));
-    let slot: number | null = null;
-    for (let x = boundary.x + 6; x + w <= boundary.x + boundary.w - 6; x += 2) {
-      if (!blocked({ x, y, w, h: TITLE_HEIGHT })) {
-        slot = x;
-        break;
-      }
-    }
-    placed.push({
-      index,
-      label: boundary.label,
-      security: boundary.kind === "security-group",
-      x: slot ?? boundary.x + 6,
-      y,
-      w,
-      h: TITLE_HEIGHT,
-      fontSize: TITLE_FONT,
-      fallback: slot === null,
-    });
-  });
-  return placed;
-}
-
-/** La etiqueta técnica se omite si su grupo ya la nombra (p. ej. "Next.js 16"), igual que en el film. */
-export function visibleTag(diagram: ArchifyArchitecture, component: ArchifyComponent) {
-  if (!component.tag) return null;
-  const wrapper = diagram.boundaries?.find((boundary) => boundary.wraps.includes(component.id));
-  return wrapper?.label.toLowerCase().includes(component.tag.toLowerCase()) ? null : component.tag;
-}
-
-/* ---------- Tipografía de las cajas ---------- */
-
-/** Familias CSS con las que se escriben las cajas (las de la marca del caso). */
-export type CardFonts = { display: string; body: string; label: string };
 
 /** Tipografías del sitio para casos sin marca cargada. */
 export const SITE_FONTS: CardFonts = {
@@ -145,74 +51,34 @@ export const SITE_FONTS: CardFonts = {
   label: "var(--ff-mono), monospace",
 };
 
-/** Ancho aproximado de un carácter (em) en una sans de proporciones normales. */
-function charEm(char: string) {
-  if (char === "→") return 1;
-  if (char === "·") return 0.3;
-  if (/[ilj.,:;'’|!]/.test(char)) return 0.28;
-  if (/[ftrI\-/()[\] ]/.test(char)) return 0.36;
-  if (/[mwMW]/.test(char)) return 0.85;
-  if (/[A-Z]/.test(char)) return 0.68;
-  if (/[0-9]/.test(char)) return 0.58;
-  if (char === "_") return 0.55;
-  return 0.54;
-}
-
-/** Ancho estimado de un texto en em (multiplicar por el cuerpo y por `fontWidth`). */
-export const textEm = (text: string) => Array.from(text).reduce((sum, char) => sum + charEm(char), 0);
-
-/**
- * Factor de ancho de cada familia respecto de la estimación de `textEm`,
- * medido en Chromium con las fuentes de las marcas (peso de las cajas), con
- * holgura sobre el caso más ancho medido. Una familia desconocida usa el más
- * ancho de la tabla.
- */
-const FONT_WIDTH: Array<[RegExp, number]> = [
-  [/oswald/i, 0.94],
-  [/fraunces/i, 1.12],
-  [/manrope/i, 1.08],
-  [/inter\b/i, 1.13],
-  [/montserrat/i, 1.25],
-];
-export const DEFAULT_FONT_WIDTH = 1.25;
-
-export function fontWidth(family: string) {
-  return FONT_WIDTH.find(([pattern]) => pattern.test(family))?.[1] ?? DEFAULT_FONT_WIDTH;
-}
-
-/** Ancho estimado (unidades del diagrama) de un texto en una familia y un cuerpo. */
-export const textWidth = (text: string, family: string, size: number) => textEm(text) * fontWidth(family) * size;
-
-/** Cuerpos posibles del título y de la bajada de una caja, de mayor a menor. */
-export const LABEL_SIZES = [13, 12.5, 12, 11.5, 11] as const;
-export const SUB_SIZES = [9.5, 9, 8.5] as const;
-/** Lo que la caja come a lo ancho: padding (10 + 10) y borde (1,5 + 1,5). */
-export const CARD_INSET_X = 23;
-/** Píldora de la etiqueta técnica: cuerpo 8 en negrita, padding 6 + 6 y separación 6. */
-const TAG_SIZE = 8;
-const TAG_EXTRA = 18;
-
-export function tagWidth(tag: string, fonts: CardFonts) {
-  return textWidth(tag, fonts.label, TAG_SIZE) * 1.06 + TAG_EXTRA;
-}
-
-/** El cuerpo más grande de la escala con el que el texto entra en el ancho (o el menor, con elipsis de resguardo). */
-export function fitSize(text: string, width: number, family: string, sizes: readonly number[]) {
-  return sizes.find((size) => textWidth(text, family, size) <= width) ?? sizes[sizes.length - 1];
-}
-
-/**
- * Cuerpos del título y de la bajada de una caja: el más grande que entra
- * entero en una línea con la tipografía de la marca, así ningún nombre se
- * corta (el póster y el explorador usan los mismos).
- */
-export function cardTextSizes(component: ArchifyComponent, tag: string | null, width: number, fonts: CardFonts) {
-  const inner = width - CARD_INSET_X;
-  return {
-    labelSize: fitSize(component.label, inner - (tag ? tagWidth(tag, fonts) : 0), fonts.display, LABEL_SIZES),
-    subSize: component.sublabel ? fitSize(component.sublabel, inner, fonts.body, SUB_SIZES) : SUB_SIZES[0],
-  };
-}
+export {
+  boundaryTitles,
+  cardTextSizes,
+  CARD_INSET_X,
+  connectionPlates,
+  DANGER,
+  DEFAULT_FONT_WIDTH,
+  diagramFrame,
+  fitSize,
+  fontWidth,
+  FRAME_PAD,
+  LABEL_SIZES,
+  PLATE_FONT,
+  plateTextLength,
+  roleColors,
+  segmentTouches,
+  SUB_SIZES,
+  tagWidth,
+  textEm,
+  textWidth,
+  TITLE_FONT,
+  titleWidth,
+  visibleTag,
+  type BoundaryTitle,
+  type CardFonts,
+  type ComponentRole,
+  type Plate,
+} from "@/data/architecture/diagramModel";
 
 export type ComponentSpec = {
   id: string;
@@ -398,7 +264,7 @@ export function explorerTheme(palette: CasePalette): { dark: ThemeTokens; light:
     accent: palette.accent,
     "accent-soft": palette.accentSoft,
     "accent-ink": palette.accentSoft,
-    danger: "#E5484D",
+    danger: DANGER.dark,
     route: mixHex(palette.accent, palette.bg, 0.6),
     plate: palette.bg,
     "pill-mix": "24%",
@@ -420,7 +286,7 @@ export function explorerTheme(palette: CasePalette): { dark: ThemeTokens; light:
     accent: deep,
     "accent-soft": palette.accentDeep,
     "accent-ink": mixHex(palette.accentDeep, ink, 0.62),
-    danger: "#B4232A",
+    danger: DANGER.light,
     route: mixHex(palette.accentDeep, ink, 0.9),
     plate: paper,
     "pill-mix": "16%",
