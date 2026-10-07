@@ -5,6 +5,8 @@ import { ArrowUpRight } from "lucide-react";
 import { WorkReel } from "./WorkReel";
 import { CaseBento } from "./CaseBento";
 import { ARCHIVE_CASES, FEATURED_CASES } from "@/data/projectCases";
+import { hasFlagshipFilm } from "@/data/films/flagships/slugs";
+import type { ProjectCase } from "@/types/site";
 import { useLanguage } from "@/context/LanguageContext";
 import { localePath } from "@/config/site";
 import { SplitReveal } from "@/components/motion/SplitReveal";
@@ -47,6 +49,7 @@ export function WorkExperience() {
           </p>
         </div>
         <DrawRule className="mt-10 block h-px w-full bg-white/10 light:bg-[rgb(var(--ink-rgb)/0.1)]" />
+        <CaseJumpIndex projects={[...FEATURED_CASES, ...ARCHIVE_CASES]} isEs={isEs} language={language} />
       </header>
 
       {/* Reel cinematográfico (full-bleed) */}
@@ -84,5 +87,40 @@ export function WorkExperience() {
         </div>
       </section>
     </main>
+  );
+}
+
+/**
+ * Índice de acceso directo: todos los casos a un clic, sin recorrer el reel.
+ * Los que tienen film insignia llevan su marca.
+ */
+function CaseJumpIndex({ projects, isEs, language }: { projects: ProjectCase[]; isEs: boolean; language: "es" | "en" }) {
+  return (
+    <nav aria-label={isEs ? "Ir directo a un caso" : "Jump to a case"} className="mt-8">
+      <div className="flex items-center justify-between gap-4">
+        <p className="font-mono text-[9px] uppercase tracking-[.16em] text-[#F3F0E8]/40 light:text-muted-foreground">{isEs ? "Ir directo a un caso" : "Jump to a case"}</p>
+        <p className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-[.16em] text-[#F3F0E8]/40 light:text-muted-foreground">
+          <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-signal" />
+          {isEs ? "Film insignia" : "Flagship film"}
+        </p>
+      </div>
+      <ul className="mt-4 flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] sm:flex-wrap sm:overflow-visible">
+        {projects.map((project) => {
+          const flagship = hasFlagshipFilm(project.slug);
+          return (
+            <li key={project.slug} className="shrink-0">
+              <Link
+                href={localePath(language, `/casos-de-exito/${project.slug}`)}
+                className="inline-flex min-h-9 items-center gap-2 whitespace-nowrap rounded-full border border-white/12 px-3.5 py-1.5 text-sm text-foreground/70 transition-colors hover:border-white/30 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring light:border-[rgb(var(--ink-rgb)/0.12)] light:hover:border-[rgb(var(--ink-rgb)/0.3)]"
+              >
+                {flagship ? <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-signal" /> : null}
+                {project.title[language]}
+                {flagship ? <span className="sr-only">{isEs ? " (film insignia)" : " (flagship film)"}</span> : null}
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
   );
 }

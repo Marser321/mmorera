@@ -3,15 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  AnimatePresence,
-  motion,
-  useMotionValue,
-  useReducedMotion,
-  useSpring,
-  useTransform,
-  useVelocity,
-} from "framer-motion";
+import { AnimatePresence, motion, useMotionValue, useSpring, useTransform, useVelocity } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { localePath } from "@/config/site";
@@ -20,6 +12,8 @@ import { CaseReel } from "@/components/shared/CaseReel";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { EASE_OUT } from "@/lib/motion";
 import type { ProjectCase } from "@/types/site";
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
+import { hasFlagshipFilm } from "@/data/films/flagships/slugs";
 
 /**
  * Índice de proyectos: lista tipográfica grande. En desktop, una preview
@@ -31,7 +25,7 @@ export function ProjectIndex({ projects }: { projects: ProjectCase[] }) {
   const { language } = useLanguage();
   const isEs = language === "es";
   const finePointer = useMediaQuery("(hover: hover) and (pointer: fine)");
-  const prefersReduced = useReducedMotion();
+  const prefersReduced = useReducedMotionSafe();
   const [active, setActive] = useState<number | null>(null);
   const [lastActive, setLastActive] = useState(0);
 
@@ -95,6 +89,12 @@ export function ProjectIndex({ projects }: { projects: ProjectCase[] }) {
                     {project.title[language]}
                   </h3>
                   <p className="text-sm leading-snug text-foreground/55 md:text-right">
+                    {hasFlagshipFilm(project.slug) ? (
+                      <span className="mb-1.5 flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[.16em] text-signal md:justify-end">
+                        <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-signal" />
+                        {language === "es" ? "Film insignia" : "Flagship film"}
+                      </span>
+                    ) : null}
                     {project.summary[language].split(":")[0].split(".")[0]}
                   </p>
                   <span className="hidden h-11 w-11 place-items-center rounded-full border border-white/15 text-foreground/70 transition-colors group-hover:border-signal group-hover:bg-signal group-hover:text-background md:grid light:border-[rgb(var(--ink-rgb)/0.15)]">

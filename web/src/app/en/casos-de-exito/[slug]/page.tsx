@@ -4,6 +4,24 @@ import { CaseStudy } from "@/components/premium/CaseStudy";
 import { UnderTheHood } from "@/components/premium/UnderTheHood";
 import { hasArchitecture } from "@/data/architecture/registry";
 import { getProjectCase, PROJECT_CASES } from "@/data/projectCases";
+import { caseJsonLd, caseMetadata, jsonLdHtml } from "@/lib/caseSeo";
+
 export function generateStaticParams() { return PROJECT_CASES.map(({ slug }) => ({ slug })); }
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> { const { slug } = await params; const project = getProjectCase(slug); if (!project) return {}; return { title: project.title.en, description: project.summary.en, alternates: { canonical: `/en/casos-de-exito/${slug}`, languages: { es: `/casos-de-exito/${slug}`, en: `/en/casos-de-exito/${slug}` } }, openGraph: { images: [{ url: project.media[0].src, alt: project.media[0].alt.en }] } }; }
-export default async function EnglishCasePage({ params }: { params: Promise<{ slug: string }> }) { const { slug } = await params; const project = getProjectCase(slug); if (!project) notFound(); return <CaseStudy project={project} underTheHood={hasArchitecture(slug) ? <UnderTheHood slug={slug} language="en" brandSlug={slug} /> : null} />; }
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const project = getProjectCase(slug);
+  return project ? caseMetadata(project, "en") : {};
+}
+
+export default async function EnglishCasePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const project = getProjectCase(slug);
+  if (!project) notFound();
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdHtml(caseJsonLd(project, "en")) }} />
+      <CaseStudy project={project} underTheHood={hasArchitecture(slug) ? <UnderTheHood slug={slug} language="en" brandSlug={slug} /> : null} />
+    </>
+  );
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type RefObject } from "react";
+import { useEffect, useRef, useState, type ReactNode, type RefObject } from "react";
 import type { PlayerRef } from "@remotion/player";
 import { Pause, Play } from "lucide-react";
 import { resolveChapterIndex, type FilmLanguage, type Localized } from "@/data/films/filmTypes";
@@ -68,6 +68,7 @@ export function FilmChapters({
   language,
   onSeekChapter,
   onTogglePlay,
+  actions,
 }: {
   chapters: ChapterLike[];
   chapterIndex: number;
@@ -77,6 +78,8 @@ export function FilmChapters({
   onSeekChapter: (index: number) => void;
   /** Sin callback no hay botón de reproducción (p. ej. el film con scroll). */
   onTogglePlay?: () => void;
+  /** Acciones junto al subtítulo (p. ej. compartir el capítulo). */
+  actions?: ReactNode;
 }) {
   const isEs = language === "es";
   const active = chapters[chapterIndex];
@@ -123,9 +126,12 @@ export function FilmChapters({
           ))}
         </ol>
       </div>
-      <p aria-live="polite" className="mt-5 min-h-[3.5rem] max-w-3xl text-lg leading-7 text-[#F3F0E8]/70 light:text-muted-foreground">
-        {active?.caption[language]}
-      </p>
+      <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <p aria-live="polite" className="min-h-[3.5rem] max-w-3xl text-lg leading-7 text-[#F3F0E8]/70 light:text-muted-foreground">
+          {active?.caption[language]}
+        </p>
+        {actions}
+      </div>
     </div>
   );
 }

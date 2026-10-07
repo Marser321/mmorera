@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import { useReducedMotion } from "framer-motion";
+import { Check, Link2 } from "lucide-react";
 import type { PlayerRef } from "@remotion/player";
 import type { CaseFilmScript } from "@/data/films/caseFilms";
 import { getFlagshipFilm } from "@/data/films/flagships";
@@ -11,12 +11,54 @@ import type { FilmLanguage } from "@/data/films/filmTypes";
 import { FilmChapters, useFilmPlayback } from "./FilmChapters";
 import type { FilmSource } from "./FilmCanvas";
 import { FilmStage, useFilmFormat } from "./FilmStage";
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
+
+/** Enlace directo a un capítulo: `/casos-de-exito/<caso>#film-<capítulo>`. */
+const HASH_PREFIX = "#film-";
+
+function chapterFromHash(chapters: { id: string }[]) {
+  const { hash } = window.location;
+  if (!hash.startsWith(HASH_PREFIX)) return -1;
+  const id = decodeURIComponent(hash.slice(HASH_PREFIX.length));
+  return chapters.findIndex((chapter) => chapter.id === id);
+}
+
+/** Cuadro quieto de un capítulo (movimiento reducido): casi al final, con todo armado. */
+const stillFrameOf = (chapter: { from: number; durationInFrames: number }) => chapter.from + chapter.durationInFrames - 24;
 
 function tap() {
   try {
     navigator.vibrate(8);
   } catch {}
 }
+
+/** Portapapeles con respaldo: hay navegadores (y vistas embebidas) que niegan la API async. */
+async function copyText(text: string) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    const area = document.createElement("textarea");
+    area.value = text;
+    area.setAttribute("readonly", "");
+    area.style.cssText = "position:fixed;opacity:0;pointer-events:none";
+    document.body.append(area);
+    area.select();
+    let copied = false;
+    try {
+      copied = document.execCommand("copy");
+    } catch {}
+    area.remove();
+    return copied;
+  }
+}
+
+type ShareState = "idle" | "copied" | "address-bar";
+
+const SHARE_LABELS: Record<FilmLanguage, Record<ShareState, string>> = {
+  es: { idle: "Compartir este capítulo", copied: "Enlace copiado", "address-bar": "Enlace listo en la barra" },
+  en: { idle: "Share this chapter", copied: "Link copied", "address-bar": "Link ready in the address bar" },
+};
 
 /**
  * Film "Cómo lo resolví" de un caso. Se reproduce al verse (una vez, sin
@@ -26,9 +68,11 @@ function tap() {
 export function CaseFilmSection({ script, language }: { script: CaseFilmScript; language: FilmLanguage }) {
   const isEs = language === "es";
   const format = useFilmFormat();
-  const reducedMotion = useReducedMotion() === true;
+  const reducedMotion = useReducedMotionSafe() === true;
   const [player, setPlayer] = useState<PlayerRef | null>(null);
   const [visible, setVisible] = useState(false);
+  const [shareState, setShareState] = useState<ShareState>("idle");
+  const sectionRef = useRef<HTMLElement>(null);
   const userPausedRef = useRef(false);
   // Film insignia (guion propio con la marca del cliente) o la plantilla de caso.
   const flagship = getFlagshipFilm(script.slug);
@@ -36,10 +80,26 @@ export function CaseFilmSection({ script, language }: { script: CaseFilmScript; 
   const durationInFrames = flagship?.durationInFrames ?? script.durationInFrames;
   const { chapterIndex, playing, barsRef } = useFilmPlayback(player, chapters);
   const lastFrame = durationInFrames - 1;
-  const stillFrame = (index: number) => {
-    const chapter = chapters[index];
-    return chapter.from + chapter.durationInFrames - 24;
-  };
+
+  // Llegar con #film-<capítulo>: el film está más abajo y el Player se monta
+  // recién al acercarse, así que primero se baja hasta la sección.
+  useEffect(() => {
+    if (chapterFromHash(chapters) >= 0) sectionRef.current?.scrollIntoView({ block: "start" });
+  }, [chapters]);
+
+  // Con el Player listo (y ante cada cambio del hash), se salta al capítulo.
+  useEffect(() => {
+    if (!player) return;
+    const seekFromHash = () => {
+      const index = chapterFromHash(chapters);
+      if (index < 0) return;
+      sectionRef.current?.scrollIntoView({ block: "start" });
+      player.seekTo(reducedMotion ? stillFrameOf(chapters[index]) : chapters[index].from);
+    };
+    seekFromHash();
+    window.addEventListener("hashchange", seekFromHash);
+    return () => window.removeEventListener("hashchange", seekFromHash);
+  }, [chapters, player, reducedMotion]);
 
   // Al verse arranca (o sigue); al salir pausa. Nunca vuelve a empezar solo.
   useEffect(() => {
@@ -59,8 +119,11 @@ export function CaseFilmSection({ script, language }: { script: CaseFilmScript; 
   const seekChapter = (index: number) => {
     if (!player) return;
     tap();
+    // La barra de direcciones queda lista para compartir (sin sumar historial;
+    // se conserva el estado del router de Next).
+    window.history.replaceState(window.history.state, "", `${HASH_PREFIX}${chapters[index].id}`);
     if (reducedMotion) {
-      player.seekTo(stillFrame(index));
+      player.seekTo(stillFrameOf(chapters[index]));
       return;
     }
     player.seekTo(chapters[index].from);
@@ -80,6 +143,25 @@ export function CaseFilmSection({ script, language }: { script: CaseFilmScript; 
     player.play();
   };
 
+  const shareChapter = async () => {
+    const chapter = chapters[chapterIndex];
+    const url = `${window.location.origin}${window.location.pathname}${HASH_PREFIX}${chapter.id}`;
+    tap();
+    // En el teléfono, la hoja de compartir del sistema; en escritorio, el portapapeles.
+    if (typeof navigator.share === "function" && window.matchMedia("(pointer: coarse)").matches) {
+      try {
+        await navigator.share({ title: document.title, url });
+        return;
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+      }
+    }
+    // Si no se puede copiar, el enlace igual queda en la barra de direcciones.
+    window.history.replaceState(window.history.state, "", `${HASH_PREFIX}${chapter.id}`);
+    setShareState((await copyText(url)) ? "copied" : "address-bar");
+    window.setTimeout(() => setShareState("idle"), 2400);
+  };
+
   const source = useMemo<FilmSource>(
     () =>
       flagship
@@ -89,7 +171,7 @@ export function CaseFilmSection({ script, language }: { script: CaseFilmScript; 
   );
 
   return (
-    <section className={`mx-auto mt-16 max-w-[1680px] px-3 sm:px-6 ${BRAND_FONT_VARIABLES}`} aria-labelledby="case-film-title">
+    <section ref={sectionRef} id="film" className={`mx-auto mt-16 max-w-[1680px] scroll-mt-20 px-3 sm:px-6 ${BRAND_FONT_VARIABLES}`} aria-labelledby="case-film-title">
       <h2 id="case-film-title" className="sr-only">{isEs ? "Cómo lo resolví" : "How I solved it"}</h2>
       <FilmStage
         source={source}
@@ -113,6 +195,16 @@ export function CaseFilmSection({ script, language }: { script: CaseFilmScript; 
           language={language}
           onSeekChapter={seekChapter}
           onTogglePlay={togglePlay}
+          actions={
+            <button
+              type="button"
+              onClick={shareChapter}
+              className="pressable inline-flex shrink-0 items-center gap-2 self-start rounded-full border border-white/14 px-4 py-2 font-mono text-[10px] uppercase tracking-[.14em] text-[#F3F0E8]/70 transition-colors hover:border-white/30 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal light:border-[rgb(var(--ink-rgb)/0.14)] light:text-muted-foreground"
+            >
+              {shareState === "idle" ? <Link2 className="h-3.5 w-3.5" /> : <Check className="h-3.5 w-3.5 text-signal" />}
+              <span aria-live="polite">{SHARE_LABELS[language][shareState]}</span>
+            </button>
+          }
         />
       </div>
     </section>

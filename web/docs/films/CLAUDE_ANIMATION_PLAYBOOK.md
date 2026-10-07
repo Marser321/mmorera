@@ -144,9 +144,9 @@ Presentación de credenciales técnicas y métricas verificadas con fuentes de c
 | **New Brothers Barbería** | `new-brothers-barberia` | ✅ Completo | ✅ Compilado | ✅ Completos | ✅ Pulido (72.0s) | Terminado. |
 | **L&B Elite Wash & Detail** | `lb-elite-wash-detail` | ✅ Completo (`lb-wash.md`) | ✅ Compilado (`lb-wash-architecture*`) | ✅ `van-real.jpg`, `van.webp`, `mark.png` + capturas del cotizador y de la cuadrilla (`shots/`) | ✅ Nivel Fénix (74,5 s) | Terminado: camioneta real + monograma en partículas, `ScrollReel` del cotizador real con el webhook de la cita, app real de la cuadrilla en `PhoneFrame`. |
 | **AD Media Solution** | `ad-media-solution` | ✅ Completo (`ad-media.md`) | ✅ Compilado (`ad-media-architecture*`) | ✅ `brand-grid.jpg` (de `banner.jpg`), `ceo.jpg`, `logo-crm.png`, `mark.png`, `wordmark.png`, `shots/site-recorrido.jpg` | ✅ Nivel Fénix (72,5 s) | Terminado: isotipo sobre su grilla, la alianza con el CEO, el sitio en `ScrollReel` y la protagonista `pipeline-board` (Speed-to-Lead + 5 etapas, datos de ejemplo). |
-| **Truckers Choice** | `truckers-choice` | 🟡 En carpeta | ⏳ Pendiente | ✅ `truckers-cover.png` | ⏳ Pendiente | Escena bilingüe lado a lado. |
+| **Truckers Choice** | `truckers-choice` | ✅ Completo (`truckers-choice.md`, sitio en vivo) | — (sin sistema propio verificable) | ✅ 4 clips del sitio (mp4 + webm), `mark.png` y `wordmark.png` del logo, capturas EN/ES (`shots/`) | ✅ Nivel Fénix (75,5 s) | Terminado: protagonista `bilingual-split` (cortina EN/ES) y `one-roof` (6 líneas, 30 trámites, 4 pasos). El formulario está en vista previa: no afirmar envíos. |
 | **Rangel Oviedo Group** | `rangel-oviedo-group` | 🟡 En carpeta | ⏳ Pendiente | ✅ `rangel-oviedo-cover.jpg` | ⏳ Pendiente | Recorrido editorial de asesoría inmobiliaria. |
-| **Mr. Studio Tattoo** | `mr-studio-tattoo` | ✅ Completo (`mr-studio.md`) | ⏳ Pendiente | ✅ `mrstudio-tattoo-cover.jpg`, shots y reels | ⏳ Listo para diagramar | **Construir escena protagónica `body-selector`** (Lovable + selector corporal anatómico interactivo + agenda señada). |
+| **Mr. Studio Tattoo** | `mr-studio-tattoo` | ✅ Reescrito con el sitio en vivo (`mr-studio.md`) | — (sin arquitectura propia verificable) | ✅ `hero-rosa.mp4/.webm` + póster, `mark.png`, `artistas.jpg`, 8 capturas de la reserva a 2× (`shots/live-*`) | ✅ Nivel Fénix (71,5 s) | Terminado: protagonista `body-selector` (figura real, zoom al antebrazo, vista de espalda, brief de ejemplo) y `consent-split`. |
 
 ---
 
@@ -204,11 +204,15 @@ Cada film tiene una tesis de ingeniería y un diferencial de negocio radicalment
   - **Visuales clave:** Usar `<CinematicPlate>` con las fotos reales de las camionetas en calle (`van-real.jpg`, `van.webp`), capturas del cotizador con `<ScrollReel>` y el diagrama de Archify que ilustra la ausencia total de Postgres.
 
 ### 2. Mr. Studio Tattoo (`mr-studio-tattoo`)
-* **Tesis Central:** Desarrollado 100% sobre **Lovable** (React + Vite + Tailwind) para un estudio de tatuajes de alta gama en Miami.
-* **Superpoder en Pantalla:** 
-  - **Selector Corporal Anatómico Interactivo:** En lugar de un selector de texto plano, la web presenta una silueta anatómica humana interactiva donde el cliente marca la ubicación exacta (antebrazo, espalda, costillas, etc.).
-  - **Agenda Multi-Paso Calificada con Seña:** El flujo califica el estilo (Realismo, Fine Line, Micro-realismo), asigna al artista residente adecuado y **exige el pago de seña/depósito (Retainer Fee)** para asegurar el turno, eliminando completamente los "no-shows" y los chats infinitos de Instagram.
-  - **Visuales clave:** Muro oscuro absoluto (`#000000`) con halo menta (`#71F3A2`), pulso SVG sobre la silueta anatómica y transición al portfolio fotográfico de obras de arte en piel.
+* **Fuente:** la versión **azul** en producción (`mrstudiotattoo.com`, `#2A4DE8`, Anton + Inter). La versión roja de `Desktop/MrTatto` no está publicada: no se usa.
+* **Tesis central:** una reserva guiada de 10 pasos, una pregunta por pantalla, que llega al artista con el brief completo.
+* **Superpoder en pantalla:**
+  - **Selector anatómico:** figura muscular de frente y espalda, 24 zonas tocables en la vista frontal (`path[id]` en SVG).
+  - **Artista elegido:** 6 residentes, cada uno con años de oficio (5+ a 8+) y su propia agenda.
+  - **Tamaño con tiempo de sesión:** chico (<8 cm, ~1 h), mediano (8–15 cm, 2–3 h), grande (>15 cm, 4 h+).
+  - **Consentimiento según la edad:** adulto, digital y firmado con su nombre; menor, notariado y con tutor presente, queda pendiente de verificación.
+  - **Depósito:** el sitio dice que se cobra al confirmar. El film lo nombra pero nunca da un monto.
+* **No afirmar:** "elimina los no-shows", calendario o CRM concretos (no aparecen en el bundle) ni métricas de conversión.
 
 ### 3. AD Media Solution (`ad-media-solution`)
 * **Tesis Central:** Trabajo de desarrollo frontend de alta conversión en funnels y sitios web. Alianza comercial estratégica donde AD Media Solution actuó como la agencia comercial que vendió y canalizó los proyectos, y **Mario Morera operó como el socio tecnológico exclusivo tercerizado (White-Label Tech Partner)**.

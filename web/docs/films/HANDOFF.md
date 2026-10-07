@@ -7,7 +7,7 @@ Estado y reglas del sistema de "films de lanzamiento" del portfolio, para seguir
   - Film de apertura con scroll (`ScrollFilm`).
   - Sala de casos de uso (`UseCaseFilmRoom`): New Brothers como caso real; IA y CRM como ejemplos rotulados.
 - **Casos de éxito (`/casos-de-exito/[slug]`):** `CaseFilmSection` elige el film:
-  - **Insignia** si el slug está en `web/src/data/films/flagships/index.ts` (datos) y en `FLAGSHIP_LOADERS` de `FilmCanvas.tsx` (composición, cargada de forma diferida con `lazyComponent`: cada página baja solo su film). Hoy: Fénix (`FenixFilm`), New Brothers (`NewBrothersFilm`), L&B (`LbWashFilm`) y AD Media (`AdMediaFilm`).
+  - **Insignia** si el slug está en `web/src/data/films/flagships/index.ts` (datos) y en `FLAGSHIP_LOADERS` de `FilmCanvas.tsx` (composición, cargada de forma diferida con `lazyComponent`: cada página baja solo su film). Hoy: Fénix (`FenixFilm`), New Brothers (`NewBrothersFilm`), L&B (`LbWashFilm`), AD Media (`AdMediaFilm`), Mr. Studio Tattoo (`MrStudioFilm`) y Truckers Choice (`TruckersFilm`). `flagships/slugs.ts` repite la lista sin cargar datos (la usan el índice de casos y el reel); un test la ata a `FLAGSHIP_FILMS`.
   - **Genérico** (`CaseFilm`) en los demás. Si el caso tiene marca en `caseBrands.ts`, se pinta con ella. Hoy: New Brothers, Fénix y AD Media. Detrás de los textos usa el sitio ya difuminado (`public/portfolio/backdrops/`), nunca la captura nítida.
 - **Home:** entrada del monograma (`LogoOvertureSection`) dentro de `#perfil`. Las flechas ">" y "Σ" se unen y giran hasta formar la M; la misma firma cierra cada film.
 
@@ -16,7 +16,10 @@ Estado y reglas del sistema de "films de lanzamiento" del portfolio, para seguir
   - `FilmStage`: monta el Player con carga diferida, sin precarga.
   - `FilmCanvas`: registro de composiciones.
   - `FilmChapters`: capítulos y subtítulos HTML reales.
+  - `CaseFilmSection`: el film del caso. Lee `#film-<capítulo>` para saltar a un capítulo, actualiza la URL al elegir uno y tiene el botón "Compartir este capítulo".
+  - `FilmRail`: riel de films del home (cuadros fijos `og` y `hero`, enlace a `#film`).
   - `compositions/`
+    - `kit/`: escenas compartidas para armar un film nuevo rápido (`KitScenes.tsx`) y sus layouts puros (`kitLayout.ts`, con test): apertura sobre placa con partículas (`PlateOpening`), placa con beats (`PlateManifesto`), recorrido del sitio (`SiteTour`), reel de capturas con notas (`ReelBeat`), arquitectura (`ArchitectureBeat`) y cifras (`FactsBeat`). Cada film suma solo su escena protagonista.
   - `scenes/brand/`: motor de marca.
     - `ParticleLogo`: partículas que forman el logo del cliente.
     - `DustField`
@@ -28,6 +31,7 @@ Estado y reglas del sistema de "films de lanzamiento" del portfolio, para seguir
 - `web/src/data/films/`: guiones puros, sin Remotion.
   - `flagships/types.ts`: cada film insignia declara su lista de escenas con un tipo (`SceneKind`) y su línea de tiempo sale de `timelineFrom()`. `flagships.test.ts` exige 70–80 s, firma al final y que dos clientes nunca compartan estructura (subsecuencia común ≤ 0,6) ni escena protagonista.
   - `flagships/fenix.ts`: cifras con su línea del dossier (`FENIX_FACTS`), assets con su medida nativa (`FENIX_ASSETS`, el test la lee de las cabeceras con `lib/mediaSize.ts`) y copia ES/EN. `fenix.test.ts` prohíbe %, precios, testimonios, FENIX OS y números que no estén en `FENIX_FACTS`.
+- `web/src/lib/caseSeo.ts`: metadata (canónica, `hreflang`, OG con el cuadro del film) y JSON-LD de cada caso, en ES y EN.
 - `web/src/lib/videoSource.ts`: `playableAsset()` elige la versión AV1/WebM de un clip cuando el navegador la reproduce (el Chromium de código abierto de Playwright no trae H.264; Safari se queda con el MP4). `CinematicPlate` y `ScrollReel` lo aplican solos y, si el video igual falla, dejan el póster en lugar de romper el film.
 - `web/src/lib/filmLayout.ts`: zona útil por formato, bandas, columnas y grillas. Las escenas nuevas calculan sus cajas ahí (texto en bandas propias, medios en placas propias) y cada una tiene un layout puro en `scenes/brand/layout/` con su test de "nada se pisa".
 - **Laboratorio de escenas** (`/films-lab`, solo `next dev`): cada escena de la biblioteca aislada, con marca, formato e idioma por query string y `window.__films.lab` para recorrerla cuadro por cuadro.
@@ -39,7 +43,10 @@ Estado y reglas del sistema de "films de lanzamiento" del portfolio, para seguir
 - **Scripts:**
   - `capture-case-reels.ts`: reels y capturas del sitio en vivo.
   - `capture-panel-shots.ts`: paneles por acceso demo público.
-  - `capture-film-flows.ts`: el cotizador de L&B en vivo (paso 2), la app real de la cuadrilla con paradas de ejemplo y el sitio de AD Media de arriba abajo sin el popup. No agenda ni envía nada.
+  - `capture-film-flows.ts`: el cotizador de L&B en vivo (paso 2), la app real de la cuadrilla con paradas de ejemplo, el sitio de AD Media de arriba abajo sin el popup la reserva de Mr. Studio (pasos 1 a 6 con datos de ejemplo; se detiene antes de "Tus datos") y Truckers Choice (`tc-site`: tres paradas en /en y /es con el mismo encuadre, los paquetes y los 3 pasos de la cotización; el paso de contacto se captura vacío). `readOnly()` corta todo pedido que no sea GET y los dominios de CRM y pagos: no agenda ni envía nada.
+  - `build-film-stills.ts [slug…]`: congela los cuadros `og` y `hero` de cada film (`FLAGSHIP_STILLS` en `flagships/slugs.ts`). Correrlo con `next dev` arriba cada vez que cambie la apertura o la protagonista de un film.
+  - `lib/flagshipPage.ts`: abre un caso en `next dev`, pausa el film y oculta las capas fijas del sitio (barra, WhatsApp, indicador de Next) antes de congelar cuadros.
+  - `film-frames.ts <slug> <landscape|portrait> <cuadros> [es|en] [dir]`: guarda cuadros sueltos de un film insignia desde `next dev` para revisarlos (`.film-frames/` está en `.gitignore`).
   - `build-film-backdrops.ts`: fondos pre-difuminados con sharp.
   - `build-archify-layouts.ts` (`npx tsx`): valida las cuatro variantes de cada diagrama con Archify (`showcase`) y congela sus rutas. Correrlo después de tocar un JSON de arquitectura o su traducción.
   - `analyze-live-site.ts <slug>`: recorrido en vivo (rutas, formularios, integraciones como GoHighLevel, fuentes y colores servidos) → `docs/films/dossiers/live/<slug>.{json,md}`. No envía formularios ni inicia sesión.
@@ -135,21 +142,36 @@ Estado y reglas del sistema de "films de lanzamiento" del portfolio, para seguir
    - `ceo.jpg` era una copia de `banner.jpg`; ahora es la foto real del CEO.
    - L&B se elevó en la misma tanda: camioneta real, cotizador real y app real de la cuadrilla. El isotipo de L&B no tiene alfa: `particleMode: "dark"`.
    - Pendiente aparte: el reel y las capturas genéricas de AD Media (`reels/`, `shots/ad-media-solution-*`) siguen mostrando solo el popup "Diagnóstico gratis" (el film insignia ya usa `site-recorrido.jpg`). `capture-case-reels.ts` ahora cierra ese tipo de modal ("×", "No, gracias…") y, si alguno sigue tapando la página o aparece durante el reel, no graba ese caso (queda el material anterior).
-5. **LNB:** esperar la carpeta de Mario y corregir la descripción del caso.
+5. ~~Film insignia de Mr. Studio Tattoo~~ (`MrStudioFilm`, 71,5 s): hecho (2026-10-07).
+   - Se basa en la versión **azul** que está en producción (`mrstudiotattoo.com`: `#2A4DE8`, Anton + Inter). La versión roja de `Desktop/MrTatto` no está publicada y no se usa.
+   - Dossier reescrito con el recorrido real de la reserva (10 pasos, verificado en vivo sin pasar de "Tus datos"). Se quitaron del caso el "retainer obligatorio" y otras afirmaciones que el sitio no sostiene.
+   - Protagonista `body-selector`: la figura real del paso 5, zoom al antebrazo, el toque, la vista de espalda y el brief para el artista armado con datos de ejemplo rotulados.
+   - `consent-split`: la edad decide el camino (adulto: consentimiento digital; menor: notariado con tutor presente).
+   - La reserva en `ReelBeat` (5 capturas a 2×, una nota por paso), el estudio en placa y 8 cifras con fuente "sitio en producción".
+   - El depósito se nombra pero no se cifra; el test prohíbe montos.
+6. ~~Film insignia de Truckers Choice~~ (`TruckersFilm`, 75,5 s): hecho (2026-10-07).
+   - Dossier nuevo (`truckers-choice.md`) con el sitio publicado: 6 líneas y 30 trámites confirmados (4 + 5 + 6 + 6 + 4 + 5, contados en `/services`), hoja de ruta de 4 pasos, 3 paquetes, 3 oficinas y rutas espejo `/en` y `/es`.
+   - Medios del propio sitio: los 4 clips de 6 s (hero y relato), recodificados a H.264 y AV1 (de 14,8 MB a 4,4 + 3,0 MB). El logo se separó en dibujo (camión y mapa) y texto.
+   - Protagonista `bilingual-split`: la misma página en inglés y en español, partida por una cortina; la barra cambia de `/en` a `/es` y se encienden las rutas espejo.
+   - `one-roof`: los 4 pasos bajo un techo que se dibuja; las líneas entran con sus trámites y la cuenta llega a 30.
+   - El relato "una noche en la ruta" usa `PlateManifesto` con una placa por capítulo (nuevo en el kit: `plates`).
+   - **El formulario de cotización está en modo vista previa** ("does not store or transmit information"). El film lo dice; el test prohíbe CRM o "leads" en la copia.
+   - El caso en `projectCases` se corrigió: acento ámbar `#FFB020` (no el cian anterior) y datos verificables.
+7. **LNB:** esperar la carpeta de Mario y corregir la descripción del caso.
    - **Hub Profesional AI** tiene el mismo problema: el reel guardado de `profecionalcv.vercel.app` muestra un taller ("Mecánica Premium"), no una herramienta de CV con IA. Confirmar con Mario qué hay hoy en esa URL antes de armar su film.
-6. **Resto de los casos (requiere red):** análisis en vivo, marca real del CSS, JSON de Archify si hay sistema y film insignia con estructura propia (el test de estructura distinta los cubre a todos).
-7. **Red del entorno:** los `liveUrl` responden 000 desde la nube. Hace falta Network access "Full", o "Custom" con `fenixmedicalcenters.com`, `www.mrstudiotattoo.com`, `*.vercel.app`, `fonts.googleapis.com` y `fonts.gstatic.com`.
+8. **Resto de los casos (requiere red):** análisis en vivo, marca real del CSS, JSON de Archify si hay sistema y film insignia con estructura propia (el test de estructura distinta los cubre a todos).
+9. **Red del entorno:** los `liveUrl` responden 000 desde la nube. Hace falta Network access "Full", o "Custom" con `fenixmedicalcenters.com`, `www.mrstudiotattoo.com`, `*.vercel.app`, `fonts.googleapis.com` y `fonts.gstatic.com`.
 
 ### Propuesta de estructura por caso (a confirmar con el análisis en vivo)
 Sale de lo que muestran los reels guardados en `public/portfolio/reels/` (1280×800, 6,2 s). Cada film necesita una escena protagonista propia (`flagships.test.ts`); varias son tipos nuevos de escena.
 
 | Caso | Lo que muestra el reel | Escena protagonista | Estado |
 |---|---|---|---|
-| AD Media Solution | (tapado por el popup; recapturar) | `pipeline-board` (datos de ejemplo) | Pendiente (red) |
+| AD Media Solution | (tapado por el popup; recapturar) | `pipeline-board` (datos de ejemplo) | **Completado** |
 | L&B Elite Wash & Detail | "Detailing móvil que llega a ti", "Arma tu cotización", grilla por tipo de vehículo | cotizador por tipo de vehículo (`vehicle-quote`) | **Completado (PR #17)** |
-| Truckers Choice | "Insurance + Permits. One roof.", sitio bilingüe | cambio de idioma lado a lado (nuevo) | Pendiente |
+| Truckers Choice | "Insurance + Permits. One roof.", sitio bilingüe | la misma página en EN y ES con cortina (`bilingual-split`) | **Completado** |
 | Rangel Oviedo Group | "Invierte, compra o múdate a Texas…", tono editorial | recorridos por objetivo: comprar, invertir, vender, mudarse (nuevo) | Pendiente |
-| Mr. Studio Tattoo | portfolio oscuro, "Perforaciones exclusivas" | muro de piezas por artista (nuevo) | Pendiente |
+| Mr. Studio Tattoo | reserva guiada de 10 pasos (versión azul en producción) | selector anatómico (`body-selector`) | **Completado** |
 | AutoHub 360 | "Tu próximo auto te espera acá", inventario | giro 360° del vehículo (nuevo; necesita los cuadros del sitio) | Pendiente |
 | EvoWrap | "Reinventa tu vehículo": cerámico, PPF, interior | selector de acabados sobre el vehículo (nuevo) | Pendiente |
 | Punta 360 | "Bienvenido a Punta360": propietarios, agencias, equipo | paneo panorámico (nuevo; necesita la imagen 360°) | Pendiente |

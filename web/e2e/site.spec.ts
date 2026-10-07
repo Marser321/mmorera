@@ -396,7 +396,8 @@ test("mantiene la composición sin desborde en tablet y pantalla ancha", async (
 
 test("abre un caso profundo sin modal ni iframe", async ({ page }) => {
   await page.goto("/casos-de-exito");
-  const caseLink = page.locator('main a[href="/casos-de-exito/autohub-360"]');
+  // La tarjeta del archivo (el índice de la cabecera lleva al mismo caso; lo cubre otro test).
+  const caseLink = page.locator('#archive-work ~ * a[href="/casos-de-exito/autohub-360"], section[aria-labelledby="archive-work"] a[href="/casos-de-exito/autohub-360"]').first();
   await expect(caseLink).toHaveAttribute("href", "/casos-de-exito/autohub-360");
   await caseLink.focus();
   await caseLink.press("Enter");
@@ -414,65 +415,92 @@ test("abre un caso profundo sin modal ni iframe", async ({ page }) => {
   await expect(page.getByText("El desafío")).toBeVisible();
 });
 
-test("el caso insignia de Fénix reproduce su film sin errores", async ({ page }) => {
-  const errors: string[] = [];
-  page.on("pageerror", (error) => errors.push(String(error)));
-  page.on("console", (message) => {
-    if (message.type() === "error" && /remotion|MediaPlayback|player/i.test(message.text())) errors.push(message.text());
+// Cada film insignia: su primer capítulo y uno con medios o la escena
+// protagonista. Saltar a ese capítulo ejercita la carga de medios: si el
+// navegador no decodifica un clip, queda el póster en lugar de un error.
+const FLAGSHIP_CASES = [
+  { slug: "fenix-medical-center", name: "Fenix Medical Center", first: /Renacer/, jump: /Posicionamiento/ },
+  { slug: "lb-elite-wash-detail", name: "L&B Elite Wash & Detail", first: /Flota/, jump: /Cotizador/ },
+  { slug: "ad-media-solution", name: "AD Media Solution", first: /La alianza/, jump: /Speed-to-Lead/ },
+  { slug: "mr-studio-tattoo", name: "Mr. Studio Tattoo", first: /El estudio/, jump: /Zona del cuerpo/ },
+  { slug: "truckers-choice", name: "Truckers Choice", first: /La ruta/, jump: /Dos idiomas/ },
+  { slug: "new-brothers-barberia", name: "New Brothers Barbería", first: /El problema/, jump: /El panel/ },
+];
+
+for (const flagship of FLAGSHIP_CASES) {
+  test(`el caso insignia de ${flagship.name} reproduce su film sin errores`, async ({ page }) => {
+    const errors: string[] = [];
+    page.on("pageerror", (error) => errors.push(String(error)));
+    page.on("console", (message) => {
+      if (message.type() === "error" && /remotion|MediaPlayback|player/i.test(message.text())) errors.push(message.text());
+    });
+    await page.goto(`/casos-de-exito/${flagship.slug}`);
+    await expect(page.getByRole("heading", { level: 1, name: flagship.name })).toBeVisible();
+
+    // El film insignia (no el genérico) con sus capítulos reales.
+    const stage = page.locator('[data-film-stage="flagship"]');
+    await expect(stage).toHaveCount(1);
+    await stage.scrollIntoViewIfNeeded();
+    await expect(page.getByRole("button", { name: flagship.first })).toBeVisible();
+
+    await page.getByRole("button", { name: flagship.jump }).click();
+    await page.waitForTimeout(3_000);
+    expect(errors).toEqual([]);
   });
-  await page.goto("/casos-de-exito/fenix-medical-center");
-  await expect(page.getByRole("heading", { level: 1, name: "Fenix Medical Center" })).toBeVisible();
+}
 
-  // El film insignia (no el genérico) con sus capítulos reales.
-  const stage = page.locator('[data-film-stage="flagship"]');
-  await expect(stage).toHaveCount(1);
-  await stage.scrollIntoViewIfNeeded();
-  await expect(page.getByRole("button", { name: /Renacer/ })).toBeVisible();
+test("un enlace con #film-<capítulo> abre el film en ese capítulo y se puede compartir", async ({ page, context }) => {
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  await page.goto("/casos-de-exito/mr-studio-tattoo#film-booking");
+  const booking = page.getByRole("button", { name: /La reserva/ });
+  await expect(booking).toHaveAttribute("aria-current", "step", { timeout: 30_000 });
 
-  // Saltar a un capítulo con video ejercita la carga de medios: si el
-  // navegador no decodifica un clip, queda el póster en lugar de un error.
-  await page.getByRole("button", { name: /Posicionamiento/ }).click();
-  await page.waitForTimeout(3_000);
-  expect(errors).toEqual([]);
+  // Elegir un capítulo deja la URL lista para compartir, sin sumar historial.
+  await page.getByRole("button", { name: /Consentimiento/ }).click();
+  await expect(page).toHaveURL(/#film-consent$/);
+  await page.getByRole("button", { name: /Compartir este capítulo/ }).click();
+  await expect(page.getByText("Enlace copiado")).toBeVisible();
+  expect(await page.evaluate("navigator.clipboard.readText()")).toMatch(/\/casos-de-exito\/mr-studio-tattoo#film-consent$/);
 });
 
-test("el caso insignia de L&B Elite Wash reproduce su film sin errores", async ({ page }) => {
-  const errors: string[] = [];
-  page.on("pageerror", (error) => errors.push(String(error)));
-  page.on("console", (message) => {
-    if (message.type() === "error" && /remotion|MediaPlayback|player/i.test(message.text())) errors.push(message.text());
-  });
-  await page.goto("/casos-de-exito/lb-elite-wash-detail");
-  await expect(page.getByRole("heading", { level: 1, name: "L&B Elite Wash & Detail" })).toBeVisible();
-
-  const stage = page.locator('[data-film-stage="flagship"]');
-  await expect(stage).toHaveCount(1);
-  await stage.scrollIntoViewIfNeeded();
-  await expect(page.getByRole("button", { name: /Flota/ })).toBeVisible();
-
-  await page.getByRole("button", { name: /Cotizador/ }).click();
-  await page.waitForTimeout(3_000);
-  expect(errors).toEqual([]);
+test("el riel de films del home abre el caso directo en su film", async ({ page }) => {
+  await page.goto("/");
+  const rail = page.getByRole("region", { name: "Cada caso, contado como un film." });
+  await rail.scrollIntoViewIfNeeded();
+  await expect(rail.getByRole("link")).toHaveCount(FLAGSHIP_CASES.length);
+  await rail.getByRole("link", { name: /L&B Elite Wash/ }).click();
+  await expect(page).toHaveURL(/\/casos-de-exito\/lb-elite-wash-detail#film$/, { timeout: 30_000 });
+  await expect(page.locator('[data-film-stage="flagship"]')).toBeInViewport({ timeout: 15_000 });
 });
 
-test("el caso insignia de AD Media reproduce su film sin errores", async ({ page }) => {
-  const errors: string[] = [];
-  page.on("pageerror", (error) => errors.push(String(error)));
-  page.on("console", (message) => {
-    if (message.type() === "error" && /remotion|MediaPlayback|player/i.test(message.text())) errors.push(message.text());
+test.describe("con movimiento reducido", () => {
+  test.use({ contextOptions: { reducedMotion: "reduce" } });
+
+  test("las páginas hidratan sin diferencias entre servidor y cliente", async ({ page }) => {
+    // Cinco rutas en una sola prueba: en `next dev` la primera visita compila cada una.
+    test.setTimeout(150_000);
+    const errors: string[] = [];
+    page.on("console", (message) => {
+      if (message.type() === "error" && /hydrat|did not match|server rendered|not hydrated/i.test(message.text())) errors.push(message.text().slice(0, 200));
+    });
+    page.on("pageerror", (error) => {
+      if (/hydrat|not hydrated/i.test(String(error))) errors.push(String(error).slice(0, 200));
+    });
+    for (const route of ["/", "/casos-de-exito", "/casos-de-exito/fenix-medical-center", "/sistemas", "/en/casos-de-exito"]) {
+      await page.goto(route, { waitUntil: "load" });
+      await page.waitForTimeout(1500);
+    }
+    expect(errors).toEqual([]);
   });
-  await page.goto("/casos-de-exito/ad-media-solution");
-  await expect(page.getByRole("heading", { level: 1, name: "AD Media Solution" })).toBeVisible();
+});
 
-  const stage = page.locator('[data-film-stage="flagship"]');
-  await expect(stage).toHaveCount(1);
-  await stage.scrollIntoViewIfNeeded();
-  await expect(page.getByRole("button", { name: /La alianza/ })).toBeVisible();
-
-  // La escena protagonista: Speed-to-Lead y el pipeline de 5 etapas.
-  await page.getByRole("button", { name: /Speed-to-Lead/ }).click();
-  await page.waitForTimeout(3_000);
-  expect(errors).toEqual([]);
+test("el archivo de casos lleva a cada caso en un clic", async ({ page }) => {
+  await page.goto("/casos-de-exito");
+  const index = page.getByRole("navigation", { name: "Ir directo a un caso" });
+  await expect(index.getByRole("link")).toHaveCount(14);
+  await index.getByRole("link", { name: /AD Media Solution/ }).click();
+  await expect(page).toHaveURL(/\/casos-de-exito\/ad-media-solution$/, { timeout: 30_000 });
+  await expect(page.locator('[data-film-stage="flagship"]')).toHaveCount(1);
 });
 
 test("el perfil abre con la entrada del monograma", async ({ page }) => {

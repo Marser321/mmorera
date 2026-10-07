@@ -1,23 +1,17 @@
 "use client";
 
 import Image from "next/image";
-import {
-  motion,
-  useMotionValue,
-  useMotionValueEvent,
-  useReducedMotion,
-  useScroll,
-  useSpring,
-  useTransform,
-  type MotionValue,
-} from "framer-motion";
+import Link from "next/link";
+import { motion, useMotionValue, useMotionValueEvent, useScroll, useSpring, useTransform, type MotionValue } from "framer-motion";
 import { useEffect, useRef, useState, type PointerEvent } from "react";
-import { ArrowUpRight, ExternalLink } from "lucide-react";
+import { ArrowRight, ArrowUpRight, ExternalLink } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { localePath } from "@/config/site";
 import type { ProjectCase, TrackId } from "@/types/site";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { LiveDemoModal } from "./LiveDemoModal";
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 
 /**
  * WorkReel — reel cinematográfico de los proyectos destacados: el scroll
@@ -65,12 +59,20 @@ function PanelActions({ project, compact = false }: { project: ProjectCase; comp
 
   return (
     <div className={compact ? "mt-5 flex flex-wrap gap-2" : "mt-9 flex flex-wrap items-center gap-3"}>
+      {/* El caso completo (con su film) es la acción principal; la demo y el sitio, secundarias. */}
+      <Link
+        href={localePath(language, `/casos-de-exito/${project.slug}`)}
+        className="pressable inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full bg-foreground px-5 py-2 font-mono text-[11px] uppercase tracking-[.14em] text-background transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+      >
+        {isEs ? "Ver el caso" : "View the case"}
+        <ArrowRight className="h-3.5 w-3.5" />
+      </Link>
       <DialogTrigger asChild>
         <button
           type="button"
-          className="pressable inline-flex min-h-10 cursor-pointer items-center justify-center gap-1.5 rounded-full bg-foreground px-5 py-2 font-mono text-[11px] uppercase tracking-[.14em] text-background transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+          className="pressable inline-flex min-h-10 cursor-pointer items-center justify-center gap-1.5 rounded-full border border-white/15 px-5 py-2 font-mono text-[11px] uppercase tracking-[.14em] text-foreground/75 transition-colors hover:border-white/30 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent light:border-[rgb(var(--ink-rgb)/0.15)] light:hover:border-[rgb(var(--ink-rgb)/0.3)]"
         >
-          {isEs ? "Ver demo en vivo" : "View live demo"}
+          {isEs ? "Demo en vivo" : "Live demo"}
           <ArrowUpRight className="h-3.5 w-3.5" />
         </button>
       </DialogTrigger>
@@ -79,7 +81,7 @@ function PanelActions({ project, compact = false }: { project: ProjectCase; comp
           href={project.liveUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="pressable inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full border border-white/15 px-5 py-2 font-mono text-[11px] uppercase tracking-[.14em] text-foreground/60 transition-colors hover:border-white/30 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent light:border-[rgb(var(--ink-rgb)/0.15)] light:hover:border-[rgb(var(--ink-rgb)/0.3)]"
+          className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full px-3 py-2 font-mono text-[11px] uppercase tracking-[.14em] text-foreground/50 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
         >
           {isEs ? "Abrir sitio" : "Open site"}
           <ExternalLink className="h-3.5 w-3.5" />
@@ -167,7 +169,9 @@ function ReelPanel({
             </div>
 
             <h3 className="mt-6 max-w-3xl break-words text-[clamp(2.8rem,5vw,5.5rem)] font-medium leading-[.9] tracking-[-.05em] text-foreground [text-wrap:balance]">
-              {project.title[language]}
+              <Link href={localePath(language, `/casos-de-exito/${project.slug}`)} className="rounded-md transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
+                {project.title[language]}
+              </Link>
             </h3>
 
             <p className="mt-6 max-w-xl text-base leading-7 text-foreground/55">{project.summary[language]}</p>
@@ -251,7 +255,9 @@ function ReelCardSimple({ project, index, total }: { project: ProjectCase; index
             <span style={{ color: accent }}>{project.tracks.map((track) => trackLabels[language][track]).join(" · ")}</span>
           </div>
           <h3 className="mt-3 break-words text-2xl font-medium leading-tight tracking-[-.04em] text-foreground [text-wrap:balance]">
-            {project.title[language]}
+            <Link href={localePath(language, `/casos-de-exito/${project.slug}`)} className="rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
+              {project.title[language]}
+            </Link>
           </h3>
           <p className="mt-3 text-sm leading-6 text-foreground/52">{project.summary[language]}</p>
           <div className="mt-4 flex flex-wrap gap-1.5">
@@ -281,7 +287,7 @@ export function WorkReel({ projects }: { projects: ProjectCase[] }) {
   // El pin de dos columnas necesita ancho lg (≥1024). Por debajo (móvil y
   // tablet) usamos el carrusel nativo: más legible y sin riesgo de recorte.
   const isCompact = useMediaQuery("(max-width: 1023px)");
-  const prefersReduced = useReducedMotion();
+  const prefersReduced = useReducedMotionSafe();
   const simple = isCompact || !!prefersReduced;
 
   const sectionRef = useRef<HTMLElement>(null);
@@ -313,7 +319,8 @@ export function WorkReel({ projects }: { projects: ProjectCase[] }) {
   // Móvil / reduced-motion: carrusel horizontal nativo (accesible por teclado).
   if (simple) {
     return (
-      <section aria-label={isEs ? "Proyectos destacados" : "Featured projects"} className="relative py-12">
+      // El ref sigue enganchado: useScroll lo exige aunque el carrusel no lo use.
+      <section ref={sectionRef} aria-label={isEs ? "Proyectos destacados" : "Featured projects"} className="relative py-12">
         <div
           role="region"
           aria-label={isEs ? "Proyectos destacados" : "Featured projects"}

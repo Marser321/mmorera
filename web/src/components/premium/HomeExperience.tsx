@@ -26,6 +26,7 @@ import { MotionBackdrop } from "@/components/shared/MotionBackdrop";
 // vez de bloquear el hilo principal con todo el Home de una vez.
 const ServicesSection = dynamic(() => import("@/components/premium/home/ServicesSection").then((m) => m.ServicesSection));
 const ProjectIndex = dynamic(() => import("@/components/premium/ProjectIndex").then((m) => m.ProjectIndex));
+const FilmRail = dynamic(() => import("@/components/films/FilmRail").then((m) => m.FilmRail));
 const OrchestrationWheelSection = dynamic(() => import("@/components/premium/home/OrchestrationWheelSection").then((m) => m.OrchestrationWheelSection));
 const LogoOvertureSection = dynamic(() => import("@/components/films/LogoOvertureSection").then((m) => m.LogoOvertureSection));
 const AuthorManifestoScene = dynamic(() => import("@/components/premium/AuthorManifestoScene").then((m) => m.AuthorManifestoScene));
@@ -260,6 +261,8 @@ export function HomeExperience() {
               </Link>
             </div>
           </div>
+
+          <FilmRail />
 
           <Reveal y={24}>
             <ProjectIndex projects={FEATURED_CASES} />
