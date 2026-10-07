@@ -1,4 +1,5 @@
 import { safeArea, type Box, type FilmFormatName } from "@/lib/filmLayout";
+import { FENIX_ASSETS } from "@/data/films/flagships/fenix";
 
 /**
  * Datos de ejemplo de las escenas de medios (puro): los usan las demos del
@@ -7,20 +8,18 @@ import { safeArea, type Box, type FilmFormatName } from "@/lib/filmLayout";
  * textos son de ejemplo y las demos los rotulan como tales.
  */
 
-const FENIX = "/portfolio/brands/fenix-medical-center";
-
 export const MEDIA_ASSETS = {
-  corridor: { src: `${FENIX}/scenes/amb-00-umbral-apertura-v2--16x9.mp4`, w: 1920, h: 1080, fps: 24, seconds: 10 },
-  corridorPoster: `${FENIX}/scenes/amb-00-umbral-apertura-v2--16x9-poster.webp`,
-  chamber: { src: `${FENIX}/scenes/hdr-v1-tratamientos-camara-hiperbarica--16x9.mp4`, w: 1920, h: 1080, fps: 30, seconds: 10 },
-  chamberPoster: `${FENIX}/scenes/hdr-v1-tratamientos-camara-hiperbarica--16x9-poster.webp`,
-  plasma: { src: `${FENIX}/scenes/mec-hbot-02-plasma-saturado.webp`, w: 1280, h: 720 },
-  diffusion: { src: `${FENIX}/scenes/mec-hbot-05-difusion-tisular.webp`, w: 1280, h: 720 },
-  angiogenesis: { src: `${FENIX}/scenes/mec-hbot-08-angiogenesis.webp`, w: 1280, h: 720 },
-  bookingDay: { src: `${FENIX}/shots/booking-1-dia.png`, w: 488, h: 636 },
-  bookingTime: { src: `${FENIX}/shots/booking-2-hora.png`, w: 488, h: 418 },
-  bookingDetails: { src: `${FENIX}/shots/booking-3-datos.png`, w: 488, h: 791 },
-  siteHbot: { src: `${FENIX}/shots/site-hbot.jpg`, w: 1600, h: 906 },
+  corridor: FENIX_ASSETS.corridor,
+  corridorPoster: FENIX_ASSETS.corridorPoster.src,
+  chamber: FENIX_ASSETS.chamber,
+  chamberPoster: FENIX_ASSETS.chamberPoster.src,
+  plasma: FENIX_ASSETS.mechanismPlasma,
+  diffusion: FENIX_ASSETS.mechanismDiffusion,
+  angiogenesis: FENIX_ASSETS.mechanismAngiogenesis,
+  bookingDay: FENIX_ASSETS.bookingDay,
+  bookingTime: FENIX_ASSETS.bookingTime,
+  bookingDetails: FENIX_ASSETS.bookingDetails,
+  siteHbot: FENIX_ASSETS.siteHbot,
   adReel: { src: "/portfolio/reels/ad-media-solution.mp4", w: 1280, h: 800, fps: 30, seconds: 6.2 },
   adReelPoster: "/portfolio/reels/ad-media-solution-poster.jpg",
 } as const;

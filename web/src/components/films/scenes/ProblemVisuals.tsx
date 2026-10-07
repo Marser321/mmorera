@@ -3,14 +3,14 @@ import { interpolate, useCurrentFrame } from "remotion";
 import type { FilmLanguage, Localized } from "@/data/films/filmTypes";
 import { CLAMP, EASE_IN_OUT, FILM_COLORS, FILM_FONTS, ink, progress, tint } from "./theme";
 
-export interface VisualBox {
+export type VisualBox = {
   x: number;
   y: number;
   w: number;
   h: number;
-}
+};
 
-interface ProblemVisualProps {
+type ProblemVisualProps = {
   box: VisualBox;
   signals: string[];
   language: FilmLanguage;
@@ -21,7 +21,7 @@ interface ProblemVisualProps {
   lanes?: Array<{ label: Localized; signals: number[] }>;
   /** Frames entre un mensaje y el siguiente (por defecto 30). */
   appearEvery?: number;
-}
+};
 
 /** Empuje de cámara + rótulo de quiebre que comparten los tres visuales. */
 function DiagnosisFrame({ box, frame, diagnosisAt, breakpoint, portrait, children }: Pick<ProblemVisualProps, "box" | "diagnosisAt" | "breakpoint" | "portrait"> & { frame: number; children: ReactNode }) {
