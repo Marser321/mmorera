@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState, type ComponentType, type ReactNode } from "react";
 import type { PlayerRef } from "@remotion/player";
 import type { FilmFormat } from "@/data/films/filmTypes";
+import { useDeferredMount } from "@/hooks/useDeferredMount";
 import { useResolvedMediaQuery } from "@/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
 import type { FilmCanvasProps, FilmSource } from "./FilmCanvas";
@@ -50,7 +51,12 @@ export function FilmStage({
   children?: ReactNode;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [mounted, setMounted] = useState(false);
+  /* El runtime de Remotion no compite con la carga inicial: se monta cuando
+     el film ya se ve, o cuando está cerca y la persona empezó a recorrer la
+     página (scroll, toque, tecla). Sin interacción, nada se evalúa fuera de
+     pantalla. */
+  const mounted = useDeferredMount(containerRef, { onVisibleChange });
+
   const [Canvas, setCanvas] = useState<ComponentType<FilmCanvasProps> | null>(null);
 
   useEffect(() => {
@@ -73,51 +79,6 @@ export function FilmStage({
       registry[kind] = player;
     }
   }, [kind, onPlayer]);
-  const visibleRef = useRef(onVisibleChange);
-
-  useEffect(() => {
-    visibleRef.current = onVisibleChange;
-  }, [onVisibleChange]);
-
-  useEffect(() => {
-    const element = containerRef.current;
-    if (!element) return;
-    /* El runtime de Remotion no compite con la carga inicial: se monta cuando
-       el film ya se ve, o cuando está cerca y la persona empezó a recorrer la
-       página (scroll, toque, tecla). Sin interacción, nada se evalúa fuera de
-       pantalla. */
-    let near = false;
-    let interacted = false;
-    const interactionEvents = ["scroll", "wheel", "pointerdown", "touchstart", "keydown"] as const;
-    const onInteract = () => {
-      interacted = true;
-      if (near) setMounted(true);
-      interactionEvents.forEach((type) => window.removeEventListener(type, onInteract));
-    };
-    interactionEvents.forEach((type) => window.addEventListener(type, onInteract, { passive: true }));
-
-    const nearObserver = new IntersectionObserver(
-      ([entry]) => {
-        near = entry.isIntersecting;
-        if (near && interacted) setMounted(true);
-      },
-      { rootMargin: "300px 0px" },
-    );
-    const visibilityObserver = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setMounted(true);
-        visibleRef.current?.(entry.isIntersecting && entry.intersectionRatio >= 0.35);
-      },
-      { threshold: [0, 0.35] },
-    );
-    nearObserver.observe(element);
-    visibilityObserver.observe(element);
-    return () => {
-      interactionEvents.forEach((type) => window.removeEventListener(type, onInteract));
-      nearObserver.disconnect();
-      visibilityObserver.disconnect();
-    };
-  }, []);
 
   const aspect = format === "portrait" ? "4 / 5" : "16 / 9";
 
