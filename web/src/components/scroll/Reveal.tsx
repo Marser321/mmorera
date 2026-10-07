@@ -1,8 +1,9 @@
 'use client';
 
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import type { ElementType, ReactNode } from 'react';
 import { VIEWPORT, EASE_OUT, DURATION } from '@/lib/motion';
+import { useReducedMotionSafe } from '@/hooks/useReducedMotionSafe';
 
 interface RevealProps {
     children: ReactNode;
@@ -31,7 +32,7 @@ export function Reveal({
     amount,
     className,
 }: RevealProps) {
-    const reduced = useReducedMotion();
+    const reduced = useReducedMotionSafe();
 
     if (reduced) {
         const Tag = as as ElementType<{ className?: string; children?: ReactNode }>;

@@ -2,9 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { useReducedMotion } from "framer-motion";
 import type { CaseReelSources } from "@/data/caseMedia";
 import { cn } from "@/lib/utils";
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 
 /**
  * Reel de un caso real (grabado del sitio en vivo). Muestra el póster al
@@ -28,7 +28,7 @@ export function CaseReel({
   priority?: boolean;
   sizes?: string;
 }) {
-  const prefersReduced = useReducedMotion();
+  const prefersReduced = useReducedMotionSafe();
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [mounted, setMounted] = useState(false);

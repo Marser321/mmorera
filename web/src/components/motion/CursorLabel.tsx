@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring } from "framer-motion";
+import { AnimatePresence, motion, useMotionValue, useSpring } from "framer-motion";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { EASE_OUT } from "@/lib/motion";
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 
 /**
  * Etiqueta que acompaña al cursor sobre elementos con `data-cursor-label`
@@ -12,7 +13,7 @@ import { EASE_OUT } from "@/lib/motion";
  */
 export function CursorLabel() {
   const finePointer = useMediaQuery("(hover: hover) and (pointer: fine)");
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionSafe();
   const [label, setLabel] = useState<string | null>(null);
   const pointerX = useMotionValue(-100);
   const pointerY = useMotionValue(-100);

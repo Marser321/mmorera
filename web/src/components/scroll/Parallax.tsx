@@ -1,8 +1,9 @@
 'use client';
 
-import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef, type ReactNode } from 'react';
 import { useIsMobile } from '@/hooks/useMediaQuery';
+import { useReducedMotionSafe } from '@/hooks/useReducedMotionSafe';
 
 interface ParallaxProps {
     children: ReactNode;
@@ -16,7 +17,7 @@ interface ParallaxProps {
 
 export function Parallax({ children, speed = 60, axis = 'y', disableOnMobile = true, className }: ParallaxProps) {
     const ref = useRef<HTMLDivElement>(null);
-    const reduced = useReducedMotion();
+    const reduced = useReducedMotionSafe();
     const isMobile = useIsMobile();
     const disabled = reduced || (disableOnMobile && isMobile);
     const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });

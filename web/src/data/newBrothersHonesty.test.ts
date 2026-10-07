@@ -2,7 +2,6 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { PROJECT_CASES } from "./projectCases";
 import { CASE_TOPOLOGIES } from "./caseTopologyData";
-import { TRANSFORMATION_CASES } from "./transformationDiffData";
 import { USE_CASE_FILMS } from "./films/systemsFilms";
 
 /**
@@ -22,7 +21,6 @@ function collectStrings(value: unknown, out: string[] = []): string[] {
 const sources = {
   projectCase: PROJECT_CASES.find((item) => item.slug === "new-brothers-barberia"),
   topology: CASE_TOPOLOGIES["new-brothers-barberia"],
-  transformation: TRANSFORMATION_CASES.find((item) => item.id === "new-brothers"),
   systemsFilm: USE_CASE_FILMS.find((film) => film.caseSlug === "new-brothers-barberia"),
 };
 

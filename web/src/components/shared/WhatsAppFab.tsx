@@ -1,10 +1,11 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { SiWhatsapp } from "react-icons/si";
 import { useLanguage } from "@/context/LanguageContext";
 import { SITE_IDENTITY } from "@/config/site";
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 
 /**
  * Acceso directo flotante a WhatsApp — el canal humano del sitio.
@@ -13,7 +14,7 @@ import { SITE_IDENTITY } from "@/config/site";
 export function WhatsAppFab() {
   const pathname = usePathname();
   const { language } = useLanguage();
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useReducedMotionSafe();
   const label = language === "es" ? "Escribir por WhatsApp" : "Chat on WhatsApp";
 
   // En la home opera IslandBar con su propio acceso a WhatsApp para no duplicar ni solapar en mobile

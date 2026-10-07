@@ -2,9 +2,10 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { LogoMM } from "@/components/shared/LogoMM";
 import { EASE_IN_OUT } from "@/lib/motion";
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 
 /**
  * Cortina de transición entre páginas: cuando cambia la ruta, cubre la página
@@ -13,7 +14,7 @@ import { EASE_IN_OUT } from "@/lib/motion";
  * (regla 2 de lib/motion.ts) y nada con prefers-reduced-motion.
  */
 export function PageCurtain() {
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionSafe();
   const pathname = usePathname();
   const previousPath = useRef(pathname);
   const [visible, setVisible] = useState(false);

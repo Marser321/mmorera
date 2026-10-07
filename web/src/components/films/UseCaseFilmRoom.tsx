@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { useReducedMotion } from "framer-motion";
 import type { PlayerRef } from "@remotion/player";
 import { useLanguage } from "@/context/LanguageContext";
 import { localePath } from "@/config/site";
@@ -13,6 +12,7 @@ import { FilmChapters, useFilmPlayback } from "./FilmChapters";
 import type { FilmSource } from "./FilmCanvas";
 import { FilmStage, useFilmFormat } from "./FilmStage";
 import { NodeInspector } from "./NodeInspector";
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 
 const ADVANCE_DELAY_MS = 1400;
 
@@ -31,7 +31,7 @@ export function UseCaseFilmRoom() {
   const { language } = useLanguage();
   const isEs = language === "es";
   const format = useFilmFormat();
-  const reducedMotion = useReducedMotion() === true;
+  const reducedMotion = useReducedMotionSafe() === true;
   const [player, setPlayer] = useState<PlayerRef | null>(null);
   const [active, setActive] = useState(0);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);

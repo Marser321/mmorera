@@ -2,9 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import { useReducedMotion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/useMediaQuery';
 import { useTheme } from '@/context/ThemeContext';
+import { useReducedMotionSafe } from '@/hooks/useReducedMotionSafe';
 
 /**
  * Fondo de video reutilizable, pensado para presencia "cinematográfica" sin
@@ -108,7 +108,7 @@ export function BackgroundVideo({
     objectPosition = 'center',
     className = '',
 }: BackgroundVideoProps) {
-    const prefersReduced = useReducedMotion();
+    const prefersReduced = useReducedMotionSafe();
     const isMobile = useIsMobile();
     const { theme } = useTheme();
     const containerRef = useRef<HTMLDivElement>(null);

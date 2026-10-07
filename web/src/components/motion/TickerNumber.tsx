@@ -1,8 +1,9 @@
 'use client';
 
-import { animate, useInView, useMotionValue, useMotionValueEvent, useReducedMotion } from 'framer-motion';
+import { animate, useInView, useMotionValue, useMotionValueEvent } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { EASE_OUT } from '@/lib/motion';
+import { useReducedMotionSafe } from '@/hooks/useReducedMotionSafe';
 
 interface TickerNumberProps {
     value: number;
@@ -19,7 +20,7 @@ interface TickerNumberProps {
  */
 export function TickerNumber({ value, pad = 2, duration = 1.2, className }: TickerNumberProps) {
     const ref = useRef<HTMLSpanElement>(null);
-    const reduced = useReducedMotion();
+    const reduced = useReducedMotionSafe();
     const inView = useInView(ref, { once: true, margin: '0px 0px -10% 0px' });
     const count = useMotionValue(0);
     const format = (raw: number) => String(Math.round(raw)).padStart(pad, '0');

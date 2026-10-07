@@ -1,7 +1,7 @@
 'use client';
 
 import { createElement, useEffect, useRef, useState, type ElementType } from 'react';
-import { useReducedMotion } from 'framer-motion';
+import { useReducedMotionSafe } from '@/hooks/useReducedMotionSafe';
 
 interface DecodeTextProps {
     text: string;
@@ -32,7 +32,7 @@ export function DecodeText({
     duration = 640,
     decodeOnMount = false,
 }: DecodeTextProps) {
-    const reduced = useReducedMotion();
+    const reduced = useReducedMotionSafe();
     const [display, setDisplay] = useState(text);
     const frameRef = useRef<number | null>(null);
     const mountedRef = useRef(false);

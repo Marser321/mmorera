@@ -3,9 +3,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { animate, useReducedMotion, type AnimationPlaybackControls } from "framer-motion";
+import { animate, type AnimationPlaybackControls } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 
 /**
  * Bento animada: spotlight que sigue al cursor sobre la grilla, anillo de glow
@@ -92,7 +93,7 @@ export function MagicBento({
     ctaLabel,
     className,
 }: MagicBentoProps) {
-    const reduced = useReducedMotion();
+    const reduced = useReducedMotionSafe();
     const sectionRef = useRef<HTMLDivElement>(null);
     const spotlightRef = useRef<HTMLDivElement>(null);
     const frameRef = useRef(0);

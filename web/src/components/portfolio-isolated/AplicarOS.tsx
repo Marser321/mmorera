@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ArrowLeft, ArrowRight, CheckCircle2, Layers3, Sparkles, User } from 'lucide-react';
 import { submitLead } from '@/actions/submit-lead';
 import type { ContactFormData } from '@/types';
@@ -11,6 +11,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { useTrack } from '@/context/TrackContext';
 import { isTrackId, type TrackId } from '@/data/tracks';
 import { getProjectCase } from '@/data/projectCases';
+import { useReducedMotionSafe } from '@/hooks/useReducedMotionSafe';
 
 type BriefData = {
     name: string;
@@ -40,7 +41,7 @@ const fieldIds: Record<LeadField, string> = {
 export function AplicarOS() {
     const { isDevMode } = useDevMode();
     const { language } = useLanguage();
-    const reducedMotion = useReducedMotion();
+    const reducedMotion = useReducedMotionSafe();
     const { track: contextTrack, setTrack: setContextTrack } = useTrack();
     const [trackId, setTrackId] = useState<TrackId | null>(null);
     const [step, setStep] = useState(0);

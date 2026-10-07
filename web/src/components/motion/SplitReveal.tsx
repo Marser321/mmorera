@@ -1,8 +1,9 @@
 'use client';
 
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import type { ElementType, ReactNode } from 'react';
 import { DURATION, EASE_OUT, STAGGER, VIEWPORT } from '@/lib/motion';
+import { useReducedMotionSafe } from '@/hooks/useReducedMotionSafe';
 
 interface SplitRevealProps {
     text: string;
@@ -19,7 +20,7 @@ interface SplitRevealProps {
  * largos en español no se eternicen. Bajo reduced-motion renderiza texto plano.
  */
 export function SplitReveal({ text, as = 'h2', mode = 'inView', delay = 0, className }: SplitRevealProps) {
-    const reduced = useReducedMotion();
+    const reduced = useReducedMotionSafe();
     const Tag = as as ElementType<{ className?: string; children?: ReactNode; 'aria-label'?: string }>;
 
     if (reduced) {

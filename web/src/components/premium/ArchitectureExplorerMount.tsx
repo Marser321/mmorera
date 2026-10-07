@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState, type ComponentType, type CSSProperties, type KeyboardEvent, type ReactNode, type RefObject } from "react";
-import { useReducedMotion } from "framer-motion";
 import { X } from "lucide-react";
 import { resolveArchitecture, type ArchitectureBundle, type ArchitectureOrientation } from "@/data/architecture/bundle";
 import { loadArchitecture } from "@/data/architecture/registry";
@@ -12,6 +11,7 @@ import { ROLE_COLOR } from "./ArchitectureArt";
 import type { ArchitectureExplorerProps } from "./ArchitectureExplorer";
 import { buildArchitectureModel, componentLinks, orientationFor, typeLabel, viewsWith, type ArchitectureModel, type CardFonts, type ComponentLink } from "./underTheHoodModel";
 import styles from "./UnderTheHood.module.css";
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 
 /* Import manual (no next/dynamic), como FilmStage: el chunk de React Flow y
    su CSS se piden recién cuando la sección se acerca, en paralelo con los
@@ -107,7 +107,7 @@ export function ArchitectureExplorerMount({
   const inspectorTitleRef = useRef<HTMLHeadingElement>(null);
   const focusInspector = useRef(false);
   const mounted = useDeferredMount(rootRef);
-  const reducedMotion = useReducedMotion() === true;
+  const reducedMotion = useReducedMotionSafe() === true;
   const [width, setWidth] = useState<number | null>(null);
   const [loaded, setLoaded] = useState<Loaded | null>(null);
   const [readyFor, setReadyFor] = useState<ArchitectureOrientation | null>(null);

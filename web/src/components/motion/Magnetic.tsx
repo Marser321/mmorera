@@ -1,9 +1,10 @@
 'use client';
 
-import { motion, useMotionValue, useReducedMotion, useSpring } from 'framer-motion';
+import { motion, useMotionValue, useSpring } from 'framer-motion';
 import { useRef, type PointerEvent, type ReactNode } from 'react';
 import { SPRING } from '@/lib/motion';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { useReducedMotionSafe } from '@/hooks/useReducedMotionSafe';
 
 interface MagneticProps {
     children: ReactNode;
@@ -18,7 +19,7 @@ interface MagneticProps {
  */
 export function Magnetic({ children, strength = 8, className }: MagneticProps) {
     const ref = useRef<HTMLDivElement>(null);
-    const reduced = useReducedMotion();
+    const reduced = useReducedMotionSafe();
     const finePointer = useMediaQuery('(pointer: fine)');
     const x = useMotionValue(0);
     const y = useMotionValue(0);

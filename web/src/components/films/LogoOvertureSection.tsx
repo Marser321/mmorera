@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useReducedMotion } from "framer-motion";
 import { RotateCcw } from "lucide-react";
 import type { PlayerRef } from "@remotion/player";
 import { useLanguage } from "@/context/LanguageContext";
 import { LOGO_OVERTURE_FRAMES } from "./compositions/logoOvertureTiming";
 import type { FilmSource } from "./FilmCanvas";
 import { FilmStage, useFilmFormat } from "./FilmStage";
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 
 /**
  * Entrada del monograma antes del perfil: el prompt de código que gira hasta
@@ -18,7 +18,7 @@ export function LogoOvertureSection() {
   const { language } = useLanguage();
   const isEs = language === "es";
   const format = useFilmFormat();
-  const reducedMotion = useReducedMotion() === true;
+  const reducedMotion = useReducedMotionSafe() === true;
   const [player, setPlayer] = useState<PlayerRef | null>(null);
   const [visible, setVisible] = useState(false);
   const [ended, setEnded] = useState(false);

@@ -1,7 +1,7 @@
 'use client';
 
 import { ReactLenis } from 'lenis/react';
-import { useReducedMotion } from 'framer-motion';
+import { useReducedMotionSafe } from '@/hooks/useReducedMotionSafe';
 
 /**
  * Inicializa Lenis una sola vez en el root (modo root = no agrega wrapper DOM,
@@ -12,7 +12,7 @@ import { useReducedMotion } from 'framer-motion';
  * entre con/sin Lenis no cambia el DOM → sin hydration mismatch.
  */
 export function SmoothScrollProvider({ children }: { children: React.ReactNode }) {
-    const prefersReduced = useReducedMotion();
+    const prefersReduced = useReducedMotionSafe();
 
     if (prefersReduced) {
         return <>{children}</>;

@@ -1,19 +1,12 @@
 "use client";
 
-import {
-  motion,
-  useMotionValue,
-  useReducedMotion,
-  useScroll,
-  useSpring,
-  useTransform,
-  useMotionValueEvent,
-} from "framer-motion";
+import { motion, useMotionValue, useScroll, useSpring, useTransform, useMotionValueEvent } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTheme } from "@/context/ThemeContext";
 import { useResolvedMediaQuery } from "@/hooks/useMediaQuery";
 import { isMotionPreviewHost } from "@/data/motionAssets";
 import type { MotionAsset, MotionMediaSource, MotionScrim } from "@/data/motionAssets";
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 
 let activeMotionVideo: HTMLVideoElement | null = null;
 
@@ -62,7 +55,7 @@ export function MotionBackdrop({
   const rootRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const { theme } = useTheme();
-  const reducedMotion = useReducedMotion() === true;
+  const reducedMotion = useReducedMotionSafe() === true;
   const desktopMatch = useResolvedMediaQuery("(min-width: 768px)");
   const isDesktop = desktopMatch === true;
   const [hasEntered, setHasEntered] = useState(false);

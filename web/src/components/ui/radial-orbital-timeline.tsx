@@ -2,11 +2,11 @@
 
 import * as React from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useReducedMotion } from "framer-motion";
 import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge, type BadgeProps } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 
 /**
  * Línea de tiempo orbital: nodos que giran alrededor de un núcleo y se abren
@@ -56,7 +56,7 @@ export function RadialOrbitalTimeline({
     renderExtra,
     className,
 }: RadialOrbitalTimelineProps) {
-    const reduced = useReducedMotion();
+    const reduced = useReducedMotionSafe();
     const containerRef = useRef<HTMLDivElement>(null);
     const stageRef = useRef<HTMLDivElement>(null);
     const [activeId, setActiveId] = useState<string | null>(null);

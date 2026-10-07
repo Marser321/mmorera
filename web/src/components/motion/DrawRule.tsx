@@ -1,7 +1,8 @@
 'use client';
 
-import { motion, useReducedMotion, type MotionValue } from 'framer-motion';
+import { motion, type MotionValue } from 'framer-motion';
 import { DURATION, EASE_OUT, VIEWPORT } from '@/lib/motion';
+import { useReducedMotionSafe } from '@/hooks/useReducedMotionSafe';
 
 interface DrawRuleProps {
     /** Lado desde el que se dibuja la regla. */
@@ -20,7 +21,7 @@ const AXIS_Y = new Set(['top', 'bottom']);
  * del className (ej. "block h-px w-full bg-white/10").
  */
 export function DrawRule({ origin = 'left', progress, delay = 0, className }: DrawRuleProps) {
-    const reduced = useReducedMotion();
+    const reduced = useReducedMotionSafe();
     const vertical = AXIS_Y.has(origin);
 
     if (reduced) {
