@@ -1,6 +1,25 @@
-# Preparación de casos para los films insignia (encargo para Gemini)
+# Films insignia de los casos (encargo para Gemini)
 
-**Objetivo:** dejar cada caso listo para animar. Claude toma el kit y escribe el film en Remotion: no tiene que investigar, capturar ni diagramar.
+**Objetivo:** cada caso del portfolio con su film insignia de 70–80 s, en español y en inglés, para el sitio y exportado a MP4 para portfolios y redes.
+
+El trabajo tiene tres fases por caso:
+
+| Fase | Qué | Guía | Listo cuando |
+|---|---|---|---|
+| A · Kit | Investigación, marca, medios, capturas y arquitectura | este documento | `npx tsx scripts/check-case-kit.ts <slug>` da ✔ |
+| B · Film | La composición Remotion a partir del kit | `docs/films/GEMINI_FILMS.md` | tests, tipos y lint en verde, más las hojas de revisión |
+| C · Export | Los MP4 (16:9 y 4:5, es y en) | `docs/films/GEMINI_FILMS.md` § 6 | `renders/<slug>/` con los 4 archivos |
+
+Claude revisa cada fase, corrige lo que haga falta, sube los cambios y despliega. Gemini no hace commits ni deploys.
+
+## 0. Criterio de portfolio (de Mario)
+
+Son proyectos diseñados y programados por Mario. Algunos no llegaron a operar del todo por razones ajenas a su trabajo, así que el sitio en vivo puede tener integraciones sin conectar o datos de ejemplo. **Igual son trabajo de portfolio**: el film muestra lo construido (diseño, código y flujos).
+
+- **Se cuenta lo construido.** Una integración sin conectar se nombra como "preparada" ("listo para conectar el MLS de HAR"), nunca como funcionando.
+- **Datos de ejemplo.** Si el código trae listados o precios de muestra, el film puede mostrarlos rotulados como ejemplo; nunca como ventas reales.
+- **Las capturas muestran el diseño.** Encuadrá para que no salgan textos técnicos de configuración que el sitio deja visibles (por ejemplo "pegá la URL en NEXT_PUBLIC_…").
+- **Nunca resultados de negocio inventados** (ventas, conversiones, ROI). Las cifras del cliente que muestra el sitio (por ejemplo "86 propiedades vendidas") son del cliente, no del trabajo: no van como logro del film.
 
 **Cuándo está terminado un caso:** cuando este comando da ✔ sin fallas (los ⚠ se pueden dejar):
 
@@ -30,13 +49,23 @@ Copiá su forma.
 | 5 | `punta-360` | https://punta-360.vercel.app/ | `pano-pan`: la imagen 360° del sitio |
 | 6 | `lnb-saas` | https://lnb-saass.vercel.app/ | A definir con lo que muestre el sitio. Hoy es La Nueva Brasil (panadería), no un "SaaS de inventario". |
 | 7 | `hub-profesional-ai` | https://profecionalcv.vercel.app/ | A definir con lo que muestre el sitio. El reel guardado muestra un taller ("Mecánica Premium"), no una herramienta de CV. |
+| 8 | `rangel-oviedo-group` | https://rangeloviedo-tor8.vercel.app/ | `goal-paths`: los 4 perfiles (inversor, compra familiar, vendedor, relocation) entrando al método de 5 pasos |
 
-- **Rangel Oviedo Group lo hace Claude:** no lo toques.
+- **Rangel Oviedo (notas que ya relevó Claude):**
+  - Sitio bilingüe con selector EN/ES en el cliente (no hay rutas `/en`). Hecho en marca blanca para AD Media Solution.
+  - Clips en `/rog/scrolly_1_facade.mp4`, `scrolly_3_livingroom.mp4`, `scrolly_4_kitchen.mp4` y `scrolly_5_terrace.mp4`, con pósters `.webp`; además `scrolly_2_entrance.webp`. La galería del equipo está en `/rog/team-gallery/`.
+  - "El Método Rangel" tiene 5 pasos y el diagnóstico tiene 4 perfiles. El equipo tiene 4 pilares (concierge y relocalización, off-market, viabilidad de inversión, escrow bilingüe).
+  - **Preparado sin conectar:** los widgets IDX del MLS de HAR (variables `NEXT_PUBLIC_HAR_*`), el WhatsApp (variable vacía) y la agenda (los botones llevan a `#contacto`, sin formulario).
+  - **Datos de ejemplo:** las 3 propiedades destacadas (`id: "sample-…"`, `mlsNumber: "00000000"`).
+  - **No mostrar:** el simulador de plusvalía de `/propiedades`, con su "ROI Neto Estimado".
+  - **El caso publicado se corrige:** el acento es cobre (`#c9a864` / `#d4b16f`), no violeta, y "CRM" sale del stack.
 - **Si la protagonista propuesta no se sostiene** con lo que hay en el sitio, proponé otra. Debe ser un `kind` nuevo, en kebab-case, y el checker comprueba que no sea la protagonista de otro film.
 - **Notas previas de cada caso:** `C:\Users\morer\OneDrive\Desktop\MMorera-Freelance-KB\projects\<slug>.md`. Son afirmaciones del portfolio "pendientes de verificar": úsalas como pista, nunca como fuente.
 - **Repos locales:** si existe uno del cliente (por ejemplo `Desktop\temp_atreact` para América Trámites), podés leerlo, pero el film cuenta **lo publicado**. Si el repo y el sitio difieren, manda el sitio y anotalo en el dossier, como en `mr-studio.md` § 0.
 
-## 2. Qué podés tocar y qué no
+## 2. Qué podés tocar y qué no (fase A)
+
+En la fase B (el film) se suman los archivos de registro que lista `GEMINI_FILMS.md`.
 
 **Podés crear o editar, por caso:**
 - `docs/films/dossiers/<slug>.md`
@@ -59,7 +88,7 @@ Copiá su forma.
 
 ## 3. Reglas (no negociables)
 
-1. **Solo datos verificables** del sitio publicado (o del código del cliente). Cada cifra del kit va al dossier con su fuente: la URL y cómo se contó.
+1. **Solo datos verificables** del sitio publicado (o del código del cliente). Mirá también el § 0. Cada cifra del kit va al dossier con su fuente: la URL y cómo se contó.
    - Ejemplo: "/services: 4 + 5 + 6 + 6 + 4 + 5 'confirmed filings'".
    - Nada de porcentajes de conversión, ROI, "garantizado", "duplicá" ni métricas inventadas. El checker los rechaza en la copia.
 2. **Solo lectura en producción.**

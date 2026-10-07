@@ -43,6 +43,9 @@
   },
   "devDependencies": {
     "@playwright/test": "1.61.1",
+    "@remotion/bundler": "4.0.490",
+    "@remotion/cli": "^4.0.490",
+    "@remotion/renderer": "4.0.490",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

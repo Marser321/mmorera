@@ -49,3 +49,5 @@ next-env.d.ts
 .vercel
 /public/_showreel/
 .film-frames/
+.remotion-bin/
+/renders/
