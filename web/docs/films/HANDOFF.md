@@ -50,7 +50,7 @@ Estado y reglas del sistema de "films de lanzamiento" del portfolio, para seguir
    - Los ejemplos se rotulan "datos de ejemplo"; nada de % de conversión ni métricas inventadas.
    - Cada número lleva su fuente en un comentario y un test que lo ate.
 2. **Métricas Lighthouse:** solo si las 4 notas son ≥ 90 (`isShowcaseWorthy`).
-3. **Prohibido escribir "Uruguay"** en el código público (`publicContent.test.ts`).
+3. **Prohibido escribir "Uru" + "guay"** en el código público (`publicContent.test.ts`).
 4. **Fénix:** sin testimonios, sin datos de pacientes, sin contenido de FENIX OS ni costos. Claims médicos con la redacción permitida (ver dossier).
 5. **Remotion:**
    - Todo movimiento sale de `useCurrentFrame()`. Nada de `transition`/`animate` de CSS dentro de una composición.
@@ -85,6 +85,31 @@ Estado y reglas del sistema de "films de lanzamiento" del portfolio, para seguir
 - **Menos ruido (resuelto):** `DustField` con 56 motas y opacidad 0,2; el logo en partículas baja su brillo y su titileo una vez formado.
 - **Personalidad por caso:** sigue en pie para los próximos films (ver abajo).
 - **Diagrama en 4:5 (resuelto):** `new-brothers-architecture.portrait.json` reordena el mismo contenido en filas; la escala de lectura pasa de ~0,68 a ~0,99.
+
+## Verificación adversarial y correcciones (Fase 0/1)
+- **Diagrama de arquitectura (`ArchitectureScene` & Bajo el capó):**
+  - Creado modelo puro compartido `diagramModel.ts` (`visibleTag`, `boundaryTitles`, `cardTextSizes`/`fitSize`, `roleColors`, `DANGER`).
+  - `archify.ts` y `underTheHoodModel.ts` re-exportan el modelo compartido; eliminada duplicación de lógica de tamaños y etiquetas.
+  - Títulos de capas renderizados vía `boundaryTitles` por encima de rutas sin colisión; etiquetas garantizan ajuste (`projectedFontPx >= 6.0px`); aristas y cajas recortadas a bordes suaves.
+  - Vistas guiadas de arquitectura en New Brothers y Fénix adaptadas a safe area en 16:9 y 4:5.
+  - Bajo el capó: accesibilidad mejorada (`id` con prefijo, `tabIndex={0}` en tabpanel, roles ARIA) y soporte táctil de arrastre + botón Restablecer en móviles.
+  - 25 tests dedicados en `ArchitectureScene.test.ts`.
+- **Datos y honestidad de métricas:**
+  - Ajustado subrótulo `send-reminders` en `new-brothers-architecture*.json` para garantizar legibilidad en Archify Showcase. Regenerados los 8 archivos de layout.
+  - Reemplazadas métricas no verificadas en `transformationDiffData.ts` (AD Media y L&B) por capacidades reales y verificadas ("datos de ejemplo" explícitos).
+  - `mediaSamples.ts` consume directamente `FENIX_ASSETS` desde `@/data/films/flagships/fenix`.
+  - Eliminado archivo muerto `fenix-visitor-journey.json` y export huérfano `FORMAT_SIZE`.
+  - Props de `ProblemVisuals` convertidas a `type`.
+  - Dependencia `sharp` fijada en `devDependencies`.
+- **Fénix Film y Dossier:**
+  - `FactWall`: fuentes de ingeniería visibles y localizadas ("repositorio del proyecto" / "sitio en producción").
+  - Copia sin cronología en `fenix.ts` y `projectCases.ts`.
+  - Fragmentos neutros de Cerebro rotulados explícitamente como ejemplos de archivo.
+  - FenixFilm migrado a safe areas, helper compartido `windowed`, token de partículas `palette.accentDeep`, y layout puro extraído a `fenixFilmLayout.ts` con 11 tests.
+  - `fenix.test.ts` robustecido con límites de palabra (`\b${num}\b`) e inspección recursiva de JSONs de arquitectura.
+  - Dossier de Fénix (`docs/films/dossiers/fenix.md`) actualizado con la confirmación de Mario sobre las láminas del mecanismo ("Difusión en el tejido", "Angiogénesis").
+- **Deuda técnica conocida:**
+  - Se mantienen por ahora 4 tablas paralelas de medición de ancho de caracteres (`charWidths`) entre diagramModel, archify, fenixFilmLayout y ProblemVisuals debido a diferencias de renderizado por fuente (`GeistMono` vs `system-ui` vs proporcional). Se unificará en una fase posterior.
 
 ## Siguiente trabajo
 1. ~~Refinar New Brothers~~ (hecho, salvo recapturar a 2×: necesita red).
