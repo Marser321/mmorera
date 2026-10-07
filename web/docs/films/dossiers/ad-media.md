@@ -6,10 +6,14 @@
 
 ---
 
-## 1. Identidad y Posicionamiento
+## 1. Identidad, Posicionamiento y Alianza Comercial
 
 - **Qué es:** Agencia de "Arquitectura de Ingresos y CRM" de marca blanca para empresas y contratistas hispanos en EE. UU.
-- **Propuesta de valor:** Sustituir procesos manuales y hojas de cálculo por una infraestructura automatizada sobre GoHighLevel con la identidad visual del cliente.
+- **Relación Comercial y Autoría (White-Label Engineering):**
+  - AD Media Solution funciona como la **agencia comercial y socia de negocio** a través de la cual se comercializaron y vendieron muchos de los proyectos del portafolio.
+  - Tienen su merecido crédito como la agencia que cerró, gestionó y canalizó las cuentas comerciales.
+  - **Mario Morera operó como el socio técnico y líder de desarrollo frontend exclusivo tercerizado (White-Label Tech Partner)**, desarrollando la arquitectura de funnels, las landing pages, las interfaces web interactivas y las integraciones con CRM.
+  - Por ello, AD Media Solution forma parte legítima y destacada del portafolio, con su propia portada de proyecto, banners corporativos oficiales y honrando la colaboración bilateral.
 - **Paleta de marca (extraída del CSS del cliente):**
   - Fondo (`bg`): `#020617` (Deep Slate / Navy)
   - Superficie (`surface`): `#0B132B`
@@ -22,12 +26,14 @@
   - Acento profundo (`accentDeep`): `#0044CC`
   - En acento (`onAccent`): `#FFFFFF`
 - **Tipografía:** Montserrat (display y texto).
-- **Assets de marca en el repo (`web/public/portfolio/brands/ad-media-solution/`):**
-  - `mark.png`: Isotipo vectorizado / rasterizado de AD Media.
-  - `wordmark.png`: Logotipo con texto.
-  - `ceo.jpg`: Fotografía de Danger Fernández (CEO).
-  - `banner.jpg`: Render publicitario / póster de marca.
-  - `logo-crm.png`: Emblema del módulo de CRM de Marca Blanca.
+- **Catálogo de Assets de Marca en el Repo (`web/public/portfolio/brands/ad-media-solution/`):**
+  - `banner.jpg`: Render publicitario / póster de marca oficial.
+  - `ceo.jpg` / `Danger Fernández CEO.png`: Fotografía corporativa del CEO (Danger Fernández).
+  - `logo-full-white.png`: Logotipo completo horizontal en blanco sobre transparente.
+  - `logo-full.png`: Logotipo completo con isotipo azul y tipografía blanca.
+  - `logo-icon.png`: Isotipo independiente en alta resolución.
+  - `logo-crm.png`: Emblema oficial del módulo de CRM de Marca Blanca.
+  - `mark.png` y `wordmark.png`: Variantes vectoriales optimizadas.
 
 ---
 

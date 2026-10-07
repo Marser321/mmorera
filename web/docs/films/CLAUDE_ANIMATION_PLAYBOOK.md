@@ -146,7 +146,7 @@ Presentación de credenciales técnicas y métricas verificadas con fuentes de c
 | **AD Media Solution** | `ad-media-solution` | ✅ Completo (`ad-media.md`) | ✅ Compilado (`ad-media-architecture*`) | ✅ `banner.jpg`, `ceo.jpg`, `logo-crm.png`, `mark.png`, `wordmark.png` | ⏳ Estructura lista | **Crear composición `AdMediaFilm.tsx`** con escena protagonista `pipeline-board` (Speed-to-Lead <30s + Kanban de 5 etapas) siguiendo el patrón de `FenixFilm.tsx`. |
 | **Truckers Choice** | `truckers-choice` | 🟡 En carpeta | ⏳ Pendiente | ✅ `truckers-cover.png` | ⏳ Pendiente | Escena bilingüe lado a lado. |
 | **Rangel Oviedo Group** | `rangel-oviedo-group` | 🟡 En carpeta | ⏳ Pendiente | ✅ `rangel-oviedo-cover.jpg` | ⏳ Pendiente | Recorrido editorial de asesoría inmobiliaria. |
-| **Mr. Studio Tattoo** | `mr-studio-tattoo` | 🟡 En carpeta | ⏳ Pendiente | ✅ Reels y capturas en carpeta | ⏳ Pendiente | Muro de piezas por artista sobre negro absoluto. |
+| **Mr. Studio Tattoo** | `mr-studio-tattoo` | ✅ Completo (`mr-studio.md`) | ⏳ Pendiente | ✅ `mrstudio-tattoo-cover.jpg`, shots y reels | ⏳ Listo para diagramar | **Construir escena protagónica `body-selector`** (Lovable + selector corporal anatómico interactivo + agenda señada). |
 
 ---
 
@@ -188,3 +188,40 @@ Requisitos innegociables:
 3. Geometría: Todo dentro de `safeArea(format)`, respetando bandas y márgenes.
 4. Ejecutá `npm test` al terminar y asegurate de que 917/917 tests pasen.
 ```
+
+---
+
+## 7. Superpoderes Técnicos y Narrativa Profunda por Caso (Ficha Creativa)
+
+Cada film tiene una tesis de ingeniería y un diferencial de negocio radicalmente diferente. Claude **debe resaltar el superpoder específico** de cada caso:
+
+### 1. L&B Elite Wash & Detail (`lb-elite-wash-detail`)
+* **Tesis Central:** Cero base de datos tradicional (cero Postgres). Orquestación 100% serverless mediante Webhooks hacia el CRM (GoHighLevel).
+* **Superpoder en Pantalla:** 
+  - El cotizador web interactivo por carrocería (88 productos, 142 precios) despacha un **Inbound Webhook** al CRM que desglosa en tiempo real: cantidad de vehículos, duraciones acumuladas y total estimado.
+  - La cita nace con hold temporal de 15 minutos (`appointmentStatus: new`).
+  - Al confirmarse el pago, la máquina de estados muta en GHL y rutea automáticamente hacia el calendario de la camioneta correspondiente entre las 4 unidades autónomas.
+  - **Visuales clave:** Usar `<CinematicPlate>` con las fotos reales de las camionetas en calle (`van-real.jpg`, `van.webp`), capturas del cotizador con `<ScrollReel>` y el diagrama de Archify que ilustra la ausencia total de Postgres.
+
+### 2. Mr. Studio Tattoo (`mr-studio-tattoo`)
+* **Tesis Central:** Desarrollado 100% sobre **Lovable** (React + Vite + Tailwind) para un estudio de tatuajes de alta gama en Miami.
+* **Superpoder en Pantalla:** 
+  - **Selector Corporal Anatómico Interactivo:** En lugar de un selector de texto plano, la web presenta una silueta anatómica humana interactiva donde el cliente marca la ubicación exacta (antebrazo, espalda, costillas, etc.).
+  - **Agenda Multi-Paso Calificada con Seña:** El flujo califica el estilo (Realismo, Fine Line, Micro-realismo), asigna al artista residente adecuado y **exige el pago de seña/depósito (Retainer Fee)** para asegurar el turno, eliminando completamente los "no-shows" y los chats infinitos de Instagram.
+  - **Visuales clave:** Muro oscuro absoluto (`#000000`) con halo menta (`#71F3A2`), pulso SVG sobre la silueta anatómica y transición al portfolio fotográfico de obras de arte en piel.
+
+### 3. AD Media Solution (`ad-media-solution`)
+* **Tesis Central:** Trabajo de desarrollo frontend de alta conversión en funnels y sitios web. Alianza comercial estratégica donde AD Media Solution actuó como la agencia comercial que vendió y canalizó los proyectos, y **Mario Morera operó como el socio tecnológico exclusivo tercerizado (White-Label Tech Partner)**.
+* **Superpoder en Pantalla:** 
+  - **Funnels y Webapps de Alta Conversión:** Portada oficial con banners de la agencia, presencia del CEO (Danger Fernández) y logos completos (`logo-full-white.png`, `logo-crm.png`).
+  - **Speed-to-Lead Instantáneo (<30 segundos):** Automatización omnicanal que conecta pauta de Meta/Google Ads con GoHighLevel.
+  - **Pipeline Kanban Dinámico:** Simulación de oportunidades de venta avanzando por las 5 etapas del CRM hasta el cierre.
+  - **Visuales clave:** Azul eléctrico (`#0066FF`), banners oficiales (`banner.jpg`, `ceo.jpg`), escáner diagnóstico de captación y flujo de marca blanca 100%.
+
+### 4. Fénix Medical Center (`fenix-medical-center`) — *Gold Standard*
+* **Tesis Central:** Plataforma médica hiper-especializada de medicina regenerativa y cámara hiperbárica.
+* **Superpoder en Pantalla:** Mecanismos médicos certificados ("Difusión tisular", "Angiogénesis"), seguridad WAF de 7 campos en el formulario y sincronización bidireccional con agendas médicas privadas.
+
+### 5. New Brothers Barbería (`new-brothers-barberia`)
+* **Tesis Central:** Mini-CRM y POS propio desarrollado sobre Supabase con Row Level Security (RLS) y PostgreSQL nativo, sin CRM externo.
+* **Superpoder en Pantalla:** 4 roles con permisos diferenciados, reserva en 6 pasos, cierre de caja diario y liquidación porcentual automática a cada barbero.
