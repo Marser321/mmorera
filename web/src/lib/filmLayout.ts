@@ -15,12 +15,6 @@ export interface Box {
 
 export type FilmFormatName = "landscape" | "portrait";
 
-/** Tamaño de cada formato de composición (FILM_FORMATS en filmTypes). */
-export const FORMAT_SIZE: Record<FilmFormatName, { width: number; height: number }> = {
-  landscape: { width: 1600, height: 900 },
-  portrait: { width: 1080, height: 1350 },
-};
-
 /**
  * Zona útil: dentro de las barras de cine (7 % / 4,5 % del alto, ver
  * Letterbox) y por encima de los ticks de capítulo, con los márgenes laterales

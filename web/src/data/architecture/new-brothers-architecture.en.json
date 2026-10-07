@@ -11,7 +11,7 @@
     "rpc_cash": { "label": "close_cash_day", "sublabel": "POS and cash close" },
     "rpc_settle": { "label": "close_barber_settlement", "sublabel": "Payouts" },
     "db": { "label": "Supabase Postgres", "sublabel": "26 tables · history" },
-    "edge": { "label": "Reactivation", "sublabel": "send-reminders → WhatsApp" },
+    "edge": { "label": "Reactivation", "sublabel": "send-reminders" },
     "ai": { "label": "AI assistant", "sublabel": "Gemini → OpenAI → rules" }
   },
   "boundaries": {

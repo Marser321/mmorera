@@ -192,7 +192,7 @@
       "id": "edge",
       "type": "cloud",
       "label": "Reactivación",
-      "sublabel": "send-reminders → WhatsApp",
+      "sublabel": "send-reminders",
       "pos": [
         1314,
         130
