@@ -18,7 +18,7 @@ import { DustField, ParticleLogo } from "../scenes/brand/ParticleLogo";
 import { SignatureScene } from "../scenes/case/ClosingScenes";
 import { Letterbox } from "../scenes/case/shared";
 import { ChapterTicks } from "../scenes/primitives";
-import { progress, useFilmLayout, windowed } from "../scenes/theme";
+import { progress, useFilmLayout } from "../scenes/theme";
 import {
   lbCrewLayout,
   lbFleetLayout,
@@ -290,7 +290,6 @@ function FleetRuleScene({ copy, format, duration }: { copy: typeof LB_COPY["es"]
   const frame = useCurrentFrame();
   const b = useBrand();
   const layout = lbFleetLayout(format);
-  const fade = windowed(frame, 0, duration, 20, 20);
 
   const vans = [
     { id: "van-1", label: "Camioneta 01", location: "Cape Coral", status: "En servicio · 3h30", active: true },
@@ -300,7 +299,7 @@ function FleetRuleScene({ copy, format, duration }: { copy: typeof LB_COPY["es"]
   ];
 
   return (
-    <AbsoluteFill style={{ opacity: fade }}>
+    <Fade duration={duration}>
       <SceneTitle kicker="Regla Operativa Central" title={copy.rulePrinciple} box={layout.titleBox} portrait={format === "portrait"} />
 
       <div style={{ position: "absolute", left: layout.vansBox.x, top: layout.vansBox.y, width: layout.vansBox.w, height: layout.vansBox.h }}>
@@ -366,7 +365,7 @@ function FleetRuleScene({ copy, format, duration }: { copy: typeof LB_COPY["es"]
           </p>
         </div>
       </div>
-    </AbsoluteFill>
+    </Fade>
   );
 }
 
@@ -384,14 +383,13 @@ function VehicleQuoterScene({
   const frame = useCurrentFrame();
   const b = useBrand();
   const layout = lbQuoterLayout(format);
-  const fade = windowed(frame, 0, duration, 20, 20);
 
   // Ciclo visual de selección automática entre tipos de vehículos
   const selectedIndex = Math.min(Math.floor((frame / (duration * 0.8)) * LB_VEHICLE_TIERS.length), LB_VEHICLE_TIERS.length - 1);
   const currentVehicle = LB_VEHICLE_TIERS[selectedIndex];
 
   return (
-    <AbsoluteFill style={{ opacity: fade }}>
+    <Fade duration={duration}>
       <SceneTitle kicker={copy.quoterTitle} title={copy.quoterSubtitle} box={layout.titleBox} portrait={format === "portrait"} />
 
       {/* Grilla de tipos de vehículo */}
@@ -484,7 +482,7 @@ function VehicleQuoterScene({
           </div>
         </div>
       </div>
-    </AbsoluteFill>
+    </Fade>
   );
 }
 
@@ -492,13 +490,12 @@ function FieldCrewScene({ copy, format, duration }: { copy: typeof LB_COPY["es"]
   const frame = useCurrentFrame();
   const b = useBrand();
   const layout = lbCrewLayout(format);
-  const fade = windowed(frame, 0, duration, 20, 20);
 
   // Simulación de interacción de botón en la app de cuadrilla
   const actionDone = frame > 110;
 
   return (
-    <AbsoluteFill style={{ opacity: fade }}>
+    <Fade duration={duration}>
       <SceneTitle kicker={copy.crewTitle} title={copy.crewSubtitle} box={layout.titleBox} portrait={format === "portrait"} />
 
       {/* Pantalla simulada de la app móvil cuadrilla.html */}
@@ -587,6 +584,6 @@ function FieldCrewScene({ copy, format, duration }: { copy: typeof LB_COPY["es"]
           </div>
         </div>
       </div>
-    </AbsoluteFill>
+    </Fade>
   );
 }
