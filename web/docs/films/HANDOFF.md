@@ -113,29 +113,36 @@ Estado y reglas del sistema de "films de lanzamiento" del portfolio, para seguir
 
 ## Siguiente trabajo
 1. ~~Refinar New Brothers~~ (hecho, salvo recapturar a 2×: necesita red).
-2. ~~Film insignia de Fénix~~ (`FenixFilm`, 79,5 s): el fénix se forma a oscuras y al ascender se enciende el corredor; mecanismo HBOT y "la dosis es el claim" con la tira de sesiones 40–60; registro de 109 afirmaciones; posicionamiento; sitio y reserva en 3 pasos; arquitectura con 3 vistas; el Cerebro (búsqueda BM25 y guiones); ingeniería; firma.
-   - Pendiente con red: `npx tsx scripts/capture-case-reels.ts fenix-medical-center` (reel del caso).
-3. **AD Media:** ya no hay métricas sin fuente en `caseTopologyData.ts`. Con red: `npx tsx scripts/analyze-live-site.ts ad-media-solution`, dossier, JSON de Archify (+ vertical + EN) y `AdMediaFilm`.
+2. ~~Film insignia de Fénix~~ (`FenixFilm`, 79,5 s): hecho y verificado (PR #17).
+3. ~~Film insignia y arquitectura de L&B Elite Wash & Detail~~ (`LbWashFilm`, 73,0 s):
+   - Dossier exhaustivo en `docs/films/dossiers/lb-wash.md` extraído de `../LyB Elite Wash Details/`.
+   - Topología Archify database-less compilada en 4 variantes (landscape/portrait, ES/EN) sin colisiones ni desbordes.
+   - Visor "Bajo el capó" activo en `/casos-de-exito/lb-elite-wash-detail`.
+   - Remotion `LbWashFilm.tsx` con apertura ParticleLogo, regla de flota ("Una visita es una camioneta en una casa"), cotizador dinámico por carrocería, arquitectura guiada de 3 vistas, app móvil de cuadrilla con feed de HighLevel CRM en vivo, y muro de verificación de ingeniería.
+   - Cero desbordes probados en `lbWashFilmLayout.test.ts` y 874/874 tests pasando.
+   - Verificado con Playwright e2e en producción.
+4. **AD Media:** ya no hay métricas sin fuente en `caseTopologyData.ts`. Con red: `npx tsx scripts/analyze-live-site.ts ad-media-solution`, dossier, JSON de Archify (+ vertical + EN) y `AdMediaFilm`.
    - El reel y las capturas guardadas de AD Media muestran solo el popup "Diagnóstico gratis" (tapa todo el sitio). `capture-case-reels.ts` ahora cierra ese tipo de modal ("×", "No, gracias…") y, si alguno sigue tapando la página o aparece durante el reel, no graba ese caso (queda el material anterior).
-4. **LNB:** esperar la carpeta de Mario y corregir la descripción del caso.
+5. **LNB:** esperar la carpeta de Mario y corregir la descripción del caso.
    - **Hub Profesional AI** tiene el mismo problema: el reel guardado de `profecionalcv.vercel.app` muestra un taller ("Mecánica Premium"), no una herramienta de CV con IA. Confirmar con Mario qué hay hoy en esa URL antes de armar su film.
-5. **Resto de los casos (requiere red):** análisis en vivo, marca real del CSS, JSON de Archify si hay sistema y film insignia con estructura propia (el test de estructura distinta los cubre a todos).
-6. **Red del entorno:** los `liveUrl` responden 000 desde la nube. Hace falta Network access "Full", o "Custom" con `fenixmedicalcenters.com`, `www.mrstudiotattoo.com`, `*.vercel.app`, `fonts.googleapis.com` y `fonts.gstatic.com`.
+6. **Resto de los casos (requiere red):** análisis en vivo, marca real del CSS, JSON de Archify si hay sistema y film insignia con estructura propia (el test de estructura distinta los cubre a todos).
+7. **Red del entorno:** los `liveUrl` responden 000 desde la nube. Hace falta Network access "Full", o "Custom" con `fenixmedicalcenters.com`, `www.mrstudiotattoo.com`, `*.vercel.app`, `fonts.googleapis.com` y `fonts.gstatic.com`.
 
 ### Propuesta de estructura por caso (a confirmar con el análisis en vivo)
 Sale de lo que muestran los reels guardados en `public/portfolio/reels/` (1280×800, 6,2 s). Cada film necesita una escena protagonista propia (`flagships.test.ts`); varias son tipos nuevos de escena.
 
-| Caso | Lo que muestra el reel | Escena protagonista |
-|---|---|---|
-| AD Media Solution | (tapado por el popup; recapturar) | `pipeline-board` (datos de ejemplo) |
-| L&B Elite Wash & Detail | "Detailing móvil que llega a ti", "Arma tu cotización", grilla por tipo de vehículo | cotizador por tipo de vehículo (nuevo) |
-| Truckers Choice | "Insurance + Permits. One roof.", sitio bilingüe | cambio de idioma lado a lado (nuevo) |
-| Rangel Oviedo Group | "Invierte, compra o múdate a Texas…", tono editorial | recorridos por objetivo: comprar, invertir, vender, mudarse (nuevo) |
-| Mr. Studio Tattoo | portfolio oscuro, "Perforaciones exclusivas" | muro de piezas por artista (nuevo) |
-| AutoHub 360 | "Tu próximo auto te espera acá", inventario | giro 360° del vehículo (nuevo; necesita los cuadros del sitio) |
-| EvoWrap | "Reinventa tu vehículo": cerámico, PPF, interior | selector de acabados sobre el vehículo (nuevo) |
-| Punta 360 | "Bienvenido a Punta360": propietarios, agencias, equipo | paneo panorámico (nuevo; necesita la imagen 360°) |
-| América Trámites | formularios guiados, "¿Qué necesita lograr hoy?" | formulario por etapas con validación (nuevo) |
-| DOGE.S.M | "Limpieza de élite Miami", oferta por servicios | oferta por niveles (nuevo) |
-| Hub Profesional AI | taller "Mecánica Premium" (no coincide con el caso) | en espera de confirmar |
-| LNB | La Nueva Brasil (no coincide con el caso) | en espera de la carpeta |
+| Caso | Lo que muestra el reel | Escena protagonista | Estado |
+|---|---|---|---|
+| AD Media Solution | (tapado por el popup; recapturar) | `pipeline-board` (datos de ejemplo) | Pendiente (red) |
+| L&B Elite Wash & Detail | "Detailing móvil que llega a ti", "Arma tu cotización", grilla por tipo de vehículo | cotizador por tipo de vehículo (`vehicle-quote`) | **Completado (PR #17)** |
+| Truckers Choice | "Insurance + Permits. One roof.", sitio bilingüe | cambio de idioma lado a lado (nuevo) | Pendiente |
+| Rangel Oviedo Group | "Invierte, compra o múdate a Texas…", tono editorial | recorridos por objetivo: comprar, invertir, vender, mudarse (nuevo) | Pendiente |
+| Mr. Studio Tattoo | portfolio oscuro, "Perforaciones exclusivas" | muro de piezas por artista (nuevo) | Pendiente |
+| AutoHub 360 | "Tu próximo auto te espera acá", inventario | giro 360° del vehículo (nuevo; necesita los cuadros del sitio) | Pendiente |
+| EvoWrap | "Reinventa tu vehículo": cerámico, PPF, interior | selector de acabados sobre el vehículo (nuevo) | Pendiente |
+| Punta 360 | "Bienvenido a Punta360": propietarios, agencias, equipo | paneo panorámico (nuevo; necesita la imagen 360°) | Pendiente |
+| América Trámites | formularios guiados, "¿Qué necesita lograr hoy?" | formulario por etapas con validación (nuevo) | Pendiente |
+| DOGE.S.M | "Limpieza de élite Miami", oferta por servicios | oferta por niveles (nuevo) | Pendiente |
+| Hub Profesional AI | taller "Mecánica Premium" (no coincide con el caso) | en espera de confirmar | Bloqueado |
+| LNB | La Nueva Brasil (no coincide con el caso) | en espera de la carpeta | Bloqueado |
+
