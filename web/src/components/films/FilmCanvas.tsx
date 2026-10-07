@@ -25,6 +25,7 @@ type FlagshipModule = { default: React.ComponentType<{ language: FilmLanguage }>
  * funciones viven a nivel de módulo (referencia estable para el Player).
  */
 const FLAGSHIP_LOADERS: Record<string, () => Promise<FlagshipModule>> = {
+  "ad-media-solution": () => import("./compositions/AdMediaFilm").then((module) => ({ default: module.AdMediaFilm })),
   "fenix-medical-center": () => import("./compositions/FenixFilm").then((module) => ({ default: module.FenixFilm })),
   "lb-elite-wash-detail": () => import("./compositions/LbWashFilm").then((module) => ({ default: module.LbWashFilm })),
   "new-brothers-barberia": () => import("./compositions/NewBrothersFilm").then((module) => ({ default: module.NewBrothersFilm })),

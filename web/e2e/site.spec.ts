@@ -455,6 +455,26 @@ test("el caso insignia de L&B Elite Wash reproduce su film sin errores", async (
   expect(errors).toEqual([]);
 });
 
+test("el caso insignia de AD Media reproduce su film sin errores", async ({ page }) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(String(error)));
+  page.on("console", (message) => {
+    if (message.type() === "error" && /remotion|MediaPlayback|player/i.test(message.text())) errors.push(message.text());
+  });
+  await page.goto("/casos-de-exito/ad-media-solution");
+  await expect(page.getByRole("heading", { level: 1, name: "AD Media Solution" })).toBeVisible();
+
+  const stage = page.locator('[data-film-stage="flagship"]');
+  await expect(stage).toHaveCount(1);
+  await stage.scrollIntoViewIfNeeded();
+  await expect(page.getByRole("button", { name: /La alianza/ })).toBeVisible();
+
+  // La escena protagonista: Speed-to-Lead y el pipeline de 5 etapas.
+  await page.getByRole("button", { name: /Speed-to-Lead/ }).click();
+  await page.waitForTimeout(3_000);
+  expect(errors).toEqual([]);
+});
+
 test("el perfil abre con la entrada del monograma", async ({ page }) => {
   await page.goto("/");
   const overture = page.locator('#perfil [data-film-stage="logo"]');
