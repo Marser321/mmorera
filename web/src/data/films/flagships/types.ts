@@ -27,7 +27,10 @@ export type SceneKind =
   | "scroll-reel"
   | "shot-stack"
   | "outcome-facts"
-  | "signature";
+  | "signature"
+  | "vehicle-quote"
+  | "fleet-routing"
+  | "field-crew";
 
 export interface FlagshipScene {
   id: string;

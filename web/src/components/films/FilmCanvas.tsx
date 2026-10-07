@@ -26,6 +26,7 @@ type FlagshipModule = { default: React.ComponentType<{ language: FilmLanguage }>
  */
 const FLAGSHIP_LOADERS: Record<string, () => Promise<FlagshipModule>> = {
   "fenix-medical-center": () => import("./compositions/FenixFilm").then((module) => ({ default: module.FenixFilm })),
+  "lb-elite-wash-detail": () => import("./compositions/LbWashFilm").then((module) => ({ default: module.LbWashFilm })),
   "new-brothers-barberia": () => import("./compositions/NewBrothersFilm").then((module) => ({ default: module.NewBrothersFilm })),
 };
 
