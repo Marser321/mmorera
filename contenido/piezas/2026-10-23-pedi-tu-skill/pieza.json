@@ -4,7 +4,7 @@
   "rama": "comunidad",
   "serie": "Skills que construyo",
   "titulo": "Pedí tu skill: elijo una tarea repetida y la automatizo en público",
-  "estado": "borrador",
+  "estado": "listo",
   "salidas": [
     {
       "id": "encuesta",
@@ -67,6 +67,14 @@
       ],
       "remate": "Dejala en los comentarios. *Empiezo la semana que viene.*",
       "cta": "Seguime para ver cómo se construye"
+    }
+  ],
+  "historial": [
+    {
+      "fecha": "2026-10-08 22:17",
+      "estado": "listo",
+      "quien": "Claude",
+      "nota": "Render revisado"
     }
   ]
 }

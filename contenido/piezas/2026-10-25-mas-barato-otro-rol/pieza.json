@@ -4,7 +4,7 @@
   "rama": "criterio",
   "serie": "IA con control",
   "titulo": "Más barato no es peor: es otro rol en el equipo",
-  "estado": "borrador",
+  "estado": "listo",
   "postura": true,
   "fuente": {
     "tipo": "experiencia",
@@ -56,6 +56,14 @@
           "enlace": "mmorera.agency"
         }
       ]
+    }
+  ],
+  "historial": [
+    {
+      "fecha": "2026-10-08 22:17",
+      "estado": "listo",
+      "quien": "Claude",
+      "nota": "Render revisado"
     }
   ]
 }

@@ -4,7 +4,7 @@
   "rama": "criterio",
   "serie": "Criterio de lunes",
   "titulo": "Un agente sin tests es un pasante con acceso a producción",
-  "estado": "borrador",
+  "estado": "listo",
   "fuente": {
     "tipo": "experiencia",
     "nota": "Delegué 8 films de casos a un modelo más barato (Gemini); en la revisión cuadro por cuadro apareció una cifra que no estaba en ninguna fuente y los tests de copia no la habían detectado."
@@ -54,6 +54,14 @@
       ],
       "remate": "Un agente sin tests es un pasante con acceso a producción.",
       "cta": "Seguime: cuento cómo trabajo con IA sin perder el control"
+    }
+  ],
+  "historial": [
+    {
+      "fecha": "2026-10-08 22:17",
+      "estado": "listo",
+      "quien": "Claude",
+      "nota": "Render revisado"
     }
   ]
 }

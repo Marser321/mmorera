@@ -4,7 +4,7 @@
   "rama": "criterio",
   "serie": "Lo que aprendí esta semana",
   "titulo": "Lo que aprendí esta semana (1)",
-  "estado": "borrador",
+  "estado": "listo",
   "postura": true,
   "salidas": [
     {
@@ -53,6 +53,14 @@
           "enlace": "mmorera.agency"
         }
       ]
+    }
+  ],
+  "historial": [
+    {
+      "fecha": "2026-10-08 22:17",
+      "estado": "listo",
+      "quien": "Claude",
+      "nota": "Render revisado"
     }
   ]
 }

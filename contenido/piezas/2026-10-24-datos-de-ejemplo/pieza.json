@@ -4,7 +4,7 @@
   "rama": "oficio",
   "serie": "Valor corto",
   "titulo": "\"Datos de ejemplo\": la frase que nadie pone",
-  "estado": "borrador",
+  "estado": "listo",
   "salidas": [
     {
       "id": "reel",
@@ -32,6 +32,14 @@
       ],
       "remate": "Nadie pierde confianza por eso. *La pierde cuando se entera.*",
       "cta": "Seguime: trabajo con IA y con datos sin adornos"
+    }
+  ],
+  "historial": [
+    {
+      "fecha": "2026-10-08 22:17",
+      "estado": "listo",
+      "quien": "Claude",
+      "nota": "Render revisado"
     }
   ]
 }

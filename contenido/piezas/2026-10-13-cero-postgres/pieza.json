@@ -4,7 +4,7 @@
   "rama": "casos",
   "serie": "Desafío del mes",
   "titulo": "Cero Postgres: el CRM era la base de datos (L&B)",
-  "estado": "borrador",
+  "estado": "listo",
   "fuente": {
     "tipo": "caso",
     "slug": "lb-elite-wash-detail",
@@ -43,6 +43,14 @@
         "Cada botón escribe en la misma cita. No hay otra base que sincronizar."
       ],
       "cierre": "La mejor pieza del sistema es la que no tuviste que agregar."
+    }
+  ],
+  "historial": [
+    {
+      "fecha": "2026-10-08 22:17",
+      "estado": "listo",
+      "quien": "Claude",
+      "nota": "Render revisado"
     }
   ]
 }

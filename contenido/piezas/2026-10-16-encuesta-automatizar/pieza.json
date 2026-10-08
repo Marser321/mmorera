@@ -4,7 +4,7 @@
   "rama": "comunidad",
   "serie": "Encuesta del viernes",
   "titulo": "¿Qué tarea te gustaría dejar de hacer a mano primero?",
-  "estado": "borrador",
+  "estado": "listo",
   "salidas": [
     {
       "id": "encuesta",
@@ -71,6 +71,14 @@
       ],
       "remate": "Comentá la letra. *La más votada la explico.*",
       "cta": "Seguime para ver cómo se automatiza"
+    }
+  ],
+  "historial": [
+    {
+      "fecha": "2026-10-08 22:17",
+      "estado": "listo",
+      "quien": "Claude",
+      "nota": "Render revisado"
     }
   ]
 }

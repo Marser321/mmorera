@@ -4,7 +4,7 @@
   "rama": "casos",
   "serie": "Detrás del caso",
   "titulo": "Una barbería no necesitaba una web: necesitaba un sistema (New Brothers)",
-  "estado": "borrador",
+  "estado": "listo",
   "fuente": {
     "tipo": "caso",
     "slug": "new-brothers-barberia",
@@ -43,6 +43,14 @@
         "Una reserva en 6 pasos que el cliente completa solo."
       ],
       "cierre": "El sitio es lo que se ve. El sistema es lo que trabaja."
+    }
+  ],
+  "historial": [
+    {
+      "fecha": "2026-10-08 22:17",
+      "estado": "listo",
+      "quien": "Claude",
+      "nota": "Render revisado"
     }
   ]
 }

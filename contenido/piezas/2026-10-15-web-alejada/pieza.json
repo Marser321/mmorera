@@ -4,7 +4,7 @@
   "rama": "oficio",
   "serie": "Detrás de escena",
   "titulo": "Mi web se veía alejada en los celulares y no lo sabía",
-  "estado": "borrador",
+  "estado": "listo",
   "fuente": {
     "tipo": "sitio",
     "nota": "Auditoría del 2026-10-08: /casos-de-exito medía 1560 px en el teléfono por textos sr-only fuera de la tira desplazable (docs/IMPECCABLE-AUDITORIA.md)."
@@ -55,6 +55,14 @@
       "resultado": "La página vuelve a medir 390 píxeles. Y sumé el control a la revisión de cada cambio.",
       "aprendizaje": "Lo que no se ve en la computadora también se mide. Revisá en un teléfono de verdad antes de dar algo por terminado.",
       "enlace": "mmorera.agency/casos-de-exito"
+    }
+  ],
+  "historial": [
+    {
+      "fecha": "2026-10-08 22:17",
+      "estado": "listo",
+      "quien": "Claude",
+      "nota": "Render revisado"
     }
   ]
 }

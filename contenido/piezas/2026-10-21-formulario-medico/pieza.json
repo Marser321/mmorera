@@ -4,7 +4,7 @@
   "rama": "sistemas",
   "serie": "Arquitectura en 30 segundos",
   "titulo": "Un formulario médico no debería tocar datos de salud (Fénix)",
-  "estado": "borrador",
+  "estado": "listo",
   "fuente": {
     "tipo": "caso",
     "slug": "fenix-medical-center",
@@ -74,6 +74,14 @@
         "Si la captura no está habilitada, no acepta nada."
       ],
       "cierre": "La seguridad también es diseño."
+    }
+  ],
+  "historial": [
+    {
+      "fecha": "2026-10-08 22:17",
+      "estado": "listo",
+      "quien": "Claude",
+      "nota": "Render revisado"
     }
   ]
 }

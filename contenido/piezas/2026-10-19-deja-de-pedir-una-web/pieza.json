@@ -4,7 +4,7 @@
   "rama": "criterio",
   "serie": "Criterio de lunes",
   "titulo": "Dejá de pedir una web: pedí un sistema que conteste a las 23:45",
-  "estado": "borrador",
+  "estado": "listo",
   "postura": true,
   "salidas": [
     {
@@ -46,6 +46,14 @@
       ],
       "remate": "Pedí un sistema que conteste a las 23:45.",
       "cta": "Seguime: criterio sobre tecnología cada lunes"
+    }
+  ],
+  "historial": [
+    {
+      "fecha": "2026-10-08 22:17",
+      "estado": "listo",
+      "quien": "Claude",
+      "nota": "Render revisado"
     }
   ]
 }

@@ -4,7 +4,7 @@
   "rama": "oficio",
   "serie": "Detrás de escena",
   "titulo": "Cada caso de mi portfolio es un film hecho con código",
-  "estado": "borrador",
+  "estado": "listo",
   "fuente": {
     "tipo": "sitio",
     "nota": "14 films insignia en Remotion con layouts testeados (web/src/components/films/)."
@@ -80,6 +80,14 @@
           "enlace": "mmorera.agency/casos-de-exito"
         }
       ]
+    }
+  ],
+  "historial": [
+    {
+      "fecha": "2026-10-08 22:17",
+      "estado": "listo",
+      "quien": "Claude",
+      "nota": "Render revisado"
     }
   ]
 }
