@@ -1,0 +1,264 @@
+{
+  "slug": "hub-profesional-ai",
+  "verifiedAt": "2026-10-07",
+  "liveUrl": "https://profecionalcv.vercel.app/",
+  "dossier": "hub-profesional-ai.md",
+  "languages": ["es", "en"],
+  "brand": {
+    "palette": {
+      "bg": "#050505",
+      "surface": "#121212",
+      "raised": "#1C1C1C",
+      "line": "#2E2E2E",
+      "text": "#F5F5F5",
+      "muted": "#B0B0B0",
+      "accent": "#FF3B30",
+      "accentSoft": "#FF6961",
+      "accentDeep": "#CC2F26",
+      "onAccent": "#050505"
+    },
+    "fonts": {
+      "display": "Geist",
+      "body": "Inter"
+    },
+    "logo": {
+      "mark": "/portfolio/brands/hub-profesional-ai/mark.png",
+      "wordmark": "/portfolio/brands/hub-profesional-ai/wordmark.png",
+      "particleMode": "alpha"
+    },
+    "source": "CSS y DOM servido de profecionalcv.vercel.app: noir #050505, card #121212, accent red #FF3B30, Geist + Inter"
+  },
+  "facts": [
+    {
+      "key": "professionsCount",
+      "value": 6,
+      "label": {
+        "es": "Especialidades profesionales disponibles en el portal",
+        "en": "Professional specialties available in the portal"
+      },
+      "source": "Dossier · /showcase: 6 plantillas de autoridad diseñadas para rubros independientes"
+    },
+    {
+      "key": "vehiclesAttended",
+      "value": 1200,
+      "label": {
+        "es": "Vehículos atendidos en la especialidad Mecánica Premium",
+        "en": "Vehicles serviced in the premium mechanics specialty"
+      },
+      "source": "Dossier · /: +1200 vehículos atendidos en la especialidad insignia Mecánica Premium"
+    },
+    {
+      "key": "ratingScore",
+      "value": 4.9,
+      "label": {
+        "es": "Puntaje promedio de satisfacción en Google",
+        "en": "Average customer satisfaction rating on Google"
+      },
+      "source": "Dossier · /: 4.9/5 puntaje promedio de calificación en Google acreditado en el portal"
+    },
+    {
+      "key": "verifiedAssets",
+      "value": 8,
+      "label": {
+        "es": "Activos verificados en portafolio de excelencia técnica",
+        "en": "Verified assets in the technical excellence portfolio"
+      },
+      "source": "Dossier · /: 8 activos verificados en el portafolio de excelencia técnica"
+    },
+    {
+      "key": "protocolSteps",
+      "value": 4,
+      "label": {
+        "es": "Pasos del protocolo de servicio de alta precisión",
+        "en": "Steps in the high-precision service protocol"
+      },
+      "source": "Dossier · /: 4 pasos del protocolo de servicio: Ingreso, Diagnóstico, Presupuesto, Control Final"
+    },
+    {
+      "key": "inspectionPoints",
+      "value": 40,
+      "label": {
+        "es": "Puntos críticos de seguridad en check-list digital",
+        "en": "Critical safety checkpoints on digital inspection"
+      },
+      "source": "Dossier · /: 40 puntos críticos de seguridad inspeccionados mediante check-list digital"
+    },
+    {
+      "key": "yearsExperience",
+      "value": 20,
+      "label": {
+        "es": "Años de experiencia y pasión técnica",
+        "en": "Years of technical passion and experience"
+      },
+      "source": "Dossier · /: Más de 20 años de experiencia y pasión técnica acreditada en el taller"
+    }
+  ],
+  "media": [
+    {
+      "id": "hero-loop",
+      "src": "/portfolio/brands/hub-profesional-ai/hero-loop.mp4",
+      "webm": "/portfolio/brands/hub-profesional-ai/hero-loop.webm",
+      "poster": "/portfolio/brands/hub-profesional-ai/hero-loop-poster.jpg",
+      "w": 1920,
+      "h": 1080,
+      "seconds": 4,
+      "note": "Clip de apertura cinematográfica del portal y panel Mecánica Premium"
+    }
+  ],
+  "captures": [
+    {
+      "id": "hero-shot",
+      "src": "/portfolio/brands/hub-profesional-ai/shots/hero.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://profecionalcv.vercel.app/",
+      "what": "Portal principal con especialidad insignia Mecánica Premium y métricas en vivo",
+      "highlights": [
+        { "rect": [0.08, 0.22, 0.84, 0.6], "label": { "es": "Panel de cabecera y métricas", "en": "Hero board and metrics" } }
+      ]
+    },
+    {
+      "id": "showcase-shot",
+      "src": "/portfolio/brands/hub-profesional-ai/shots/showcase.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://profecionalcv.vercel.app/showcase",
+      "what": "Showcase Live: El Estándar Profesional con pilares de ingeniería",
+      "highlights": [
+        { "rect": [0.1, 0.15, 0.8, 0.7], "label": { "es": "Propuesta de valor y pilares técnicos", "en": "Value proposition and technical pillars" } }
+      ]
+    },
+    {
+      "id": "templates-shot",
+      "src": "/portfolio/brands/hub-profesional-ai/shots/templates.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://profecionalcv.vercel.app/showcase",
+      "what": "Catálogo interactivo con las 6 plantillas profesionales especializadas",
+      "highlights": [
+        { "rect": [0.05, 0.1, 0.9, 0.8], "label": { "es": "Catálogo de 6 plantillas", "en": "Catalog of 6 templates" } }
+      ]
+    },
+    {
+      "id": "services-shot",
+      "src": "/portfolio/brands/hub-profesional-ai/shots/services.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://profecionalcv.vercel.app/",
+      "what": "Servicios Tácticos Elite con especificaciones y diagnóstico por módulo",
+      "highlights": [
+        { "rect": [0.06, 0.12, 0.88, 0.76], "label": { "es": "Módulos de servicio técnico", "en": "Technical service modules" } }
+      ]
+    },
+    {
+      "id": "gallery-shot",
+      "src": "/portfolio/brands/hub-profesional-ai/shots/gallery.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://profecionalcv.vercel.app/",
+      "what": "Portafolio de excelencia técnica con 8 activos verificados",
+      "highlights": [
+        { "rect": [0.08, 0.15, 0.84, 0.7], "label": { "es": "8 activos verificados", "en": "8 verified assets" } }
+      ]
+    },
+    {
+      "id": "protocol-shot",
+      "src": "/portfolio/brands/hub-profesional-ai/shots/protocol.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://profecionalcv.vercel.app/",
+      "what": "Protocolo de servicio estructurado en 4 fases de alta precisión",
+      "highlights": [
+        { "rect": [0.08, 0.18, 0.84, 0.65], "label": { "es": "Protocolo en 4 fases", "en": "4-phase protocol" } }
+      ]
+    }
+  ],
+  "captureTarget": "hub-profesional-ai-site",
+  "architecture": {
+    "bundle": null,
+    "reason": "Portal de plantillas estáticas Next.js 15 con renderizado estático y componentes cliente interactivos, sin backend persistente ni base de datos dedicada"
+  },
+  "protagonist": {
+    "kind": "profession-switcher",
+    "idea": "Selector interactivo de las 6 profesiones con metamorfosis en tiempo real de paleta de color, propuesta de valor y módulos de servicio",
+    "uses": ["templates-shot", "hero-shot"]
+  },
+  "storyboard": [
+    {
+      "scene": "00-particle-open",
+      "kind": "particle-open",
+      "seconds": 7,
+      "uses": ["hero-loop"],
+      "copy": {
+        "es": "Hub Profesional · El estándar digital para profesionales independientes",
+        "en": "Hub Profesional · The digital standard for independent professionals"
+      }
+    },
+    {
+      "scene": "01-standard",
+      "kind": "standard-manifesto",
+      "seconds": 8.5,
+      "uses": ["showcase-shot"],
+      "copy": {
+        "es": "Herramientas de autoridad diseñadas para convertir el tráfico en clientes recurrentes",
+        "en": "Authority tools crafted to transform incoming traffic into recurring clients"
+      }
+    },
+    {
+      "scene": "02-switcher",
+      "kind": "profession-switcher",
+      "seconds": 24,
+      "uses": ["templates-shot", "hero-shot"],
+      "copy": {
+        "es": "Selector multirrubro: 6 especialidades con adaptación visual y narrativa instantánea",
+        "en": "Multi-industry switcher: 6 specialties with instant visual and narrative adaptation"
+      }
+    },
+    {
+      "scene": "03-services",
+      "kind": "tactical-catalog",
+      "seconds": 9.5,
+      "uses": ["services-shot"],
+      "copy": {
+        "es": "Despliegue táctico de servicios elite con rigor técnico y diagnóstico computarizado",
+        "en": "Tactical deployment of elite services with technical rigor and computerized diagnostics"
+      }
+    },
+    {
+      "scene": "04-protocol",
+      "kind": "protocol-stepper",
+      "seconds": 9,
+      "uses": ["protocol-shot", "gallery-shot"],
+      "copy": {
+        "es": "Protocolo estructurado en 4 fases con revisión de 40 puntos críticos de seguridad",
+        "en": "Structured 4-phase protocol with inspection across 40 critical safety points"
+      }
+    },
+    {
+      "scene": "05-metrics",
+      "kind": "authority-facts",
+      "seconds": 7,
+      "uses": ["hero-shot"],
+      "copy": {
+        "es": "Más de 1200 vehículos atendidos, 4.9 estrellas en Google y 8 activos verificados",
+        "en": "Over 1200 vehicles serviced, 4.9 Google stars and 8 verified assets"
+      }
+    },
+    {
+      "scene": "06-signature",
+      "kind": "signature",
+      "seconds": 6.5,
+      "uses": ["hero-loop"],
+      "copy": {
+        "es": "Hub Profesional · Autoridad, conversión y rendimiento en Next.js",
+        "en": "Hub Profesional · Authority, conversion and performance on Next.js"
+      }
+    }
+  ],
+  "doNotClaim": [
+    "No prometer facturación automatizada ni cobro integrado con pasarelas de pago",
+    "No prometer garantías de facturación, retornos de inversión ni porcentajes de conversión",
+    "No afirmar que el sistema incluye CRM multi-tenant activo con bases de datos SQL en producción",
+    "Aclarar que las plantillas y flujos son demostradores interactivos de autoridad profesional para independientes"
+  ]
+}

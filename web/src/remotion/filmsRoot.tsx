@@ -3,10 +3,18 @@ import { Composition, continueRender, delayRender, registerRoot } from "remotion
 import { FLAGSHIP_FILMS } from "@/data/films/flagships";
 import { FILM_FORMATS, FILM_FPS, type FilmLanguage } from "@/data/films/filmTypes";
 import { AdMediaFilm } from "@/components/films/compositions/AdMediaFilm";
+import { AmericaTramitesFilm } from "@/components/films/compositions/AmericaTramitesFilm";
+import { Autohub360Film } from "@/components/films/compositions/Autohub360Film";
+import { DogeSmFilm } from "@/components/films/compositions/DogeSmFilm";
+import { EvowrapFilm } from "@/components/films/compositions/EvowrapFilm";
 import { FenixFilm } from "@/components/films/compositions/FenixFilm";
+import { HubProfesionalFilm } from "@/components/films/compositions/HubProfesionalFilm";
 import { LbWashFilm } from "@/components/films/compositions/LbWashFilm";
+import { LnbSaasFilm } from "@/components/films/compositions/LnbSaasFilm";
 import { MrStudioFilm } from "@/components/films/compositions/MrStudioFilm";
 import { NewBrothersFilm } from "@/components/films/compositions/NewBrothersFilm";
+import { Punta360Film } from "@/components/films/compositions/Punta360Film";
+import { RangelOviedoFilm } from "@/components/films/compositions/RangelOviedoFilm";
 import { TruckersFilm } from "@/components/films/compositions/TruckersFilm";
 
 /**
@@ -21,10 +29,18 @@ import { TruckersFilm } from "@/components/films/compositions/TruckersFilm";
 
 const FILMS: Record<string, ComponentType<{ language: FilmLanguage }>> = {
   "ad-media-solution": AdMediaFilm,
+  "america-tramites": AmericaTramitesFilm,
+  "autohub-360": Autohub360Film,
+  "doge-sm": DogeSmFilm,
+  evowrap: EvowrapFilm,
   "fenix-medical-center": FenixFilm,
+  "hub-profesional-ai": HubProfesionalFilm,
   "lb-elite-wash-detail": LbWashFilm,
+  "lnb-saas": LnbSaasFilm,
   "mr-studio-tattoo": MrStudioFilm,
   "new-brothers-barberia": NewBrothersFilm,
+  "punta-360": Punta360Film,
+  "rangel-oviedo-group": RangelOviedoFilm,
   "truckers-choice": TruckersFilm,
 };
 
@@ -40,6 +56,10 @@ const FONTS = [
   { variable: "--ff-brand-montserrat", family: "Montserrat", weights: "400;500;600;700" },
   { variable: "--ff-brand-anton", family: "Anton", weights: "400" },
   { variable: "--ff-brand-outfit", family: "Outfit", weights: "400;500;600;700" },
+  { variable: "--ff-brand-playfair-display", family: "Playfair Display", weights: "400;500;600;700" },
+  { variable: "--ff-brand-orbitron", family: "Orbitron", weights: "400;500;600;700;800;900" },
+  { variable: "--ff-brand-geist", family: "Geist", weights: "400;500;600;700" },
+  { variable: "--ff-brand-michroma", family: "Michroma", weights: "400" },
 ];
 
 const FONTS_URL = `https://fonts.googleapis.com/css2?${FONTS.map((font) => `family=${font.family.replace(/ /g, "+")}:wght@${font.weights}`).join("&")}&display=block`;

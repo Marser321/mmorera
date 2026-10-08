@@ -1,0 +1,344 @@
+{
+  "slug": "autohub-360",
+  "verifiedAt": "2026-10-07",
+  "liveUrl": "https://auto-indol-five.vercel.app/",
+  "dossier": "autohub-360.md",
+  "languages": ["es"],
+  "brand": {
+    "palette": {
+      "bg": "#020617",
+      "surface": "#0F172A",
+      "raised": "#1E293B",
+      "line": "#334155",
+      "text": "#F8FAFC",
+      "muted": "#94A3B8",
+      "accent": "#DC2626",
+      "accentSoft": "#EF4444",
+      "accentDeep": "#991B1B",
+      "onAccent": "#FFFFFF"
+    },
+    "fonts": {
+      "display": "Inter",
+      "body": "Inter"
+    },
+    "logo": {
+      "mark": "/portfolio/brands/autohub-360/mark.png",
+      "wordmark": "/portfolio/brands/autohub-360/wordmark.png",
+      "particleMode": "alpha"
+    },
+    "source": "CSS servido (_next/static/chunks/*.css): fondo #020617, superficie #0F172A, superficie elevada #1E293B, líneas #334155, texto #F8FAFC, acento rojo #DC2626 (suave #EF4444, profundo #991B1B). Tipografía: Inter (display y body). Logo: navbar institucional con isotipo en squircle rojo y monograma vectorial (mark.png, canal alfa 600x600) y wordmark en texto institucional (wordmark.png, 600x140)."
+  },
+  "facts": [
+    {
+      "key": "catalogUnits",
+      "value": 15,
+      "label": {
+        "es": "Unidades vehiculares disponibles en el catálogo",
+        "en": "Available vehicle units in the catalog"
+      },
+      "source": "https://auto-indol-five.vercel.app/catalogo: encabezado 'Encontrá el vehículo perfecto entre nuestras 15 unidades disponibles'"
+    },
+    {
+      "key": "tourHotspots",
+      "value": 8,
+      "label": {
+        "es": "Puntos de interés interactivos en el visor esférico 360°",
+        "en": "Interactive hotspots in the 360° spherical viewer"
+      },
+      "source": "https://auto-indol-five.vercel.app/catalogo/demo-1: botón 'Tour Interior 360° • 8 puntos de interés' y modal con 8 marcadores interactivos"
+    },
+    {
+      "key": "inspectionPoints",
+      "value": 110,
+      "label": {
+        "es": "Puntos técnicos verificados en la inspección vehicular",
+        "en": "Technical check points verified in multi-point inspection"
+      },
+      "source": "https://auto-indol-five.vercel.app/catalogo/demo-1: sección 'Garantia e inspeccion', ficha '110 puntos verificados'"
+    },
+    {
+      "key": "adminModules",
+      "value": 4,
+      "label": {
+        "es": "Módulos de gestión operativa en la central de operaciones",
+        "en": "Operational management modules in operations center"
+      },
+      "source": "https://auto-indol-five.vercel.app/admin: 4 tarjetas de 'Módulos Administrativos' (Inventario, CRM, Taller y Facturación)"
+    },
+    {
+      "key": "vipServices",
+      "value": 3,
+      "label": {
+        "es": "Servicios de digitalización y contenido para concesionarias",
+        "en": "Digitalization and media services for auto dealerships"
+      },
+      "source": "https://auto-indol-five.vercel.app/servicios: 3 servicios (Fotografía Profesional, Tour Interior 360°, Video Reels & Short-form)"
+    },
+    {
+      "key": "ambientLightingColors",
+      "value": 64,
+      "label": {
+        "es": "Colores seleccionables en iluminación ambiental interior",
+        "en": "Selectable colors in interior ambient lighting system"
+      },
+      "source": "https://auto-indol-five.vercel.app/catalogo/demo-1: punto de interés 360-4 'Iluminación Ambiental 64 Colores'"
+    }
+  ],
+  "media": [
+    {
+      "id": "car-interior-1",
+      "src": "/portfolio/brands/autohub-360/car-interior-1.jpg",
+      "w": 4096,
+      "h": 2048,
+      "note": "Fotografía panorámica equirectangular del interior vehicular para el visor 360°"
+    },
+    {
+      "id": "car-interior-2",
+      "src": "/portfolio/brands/autohub-360/car-interior-2.jpg",
+      "w": 4096,
+      "h": 2048,
+      "note": "Panorámica equirectangular interior de habitáculo deportivo BMW"
+    },
+    {
+      "id": "car-interior-3",
+      "src": "/portfolio/brands/autohub-360/car-interior-3.jpg",
+      "w": 4096,
+      "h": 2048,
+      "note": "Panorámica equirectangular interior de habitáculo de alta gama Audi"
+    },
+    {
+      "id": "demo-1",
+      "src": "/portfolio/brands/autohub-360/demo-1.jpg",
+      "w": 931,
+      "h": 1400,
+      "note": "Vehículo demo 1: Volkswagen Golf Trendline 1.6 en catálogo"
+    },
+    {
+      "id": "demo-2",
+      "src": "/portfolio/brands/autohub-360/demo-2.jpg",
+      "w": 1400,
+      "h": 787,
+      "note": "Vehículo demo 2: Smart Forfour Brabus en catálogo"
+    },
+    {
+      "id": "demo-3",
+      "src": "/portfolio/brands/autohub-360/demo-3.jpg",
+      "w": 1400,
+      "h": 855,
+      "note": "Vehículo demo 3: Ford F-250 Lariat 4x4 en catálogo"
+    },
+    {
+      "id": "demo-4",
+      "src": "/portfolio/brands/autohub-360/demo-4.jpg",
+      "w": 787,
+      "h": 1400,
+      "note": "Vehículo demo 4: BMW 330i M Sport en catálogo"
+    }
+  ],
+  "captures": [
+    {
+      "id": "hero",
+      "src": "/portfolio/brands/autohub-360/shots/hero.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://auto-indol-five.vercel.app/",
+      "what": "Hero principal con propuesta de concesionaria digital",
+      "highlights": [
+        {
+          "label": {
+            "es": "Hero principal: tu próximo auto te espera acá",
+            "en": "Main hero: your next car awaits here"
+          },
+          "rect": [0.2, 0.25, 0.6, 0.45]
+        }
+      ]
+    },
+    {
+      "id": "catalog",
+      "src": "/portfolio/brands/autohub-360/shots/catalog.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://auto-indol-five.vercel.app/catalogo",
+      "what": "Catálogo interactivo con tarjetas de vehículos e insignias 360°",
+      "highlights": [
+        {
+          "label": {
+            "es": "Catálogo interactivo con distintivos 360°",
+            "en": "Interactive catalog with 360° badges"
+          },
+          "rect": [0.18, 0.37, 0.64, 0.4]
+        }
+      ]
+    },
+    {
+      "id": "detail",
+      "src": "/portfolio/brands/autohub-360/shots/detail.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://auto-indol-five.vercel.app/catalogo/demo-1",
+      "what": "Ficha detallada con especificaciones técnicas y acceso al tour 360°",
+      "highlights": [
+        {
+          "label": {
+            "es": "Acceso al tour interior 360° con 8 marcadores",
+            "en": "Access to 360° interior tour with 8 markers"
+          },
+          "rect": [0.18, 0.64, 0.32, 0.08]
+        },
+        {
+          "label": {
+            "es": "Especificaciones completas e inspección técnica",
+            "en": "Complete technical specifications and inspection"
+          },
+          "rect": [0.5, 0.3, 0.32, 0.22]
+        }
+      ]
+    },
+    {
+      "id": "tour-360",
+      "src": "/portfolio/brands/autohub-360/shots/tour-360.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://auto-indol-five.vercel.app/catalogo/demo-1",
+      "what": "Visor esférico 360° interactivo con Three.js y panel lateral de marcadores",
+      "highlights": [
+        {
+          "label": {
+            "es": "Visor esférico 360° con Three.js y puntos de interés",
+            "en": "Three.js 360° spherical viewer with interactive hotspots"
+          },
+          "rect": [0.015, 0.058, 0.815, 0.925]
+        },
+        {
+          "label": {
+            "es": "8 puntos clasificados por material, equipamiento y lujo",
+            "en": "8 hotspots categorized by material, equipment, and luxury"
+          },
+          "rect": [0.835, 0.058, 0.15, 0.925]
+        }
+      ]
+    },
+    {
+      "id": "services",
+      "src": "/portfolio/brands/autohub-360/shots/services.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://auto-indol-five.vercel.app/servicios",
+      "what": "Servicios de digitalización y producción audiovisual para agencias",
+      "highlights": [
+        {
+          "label": {
+            "es": "Producción de fotografía, tours 360° y video",
+            "en": "Photography production, 360° tours, and video"
+          },
+          "rect": [0.15, 0.2, 0.7, 0.6]
+        }
+      ]
+    },
+    {
+      "id": "admin",
+      "src": "/portfolio/brands/autohub-360/shots/admin.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://auto-indol-five.vercel.app/admin",
+      "what": "Central de operaciones y módulos administrativos de la concesionaria",
+      "highlights": [
+        {
+          "label": {
+            "es": "Módulos de inventario, CRM, taller y facturación",
+            "en": "Inventory, CRM, workshop, and billing modules"
+          },
+          "rect": [0.18, 0.3, 0.64, 0.25]
+        }
+      ]
+    }
+  ],
+  "captureTarget": "autohub-site",
+  "architecture": {
+    "bundle": null,
+    "reason": "Aplicación Next.js cliente orientada a catálogo e interactividad WebGL 360 sin backend distribuido propio verificado."
+  },
+  "protagonist": {
+    "kind": "interior-tour",
+    "idea": "El visor esférico Three.js con rotación interactiva sobre el interior vehicular y marcadores clasificados de material, confort y tecnología.",
+    "uses": ["tour-360", "car-interior-1", "car-interior-2"]
+  },
+  "storyboard": [
+    {
+      "scene": "scene-1",
+      "kind": "particle-open",
+      "seconds": 5.5,
+      "uses": [],
+      "copy": {
+        "es": "AutoHub 360 · Concesionaria Digital",
+        "en": "AutoHub 360 · Digital Dealership"
+      }
+    },
+    {
+      "scene": "scene-2",
+      "kind": "cinematic-plate",
+      "seconds": 8.0,
+      "uses": ["hero", "catalog"],
+      "copy": {
+        "es": "El catálogo automotor reinventado: visualización inmersiva y gestión integral.",
+        "en": "Automotive catalog reinvented: immersive visualization and full management."
+      }
+    },
+    {
+      "scene": "scene-3",
+      "kind": "interior-tour",
+      "seconds": 18.5,
+      "uses": ["tour-360", "car-interior-1", "car-interior-2"],
+      "copy": {
+        "es": "Tour interior 360° en WebGL con marcadores de material, tecnología y lujo.",
+        "en": "WebGL 360° interior tour with material, tech, and luxury hotspots."
+      }
+    },
+    {
+      "scene": "scene-4",
+      "kind": "scroll-reel",
+      "seconds": 12.0,
+      "uses": ["detail", "services", "demo-1", "demo-2"],
+      "copy": {
+        "es": "Fichas técnicas con simulador de cuotas, galería y producción de contenido.",
+        "en": "Vehicle technical sheets with financing simulator, gallery, and media production."
+      }
+    },
+    {
+      "scene": "scene-5",
+      "kind": "shot-stack",
+      "seconds": 14.5,
+      "uses": ["admin", "catalog", "demo-3", "demo-4"],
+      "copy": {
+        "es": "Central de operaciones: inventario, CRM, control de taller y facturación.",
+        "en": "Operations center: inventory, CRM, workshop tracking, and billing."
+      }
+    },
+    {
+      "scene": "scene-6",
+      "kind": "fact-wall",
+      "seconds": 10.0,
+      "uses": ["catalog", "detail"],
+      "copy": {
+        "es": "Arquitectura probada en producción sobre catálogo de alta fidelidad.",
+        "en": "Production-proven architecture built on high-fidelity catalog data."
+      }
+    },
+    {
+      "scene": "scene-7",
+      "kind": "signature",
+      "seconds": 6.0,
+      "uses": [],
+      "copy": {
+        "es": "Diseño de experiencia, WebGL y desarrollo por Mario Morera.",
+        "en": "Experience design, WebGL, and development by Mario Morera."
+      }
+    }
+  ],
+  "doNotClaim": [
+    "No afirmar resultados comerciales de venta o facturación real de vehículos (los datos corresponden a inventario demo).",
+    "No afirmar integración activa con scoring crediticio bancario real (el simulador es una calculadora paramétrica de cuotas).",
+    "No afirmar que las tomas 360° fueron capturadas en instalaciones físicas del cliente (son modelos demo optimizados).",
+    "No afirmar que los módulos administrativos procesan transacciones financieras o legales vinculantes en producción."
+  ]
+}

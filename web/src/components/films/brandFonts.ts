@@ -1,4 +1,4 @@
-import { Anton, Fraunces, Inter, Manrope, Montserrat, Oswald, Outfit } from "next/font/google";
+import { Anton, Fraunces, Geist, Inter, Manrope, Michroma, Montserrat, Orbitron, Oswald, Outfit, Playfair_Display } from "next/font/google";
 
 /**
  * Tipografías de las marcas de los clientes, solo para sus films.
@@ -12,7 +12,11 @@ const manrope = Manrope({ subsets: ["latin"], weight: ["400", "500", "600", "700
 const montserrat = Montserrat({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--ff-brand-montserrat", display: "swap", preload: false });
 const anton = Anton({ subsets: ["latin"], weight: "400", variable: "--ff-brand-anton", display: "swap", preload: false });
 const outfit = Outfit({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--ff-brand-outfit", display: "swap", preload: false });
+const playfairDisplay = Playfair_Display({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--ff-brand-playfair-display", display: "swap", preload: false });
+const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800", "900"], variable: "--ff-brand-orbitron", display: "swap", preload: false });
+const geist = Geist({ subsets: ["latin"], variable: "--ff-brand-geist", display: "swap", preload: false });
+const michroma = Michroma({ subsets: ["latin"], weight: "400", variable: "--ff-brand-michroma", display: "swap", preload: false });
 
 /** Clases que declaran las variables --ff-brand-* en el contenedor del film. */
-export const BRAND_FONT_VARIABLES = [oswald, inter, fraunces, manrope, montserrat, outfit, anton].map((font) => font.variable).join(" ");
+export const BRAND_FONT_VARIABLES = [oswald, inter, fraunces, manrope, montserrat, outfit, anton, playfairDisplay, orbitron, geist, michroma].map((font) => font.variable).join(" ");
 

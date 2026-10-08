@@ -41,6 +41,8 @@ export interface ProjectCase {
   evidence: LocalizedText[];
   stack: string[];
   media: { src: string; alt: LocalizedText }[];
+  /** Hold the generic Remotion case film until the owner supplies this case's cinematic. */
+  cinematicPending?: boolean;
   liveUrl?: string;
   demoUrl?: string;
   embeddable?: boolean;

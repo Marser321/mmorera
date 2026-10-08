@@ -422,9 +422,17 @@ const FLAGSHIP_CASES = [
   { slug: "fenix-medical-center", name: "Fenix Medical Center", first: /Renacer/, jump: /Posicionamiento/ },
   { slug: "lb-elite-wash-detail", name: "L&B Elite Wash & Detail", first: /Flota/, jump: /Cotizador/ },
   { slug: "ad-media-solution", name: "AD Media Solution", first: /La alianza/, jump: /Speed-to-Lead/ },
+  { slug: "america-tramites", name: "América Trámites", first: /Identidad/, jump: /Recorrido/ },
   { slug: "mr-studio-tattoo", name: "Mr. Studio Tattoo", first: /El estudio/, jump: /Zona del cuerpo/ },
   { slug: "truckers-choice", name: "Truckers Choice", first: /La ruta/, jump: /Dos idiomas/ },
   { slug: "new-brothers-barberia", name: "New Brothers Barbería", first: /El problema/, jump: /El panel/ },
+  { slug: "rangel-oviedo-group", name: "Rangel Oviedo Group", first: /Identidad/, jump: /El Método/ },
+  { slug: "evowrap", name: "EvoWrap", first: /Identidad/, jump: /Configurador/ },
+  { slug: "autohub-360", name: "AutoHub 360", first: /Concesionaria/i, jump: /Tour Interior/i },
+  { slug: "doge-sm", name: "DOGE.S.M LLC", first: /Estándar/i, jump: /Niveles/i },
+  { slug: "punta-360", name: "Punta 360", first: /Estándar/i, jump: /Tour Inmersivo/i },
+  { slug: "lnb-saas", name: "La Nueva Brasil", first: /Tradición/i, jump: /The Cake Studio/i },
+  { slug: "hub-profesional-ai", name: "Hub Profesional", first: /Estándar/i, jump: /Selector/i },
 ];
 
 for (const flagship of FLAGSHIP_CASES) {
@@ -497,7 +505,7 @@ test.describe("con movimiento reducido", () => {
 test("el archivo de casos lleva a cada caso en un clic", async ({ page }) => {
   await page.goto("/casos-de-exito");
   const index = page.getByRole("navigation", { name: "Ir directo a un caso" });
-  await expect(index.getByRole("link")).toHaveCount(14);
+  await expect(index.getByRole("link")).toHaveCount(15);
   await index.getByRole("link", { name: /AD Media Solution/ }).click();
   await expect(page).toHaveURL(/\/casos-de-exito\/ad-media-solution$/, { timeout: 30_000 });
   await expect(page.locator('[data-film-stage="flagship"]')).toHaveCount(1);

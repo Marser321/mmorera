@@ -34,7 +34,22 @@ export type SceneKind =
   | "body-selector"
   | "consent-split"
   | "bilingual-split"
-  | "one-roof";
+  | "one-roof"
+  | "goal-paths"
+  | "staged-form"
+  | "finish-selector"
+  | "interior-tour"
+  | "tier-offer"
+  | "virtual-tour"
+  | "cake-builder"
+  | "card-mosaic"
+  | "catalog-flow"
+  | "loyalty-card"
+  | "profession-switcher"
+  | "standard-manifesto"
+  | "tactical-catalog"
+  | "protocol-stepper"
+  | "authority-facts";
 
 export interface FlagshipScene {
   id: string;

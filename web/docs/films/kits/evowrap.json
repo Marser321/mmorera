@@ -1,0 +1,167 @@
+{
+  "slug": "evowrap",
+  "verifiedAt": "2026-10-07",
+  "liveUrl": "https://evowrap.vercel.app/",
+  "dossier": "evowrap.md",
+  "languages": ["es"],
+  "brand": {
+    "palette": {
+      "bg": "#050505",
+      "surface": "#0A0A0A",
+      "raised": "#171717",
+      "line": "#262626",
+      "text": "#FFFFFF",
+      "muted": "#A3A3A3",
+      "accent": "#F59E0B",
+      "accentSoft": "#FBBF24",
+      "accentDeep": "#D97706",
+      "onAccent": "#050505"
+    },
+    "fonts": { "display": "Orbitron", "body": "Geist" },
+    "logo": {
+      "mark": "/portfolio/brands/evowrap/mark.png",
+      "wordmark": "/portfolio/brands/evowrap/wordmark.png",
+      "particleMode": "alpha"
+    },
+    "source": "CSS servido (_next/static/chunks/*.css): fondo #050505, superficie #0A0A0A, superficie elevada #171717, bordes #262626, texto #FFFFFF, acento ámbar #F59E0B (suave #FBBF24, profundo #D97706). Tipografía: Orbitron (display) y Geist (body). Logo: /images/branding/logo-correct.png separado en isotipo (mark.png, canal alfa 600x600) y texto institucional (wordmark.png, 371x92)."
+  },
+  "facts": [
+    { "key": "finishes", "value": 8, "label": { "es": "Acabados y texturas en el visualizador tridimensional", "en": "Finishes and textures in the three-dimensional visualizer" }, "source": "/visualizer: 8 selectores interactivos de material y acabado vehicular" },
+    { "key": "services", "value": 4, "label": { "es": "Líneas de servicio automotor en el catálogo", "en": "Automotive service lines in the catalog" }, "source": "/services: 4 líneas de especialidad (cerámico, PPF, wrapping e interior)" },
+    { "key": "fields", "value": 5, "label": { "es": "Campos de datos vehiculares en el formulario de visita", "en": "Vehicle data fields in the visit scheduling form" }, "source": "/booking: 5 campos de captura para agendamiento de visita" },
+    { "key": "pillars", "value": 4, "label": { "es": "Pilares de posicionamiento: protección, cerámico, detailing y evolución", "en": "Positioning pillars: protection, ceramic, detailing and evolution" }, "source": "Home y footer: 4 pilares de marca (Protection, Ceramic, Detailing, Evolution)" },
+    { "key": "stages", "value": 2, "label": { "es": "Estados de transformación comparados en el deslizador interactivo", "en": "Transformation states compared in the interactive slider" }, "source": "Home, sección de transformación: 2 estados comparados en el deslizador antes y después" },
+    { "key": "routes", "value": 4, "label": { "es": "Rutas técnicas dedicadas por tipo de tratamiento", "en": "Dedicated technical routes by treatment type" }, "source": "/services: 4 páginas de servicio dedicadas con especificación técnica" }
+  ],
+  "media": [
+    { "id": "ferrari-before", "src": "/portfolio/brands/evowrap/ferrari-before.jpg", "w": 1024, "h": 1024, "note": "Ferrari en estado estándar antes del tratamiento estético" },
+    { "id": "ferrari-after", "src": "/portfolio/brands/evowrap/ferrari-after.jpg", "w": 1024, "h": 1024, "note": "Ferrari transformado con acabado y wrap completo" },
+    { "id": "porsche-ceramic", "src": "/portfolio/brands/evowrap/porsche-ceramic-shine.jpg", "w": 1080, "h": 1920, "note": "Porsche con tratamiento cerámico en estudio de iluminación" },
+    { "id": "matte-gtr", "src": "/portfolio/brands/evowrap/matte-black-gtr.jpg", "w": 1000, "h": 667, "note": "Nissan GT-R con acabado en vinilo matte black" },
+    { "id": "ppf-install", "src": "/portfolio/brands/evowrap/ppf-application.jpg", "w": 1080, "h": 1080, "note": "Aplicación de Paint Protection Film sobre panel automotor" }
+  ],
+  "captures": [
+    {
+      "id": "hero",
+      "src": "/portfolio/brands/evowrap/shots/hero.jpg",
+      "w": 1920,
+      "h": 1200,
+      "url": "https://evowrap.vercel.app/",
+      "what": "Hero principal con estética automotriz y botones de acción",
+      "highlights": [{ "label": { "es": "Hero interactivo: reinventa tu vehículo", "en": "Interactive hero: reinvent your vehicle" }, "rect": [0.25, 0.35, 0.5, 0.45] }]
+    },
+    {
+      "id": "transformation",
+      "src": "/portfolio/brands/evowrap/shots/transformation.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://evowrap.vercel.app/#transformation",
+      "what": "Deslizador interactivo de transformación antes y después",
+      "highlights": [{ "label": { "es": "Deslizador interactivo antes y después", "en": "Interactive before and after slider" }, "rect": [0.23, 0.46, 0.54, 0.4] }]
+    },
+    {
+      "id": "services",
+      "src": "/portfolio/brands/evowrap/shots/services.jpg",
+      "w": 1920,
+      "h": 1200,
+      "url": "https://evowrap.vercel.app/services",
+      "what": "Catálogo de especialidades en estética y protección",
+      "highlights": [{ "label": { "es": "Catálogo de servicios de personalización", "en": "Customization services catalog" }, "rect": [0.08, 0.3, 0.84, 0.55] }]
+    },
+    {
+      "id": "visualizer",
+      "src": "/portfolio/brands/evowrap/shots/visualizer.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://evowrap.vercel.app/visualizer",
+      "what": "Visualizador 3D rotable con panel lateral de acabados",
+      "highlights": [{ "label": { "es": "Configurador 3D con selector de acabados", "en": "3D configurator with finish selector" }, "rect": [0.82, 0.14, 0.15, 0.75] }]
+    },
+    {
+      "id": "booking",
+      "src": "/portfolio/brands/evowrap/shots/booking.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://evowrap.vercel.app/booking",
+      "what": "Formulario de agendamiento de visita con campos vacíos",
+      "highlights": [{ "label": { "es": "Formulario de agendamiento y datos vehiculares", "en": "Booking form and vehicle specifications" }, "rect": [0.32, 0.3, 0.36, 0.35] }]
+    }
+  ],
+  "captureTarget": "evo-site",
+  "architecture": {
+    "bundle": null,
+    "reason": "Sitio web enfocado en experiencia visual y configurador 3D en cliente sin arquitectura de backend o base de datos que diagramar."
+  },
+  "protagonist": {
+    "kind": "finish-selector",
+    "idea": "El selector de acabados tridimensional sobre el modelo vehicular: cambio en tiempo real entre cerámico, vinilo satinado, PPF mate y paleta de colores exclusivos.",
+    "uses": ["visualizer", "transformation"]
+  },
+  "storyboard": [
+    {
+      "scene": "opening",
+      "kind": "particle-open",
+      "seconds": 8,
+      "uses": ["porsche-ceramic"],
+      "copy": {
+        "es": "Estética absoluta y protección automotriz de lujo.",
+        "en": "Absolute aesthetics and luxury automotive protection."
+      }
+    },
+    {
+      "scene": "transformation",
+      "kind": "before-after",
+      "seconds": 14,
+      "uses": ["transformation", "ferrari-before", "ferrari-after"],
+      "copy": {
+        "es": "Deslizador interactivo: de lo estándar a lo extraordinario.",
+        "en": "Interactive slider: from standard to extraordinary."
+      }
+    },
+    {
+      "scene": "selector",
+      "kind": "finish-selector",
+      "seconds": 24,
+      "uses": ["visualizer"],
+      "copy": {
+        "es": "Ocho acabados en tiempo real sobre el modelo tridimensional.",
+        "en": "Eight finishes in real time on the three-dimensional model."
+      }
+    },
+    {
+      "scene": "services",
+      "kind": "scroll-reel",
+      "seconds": 12,
+      "uses": ["services", "ppf-install", "matte-gtr"],
+      "copy": {
+        "es": "Cuatro especialidades: cerámico, film protector, vinilo e interior.",
+        "en": "Four specialties: ceramic coating, paint protection, wrap and interior."
+      }
+    },
+    {
+      "scene": "specs",
+      "kind": "fact-wall",
+      "seconds": 13,
+      "uses": [],
+      "copy": {
+        "es": "Detalle técnico, acabados exclusivos y agendamiento directo.",
+        "en": "Technical detail, exclusive finishes and direct scheduling."
+      }
+    },
+    {
+      "scene": "signature",
+      "kind": "signature",
+      "seconds": 4.5,
+      "uses": [],
+      "copy": {
+        "es": "Firma",
+        "en": "Signature"
+      }
+    }
+  ],
+  "doNotClaim": [
+    "Tiempos garantizados de entrega, porcentajes de protección ni métricas no comprobadas.",
+    "Que el configurador 3D procesa cobros directos o reservas automáticas.",
+    "Volúmenes de clientes atendidos o testimonios no verificados en el sitio publicado."
+  ]
+}

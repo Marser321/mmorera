@@ -26,11 +26,19 @@ type FlagshipModule = { default: React.ComponentType<{ language: FilmLanguage }>
  */
 const FLAGSHIP_LOADERS: Record<string, () => Promise<FlagshipModule>> = {
   "ad-media-solution": () => import("./compositions/AdMediaFilm").then((module) => ({ default: module.AdMediaFilm })),
+  "america-tramites": () => import("./compositions/AmericaTramitesFilm").then((module) => ({ default: module.AmericaTramitesFilm })),
+  "autohub-360": () => import("./compositions/Autohub360Film").then((module) => ({ default: module.Autohub360Film })),
+  "doge-sm": () => import("./compositions/DogeSmFilm").then((module) => ({ default: module.DogeSmFilm })),
+  evowrap: () => import("./compositions/EvowrapFilm").then((module) => ({ default: module.EvowrapFilm })),
   "fenix-medical-center": () => import("./compositions/FenixFilm").then((module) => ({ default: module.FenixFilm })),
+  "hub-profesional-ai": () => import("./compositions/HubProfesionalFilm").then((module) => ({ default: module.HubProfesionalFilm })),
   "lb-elite-wash-detail": () => import("./compositions/LbWashFilm").then((module) => ({ default: module.LbWashFilm })),
+  "lnb-saas": () => import("./compositions/LnbSaasFilm").then((module) => ({ default: module.LnbSaasFilm })),
   "mr-studio-tattoo": () => import("./compositions/MrStudioFilm").then((module) => ({ default: module.MrStudioFilm })),
-  "truckers-choice": () => import("./compositions/TruckersFilm").then((module) => ({ default: module.TruckersFilm })),
   "new-brothers-barberia": () => import("./compositions/NewBrothersFilm").then((module) => ({ default: module.NewBrothersFilm })),
+  "punta-360": () => import("./compositions/Punta360Film").then((module) => ({ default: module.Punta360Film })),
+  "rangel-oviedo-group": () => import("./compositions/RangelOviedoFilm").then((module) => ({ default: module.RangelOviedoFilm })),
+  "truckers-choice": () => import("./compositions/TruckersFilm").then((module) => ({ default: module.TruckersFilm })),
 };
 
 export interface FilmCanvasProps {

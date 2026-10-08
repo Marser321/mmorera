@@ -42,10 +42,10 @@ export function WorkExperience() {
         />
         <div className="mt-8 flex flex-wrap items-end justify-between gap-6">
           <p className="max-w-xl text-lg leading-7 text-[#F3F0E8]/55 light:text-muted-foreground">
-            {isEs ? "Casos y demos reales, desplegados y navegables." : "Real cases and demos, deployed and browsable."}
+            {isEs ? "Casos, implementaciones locales y demos; cada ficha deja claro su estado." : "Cases, local implementations and demos; each page makes its status clear."}
           </p>
           <p className="font-mono text-[9px] uppercase tracking-[.16em] text-[#F3F0E8]/30 light:text-muted-foreground/85">
-            <TickerNumber value={total} /> · {isEs ? "demos en línea" : "demos online"}
+            <TickerNumber value={total} /> · {isEs ? "casos" : "cases"}
           </p>
         </div>
         <DrawRule className="mt-10 block h-px w-full bg-white/10 light:bg-[rgb(var(--ink-rgb)/0.1)]" />

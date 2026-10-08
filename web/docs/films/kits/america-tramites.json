@@ -1,0 +1,175 @@
+{
+  "slug": "america-tramites",
+  "verifiedAt": "2026-10-07",
+  "liveUrl": "https://atreact.vercel.app/",
+  "dossier": "america-tramites.md",
+  "languages": ["es"],
+  "brand": {
+    "palette": {
+      "bg": "#050B14",
+      "surface": "#0A1322",
+      "raised": "#0D192C",
+      "line": "#1E293B",
+      "text": "#F8FAFC",
+      "muted": "#94A3B8",
+      "accent": "#BE0000",
+      "accentSoft": "#EF4444",
+      "accentDeep": "#990000",
+      "onAccent": "#FFFFFF"
+    },
+    "fonts": { "display": "Montserrat", "body": "Inter" },
+    "logo": {
+      "mark": "/portfolio/brands/america-tramites/mark.png",
+      "wordmark": "/portfolio/brands/america-tramites/wordmark.png",
+      "particleMode": "alpha"
+    },
+    "source": "CSS servido (/assets/index-44aAmVww.css y clases compiladas de Tailwind): fondo #050B14, superficie #0A1322, superficie elevada #0D192C, borde #1E293B, texto #F8FAFC, acento rojo #BE0000 (hover #990000, suave #DC2626). Tipografía: fuentes del sistema mapeadas a Montserrat (display) e Inter (body). Logo: CeoLogo SVG compilado en App.tsx separado en isotipo (mark.png, canal alfa 600x600) y texto institucional (wordmark.png, 750x220)."
+  },
+  "facts": [
+    { "key": "filings", "value": 4, "label": { "es": "Trámites administrativos en el catálogo interactivo", "en": "Administrative filings in the interactive catalog" }, "source": "/tramites: 4 tarjetas interactivas de servicio con alcance y documentos" },
+    { "key": "families", "value": 3, "label": { "es": "Familias de servicio: migratorios, renovaciones y negocios", "en": "Service families: immigration, renewals and business" }, "source": "/tramites: selector por 3 familias de trámites más filtro general" },
+    { "key": "routes", "value": 3, "label": { "es": "Rutas guiadas por intención: emprender, trámites y aprender", "en": "Guided intent routes: enterprise, filings and education" }, "source": "Home y /contacto: 3 rutas de navegación y clasificación inicial" },
+    { "key": "weeks", "value": 6, "label": { "es": "Semanas de formación en el roadmap profesional", "en": "Training weeks in the professional roadmap" }, "source": "/emprender: 6 semanas consecutivas con resultado práctico semanal" },
+    { "key": "guides", "value": 3, "label": { "es": "Microguías educativas gratuitas con checklists desplegables", "en": "Free micro-guides with collapsible checklists" }, "source": "/aprender: 3 microguías con puntos clave y checklists desplegables" },
+    { "key": "courses", "value": 3, "label": { "es": "Formaciones guiadas con sesiones prácticas y talleres", "en": "Guided courses with practical sessions and workshops" }, "source": "/aprender: 3 formaciones guiadas con temario y formato" },
+    { "key": "steps", "value": 3, "label": { "es": "Pasos del método operativo: escuchar, ordenar y clasificar", "en": "Operational method steps: listen, organize and classify" }, "source": "/nosotros: sección Cómo trabajamos con 3 etapas numeradas" }
+  ],
+  "media": [
+    { "id": "conversion-scene", "src": "/portfolio/brands/america-tramites/conversion-scene.webp", "w": 1774, "h": 887, "note": "Escena editorial del formulario de contacto y conversión" },
+    { "id": "document-suite", "src": "/portfolio/brands/america-tramites/document-suite.webp", "w": 1024, "h": 1536, "note": "Ilustración de suite documental de la página de trámites" },
+    { "id": "education-scene", "src": "/portfolio/brands/america-tramites/education-scene.webp", "w": 1774, "h": 887, "note": "Escena del centro educativo y recursos de aprendizaje" }
+  ],
+  "captures": [
+    {
+      "id": "hero",
+      "src": "/portfolio/brands/america-tramites/shots/hero.jpg",
+      "w": 1920,
+      "h": 1200,
+      "url": "https://atreact.vercel.app/",
+      "what": "Hero principal con propuesta de valor y acceso a las tres rutas",
+      "highlights": [{ "label": { "es": "Panel principal y tres rutas de acceso", "en": "Main panel and three access routes" }, "rect": [0.117, 0.171, 0.767, 0.701] }]
+    },
+    {
+      "id": "quiz",
+      "src": "/portfolio/brands/america-tramites/shots/quiz.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://atreact.vercel.app/#quiz",
+      "what": "Clasificador interactivo por intención en la página de inicio",
+      "highlights": [{ "label": { "es": "Clasificador: responder una pregunta para enrutar", "en": "Classifier: answer one question to route" }, "rect": [0.459, 0.13, 0.295, 0.309] }]
+    },
+    {
+      "id": "services-catalog",
+      "src": "/portfolio/brands/america-tramites/shots/services-catalog.jpg",
+      "w": 1920,
+      "h": 1200,
+      "url": "https://atreact.vercel.app/tramites",
+      "what": "Catálogo de trámites ordenado por familias de servicio",
+      "highlights": [{ "label": { "es": "Selector por familias y catálogo interactivo", "en": "Family selector and interactive catalog" }, "rect": [0.056, 0.077, 0.889, 0.854] }]
+    },
+    {
+      "id": "service-modal",
+      "src": "/portfolio/brands/america-tramites/shots/service-modal.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://atreact.vercel.app/tramites",
+      "what": "Modal de trámite con alcance y lista de documentos requeridos",
+      "highlights": [{ "label": { "es": "Alcance administrativo y documentos comunes", "en": "Administrative scope and common documents" }, "rect": [0.325, 0.256, 0.35, 0.487] }]
+    },
+    {
+      "id": "contact-form",
+      "src": "/portfolio/brands/america-tramites/shots/contact-form.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://atreact.vercel.app/contacto?ruta=tramites",
+      "what": "Formulario de contacto contextual con campos vacíos",
+      "highlights": [{ "label": { "es": "Formulario contextual de clasificación", "en": "Contextual classification form" }, "rect": [0.451, 0.092, 0.349, 0.552] }]
+    },
+    {
+      "id": "roadmap",
+      "src": "/portfolio/brands/america-tramites/shots/roadmap.jpg",
+      "w": 1920,
+      "h": 1200,
+      "url": "https://atreact.vercel.app/emprender",
+      "what": "Hoja de ruta formativa de seis semanas en la ruta profesional",
+      "highlights": [{ "label": { "es": "Roadmap profesional: seis semanas con criterio", "en": "Professional roadmap: six weeks with criteria" }, "rect": [0.1, 0.417, 0.8, 0.54] }]
+    }
+  ],
+  "captureTarget": "at-site",
+  "architecture": {
+    "bundle": null,
+    "reason": "Sitio web informativo en React con enrutador en cliente y sin backend propio: el formulario clasifica en el navegador y deriva directamente a WhatsApp sin almacenar datos."
+  },
+  "protagonist": {
+    "kind": "staged-form",
+    "idea": "El recorrido por etapas desde la intención inicial hasta la derivación responsable: clasificación en el quiz, selección en el catálogo documental y contacto adaptativo con validación en cliente.",
+    "uses": ["quiz", "services-catalog", "service-modal", "contact-form"]
+  },
+  "storyboard": [
+    {
+      "scene": "opening",
+      "kind": "particle-open",
+      "seconds": 8,
+      "uses": ["conversion-scene"],
+      "copy": {
+        "es": "Asistencia administrativa y educación. Claridad documental.",
+        "en": "Administrative assistance and education. Document clarity."
+      }
+    },
+    {
+      "scene": "routes",
+      "kind": "checklist",
+      "seconds": 10,
+      "uses": ["hero"],
+      "copy": {
+        "es": "Tres caminos definidos: emprender, tramitar o aprender.",
+        "en": "Three defined paths: enterprise, filings or learning."
+      }
+    },
+    {
+      "scene": "staged",
+      "kind": "staged-form",
+      "seconds": 24,
+      "uses": ["quiz", "services-catalog", "service-modal", "contact-form"],
+      "copy": {
+        "es": "Clasificación inicial, catálogo por familias y contacto con contexto.",
+        "en": "Initial classification, family catalog and contextual contact."
+      }
+    },
+    {
+      "scene": "roadmap",
+      "kind": "shot-stack",
+      "seconds": 12,
+      "uses": ["roadmap", "education-scene"],
+      "copy": {
+        "es": "Seis semanas de formación para operar con método y límites claros.",
+        "en": "Six weeks of training to operate with method and clear boundaries."
+      }
+    },
+    {
+      "scene": "documents",
+      "kind": "fact-wall",
+      "seconds": 14,
+      "uses": ["document-suite"],
+      "copy": {
+        "es": "Cuatro trámites, microguías y tres pasos de método operativo.",
+        "en": "Four filings, micro-guides and three operational method steps."
+      }
+    },
+    {
+      "scene": "signature",
+      "kind": "signature",
+      "seconds": 4.5,
+      "uses": [],
+      "copy": {
+        "es": "Firma",
+        "en": "Signature"
+      }
+    }
+  ],
+  "doNotClaim": [
+    "Que el sitio cuenta con un portal consular o sistema de subida de archivos.",
+    "Que brinda asesoramiento legal, representación en corte o garantías migratorias.",
+    "Tiempos de respuesta garantizados, tasas de aprobación o clientes atendidos no publicados."
+  ]
+}

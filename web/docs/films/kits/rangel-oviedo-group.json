@@ -1,0 +1,328 @@
+{
+  "slug": "rangel-oviedo-group",
+  "verifiedAt": "2026-10-07",
+  "liveUrl": "https://rangeloviedo-tor8.vercel.app/",
+  "dossier": "rangel-oviedo-group.md",
+  "languages": ["es", "en"],
+  "brand": {
+    "palette": {
+      "bg": "#0B0A08",
+      "surface": "#1A1612",
+      "raised": "#2D2421",
+      "line": "#2D2421",
+      "text": "#F5F1E8",
+      "muted": "#A8A29E",
+      "accent": "#C9A864",
+      "accentSoft": "#D4B16F",
+      "accentDeep": "#9A3412",
+      "onAccent": "#0B0A08"
+    },
+    "fonts": {
+      "display": "Playfair Display",
+      "body": "Inter"
+    },
+    "logo": {
+      "mark": "/portfolio/brands/rangel-oviedo-group/mark.png",
+      "wordmark": "/portfolio/brands/rangel-oviedo-group/wordmark.png",
+      "particleMode": "alpha"
+    },
+    "source": "CSS servido (_next/static/css/*.css): clases compiladas con variables --ro-ink #0B0A08, --ro-surface #1A1612, --ro-raised #2D2421, --ro-paper #F5F1E8, acento cobre --ro-accent #C9A864, acento suave --ro-accent-soft #D4B16F, acento terracota --ro-accent-deep #9A3412. Tipografías: Playfair Display en títulos e Inter en textos. Logo vectorial transparente separado en mark y wordmark."
+  },
+  "facts": [
+    {
+      "key": "sold",
+      "value": 86,
+      "label": {
+        "es": "Propiedades vendidas en Texas",
+        "en": "Properties sold across Texas"
+      },
+      "source": "Home, franja de métricas del hero: \"86 propiedades vendidas\""
+    },
+    {
+      "key": "leased",
+      "value": 55,
+      "label": {
+        "es": "Propiedades rentadas gestionadas",
+        "en": "Leased properties managed"
+      },
+      "source": "Home, franja de métricas del hero: \"55 rentadas\""
+    },
+    {
+      "key": "reviews",
+      "value": 45,
+      "label": {
+        "es": "Reseñas de clientes en Google",
+        "en": "Client reviews on Google"
+      },
+      "source": "Home, franja de métricas del hero: \"45 reseñas Google\""
+    },
+    {
+      "key": "methodSteps",
+      "value": 5,
+      "label": {
+        "es": "Pasos en El Método Rangel",
+        "en": "Steps in The Rangel Method"
+      },
+      "source": "Home, sección \"El Método Rangel\": 5 pasos (Diagnóstico, Lectura de mercado, Selección privada, Negociación, Continuidad)"
+    },
+    {
+      "key": "profiles",
+      "value": 4,
+      "label": {
+        "es": "Perfiles en el diagnóstico guiado",
+        "en": "Profiles in guided diagnostic"
+      },
+      "source": "Home, sección \"Diagnóstico por perfil\": 4 perfiles (Inversor internacional, Compra familiar, Vendedor premium, Relocation a Texas)"
+    },
+    {
+      "key": "pillars",
+      "value": 4,
+      "label": {
+        "es": "Pilares del equipo consultor",
+        "en": "Consulting team pillars"
+      },
+      "source": "Home, sección \"El Equipo Consultor\": 4 pilares (Concierge & Relocation, Acceso Off-Market, Viabilidad & underwriting, Escrow & legal bilingüe)"
+    }
+  ],
+  "media": [
+    {
+      "id": "facade-loop",
+      "src": "/portfolio/brands/rangel-oviedo-group/facade-loop.mp4",
+      "webm": "/portfolio/brands/rangel-oviedo-group/facade-loop.webm",
+      "poster": "/portfolio/brands/rangel-oviedo-group/facade-loop-poster.jpg",
+      "w": 1280,
+      "h": 720,
+      "seconds": 6,
+      "note": "Fachada y entorno residencial en The Woodlands (/rog/scrolly_1_facade.mp4 recodificado)"
+    },
+    {
+      "id": "livingroom",
+      "src": "/portfolio/brands/rangel-oviedo-group/livingroom.mp4",
+      "webm": "/portfolio/brands/rangel-oviedo-group/livingroom.webm",
+      "poster": "/portfolio/brands/rangel-oviedo-group/livingroom-poster.jpg",
+      "w": 1280,
+      "h": 720,
+      "seconds": 8,
+      "note": "Interior residencial y acabados de lujo (/rog/scrolly_3_livingroom.mp4 recodificado)"
+    },
+    {
+      "id": "ceo-seated",
+      "src": "/portfolio/brands/rangel-oviedo-group/ceo-seated-dark.jpg",
+      "w": 1278,
+      "h": 1920,
+      "note": "Retrato del fundador y asesor inmobiliario (/rog/ceo-seated-dark.jpg optimizado)"
+    },
+    {
+      "id": "team-texans",
+      "src": "/portfolio/brands/rangel-oviedo-group/team-texans.jpg",
+      "w": 1280,
+      "h": 1920,
+      "note": "Equipo consultor y red especializada en Texas (/rog/team-texans.jpg optimizado)"
+    },
+    {
+      "id": "entrance",
+      "src": "/portfolio/brands/rangel-oviedo-group/entrance.jpg",
+      "w": 1024,
+      "h": 1024,
+      "note": "Entrada residencial y diseño de acceso (/rog/scrolly_2_entrance.webp optimizado)"
+    }
+  ],
+  "captures": [
+    {
+      "id": "es-hero",
+      "src": "/portfolio/brands/rangel-oviedo-group/shots/es-hero.jpg",
+      "w": 1920,
+      "h": 1200,
+      "url": "https://rangeloviedo-tor8.vercel.app/",
+      "language": "es",
+      "what": "Hero principal en español con titular de asesoría de lujo y métricas",
+      "highlights": [
+        {
+          "label": {
+            "es": "Titular · Bienes Raíces de Lujo en Texas",
+            "en": "Headline · Luxury Real Estate in Texas"
+          },
+          "rect": [0.25, 0.337, 0.5, 0.326]
+        }
+      ]
+    },
+    {
+      "id": "en-hero",
+      "src": "/portfolio/brands/rangel-oviedo-group/shots/en-hero.jpg",
+      "w": 1920,
+      "h": 1200,
+      "url": "https://rangeloviedo-tor8.vercel.app/",
+      "language": "en",
+      "what": "Hero en inglés tras activar el selector bilingüe con mismo encuadre",
+      "highlights": [
+        {
+          "label": {
+            "es": "Selector bilingüe · Experiencia EN/ES",
+            "en": "Bilingual selector · EN/ES experience"
+          },
+          "rect": [0.25, 0.337, 0.5, 0.326]
+        }
+      ]
+    },
+    {
+      "id": "es-metodo",
+      "src": "/portfolio/brands/rangel-oviedo-group/shots/es-metodo.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://rangeloviedo-tor8.vercel.app/#metodo",
+      "language": "es",
+      "what": "El Método Rangel: las 5 etapas estratégicas antes de abrir listados",
+      "highlights": [
+        {
+          "label": {
+            "es": "El Método Rangel · 5 etapas estructuradas",
+            "en": "The Rangel Method · 5 structured stages"
+          },
+          "rect": [0.168, 0.38, 0.664, 0.225]
+        }
+      ]
+    },
+    {
+      "id": "es-perfiles",
+      "src": "/portfolio/brands/rangel-oviedo-group/shots/es-perfiles.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://rangeloviedo-tor8.vercel.app/#perfiles",
+      "language": "es",
+      "what": "Diagnóstico por perfil: 4 perfiles de inversor y comprador",
+      "highlights": [
+        {
+          "label": {
+            "es": "Diagnóstico · 4 perfiles de comprador e inversor",
+            "en": "Diagnostic · 4 buyer and investor profiles"
+          },
+          "rect": [0.167, 0.378, 0.666, 0.275]
+        }
+      ]
+    },
+    {
+      "id": "es-curaduria",
+      "src": "/portfolio/brands/rangel-oviedo-group/shots/es-propiedades.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://rangeloviedo-tor8.vercel.app/",
+      "language": "es",
+      "what": "Catálogo Curado con filtro estricto de oportunidades",
+      "highlights": [
+        {
+          "label": {
+            "es": "Catálogo Curado · Oportunidades residenciales (ejemplo)",
+            "en": "Curated Catalog · Residential opportunities (sample)"
+          },
+          "rect": [0.167, 0.177, 0.369, 0.208]
+        }
+      ]
+    },
+    {
+      "id": "es-contacto",
+      "src": "/portfolio/brands/rangel-oviedo-group/shots/es-contacto.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://rangeloviedo-tor8.vercel.app/#contacto",
+      "language": "es",
+      "what": "Sección de asesoría privada y llamada a agenda directa",
+      "highlights": [
+        {
+          "label": {
+            "es": "Asesoría privada · Próximo paso en Texas",
+            "en": "Private advisory · Next step in Texas"
+          },
+          "rect": [0.267, 0.19, 0.467, 0.333]
+        }
+      ]
+    }
+  ],
+  "captureTarget": "rog-site",
+  "architecture": {
+    "bundle": null,
+    "reason": "Sitio web informativo bilingüe enfocado en experiencia visual y llamada a contacto directo sin backend ni base de datos que diagramar."
+  },
+  "protagonist": {
+    "kind": "goal-paths",
+    "idea": "Los cuatro perfiles de decisión (inversor internacional, compra familiar, vendedor premium y relocation) ingresando a las cinco etapas estructuradas de El Método Rangel.",
+    "uses": ["es-perfiles", "es-metodo"]
+  },
+  "storyboard": [
+    {
+      "scene": "opening",
+      "kind": "particle-open",
+      "seconds": 8,
+      "uses": ["livingroom"],
+      "copy": {
+        "es": "Asesoría inmobiliaria privada y bilingüe en Texas.",
+        "en": "Private and bilingual real estate advisory in Texas."
+      }
+    },
+    {
+      "scene": "residences",
+      "kind": "camera-reel",
+      "seconds": 12,
+      "uses": ["facade-loop", "livingroom"],
+      "copy": {
+        "es": "Curaduría arquitectónica y residencias de alto nivel en Houston y The Woodlands.",
+        "en": "Architectural curation and high-end residences in Houston and The Woodlands."
+      }
+    },
+    {
+      "scene": "paths",
+      "kind": "goal-paths",
+      "seconds": 24,
+      "uses": ["es-perfiles", "es-metodo"],
+      "copy": {
+        "es": "Cuatro perfiles de decisión ingresando a las cinco etapas de El Método Rangel.",
+        "en": "Four decision profiles entering the five stages of The Rangel Method."
+      }
+    },
+    {
+      "scene": "interface",
+      "kind": "shot-stack",
+      "seconds": 12,
+      "uses": ["es-hero", "en-hero", "es-curaduria", "es-contacto"],
+      "copy": {
+        "es": "Experiencia bilingüe fluida en español e inglés con selección privada.",
+        "en": "Seamless bilingual experience in English and Spanish with private selection."
+      }
+    },
+    {
+      "scene": "pillars",
+      "kind": "checklist",
+      "seconds": 8,
+      "uses": ["team-texans", "ceo-seated"],
+      "copy": {
+        "es": "Equipo consultor: concierge, acceso fuera de mercado, viabilidad y legal bilingüe.",
+        "en": "Consulting team: concierge, off-market access, underwriting, and bilingual legal."
+      }
+    },
+    {
+      "scene": "metrics",
+      "kind": "fact-wall",
+      "seconds": 8,
+      "uses": [],
+      "copy": {
+        "es": "Métricas verificadas en Texas y método de asesoría estructurada.",
+        "en": "Verified Texas metrics and structured advisory method."
+      }
+    },
+    {
+      "scene": "signature",
+      "kind": "signature",
+      "seconds": 5,
+      "uses": [],
+      "copy": {
+        "es": "Rangel Oviedo Group · Asesoría Inmobiliaria en Texas.",
+        "en": "Rangel Oviedo Group · Real Estate Advisory in Texas."
+      }
+    }
+  ],
+  "doNotClaim": [
+    "Que los widgets IDX del MLS de HAR están sincronizados en tiempo real (quedan preparados mediante variables de entorno sin conectar).",
+    "Que los botones de WhatsApp o de agenda con formulario procesan reservas automáticas.",
+    "Métricas de retorno de inversión, plusvalía asegurada o rendimientos financieros no sostenidos.",
+    "Que las propiedades del catálogo son operaciones concluidas reales (se rotulan con identificador de muestra)."
+  ]
+}

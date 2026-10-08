@@ -157,12 +157,41 @@ export function CaseStudy({ project, underTheHood }: { project: ProjectCase; und
         </header>
 
         {/* Film "Cómo lo resolví": el tráiler del caso con el sitio real */}
-        <CaseFilmSection script={film} language={language} />
+        {!project.cinematicPending && <CaseFilmSection script={film} language={language} />}
 
         {/* Bajo el capó: la arquitectura real del sistema, interactiva */}
         {underTheHood}
 
         {metrics && project.liveUrl && isShowcaseWorthy(metrics) && <MetricsBand metrics={metrics} liveUrl={project.liveUrl} isEs={isEs} />}
+
+        {project.cinematicPending && project.media.length > 1 && (
+          <section className="mx-auto mt-20 max-w-[1480px] px-5 sm:px-8 lg:px-12" aria-labelledby="case-static-gallery">
+            <p className={label}>{isEs ? "Implementación local · capturas estáticas" : "Local implementation · static captures"}</p>
+            <h2 id="case-static-gallery" className="mt-4 text-3xl font-medium tracking-[-0.04em] text-foreground sm:text-4xl">
+              {isEs ? "La experiencia en escritorio y móvil." : "The experience on desktop and mobile."}
+            </h2>
+            <div className="mt-10 grid items-start gap-6 lg:grid-cols-[1.6fr_.55fr]">
+              {project.media.slice(1).map((shot, index) => (
+                <Reveal key={shot.src} y={30} className={`relative overflow-hidden rounded-2xl border border-white/10 light:border-[rgb(var(--ink-rgb)/0.1)] ${index === 1 ? "mx-auto w-full max-w-[300px]" : "w-full"}`}>
+                  <div className={`relative ${index === 1 ? "aspect-[390/844]" : "aspect-[16/10]"}`}>
+                    <Image
+                      src={shot.src}
+                      alt={shot.alt[language]}
+                      fill
+                      sizes={index === 1 ? "300px" : "(max-width: 1024px) 100vw, 65vw"}
+                      className={index === 1 ? "object-contain" : "object-cover object-top"}
+                    />
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+            <p className="mt-5 max-w-3xl text-sm leading-6 text-[#F3F0E8]/50 light:text-muted-foreground">
+              {isEs
+                ? "Estas capturas muestran una implementación local. No se verificó que coincida con la versión activa de canavacations.com ni una conexión real de reservas o pagos."
+                : "These captures show a local implementation. It has not been verified against the current canavacations.com site or a live booking or payment connection."}
+            </p>
+          </section>
+        )}
 
         {/* Ficha del caso: datos y el relato completo en texto */}
         <div className="mx-auto mt-20 grid max-w-[1480px] gap-10 px-5 sm:px-8 lg:grid-cols-[.55fr_1.45fr] lg:px-12">

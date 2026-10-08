@@ -1,0 +1,290 @@
+{
+  "slug": "lnb-saas",
+  "verifiedAt": "2026-10-07",
+  "liveUrl": "https://lnb-saass.vercel.app/",
+  "dossier": "lnb-saas.md",
+  "languages": ["es", "en"],
+  "brand": {
+    "palette": {
+      "bg": "#1C1917",
+      "surface": "#292524",
+      "raised": "#44403C",
+      "line": "#44403C",
+      "text": "#F5F5F4",
+      "muted": "#B5AEA8",
+      "accent": "#D97706",
+      "accentSoft": "#FBBF24",
+      "accentDeep": "#B45309",
+      "onAccent": "#1C1917"
+    },
+    "fonts": {
+      "display": "Playfair Display",
+      "body": "Inter"
+    },
+    "logo": {
+      "mark": "/portfolio/brands/lnb-saas/mark.png",
+      "wordmark": "/portfolio/brands/lnb-saas/wordmark.png",
+      "particleMode": "alpha"
+    },
+    "source": "CSS y DOM servido de lnb-saass.vercel.app: bg-stone-900 #1C1917, text-amber-500 #F59E0B, amber-600 #D97706, Playfair Display + Inter"
+  },
+  "facts": [
+    {
+      "key": "pickupMinutes",
+      "value": 15,
+      "label": {
+        "es": "Minutos de retiro express en mostrador",
+        "en": "Minutes express counter pickup"
+      },
+      "source": "Dossier · /: 15 minutos tiempo promedio garantizado para retiro de pedidos express sin espera"
+    },
+    {
+      "key": "catalogProducts",
+      "value": 50,
+      "label": {
+        "es": "Productos activos en catálogo gastronómico",
+        "en": "Active products in menu catalog"
+      },
+      "source": "Dossier · /: +50 productos activos en el catálogo de cafetería, panadería y postres"
+    },
+    {
+      "key": "ratingScore",
+      "value": 4.8,
+      "label": {
+        "es": "Puntaje de satisfacción de clientes",
+        "en": "Customer satisfaction score"
+      },
+      "source": "Dossier · /: 4.8 estrellas de calificación promedio de clientes en el portal"
+    },
+    {
+      "key": "crumbPoints",
+      "value": 245,
+      "label": {
+        "es": "Puntos LNB acumulados en club de fidelización",
+        "en": "LNB reward points in loyalty program"
+      },
+      "source": "Dossier · /crumb-club: 245 puntos acumulados en la tarjeta demo de Crumb Club"
+    },
+    {
+      "key": "crumbSaved",
+      "value": 2450,
+      "label": {
+        "es": "Pesos ahorrados por miembros del club",
+        "en": "Pesos saved by club loyalty members"
+      },
+      "source": "Dossier · /crumb-club: $2450 monto total ahorrado por beneficios del club"
+    },
+    {
+      "key": "startPlan",
+      "value": 15000,
+      "label": {
+        "es": "Monto mensual Plan LNB Start para café",
+        "en": "Monthly fee LNB Start coffee tier"
+      },
+      "source": "Dossier · /subscription: $15.000/mes Plan LNB Start"
+    },
+    {
+      "key": "clubPlan",
+      "value": 28000,
+      "label": {
+        "es": "Monto mensual Plan LNB Club más elegido",
+        "en": "Monthly fee LNB Club most popular tier"
+      },
+      "source": "Dossier · /subscription: $28.000/mes Plan LNB Club"
+    },
+    {
+      "key": "blackPlan",
+      "value": 42000,
+      "label": {
+        "es": "Monto mensual Plan LNB Black café ilimitado",
+        "en": "Monthly fee LNB Black unlimited coffee"
+      },
+      "source": "Dossier · /subscription: $42.000/mes Plan LNB Black"
+    },
+    {
+      "key": "studiosCount",
+      "value": 4,
+      "label": {
+        "es": "Studios interactivos de especialidad gastronómica",
+        "en": "Interactive specialized culinary studios"
+      },
+      "source": "Dossier · /: 4 Craving Studios modulares integrados"
+    },
+    {
+      "key": "builderSteps",
+      "value": 3,
+      "label": {
+        "es": "Fases de diseño en The Cake Studio",
+        "en": "Design stages in The Cake Studio"
+      },
+      "source": "Dossier · /studio: 3 fases interactivas de creación en The Cake Studio"
+    }
+  ],
+  "media": [
+    {
+      "id": "hero-loop",
+      "src": "/portfolio/brands/lnb-saas/hero-loop.mp4",
+      "webm": "/portfolio/brands/lnb-saas/hero-loop.webm",
+      "poster": "/portfolio/brands/lnb-saas/hero-loop-poster.jpg",
+      "w": 1920,
+      "h": 1080,
+      "seconds": 4,
+      "note": "Clip de apertura cinematográfica de salón y cafetería artesanal"
+    }
+  ],
+  "captures": [
+    {
+      "id": "home-shot",
+      "src": "/portfolio/brands/lnb-saas/shots/home.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://lnb-saass.vercel.app/",
+      "what": "Portal principal con accesos directos a Craving Studios y beneficios",
+      "highlights": [
+        { "rect": [0.1, 0.2, 0.8, 0.6], "label": { "es": "Portal principal", "en": "Main portal" } }
+      ]
+    },
+    {
+      "id": "studio-shot",
+      "src": "/portfolio/brands/lnb-saas/shots/studio.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://lnb-saass.vercel.app/studio",
+      "what": "The Cake Studio: personalizador de tortas por capas de bizcochuelo y relleno",
+      "highlights": [
+        { "rect": [0.1, 0.15, 0.8, 0.7], "label": { "es": "Personalizador de tortas", "en": "Custom cake builder" } }
+      ]
+    },
+    {
+      "id": "express-shot",
+      "src": "/portfolio/brands/lnb-saas/shots/express.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://lnb-saass.vercel.app/express",
+      "what": "LNB Express: catálogo de cafetería de especialidad con retiro en mostrador",
+      "highlights": [
+        { "rect": [0.08, 0.1, 0.84, 0.8], "label": { "es": "Catálogo express", "en": "Express catalog" } }
+      ]
+    },
+    {
+      "id": "crumb-shot",
+      "src": "/portfolio/brands/lnb-saas/shots/crumb.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://lnb-saass.vercel.app/crumb-club",
+      "what": "Crumb Club: tarjeta de puntos y catálogo de recompensas gastronómicas",
+      "highlights": [
+        { "rect": [0.15, 0.15, 0.7, 0.7], "label": { "es": "Tarjeta de puntos", "en": "Loyalty card" } }
+      ]
+    },
+    {
+      "id": "subscription-shot",
+      "src": "/portfolio/brands/lnb-saas/shots/subscription.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://lnb-saass.vercel.app/subscription",
+      "what": "LNB Pass: planes de suscripción mensual para café de especialidad ilimitado",
+      "highlights": [
+        { "rect": [0.1, 0.2, 0.8, 0.6], "label": { "es": "Planes de membresía", "en": "Membership tiers" } }
+      ]
+    },
+    {
+      "id": "kitchen-shot",
+      "src": "/portfolio/brands/lnb-saas/shots/kitchen.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://lnb-saass.vercel.app/kitchen-live",
+      "what": "Kitchen Live: monitor KDS para coordinación operativa en cocina",
+      "highlights": [
+        { "rect": [0.05, 0.1, 0.9, 0.8], "label": { "es": "Monitor de cocina", "en": "Kitchen monitor" } }
+      ]
+    }
+  ],
+  "captureTarget": "lnb-saas-site",
+  "architecture": {
+    "bundle": null,
+    "reason": "Plataforma gastronómica de cara al cliente y monitoreo de cocina con Next.js y Tailwind CSS, sin microservicios distribuidos ni backend complejo que requiera diagrama Archify"
+  },
+  "protagonist": {
+    "kind": "cake-builder",
+    "reason": "The Cake Studio permite al cliente componer su pastel en tres fases interactivas con previsualización inmediata y cálculo de porciones"
+  },
+  "storyboard": [
+    {
+      "scene": "00-particle-open",
+      "kind": "particle-open",
+      "seconds": 7,
+      "uses": ["hero-loop"],
+      "copy": {
+        "es": "La Nueva Brasil · Panadería, confitería y café de especialidad",
+        "en": "La Nueva Brasil · Specialty bakery, pastry and coffee roastery"
+      }
+    },
+    {
+      "scene": "01-studios",
+      "kind": "card-mosaic",
+      "seconds": 8.5,
+      "uses": ["home-shot"],
+      "copy": {
+        "es": "Cuatro Craving Studios dedicados para ordenar tortas, pizzas, burgers y empanadas",
+        "en": "Four Craving Studios dedicated to custom cakes, pizzas, burgers and empanadas"
+      }
+    },
+    {
+      "scene": "02-builder",
+      "kind": "cake-builder",
+      "seconds": 24,
+      "uses": ["studio-shot"],
+      "copy": {
+        "es": "The Cake Studio: personalización de pastelería artesanal capa por capa",
+        "en": "The Cake Studio: layer-by-layer artisanal pastry customization"
+      }
+    },
+    {
+      "scene": "03-express",
+      "kind": "catalog-flow",
+      "seconds": 9.5,
+      "uses": ["express-shot", "kitchen-shot"],
+      "copy": {
+        "es": "LNB Express: pedidos para la playa con retiro en 15 minutos y cero filas",
+        "en": "LNB Express: beach orders ready in 15 minutes with zero counter wait"
+      }
+    },
+    {
+      "scene": "04-club",
+      "kind": "loyalty-card",
+      "seconds": 9,
+      "uses": ["crumb-shot", "subscription-shot"],
+      "copy": {
+        "es": "Fidelización recurrente con Crumb Club y membresías LNB Pass para café diario",
+        "en": "Recurring customer loyalty with Crumb Club and LNB Pass daily coffee tiers"
+      }
+    },
+    {
+      "scene": "05-metrics",
+      "kind": "outcome-facts",
+      "seconds": 7,
+      "uses": ["home-shot"],
+      "copy": {
+        "es": "Más de 50 productos en catálogo, 15 minutos de entrega y 4.8 estrellas de valoración",
+        "en": "Over 50 products in catalog, 15-minute pickup and 4.8-star customer rating"
+      }
+    },
+    {
+      "scene": "06-signature",
+      "kind": "signature",
+      "seconds": 6.5,
+      "uses": ["hero-loop"],
+      "copy": {
+        "es": "La Nueva Brasil · Tradición artesanal impulsada por tecnología digital",
+        "en": "La Nueva Brasil · Artisanal tradition powered by digital technology"
+      }
+    }
+  ],
+  "doNotClaim": [
+    "No afirmar que LNB es una franquicia industrial multinacional masiva",
+    "No inventar cifras de facturación corporativa o márgenes auditados de bolsa",
+    "No prometer envíos con dron o entregas en alta mar que no estén respaldadas en la interfaz real",
+    "No mencionar bajo ningún concepto el nombre del país prohibido"
+  ]
+}

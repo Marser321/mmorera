@@ -1,0 +1,255 @@
+{
+  "slug": "doge-sm",
+  "verifiedAt": "2026-10-07",
+  "liveUrl": "https://doge-27dp.vercel.app/",
+  "dossier": "doge-sm.md",
+  "languages": ["es", "en"],
+  "brand": {
+    "palette": {
+      "bg": "#0B0B0F",
+      "surface": "#131318",
+      "raised": "#1B1B22",
+      "line": "#24242D",
+      "text": "#F4F4F5",
+      "muted": "#A1A1AA",
+      "accent": "#D62828",
+      "accentSoft": "#EF4444",
+      "accentDeep": "#790302",
+      "onAccent": "#FFFFFF"
+    },
+    "fonts": { "display": "Michroma", "body": "Inter" },
+    "logo": {
+      "mark": "/portfolio/brands/doge-sm/mark.png",
+      "wordmark": "/portfolio/brands/doge-sm/wordmark.png",
+      "particleMode": "alpha"
+    },
+    "source": "CSS servido de doge-27dp.vercel.app: --surface-0 #0B0B0F, --surface-1 #131318, --surface-2 #1B1B22, --surface-3 #24242D, --text-primary #F4F4F5, --brand #D62828; Michroma + Inter"
+  },
+  "facts": [
+    {
+      "key": "tiers",
+      "value": 3,
+      "label": {
+        "es": "Niveles de membresía estructurados",
+        "en": "Structured membership tiers"
+      },
+      "source": "Endpoint /api/catalog/plans: Essential, Signature y Estate"
+    },
+    {
+      "key": "cadence",
+      "value": 3,
+      "label": {
+        "es": "Cadencias de mantenimiento programado",
+        "en": "Scheduled maintenance cadences"
+      },
+      "source": "Endpoint /api/catalog/plans: intervalos de 30, 14 y 7 días"
+    },
+    {
+      "key": "services",
+      "value": 3,
+      "label": {
+        "es": "Líneas de servicio técnico especializado",
+        "en": "Specialized technical service lines"
+      },
+      "source": "Ruta /services: Limpieza de Cristales, Lavado a Presión y Alfombras"
+    },
+    {
+      "key": "steps",
+      "value": 4,
+      "label": {
+        "es": "Etapas en el flujo operativo",
+        "en": "Stages in operational workflow"
+      },
+      "source": "Home, sección Cómo Funciona: 4 pasos numerados"
+    },
+    {
+      "key": "departments",
+      "value": 7,
+      "label": {
+        "es": "Departamentos de insumos en tienda",
+        "en": "Supply departments in store"
+      },
+      "source": "Ruta /store: 7 categorías con selector de departamento"
+    },
+    {
+      "key": "products",
+      "value": 21,
+      "label": {
+        "es": "Productos piloto catalogados",
+        "en": "Piloted catalog products"
+      },
+      "source": "Endpoint /api/catalog/products: 21 productos registrados"
+    }
+  ],
+  "media": [
+    {
+      "id": "hero",
+      "src": "/portfolio/brands/doge-sm/hero-loop.mp4",
+      "webm": "/portfolio/brands/doge-sm/hero-loop.webm",
+      "poster": "/portfolio/brands/doge-sm/hero-loop-poster.jpg",
+      "w": 1280,
+      "h": 800,
+      "seconds": 6.2,
+      "note": "Clip loop oficial de la marca"
+    },
+    {
+      "id": "service-window",
+      "src": "/portfolio/brands/doge-sm/service-window.jpg",
+      "w": 1536,
+      "h": 1024,
+      "note": "Resultado de limpieza de cristales WFP"
+    },
+    {
+      "id": "service-pressure",
+      "src": "/portfolio/brands/doge-sm/service-pressure.jpg",
+      "w": 1536,
+      "h": 1024,
+      "note": "Resultado de lavado a presión calibrado"
+    },
+    {
+      "id": "service-carpet",
+      "src": "/portfolio/brands/doge-sm/service-carpet.jpg",
+      "w": 1536,
+      "h": 1024,
+      "note": "Resultado de extracción de alfombras"
+    }
+  ],
+  "captures": [
+    {
+      "id": "hero-shot",
+      "src": "/portfolio/brands/doge-sm/shots/hero.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://doge-27dp.vercel.app/",
+      "what": "Hero principal con propuesta de valor y cuadrillas certificadas"
+    },
+    {
+      "id": "workflow-shot",
+      "src": "/portfolio/brands/doge-sm/shots/workflow.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://doge-27dp.vercel.app/",
+      "what": "Cómo funciona: 4 etapas del flujo de solicitud"
+    },
+    {
+      "id": "services-shot",
+      "src": "/portfolio/brands/doge-sm/shots/services.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://doge-27dp.vercel.app/services",
+      "what": "Catálogo de las 3 especialidades de limpieza técnica"
+    },
+    {
+      "id": "service-detail-shot",
+      "src": "/portfolio/brands/doge-sm/shots/service-detail.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://doge-27dp.vercel.app/services/window-cleaning",
+      "what": "Ficha de cristales con estimado y WhatsApp directo"
+    },
+    {
+      "id": "memberships-shot",
+      "src": "/portfolio/brands/doge-sm/shots/memberships.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://doge-27dp.vercel.app/membership",
+      "what": "Página de membresías con los 3 planes y formulario"
+    },
+    {
+      "id": "store-shot",
+      "src": "/portfolio/brands/doge-sm/shots/store.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://doge-27dp.vercel.app/store",
+      "what": "DOGE Store con 7 departamentos e insumos de hogar"
+    }
+  ],
+  "captureTarget": "doge-site",
+  "architecture": {
+    "bundle": null,
+    "reason": "Servicio premium con cotización ágil y despacho directo: sin arquitectura pesada que diagramar."
+  },
+  "protagonist": {
+    "kind": "tier-offer",
+    "idea": "La oferta por niveles estructurada en tres planes recurrentes (Essential, Signature, Estate) con cadencias, tarifas base y solicitud directa sin fricción.",
+    "uses": ["memberships-shot", "services-shot"]
+  },
+  "storyboard": [
+    {
+      "scene": "opening",
+      "kind": "particle-open",
+      "seconds": 8,
+      "uses": ["hero"],
+      "copy": {
+        "es": "Limpieza de Élite. Estándar Titanium Noir en Miami.",
+        "en": "Elite Cleaning. Titanium Noir Standard in Miami."
+      }
+    },
+    {
+      "scene": "manifesto",
+      "kind": "manifesto",
+      "seconds": 11,
+      "uses": ["service-window", "service-pressure", "service-carpet"],
+      "copy": {
+        "es": "Conservación técnica de activos residenciales y comerciales.",
+        "en": "Technical asset preservation for residential and commercial estates."
+      }
+    },
+    {
+      "scene": "tiers",
+      "kind": "tier-offer",
+      "seconds": 20,
+      "uses": ["memberships-shot", "services-shot"],
+      "copy": {
+        "es": "Tres niveles de mantenimiento recurrente: Essential, Signature y Estate.",
+        "en": "Three recurrent maintenance tiers: Essential, Signature and Estate."
+      }
+    },
+    {
+      "scene": "workflow",
+      "kind": "workflow-steps",
+      "seconds": 12,
+      "uses": ["workflow-shot"],
+      "copy": {
+        "es": "Cuatro pasos sin fricción: necesidad, estimado, cuadrilla y resultado.",
+        "en": "Four frictionless steps: scope, estimate, crew and verified result."
+      }
+    },
+    {
+      "scene": "services",
+      "kind": "service-trio",
+      "seconds": 9,
+      "uses": ["service-detail-shot", "store-shot"],
+      "copy": {
+        "es": "Cristales WFP, lavado a presión y extracción de alfombras.",
+        "en": "WFP pure water glass, pressure washing and deep carpet extraction."
+      }
+    },
+    {
+      "scene": "engineering",
+      "kind": "fact-wall",
+      "seconds": 7,
+      "uses": [],
+      "copy": {
+        "es": "Infraestructura digital, tienda y despacho en Sur de Florida.",
+        "en": "Digital infrastructure, supply store and dispatch in South Florida."
+      }
+    },
+    {
+      "scene": "signature",
+      "kind": "signature",
+      "seconds": 4.5,
+      "uses": [],
+      "copy": {
+        "es": "Firma",
+        "en": "Signature"
+      }
+    }
+  ],
+  "doNotClaim": [
+    "No prometer cobro automático con tarjeta sin evaluación técnica previa de la propiedad.",
+    "No inventar porcentajes de ahorro garantizado o conversiones artificiales.",
+    "No afirmar pasarelas de pago no publicadas ni facturación recurrente desatendida.",
+    "No incluir afirmaciones territoriales fuera de Miami y Sur de Florida."
+  ]
+}

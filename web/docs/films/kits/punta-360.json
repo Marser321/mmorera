@@ -1,0 +1,278 @@
+{
+  "slug": "punta-360",
+  "verifiedAt": "2026-10-07",
+  "liveUrl": "https://punta-360.vercel.app/",
+  "dossier": "punta-360.md",
+  "languages": ["es", "en"],
+  "brand": {
+    "palette": {
+      "bg": "#020617",
+      "surface": "#0B1120",
+      "raised": "#131D31",
+      "line": "#1E293B",
+      "text": "#F8FAFC",
+      "muted": "#94A3B8",
+      "accent": "#F59E0B",
+      "accentSoft": "#FBBF24",
+      "accentDeep": "#D97706",
+      "onAccent": "#020617"
+    },
+    "fonts": { "display": "Geist", "body": "Geist" },
+    "logo": {
+      "mark": "/portfolio/brands/punta-360/mark.png",
+      "wordmark": "/portfolio/brands/punta-360/wordmark.png",
+      "particleMode": "alpha"
+    },
+    "source": "CSS servido de punta-360.vercel.app: bg-slate-950 #020617, text-amber-500 #F59E0B, amber-400 #FBBF24, amber-600 #D97706, Geist sans-serif, border-white/10"
+  },
+  "facts": [
+    {
+      "key": "effectiveness",
+      "value": 98,
+      "label": {
+        "es": "Efectividad comercial reportada",
+        "en": "Reported sales effectiveness"
+      },
+      "source": "Ruta /owners, banner de métricas: 98% Efectividad comercial reportada"
+    },
+    {
+      "key": "days",
+      "value": 45,
+      "label": {
+        "es": "Días promedio de comercialización",
+        "en": "Average days on market"
+      },
+      "source": "Ruta /owners, banner de métricas: 45 Días Promedio de comercialización"
+    },
+    {
+      "key": "properties",
+      "value": 850,
+      "label": {
+        "es": "Propiedades producidas en catálogo",
+        "en": "Properties produced in catalog"
+      },
+      "source": "Ruta /owners, banner de métricas: +850 Propiedades producidas en catálogo"
+    },
+    {
+      "key": "support",
+      "value": 24,
+      "label": {
+        "es": "Horas de respuesta y soporte operativo",
+        "en": "Response and operational support hours"
+      },
+      "source": "Ruta /owners, banner de métricas: 24h Soporte y coordinación operativa"
+    },
+    {
+      "key": "solo",
+      "value": 99,
+      "label": {
+        "es": "Tarifa mensual Plan Agente Solo (USD)",
+        "en": "Agente Solo monthly rate (USD)"
+      },
+      "source": "Ruta /enterprise, selector de membresías: USD $99/mes Plan Agente Solo"
+    },
+    {
+      "key": "growth",
+      "value": 399,
+      "label": {
+        "es": "Tarifa mensual Plan Agencia Growth (USD)",
+        "en": "Agencia Growth monthly rate (USD)"
+      },
+      "source": "Ruta /enterprise, selector de membresías: USD $399/mes Plan Agencia Growth"
+    },
+    {
+      "key": "scale",
+      "value": 899,
+      "label": {
+        "es": "Tarifa mensual Plan Scale (USD)",
+        "en": "Scale tier monthly rate (USD)"
+      },
+      "source": "Ruta /enterprise, selector de membresías: USD $899/mes Plan Scale"
+    },
+    {
+      "key": "disciplines",
+      "value": 4,
+      "label": {
+        "es": "Disciplinas de producción multimedia",
+        "en": "Multimedia production disciplines"
+      },
+      "source": "Ruta /owners, sección de disciplinas: 4 disciplinas visuales integradas"
+    },
+    {
+      "key": "steps",
+      "value": 4,
+      "label": {
+        "es": "Etapas del flujo de producción",
+        "en": "Production workflow stages"
+      },
+      "source": "Ruta /owners, sección Simple & Transparente: 4 pasos del flujo de producción"
+    }
+  ],
+  "media": [
+    {
+      "id": "hero-loop",
+      "src": "/portfolio/brands/punta-360/hero-loop.mp4",
+      "webm": "/portfolio/brands/punta-360/hero-loop.webm",
+      "poster": "/portfolio/brands/punta-360/hero-loop-poster.jpg",
+      "w": 1920,
+      "h": 1080,
+      "seconds": 4,
+      "note": "Clip panorámico oficial de villa residencial con paneo cinemático"
+    }
+  ],
+  "captures": [
+    {
+      "id": "hero-shot",
+      "src": "/portfolio/brands/punta-360/shots/hero.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://punta-360.vercel.app/",
+      "what": "Selector de portales de acceso en página principal",
+      "highlights": [
+        { "rect": [0.15, 0.35, 0.7, 0.45], "label": { "es": "Acceso por perfil", "en": "Profile-based entry" } }
+      ]
+    },
+    {
+      "id": "owners-shot",
+      "src": "/portfolio/brands/punta-360/shots/owners.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://punta-360.vercel.app/owners",
+      "what": "Portal de Propietarios con métricas comerciales destacadas",
+      "highlights": [
+        { "rect": [0.1, 0.85, 0.8, 0.12], "label": { "es": "Métricas de efectividad", "en": "Effectiveness metrics" } }
+      ]
+    },
+    {
+      "id": "disciplines-shot",
+      "src": "/portfolio/brands/punta-360/shots/disciplines.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://punta-360.vercel.app/owners",
+      "what": "Presentación de las 4 disciplinas de producción visual",
+      "highlights": [
+        { "rect": [0.1, 0.22, 0.8, 0.35], "label": { "es": "Cuatro disciplinas", "en": "Four disciplines" } }
+      ]
+    },
+    {
+      "id": "workflow-shot",
+      "src": "/portfolio/brands/punta-360/shots/workflow.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://punta-360.vercel.app/owners",
+      "what": "Flujo de trabajo en 4 pasos Simple y Transparente",
+      "highlights": [
+        { "rect": [0.08, 0.8, 0.84, 0.18], "label": { "es": "Flujo en 4 pasos", "en": "4-step workflow" } }
+      ]
+    },
+    {
+      "id": "enterprise-shot",
+      "src": "/portfolio/brands/punta-360/shots/enterprise.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://punta-360.vercel.app/enterprise",
+      "what": "Portal de Agencias y Agentes inmobiliarios",
+      "highlights": [
+        { "rect": [0.2, 0.2, 0.6, 0.4], "label": { "es": "Marketing para agentes", "en": "Agent marketing" } }
+      ]
+    },
+    {
+      "id": "plans-shot",
+      "src": "/portfolio/brands/punta-360/shots/plans.jpg",
+      "w": 1920,
+      "h": 1080,
+      "url": "https://punta-360.vercel.app/enterprise",
+      "what": "Estructura de planes de membresía mensual para agentes",
+      "highlights": [
+        { "rect": [0.18, 0.1, 0.64, 0.75], "label": { "es": "Planes escalables", "en": "Scalable tiers" } }
+      ]
+    }
+  ],
+  "captureTarget": "punta-360-site",
+  "architecture": {
+    "bundle": null,
+    "reason": "Plataforma comercial de presentación y catálogo multimedia para el sector inmobiliario de lujo con selector de perfiles y comparador HDR en frontend, sin backend de microservicios ni base de datos distribuida expuesta que justifique diagrama Archify"
+  },
+  "protagonist": {
+    "kind": "virtual-tour",
+    "reason": "El recorrido inmersivo 3D interactivo y escaneo espacial constituye la innovación central que elimina la distancia física para compradores internacionales"
+  },
+  "storyboard": [
+    {
+      "scene": "00-particle-open",
+      "kind": "particle-open",
+      "seconds": 7,
+      "uses": ["hero-loop"],
+      "copy": {
+        "es": "Punta360 · Marketing visual inmobiliario de lujo",
+        "en": "Punta360 · Luxury real estate visual marketing"
+      }
+    },
+    {
+      "scene": "01-comparison",
+      "kind": "before-after",
+      "seconds": 8.5,
+      "uses": ["enterprise-shot"],
+      "copy": {
+        "es": "Comparativa de impacto: fotografía HDR profesional versus captura amateur",
+        "en": "Impact comparison: professional HDR photography versus amateur capture"
+      }
+    },
+    {
+      "scene": "02-tour",
+      "kind": "virtual-tour",
+      "seconds": 24,
+      "uses": ["owners-shot", "disciplines-shot"],
+      "copy": {
+        "es": "Tours inmersivos 3D que permiten recorrer la residencia sin límites de distancia",
+        "en": "3D immersive tours allowing buyers to walk through estates without distance limits"
+      }
+    },
+    {
+      "scene": "03-workflow",
+      "kind": "checklist",
+      "seconds": 9.5,
+      "uses": ["workflow-shot"],
+      "copy": {
+        "es": "Cuatro fases operativas: agenda, producción visual, lanzamiento y cierre",
+        "en": "Four operational phases: booking, visual production, launch and closing"
+      }
+    },
+    {
+      "scene": "04-plans",
+      "kind": "pipeline-board",
+      "seconds": 9,
+      "uses": ["plans-shot"],
+      "copy": {
+        "es": "Planes estructurados para agentes y agencias con producción y drones",
+        "en": "Structured plans for agents and agencies with production and drones"
+      }
+    },
+    {
+      "scene": "05-metrics",
+      "kind": "outcome-facts",
+      "seconds": 7,
+      "uses": ["owners-shot"],
+      "copy": {
+        "es": "98 de cada 100 en efectividad comercial y ciclo promedio de 45 días",
+        "en": "98 out of 100 in sales effectiveness and 45-day average market cycle"
+      }
+    },
+    {
+      "scene": "06-signature",
+      "kind": "signature",
+      "seconds": 6.5,
+      "uses": ["hero-shot"],
+      "copy": {
+        "es": "Punta360 · Producción visual que transforma residencias en experiencias",
+        "en": "Punta360 · Visual production turning estates into experiences"
+      }
+    }
+  ],
+  "doNotClaim": [
+    "No afirmar que Punta360 procesa transacciones bancarias o escrituración notarial directa",
+    "No prometer ventas en menos de 24 horas ni retornos de inversión garantizados",
+    "No afirmar fabricación de drones propios ni propiedad de satélites espaciales",
+    "No mencionar bajo ningún concepto el nombre del país prohibido"
+  ]
+}
