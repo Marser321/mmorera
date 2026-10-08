@@ -51,3 +51,4 @@ next-env.d.ts
 .film-frames/
 .remotion-bin/
 /renders/
+/media-kit/
