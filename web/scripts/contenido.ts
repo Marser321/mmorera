@@ -12,12 +12,19 @@
  *   npx tsx scripts/contenido.ts hoy [AAAA-MM-DD]               qué publicar hoy, por plataforma (para el agente)
  *   npx tsx scripts/contenido.ts publicado <id> <plataforma> <url>
  *   npx tsx scripts/contenido.ts revision                       escribe contenido/REVISION.md
+ *   npx tsx scripts/contenido.ts chatgpt                        qué diapositivas de ChatGPT faltan
+ *   npx tsx scripts/contenido.ts importar <id> <salida> [carpeta]
+ *       toma las N imágenes más nuevas de la carpeta (por defecto, Descargas), en el
+ *       orden en que se descargaron, las recorta a la medida del formato y las guarda
+ *       como imagenes/gpt-<salida>-01.png, -02.png…
  */
-import { existsSync, readdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, statSync, writeFileSync } from "node:fs";
+import os from "node:os";
 import path from "node:path";
+import sharp from "sharp";
 import { SECCION_COPY, validarPieza } from "../src/data/social/validate";
-import { archivosEsperados } from "../src/data/social/render";
-import { PLATAFORMAS, type Estado, type Pieza, type Plataforma } from "../src/data/social/types";
+import { archivosChatGPT, archivosEsperados } from "../src/data/social/render";
+import { PLATAFORMAS, SOCIAL_FORMATS, type Estado, type Pieza, type Plataforma } from "../src/data/social/types";
 import { carpetaDe, CONTENIDO, entornoDe, guardarPieza, leerPieza, listarPiezas, revisarPieza, seccionCopy } from "./lib/piezas";
 
 function option(name: string) {
@@ -40,12 +47,21 @@ function sinErrores(id: string) {
   return errores.length === 0;
 }
 
-/** Plataformas de cada salida y los archivos que le tocan. */
+/**
+ * Plataformas de cada salida y los archivos que le tocan (rutas completas).
+ * Las salidas estáticas usan la versión de ChatGPT si está completa; si no,
+ * la de código. Los reels siempre son de código.
+ */
 function archivosPorPlataforma(pieza: Pieza) {
   const files = archivosEsperados(pieza);
+  const carpeta = carpetaDe(pieza.id);
   const out = new Map<Plataforma, string[]>();
   for (const salida of pieza.salidas) {
-    const mine = files.filter((file) => file.startsWith(`${salida.id}.`) || file.startsWith(`${salida.id}-`));
+    const gpt = archivosChatGPT(salida);
+    const gptListo = gpt.length > 0 && gpt.every((file) => existsSync(path.join(carpeta, "imagenes", file)));
+    const codigo = files.filter((file) => file.startsWith(`${salida.id}.`) || file.startsWith(`${salida.id}-`));
+    // El carrusel en video (si lo hay) sigue saliendo del código.
+    const mine = gptListo ? [...gpt.map((file) => path.join(carpeta, "imagenes", file)), ...codigo.filter((file) => file.endsWith(".mp4")).map((file) => path.join(carpeta, "salida", file))] : codigo.map((file) => path.join(carpeta, "salida", file));
     for (const p of salida.para) out.set(p, [...(out.get(p) ?? []), ...mine]);
   }
   return out;
@@ -125,7 +141,7 @@ switch (command) {
           continue;
         }
         console.log(`  ${plataforma}:`);
-        for (const file of files) console.log(`    subir  ${path.join(carpetaDe(id), "salida", file)}`);
+        for (const file of files) console.log(`    subir  ${file}${file.includes(`${path.sep}imagenes${path.sep}gpt-`) ? "  (versión ChatGPT)" : ""}`);
         console.log(`    texto  ${SECCION_COPY[plataforma]} de ${path.join(carpetaDe(id), "copy.md")}`);
         const section = seccionCopy(copy, SECCION_COPY[plataforma]);
         if (section) console.log(section.split("\n").map((line) => `      ${line}`).join("\n"));
@@ -155,6 +171,49 @@ switch (command) {
     console.log(`✔ ${path.join(CONTENIDO, "REVISION.md")}`);
     break;
   }
+  case "chatgpt": {
+    for (const id of listarPiezas()) {
+      const pieza = leerPieza(id);
+      if (pieza.estado === "idea" || pieza.estado === "publicado") continue;
+      for (const salida of pieza.salidas) {
+        const gpt = archivosChatGPT(salida);
+        if (!gpt.length) continue;
+        const faltan = gpt.filter((file) => !existsSync(path.join(carpetaDe(id), "imagenes", file)));
+        console.log(`${faltan.length ? "·" : "✔"} ${id} · ${salida.id}: ${gpt.length - faltan.length}/${gpt.length}${faltan.length ? `  → pedidos en ${path.join(carpetaDe(id), "chatgpt.md")}` : ""}`);
+      }
+    }
+    break;
+  }
+  case "importar": {
+    const [id, salidaId, carpeta = path.join(os.homedir(), "Downloads")] = args;
+    const pieza = leerPieza(id);
+    const salida = pieza.salidas.find((item) => item.id === salidaId);
+    if (!salida) throw new Error(`${id} no tiene la salida "${salidaId}"`);
+    const destinos = archivosChatGPT(salida);
+    if (!destinos.length) throw new Error(`${salidaId} no es una salida para ChatGPT`);
+    const formato = salida.plantilla === "carrusel" || salida.plantilla === "desafio" || salida.plantilla === "imagen" ? salida.formato : "feed";
+    const { width, height } = SOCIAL_FORMATS[formato];
+    // Las N más nuevas, en el orden en que se descargaron.
+    const candidatas = readdirSync(carpeta)
+      .filter((file) => /\.(png|jpe?g|webp)$/i.test(file))
+      .map((file) => ({ file: path.join(carpeta, file), time: statSync(path.join(carpeta, file)).mtimeMs }))
+      .sort((a, b) => b.time - a.time)
+      .slice(0, destinos.length)
+      .reverse();
+    if (candidatas.length < destinos.length) throw new Error(`En ${carpeta} hay ${candidatas.length} imágenes; la salida necesita ${destinos.length}`);
+    mkdirSync(path.join(carpetaDe(id), "imagenes"), { recursive: true });
+    void (async () => {
+      for (const [index, candidata] of candidatas.entries()) {
+        const destino = path.join(carpetaDe(id), "imagenes", destinos[index]);
+        await sharp(candidata.file).resize(width, height, { fit: "cover", position: "centre" }).png().toFile(destino);
+        console.log(`  ${path.basename(candidata.file)} → imagenes/${destinos[index]}`);
+      }
+      const errores = revisarPieza(id).problemas.filter((p) => p.nivel === "error" && p.donde.startsWith(`salidas.${salidaId}`));
+      for (const p of errores) console.log(`  error  ${p.donde}: ${p.mensaje}`);
+      console.log(errores.length ? "✖ revisá los errores de arriba" : `✔ ${id} · ${salidaId}: versión de ChatGPT importada`);
+    })();
+    break;
+  }
   default:
-    console.log("Comandos: estado · listo <id> · borrador <id> · aprobar <id…> · hoy [fecha] · publicado <id> <plataforma> <url> · revision");
+    console.log("Comandos: estado · listo <id> · borrador <id> · aprobar <id…> · hoy [fecha] · publicado <id> <plataforma> <url> · revision · chatgpt · importar <id> <salida> [carpeta]");
 }

@@ -3,7 +3,7 @@ import { FORBIDDEN_CLAIMS } from "@/data/films/flagships/flagshipAssertions";
 import { FLAGSHIP_SLUGS } from "@/data/films/flagships/slugs";
 import { PROJECT_CASES } from "@/data/projectCases";
 import { plain, reelBeatLayout, reelCasoLayout, reelFirmaLayout, slideLayout, type ImageSizes } from "./layout";
-import { archivosEsperados } from "./render";
+import { archivosChatGPT, archivosEsperados } from "./render";
 import { diapositivasDe, reelCasoBeats, reelTextoBeats, videoSeconds } from "./timing";
 import { DURACION_MAXIMA, ESTADOS, PLATAFORMAS, RAMAS, SOCIAL_FORMATS, type Diapositiva, type Estado, type Pieza, type Plataforma, type Salida } from "./types";
 
@@ -24,6 +24,8 @@ export type Entorno = {
   imagen: (slot: string) => { w: number; h: number } | undefined;
   /** Archivos presentes en salida/. */
   salida: string[];
+  /** Medida de un archivo de imagenes/ por su nombre (las diapositivas de ChatGPT), si existe. */
+  archivoImagen?: (file: string) => { w: number; h: number } | undefined;
 };
 
 const ESTADO_INDEX = (estado: Estado) => ESTADOS.indexOf(estado);
@@ -177,6 +179,19 @@ export function validarPieza(raw: unknown, entorno: Entorno): Problema[] {
               ? reelBeatLayout(beat.texto, "remate")
               : reelCasoLayout(beat.texto, beat.kicker ?? "", Boolean(beat.placa));
         for (const problem of layoutProblems(layout.blocks, layout.safe)) error(`${donde}.${beat.id}`, problem);
+      }
+    }
+
+    // Versión de ChatGPT: o el juego completo, con la proporción del formato, o ninguna (se usa el código).
+    const gpt = archivosChatGPT(salida);
+    if (gpt.length) {
+      const want = SOCIAL_FORMATS[formato];
+      const present = gpt.filter((file) => entorno.archivoImagen?.(file));
+      if (present.length === 0) aviso(donde, `versión de ChatGPT pendiente (${gpt.length} diapositiva/s): mientras falte se publica la de código`);
+      else if (present.length < gpt.length) error(donde, `faltan ${gpt.length - present.length} de ${gpt.length} diapositivas de ChatGPT (${gpt.filter((file) => !present.includes(file)).join(", ")})`);
+      for (const file of present) {
+        const have = entorno.archivoImagen!(file)!;
+        if (Math.abs(have.w / have.h / (want.width / want.height) - 1) > 0.03) error(donde, `${file} mide ${have.w}×${have.h}; el formato pide ${want.width}×${want.height}`);
       }
     }
 

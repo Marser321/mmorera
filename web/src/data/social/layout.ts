@@ -382,7 +382,8 @@ export type BeatRol = "gancho" | "pulso" | "remate";
 /** Un pulso del reel de texto: rótulo opcional y la frase grande, centrados en la zona segura. */
 export function reelBeatLayout(value: string, rol: BeatRol, kicker?: string): SlideLayout {
   const safe = socialSafeArea("reel");
-  const ladder = rol === "pulso" ? [112, 104, 96, 88, 80, 72, 64, 58, 52] : [128, 116, 108, 100, 92, 84, 76, 68, 60];
+  // Tipografía de reel: grande, pocas palabras por línea.
+  const ladder = rol === "pulso" ? [140, 128, 120, 112, 104, 96, 88, 80, 72, 64, 58, 52] : [156, 144, 132, 120, 112, 104, 96, 88, 80, 72, 64, 58];
   const maxLines = rol === "pulso" ? 7 : 6;
   // El contador va arriba; la frase se centra en lo que queda.
   const counterH = textHeight(SPEC.reel.kicker, 1, LH.mono);
@@ -412,7 +413,7 @@ export function reelCasoLayout(value: string, kicker: string, conPlaca: boolean)
     elements.push({ kind: "image", box: plate, slot: "placa", order: 0 });
     area = { x: safe.x, y: plate.y + plate.h + 56, w: safe.w, h: safe.y + safe.h - (plate.y + plate.h + 56) };
   }
-  const ladder = conPlaca ? [84, 76, 70, 64, 58, 54, 50, 46] : [120, 108, 100, 92, 84, 76, 68, 60];
+  const ladder = conPlaca ? [96, 88, 80, 72, 66, 60, 54, 50, 46] : [144, 132, 120, 112, 104, 96, 88, 80, 72, 64, 58];
   const fit = pickStep(ladder.length, (step) =>
     stack(
       [

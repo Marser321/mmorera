@@ -134,6 +134,11 @@ Ordenadas por impacto y esfuerzo:
   - `scripts/lib/remotionBundle.ts`, compartido con `render-films.ts`.
 - **Primeras 2 semanas producidas** (12 al 25 de octubre, 14 piezas). Las semanas 3 y 4 quedan encargadas a Gemini (`contenido/encargos/`).
 - **`web/vercel.json`:** un commit que no toca `web/` no redespliega el sitio (compara contra el último despliegue).
+- **Versión 2 del kit** (la primera le pareció a Mario demasiado sobria). Sigue en blanco y negro, pero:
+  - **Reels:** cada corte entra con una transición (golpe, barrido, zoom o flash), los números cuentan, una palabra o un número gigante hace de eco y hay grano de película.
+  - **Ritmo:** pulsos más cortos, tipografía más grande y barra de progreso por segmentos.
+  - **Carruseles:** alternan blanco y negro, con número gigante, un hilo continuo entre diapositivas y "Deslizá".
+- **ChatGPT diseña las piezas estáticas completas**, con el código de respaldo: `scripts/chatgpt-prompts.ts`, `contenido.ts chatgpt` e `importar`, y el manual `contenido/agentes/chatgpt.md`. Los prompts para pegar están en `contenido/agentes/PROMPT-*.md`.
 
 ## 6. Decisiones de Mario (2026-10-07)
 

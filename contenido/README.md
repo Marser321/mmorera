@@ -14,7 +14,8 @@ calendario/   qué sale cada día: una pieza madre por día, con sus versiones p
 piezas/<AAAA-MM-DD>-<slug>/
    pieza.json   los datos que anima el código (textos, diapositivas, pulsos, imágenes)
    copy.md      el texto de cada plataforma, listo para pegar
-   imagenes/    lo que genera ChatGPT (no va a git)
+   chatgpt.md   los pedidos para que ChatGPT diseñe sus diapositivas (se genera solo)
+   imagenes/    lo que genera ChatGPT: diapositivas gpt-*.png y fotos sueltas (no va a git)
    salida/      los PNG y MP4 renderizados (no va a git)
    │
 agentes/      el manual de cada agente: publicador, imágenes y Gemini
@@ -67,6 +68,16 @@ Las plantillas están en `web/src/components/social/` y sus datos en `web/src/da
 | `desafio` | 4:5 | El "desafío del mes" de LinkedIn: contexto → problema → decisión → resultado → aprendizaje. |
 | `imagen` | cualquiera | Una sola diapositiva: tarjeta de opinión, encuesta, sorteo, etc. |
 
+**Las piezas estáticas** (carrusel, desafío, imagen) las diseña **ChatGPT** completas, con `marca/chatgpt-diseno.md`. El código genera siempre una versión de respaldo. Para trabajar con ellas:
+
+```bash
+npx tsx scripts/chatgpt-prompts.ts <id>                 # escribe los pedidos en piezas/<id>/chatgpt.md
+npx tsx scripts/contenido.ts chatgpt                    # qué falta
+npx tsx scripts/contenido.ts importar <id> <salida>     # trae las descargas, recorta y nombra
+```
+
+Si la versión de ChatGPT está completa, el publicador usa esa; si no, la de código.
+
 ## Relación con `content-os/` (anterior)
 
 `content-os/` (sin versionar) es un sistema anterior: un radar de noticias de IA y plantillas de guion para videos grabados a cámara.
@@ -75,11 +86,16 @@ Las plantillas están en `web/src/components/social/` y sus datos en `web/src/da
 - **No sirve como fuente de casos.** Su `docs/matriz-social-autoridad.md` tiene datos sin verificar (un nombre equivocado y cifras sin fuente). Para los casos, las fuentes son solo los dossiers de `web/docs/films/dossiers/` y `web/src/data/capabilityCases.ts`.
 - **El publicador es `agentes/publicador.md`,** no el `publisher_agent.py` de content-os.
 
+## Prompts listos para pegar
+
+- **Gemini:** `agentes/PROMPT-gemini.md` (producción de piezas y plantillas animadas nuevas).
+- **Agente del navegador:** `agentes/PROMPT-navegador.md`, con dos prompts: A, diseño en ChatGPT; B, publicación diaria.
+
 ## Quién hace qué
 
 - **Mario:** aprueba, ajusta su postura en las opiniones, confirma premios y bases de los sorteos.
 - **Claude:** construye y cuida las plantillas, escribe y revisa piezas, revisa lo que hace Gemini.
 - **Gemini:** produce piezas a partir del calendario con las plantillas, las valida y las renderiza (`agentes/gemini.md`).
 - **El agente del navegador:**
-  - genera imágenes en ChatGPT (`agentes/imagenes.md`);
+  - diseña en ChatGPT los carruseles y piezas estáticas, y genera las fotos (`agentes/chatgpt.md`);
   - publica lo aprobado (`agentes/publicador.md`).

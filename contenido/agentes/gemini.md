@@ -8,6 +8,31 @@ Producís contenido para las redes de Mario con un sistema ya armado: plantillas
 - `../marca/voz.md`
 - `../marca/reglas.md`
 
+## Estándar creativo (lo que separa una pieza que se mira de una que se pasa)
+
+**Reels** (`reel-texto` y `reel-caso`):
+- **Gancho** de hasta 10 palabras, que se entiende en 1,5 s. Elegí uno de estos recursos:
+  - una contradicción ("Dejá de pedir una web");
+  - una escena con hora o lugar ("Son las 23:45");
+  - una confesión ("Mi web se veía alejada y no lo sabía");
+  - un número verificable.
+
+  Nada de preguntas genéricas ("¿Sabías que…?").
+- **De 3 a 5 pulsos:** una idea por pulso y hasta 14 palabras cada uno.
+  - El `kicker` de cada pulso va en 1 a 3 palabras ("El síntoma", "La causa", "El arreglo").
+  - Marcá con `*asteriscos*` de 1 a 3 palabras clave por pulso: se invierten y saltan. Más que eso apaga el efecto.
+- **Números verificables** sueltos ("26 tablas", "7 campos"): el motor los anima contando. Usalos cuando la fuente los tenga; nunca los inventes.
+- **Remate** de hasta 12 palabras, memorable, con su énfasis. Es el pulso que se invierte.
+- **CTA** concreto: seguir para qué, guardar o comentar una palabra.
+
+**Carruseles** (`carrusel` y `desafio`):
+- **Portada:** el gancho en hasta 9 palabras y la bajada en una línea.
+- **Contenido:** de 3 a 7 diapositivas, una idea por diapositiva. **Mezclá tipos**: lista, comparación, cita, texto. Nunca más de dos "texto" seguidas.
+- **Cierre:** un pedido concreto ("Guardalo", "Comentá cuál elegís").
+- **Diseño:** la versión principal la diseña ChatGPT. Vos generás sus pedidos con `npx tsx scripts/chatgpt-prompts.ts <id>`, y el código produce el respaldo.
+
+**Antes de dar una pieza por lista,** mirala como alguien que hace scroll. Si el gancho no frena el dedo, se reescribe el gancho, no el resto.
+
 ## Carril 1 · Piezas a partir del calendario (el más común)
 
 Tomás una fila del calendario (`../calendario/AAAA-MM.md`), o un encargo de `../encargos/`, y la convertís en una pieza.
@@ -37,20 +62,24 @@ Tomás una fila del calendario (`../calendario/AAAA-MM.md`), o un encargo de `..
    - Si un texto "no entra", acortalo.
    - Si aparece "honestidad", sacá la cifra o la promesa.
 4. **Si la pieza pide imágenes,** escribí el `prompt` de cada slot siguiendo `../marca/imagenes-chatgpt.md`. Las genera el agente del navegador; vos no las inventes.
-5. **Renderizá:**
+5. **Generá los pedidos de ChatGPT** para sus salidas estáticas (carrusel, desafío, imagen). Los ejecuta el agente del navegador (`chatgpt.md`):
+   ```bash
+   npx tsx scripts/chatgpt-prompts.ts <id>
+   ```
+6. **Renderizá** (los reels y la versión de respaldo de lo estático):
    ```bash
    npx tsx scripts/render-social.ts <id> --stills   # primero los PNG
    npx tsx scripts/render-social.ts <id>            # después todo, con los MP4
    ```
-6. **Revisá cada PNG** en `salida/`:
+7. **Revisá cada PNG** en `salida/`:
    - nada cortado ni pegado al borde;
    - el énfasis (`*palabra*`) donde corresponde;
    - el ritmo del reel, mirando el MP4 entero.
-7. **Si todo está bien:**
+8. **Si todo está bien:**
    ```bash
    npx tsx scripts/contenido.ts listo <id>
    ```
-8. **Reportá en el encargo:** qué piezas quedaron listas, qué avisos quedan y qué dudas tenés.
+9. **Reportá en el encargo:** qué piezas quedaron listas, qué avisos quedan y qué dudas tenés.
 
 ## Carril 2 · Plantillas nuevas (con revisión de Claude)
 

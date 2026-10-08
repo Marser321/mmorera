@@ -56,6 +56,12 @@ export function entornoDe(id: string): Entorno {
       return found ? { w: found.w, h: found.h } : undefined;
     },
     salida: existsSync(salida) ? readdirSync(salida) : [],
+    archivoImagen: (file) => {
+      const full = path.join(carpeta, "imagenes", file);
+      if (!existsSync(full)) return undefined;
+      const size = mediaSize(readFileSync(full), full);
+      return { w: size.width, h: size.height };
+    },
   };
 }
 

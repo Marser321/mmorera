@@ -23,11 +23,18 @@ Publicás en LinkedIn, Instagram, TikTok, YouTube Shorts y X, desde las sesiones
    - Un carrusel son varios PNG en orden: `-01`, `-02`, ….
    - Un reel es el MP4.
    - Como portada del reel usá `<salida>-portada.png`, si la plataforma lo permite.
-2. **Pegá el texto de la sección de esa plataforma**, tal cual. No lo reescribas ni le agregues emojis o hashtags.
-3. **Texto alternativo:** si la plataforma lo pide, usá la línea "Alt:" de `copy.md`. Si no hay, describí la imagen en una frase sobria.
-4. **Encuestas:** creá la encuesta nativa con las opciones de `copy.md`, en el mismo orden. En Instagram, en historias con el sticker de encuesta, sobre la imagen 9:16.
-5. **Primer comentario:** si `copy.md` trae "Primer comentario", publicalo vos apenas sale la pieza.
-6. **Publicá. Copiá la URL de la publicación y registrala:**
+
+   `hoy` ya elige la versión: la de ChatGPT (`imagenes/gpt-…`) si está completa; si no, la de código (`salida/`).
+2. **Audio en Instagram, TikTok y Shorts:** agregá un audio de la **biblioteca de la propia plataforma**:
+   - instrumental, con ritmo marcado;
+   - a volumen bajo, para que no tape la lectura.
+
+   Nunca música de otra fuente. En LinkedIn y X, sin audio.
+3. **Pegá el texto de la sección de esa plataforma**, tal cual. No lo reescribas ni le agregues emojis o hashtags.
+4. **Texto alternativo:** si la plataforma lo pide, usá la línea "Alt:" de `copy.md`. Si no hay, describí la imagen en una frase sobria.
+5. **Encuestas:** creá la encuesta nativa con las opciones de `copy.md`, en el mismo orden. En Instagram, en historias con el sticker de encuesta, sobre la imagen 9:16.
+6. **Primer comentario:** si `copy.md` trae "Primer comentario", publicalo vos apenas sale la pieza.
+7. **Publicá. Copiá la URL de la publicación y registrala:**
    ```bash
    npx tsx scripts/contenido.ts publicado <id> <plataforma> <url>
    ```

@@ -64,12 +64,21 @@ export type Pulso = { texto: string; kicker?: string };
 
 type SalidaBase = { id: string; para: Plataforma[] };
 
+/**
+ * Quién diseña las piezas estáticas (carrusel, desafío, imagen): ChatGPT, con
+ * el sistema de diseño de contenido/marca/chatgpt-diseno.md y el código como
+ * respaldo (por defecto), o solo el código.
+ */
+export type Generador = "chatgpt" | "codigo";
+type Estatica = { generador?: Generador };
+
 export type Salida =
-  | (SalidaBase & { plantilla: "carrusel"; formato: "feed" | "cuadrado"; tono?: Tono; diapositivas: Diapositiva[]; video?: boolean })
-  | (SalidaBase & { plantilla: "imagen"; formato: Formato; tono?: Tono; diapositiva: Diapositiva })
+  | (SalidaBase & Estatica & { plantilla: "carrusel"; formato: "feed" | "cuadrado"; tono?: Tono; diapositivas: Diapositiva[]; video?: boolean })
+  | (SalidaBase & Estatica & { plantilla: "imagen"; formato: Formato; tono?: Tono; diapositiva: Diapositiva })
   | (SalidaBase & { plantilla: "reel-texto"; tono?: Tono; gancho: string; pulsos: Pulso[]; remate: string; cta: string })
   | (SalidaBase & { plantilla: "reel-caso"; caso: string; gancho: string; decisiones: string[]; cierre: string })
-  | (SalidaBase & {
+  | (SalidaBase &
+      Estatica & {
       plantilla: "desafio";
       formato: "feed" | "cuadrado";
       tono?: Tono;

@@ -32,5 +32,6 @@ contenido/**/imagenes/*.png
 contenido/**/imagenes/*.jpg
 contenido/**/imagenes/*.jpeg
 contenido/**/imagenes/*.webp
-# Se regenera con `npx tsx scripts/contenido.ts revision`
+# Se regeneran: `npx tsx scripts/contenido.ts revision` y `npx tsx scripts/chatgpt-prompts.ts <id>`
 contenido/REVISION.md
+contenido/piezas/*/chatgpt.md

@@ -91,6 +91,18 @@ export function trabajosDe(pieza: Pieza, fuentes: Fuentes): Trabajo[] {
   return pieza.salidas.flatMap((salida) => trabajosDeSalida(salida, fuentes));
 }
 
+/** ¿Esta salida la diseña ChatGPT (con el código de respaldo)? */
+export function usaChatGPT(salida: Salida) {
+  return (salida.plantilla === "carrusel" || salida.plantilla === "desafio" || salida.plantilla === "imagen") && salida.generador !== "codigo";
+}
+
+/** Imágenes que entrega ChatGPT para una salida: imagenes/gpt-<salida>-01.png, -02.png… */
+export function archivosChatGPT(salida: Salida): string[] {
+  if (!usaChatGPT(salida)) return [];
+  const total = diapositivasDe(salida).length;
+  return Array.from({ length: total }, (_, index) => `gpt-${salida.id}-${two(index + 1)}.png`);
+}
+
 /** Archivos que deja el render de una pieza (para exigirlos cuando está "lista"). */
 export function archivosEsperados(pieza: Pieza): string[] {
   const vacio: Fuentes = { imagenes: {}, nombreCaso: () => "", placa: () => "" };
