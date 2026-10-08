@@ -1,0 +1,12 @@
+{
+  "id": "2026-01-01-plantilla-sorteo",
+  "fecha": "2026-01-01",
+  "rama": "comunidad",
+  "serie": "Sorteo del mes",
+  "titulo": "Sorteo (4:5 y 9:16) — solo con bases aprobadas por Mario",
+  "estado": "idea",
+  "salidas": [
+    { "id": "sorteo", "plantilla": "imagen", "formato": "feed", "para": ["instagram", "linkedin"], "diapositiva": { "tipo": "sorteo", "premio": "Una landing page lista para publicar", "pasos": ["Seguí la cuenta.", "Comentá qué negocio tenés y qué tendría que lograr la landing.", "Compartí la publicación en tus historias (opcional)."], "cierre": "Cierra el domingo 8 de noviembre a las 23:59", "bases": "mmorera.agency/sorteos/landing-noviembre" } },
+    { "id": "historia", "plantilla": "imagen", "formato": "reel", "para": ["instagram"], "diapositiva": { "tipo": "sorteo", "premio": "Una landing page lista para publicar", "pasos": ["Seguí la cuenta.", "Comentá qué negocio tenés y qué tendría que lograr la landing."], "cierre": "Cierra el domingo 8 de noviembre a las 23:59", "bases": "mmorera.agency/sorteos/landing-noviembre" } }
+  ]
+}

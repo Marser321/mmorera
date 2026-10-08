@@ -1,0 +1,60 @@
+{
+  "id": "2026-10-15-web-alejada",
+  "fecha": "2026-10-15",
+  "rama": "oficio",
+  "serie": "Detrás de escena",
+  "titulo": "Mi web se veía alejada en los celulares y no lo sabía",
+  "estado": "borrador",
+  "fuente": {
+    "tipo": "sitio",
+    "nota": "Auditoría del 2026-10-08: /casos-de-exito medía 1560 px en el teléfono por textos sr-only fuera de la tira desplazable (docs/IMPECCABLE-AUDITORIA.md)."
+  },
+  "salidas": [
+    {
+      "id": "reel",
+      "plantilla": "reel-texto",
+      "para": [
+        "instagram",
+        "tiktok",
+        "shorts",
+        "x"
+      ],
+      "gancho": "Mi web se veía *alejada* en los celulares. Y no lo sabía.",
+      "pulsos": [
+        {
+          "kicker": "El síntoma",
+          "texto": "Una página medía 1560 píxeles de ancho en un teléfono de 390."
+        },
+        {
+          "kicker": "La causa",
+          "texto": "Textos invisibles para lectores de pantalla, ubicados fuera de su contenedor."
+        },
+        {
+          "kicker": "Por qué no lo vi",
+          "texto": "En la computadora no pasaba nada. Solo en el teléfono."
+        },
+        {
+          "kicker": "El arreglo",
+          "texto": "Una propiedad de CSS. *Una línea.*"
+        }
+      ],
+      "remate": "Revisá tu web en un teléfono de verdad. *Hoy.*",
+      "cta": "Seguime: cuento lo que encuentro al revisar sitios"
+    },
+    {
+      "id": "desafio",
+      "plantilla": "desafio",
+      "formato": "feed",
+      "para": [
+        "linkedin"
+      ],
+      "titulo": "La página que nadie veía bien en el teléfono",
+      "contexto": "Pasé mi propio sitio por una auditoría de diseño y accesibilidad: seis páginas, en escritorio y en teléfono.",
+      "problema": "La página de trabajos medía 1560 píxeles de ancho en un teléfono de 390. El navegador alejaba todo para que entrara.",
+      "decision": "Busqué la causa en vez de esconder el síntoma: textos para lectores de pantalla quedaban fuera de su contenedor. Una línea de CSS los devolvió adentro.",
+      "resultado": "La página vuelve a medir 390 píxeles. Y sumé el control a la revisión de cada cambio.",
+      "aprendizaje": "Lo que no se ve en la computadora también se mide. Revisá en un teléfono de verdad antes de dar algo por terminado.",
+      "enlace": "mmorera.agency/casos-de-exito"
+    }
+  ]
+}

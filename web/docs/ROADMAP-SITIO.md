@@ -120,7 +120,22 @@ Ordenadas por impacto y esfuerzo:
   - Los capítulos de films que decían "Métricas" o "Impacto" ahora dicen "Lo construido".
 - **Impeccable** (skill de diseño): instalada y aplicada. Informe, puntaje antes/después y propuestas grandes pendientes en `docs/IMPECCABLE-AUDITORIA.md`. El arreglo principal: `/casos-de-exito` medía 1560 px de ancho en el teléfono, también en producción.
 
-## 5. Decisiones de Mario (2026-10-07)
+## 5. Sistema de contenido para redes (2026-10-08)
+
+- **`contenido/` en la raíz:** la fuente de las redes.
+  - Tiene marca, voz, reglas, ramas, calendario, piezas, manuales de agentes (publicador, imágenes, Gemini), encargos y métricas.
+  - Decisiones de Mario: publicar solo lo aprobado, en LinkedIn, Instagram, TikTok, Shorts y X, en español, a diario.
+- **Kit de animación para redes:**
+  - `src/components/social/`, `src/data/social/` (layout, ritmo, render y validador, con tests) y `src/remotion/socialRoot.tsx`.
+  - Plantillas: `reel-texto`, `reel-caso`, `carrusel` (también en video), `desafio` e `imagen` (tarjeta, encuesta, sorteo).
+  - Estética: blanco y negro, Familjen Grotesk y Space Mono, "lento con pulso".
+- **Scripts:**
+  - `render-social.ts`, `check-pieza.ts` y `contenido.ts` (estados, aprobación, lista del día, revisión).
+  - `scripts/lib/remotionBundle.ts`, compartido con `render-films.ts`.
+- **Primeras 2 semanas producidas** (12 al 25 de octubre, 14 piezas). Las semanas 3 y 4 quedan encargadas a Gemini (`contenido/encargos/`).
+- **`web/vercel.json`:** un commit que no toca `web/` no redespliega el sitio (compara contra el último despliegue).
+
+## 6. Decisiones de Mario (2026-10-07)
 
 - **Casos de archivo:** film insignia completo (70–80 s) para cada uno.
 - **LNB y Hub Profesional AI:** film con lo que hay hoy en vivo, corrigiendo el caso.

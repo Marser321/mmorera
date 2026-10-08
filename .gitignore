@@ -25,3 +25,12 @@ public/_showreel/
 LyB Elite Wash Details/
 content-os/
 .vscode/
+
+# Contenido de redes: imágenes generadas y renders (binarios; los sincroniza OneDrive)
+contenido/**/salida/
+contenido/**/imagenes/*.png
+contenido/**/imagenes/*.jpg
+contenido/**/imagenes/*.jpeg
+contenido/**/imagenes/*.webp
+# Se regenera con `npx tsx scripts/contenido.ts revision`
+contenido/REVISION.md

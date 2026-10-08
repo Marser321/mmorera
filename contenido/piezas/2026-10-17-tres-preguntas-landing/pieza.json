@@ -1,0 +1,37 @@
+{
+  "id": "2026-10-17-tres-preguntas-landing",
+  "fecha": "2026-10-17",
+  "rama": "oficio",
+  "serie": "Valor corto",
+  "titulo": "Tres preguntas antes de pedir una landing",
+  "estado": "borrador",
+  "salidas": [
+    {
+      "id": "reel",
+      "plantilla": "reel-texto",
+      "para": [
+        "instagram",
+        "tiktok",
+        "shorts",
+        "x"
+      ],
+      "gancho": "Antes de pedir una landing, *respondé esto*.",
+      "pulsos": [
+        {
+          "kicker": "Uno",
+          "texto": "¿Qué tiene que pasar después de que alguien completa el formulario?"
+        },
+        {
+          "kicker": "Dos",
+          "texto": "¿Quién responde, en cuánto tiempo y con qué herramienta?"
+        },
+        {
+          "kicker": "Tres",
+          "texto": "¿Cómo vas a saber si funcionó, sin inventar números?"
+        }
+      ],
+      "remate": "Una landing es la puerta. Lo que importa es *la casa*.",
+      "cta": "Guardalo para tu próximo proyecto"
+    }
+  ]
+}

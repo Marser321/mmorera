@@ -1,0 +1,107 @@
+{
+  "id": "2026-10-14-lead-23-45",
+  "fecha": "2026-10-14",
+  "rama": "sistemas",
+  "serie": "Así funciona",
+  "titulo": "Qué pasa con un lead que llega a las 23:45",
+  "estado": "borrador",
+  "fuente": {
+    "tipo": "sitio",
+    "slug": "ad-media-solution",
+    "capitulo": "speed-to-lead",
+    "nota": "Caso de uso de ejemplo de /sistemas (after-hours-lead); visto en AD Media"
+  },
+  "ejemplo": true,
+  "imagenes": [
+    {
+      "slot": "noche",
+      "formato": "feed",
+      "prompt": "Un escritorio vacío de noche, una sola lámpara encendida iluminando una silla de oficina vacía, el resto en negro."
+    }
+  ],
+  "salidas": [
+    {
+      "id": "carrusel",
+      "plantilla": "carrusel",
+      "formato": "feed",
+      "para": [
+        "instagram",
+        "linkedin"
+      ],
+      "diapositivas": [
+        {
+          "tipo": "portada",
+          "kicker": "Así funciona",
+          "titulo": "Qué pasa con un lead que llega a las *23:45*",
+          "bajada": "El mismo formulario, con y sin sistema."
+        },
+        {
+          "tipo": "imagen",
+          "kicker": "La escena",
+          "imagen": "noche",
+          "titulo": "Nadie mira el correo a esa hora",
+          "pie": "Y la persona sigue buscando."
+        },
+        {
+          "tipo": "lista",
+          "kicker": "El sistema",
+          "titulo": "Tres pasos que no necesitan a nadie despierto",
+          "items": [
+            "El formulario crea el contacto en el CRM.",
+            "Sale una respuesta con el siguiente paso y un horario para hablar.",
+            "Queda una tarea para el equipo a primera hora."
+          ]
+        },
+        {
+          "tipo": "comparacion",
+          "kicker": "Antes y después",
+          "titulo": "La misma consulta",
+          "antes": {
+            "rotulo": "Sin sistema",
+            "texto": "Se responde al otro día, cuando quizás ya habló con otro."
+          },
+          "despues": {
+            "rotulo": "Con sistema",
+            "texto": "Recibe respuesta en el momento y un horario para hablar (datos de ejemplo)."
+          }
+        },
+        {
+          "tipo": "cierre",
+          "titulo": "¿Tu formulario contesta de noche?",
+          "cta": "Guardalo para revisarlo con tu equipo.",
+          "enlace": "mmorera.agency/sistemas"
+        }
+      ]
+    },
+    {
+      "id": "reel",
+      "plantilla": "reel-texto",
+      "para": [
+        "tiktok",
+        "shorts",
+        "x"
+      ],
+      "gancho": "Son las *23:45*. Alguien completa tu formulario.",
+      "pulsos": [
+        {
+          "kicker": "Sin sistema",
+          "texto": "El correo espera hasta mañana. La persona, no."
+        },
+        {
+          "kicker": "Con sistema",
+          "texto": "El contacto entra al CRM en el momento."
+        },
+        {
+          "kicker": "Paso dos",
+          "texto": "Recibe una respuesta con el siguiente paso y un horario."
+        },
+        {
+          "kicker": "Paso tres",
+          "texto": "Tu equipo encuentra la tarea a primera hora (datos de ejemplo)."
+        }
+      ],
+      "remate": "Tu formulario también trabaja de noche. *O no trabaja.*",
+      "cta": "Seguime: explico sistemas así cada miércoles"
+    }
+  ]
+}

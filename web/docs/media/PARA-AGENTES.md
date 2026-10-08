@@ -1,5 +1,7 @@
 # Media kit de los casos · guía para agentes
 
+> **Contenido diario para redes (posts, carruseles, reels, encuestas, sorteos):** la fuente es `contenido/` en la raíz del repo. Empezá por `contenido/README.md`. Esta guía cubre el media kit de los casos (films completos, recortes y formatos por plataforma), que las piezas de `contenido/` pueden usar.
+
 Material listo para subir los casos de éxito a portfolios y redes: Upwork, Fiverr, LinkedIn, Behance, Dribbble, Contra, Instagram, TikTok, YouTube y X.
 
 - **Carpeta:** `C:\Users\morer\OneDrive\Desktop\MMORERA\web\media-kit\`. Está fuera de git.

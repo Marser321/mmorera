@@ -1,0 +1,76 @@
+{
+  "id": "2026-10-16-encuesta-automatizar",
+  "fecha": "2026-10-16",
+  "rama": "comunidad",
+  "serie": "Encuesta del viernes",
+  "titulo": "¿Qué tarea te gustaría dejar de hacer a mano primero?",
+  "estado": "borrador",
+  "salidas": [
+    {
+      "id": "encuesta",
+      "plantilla": "imagen",
+      "formato": "feed",
+      "para": [
+        "linkedin",
+        "x"
+      ],
+      "diapositiva": {
+        "tipo": "encuesta",
+        "pregunta": "¿Qué tarea te gustaría dejar de hacer a mano primero?",
+        "opciones": [
+          "Responder consultas",
+          "Agendar turnos",
+          "Seguimiento post-venta",
+          "Reportes semanales"
+        ]
+      }
+    },
+    {
+      "id": "historia",
+      "plantilla": "imagen",
+      "formato": "reel",
+      "para": [
+        "instagram"
+      ],
+      "diapositiva": {
+        "tipo": "encuesta",
+        "pregunta": "¿Qué tarea te gustaría dejar de hacer a mano primero?",
+        "opciones": [
+          "Responder consultas",
+          "Agendar turnos",
+          "Seguimiento post-venta",
+          "Reportes semanales"
+        ]
+      }
+    },
+    {
+      "id": "reel",
+      "plantilla": "reel-texto",
+      "para": [
+        "tiktok",
+        "shorts"
+      ],
+      "gancho": "¿Qué tarea te gustaría dejar de hacer *a mano*?",
+      "pulsos": [
+        {
+          "kicker": "A",
+          "texto": "Responder consultas"
+        },
+        {
+          "kicker": "B",
+          "texto": "Agendar turnos"
+        },
+        {
+          "kicker": "C",
+          "texto": "Seguimiento post-venta"
+        },
+        {
+          "kicker": "D",
+          "texto": "Reportes semanales"
+        }
+      ],
+      "remate": "Comentá la letra. *La más votada la explico.*",
+      "cta": "Seguime para ver cómo se automatiza"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "id": "2026-01-01-plantilla-reel-caso",
+  "fecha": "2026-01-01",
+  "rama": "casos",
+  "serie": "Detrás del caso",
+  "titulo": "Reel de caso (9:16)",
+  "estado": "borrador",
+  "fuente": { "tipo": "caso", "slug": "new-brothers-barberia", "capitulo": "product" },
+  "salidas": [
+    {
+      "id": "reel",
+      "plantilla": "reel-caso",
+      "para": ["instagram", "tiktok", "shorts"],
+      "caso": "new-brothers-barberia",
+      "gancho": "Una barbería no necesitaba una web. *Necesitaba un sistema.*",
+      "decisiones": ["Agenda, clientes, caja y liquidaciones en un solo panel.", "26 tablas con seguridad por fila y 4 roles: cada uno ve lo suyo.", "Una reserva en 6 pasos que el cliente completa solo."],
+      "cierre": "El sitio es lo que se ve. El sistema es lo que trabaja."
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "id": "2026-10-20-barberia-sistema",
+  "fecha": "2026-10-20",
+  "rama": "casos",
+  "serie": "Detrás del caso",
+  "titulo": "Una barbería no necesitaba una web: necesitaba un sistema (New Brothers)",
+  "estado": "borrador",
+  "fuente": {
+    "tipo": "caso",
+    "slug": "new-brothers-barberia",
+    "capitulo": "product"
+  },
+  "salidas": [
+    {
+      "id": "desafio",
+      "plantilla": "desafio",
+      "formato": "feed",
+      "para": [
+        "linkedin"
+      ],
+      "titulo": "La barbería que era un sistema",
+      "contexto": "New Brothers es una barbería. El pedido inicial parecía un sitio con reservas.",
+      "problema": "La operación diaria pasaba por la agenda, los clientes, la caja y lo que se le liquida a cada barbero. Un sitio con reservas no tocaba nada de eso.",
+      "decision": "Construir un panel que reúne agenda, clientes, caja y liquidaciones, con 26 tablas con seguridad por fila y 4 roles: cada persona ve solo lo suyo.",
+      "resultado": "Un mini CRM a medida, con una reserva en 6 pasos que el cliente completa solo y un panel para operar el día.",
+      "aprendizaje": "El pedido describe el síntoma. El sistema sale de mirar cómo se trabaja de verdad.",
+      "enlace": "mmorera.agency/casos-de-exito/new-brothers-barberia"
+    },
+    {
+      "id": "reel",
+      "plantilla": "reel-caso",
+      "para": [
+        "instagram",
+        "tiktok",
+        "shorts",
+        "x"
+      ],
+      "caso": "new-brothers-barberia",
+      "gancho": "Una barbería no necesitaba una web. *Necesitaba un sistema.*",
+      "decisiones": [
+        "Agenda, clientes, caja y liquidaciones en un solo panel.",
+        "26 tablas con seguridad por fila y 4 roles: cada uno ve lo suyo.",
+        "Una reserva en 6 pasos que el cliente completa solo."
+      ],
+      "cierre": "El sitio es lo que se ve. El sistema es lo que trabaja."
+    }
+  ]
+}

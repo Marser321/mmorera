@@ -1,0 +1,23 @@
+{
+  "id": "2026-01-01-plantilla-reel-texto",
+  "fecha": "2026-01-01",
+  "rama": "oficio",
+  "serie": "Valor corto",
+  "titulo": "Reel de texto (9:16)",
+  "estado": "borrador",
+  "salidas": [
+    {
+      "id": "reel",
+      "plantilla": "reel-texto",
+      "para": ["instagram", "tiktok", "shorts"],
+      "gancho": "Antes de pedir una landing, *respondé esto*.",
+      "pulsos": [
+        { "kicker": "Uno", "texto": "¿Qué tiene que pasar después de que alguien completa el formulario?" },
+        { "kicker": "Dos", "texto": "¿Quién responde, en cuánto tiempo y con qué herramienta?" },
+        { "kicker": "Tres", "texto": "¿Cómo vas a saber si funcionó, sin inventar números?" }
+      ],
+      "remate": "Una landing es la puerta. Lo que importa es *la casa*.",
+      "cta": "Guardalo para tu próximo proyecto"
+    }
+  ]
+}

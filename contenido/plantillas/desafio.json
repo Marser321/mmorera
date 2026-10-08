@@ -1,0 +1,24 @@
+{
+  "id": "2026-01-01-plantilla-desafio",
+  "fecha": "2026-01-01",
+  "rama": "casos",
+  "serie": "Desafío del mes",
+  "titulo": "Desafío del mes (documento de LinkedIn, 4:5)",
+  "estado": "borrador",
+  "fuente": { "tipo": "caso", "slug": "lb-elite-wash-detail", "capitulo": "arquitectura" },
+  "salidas": [
+    {
+      "id": "desafio",
+      "plantilla": "desafio",
+      "formato": "feed",
+      "para": ["linkedin", "instagram"],
+      "titulo": "Un negocio sin base de datos propia",
+      "contexto": "Un servicio de lavado a domicilio con 4 camionetas necesitaba cotizar, agendar y coordinar la cuadrilla en campo.",
+      "problema": "Sumar una base de datos propia era sumar algo más para mantener, sincronizar y pagar, cuando el CRM ya guardaba clientes y citas.",
+      "decision": "El CRM fue la base de datos: cada cita nace ahí y la app de la cuadrilla escribe en esa misma cita. La lógica corre en funciones serverless.",
+      "resultado": "Cero Postgres. Un solo lugar donde está la verdad de cada cita.",
+      "aprendizaje": "Antes de sumar una pieza al sistema, preguntate si alguna de las que ya tenés puede hacer ese trabajo.",
+      "enlace": "mmorera.agency/casos-de-exito/lb-elite-wash-detail"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "id": "2026-10-18-aprendi-semana-1",
+  "fecha": "2026-10-18",
+  "rama": "criterio",
+  "serie": "Lo que aprendí esta semana",
+  "titulo": "Lo que aprendí esta semana (1)",
+  "estado": "borrador",
+  "postura": true,
+  "salidas": [
+    {
+      "id": "carrusel",
+      "plantilla": "carrusel",
+      "formato": "feed",
+      "para": [
+        "linkedin",
+        "instagram"
+      ],
+      "diapositivas": [
+        {
+          "tipo": "portada",
+          "kicker": "Lo que aprendí esta semana",
+          "titulo": "Cuatro cosas que me dejó la semana",
+          "bajada": "Trabajo real, sin adornos."
+        },
+        {
+          "tipo": "texto",
+          "kicker": "01",
+          "titulo": "La IA delega rápido. El control es tuyo.",
+          "cuerpo": "Un modelo más barato produjo mucho en poco tiempo. La calidad la sostuvieron las reglas y la revisión, no el modelo."
+        },
+        {
+          "tipo": "texto",
+          "kicker": "02",
+          "titulo": "El teléfono es la pantalla que manda",
+          "cuerpo": "Un error invisible en la computadora alejaba toda una página en el celular. Ahora reviso en un teléfono de verdad antes de dar algo por terminado."
+        },
+        {
+          "tipo": "texto",
+          "kicker": "03",
+          "titulo": "Datos de ejemplo es una frase honesta",
+          "cuerpo": "Si una demo usa datos inventados, lo digo en pantalla. Nadie pierde confianza por eso; la pierde cuando descubre que no era real."
+        },
+        {
+          "tipo": "texto",
+          "kicker": "04",
+          "titulo": "Menos piezas, menos problemas",
+          "cuerpo": "Antes de sumar una herramienta, pregunto si alguna de las que ya están puede hacer ese trabajo."
+        },
+        {
+          "tipo": "cierre",
+          "titulo": "¿Qué te dejó tu semana?",
+          "cta": "Contame una en los comentarios.",
+          "enlace": "mmorera.agency"
+        }
+      ]
+    }
+  ]
+}

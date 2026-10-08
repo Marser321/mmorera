@@ -1,0 +1,12 @@
+{
+  "id": "2026-01-01-plantilla-encuesta",
+  "fecha": "2026-01-01",
+  "rama": "comunidad",
+  "serie": "Encuesta del viernes",
+  "titulo": "Encuesta (4:5 y 9:16)",
+  "estado": "borrador",
+  "salidas": [
+    { "id": "encuesta", "plantilla": "imagen", "formato": "feed", "para": ["linkedin", "x"], "diapositiva": { "tipo": "encuesta", "pregunta": "¿Qué tarea te gustaría dejar de hacer a mano primero?", "opciones": ["Responder consultas", "Agendar turnos", "Seguimiento post-venta", "Reportes semanales"] } },
+    { "id": "historia", "plantilla": "imagen", "formato": "reel", "para": ["instagram"], "diapositiva": { "tipo": "encuesta", "pregunta": "¿Qué tarea te gustaría dejar de hacer a mano primero?", "opciones": ["Responder consultas", "Agendar turnos", "Seguimiento post-venta", "Reportes semanales"] } }
+  ]
+}

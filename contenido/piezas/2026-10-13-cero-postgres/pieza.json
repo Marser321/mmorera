@@ -1,0 +1,48 @@
+{
+  "id": "2026-10-13-cero-postgres",
+  "fecha": "2026-10-13",
+  "rama": "casos",
+  "serie": "Desafío del mes",
+  "titulo": "Cero Postgres: el CRM era la base de datos (L&B)",
+  "estado": "borrador",
+  "fuente": {
+    "tipo": "caso",
+    "slug": "lb-elite-wash-detail",
+    "capitulo": "arquitectura"
+  },
+  "salidas": [
+    {
+      "id": "desafio",
+      "plantilla": "desafio",
+      "formato": "feed",
+      "para": [
+        "linkedin"
+      ],
+      "titulo": "Un negocio sin base de datos propia",
+      "contexto": "L&B lava autos y embarcaciones a domicilio con 4 camionetas. Necesitaba cotizar, agendar y coordinar la cuadrilla en campo.",
+      "problema": "Sumar una base de datos propia era sumar algo más para mantener y sincronizar, cuando el CRM ya guardaba clientes y citas.",
+      "decision": "El CRM fue la base de datos. La cita nace en GoHighLevel con una reserva temporal de 15 minutos y la app de la cuadrilla escribe en esa misma cita.",
+      "resultado": "Cero Postgres. Un solo lugar con la verdad de cada cita, y la lógica en funciones serverless.",
+      "aprendizaje": "Antes de sumar una pieza al sistema, preguntate si alguna de las que ya tenés puede hacer ese trabajo.",
+      "enlace": "mmorera.agency/casos-de-exito/lb-elite-wash-detail"
+    },
+    {
+      "id": "reel",
+      "plantilla": "reel-caso",
+      "para": [
+        "instagram",
+        "tiktok",
+        "shorts",
+        "x"
+      ],
+      "caso": "lb-elite-wash-detail",
+      "gancho": "Cero Postgres: *el CRM era la base de datos.*",
+      "decisiones": [
+        "El cotizador real en 5 pasos: la cita nace en el CRM con una reserva de 15 minutos.",
+        "Una app para la cuadrilla con botones grandes, para usar con una mano y las manos mojadas.",
+        "Cada botón escribe en la misma cita. No hay otra base que sincronizar."
+      ],
+      "cierre": "La mejor pieza del sistema es la que no tuviste que agregar."
+    }
+  ]
+}

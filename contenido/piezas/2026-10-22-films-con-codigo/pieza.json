@@ -1,0 +1,85 @@
+{
+  "id": "2026-10-22-films-con-codigo",
+  "fecha": "2026-10-22",
+  "rama": "oficio",
+  "serie": "Detrás de escena",
+  "titulo": "Cada caso de mi portfolio es un film hecho con código",
+  "estado": "borrador",
+  "fuente": {
+    "tipo": "sitio",
+    "nota": "14 films insignia en Remotion con layouts testeados (web/src/components/films/)."
+  },
+  "salidas": [
+    {
+      "id": "reel",
+      "plantilla": "reel-texto",
+      "para": [
+        "instagram",
+        "tiktok",
+        "shorts",
+        "x"
+      ],
+      "gancho": "Cada caso de mi portfolio es un *film*. Hecho con código.",
+      "pulsos": [
+        {
+          "kicker": "La herramienta",
+          "texto": "Remotion: video escrito en React, cuadro por cuadro."
+        },
+        {
+          "kicker": "La regla",
+          "texto": "Cada número del film sale de una fuente verificada."
+        },
+        {
+          "kicker": "El control",
+          "texto": "Un test revisa que ningún texto se pise con otro."
+        },
+        {
+          "kicker": "El resultado",
+          "texto": "14 films, en español e inglés, en 16:9 y 4:5."
+        }
+      ],
+      "remate": "Un portfolio no muestra capturas. *Muestra cómo pensaste.*",
+      "cta": "Mirá los films en mmorera.agency"
+    },
+    {
+      "id": "carrusel",
+      "plantilla": "carrusel",
+      "formato": "feed",
+      "para": [
+        "linkedin"
+      ],
+      "diapositivas": [
+        {
+          "tipo": "portada",
+          "kicker": "Detrás de escena",
+          "titulo": "Cada caso es un *film* hecho con código",
+          "bajada": "Por qué dejé las capturas por películas de 70 a 80 segundos."
+        },
+        {
+          "tipo": "texto",
+          "kicker": "01",
+          "titulo": "Video escrito en React",
+          "cuerpo": "Uso Remotion: cada escena es un componente y cada movimiento sale del número de cuadro. Nada se anima a mano."
+        },
+        {
+          "tipo": "texto",
+          "kicker": "02",
+          "titulo": "Datos con fuente",
+          "cuerpo": "Cada cifra que aparece en un film viene de un documento verificado del caso. Si no tiene fuente, no entra."
+        },
+        {
+          "tipo": "texto",
+          "kicker": "03",
+          "titulo": "Tests de diseño",
+          "cuerpo": "La geometría de cada escena se calcula aparte y un test revisa que ningún texto se pise ni salga de su lugar, en 16:9 y en 4:5."
+        },
+        {
+          "tipo": "cierre",
+          "titulo": "Un portfolio que muestra cómo pensaste",
+          "cta": "Los 14 films están en mi sitio.",
+          "enlace": "mmorera.agency/casos-de-exito"
+        }
+      ]
+    }
+  ]
+}

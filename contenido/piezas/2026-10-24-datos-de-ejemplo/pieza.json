@@ -1,0 +1,37 @@
+{
+  "id": "2026-10-24-datos-de-ejemplo",
+  "fecha": "2026-10-24",
+  "rama": "oficio",
+  "serie": "Valor corto",
+  "titulo": "\"Datos de ejemplo\": la frase que nadie pone",
+  "estado": "borrador",
+  "salidas": [
+    {
+      "id": "reel",
+      "plantilla": "reel-texto",
+      "para": [
+        "instagram",
+        "tiktok",
+        "shorts",
+        "x"
+      ],
+      "gancho": "La frase más honesta de una demo: *datos de ejemplo*.",
+      "pulsos": [
+        {
+          "kicker": "El problema",
+          "texto": "Una demo con números perfectos parece un resultado."
+        },
+        {
+          "kicker": "Lo que pasa",
+          "texto": "Quien la ve cree que eso ya pasó en un negocio real."
+        },
+        {
+          "kicker": "Lo que hago",
+          "texto": "Si el dato es de muestra, lo digo en pantalla."
+        }
+      ],
+      "remate": "Nadie pierde confianza por eso. *La pierde cuando se entera.*",
+      "cta": "Seguime: trabajo con IA y con datos sin adornos"
+    }
+  ]
+}

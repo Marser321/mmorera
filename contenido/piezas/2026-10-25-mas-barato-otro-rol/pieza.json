@@ -1,0 +1,61 @@
+{
+  "id": "2026-10-25-mas-barato-otro-rol",
+  "fecha": "2026-10-25",
+  "rama": "criterio",
+  "serie": "IA con control",
+  "titulo": "Más barato no es peor: es otro rol en el equipo",
+  "estado": "borrador",
+  "postura": true,
+  "fuente": {
+    "tipo": "experiencia",
+    "nota": "Flujo real del sitio: Gemini prepara kits y films con un contrato y un validador; Claude arma plantillas y revisa; Mario aprueba."
+  },
+  "salidas": [
+    {
+      "id": "carrusel",
+      "plantilla": "carrusel",
+      "formato": "feed",
+      "para": [
+        "linkedin",
+        "instagram"
+      ],
+      "diapositivas": [
+        {
+          "tipo": "portada",
+          "kicker": "IA con control",
+          "titulo": "Más barato no es peor. *Es otro rol.*",
+          "bajada": "Cómo reparto el trabajo entre modelos de IA sin perder la calidad."
+        },
+        {
+          "tipo": "lista",
+          "kicker": "El equipo",
+          "titulo": "Cada modelo, un rol",
+          "items": [
+            "Uno diseña las plantillas y revisa todo lo que sale.",
+            "Otro, más barato, produce en volumen siguiendo un contrato.",
+            "Otro genera las imágenes con un estilo fijo.",
+            "Yo apruebo. Nada sale sin eso."
+          ]
+        },
+        {
+          "tipo": "texto",
+          "kicker": "La clave",
+          "titulo": "El contrato hace el trabajo",
+          "cuerpo": "Plantillas, reglas y un validador que rechaza lo que no cumple. Con eso, el modelo más barato rinde; sin eso, solo produce más rápido lo que después hay que corregir."
+        },
+        {
+          "tipo": "cita",
+          "kicker": "Mi postura",
+          "cita": "No elijas el modelo más inteligente para todo. Elegí el rol, y después el modelo.",
+          "autor": "Mario Morera"
+        },
+        {
+          "tipo": "cierre",
+          "titulo": "¿Cómo repartís el trabajo con IA?",
+          "cta": "Contame qué modelo usás para qué.",
+          "enlace": "mmorera.agency"
+        }
+      ]
+    }
+  ]
+}

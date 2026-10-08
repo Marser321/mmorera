@@ -1,0 +1,79 @@
+{
+  "id": "2026-10-21-formulario-medico",
+  "fecha": "2026-10-21",
+  "rama": "sistemas",
+  "serie": "Arquitectura en 30 segundos",
+  "titulo": "Un formulario médico no debería tocar datos de salud (Fénix)",
+  "estado": "borrador",
+  "fuente": {
+    "tipo": "caso",
+    "slug": "fenix-medical-center",
+    "capitulo": "architecture"
+  },
+  "salidas": [
+    {
+      "id": "carrusel",
+      "plantilla": "carrusel",
+      "formato": "feed",
+      "para": [
+        "linkedin",
+        "instagram"
+      ],
+      "diapositivas": [
+        {
+          "tipo": "portada",
+          "kicker": "Arquitectura en 30 segundos",
+          "titulo": "Un formulario médico no debería tocar *datos de salud*",
+          "bajada": "Cómo se diseñó la captura de consultas de Fénix Medical Center."
+        },
+        {
+          "tipo": "texto",
+          "kicker": "01 · La puerta",
+          "titulo": "Un firewall antes que nada",
+          "cuerpo": "Cada consulta pasa primero por un firewall de aplicación que limita los envíos: 5 cada 10 minutos por conexión."
+        },
+        {
+          "tipo": "texto",
+          "kicker": "02 · El filtro",
+          "titulo": "Siete campos exactos",
+          "cuerpo": "El formulario acepta exactamente 7 campos y ninguno es de texto libre. Así no hay dónde escribir información clínica."
+        },
+        {
+          "tipo": "texto",
+          "kicker": "03 · El interruptor",
+          "titulo": "Apagado, salvo que se encienda",
+          "cuerpo": "La captura funciona solo si está habilitada de forma explícita. Si esa configuración falta, no acepta nada: falla cerrada."
+        },
+        {
+          "tipo": "texto",
+          "kicker": "04 · Lo que no viaja",
+          "titulo": "Los datos de salud quedan afuera",
+          "cuerpo": "Sin texto libre no hay síntomas ni diagnósticos en el formulario. Y la medición de anuncios viaja sin datos personales."
+        },
+        {
+          "tipo": "cierre",
+          "titulo": "La seguridad también es diseño",
+          "cta": "Mirá el capítulo de arquitectura del caso.",
+          "enlace": "mmorera.agency/casos-de-exito/fenix-medical-center"
+        }
+      ]
+    },
+    {
+      "id": "reel",
+      "plantilla": "reel-caso",
+      "para": [
+        "tiktok",
+        "shorts",
+        "x"
+      ],
+      "caso": "fenix-medical-center",
+      "gancho": "Un formulario médico no debería tocar *datos de salud*.",
+      "decisiones": [
+        "Un firewall limita los envíos: 5 cada 10 minutos por conexión.",
+        "Exactamente 7 campos, y ninguno de texto libre.",
+        "Si la captura no está habilitada, no acepta nada."
+      ],
+      "cierre": "La seguridad también es diseño."
+    }
+  ]
+}

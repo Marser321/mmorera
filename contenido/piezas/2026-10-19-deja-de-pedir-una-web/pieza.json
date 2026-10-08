@@ -1,0 +1,51 @@
+{
+  "id": "2026-10-19-deja-de-pedir-una-web",
+  "fecha": "2026-10-19",
+  "rama": "criterio",
+  "serie": "Criterio de lunes",
+  "titulo": "Dejá de pedir una web: pedí un sistema que conteste a las 23:45",
+  "estado": "borrador",
+  "postura": true,
+  "salidas": [
+    {
+      "id": "tarjeta",
+      "plantilla": "imagen",
+      "formato": "cuadrado",
+      "para": [
+        "linkedin",
+        "x"
+      ],
+      "diapositiva": {
+        "tipo": "tarjeta",
+        "kicker": "Criterio",
+        "texto": "Dejá de pedir *una web*. Pedí un sistema que conteste a las 23:45."
+      }
+    },
+    {
+      "id": "reel",
+      "plantilla": "reel-texto",
+      "para": [
+        "instagram",
+        "tiktok",
+        "shorts"
+      ],
+      "gancho": "Dejá de pedir *una web*.",
+      "pulsos": [
+        {
+          "kicker": "Lo que se pide",
+          "texto": "Un sitio lindo, rápido y con formulario."
+        },
+        {
+          "kicker": "Lo que se necesita",
+          "texto": "Que alguien conteste cuando esa persona escribe."
+        },
+        {
+          "kicker": "La diferencia",
+          "texto": "Una web se mira. *Un sistema trabaja.*"
+        }
+      ],
+      "remate": "Pedí un sistema que conteste a las 23:45.",
+      "cta": "Seguime: criterio sobre tecnología cada lunes"
+    }
+  ]
+}

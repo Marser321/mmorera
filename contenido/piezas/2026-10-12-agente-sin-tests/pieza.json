@@ -1,0 +1,59 @@
+{
+  "id": "2026-10-12-agente-sin-tests",
+  "fecha": "2026-10-12",
+  "rama": "criterio",
+  "serie": "Criterio de lunes",
+  "titulo": "Un agente sin tests es un pasante con acceso a producción",
+  "estado": "borrador",
+  "fuente": {
+    "tipo": "experiencia",
+    "nota": "Delegué 8 films de casos a un modelo más barato (Gemini); en la revisión cuadro por cuadro apareció una cifra que no estaba en ninguna fuente y los tests de copia no la habían detectado."
+  },
+  "postura": true,
+  "salidas": [
+    {
+      "id": "tarjeta",
+      "plantilla": "imagen",
+      "formato": "cuadrado",
+      "para": [
+        "linkedin",
+        "x"
+      ],
+      "diapositiva": {
+        "tipo": "tarjeta",
+        "kicker": "Criterio",
+        "texto": "Un agente sin tests es un *pasante* con acceso a producción."
+      }
+    },
+    {
+      "id": "reel",
+      "plantilla": "reel-texto",
+      "para": [
+        "instagram",
+        "tiktok",
+        "shorts"
+      ],
+      "gancho": "Le di trabajo real a una IA *más barata*.",
+      "pulsos": [
+        {
+          "kicker": "Lo bueno",
+          "texto": "Ocho films de casos en una sola tanda."
+        },
+        {
+          "kicker": "Lo otro",
+          "texto": "Y en uno apareció una cifra que *no estaba* en ninguna fuente."
+        },
+        {
+          "kicker": "Quién la frenó",
+          "texto": "Una revisión cuadro por cuadro, con una regla: ningún número sin fuente."
+        },
+        {
+          "kicker": "La regla",
+          "texto": "Delegar sí. Delegar *sin verificar*, nunca."
+        }
+      ],
+      "remate": "Un agente sin tests es un pasante con acceso a producción.",
+      "cta": "Seguime: cuento cómo trabajo con IA sin perder el control"
+    }
+  ]
+}

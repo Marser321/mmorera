@@ -1,0 +1,72 @@
+{
+  "id": "2026-10-23-pedi-tu-skill",
+  "fecha": "2026-10-23",
+  "rama": "comunidad",
+  "serie": "Skills que construyo",
+  "titulo": "Pedí tu skill: elijo una tarea repetida y la automatizo en público",
+  "estado": "borrador",
+  "salidas": [
+    {
+      "id": "encuesta",
+      "plantilla": "imagen",
+      "formato": "feed",
+      "para": [
+        "linkedin",
+        "x"
+      ],
+      "diapositiva": {
+        "tipo": "encuesta",
+        "pregunta": "¿Qué tarea repetís todas las semanas?",
+        "opciones": [
+          "Responder mensajes",
+          "Armar presupuestos",
+          "Cargar datos",
+          "Seguir clientes"
+        ]
+      }
+    },
+    {
+      "id": "historia",
+      "plantilla": "imagen",
+      "formato": "reel",
+      "para": [
+        "instagram"
+      ],
+      "diapositiva": {
+        "tipo": "encuesta",
+        "pregunta": "¿Qué tarea repetís todas las semanas?",
+        "opciones": [
+          "Responder mensajes",
+          "Armar presupuestos",
+          "Cargar datos",
+          "Seguir clientes"
+        ]
+      }
+    },
+    {
+      "id": "reel",
+      "plantilla": "reel-texto",
+      "para": [
+        "tiktok",
+        "shorts"
+      ],
+      "gancho": "Contame qué tarea *repetís* todas las semanas.",
+      "pulsos": [
+        {
+          "kicker": "Lo que hago",
+          "texto": "Elijo una de las respuestas."
+        },
+        {
+          "kicker": "Cómo",
+          "texto": "Construyo la skill o la automatización, y la muestro paso a paso."
+        },
+        {
+          "kicker": "Para quién",
+          "texto": "Para que la uses vos y cualquiera que tenga el mismo problema."
+        }
+      ],
+      "remate": "Dejala en los comentarios. *Empiezo la semana que viene.*",
+      "cta": "Seguime para ver cómo se construye"
+    }
+  ]
+}
