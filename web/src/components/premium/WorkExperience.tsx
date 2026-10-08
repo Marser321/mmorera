@@ -44,7 +44,7 @@ export function WorkExperience() {
           <p className="max-w-xl text-lg leading-7 text-[#F3F0E8]/55 light:text-muted-foreground">
             {isEs ? "Casos, implementaciones locales y demos; cada ficha deja claro su estado." : "Cases, local implementations and demos; each page makes its status clear."}
           </p>
-          <p className="font-mono text-[9px] uppercase tracking-[.16em] text-[#F3F0E8]/30 light:text-muted-foreground/85">
+          <p className="font-mono text-[10px] uppercase tracking-[.16em] text-[#F3F0E8]/55 light:text-muted-foreground/85">
             <TickerNumber value={total} /> · {isEs ? "casos" : "cases"}
           </p>
         </div>
@@ -58,7 +58,7 @@ export function WorkExperience() {
       {/* Archivo de Proyectos & Sistemas */}
       <section className="mx-auto w-full max-w-[1480px] px-5 pt-16 sm:px-8 sm:pt-24 lg:px-12" aria-labelledby="archive-work">
         <div className="mb-10">
-          <p className="font-mono text-[9px] uppercase tracking-[.16em] text-accent">
+          <p className="font-mono text-[10px] uppercase tracking-[.16em] text-accent">
             {isEs ? "Archivo Completo" : "Complete Archive"} · {String(ARCHIVE_CASES.length).padStart(2, "0")}
           </p>
           <h2 id="archive-work" className="mt-3 max-w-3xl text-[clamp(2.2rem,4.5vw,4.2rem)] font-medium leading-[.96] tracking-[-.055em] text-foreground">
@@ -98,13 +98,14 @@ function CaseJumpIndex({ projects, isEs, language }: { projects: ProjectCase[]; 
   return (
     <nav aria-label={isEs ? "Ir directo a un caso" : "Jump to a case"} className="mt-8">
       <div className="flex items-center justify-between gap-4">
-        <p className="font-mono text-[9px] uppercase tracking-[.16em] text-[#F3F0E8]/40 light:text-muted-foreground">{isEs ? "Ir directo a un caso" : "Jump to a case"}</p>
-        <p className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-[.16em] text-[#F3F0E8]/40 light:text-muted-foreground">
+        <p className="font-mono text-[10px] uppercase tracking-[.16em] text-[#F3F0E8]/55 light:text-muted-foreground">{isEs ? "Ir directo a un caso" : "Jump to a case"}</p>
+        <p className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[.16em] text-[#F3F0E8]/55 light:text-muted-foreground">
           <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-signal" />
           {isEs ? "Film insignia" : "Flagship film"}
         </p>
       </div>
-      <ul className="mt-4 flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] sm:flex-wrap sm:overflow-visible">
+      {/* relative: los textos sr-only (absolutos) quedan dentro de la tira; si no, estiran la página en el teléfono. */}
+      <ul className="relative mt-4 flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] sm:flex-wrap sm:overflow-visible">
         {projects.map((project) => {
           const flagship = hasFlagshipFilm(project.slug);
           return (

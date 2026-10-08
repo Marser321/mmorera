@@ -17,8 +17,11 @@ import { Reveal } from "@/components/scroll/Reveal";
 import { SplitReveal } from "@/components/motion/SplitReveal";
 import { Magnetic } from "@/components/motion/Magnetic";
 import { EASE_OUT } from "@/lib/motion";
+import { relatedCases } from "@/data/capabilityCases";
+import { SKILL_ORBIT } from "@/data/skillOrbit";
+import { flagshipRuntime, flagshipStill, hasFlagshipFilm } from "@/data/films/flagships/slugs";
 
-const label = "font-mono text-[9px] uppercase tracking-[.16em] text-[#F3F0E8]/55 light:text-muted-foreground";
+const label = "font-mono text-[10px] uppercase tracking-[.16em] text-[#F3F0E8]/55 light:text-muted-foreground";
 
 function hostname(url: string) {
   try {
@@ -119,6 +122,8 @@ export function CaseStudy({ project, underTheHood }: { project: ProjectCase; und
   const next = PROJECT_CASES[(index + 1) % PROJECT_CASES.length];
   const nextMedia = getCaseMedia(next.slug);
   const nextCover = nextMedia?.reel.poster ?? next.media[0]?.src;
+  // Casos parecidos: comparten capacidades con este (sin repetir el siguiente).
+  const related = relatedCases(project.slug, 4).filter((item) => item.slug !== next.slug).slice(0, 3);
   const desktopShots = media?.gallery.filter((shot) => shot.device === "desktop") ?? [];
   const mobileShots = media?.gallery.filter((shot) => shot.device === "mobile") ?? [];
   const whatsappText = encodeURIComponent(
@@ -133,7 +138,7 @@ export function CaseStudy({ project, underTheHood }: { project: ProjectCase; und
         {/* Encabezado */}
         <header className="px-5 sm:px-8 lg:px-12">
           <div className="mx-auto max-w-[1480px]">
-            <Link href={localePath(language, "/casos-de-exito")} className="inline-flex items-center gap-2 rounded-md text-sm text-[#F3F0E8]/48 light:text-muted-foreground hover:text-[#F3F0E8] light:hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white light:ring-ring"><ArrowLeft className="h-4 w-4" />{isEs ? "Volver al archivo" : "Back to archive"}</Link>
+            <Link href={localePath(language, "/casos-de-exito")} className="inline-flex items-center gap-2 rounded-md text-sm text-[#F3F0E8]/60 light:text-muted-foreground hover:text-[#F3F0E8] light:hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white light:ring-ring"><ArrowLeft className="h-4 w-4" />{isEs ? "Volver al archivo" : "Back to archive"}</Link>
             <div className="mt-12 grid gap-8 lg:grid-cols-[1.25fr_.75fr] lg:items-end">
               <div>
                 <div className="flex flex-wrap gap-3 font-mono text-[10px] uppercase tracking-[.16em] text-accent">{project.kind && <span>{project.kind[language]}</span>}{project.year && <span>{project.year}</span>}{project.stack.slice(0, 3).map((item) => <span key={item}>{item}</span>)}</div>
@@ -207,10 +212,10 @@ export function CaseStudy({ project, underTheHood }: { project: ProjectCase; und
               <span className="font-mono text-[10px] uppercase tracking-[.16em] text-signal transition-transform group-open:rotate-45" aria-hidden="true">+</span>
             </summary>
             <div className="pb-6">
-              <section className="border-t border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)] py-8"><p className="font-mono text-[9px] uppercase tracking-[.16em] text-track-create">01 · {isEs ? "El desafío" : "The challenge"}</p><h3 className="mt-5 max-w-3xl text-3xl font-medium leading-tight tracking-[-.04em] text-foreground sm:text-4xl">{project.challenge[language]}</h3></section>
-              <section className="border-t border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)] py-8"><p className="font-mono text-[9px] uppercase tracking-[.16em] text-accent">02 · {isEs ? "Restricciones" : "Constraints"}</p><ul className="mt-6 space-y-3">{project.constraints.map((item) => <li key={item[language]} className="flex gap-4 text-lg leading-7 text-[#F3F0E8]/55 light:text-muted-foreground"><span className="mt-3 h-1 w-1 shrink-0 rounded-full bg-accent" />{item[language]}</li>)}</ul></section>
-              <section className="border-t border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)] py-8"><p className="font-mono text-[9px] uppercase tracking-[.16em] text-signal">03 · {isEs ? "Decisiones" : "Decisions"}</p><ol className="mt-6 space-y-5">{project.decisions.map((item, i) => <li key={item[language]} className="grid grid-cols-[38px_1fr] gap-3 text-lg leading-7 text-[#F3F0E8]/65 light:text-muted-foreground"><span className="font-mono text-[10px] text-[#F3F0E8]/50 light:text-muted-foreground">0{i + 1}</span>{item[language]}</li>)}</ol></section>
-              <section className="border-t border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)] pt-8"><p className="font-mono text-[9px] uppercase tracking-[.16em] text-[#F3F0E8]/55 light:text-muted-foreground">04 · {isEs ? "Resultado" : "Outcome"}</p><p className="mt-5 max-w-3xl text-3xl font-medium leading-tight tracking-[-.04em] text-foreground sm:text-4xl">{project.result[language]}</p></section>
+              <section className="border-t border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)] py-8"><p className="font-mono text-[10px] uppercase tracking-[.16em] text-track-create">01 · {isEs ? "El desafío" : "The challenge"}</p><h3 className="mt-5 max-w-3xl text-3xl font-medium leading-tight tracking-[-.04em] text-foreground sm:text-4xl">{project.challenge[language]}</h3></section>
+              <section className="border-t border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)] py-8"><p className="font-mono text-[10px] uppercase tracking-[.16em] text-accent">02 · {isEs ? "Restricciones" : "Constraints"}</p><ul className="mt-6 space-y-3">{project.constraints.map((item) => <li key={item[language]} className="flex gap-4 text-lg leading-7 text-[#F3F0E8]/55 light:text-muted-foreground"><span className="mt-3 h-1 w-1 shrink-0 rounded-full bg-accent" />{item[language]}</li>)}</ul></section>
+              <section className="border-t border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)] py-8"><p className="font-mono text-[10px] uppercase tracking-[.16em] text-signal">03 · {isEs ? "Decisiones" : "Decisions"}</p><ol className="mt-6 space-y-5">{project.decisions.map((item, i) => <li key={item[language]} className="grid grid-cols-[38px_1fr] gap-3 text-lg leading-7 text-[#F3F0E8]/65 light:text-muted-foreground"><span className="font-mono text-[10px] text-[#F3F0E8]/50 light:text-muted-foreground">0{i + 1}</span>{item[language]}</li>)}</ol></section>
+              <section className="border-t border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)] pt-8"><p className="font-mono text-[10px] uppercase tracking-[.16em] text-[#F3F0E8]/55 light:text-muted-foreground">04 · {isEs ? "Resultado" : "Outcome"}</p><p className="mt-5 max-w-3xl text-3xl font-medium leading-tight tracking-[-.04em] text-foreground sm:text-4xl">{project.result[language]}</p></section>
             </div>
           </details>
         </div>
@@ -262,6 +267,46 @@ export function CaseStudy({ project, underTheHood }: { project: ProjectCase; und
           </div>
         </div>
       </section>
+
+      {/* Casos parecidos: se recorre el portfolio sin volver atrás */}
+      {related.length > 0 && (
+        <section className="mx-auto mt-24 max-w-[1480px] px-5 sm:px-8 lg:px-12" aria-labelledby="related-cases">
+          <p className={label}>{isEs ? "Casos parecidos" : "Related cases"}</p>
+          <h2 id="related-cases" className="mt-3 max-w-3xl text-3xl font-medium tracking-[-0.04em] text-foreground sm:text-4xl">
+            {isEs ? "Otros casos que resuelven algo parecido." : "Other cases that solve something similar."}
+          </h2>
+          <ul className="mt-8 grid gap-6 md:grid-cols-3">
+            {related.map(({ slug, shared }) => {
+              const other = PROJECT_CASES.find((item) => item.slug === slug);
+              if (!other) return null;
+              const still = flagshipStill(slug, "hero", language) ?? other.media[0]?.src;
+              const runtime = flagshipRuntime(slug);
+              return (
+                <li key={slug}>
+                  <Link
+                    href={localePath(language, `/casos-de-exito/${slug}${hasFlagshipFilm(slug) ? "#film" : ""}`)}
+                    className="group block rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+                  >
+                    <div className="relative aspect-video overflow-hidden rounded-2xl border border-white/10 bg-card light:border-[rgb(var(--ink-rgb)/0.1)]">
+                      {still && <Image src={still} alt="" fill sizes="(min-width: 768px) 30vw, 100vw" className="object-cover transition-transform duration-700 group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100" />}
+                    </div>
+                    <p className="mt-4 font-mono text-[10px] uppercase tracking-[.16em] text-signal">
+                      {shared.map((family) => SKILL_ORBIT.find((node) => node.id === family)?.label[language]).filter(Boolean).join(" · ")}
+                    </p>
+                    <p className="mt-1.5 flex items-center justify-between gap-3 text-xl font-medium tracking-[-0.03em] text-foreground">
+                      <span>{other.title[language]}</span>
+                      <ArrowUpRight className="h-4 w-4 shrink-0 text-foreground/50 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
+                    </p>
+                    <p className="mt-1 text-sm text-foreground/55">
+                      {runtime ? `${isEs ? "Ver el caso y su film" : "View the case and its film"} · ${runtime}` : isEs ? "Ver el caso" : "View the case"}
+                    </p>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )}
 
       {/* Siguiente proyecto */}
       <Link

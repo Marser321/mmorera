@@ -7,6 +7,7 @@ import { useTheme } from "@/context/ThemeContext";
 import { themedAccent } from "@/data/particleScenes";
 import type { ProjectCase } from "@/types/site";
 import { MagicBento, type BentoItem } from "@/components/ui/magic-bento";
+import { hasFlagshipFilm } from "@/data/films/flagships/slugs";
 
 /**
  * Puente entre `PROJECT_CASES` y la bento animada: cada caso aporta su portada,
@@ -47,8 +48,9 @@ export function CaseBento({
                 // con un hueco, la última tarjeta lo cubre solo en desktop.
                 wideLg: featureFirst && (projects.length + 3) % 3 === 2 && index === projects.length - 1,
                 footer: project.year ?? project.client?.[language],
+                cta: hasFlagshipFilm(project.slug) ? (isEs ? "Ver el caso y su film" : "View the case and its film") : isEs ? "Ver el caso" : "View the case",
             })),
-        [projects, language, theme, featureFirst],
+        [projects, language, theme, featureFirst, isEs],
     );
 
     return (

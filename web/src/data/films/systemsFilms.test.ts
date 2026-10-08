@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { PROJECT_CASES } from "../projectCases";
+import { FLAGSHIP_FILMS } from "./flagships";
 import { CHAPTER_ORDER, resolveChapterIndex } from "./filmTypes";
 import { OPENING_BEATS, OPENING_DURATION, SYSTEM_RAIL_STAGES, USE_CASE_FILMS } from "./systemsFilms";
 
@@ -29,6 +30,12 @@ test("films de sistemas", async (t) => {
         assert.ok(film.stages.every((stage) => stage.latencyMs === undefined), `${film.id}: un caso real no muestra latencias de muestra`);
       } else {
         assert.equal(film.caseSlug, undefined, `${film.id}: un ejemplo no se atribuye a un cliente`);
+        // "Visto en": casos reales con film, enlazados a un capítulo que existe.
+        for (const seen of film.seenIn ?? []) {
+          const flagship = FLAGSHIP_FILMS[seen.slug];
+          assert.ok(flagship, `${film.id}: ${seen.slug} no tiene film insignia`);
+          assert.ok(flagship.chapters.some((chapter) => chapter.id === seen.chapter), `${film.id}: ${seen.slug} no tiene el capítulo ${seen.chapter}`);
+        }
       }
     }
   });

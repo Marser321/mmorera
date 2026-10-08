@@ -25,7 +25,7 @@ function Header({ isEs }: { isEs: boolean }) {
   return (
     <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
       <div>
-        <p className="font-mono text-[10px] uppercase tracking-[.18em] text-[#F3F0E8]/35 light:text-muted-foreground/85">01 · {isEs ? "Mapa operativo" : "Operational map"}</p>
+        <p className="font-mono text-[10px] uppercase tracking-[.18em] text-[#F3F0E8]/55 light:text-muted-foreground/85">01 · {isEs ? "Mapa operativo" : "Operational map"}</p>
         <h2 id="opening-film-title" className="mt-4 text-3xl font-medium tracking-[-.04em] text-foreground sm:text-5xl">
           {isEs ? "De herramientas sueltas a un sistema." : "From scattered tools to one system."}
         </h2>

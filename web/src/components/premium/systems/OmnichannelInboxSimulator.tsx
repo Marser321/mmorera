@@ -8,22 +8,13 @@ import { SplitReveal } from "@/components/motion/SplitReveal";
 import {
   OMNICHANNEL_LEADS,
   type OmnichannelLead,
-  type ChannelType,
 } from "@/data/omnichannelInboxData";
 import {
   Inbox,
-  MessageSquare,
   Sparkles,
   Zap,
   CheckCircle2,
-  Clock,
-  DollarSign,
-  TrendingUp,
   ArrowRight,
-  ShieldAlert,
-  Send,
-  Calendar,
-  Flame,
 } from "lucide-react";
 
 export function OmnichannelInboxSimulator() {
@@ -84,7 +75,7 @@ export function OmnichannelInboxSimulator() {
       <div className="relative z-10 mx-auto max-w-[1480px]">
         {/* Header */}
         <div className="max-w-3xl">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <span
               className="h-2.5 w-2.5 rounded-full shadow-[0_0_12px_currentColor] transition-colors duration-500"
               style={{ backgroundColor: activeLead.channelColor, color: activeLead.channelColor }}
@@ -95,20 +86,24 @@ export function OmnichannelInboxSimulator() {
             >
               {isEs ? "03 · Bandeja Omnicanal & Speed-to-Lead" : "03 · Omnichannel Inbox & Speed-to-Lead"}
             </p>
+            {/* Demo: prospectos, puntajes y tiempos son de ejemplo, no de un cliente. */}
+            <span className="ml-1 rounded-full border border-white/15 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-foreground/60 light:border-[rgb(var(--ink-rgb)/0.16)]">
+              {isEs ? "Datos de ejemplo" : "Sample data"}
+            </span>
           </div>
           <SplitReveal
             as="h2"
             text={
               isEs
-                ? "Todos tus canales en un solo lugar. Respuesta en 18s con IA."
-                : "All your channels in one place. Sub-18s replies with AI."
+                ? "Todos tus canales en un solo lugar."
+                : "All your channels in one place."
             }
             className="mt-4 text-[clamp(2.25rem,4.5vw,4.5rem)] font-medium leading-[1.02] tracking-[-0.05em] text-foreground"
           />
           <Reveal as="p" className="mt-5 text-base leading-relaxed text-foreground/60 sm:text-lg">
             {isEs
               ? "WhatsApp Business, Instagram DM, formularios web y pauta publicitaria sincronizados en tiempo real. Tu equipo y los agentes de IA atienden desde una sola consola, sin prospectos perdidos entre pestañas ni olvidos."
-              : "WhatsApp Business, Instagram DMs, web forms, and ad campaigns synced in real time. Your team and AI agents respond from one unified cockpit, ending dropped leads and lost chats forever."}
+              : "WhatsApp Business, Instagram DMs, web forms, and ad campaigns synced in real time. Your team and AI agents respond from one console, so no lead gets lost between tabs."}
           </Reveal>
         </div>
 
@@ -119,11 +114,11 @@ export function OmnichannelInboxSimulator() {
             <div>
               <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
                 <span className="font-mono text-xs uppercase tracking-wider text-foreground/60 flex items-center gap-1.5">
-                  <Inbox className="h-3.5 w-3.5 text-foreground/40" />
+                  <Inbox className="h-3.5 w-3.5 text-foreground/55" />
                   {isEs ? "Bandeja Unificada" : "Unified Stream"}
                 </span>
                 <span className="text-[10px] font-mono text-signal bg-signal/10 px-2 py-0.5 rounded-full">
-                  LIVE SYNC
+                  {isEs ? "Simulación" : "Simulation"}
                 </span>
               </div>
 
@@ -149,7 +144,7 @@ export function OmnichannelInboxSimulator() {
                     >
                       <div className="flex items-center justify-between">
                         <span
-                          className="rounded-full px-2 py-0.5 text-[9px] font-mono uppercase tracking-wider font-semibold"
+                          className="rounded-full px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider font-semibold"
                           style={{
                             backgroundColor: `${lead.channelColor}20`,
                             color: lead.channelColor,
@@ -163,13 +158,13 @@ export function OmnichannelInboxSimulator() {
                         </span>
                       </div>
 
-                      <h4 className="mt-2 text-sm font-semibold text-foreground truncate">
+                      <h3 className="mt-2 text-sm font-semibold text-foreground truncate">
                         {lead.customerName}
-                      </h4>
+                      </h3>
                       <p className="text-xs text-foreground/50 truncate">{lead.companyName}</p>
 
                       <div className="mt-2.5 pt-2 border-t border-white/8 flex items-center justify-between text-[11px] font-mono">
-                        <span className="text-foreground/40">Valor:</span>
+                        <span className="text-foreground/55">{isEs ? "Valor:" : "Value:"}</span>
                         <span className="text-foreground/80 font-bold">${lead.dealValueUsd} USD</span>
                       </div>
                     </button>
@@ -178,7 +173,7 @@ export function OmnichannelInboxSimulator() {
               </div>
             </div>
 
-            <div className="mt-5 border-t border-white/10 pt-3 text-[10px] font-mono text-foreground/40 text-center">
+            <div className="mt-5 border-t border-white/10 pt-3 text-[10px] font-mono text-foreground/55 text-center">
               {isEs ? "3 de 3 canales sincronizados en tiempo real" : "3 of 3 channels in real-time sync"}
             </div>
           </div>
@@ -200,7 +195,7 @@ export function OmnichannelInboxSimulator() {
                     {activeLead.customerName.charAt(0)}
                   </div>
                   <div>
-                    <h4 className="text-sm font-semibold text-foreground">{activeLead.customerName}</h4>
+                    <h3 className="text-sm font-semibold text-foreground">{activeLead.customerName}</h3>
                     <p className="text-xs text-foreground/50 font-mono">{activeLead.channelLabel}</p>
                   </div>
                 </div>
@@ -225,7 +220,7 @@ export function OmnichannelInboxSimulator() {
                     >
                       {isAgent && (
                         <div
-                          className="h-6 w-6 rounded-full flex items-center justify-center text-[9px] font-bold shrink-0 mt-0.5"
+                          className="h-6 w-6 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5"
                           style={{
                             backgroundColor: `${activeLead.channelColor}25`,
                             color: activeLead.channelColor,
@@ -277,20 +272,20 @@ export function OmnichannelInboxSimulator() {
                   <Sparkles className="h-3.5 w-3.5 text-signal" />
                   {isEs ? "Dossier del Prospecto" : "Prospect Dossier"}
                 </span>
-                <span className="text-[10px] font-mono text-foreground/40">CRM LIVE</span>
+                <span className="text-[10px] font-mono text-foreground/55">{isEs ? "Ejemplo" : "Sample"}</span>
               </div>
 
               {/* Métricas clave */}
               <div className="grid grid-cols-2 gap-3 mb-5">
                 <div className="rounded-2xl border border-white/8 bg-background/50 p-3 text-center">
-                  <span className="text-[9px] font-mono uppercase text-foreground/40 block">Intención</span>
-                  <span className="text-xl font-bold font-mono text-signal">{activeLead.intentScore}%</span>
-                  <span className="text-[9px] font-mono text-signal/80">A+ Calificado</span>
+                  <span className="text-[10px] font-mono uppercase text-foreground/55 block">{isEs ? "Intención · ejemplo" : "Intent · sample"}</span>
+                  <span className="text-xl font-bold font-mono text-signal">{activeLead.intentScore}/100</span>
+                  <span className="text-[10px] font-mono text-signal/80">{isEs ? "A+ Calificado" : "A+ Qualified"}</span>
                 </div>
                 <div className="rounded-2xl border border-white/8 bg-background/50 p-3 text-center">
-                  <span className="text-[9px] font-mono uppercase text-foreground/40 block">Oportunidad</span>
+                  <span className="text-[10px] font-mono uppercase text-foreground/55 block">{isEs ? "Oportunidad" : "Opportunity"}</span>
                   <span className="text-xl font-bold font-mono text-foreground">${activeLead.dealValueUsd}</span>
-                  <span className="text-[9px] font-mono text-foreground/50">USD Estimados</span>
+                  <span className="text-[10px] font-mono text-foreground/50">{isEs ? "USD estimados" : "Est. USD"}</span>
                 </div>
               </div>
 
@@ -300,7 +295,7 @@ export function OmnichannelInboxSimulator() {
 
               {/* Botones de acción de CRM con 1 clic */}
               <div className="space-y-2.5">
-                <span className="font-mono text-[10px] uppercase tracking-wider text-foreground/40 block">
+                <span className="font-mono text-[10px] uppercase tracking-wider text-foreground/55 block">
                   {isEs ? "Disparar Acción en CRM (1 Clic):" : "Trigger CRM Action (1 Click):"}
                 </span>
                 {activeLead.availableActions.map((action) => (

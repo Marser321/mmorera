@@ -8,6 +8,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { localePath } from "@/config/site";
 import { nodeActivationFrame } from "@/data/films/filmTypes";
 import { USE_CASE_FILMS } from "@/data/films/systemsFilms";
+import { PROJECT_CASES } from "@/data/projectCases";
 import { FilmChapters, useFilmPlayback } from "./FilmChapters";
 import type { FilmSource } from "./FilmCanvas";
 import { FilmStage, useFilmFormat } from "./FilmStage";
@@ -191,12 +192,12 @@ export function UseCaseFilmRoom() {
       <div className="mx-auto max-w-[1480px]">
         <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-[.18em] text-[#F3F0E8]/35 light:text-muted-foreground/85">02 · {isEs ? "Casos de uso" : "Use cases"}</p>
+            <p className="font-mono text-[10px] uppercase tracking-[.18em] text-[#F3F0E8]/55 light:text-muted-foreground/85">02 · {isEs ? "Casos de uso" : "Use cases"}</p>
             <h2 id="use-cases-title" className="mt-4 text-3xl font-medium tracking-[-.04em] text-foreground sm:text-5xl">
               {isEs ? "Del problema al sistema, paso a paso." : "From problem to system, step by step."}
             </h2>
           </div>
-          <p className="font-mono text-[9px] uppercase tracking-widest text-[#F3F0E8]/28 light:text-muted-foreground/85">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-[#F3F0E8]/55 light:text-muted-foreground/85">
             {isEs ? "Tocá un nodo para inspeccionarlo" : "Tap a node to inspect it"}
           </p>
         </div>
@@ -219,8 +220,8 @@ export function UseCaseFilmRoom() {
                     : "border-white/8 bg-white/[.025] hover:border-white/20 light:border-[rgb(var(--ink-rgb)/0.08)] light:bg-[rgb(var(--ink-rgb)/0.025)] light:hover:border-[rgb(var(--ink-rgb)/0.2)]"
                 }`}
               >
-                <span className="flex items-center justify-between gap-3 font-mono text-[9px] uppercase tracking-[.16em]">
-                  <span className={selected ? "text-signal" : "text-[#F3F0E8]/40 light:text-muted-foreground/85"}>{item.category[language]}</span>
+                <span className="flex items-center justify-between gap-3 font-mono text-[10px] uppercase tracking-[.16em]">
+                  <span className={selected ? "text-signal" : "text-[#F3F0E8]/55 light:text-muted-foreground/85"}>{item.category[language]}</span>
                   <span className={item.kind === "real" ? "text-signal" : "text-accent"}>
                     {item.kind === "real" ? (isEs ? "Caso real" : "Real case") : (isEs ? "Ejemplo" : "Example")}
                   </span>
@@ -282,14 +283,26 @@ export function UseCaseFilmRoom() {
               ))}
             </ol>
             {film.caseSlug && caseTitle ? (
-              <Link href={localePath(language, `/casos-de-exito/${film.caseSlug}`)} className="inline-flex shrink-0 items-center gap-2 text-sm text-foreground">
+              <Link href={localePath(language, `/casos-de-exito/${film.caseSlug}`)} className="inline-flex min-h-10 shrink-0 items-center gap-2 text-sm text-foreground hover:text-signal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal">
                 {isEs ? `Ver el caso ${caseTitle}` : `See the ${caseTitle} case`}
                 <ArrowUpRight className="h-4 w-4" />
               </Link>
             ) : (
-              <p className="font-mono text-[9px] uppercase tracking-[.14em] text-[#F3F0E8]/35 light:text-muted-foreground/85">
-                {isEs ? "Flujo de ejemplo con datos de muestra" : "Example flow with sample data"}
-              </p>
+              <div className="flex flex-wrap items-center justify-end gap-x-4 gap-y-2">
+                <p className="font-mono text-[10px] uppercase tracking-[.14em] text-[#F3F0E8]/55 light:text-muted-foreground/85">
+                  {isEs ? "Flujo de ejemplo con datos de muestra" : "Example flow with sample data"}
+                </p>
+                {/* Un caso real que resuelve algo parecido, directo al capítulo de su film. */}
+                {film.seenIn?.map((seen) => {
+                  const title = PROJECT_CASES.find((project) => project.slug === seen.slug)?.title[language];
+                  return title ? (
+                    <Link key={seen.slug} href={localePath(language, `/casos-de-exito/${seen.slug}#film-${seen.chapter}`)} className="inline-flex min-h-10 shrink-0 items-center gap-2 text-sm text-foreground hover:text-signal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal">
+                      {isEs ? `Visto en ${title}` : `Seen in ${title}`}
+                      <ArrowUpRight className="h-4 w-4" />
+                    </Link>
+                  ) : null;
+                })}
+              </div>
             )}
           </div>
         </div>

@@ -191,7 +191,7 @@ export function SistemasBlueprint() {
                                         }`}>
                                             <NodeIcon name={node.iconName} className="h-5 w-5" />
                                         </div>
-                                        <div className="flex items-center gap-1.5 font-mono text-[8px] text-zinc-600">
+                                        <div className="flex items-center gap-1.5 font-mono text-[9px] text-zinc-600">
                                             <span>STEP 0{index + 1}</span>
                                         </div>
                                     </div>
@@ -206,11 +206,11 @@ export function SistemasBlueprint() {
                                     </div>
 
                                     {/* Telemetría Integrada */}
-                                    <div className="mt-2 pt-2 border-t border-white/5 flex items-center justify-between font-mono text-[8px] text-zinc-500">
+                                    <div className="mt-2 pt-2 border-t border-white/5 flex items-center justify-between font-mono text-[9px] text-zinc-500">
                                         <span>LATENCY</span>
                                         <span className="text-white font-medium">{currentLatency}ms</span>
                                     </div>
-                                    <div className="flex items-center justify-between font-mono text-[8px] text-zinc-500">
+                                    <div className="flex items-center justify-between font-mono text-[9px] text-zinc-500">
                                         <span>STATUS</span>
                                         <span className={node.httpStatus < 300 ? 'text-emerald-400 font-bold' : 'text-cyan-400 font-bold'}>
                                             {node.httpStatus} OK
@@ -249,7 +249,7 @@ export function SistemasBlueprint() {
                                         }`}>
                                             <NodeIcon name={node.iconName} className="h-5 w-5" />
                                         </div>
-                                        <div className="flex items-center gap-1.5 font-mono text-[8px] text-zinc-600">
+                                        <div className="flex items-center gap-1.5 font-mono text-[9px] text-zinc-600">
                                             <span>STEP 0{nodeIdx + 1}</span>
                                         </div>
                                     </div>
@@ -264,11 +264,11 @@ export function SistemasBlueprint() {
                                     </div>
 
                                     {/* Telemetría Integrada */}
-                                    <div className="mt-2 pt-2 border-t border-white/5 flex items-center justify-between font-mono text-[8px] text-zinc-500">
+                                    <div className="mt-2 pt-2 border-t border-white/5 flex items-center justify-between font-mono text-[9px] text-zinc-500">
                                         <span>LATENCY</span>
                                         <span className="text-white font-medium">{currentLatency}ms</span>
                                     </div>
-                                    <div className="flex items-center justify-between font-mono text-[8px] text-zinc-500">
+                                    <div className="flex items-center justify-between font-mono text-[9px] text-zinc-500">
                                         <span>STATUS</span>
                                         <span className={node.httpStatus < 300 ? 'text-emerald-400 font-bold' : 'text-cyan-400 font-bold'}>
                                             {node.httpStatus} OK
@@ -319,7 +319,7 @@ export function SistemasBlueprint() {
                                                 0{index + 1} | {currentLatency}ms
                                             </span>
                                         </div>
-                                        <p className="text-[9px] text-zinc-400 mt-1 line-clamp-2 font-light">
+                                        <p className="text-[10px] text-zinc-400 mt-1 line-clamp-2 font-light">
                                             {node.detail[language]}
                                         </p>
                                     </div>
@@ -338,7 +338,7 @@ export function SistemasBlueprint() {
                 <div className="absolute inset-0 z-0 border-[6px] border-emerald-500/20 pointer-events-none">
                     <div className="absolute top-1/2 left-0 right-0 h-px bg-emerald-500/10" />
                     <div className="absolute top-0 bottom-0 left-1/2 w-px bg-emerald-500/10" />
-                    <span className="absolute bottom-4 left-4 font-mono text-[8px] text-emerald-500/30 uppercase tracking-widest">
+                    <span className="absolute bottom-4 left-4 font-mono text-[9px] text-emerald-500/30 uppercase tracking-widest">
                         Blueprint Node Graph // Active Connections: 6 // Circuit Loop: serp_v2
                     </span>
                 </div>

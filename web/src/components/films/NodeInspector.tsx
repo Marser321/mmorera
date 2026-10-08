@@ -33,7 +33,7 @@ export function NodeInspector({
     >
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="font-mono text-[9px] uppercase tracking-[.16em] text-signal">
+          <p className="font-mono text-[10px] uppercase tracking-[.16em] text-signal">
             {isEs ? "Etapa" : "Step"} {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
           </p>
           <h3 className="mt-2 text-xl font-medium tracking-[-.03em] text-foreground">{stage.title[language]}</h3>
@@ -50,18 +50,18 @@ export function NodeInspector({
 
       <dl className="mt-5 grid grid-cols-2 gap-3 font-mono text-[10px] uppercase tracking-[.12em]">
         <div className="col-span-2 rounded-xl border border-white/8 p-3 light:border-[rgb(var(--ink-rgb)/0.1)]">
-          <dt className="text-foreground/45">{isEs ? "Tecnología" : "Technology"}</dt>
+          <dt className="text-foreground/55">{isEs ? "Tecnología" : "Technology"}</dt>
           <dd className="mt-1 normal-case tracking-normal text-foreground">{stage.technology}</dd>
         </div>
         {stage.latencyMs !== undefined ? (
           <div className="rounded-xl border border-white/8 p-3 light:border-[rgb(var(--ink-rgb)/0.1)]">
-            <dt className="text-foreground/45">{isEs ? "Latencia" : "Latency"}</dt>
+            <dt className="text-foreground/55">{isEs ? "Latencia" : "Latency"}</dt>
             <dd className="mt-1 text-signal">{stage.latencyMs} ms</dd>
           </div>
         ) : null}
         {stage.httpStatus !== undefined ? (
           <div className="rounded-xl border border-white/8 p-3 light:border-[rgb(var(--ink-rgb)/0.1)]">
-            <dt className="text-foreground/45">HTTP</dt>
+            <dt className="text-foreground/55">HTTP</dt>
             <dd className="mt-1 text-signal">{stage.httpStatus}</dd>
           </div>
         ) : null}
@@ -76,7 +76,7 @@ export function NodeInspector({
       ) : null}
 
       <div className="mt-4 flex items-center justify-between gap-3">
-        <span className="font-mono text-[9px] uppercase tracking-[.14em] text-foreground/40">
+        <span className="font-mono text-[10px] uppercase tracking-[.14em] text-foreground/55">
           {example ? (isEs ? "Datos de muestra" : "Sample data") : (isEs ? "Caso real" : "Real case")}
         </span>
         <button

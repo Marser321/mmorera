@@ -65,7 +65,7 @@ export function PortfolioGrid() {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8 }}
-                    className="w-full max-w-7xl mb-12 border-b border-white/5 pb-4 flex flex-wrap items-center justify-between gap-3 font-mono text-[9px] font-bold tracking-[0.16em] text-zinc-500 uppercase relative"
+                    className="w-full max-w-7xl mb-12 border-b border-white/5 pb-4 flex flex-wrap items-center justify-between gap-3 font-mono text-[10px] font-bold tracking-[0.16em] text-zinc-500 uppercase relative"
                 >
                     <div className="flex items-center gap-2 text-fuchsia-400/80">
                         <span className="relative flex h-1.5 w-1.5 shrink-0">
@@ -126,12 +126,12 @@ export function PortfolioGrid() {
                                                     <div className="mt-1 flex flex-col gap-3 border-t border-white/5 pt-3 sm:flex-row sm:items-end sm:justify-between">
                                                         <div className="flex min-w-0 flex-wrap gap-1.5">
                                                             {project.stack.slice(0, 3).map(s => (
-                                                                <span key={s} className="rounded border border-white/5 bg-white/5 px-2 py-0.5 font-mono text-[8px] text-zinc-400">
+                                                                <span key={s} className="rounded border border-white/5 bg-white/5 px-2 py-0.5 font-mono text-[9px] text-zinc-400">
                                                                     {s}
                                                                 </span>
                                                             ))}
                                                         </div>
-                                                        <span className="flex shrink-0 items-center gap-1.5 self-start font-mono text-[9px] font-black uppercase leading-tight text-violet-400 transition-colors group-hover:text-white sm:self-auto">
+                                                        <span className="flex shrink-0 items-center gap-1.5 self-start font-mono text-[10px] font-black uppercase leading-tight text-violet-400 transition-colors group-hover:text-white sm:self-auto">
                                                             {language === 'es' ? 'VER TECNOLOGÍAS' : 'VIEW TECH'}
                                                             <Play className="w-3 h-3 text-violet-400 fill-violet-400/20 group-hover:fill-white/20 transition-all" />
                                                         </span>
@@ -153,7 +153,7 @@ export function PortfolioGrid() {
                 <div className="absolute inset-0 z-0 border-[6px] border-emerald-500/20 pointer-events-none">
                     <div className="absolute top-1/2 left-0 right-0 h-px bg-emerald-500/10" />
                     <div className="absolute top-0 bottom-0 left-1/2 w-px bg-emerald-500/10" />
-                    <span className="absolute bottom-4 left-4 font-mono text-[8px] text-emerald-500/30 uppercase tracking-widest">
+                    <span className="absolute bottom-4 left-4 font-mono text-[9px] text-emerald-500/30 uppercase tracking-widest">
                         Wireframe Active // Portfolio Grid Mode: Aspect 16:10 Grid
                     </span>
                 </div>

@@ -93,8 +93,8 @@ export const OMNICHANNEL_LEADS: OmnichannelLead[] = [
         id: "m-4",
         sender: "ai_agent",
         text: {
-          es: "Excelente volumen. En ese rango la automatización evita perder un 40% de prospectos fríos. ¿Te queda bien revisar la arquitectura mañana a las 11:00 hs?",
-          en: "Solid volume. At that tier automation recovers 40% of dropped leads. Does tomorrow at 11:00 AM work for an architecture review?",
+          es: "Excelente volumen. En ese rango conviene automatizar la captura para que ningún prospecto quede sin respuesta. ¿Te queda bien revisar la arquitectura mañana a las 11:00 hs?",
+          en: "Solid volume. At that tier it pays to automate capture so no lead goes unanswered. Does tomorrow at 11:00 AM work for an architecture review?",
         },
         timestamp: "10:15 AM",
       },
@@ -228,8 +228,8 @@ export const OMNICHANNEL_LEADS: OmnichannelLead[] = [
         id: "m-32",
         sender: "ai_agent",
         text: {
-          es: "Hola Esteban. La migración a Server Components y Edge CDN reduce caídas al 0% y acelera consultas SQL a sub-100ms. ¿Cuántos usuarios concurrentes manejan?",
-          en: "Hi Esteban. Moving to Server Components & Edge CDN drops downtime to 0% and cuts SQL latency to sub-100ms. How many concurrent users?",
+          es: "Hola Esteban. Con Server Components y una CDN en el borde, el servidor trabaja menos y las consultas más pedidas se pueden cachear. ¿Cuántos usuarios concurrentes manejan?",
+          en: "Hi Esteban. With Server Components and an edge CDN the server does less work and the most-requested queries can be cached. How many concurrent users?",
         },
         timestamp: "09:05 AM",
       },

@@ -43,7 +43,7 @@ export function WorkflowSection() {
                   <span className="font-mono text-3xl font-bold tracking-tighter text-signal/80">
                     {stage.step}
                   </span>
-                  <span className="rounded-full border border-white/12 bg-white/5 px-2.5 py-0.5 font-mono text-[9px] uppercase tracking-wider text-foreground/60 light:border-[rgb(var(--ink-rgb)/0.12)]">
+                  <span className="rounded-full border border-white/12 bg-white/5 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-foreground/60 light:border-[rgb(var(--ink-rgb)/0.12)]">
                     {stage.badge[language]}
                   </span>
                 </div>
@@ -58,7 +58,7 @@ export function WorkflowSection() {
               </div>
 
               <div className="mt-6 pt-4 border-t border-white/5 light:border-[rgb(var(--ink-rgb)/0.05)]">
-                <span className="font-mono text-[10px] text-foreground/35 uppercase tracking-wider">
+                <span className="font-mono text-[10px] text-foreground/55 uppercase tracking-wider">
                   {isEs ? `Etapa 0${idx + 1}` : `Phase 0${idx + 1}`}
                 </span>
               </div>

@@ -79,11 +79,11 @@ export function CinematicPlate({ box, asset: source, poster, focal = { x: 0.5, y
         }}
       >
         <div style={{ position: "absolute", left: media.x - plate.x, top: media.y - plate.y, width: media.w, height: media.h, scale: `${scale}`, transformOrigin: `${focal.x * 100}% ${focal.y * 100}%` }}>
-          {poster && video ? <Img src={poster} style={fill} /> : null}
+          {poster && video ? <Img src={poster} alt="" style={fill} /> : null}
           {video ? (
             failed ? null : <Html5Video src={asset.src} muted loop={loop} pauseWhenBuffering={false} acceptableTimeShiftInSeconds={0.6} trimBefore={startAt > 0 ? Math.round(startAt * fps) : undefined} onError={() => setFailed(true)} style={fill} />
           ) : (
-            <Img src={asset.src} style={fill} />
+            <Img src={asset.src} alt="" style={fill} />
           )}
         </div>
         {/* Velo de la marca: viñeta hacia el fondo y un degradé suave arriba y abajo. */}

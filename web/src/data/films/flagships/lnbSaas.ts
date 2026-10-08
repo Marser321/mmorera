@@ -182,8 +182,8 @@ export const LNB_CHAPTERS: ReadonlyArray<FlagshipChapter> = [
     id: "signature",
     from: 1740,
     durationInFrames: 405,
-    label: { es: "Métricas & Firma", en: "Metrics & Signature" },
-    caption: { es: "Catálogo, tiempos de retiro y cierre de marca", en: "Catalog, pickup speed and brand closing" },
+    label: { es: "Lo construido y firma", en: "What was built & signature" },
+    caption: { es: "Catálogo, studios y planes que hay en producción", en: "Catalog, studios and plans in production" },
   },
 ];
 

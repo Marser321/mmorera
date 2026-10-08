@@ -467,7 +467,7 @@ function AuthorManifestoSceneComponent({
             <div className="flex items-start border-t border-white/18 pt-4">
               <div>
                 <p className="font-mono text-[10px] uppercase tracking-[.18em] text-[#B68CFF]">{copy.eyebrow}</p>
-                <p className="mt-2 font-mono text-[10px] uppercase tracking-[.14em] text-[#F3F0E8]/48">Mario Morera · Perfil</p>
+                <p className="mt-2 font-mono text-[10px] uppercase tracking-[.14em] text-[#F3F0E8]/60">Mario Morera · Perfil</p>
               </div>
             </div>
             <div className="max-w-[900px] pt-28 lg:ml-auto lg:w-[62vw]">
@@ -497,7 +497,7 @@ function AuthorManifestoSceneComponent({
                 <div className="flex items-start border-t border-white/18 pt-4">
                   <div>
                     <p className="font-mono text-[10px] uppercase tracking-[.18em] text-[#B68CFF]">{copy.eyebrow}</p>
-                    <p className="mt-2 font-mono text-[10px] uppercase tracking-[.14em] text-[#F3F0E8]/48">Mario Morera · Perfil</p>
+                    <p className="mt-2 font-mono text-[10px] uppercase tracking-[.14em] text-[#F3F0E8]/60">Mario Morera · Perfil</p>
                   </div>
                 </div>
 

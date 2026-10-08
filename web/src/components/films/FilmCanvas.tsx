@@ -3,6 +3,7 @@
 import { Player, type PlayerRef } from "@remotion/player";
 import type React from "react";
 import { FILM_FORMATS, FILM_FPS, type FilmFormat, type FilmLanguage } from "@/data/films/filmTypes";
+import type { CapabilityFilmProps } from "./compositions/CapabilityFilm";
 import { CaseFilm, type CaseFilmProps } from "./compositions/CaseFilm";
 import { LogoOverture, type LogoOvertureProps } from "./compositions/LogoOverture";
 import { SystemsOpening, type SystemsOpeningProps } from "./compositions/SystemsOpening";
@@ -13,7 +14,8 @@ export type FilmSource =
   | { kind: "use-case"; props: UseCaseFilmProps; durationInFrames: number }
   | { kind: "case"; props: CaseFilmProps; durationInFrames: number }
   | { kind: "logo"; props: LogoOvertureProps; durationInFrames: number }
-  | { kind: "flagship"; props: FlagshipProps; durationInFrames: number };
+  | { kind: "flagship"; props: FlagshipProps; durationInFrames: number }
+  | { kind: "capability"; props: CapabilityFilmProps; durationInFrames: number };
 
 export type FlagshipProps = { slug: string; language: FilmLanguage };
 
@@ -40,6 +42,9 @@ const FLAGSHIP_LOADERS: Record<string, () => Promise<FlagshipModule>> = {
   "rangel-oviedo-group": () => import("./compositions/RangelOviedoFilm").then((module) => ({ default: module.RangelOviedoFilm })),
   "truckers-choice": () => import("./compositions/TruckersFilm").then((module) => ({ default: module.TruckersFilm })),
 };
+
+/** Films por capacidad (/estudio): una sola composición, también diferida. */
+const loadCapabilityFilm = () => import("./compositions/CapabilityFilm").then((module) => ({ default: module.CapabilityFilm }));
 
 export interface FilmCanvasProps {
   source: FilmSource;
@@ -84,6 +89,8 @@ export function FilmCanvas({ source, format, onPlayer, initialFrame = 0 }: FilmC
       const loader = FLAGSHIP_LOADERS[source.props.slug];
       return loader ? <Player {...shared} lazyComponent={loader} inputProps={{ language: source.props.language }} /> : null;
     }
+    case "capability":
+      return <Player {...shared} lazyComponent={loadCapabilityFilm} inputProps={source.props} />;
     default:
       return <Player {...shared} component={UseCaseFilm} inputProps={source.props} />;
   }

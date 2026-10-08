@@ -199,7 +199,7 @@ export function HomeExperience() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -12 }}
                     transition={{ duration: 0.28, ease: EASE_OUT }}
-                    className={focusedSolution ? "text-sm text-foreground/80" : "font-mono text-[10px] uppercase tracking-[0.16em] text-foreground/35 max-sm:hidden"}
+                    className={focusedSolution ? "text-sm text-foreground/80" : "font-mono text-[10px] uppercase tracking-[0.16em] text-foreground/55 max-sm:hidden"}
                   >
                     {focusedSolution ? focusedSolution.headline[language] : `↳ ${c.servicesHint}`}
                   </motion.p>

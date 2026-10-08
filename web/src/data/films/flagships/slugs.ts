@@ -67,6 +67,13 @@ export const FLAGSHIP_SECONDS: Record<FlagshipSlug, number> = {
   "truckers-choice": 75.5,
 };
 
+/** Duración del film como en un reproductor (79,5 s → "1:20"); undefined si el caso no tiene film. */
+export function flagshipRuntime(slug: string) {
+  if (!hasFlagshipFilm(slug)) return undefined;
+  const total = Math.round(FLAGSHIP_SECONDS[slug as FlagshipSlug]);
+  return `${Math.floor(total / 60)}:${String(total % 60).padStart(2, "0")}`;
+}
+
 export const STILL_SIZE: Record<StillKind, { w: number; h: number }> = { og: { w: 1200, h: 630 }, hero: { w: 1600, h: 900 } };
 
 export function flagshipStill(slug: string, kind: StillKind, language: "es" | "en") {

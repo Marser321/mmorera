@@ -114,8 +114,8 @@ export function FilmChapters({
                   />
                 </span>
                 <span
-                  className={`mt-2 block truncate font-mono text-[8px] uppercase tracking-[.06em] transition-colors group-focus-visible:text-signal sm:text-[9px] sm:tracking-[.14em] ${
-                    index === chapterIndex ? "text-foreground" : "text-[#F3F0E8]/38 group-hover:text-[#F3F0E8]/70 light:text-muted-foreground/80"
+                  className={`mt-2 block truncate font-mono text-[9px] uppercase tracking-[.06em] transition-colors group-focus-visible:text-signal sm:text-[10px] sm:tracking-[.14em] ${
+                    index === chapterIndex ? "text-foreground" : "text-[#F3F0E8]/55 group-hover:text-[#F3F0E8]/70 light:text-muted-foreground/80"
                   }`}
                 >
                   <span className="hidden sm:inline">0{index + 1} · </span>

@@ -38,6 +38,8 @@ export interface BentoItem {
     wideLg?: boolean;
     /** Línea de pie (cliente, año, etc.). */
     footer?: string;
+    /** Texto del botón de esta tarjeta (si no, el `ctaLabel` de la grilla). */
+    cta?: string;
     /** Chips de tecnologías/herramientas asociadas. */
     technologies?: string[];
     /** Badge destacado de métrica o SLA. */
@@ -423,7 +425,7 @@ function BentoCard({
                 <div className="flex items-center gap-2">
                     {item.metricBadge && (
                         <span
-                            className="rounded-full border px-2.5 py-0.5 font-mono text-[9px] font-medium uppercase tracking-wider"
+                            className="rounded-full border px-2.5 py-0.5 font-mono text-[10px] font-medium uppercase tracking-wider"
                             style={{
                                 borderColor: `${accent}40`,
                                 backgroundColor: `${accent}10`,
@@ -434,7 +436,7 @@ function BentoCard({
                         </span>
                     )}
                     {item.href && (
-                        <ArrowUpRight className="h-4 w-4 shrink-0 text-foreground/40 transition-transform duration-500 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                        <ArrowUpRight className="h-4 w-4 shrink-0 text-foreground/55 transition-transform duration-500 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                     )}
                 </div>
             </div>
@@ -471,10 +473,23 @@ function BentoCard({
                     </div>
                 )}
 
-                {(item.footer || (item.href && ctaLabel)) && (
-                    <p className="mt-4 font-mono text-[9px] uppercase tracking-[0.16em] text-foreground/30">
-                        {item.footer ?? ctaLabel}
-                    </p>
+                {/* Botón visible (la tarjeta entera es el enlace) y, aparte, el pie. */}
+                {((item.href && (item.cta ?? ctaLabel)) || item.footer) && (
+                    <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
+                        {item.href && (item.cta ?? ctaLabel) ? (
+                            <span
+                                className="inline-flex min-h-9 items-center gap-2 rounded-full border px-3.5 py-1.5 text-xs font-medium text-foreground transition-colors duration-300 group-hover:text-background"
+                                style={{ borderColor: `${accent}73`, backgroundColor: `${accent}1F`, ["--cta-accent" as string]: accent }}
+                            >
+                                <span aria-hidden className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: accent }} />
+                                {item.cta ?? ctaLabel}
+                                <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                            </span>
+                        ) : (
+                            <span />
+                        )}
+                        {item.footer ? <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-foreground/55">{item.footer}</span> : null}
+                    </div>
                 )}
             </div>
         </>

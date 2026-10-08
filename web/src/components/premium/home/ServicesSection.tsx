@@ -189,7 +189,7 @@ export function ServicesSection() {
                     {project && (
                       <Link
                         href={localePath(language, `/casos-de-exito/${project.slug}`)}
-                        className="group inline-flex items-center gap-1.5 text-sm text-foreground/65 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                        className="group inline-flex min-h-10 items-center gap-1.5 text-sm text-foreground/65 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       >
                         {c.seenIn} <span className="font-medium text-foreground">{project.title[language]}</span>
                         <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useActiveTech } from "@/context/ActiveTechContext";
 import type { Language } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
@@ -11,16 +11,21 @@ import { DrawRule } from "@/components/motion/DrawRule";
 import { Reveal } from "@/components/scroll/Reveal";
 import { SplitReveal } from "@/components/motion/SplitReveal";
 import { RadialOrbitalTimeline, type RadialOrbitalNode } from "@/components/ui/radial-orbital-timeline";
+import { CapabilityFilmPanel } from "./CapabilityFilmPanel";
 
 /**
  * "01 · Capacidades" como órbita: cada familia del stack gira alrededor de un
  * núcleo y, al abrirse, muestra sus tecnologías reales. Abrir un nodo también
  * toma el control del campo de partículas global y del label contextual del
- * hero, así que la sección no es decorativa: dirige la escena.
+ * hero, así que la sección no es decorativa: dirige la escena. Al lado, el
+ * film corto de la familia abierta y los casos que la demuestran.
  */
 
 /** Default de /estudio — se restaura al cerrar un nodo. */
 const STUDIO_FAMILIES: Family[] = ["Media", "Marketing", "Web"];
+
+/** Film que se ve antes de abrir una familia (el primero de STUDIO_FAMILIES). */
+const DEFAULT_FILM: Family = STUDIO_FAMILIES[0];
 
 const STANCE_COPY: Record<SkillStance, { es: string; en: string; variant: "signal" | "accent" | "muted" }> = {
     core: { es: "Práctica diaria", en: "Daily practice", variant: "signal" },
@@ -57,6 +62,8 @@ export function CapabilitiesOrbit({ language }: { language: Language }) {
     const { theme } = useTheme();
     const { setActiveFamilies } = useActiveTech();
     const c = COPY[language];
+    // El film sigue a la familia abierta; al cerrarla queda el último elegido.
+    const [filmFamily, setFilmFamily] = useState<Family>(DEFAULT_FILM);
 
     const nodes = useMemo<RadialOrbitalNode[]>(
         () =>
@@ -83,6 +90,7 @@ export function CapabilitiesOrbit({ language }: { language: Language }) {
     const handleActiveChange = useCallback(
         (id: string | null) => {
             setActiveFamilies(id ? [id as Family] : STUDIO_FAMILIES);
+            if (id) setFilmFamily(id as Family);
         },
         [setActiveFamilies]
     );
@@ -90,7 +98,7 @@ export function CapabilitiesOrbit({ language }: { language: Language }) {
     return (
         <section className="mt-24 border-y border-white/10 bg-card px-5 py-20 sm:px-8 lg:px-12 lg:py-28 light:border-[rgb(var(--ink-rgb)/0.1)]">
             <div className="mx-auto max-w-[1480px]">
-                <p className="font-mono text-[10px] uppercase tracking-[.18em] text-foreground/35">
+                <p className="font-mono text-[10px] uppercase tracking-[.18em] text-foreground/55">
                     {c.eyebrow}
                 </p>
                 <div className="mt-6 grid gap-8 md:grid-cols-[1fr_.7fr] md:items-end">
@@ -105,7 +113,7 @@ export function CapabilitiesOrbit({ language }: { language: Language }) {
                 </div>
                 <DrawRule className="mt-12 block h-px w-full bg-white/10 light:bg-[rgb(var(--ink-rgb)/0.1)]" />
 
-                <div className="mx-auto mt-6 max-w-[900px]">
+                <div className="mt-6 grid gap-14 lg:grid-cols-2 lg:items-start lg:gap-12">
                     <RadialOrbitalTimeline
                         nodes={nodes}
                         labels={{ level: c.level, related: c.related, hint: c.hint }}
@@ -115,7 +123,7 @@ export function CapabilitiesOrbit({ language }: { language: Language }) {
                             if (techs.length === 0) return null;
                             return (
                                 <div className="mt-5 border-t border-white/10 pt-4 light:border-[rgb(var(--ink-rgb)/0.1)]">
-                                    <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-foreground/40">
+                                    <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-foreground/55">
                                         {c.tools}
                                     </p>
                                     <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1.5">
@@ -129,6 +137,9 @@ export function CapabilitiesOrbit({ language }: { language: Language }) {
                             );
                         }}
                     />
+                    <div className="lg:pt-6">
+                        <CapabilityFilmPanel family={filmFamily} language={language} />
+                    </div>
                 </div>
             </div>
         </section>

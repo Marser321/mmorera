@@ -10,7 +10,7 @@ import { ArchitectureExplorerMount } from "./ArchitectureExplorerMount";
 import { buildArchitectureModel, diagramSummary, narrowAspect, SITE_FONTS, SITE_PALETTE, themeVars } from "./underTheHoodModel";
 import styles from "./UnderTheHood.module.css";
 
-const label = "font-mono text-[9px] uppercase tracking-[.16em] text-[#F3F0E8]/55 light:text-muted-foreground";
+const label = "font-mono text-[10px] uppercase tracking-[.16em] text-[#F3F0E8]/55 light:text-muted-foreground";
 
 const COPY = {
   es: {

@@ -434,7 +434,7 @@ export function HeroPortfolio() {
                                         </p>
                                         <div className="mt-3 flex justify-center gap-3 flex-wrap">
                                             {track.tools.map((tool) => (
-                                                <span key={tool.name} className="text-[9px] font-mono text-zinc-200 bg-white/[0.06] border border-white/10 px-2 py-0.5 rounded-full backdrop-blur-sm">
+                                                <span key={tool.name} className="text-[10px] font-mono text-zinc-200 bg-white/[0.06] border border-white/10 px-2 py-0.5 rounded-full backdrop-blur-sm">
                                                     {tool.name}
                                                 </span>
                                             ))}
@@ -508,7 +508,7 @@ export function HeroPortfolio() {
                         <div className="absolute top-0 bottom-0 left-1/2 w-px bg-emerald-500/10" />
 
                         {/* Status bar inferior */}
-                        <div className="absolute bottom-0 left-0 right-0 h-8 bg-black/80 border-t border-emerald-500/20 flex items-center justify-between px-6 font-mono text-[9px] text-emerald-500/60 pointer-events-auto">
+                        <div className="absolute bottom-0 left-0 right-0 h-8 bg-black/80 border-t border-emerald-500/20 flex items-center justify-between px-6 font-mono text-[10px] text-emerald-500/60 pointer-events-auto">
                             <span>FPS: <span className="text-white font-bold">{metrics.fps}</span></span>
                             <span>DOM: <span className="text-white font-bold">{metrics.domNodes}</span></span>
                             <span>HEAP: <span className="text-white font-bold">{metrics.memoryUsed}</span></span>
@@ -521,7 +521,7 @@ export function HeroPortfolio() {
                         </div>
 
                         {/* Label de componente */}
-                        <span className="absolute top-4 left-4 font-mono text-[8px] text-emerald-500/40 uppercase">
+                        <span className="absolute top-4 left-4 font-mono text-[9px] text-emerald-500/40 uppercase">
                             {'<HeroPortfolio /> // Cmd+Shift+D to toggle'}
                         </span>
                     </motion.div>

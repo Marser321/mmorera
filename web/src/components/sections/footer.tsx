@@ -58,7 +58,7 @@ export function Footer() {
           <a href={SITE_IDENTITY.contact.whatsapp} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-foreground/55 hover:text-foreground">WhatsApp <ArrowUpRight className="h-3.5 w-3.5" /></a>
         </div>
       </div>
-      <div className="mx-auto mt-10 flex max-w-[1480px] flex-col gap-2 border-t border-white/10 pt-5 font-mono text-[10px] uppercase tracking-[0.12em] text-foreground/30 light:border-[rgb(var(--ink-rgb)/0.1)] sm:flex-row sm:justify-between">
+      <div className="mx-auto mt-10 flex max-w-[1480px] flex-col gap-2 border-t border-white/10 pt-5 font-mono text-[10px] uppercase tracking-[0.12em] text-foreground/55 light:border-[rgb(var(--ink-rgb)/0.1)] sm:flex-row sm:justify-between">
         <span>© Mario Morera</span><span>mmorera.agency</span>
       </div>
     </footer>

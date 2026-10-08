@@ -210,7 +210,7 @@ export function AplicarOS() {
     }
 
     const StepIcon = steps[step].icon;
-    const inputClass = "w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 font-sans text-sm text-white transition-[border-color,box-shadow,background-color] placeholder:text-white/35 focus-visible:border-signal/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal/30 light:border-border light:bg-input light:text-foreground light:placeholder:text-foreground/45";
+    const inputClass = "w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 font-sans text-sm text-white transition-[border-color,box-shadow,background-color] placeholder:text-white/35 focus-visible:border-signal/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal/30 light:border-border light:bg-input light:text-foreground light:placeholder:text-foreground/55";
     const getOptionCardClass = (selected: boolean) =>
         `flex min-h-12 cursor-pointer items-center justify-between rounded-xl border px-4 py-3 text-sm leading-5 transition-all duration-200 select-none ${
             selected
@@ -235,7 +235,7 @@ export function AplicarOS() {
 
                     <div className="mb-6 flex items-center justify-between border-b border-white/5 pb-4 light:border-[rgb(var(--ink-rgb)/0.05)]">
                         <h2 className="flex items-center gap-2 text-base font-semibold text-white light:text-foreground"><StepIcon aria-hidden="true" className="h-4 w-4 text-signal" />{steps[step].title}</h2>
-                        <span className="font-mono text-[9px] text-zinc-500 light:text-muted-foreground">{isEs ? `Paso ${step + 1} de ${steps.length}` : `Step ${step + 1} of ${steps.length}`}</span>
+                        <span className="font-mono text-[10px] text-zinc-400 light:text-muted-foreground">{isEs ? `Paso ${step + 1} de ${steps.length}` : `Step ${step + 1} of ${steps.length}`}</span>
                     </div>
 
                     <div className="min-h-[320px] text-left">
@@ -243,12 +243,12 @@ export function AplicarOS() {
                             <fieldset className="space-y-5">
                                 <legend className="sr-only">{isEs ? 'Tus datos' : 'Your details'}</legend>
                                 <div>
-                                    <label htmlFor="brief-name" className="mb-2 block font-mono text-[9px] font-bold uppercase tracking-wider text-zinc-500 light:text-muted-foreground">{isEs ? 'Nombre' : 'Name'}</label>
+                                    <label htmlFor="brief-name" className="mb-2 block font-mono text-[10px] font-bold uppercase tracking-wider text-zinc-400 light:text-muted-foreground">{isEs ? 'Nombre' : 'Name'}</label>
                                     <input id="brief-name" name="nombre" type="text" value={formData.name} onChange={(event) => updateField('name', event.target.value, 'nombre')} autoComplete="name" maxLength={80} aria-invalid={Boolean(fieldErrors.nombre)} aria-describedby={fieldErrors.nombre ? 'brief-name-error' : undefined} placeholder={isEs ? 'Tu nombre…' : 'Your name…'} className={inputClass} />
                                     {errorText('nombre')}
                                 </div>
                                 <div>
-                                    <label htmlFor="brief-email" className="mb-2 block font-mono text-[9px] font-bold uppercase tracking-wider text-zinc-500 light:text-muted-foreground">Email</label>
+                                    <label htmlFor="brief-email" className="mb-2 block font-mono text-[10px] font-bold uppercase tracking-wider text-zinc-400 light:text-muted-foreground">Email</label>
                                     <input id="brief-email" name="email" type="email" value={formData.email} onChange={(event) => updateField('email', event.target.value, 'email')} autoComplete="email" inputMode="email" spellCheck={false} maxLength={254} aria-invalid={Boolean(fieldErrors.email)} aria-describedby={fieldErrors.email ? 'brief-email-error' : undefined} placeholder="nombre@empresa.com…" className={inputClass} />
                                     {errorText('email')}
                                 </div>
@@ -258,11 +258,11 @@ export function AplicarOS() {
                         {step === 1 && (
                             <div className="space-y-7">
                                 <div>
-                                    <label htmlFor="brief-company" className="mb-2 block font-mono text-[9px] font-bold uppercase tracking-wider text-zinc-500 light:text-muted-foreground">{isEs ? 'Proyecto o empresa (opcional)' : 'Project or company (optional)'}</label>
+                                    <label htmlFor="brief-company" className="mb-2 block font-mono text-[10px] font-bold uppercase tracking-wider text-zinc-400 light:text-muted-foreground">{isEs ? 'Proyecto o empresa (opcional)' : 'Project or company (optional)'}</label>
                                     <input id="brief-company" name="empresa" type="text" value={formData.company} onChange={(event) => updateField('company', event.target.value, 'empresa')} autoComplete="organization" maxLength={120} placeholder={isEs ? 'Nombre del proyecto…' : 'Project name…'} className={inputClass} />
                                 </div>
                                 <fieldset>
-                                    <legend className="mb-3 font-mono text-[9px] font-bold uppercase tracking-wider text-zinc-500 light:text-muted-foreground">{isEs ? 'Madurez' : 'Stage'}</legend>
+                                    <legend className="mb-3 font-mono text-[10px] font-bold uppercase tracking-wider text-zinc-400 light:text-muted-foreground">{isEs ? 'Madurez' : 'Stage'}</legend>
                                     <div className="grid gap-2 sm:grid-cols-2">
                                         {projectStages.map((option, index) => {
                                             const isSelected = formData.projectStage === option.value;
@@ -291,7 +291,7 @@ export function AplicarOS() {
                                     {errorText('projectStage')}
                                 </fieldset>
                                 <fieldset>
-                                    <legend className="mb-3 font-mono text-[9px] font-bold uppercase tracking-wider text-zinc-500 light:text-muted-foreground">{isEs ? 'Equipo' : 'Team'}</legend>
+                                    <legend className="mb-3 font-mono text-[10px] font-bold uppercase tracking-wider text-zinc-400 light:text-muted-foreground">{isEs ? 'Equipo' : 'Team'}</legend>
                                     <div className="grid gap-2 sm:grid-cols-2">
                                         {teamContexts.map((option, index) => {
                                             const isSelected = formData.teamContext === option.value;
@@ -325,12 +325,12 @@ export function AplicarOS() {
                         {step === 2 && (
                             <div className="space-y-7">
                                 <div>
-                                    <label htmlFor="brief-project" className="mb-2 block font-mono text-[9px] font-bold uppercase tracking-wider text-zinc-500 light:text-muted-foreground">{isEs ? '¿Qué querés cambiar, construir o hacer posible?' : 'What do you want to change, build or make possible?'}</label>
+                                    <label htmlFor="brief-project" className="mb-2 block font-mono text-[10px] font-bold uppercase tracking-wider text-zinc-400 light:text-muted-foreground">{isEs ? '¿Qué querés cambiar, construir o hacer posible?' : 'What do you want to change, build or make possible?'}</label>
                                     <textarea id="brief-project" name="mensaje" value={formData.challenge} onChange={(event) => updateField('challenge', event.target.value, 'mensaje')} autoComplete="off" maxLength={2000} rows={6} aria-invalid={Boolean(fieldErrors.mensaje)} aria-describedby={fieldErrors.mensaje ? 'brief-project-error' : undefined} placeholder={isEs ? 'El contexto, qué existe hoy y qué debería cambiar…' : 'The context, what exists today and what should change…'} className={`${inputClass} resize-y`} />
-                                    <div className="flex items-start justify-between gap-4">{errorText('mensaje')}<span className="ml-auto mt-2 font-mono text-[9px] tabular-nums text-foreground/30">{formData.challenge.length}/2000</span></div>
+                                    <div className="flex items-start justify-between gap-4">{errorText('mensaje')}<span className="ml-auto mt-2 font-mono text-[10px] tabular-nums text-foreground/55">{formData.challenge.length}/2000</span></div>
                                 </div>
                                 <fieldset>
-                                    <legend className="mb-3 font-mono text-[9px] font-bold uppercase tracking-wider text-zinc-500 light:text-muted-foreground">{isEs ? 'Momento estimado de inicio' : 'Estimated start time'}</legend>
+                                    <legend className="mb-3 font-mono text-[10px] font-bold uppercase tracking-wider text-zinc-400 light:text-muted-foreground">{isEs ? 'Momento estimado de inicio' : 'Estimated start time'}</legend>
                                     <div className="grid gap-2 sm:grid-cols-2">
                                         {timelines.map((option, index) => {
                                             const isSelected = formData.timeline === option.value;

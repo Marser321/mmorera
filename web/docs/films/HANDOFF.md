@@ -19,6 +19,12 @@ Estado y reglas del sistema de "films de lanzamiento" del portfolio, para seguir
   - `CaseFilmSection`: el film del caso. Lee `#film-<capítulo>` para saltar a un capítulo, actualiza la URL al elegir uno y tiene el botón "Compartir este capítulo".
   - `FilmRail`: riel de films del home (cuadros fijos `og` y `hero`, enlace a `#film`).
   - `compositions/`
+    - `CapabilityFilm.tsx`: film corto por capacidad de /estudio (`{ family, language }`):
+      - apertura con la órbita de la familia y sus herramientas (`capabilityFilmLayout.ts`, con test);
+      - montaje de casos con `PlateManifesto` y los cuadros `hero`/`og` de cada film;
+      - firma.
+
+      Datos en `data/films/capabilityFilms.ts`, a partir de `capabilityCases.ts`. Lo carga `FilmCanvas` (`kind: "capability"`) y lo muestra `premium/estudio/CapabilityFilmPanel.tsx`.
     - `kit/`: escenas compartidas para armar un film nuevo rápido (`KitScenes.tsx`) y sus layouts puros (`kitLayout.ts`, con test): apertura sobre placa con partículas (`PlateOpening`), placa con beats (`PlateManifesto`), recorrido del sitio (`SiteTour`), reel de capturas con notas (`ReelBeat`), arquitectura (`ArchitectureBeat`) y cifras (`FactsBeat`). Cada film suma solo su escena protagonista.
   - `scenes/brand/`: motor de marca.
     - `ParticleLogo`: partículas que forman el logo del cliente.
@@ -51,6 +57,9 @@ Estado y reglas del sistema de "films de lanzamiento" del portfolio, para seguir
   - `build-archify-layouts.ts` (`npx tsx`): valida las cuatro variantes de cada diagrama con Archify (`showcase`) y congela sus rutas. Correrlo después de tocar un JSON de arquitectura o su traducción.
   - `analyze-live-site.ts <slug>`: recorrido en vivo (rutas, formularios, integraciones como GoHighLevel, fuentes y colores servidos) → `docs/films/dossiers/live/<slug>.{json,md}`. No envía formularios ni inicia sesión.
   - `measure-cases.ts`: Lighthouse.
+  - `render-films.ts`: MP4 de los films insignia y de los films por capacidad.
+    - `--capabilities` exporta los 9 de capacidad (ids `capability-<familia>`).
+    - `--stills 120,400` saca cuadros PNG en lugar de video, para revisar o hacer miniaturas.
 
 ## Reglas (no negociables)
 1. **Honestidad:**

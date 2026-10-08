@@ -6,8 +6,12 @@
  *   npx tsx scripts/render-films.ts                          (todos, 16:9 y 4:5, es y en)
  *   npx tsx scripts/render-films.ts truckers-choice          (un film)
  *   npx tsx scripts/render-films.ts truckers-choice --formats landscape --languages es --frames 0-299
+ *   npx tsx scripts/render-films.ts --capabilities           (los 9 films por capacidad de /estudio)
+ *   npx tsx scripts/render-films.ts capability-ai            (uno de ellos)
+ *   npx tsx scripts/render-films.ts capability-ai --stills 120,400   (cuadros PNG, para revisar o miniaturas)
  *
- * Salida: renders/<slug>/<slug>-<formato>-<idioma>.mp4 (fuera de git).
+ * Salida: renders/<id>/<id>-<formato>-<idioma>.mp4 (fuera de git), con <id> el
+ * slug del caso o capability-<familia>.
  * - 16:9 a 1920×1080 (el film mide 1600×900 y se escala 1,2).
  * - 4:5 a 1080×1350 (Instagram, LinkedIn).
  *
@@ -24,8 +28,10 @@ import { cpSync, existsSync, mkdirSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { bundle } from "@remotion/bundler";
-import { renderMedia, selectComposition } from "@remotion/renderer";
+import { renderMedia, renderStill, selectComposition } from "@remotion/renderer";
+import { capabilityFilmId } from "../src/data/films/capabilityFilms";
 import { FLAGSHIP_FILMS } from "../src/data/films/flagships";
+import { FAMILIES } from "../src/data/techStack";
 
 const ROOT = process.cwd();
 const REMOTION_VERSION = "4.0.490";
@@ -49,13 +55,20 @@ function binariesDirectory() {
   return pkg;
 }
 
+/** Opciones que llevan valor (el resto, como --capabilities, son interruptores). */
+const VALUED = new Set(["--formats", "--languages", "--frames", "--stills"]);
+
+/** Films por capacidad: id de exportación → familia. */
+const CAPABILITIES = Object.fromEntries(FAMILIES.map((family) => [capabilityFilmId(family.id), family.id]));
+
 async function main() {
-  const slugs = process.argv.slice(2).filter((arg, index, all) => !arg.startsWith("--") && !all[index - 1]?.startsWith("--"));
-  const films = slugs.length ? slugs : Object.keys(FLAGSHIP_FILMS);
+  const names = process.argv.slice(2).filter((arg, index, all) => !arg.startsWith("--") && !VALUED.has(all[index - 1]));
+  const films = names.length ? names : process.argv.includes("--capabilities") ? Object.keys(CAPABILITIES) : Object.keys(FLAGSHIP_FILMS);
   const formats = (option("formats") ?? "landscape,portrait").split(",") as Array<"landscape" | "portrait">;
   const languages = (option("languages") ?? "es,en").split(",") as Array<"es" | "en">;
   const frames = option("frames")?.split("-").map(Number) as [number, number] | undefined;
-  for (const slug of films) if (!FLAGSHIP_FILMS[slug]) throw new Error(`No hay film insignia para ${slug}`);
+  const stills = option("stills")?.split(",").map(Number);
+  for (const name of films) if (!FLAGSHIP_FILMS[name] && !CAPABILITIES[name]) throw new Error(`No hay film insignia ni film por capacidad con el id ${name}`);
 
   const binaries = binariesDirectory();
   const browserExecutable = process.platform === "win32" && existsSync(CHROME) ? CHROME : null;
@@ -74,8 +87,16 @@ async function main() {
         const outDir = path.join(ROOT, "renders", slug);
         mkdirSync(outDir, { recursive: true });
         const outputLocation = path.join(outDir, `${id}${frames ? `-${frames[0]}-${frames[1]}` : ""}.mp4`);
-        const inputProps = { slug, language };
+        const inputProps = CAPABILITIES[slug] ? { family: CAPABILITIES[slug], language } : { slug, language };
         const composition = await selectComposition({ serveUrl, id, inputProps, binariesDirectory: binaries, browserExecutable });
+        if (stills) {
+          for (const frame of stills) {
+            const output = path.join(outDir, `${id}-${frame}.png`);
+            await renderStill({ composition, serveUrl, frame, output, inputProps, scale: format === "landscape" ? 1.2 : 1, binariesDirectory: binaries, browserExecutable, timeoutInMilliseconds: 120_000 });
+            console.log(path.relative(ROOT, output));
+          }
+          continue;
+        }
         const started = Date.now();
         let last = -1;
         await renderMedia({

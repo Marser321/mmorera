@@ -26,6 +26,24 @@ Material listo para subir los casos de éxito a portfolios y redes: Upwork, Five
 
 **Casos con diagrama de Archify:** Fenix Medical Center, L&B Elite Wash, New Brothers y AD Media Solution. Los demás son sitios y productos de frontend sin sistema propio para diagramar.
 
+### Films por capacidad (perfil, no un caso)
+
+Nueve films cortos (21,5–26 s), uno por capacidad de /estudio:
+- **Familias:** IA aplicada, Automatización, Backend & datos, Experiencias web, Commerce, Marketing & medición, CRM & operación, Dirección visual e Infraestructura.
+- **Qué cuentan:** qué resuelve la capacidad, con qué herramientas y qué casos la demuestran.
+- **Para qué sirven:** secciones de habilidades o servicios (LinkedIn, Upwork, Contra, Fiverr) y posts que presentan un servicio y no un cliente.
+
+Desde `web/`:
+
+```bash
+npx tsx scripts/render-films.ts --capabilities                 # los 9, 16:9 y 4:5, es y en
+npx tsx scripts/render-films.ts capability-crm --languages en  # uno solo
+```
+
+- **Salida:** `renders/capability-<familia>/capability-<familia>-<landscape|portrait>-<es|en>.mp4` (16:9 a 1920×1080, 4:5 a 1080×1350).
+- **Ids:** `capability-ai`, `-automation`, `-backend`, `-web`, `-commerce`, `-marketing`, `-crm`, `-media` e `-infrastructure`.
+- Con `--stills 100,300` saca cuadros PNG para miniaturas.
+
 ## 2. Pedir otro formato o recorte (el agente lo genera solo)
 
 Desde `C:\Users\morer\OneDrive\Desktop\MMORERA\web`:

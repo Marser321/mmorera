@@ -35,8 +35,8 @@ export default function EnglishApplicationPage() {
       <div id="brief-form">
         <AplicarOS />
       </div>
-      <div className="mx-auto flex max-w-3xl flex-wrap justify-between gap-5 border-t border-white/10 pt-7 light:border-[rgb(var(--ink-rgb)/0.1)] text-sm text-foreground/48">
-        <span className="font-mono text-[9px] uppercase tracking-[.15em]">
+      <div className="mx-auto flex max-w-3xl flex-wrap justify-between gap-5 border-t border-white/10 pt-7 light:border-[rgb(var(--ink-rgb)/0.1)] text-sm text-foreground/60">
+        <span className="font-mono text-[10px] uppercase tracking-[.15em]">
           Direct channels
         </span>
         <div className="flex flex-wrap gap-5">
