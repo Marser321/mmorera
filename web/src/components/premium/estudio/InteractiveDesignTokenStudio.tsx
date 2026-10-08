@@ -131,7 +131,8 @@ export function InteractiveDesignTokenStudio() {
       </div>
 
       {/* Studio Workbench */}
-      <div className="relative z-10 mt-10 grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+      {/* min-w-0 en las columnas: el bloque de código no ensancha la grilla en el teléfono. */}
+      <div className="relative z-10 mt-10 grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start [&>*]:min-w-0">
         {/* Left Controls */}
         <div className="space-y-8">
           {/* Step 1: Color Themes */}

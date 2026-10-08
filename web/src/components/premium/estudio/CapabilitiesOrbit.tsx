@@ -96,7 +96,9 @@ export function CapabilitiesOrbit({ language }: { language: Language }) {
     );
 
     return (
-        <section className="mt-24 border-y border-white/10 bg-card px-5 py-20 sm:px-8 lg:px-12 lg:py-28 light:border-[rgb(var(--ink-rgb)/0.1)]">
+        // overflow-x-clip: antes de medirse, la órbita usa un radio de 200 px y en
+        // el teléfono los nodos sobresalían 27 px (scroll lateral al cargar).
+        <section className="mt-24 overflow-x-clip border-y border-white/10 bg-card px-5 py-20 sm:px-8 lg:px-12 lg:py-28 light:border-[rgb(var(--ink-rgb)/0.1)]">
             <div className="mx-auto max-w-[1480px]">
                 <p className="font-mono text-[10px] uppercase tracking-[.18em] text-foreground/55">
                     {c.eyebrow}
