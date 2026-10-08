@@ -300,7 +300,7 @@ export const DOGE_COPY = {
       subtitle: "Equipo profesional y tecnología avanzada en cada intervención.",
     },
     facts: {
-      kicker: "MÉTRICAS VERIFICADAS",
+      kicker: "LO QUE HAY EN PRODUCCIÓN",
       title: "ECOSISTEMA DIGITAL DOGE",
       cards: [
         { label: "Niveles de membresía", value: formatFact(DOGE_FACTS.tiers, "es"), note: "Essential, Signature y Estate" },
@@ -347,7 +347,7 @@ export const DOGE_COPY = {
       subtitle: "Dedicated commercial equipment and modern methods on every task.",
     },
     facts: {
-      kicker: "VERIFIED METRICS",
+      kicker: "WHAT RUNS IN PRODUCTION",
       title: "DOGE DIGITAL ECOSYSTEM",
       cards: [
         { label: "Membership tiers", value: formatFact(DOGE_FACTS.tiers, "en"), note: "Essential, Signature and Estate" },

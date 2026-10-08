@@ -224,7 +224,7 @@ export const AUTOHUB_CHAPTERS: ReadonlyArray<FlagshipChapter> = [
   {
     id: "facts",
     label: { es: "MÉTRICAS Y ARQUITECTURA", en: "METRICS & ARCHITECTURE" },
-    caption: { es: "Cifras verificadas de la plataforma en producción", en: "Verified production metrics of the platform" },
+    caption: { es: "Cifras contadas en la plataforma en producción", en: "Figures counted on the live platform" },
     from: 1755,
     durationInFrames: 480, // 58.5s - 74.5s
   },
