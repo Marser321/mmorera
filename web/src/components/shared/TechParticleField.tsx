@@ -269,7 +269,7 @@ function anchorForViewport(isMobile: boolean, isTablet: boolean): { center: [num
    grafito con blending normal — lo aditivo se lava hasta desaparecer sobre
    papel, y la tinta necesita un poco más de densidad para la misma presencia. */
 const PARTICLE_PHYSICS: Record<"dark" | "light", { base: string; blending: THREE.Blending; opacityBoost: number }> = {
-  dark: { base: "#F3F0E8", blending: THREE.AdditiveBlending, opacityBoost: 1 },
+  dark: { base: "#ECE7DD", blending: THREE.AdditiveBlending, opacityBoost: 1 },
   light: { base: "#1F2429", blending: THREE.NormalBlending, opacityBoost: 1.25 },
 };
 

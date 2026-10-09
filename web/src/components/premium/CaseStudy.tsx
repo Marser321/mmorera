@@ -21,7 +21,7 @@ import { relatedCases } from "@/data/capabilityCases";
 import { SKILL_ORBIT } from "@/data/skillOrbit";
 import { flagshipRuntime, flagshipStill, hasFlagshipFilm } from "@/data/films/flagships/slugs";
 
-const label = "font-mono text-[10px] uppercase tracking-[.16em] text-[#F3F0E8]/55 light:text-muted-foreground";
+const label = "font-mono text-[10px] uppercase tracking-[.16em] text-foreground/55 light:text-muted-foreground";
 
 function hostname(url: string) {
   try {
@@ -138,14 +138,14 @@ export function CaseStudy({ project, underTheHood }: { project: ProjectCase; und
         {/* Encabezado */}
         <header className="px-5 sm:px-8 lg:px-12">
           <div className="mx-auto max-w-[1480px]">
-            <Link href={localePath(language, "/casos-de-exito")} className="inline-flex items-center gap-2 rounded-md text-sm text-[#F3F0E8]/60 light:text-muted-foreground hover:text-[#F3F0E8] light:hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white light:ring-ring"><ArrowLeft className="h-4 w-4" />{isEs ? "Volver al archivo" : "Back to archive"}</Link>
+            <Link href={localePath(language, "/casos-de-exito")} className="inline-flex items-center gap-2 rounded-md text-sm text-foreground/60 light:text-muted-foreground hover:text-foreground light:hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white light:ring-ring"><ArrowLeft className="h-4 w-4" />{isEs ? "Volver al archivo" : "Back to archive"}</Link>
             <div className="mt-12 grid gap-8 lg:grid-cols-[1.25fr_.75fr] lg:items-end">
               <div>
                 <div className="flex flex-wrap gap-3 font-mono text-[10px] uppercase tracking-[.16em] text-accent">{project.kind && <span>{project.kind[language]}</span>}{project.year && <span>{project.year}</span>}{project.stack.slice(0, 3).map((item) => <span key={item}>{item}</span>)}</div>
                 <SplitReveal as="h1" mode="load" text={project.title[language]} className="mt-5 text-[clamp(3.2rem,8.5vw,9rem)] font-medium leading-[.87] tracking-[-.075em] text-foreground" />
               </div>
               <div className="lg:pb-3">
-                <p className="text-xl leading-8 tracking-[-.015em] text-[#F3F0E8]/62 light:text-muted-foreground">{project.summary[language]}</p>
+                <p className="text-xl leading-8 tracking-[-.015em] text-foreground/62 light:text-muted-foreground">{project.summary[language]}</p>
                 <div className="mt-7 flex flex-wrap gap-3">
                   {project.liveUrl && (
                     <a href={project.liveUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
@@ -190,7 +190,7 @@ export function CaseStudy({ project, underTheHood }: { project: ProjectCase; und
                 </Reveal>
               ))}
             </div>
-            <p className="mt-5 max-w-3xl text-sm leading-6 text-[#F3F0E8]/50 light:text-muted-foreground">
+            <p className="mt-5 max-w-3xl text-sm leading-6 text-foreground/50 light:text-muted-foreground">
               {isEs
                 ? "Estas capturas muestran una implementación local. No se verificó que coincida con la versión activa de canavacations.com ni una conexión real de reservas o pagos."
                 : "These captures show a local implementation. It has not been verified against the current canavacations.com site or a live booking or payment connection."}
@@ -201,9 +201,9 @@ export function CaseStudy({ project, underTheHood }: { project: ProjectCase; und
         {/* Ficha del caso: datos y el relato completo en texto */}
         <div className="mx-auto mt-20 grid max-w-[1480px] gap-10 px-5 sm:px-8 lg:grid-cols-[.55fr_1.45fr] lg:px-12">
           <aside className="grid gap-8 sm:grid-cols-2 lg:grid-cols-1 lg:self-start">
-            {project.client && <div><p className={label}>{isEs ? "Cliente" : "Client"}</p><p className="mt-3 text-sm leading-6 text-[#F3F0E8]/65 light:text-muted-foreground">{project.client[language]}</p></div>}
-            <div><p className={label}>{isEs ? "Rol" : "Role"}</p><p className="mt-3 text-sm leading-6 text-[#F3F0E8]/65 light:text-muted-foreground">{project.role[language]}</p></div>
-            <div><p className={label}>Stack</p><div className="mt-3 flex flex-wrap gap-2">{project.stack.map((item) => <span key={item} className="rounded-full border border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)] px-3 py-1.5 text-xs text-[#F3F0E8]/55 light:text-muted-foreground">{item}</span>)}</div></div>
+            {project.client && <div><p className={label}>{isEs ? "Cliente" : "Client"}</p><p className="mt-3 text-sm leading-6 text-foreground/65 light:text-muted-foreground">{project.client[language]}</p></div>}
+            <div><p className={label}>{isEs ? "Rol" : "Role"}</p><p className="mt-3 text-sm leading-6 text-foreground/65 light:text-muted-foreground">{project.role[language]}</p></div>
+            <div><p className={label}>Stack</p><div className="mt-3 flex flex-wrap gap-2">{project.stack.map((item) => <span key={item} className="rounded-full border border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)] px-3 py-1.5 text-xs text-foreground/55 light:text-muted-foreground">{item}</span>)}</div></div>
             {project.liveUrl && <div><p className={label}>{isEs ? "En producción" : "In production"}</p><a href={project.liveUrl} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-1.5 text-sm text-signal hover:underline">{hostname(project.liveUrl)}<ArrowUpRight className="h-3.5 w-3.5" /></a></div>}
           </aside>
           <details className="group border-y border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)]">
@@ -213,9 +213,9 @@ export function CaseStudy({ project, underTheHood }: { project: ProjectCase; und
             </summary>
             <div className="pb-6">
               <section className="border-t border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)] py-8"><p className="font-mono text-[10px] uppercase tracking-[.16em] text-track-create">01 · {isEs ? "El desafío" : "The challenge"}</p><h3 className="mt-5 max-w-3xl text-3xl font-medium leading-tight tracking-[-.04em] text-foreground sm:text-4xl">{project.challenge[language]}</h3></section>
-              <section className="border-t border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)] py-8"><p className="font-mono text-[10px] uppercase tracking-[.16em] text-accent">02 · {isEs ? "Restricciones" : "Constraints"}</p><ul className="mt-6 space-y-3">{project.constraints.map((item) => <li key={item[language]} className="flex gap-4 text-lg leading-7 text-[#F3F0E8]/55 light:text-muted-foreground"><span className="mt-3 h-1 w-1 shrink-0 rounded-full bg-accent" />{item[language]}</li>)}</ul></section>
-              <section className="border-t border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)] py-8"><p className="font-mono text-[10px] uppercase tracking-[.16em] text-signal">03 · {isEs ? "Decisiones" : "Decisions"}</p><ol className="mt-6 space-y-5">{project.decisions.map((item, i) => <li key={item[language]} className="grid grid-cols-[38px_1fr] gap-3 text-lg leading-7 text-[#F3F0E8]/65 light:text-muted-foreground"><span className="font-mono text-[10px] text-[#F3F0E8]/50 light:text-muted-foreground">0{i + 1}</span>{item[language]}</li>)}</ol></section>
-              <section className="border-t border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)] pt-8"><p className="font-mono text-[10px] uppercase tracking-[.16em] text-[#F3F0E8]/55 light:text-muted-foreground">04 · {isEs ? "Resultado" : "Outcome"}</p><p className="mt-5 max-w-3xl text-3xl font-medium leading-tight tracking-[-.04em] text-foreground sm:text-4xl">{project.result[language]}</p></section>
+              <section className="border-t border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)] py-8"><p className="font-mono text-[10px] uppercase tracking-[.16em] text-accent">02 · {isEs ? "Restricciones" : "Constraints"}</p><ul className="mt-6 space-y-3">{project.constraints.map((item) => <li key={item[language]} className="flex gap-4 text-lg leading-7 text-foreground/55 light:text-muted-foreground"><span className="mt-3 h-1 w-1 shrink-0 rounded-full bg-accent" />{item[language]}</li>)}</ul></section>
+              <section className="border-t border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)] py-8"><p className="font-mono text-[10px] uppercase tracking-[.16em] text-signal">03 · {isEs ? "Decisiones" : "Decisions"}</p><ol className="mt-6 space-y-5">{project.decisions.map((item, i) => <li key={item[language]} className="grid grid-cols-[38px_1fr] gap-3 text-lg leading-7 text-foreground/65 light:text-muted-foreground"><span className="font-mono text-[10px] text-foreground/50 light:text-muted-foreground">0{i + 1}</span>{item[language]}</li>)}</ol></section>
+              <section className="border-t border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)] pt-8"><p className="font-mono text-[10px] uppercase tracking-[.16em] text-foreground/55 light:text-muted-foreground">04 · {isEs ? "Resultado" : "Outcome"}</p><p className="mt-5 max-w-3xl text-3xl font-medium leading-tight tracking-[-.04em] text-foreground sm:text-4xl">{project.result[language]}</p></section>
             </div>
           </details>
         </div>
@@ -247,9 +247,9 @@ export function CaseStudy({ project, underTheHood }: { project: ProjectCase; und
         )}
       </article>
 
-      {/* Cierre: CTA */}
-      <section className="mx-auto mt-28 max-w-[1480px] px-5 sm:px-8 lg:px-12">
-        <div className="grid gap-8 border-y border-white/10 py-14 light:border-[rgb(var(--ink-rgb)/0.1)] md:grid-cols-[1.3fr_auto] md:items-center">
+      {/* Cierre: CTA, la banda marfil del caso. */}
+      <section className="banda-marfil mt-28 px-5 py-16 sm:px-8 sm:py-24 lg:px-12">
+        <div className="mx-auto grid max-w-[1480px] gap-8 md:grid-cols-[1.3fr_auto] md:items-center">
           <h2 className="text-[clamp(2.2rem,4.5vw,4.6rem)] font-medium leading-[0.98] tracking-[-0.055em] text-foreground">
             {isEs ? "¿Querés algo así para tu negocio?" : "Want something like this for your business?"}
           </h2>
@@ -260,7 +260,8 @@ export function CaseStudy({ project, underTheHood }: { project: ProjectCase; und
               </Link>
             </Magnetic>
             <Magnetic>
-              <a href={`${SITE_IDENTITY.contact.whatsapp}?text=${whatsappText}`} target="_blank" rel="noopener noreferrer" className="pressable inline-flex items-center gap-2 rounded-full border border-[#25D366]/40 bg-[#25D366]/15 px-6 py-3.5 text-sm font-semibold text-[#25D366] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366]">
+              {/* Verde sólido con letra oscura: AA sobre marfil y sobre pared. */}
+              <a href={`${SITE_IDENTITY.contact.whatsapp}?text=${whatsappText}`} target="_blank" rel="noopener noreferrer" className="pressable inline-flex items-center gap-2 rounded-full bg-[#25D366] px-6 py-3.5 text-sm font-semibold text-[#0B0B0A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                 <MessageCircle className="h-4 w-4" />WhatsApp
               </a>
             </Magnetic>

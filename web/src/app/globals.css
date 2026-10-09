@@ -4,8 +4,16 @@
 
 /*
  * ══════════════════════════════════════════════════════
- * SISTEMA DE DISEÑO "DEEP SPACE"
- * Paleta OKLCH · Tailwind CSS 3.4 · Dark Mode Nativo
+ * SISTEMA DE DISEÑO "PARED"
+ * Negro mate con grano (una pared, no un cielo), blanco roto y
+ * escalones de superficie. Tailwind CSS 3.4 · Dark Mode Nativo
+ *
+ * Escalones (oscuro):  pared #0B0B0A → relieve #121211 → marco #181816
+ * Pesos del blanco roto (#ECE7DD):
+ *   título 100 % · cuerpo 72 % · secundario 58 % · rótulos 55 % (mínimo AA)
+ *   líneas finas 10–14 % · contornos gigantes 10–14 %
+ *   monograma fundido: 85 % en marcos, 16–22 % como marca de agua
+ * Banda marfil: la sección clave de cada página, invertida (.banda-marfil).
  * ══════════════════════════════════════════════════════
  */
 
@@ -23,30 +31,34 @@
   --radius-lg: 0.75rem;
   --radius-xl: 1rem;
 
-  /* ─── Paleta Deep Space (OKLCH) ─── */
-  /* Fondos — base grafito casi negro (~#070809) */
-  --color-background: #070809;
-  --color-foreground: #F3F0E8;
+  /* ─── Paleta "Pared" ─── */
+  /* Fondo — negro mate (pared); el grano lo pone GlobalBackground */
+  --color-background: #0B0B0A;
+  /* Blanco roto: el marfil gastado del monograma */
+  --color-foreground: #ECE7DD;
 
-  /* Cards y superficies elevadas */
-  --color-card: #0D1114;
-  --color-card-foreground: #F3F0E8;
+  /* Escalón 1 — relieve: secciones que se separan de la pared */
+  --color-relieve: #121211;
+
+  /* Escalón 2 — marco: cards, paneles y superficies elevadas */
+  --color-card: #181816;
+  --color-card-foreground: #ECE7DD;
 
   /* Popover / Dropdowns */
-  --color-popover: oklch(0.16 0.012 260);
-  --color-popover-foreground: oklch(0.97 0.005 260);
+  --color-popover: #161615;
+  --color-popover-foreground: #ECE7DD;
 
-  /* Primary — Verde ácido de señal (color firma "Orquestador máximo") */
-  --color-primary: #F3F0E8;
-  --color-primary-foreground: #070809;
+  /* Primary — el blanco roto como botón principal */
+  --color-primary: #ECE7DD;
+  --color-primary-foreground: #0B0B0A;
 
-  /* Secondary — Gris cálido elegante */
-  --color-secondary: oklch(0.25 0.015 260);
-  --color-secondary-foreground: oklch(0.9 0.01 260);
+  /* Secondary — gris cálido */
+  --color-secondary: #232321;
+  --color-secondary-foreground: #DAD5CB;
 
-  /* Muted — texto secundario */
-  --color-muted: oklch(0.22 0.012 260);
-  --color-muted-foreground: oklch(0.65 0.015 260);
+  /* Muted — texto secundario (cálido, sin el tinte azul anterior) */
+  --color-muted: #1E1E1C;
+  --color-muted-foreground: #A29E95;
 
   /* Accent — Cyan sutil (señal de apoyo) */
   --color-accent: #55D8FF;
@@ -66,9 +78,9 @@
   --color-destructive-foreground: oklch(0.97 0.005 260);
 
   /* Bordes y anillos */
-  --color-border: oklch(0.3 0.02 260);
+  --color-border: #2B2B28;
   --color-ring: #55D8FF;
-  --color-input: oklch(0.25 0.015 260);
+  --color-input: #232321;
 
   /* Sidebar (futuro) */
   --color-sidebar: oklch(0.15 0.012 260);
@@ -85,9 +97,9 @@
   --animate-float: float 6s ease-in-out infinite;
   --animate-glow-pulse: glow-pulse 3s ease-in-out infinite;
 
-  /* ─── Tinta: el color que dibuja sobre el fondo (marfil en dark) ───
+  /* ─── Tinta: el color que dibuja sobre el fondo (blanco roto en dark) ───
      Para velos y bordes con alpha: rgb(var(--ink-rgb) / 0.12) */
-  --ink-rgb: 243 240 232;
+  --ink-rgb: 236 231 221;
 
   color-scheme: dark;
 }
@@ -104,6 +116,9 @@ html.light {
   /* Fondos — papel marfil de marca (el foreground exacto del dark) */
   --color-background: #F3F0E8;
   --color-foreground: #14171A;
+
+  /* Relieve: papel apenas más oscuro que el fondo */
+  --color-relieve: #EBE6DB;
 
   /* Cards: papel más blanco que el fondo → elevación */
   --color-card: #FBFAF4;
@@ -407,4 +422,134 @@ html.light {
   .fade-up-in {
     animation: none !important;
   }
+}
+
+/*
+ * ══════════════════════════════════════════════════════
+ * MARCA "PARED": grano, monograma fundido, palabra eco y banda marfil
+ * Fuera de @layer: Tailwind no las purga aunque solo se usen desde TSX.
+ * ══════════════════════════════════════════════════════
+ */
+
+/* Grano de pared: una textura fija y tenue sobre todo el sitio. Sin
+   mix-blend (no fuerza a recomponer lo que hay debajo al hacer scroll). */
+.grano-pared {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  background-image: url("/social/grano.png");
+  background-size: 384px 384px;
+  opacity: 0.055;
+}
+
+html.light .grano-pared {
+  opacity: 0.04;
+}
+
+/* Monograma en blanco roto con textura de piedra, fundiéndose hacia la pared.
+   La forma la da la máscara del SVG; el fundido, un degradé (--fundido). */
+.monograma-fundido {
+  aspect-ratio: 2239.69 / 1885.03;
+  pointer-events: none;
+  user-select: none;
+  background-color: var(--color-foreground);
+  background-image: url("/marca/textura-piedra.webp");
+  background-size: 420px 420px;
+  background-blend-mode: multiply;
+  -webkit-mask-image: url("/marca/monograma.svg"), var(--fundido, linear-gradient(to bottom, #000 28%, transparent 92%));
+  mask-image: url("/marca/monograma.svg"), var(--fundido, linear-gradient(to bottom, #000 28%, transparent 92%));
+  -webkit-mask-size: 100% 100%, 100% 100%;
+  mask-size: 100% 100%, 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+  /* Por variable, para que una página pueda bajarla por breakpoint
+     (`max-sm:[--monograma-opacidad:0.3]`) sin pelear especificidad. */
+  opacity: var(--monograma-opacidad, 0.85);
+}
+
+.monograma-fundido[data-intensidad="marca"] {
+  opacity: var(--monograma-opacidad, 0.18);
+}
+
+/* Palabra gigante en contorno, recortada contra el borde (decorativa). */
+.palabra-eco {
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+  font-weight: 500;
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgb(var(--ink-rgb) / 0.13);
+}
+
+/* Banda marfil: la sección clave de cada página, invertida. Redefine los
+   tokens: todo lo que los usa (texto, bordes, botones, señal) se invierte solo.
+   En el tema claro, la banda pasa a pared. Adentro, los textos secundarios van
+   con `text-muted-foreground` (no `foreground/55`: sobre marfil no llega a AA). */
+.banda-marfil {
+  --color-background: #ECE7DD;
+  --color-foreground: #0B0B0A;
+  --color-relieve: #E3DED3;
+  --color-card: #F4F0E8;
+  --color-card-foreground: #0B0B0A;
+  --color-muted: #DCD6CA;
+  --color-muted-foreground: #4A4740;
+  --color-border: #C9C3B7;
+  --color-primary: #0B0B0A;
+  --color-primary-foreground: #ECE7DD;
+  --color-secondary: #DCD6CA;
+  --color-secondary-foreground: #1E1D1A;
+  --color-input: #DCD6CA;
+  /* Acentos "print" un punto más oscuros: AA (≥ 4.5:1) sobre el marfil. */
+  --color-accent: #08657F;
+  --color-accent-foreground: #ECE7DD;
+  --color-signal: #0B6B3D;
+  --color-signal-foreground: #ECE7DD;
+  --color-track-create: #6D43CC;
+  --color-ring: #08657F;
+  --ink-rgb: 11 11 10;
+  position: relative;
+  isolation: isolate;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+}
+
+html.light .banda-marfil {
+  --color-background: #0B0B0A;
+  --color-foreground: #ECE7DD;
+  --color-relieve: #121211;
+  --color-card: #181816;
+  --color-card-foreground: #ECE7DD;
+  --color-muted: #1E1E1C;
+  --color-muted-foreground: #A29E95;
+  --color-border: #2B2B28;
+  --color-primary: #ECE7DD;
+  --color-primary-foreground: #0B0B0A;
+  --color-secondary: #232321;
+  --color-secondary-foreground: #DAD5CB;
+  --color-input: #232321;
+  --color-accent: #55D8FF;
+  --color-accent-foreground: #0B0B0A;
+  --color-signal: #71F3A2;
+  --color-signal-foreground: #0B0B0A;
+  --color-track-create: #B68CFF;
+  --color-ring: #55D8FF;
+  --ink-rgb: 236 231 221;
+}
+
+/* Grano de papel propio de la banda. */
+.banda-marfil::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: url("/social/grano.png");
+  background-size: 384px 384px;
+  opacity: 0.08;
 }

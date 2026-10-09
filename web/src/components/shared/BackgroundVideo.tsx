@@ -73,7 +73,7 @@ const TINT_RGB_LIGHT: Record<Exclude<Tint, 'none'>, string> = {
 };
 
 // Todas las paradas usan var(--color-background) en vez de negro crudo: en
-// dark resuelve a #070809 (mismo resultado visual que antes); en light
+// dark resuelve a la pared (#0B0B0A); en light
 // resuelve a #F3F0E8 (marfil) → el "velo" se vuelve papel, no tinta negra.
 function scrimBackground(scrim: Scrim): string | undefined {
     const bg = (alpha: number) => `color-mix(in srgb, var(--color-background) ${alpha * 100}%, transparent)`;

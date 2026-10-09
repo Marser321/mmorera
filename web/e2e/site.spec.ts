@@ -751,8 +751,8 @@ test("cruza el fondo abstracto con el tema y mantiene Perfil oscuro", async ({ p
 
   await page.goto("/#perfil");
   const manifesto = page.getByTestId("author-manifesto");
-  await expect.poll(() => manifesto.evaluate((section) => getComputedStyle(section).backgroundColor)).toBe("rgb(5, 6, 7)");
-  await expect.poll(() => manifesto.evaluate((section) => getComputedStyle(section).color)).toBe("rgb(243, 240, 232)");
+  await expect.poll(() => manifesto.evaluate((section) => getComputedStyle(section).backgroundColor)).toBe("rgb(11, 11, 10)");
+  await expect.poll(() => manifesto.evaluate((section) => getComputedStyle(section).color)).toBe("rgb(236, 231, 221)");
 });
 
 test("mantiene posters estaticos sin montar videos con movimiento reducido", async ({ browser }) => {

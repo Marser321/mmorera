@@ -9,8 +9,10 @@ export function WorkflowSection() {
   const { language } = useLanguage();
   const isEs = language === "es";
 
+  // La banda marfil del home: todo va con tokens, que la banda invierte (en el
+  // tema claro pasa a pared). Nada de blancos fijos adentro.
   return (
-    <section id="metodo" className="relative scroll-mt-24 border-t border-white/10 bg-card/30 px-5 py-20 sm:px-8 sm:py-28 lg:px-12 light:border-[rgb(var(--ink-rgb)/0.1)] light:bg-card/20">
+    <section id="metodo" className="banda-marfil scroll-mt-24 px-5 py-20 sm:px-8 sm:py-28 lg:px-12">
       <div className="mx-auto max-w-[1480px]">
         {/* Header */}
         <div className="max-w-3xl">
@@ -22,7 +24,7 @@ export function WorkflowSection() {
             text={isEs ? "Del problema a un sistema vivo en producción." : "From problem to deployed live software."}
             className="mt-4 text-[clamp(2.25rem,4.5vw,4.5rem)] font-medium leading-[1.02] tracking-[-0.05em] text-foreground"
           />
-          <Reveal as="p" className="mt-5 text-base leading-relaxed text-foreground/60 sm:text-lg">
+          <Reveal as="p" className="mt-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
             {isEs
               ? "Un proceso probado en 4 etapas para que nunca haya sorpresas, retrasos de meses ni presupuestos fuera de control."
               : "A battle-tested 4-stage process ensuring zero surprises, no multi-month delays, and strict budget predictability."}
@@ -36,14 +38,14 @@ export function WorkflowSection() {
               key={stage.step}
               y={20}
               delay={idx * 0.08}
-              className="relative flex flex-col justify-between rounded-2xl border border-white/10 bg-background/80 p-6 sm:p-7 backdrop-blur-sm transition-all hover:border-signal/40 hover:bg-background light:border-[rgb(var(--ink-rgb)/0.1)]"
+              className="relative flex flex-col justify-between rounded-2xl border border-[rgb(var(--ink-rgb)/0.12)] bg-card p-6 transition-colors hover:border-signal/40 hover:bg-background sm:p-7"
             >
               <div>
                 <div className="flex items-center justify-between">
-                  <span className="font-mono text-3xl font-bold tracking-tighter text-signal/80">
+                  <span className="font-mono text-3xl font-bold tracking-tighter text-signal">
                     {stage.step}
                   </span>
-                  <span className="rounded-full border border-white/12 bg-white/5 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-foreground/60 light:border-[rgb(var(--ink-rgb)/0.12)]">
+                  <span className="rounded-full border border-[rgb(var(--ink-rgb)/0.14)] bg-[rgb(var(--ink-rgb)/0.04)] px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
                     {stage.badge[language]}
                   </span>
                 </div>
@@ -52,13 +54,13 @@ export function WorkflowSection() {
                   {stage.title[language]}
                 </h3>
 
-                <p className="mt-3 text-xs sm:text-sm leading-relaxed text-foreground/60">
+                <p className="mt-3 text-xs leading-relaxed text-muted-foreground sm:text-sm">
                   {stage.description[language]}
                 </p>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-white/5 light:border-[rgb(var(--ink-rgb)/0.05)]">
-                <span className="font-mono text-[10px] text-foreground/55 uppercase tracking-wider">
+              <div className="mt-6 border-t border-[rgb(var(--ink-rgb)/0.08)] pt-4">
+                <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
                   {isEs ? `Etapa 0${idx + 1}` : `Phase 0${idx + 1}`}
                 </span>
               </div>

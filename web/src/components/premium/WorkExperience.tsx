@@ -14,6 +14,8 @@ import { TickerNumber } from "@/components/motion/TickerNumber";
 import { DrawRule } from "@/components/motion/DrawRule";
 import { Reveal } from "@/components/scroll/Reveal";
 import { ScrollProgressBar } from "@/components/scroll/ScrollProgressBar";
+import { MonogramaFundido } from "@/components/marca/MonogramaFundido";
+import { PalabraEco } from "@/components/marca/PalabraEco";
 
 /**
  * WorkExperience — /casos-de-exito: header compacto, reel cinematográfico de
@@ -29,7 +31,12 @@ export function WorkExperience() {
     <main id="contenido-principal" className="bg-transparent pb-28 pt-36 lg:pt-44">
       <ScrollProgressBar />
 
-      {/* Header compacto */}
+      {/* Header compacto, sobre la pared: eco y monograma fundido detrás. */}
+      <div className="relative isolate overflow-x-clip">
+      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 -top-36 bottom-0 -z-10 lg:-top-44">
+        <PalabraEco className="absolute left-[-.04em] top-[5.5rem] lg:top-[7rem]">{isEs ? "Trabajo" : "Work"}</PalabraEco>
+        <MonogramaFundido fundido="corto" className="absolute right-[-6vw] top-20 w-[min(42vw,560px)] max-sm:[--monograma-opacidad:0.3]" />
+      </div>
       <header className="mx-auto flex min-h-[40vh] w-full max-w-[1480px] flex-col justify-end px-5 pb-4 sm:px-8 lg:px-12">
         <p className="font-mono text-[10px] uppercase tracking-[.18em] text-accent">
           {isEs ? "Trabajo" : "Work"}
@@ -41,16 +48,17 @@ export function WorkExperience() {
           className="mt-6 max-w-5xl text-[clamp(2.8rem,6.5vw,7rem)] font-medium leading-[.9] tracking-[-.06em] text-foreground"
         />
         <div className="mt-8 flex flex-wrap items-end justify-between gap-6">
-          <p className="max-w-xl text-lg leading-7 text-[#F3F0E8]/55 light:text-muted-foreground">
+          <p className="max-w-xl text-lg leading-7 text-foreground/55 light:text-muted-foreground">
             {isEs ? "Casos, implementaciones locales y demos; cada ficha deja claro su estado." : "Cases, local implementations and demos; each page makes its status clear."}
           </p>
-          <p className="font-mono text-[10px] uppercase tracking-[.16em] text-[#F3F0E8]/55 light:text-muted-foreground/85">
+          <p className="font-mono text-[10px] uppercase tracking-[.16em] text-foreground/55 light:text-muted-foreground/85">
             <TickerNumber value={total} /> · {isEs ? "casos" : "cases"}
           </p>
         </div>
         <DrawRule className="mt-10 block h-px w-full bg-white/10 light:bg-[rgb(var(--ink-rgb)/0.1)]" />
         <CaseJumpIndex projects={[...FEATURED_CASES, ...ARCHIVE_CASES]} isEs={isEs} language={language} />
       </header>
+      </div>
 
       {/* Reel cinematográfico (full-bleed) */}
       <WorkReel projects={FEATURED_CASES} />
@@ -71,15 +79,15 @@ export function WorkExperience() {
         </Reveal>
       </section>
 
-      {/* CTA de cierre */}
-      <section className="mx-auto mt-24 w-full max-w-[1480px] px-5 sm:px-8 lg:px-12">
-        <div className="flex flex-wrap items-center justify-between gap-4 border-y border-white/10 light:border-[rgb(var(--ink-rgb)/0.1)] py-8">
-          <p className="text-lg text-[#F3F0E8]/55 light:text-muted-foreground">
+      {/* CTA de cierre: la banda marfil de la página. */}
+      <section className="banda-marfil mt-24 px-5 py-16 sm:px-8 sm:py-24 lg:px-12">
+        <div className="mx-auto flex w-full max-w-[1480px] flex-wrap items-end justify-between gap-8">
+          <p className="max-w-4xl text-[clamp(2.2rem,4.2vw,4.4rem)] font-medium leading-[.95] tracking-[-.055em] text-foreground">
             {isEs ? "¿Qué querés hacer posible?" : "What do you want to make possible?"}
           </p>
           <Link
             href={localePath(language, "/aplicar")}
-            className="link-draw group inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[.16em] text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="pressable group inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3.5 text-sm font-semibold text-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             {isEs ? "Hablemos" : "Let’s talk"}
             <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
@@ -98,8 +106,8 @@ function CaseJumpIndex({ projects, isEs, language }: { projects: ProjectCase[]; 
   return (
     <nav aria-label={isEs ? "Ir directo a un caso" : "Jump to a case"} className="mt-8">
       <div className="flex items-center justify-between gap-4">
-        <p className="font-mono text-[10px] uppercase tracking-[.16em] text-[#F3F0E8]/55 light:text-muted-foreground">{isEs ? "Ir directo a un caso" : "Jump to a case"}</p>
-        <p className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[.16em] text-[#F3F0E8]/55 light:text-muted-foreground">
+        <p className="font-mono text-[10px] uppercase tracking-[.16em] text-foreground/55 light:text-muted-foreground">{isEs ? "Ir directo a un caso" : "Jump to a case"}</p>
+        <p className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[.16em] text-foreground/55 light:text-muted-foreground">
           <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-signal" />
           {isEs ? "Film insignia" : "Flagship film"}
         </p>

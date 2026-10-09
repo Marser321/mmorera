@@ -51,7 +51,7 @@ export function LiveDemoModal({ project }: { project: ProjectCase }) {
           <DialogTitle className="truncate text-lg font-medium tracking-[-.03em] text-foreground sm:text-xl">
             {project.title[language]}
           </DialogTitle>
-          <DialogDescription className="mt-1 font-mono text-[10px] uppercase tracking-[.16em] text-[#F3F0E8]/55 light:text-muted-foreground/85">
+          <DialogDescription className="mt-1 font-mono text-[10px] uppercase tracking-[.16em] text-foreground/55 light:text-muted-foreground/85">
             {project.tracks.map((track) => trackLabels[language][track]).join(" · ")}
           </DialogDescription>
         </div>
@@ -59,7 +59,7 @@ export function LiveDemoModal({ project }: { project: ProjectCase }) {
         <div className="ml-auto flex flex-wrap items-center gap-4">
           <Link
             href={localePath(language, `/casos-de-exito/${project.slug}`)}
-            className="link-draw font-mono text-[10px] uppercase tracking-[.16em] text-[#F3F0E8]/55 light:text-muted-foreground transition-colors hover:text-[#F3F0E8] light:hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="link-draw font-mono text-[10px] uppercase tracking-[.16em] text-foreground/55 light:text-muted-foreground transition-colors hover:text-foreground light:hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             {isEs ? "Caso completo" : "Full case"} →
           </Link>
@@ -68,7 +68,7 @@ export function LiveDemoModal({ project }: { project: ProjectCase }) {
               href={project.liveUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="link-draw inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[.16em] text-[#F3F0E8]/55 light:text-muted-foreground transition-colors hover:text-[#F3F0E8] light:hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="link-draw inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[.16em] text-foreground/55 light:text-muted-foreground transition-colors hover:text-foreground light:hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               {isEs ? "Abrir en pestaña nueva" : "Open in new tab"}
               <ExternalLink className="h-3 w-3" />
@@ -84,7 +84,7 @@ export function LiveDemoModal({ project }: { project: ProjectCase }) {
                 aria-label={id}
                 aria-pressed={device === id}
                 className={cn(
-                  "cursor-pointer rounded-full p-1.5 text-[#F3F0E8]/55 light:text-muted-foreground transition-colors hover:text-[#F3F0E8] light:hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                  "cursor-pointer rounded-full p-1.5 text-foreground/55 light:text-muted-foreground transition-colors hover:text-foreground light:hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                   device === id && "bg-white/10 light:bg-[rgb(var(--ink-rgb)/0.1)] text-foreground",
                 )}
               >
@@ -102,7 +102,7 @@ export function LiveDemoModal({ project }: { project: ProjectCase }) {
               {!loaded && (
                 <div aria-hidden className="absolute inset-0 z-10 flex items-center justify-center bg-card">
                   <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-white/[0.04] light:from-[rgb(var(--ink-rgb)/0.04)] via-transparent to-white/[0.02] light:to-[rgb(var(--ink-rgb)/0.02)]" />
-                  <span className="font-mono text-[10px] uppercase tracking-[.2em] text-[#F3F0E8]/55 light:text-muted-foreground/85">
+                  <span className="font-mono text-[10px] uppercase tracking-[.2em] text-foreground/55 light:text-muted-foreground/85">
                     {isEs ? "Cargando demo…" : "Loading demo…"}
                   </span>
                 </div>
@@ -125,8 +125,8 @@ export function LiveDemoModal({ project }: { project: ProjectCase }) {
                 sizes="(max-width: 1024px) 100vw, 1200px"
                 className="object-cover"
               />
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-[#070809]/72 light:bg-[rgb(var(--ink-rgb)/0.45)] px-6 text-center">
-                <p className="font-mono text-[10px] uppercase tracking-[.2em] text-[#F3F0E8]/55">
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-background/72 light:bg-[rgb(var(--ink-rgb)/0.45)] px-6 text-center">
+                <p className="font-mono text-[10px] uppercase tracking-[.2em] text-[#ECE7DD]/55">
                   {isEs ? "Este sitio no permite vista embebida" : "This site blocks embedding"}
                 </p>
                 {project.liveUrl && (
@@ -134,7 +134,7 @@ export function LiveDemoModal({ project }: { project: ProjectCase }) {
                     href={project.liveUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="pressable inline-flex items-center gap-2 rounded-full bg-[#F3F0E8] px-5 py-2.5 font-mono text-[11px] uppercase tracking-[.14em] text-[#070809] transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55D8FF]"
+                    className="pressable inline-flex items-center gap-2 rounded-full bg-[#ECE7DD] px-5 py-2.5 font-mono text-[11px] uppercase tracking-[.14em] text-[#0B0B0A] transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55D8FF]"
                   >
                     {isEs ? "Abrir sitio en vivo" : "Open live site"}
                     <ArrowUpRight className="h-3.5 w-3.5" />

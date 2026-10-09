@@ -46,7 +46,7 @@ export function SocialShareImage() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                background: "#070809",
+                background: "#0B0B0A",
                 color: "white",
                 position: "relative",
                 overflow: "hidden",

@@ -54,7 +54,7 @@ function DirectLinks({ interactive = true }: { interactive?: boolean }) {
           target={label === "WhatsApp" ? "_blank" : undefined}
           rel={label === "WhatsApp" ? "noreferrer" : undefined}
           tabIndex={interactive ? undefined : -1}
-          className="inline-flex items-center gap-2 border-b border-white/24 pb-1 text-sm text-[#F3F0E8] transition-colors hover:border-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55D8FF]"
+          className="inline-flex items-center gap-2 border-b border-white/24 pb-1 text-sm text-[#ECE7DD] transition-colors hover:border-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55D8FF]"
         >
           {label}<ArrowUpRight className="h-3.5 w-3.5" />
         </a>
@@ -86,8 +86,8 @@ function EditorialCopy({
     <div>
       <motion.div style={animate ? { opacity: headlineOpacity, y: headlineY } : undefined}>
         <h2 className={compact
-          ? "text-[clamp(2.55rem,10vw,4.5rem)] font-medium leading-[.92] tracking-[-.06em] text-[#F3F0E8]"
-          : "text-[clamp(2.65rem,5vw,6rem)] font-medium leading-[.92] tracking-[-.063em] text-[#F3F0E8]"}
+          ? "text-[clamp(2.55rem,10vw,4.5rem)] font-medium leading-[.92] tracking-[-.06em] text-[#ECE7DD]"
+          : "text-[clamp(2.65rem,5vw,6rem)] font-medium leading-[.92] tracking-[-.063em] text-[#ECE7DD]"}
         >
           {copy.headline}
         </h2>
@@ -96,10 +96,10 @@ function EditorialCopy({
         style={animate ? { opacity: detailsOpacity, y: detailsY } : undefined}
         className="mt-7 border-t border-white/16 pt-6 lg:grid lg:grid-cols-[1.35fr_.65fr] lg:gap-10"
       >
-        <p className="max-w-2xl text-base leading-7 text-[#F3F0E8]/66">{copy.body}</p>
+        <p className="max-w-2xl text-base leading-7 text-[#ECE7DD]/66">{copy.body}</p>
         <div className="mt-8 lg:mt-0">
           <p className="font-mono text-[10px] uppercase tracking-[.16em] text-[#B68CFF]">{copy.principleLabel}</p>
-          <p className="mt-3 text-[15px] leading-6 text-[#F3F0E8]/84">{copy.principle}</p>
+          <p className="mt-3 text-[15px] leading-6 text-[#ECE7DD]/84">{copy.principle}</p>
           <DirectLinks interactive={linksInteractive} />
         </div>
       </motion.div>
@@ -377,7 +377,7 @@ function AuthorManifestoSceneComponent({
       data-film-status={videoStatus}
       data-film-time={reducedMotion ? sequence.duration.toFixed(3) : "0.000"}
       data-film-rendered-time={reducedMotion ? sequence.duration.toFixed(3) : renderedTime.toFixed(3)}
-      className="absolute inset-0 overflow-hidden bg-[#050607]"
+      className="absolute inset-0 overflow-hidden bg-[#0B0B0A]"
       style={reducedMotion ? undefined : { scale: sceneScale }}
     >
       <picture className="absolute inset-0 block h-full w-full">
@@ -442,7 +442,7 @@ function AuthorManifestoSceneComponent({
         className="absolute inset-0 hidden bg-[linear-gradient(90deg,rgba(5,6,7,.97)_0%,rgba(5,6,7,.78)_30%,rgba(5,6,7,.2)_58%,rgba(5,6,7,.04)_100%)] lg:block"
         style={{ opacity: reducedMotion ? 0.24 : leftScrimOpacity }}
       />
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,6,7,.08)_0%,rgba(5,6,7,.03)_48%,rgba(5,6,7,.9)_76%,#050607_100%)] lg:bg-[radial-gradient(circle_at_70%_42%,transparent_0%,rgba(5,6,7,.06)_40%,rgba(5,6,7,.4)_100%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,6,7,.08)_0%,rgba(5,6,7,.03)_48%,rgba(5,6,7,.9)_76%,#0B0B0A_100%)] lg:bg-[radial-gradient(circle_at_70%_42%,transparent_0%,rgba(5,6,7,.06)_40%,rgba(5,6,7,.4)_100%)]" />
       <motion.div
         className="absolute inset-y-0 right-0 hidden w-[68%] bg-[linear-gradient(270deg,rgba(5,6,7,.96)_0%,rgba(5,6,7,.82)_48%,transparent_100%)] lg:block"
         style={{ opacity: reducedMotion ? 0.88 : finalScrimOpacity }}
@@ -456,7 +456,7 @@ function AuthorManifestoSceneComponent({
       id="perfil"
       data-home-section="manifesto"
       data-testid="author-manifesto"
-      className="relative scroll-mt-28 overflow-clip border-y border-white/10 bg-[#050607] text-[#F3F0E8]"
+      className="relative scroll-mt-28 overflow-clip border-y border-white/10 bg-[#0B0B0A] text-[#ECE7DD]"
     >
       <p className="sr-only">{copy.convergence}: {practiceVerbs.create}, {practiceVerbs.build}, {practiceVerbs.scale}.</p>
 
@@ -467,12 +467,12 @@ function AuthorManifestoSceneComponent({
             <div className="flex items-start border-t border-white/18 pt-4">
               <div>
                 <p className="font-mono text-[10px] uppercase tracking-[.18em] text-[#B68CFF]">{copy.eyebrow}</p>
-                <p className="mt-2 font-mono text-[10px] uppercase tracking-[.14em] text-[#F3F0E8]/60">Mario Morera · Perfil</p>
+                <p className="mt-2 font-mono text-[10px] uppercase tracking-[.14em] text-[#ECE7DD]/60">Mario Morera · Perfil</p>
               </div>
             </div>
             <div className="max-w-[900px] pt-28 lg:ml-auto lg:w-[62vw]">
-              <p className="font-mono text-[10px] uppercase tracking-[.18em] text-[#F3F0E8]/54">{copy.signature}</p>
-              <p className="mt-5 max-w-3xl text-[clamp(2.6rem,5vw,5.8rem)] font-medium uppercase leading-[.86] tracking-[-.07em] text-[#F3F0E8]">{copy.convergence}</p>
+              <p className="font-mono text-[10px] uppercase tracking-[.18em] text-[#ECE7DD]/54">{copy.signature}</p>
+              <p className="mt-5 max-w-3xl text-[clamp(2.6rem,5vw,5.8rem)] font-medium uppercase leading-[.86] tracking-[-.07em] text-[#ECE7DD]">{copy.convergence}</p>
               <div className="mt-10"><EditorialCopy copy={copy} compact={!isDesktop} /></div>
             </div>
           </div>
@@ -487,7 +487,7 @@ function AuthorManifestoSceneComponent({
                   <button
                     type="button"
                     onClick={() => prepareVideo(true)}
-                    className="pointer-events-auto rounded-full border border-white/25 bg-[#050607]/78 px-5 py-3 font-mono text-[10px] uppercase tracking-[.16em] text-[#F3F0E8] shadow-[0_12px_36px_rgba(0,0,0,.3)] backdrop-blur-md transition-colors hover:border-[#B68CFF]/70 hover:bg-[#050607]/92 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55D8FF] motion-reduce:transition-none"
+                    className="pointer-events-auto rounded-full border border-white/25 bg-[#0B0B0A]/78 px-5 py-3 font-mono text-[10px] uppercase tracking-[.16em] text-[#ECE7DD] shadow-[0_12px_36px_rgba(0,0,0,.3)] backdrop-blur-md transition-colors hover:border-[#B68CFF]/70 hover:bg-[#0B0B0A]/92 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55D8FF] motion-reduce:transition-none"
                   >
                     {language === "es" ? "Activar secuencia" : "Enable sequence"}
                   </button>
@@ -497,21 +497,21 @@ function AuthorManifestoSceneComponent({
                 <div className="flex items-start border-t border-white/18 pt-4">
                   <div>
                     <p className="font-mono text-[10px] uppercase tracking-[.18em] text-[#B68CFF]">{copy.eyebrow}</p>
-                    <p className="mt-2 font-mono text-[10px] uppercase tracking-[.14em] text-[#F3F0E8]/60">Mario Morera · Perfil</p>
+                    <p className="mt-2 font-mono text-[10px] uppercase tracking-[.14em] text-[#ECE7DD]/60">Mario Morera · Perfil</p>
                   </div>
                 </div>
 
                 <div className="absolute inset-x-0 bottom-[8%] top-20 lg:bottom-auto lg:top-[25%] lg:max-w-[850px]" aria-hidden="true">
                   <motion.div style={{ opacity: nameOpacity, y: nameY }} className="absolute bottom-0 left-0 lg:bottom-auto lg:top-0">
-                    <p className="font-mono text-[10px] uppercase tracking-[.18em] text-[#F3F0E8]/54">{copy.signature}</p>
-                    <p className="mt-4 text-[clamp(3.6rem,8vw,8rem)] font-medium leading-[.77] tracking-[-.085em] text-[#F3F0E8]">Mario<br />Morera</p>
+                    <p className="font-mono text-[10px] uppercase tracking-[.18em] text-[#ECE7DD]/54">{copy.signature}</p>
+                    <p className="mt-4 text-[clamp(3.6rem,8vw,8rem)] font-medium leading-[.77] tracking-[-.085em] text-[#ECE7DD]">Mario<br />Morera</p>
                   </motion.div>
                   <motion.p style={{ opacity: createOpacity, x: createX }} className="absolute bottom-0 left-0 text-[clamp(3.6rem,10vw,10rem)] font-medium uppercase leading-none tracking-[-.08em] text-[#B68CFF] lg:bottom-auto lg:top-[18%]">{practiceVerbs.create}</motion.p>
                   <motion.p style={{ opacity: buildOpacity, x: buildX }} className="absolute bottom-0 left-0 text-[clamp(3.25rem,9vw,9rem)] font-medium uppercase leading-none tracking-[-.08em] text-[#55D8FF] lg:bottom-auto lg:top-[18%]">{practiceVerbs.build}</motion.p>
                   <motion.p style={{ opacity: scaleOpacity, x: scaleX }} className="absolute bottom-0 left-0 text-[clamp(3.6rem,10vw,10rem)] font-medium uppercase leading-none tracking-[-.08em] text-[#71F3A2] lg:bottom-auto lg:top-[18%]">{practiceVerbs.scale}</motion.p>
                   <motion.p
                     style={{ opacity: convergenceOpacity, y: convergenceY, scale: convergenceScale }}
-                    className="absolute bottom-0 left-0 max-w-[800px] origin-left text-[clamp(2.5rem,6.2vw,7rem)] font-medium uppercase leading-[.83] tracking-[-.07em] text-[#F3F0E8] lg:bottom-auto lg:top-[8%]"
+                    className="absolute bottom-0 left-0 max-w-[800px] origin-left text-[clamp(2.5rem,6.2vw,7rem)] font-medium uppercase leading-[.83] tracking-[-.07em] text-[#ECE7DD] lg:bottom-auto lg:top-[8%]"
                   >
                     {copy.convergence}
                   </motion.p>
@@ -520,9 +520,9 @@ function AuthorManifestoSceneComponent({
                 <motion.div
                   aria-hidden="true"
                   style={{ opacity: headlineOpacity, y: headlineY }}
-                  className="absolute inset-x-0 bottom-[4%] bg-[linear-gradient(180deg,transparent_0%,rgba(5,6,7,.96)_20%,#050607_100%)] px-1 pb-2 pt-14 lg:hidden"
+                  className="absolute inset-x-0 bottom-[4%] bg-[linear-gradient(180deg,transparent_0%,rgba(5,6,7,.96)_20%,#0B0B0A_100%)] px-1 pb-2 pt-14 lg:hidden"
                 >
-                  <p className="max-w-[680px] text-[clamp(2.15rem,9vw,4rem)] font-medium leading-[.91] tracking-[-.06em] text-[#F3F0E8]">
+                  <p className="max-w-[680px] text-[clamp(2.15rem,9vw,4rem)] font-medium leading-[.91] tracking-[-.06em] text-[#ECE7DD]">
                     {copy.headline}
                   </p>
                 </motion.div>

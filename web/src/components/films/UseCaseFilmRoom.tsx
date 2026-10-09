@@ -192,12 +192,12 @@ export function UseCaseFilmRoom() {
       <div className="mx-auto max-w-[1480px]">
         <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-[.18em] text-[#F3F0E8]/55 light:text-muted-foreground/85">02 · {isEs ? "Casos de uso" : "Use cases"}</p>
+            <p className="font-mono text-[10px] uppercase tracking-[.18em] text-foreground/55 light:text-muted-foreground/85">02 · {isEs ? "Casos de uso" : "Use cases"}</p>
             <h2 id="use-cases-title" className="mt-4 text-3xl font-medium tracking-[-.04em] text-foreground sm:text-5xl">
               {isEs ? "Del problema al sistema, paso a paso." : "From problem to system, step by step."}
             </h2>
           </div>
-          <p className="font-mono text-[10px] uppercase tracking-widest text-[#F3F0E8]/55 light:text-muted-foreground/85">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-foreground/55 light:text-muted-foreground/85">
             {isEs ? "Tocá un nodo para inspeccionarlo" : "Tap a node to inspect it"}
           </p>
         </div>
@@ -221,7 +221,7 @@ export function UseCaseFilmRoom() {
                 }`}
               >
                 <span className="flex items-center justify-between gap-3 font-mono text-[10px] uppercase tracking-[.16em]">
-                  <span className={selected ? "text-signal" : "text-[#F3F0E8]/55 light:text-muted-foreground/85"}>{item.category[language]}</span>
+                  <span className={selected ? "text-signal" : "text-foreground/55 light:text-muted-foreground/85"}>{item.category[language]}</span>
                   <span className={item.kind === "real" ? "text-signal" : "text-accent"}>
                     {item.kind === "real" ? (isEs ? "Caso real" : "Real case") : (isEs ? "Ejemplo" : "Example")}
                   </span>
@@ -274,7 +274,7 @@ export function UseCaseFilmRoom() {
                     className={`pressable rounded-full border px-3 py-1.5 font-mono text-[10px] tracking-[.06em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal ${
                       selectedNodeId === stage.id
                         ? "border-accent/60 text-foreground"
-                        : "border-white/12 text-[#F3F0E8]/60 hover:text-foreground light:border-[rgb(var(--ink-rgb)/0.12)] light:text-muted-foreground"
+                        : "border-white/12 text-foreground/60 hover:text-foreground light:border-[rgb(var(--ink-rgb)/0.12)] light:text-muted-foreground"
                     }`}
                   >
                     0{index + 1} · {stage.title[language]}
@@ -289,7 +289,7 @@ export function UseCaseFilmRoom() {
               </Link>
             ) : (
               <div className="flex flex-wrap items-center justify-end gap-x-4 gap-y-2">
-                <p className="font-mono text-[10px] uppercase tracking-[.14em] text-[#F3F0E8]/55 light:text-muted-foreground/85">
+                <p className="font-mono text-[10px] uppercase tracking-[.14em] text-foreground/55 light:text-muted-foreground/85">
                   {isEs ? "Flujo de ejemplo con datos de muestra" : "Example flow with sample data"}
                 </p>
                 {/* Un caso real que resuelve algo parecido, directo al capítulo de su film. */}

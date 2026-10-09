@@ -199,7 +199,7 @@ export function CaseFilmSection({ script, language }: { script: CaseFilmScript; 
             <button
               type="button"
               onClick={shareChapter}
-              className="pressable inline-flex shrink-0 items-center gap-2 self-start rounded-full border border-white/14 px-4 py-2 font-mono text-[10px] uppercase tracking-[.14em] text-[#F3F0E8]/70 transition-colors hover:border-white/30 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal light:border-[rgb(var(--ink-rgb)/0.14)] light:text-muted-foreground"
+              className="pressable inline-flex shrink-0 items-center gap-2 self-start rounded-full border border-white/14 px-4 py-2 font-mono text-[10px] uppercase tracking-[.14em] text-foreground/70 transition-colors hover:border-white/30 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal light:border-[rgb(var(--ink-rgb)/0.14)] light:text-muted-foreground"
             >
               {shareState === "idle" ? <Link2 className="h-3.5 w-3.5" /> : <Check className="h-3.5 w-3.5 text-signal" />}
               <span aria-live="polite">{SHARE_LABELS[language][shareState]}</span>
