@@ -3,8 +3,6 @@ import { AplicarOS } from "@/components/portfolio-isolated/AplicarOS";
 import { SITE_IDENTITY } from "@/config/site";
 import { MotionBackdrop } from "@/components/shared/MotionBackdrop";
 import { MOTION_ASSETS } from "@/data/motionAssets";
-import { MonogramaFundido } from "@/components/marca/MonogramaFundido";
-import { PalabraEco } from "@/components/marca/PalabraEco";
 export const metadata: Metadata = {
   title: "Tell me what you want to move",
   description: "Three steps to understand the context and reply with the most useful next step.",
@@ -20,11 +18,6 @@ export default function EnglishApplicationPage() {
       className="relative isolate min-h-screen overflow-hidden bg-transparent px-5 pb-24 pt-36 sm:px-8 sm:pt-44 lg:px-12"
     >
       <MotionBackdrop asset={MOTION_ASSETS.opening} intensity={0.22} scrim="form" priority />
-      {/* Sobre el video y bajo el texto: eco y monograma fundido en la cabecera. */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-[70vh]">
-        <PalabraEco className="absolute left-[-.04em] top-24 sm:top-28">Let’s talk</PalabraEco>
-        <MonogramaFundido fundido="corto" className="absolute right-[-3vw] top-24 w-[min(30vw,430px)] max-sm:[--monograma-opacidad:0.3]" />
-      </div>
       <div className="relative z-10">
       <header className="mx-auto grid max-w-[1180px] gap-8 border-b border-white/10 pb-10 light:border-[rgb(var(--ink-rgb)/0.1)] md:grid-cols-[1.2fr_.8fr] md:items-end">
         <div>

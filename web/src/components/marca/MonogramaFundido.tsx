@@ -4,8 +4,6 @@ import { cn } from "@/lib/utils";
 /* Hacia dónde se funde el monograma contra la pared. */
 const FUNDIDOS = {
   abajo: "linear-gradient(to bottom, #000 28%, transparent 92%)",
-  /* Se apaga antes: deja libre lo que viene debajo (rótulos, chips). */
-  corto: "linear-gradient(to bottom, #000 14%, transparent 66%)",
   arriba: "linear-gradient(to top, #000 28%, transparent 92%)",
   /* Para el pie: la mitad de arriba ya es pared, así el recorte del pie no se ve. */
   pie: "linear-gradient(to top, #000 8%, transparent 58%)",

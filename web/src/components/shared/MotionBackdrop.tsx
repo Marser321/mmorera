@@ -25,6 +25,9 @@ interface MotionBackdropProps {
   intensity?: number;
   scrim?: MotionScrim;
   priority?: boolean;
+  /** Dentro de una `.banda-marfil` la sección va al revés del tema del sitio:
+   *  marfil en oscuro, pared en claro. Usa la variante que corresponde a ese fondo. */
+  invertirTema?: boolean;
 }
 
 function Poster({ source, priority }: { source: MotionMediaSource; priority: boolean }) {
@@ -51,10 +54,12 @@ export function MotionBackdrop({
   intensity = 1,
   scrim = asset.scrim,
   priority = false,
+  invertirTema = false,
 }: MotionBackdropProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const { theme } = useTheme();
+  const { theme: siteTheme } = useTheme();
+  const theme = invertirTema ? (siteTheme === "light" ? "dark" : "light") : siteTheme;
   const reducedMotion = useReducedMotionSafe() === true;
   const desktopMatch = useResolvedMediaQuery("(min-width: 768px)");
   const isDesktop = desktopMatch === true;

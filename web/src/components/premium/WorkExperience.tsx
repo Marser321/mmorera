@@ -14,8 +14,6 @@ import { TickerNumber } from "@/components/motion/TickerNumber";
 import { DrawRule } from "@/components/motion/DrawRule";
 import { Reveal } from "@/components/scroll/Reveal";
 import { ScrollProgressBar } from "@/components/scroll/ScrollProgressBar";
-import { MonogramaFundido } from "@/components/marca/MonogramaFundido";
-import { PalabraEco } from "@/components/marca/PalabraEco";
 
 /**
  * WorkExperience — /casos-de-exito: header compacto, reel cinematográfico de
@@ -31,12 +29,7 @@ export function WorkExperience() {
     <main id="contenido-principal" className="bg-transparent pb-28 pt-36 lg:pt-44">
       <ScrollProgressBar />
 
-      {/* Header compacto, sobre la pared: eco y monograma fundido detrás. */}
-      <div className="relative isolate overflow-x-clip">
-      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 -top-36 bottom-0 -z-10 lg:-top-44">
-        <PalabraEco className="absolute left-[-.04em] top-[5.5rem] lg:top-[7rem]">{isEs ? "Trabajo" : "Work"}</PalabraEco>
-        <MonogramaFundido fundido="corto" className="absolute right-[-6vw] top-20 w-[min(42vw,560px)] max-sm:[--monograma-opacidad:0.3]" />
-      </div>
+      {/* Header compacto */}
       <header className="mx-auto flex min-h-[40vh] w-full max-w-[1480px] flex-col justify-end px-5 pb-4 sm:px-8 lg:px-12">
         <p className="font-mono text-[10px] uppercase tracking-[.18em] text-accent">
           {isEs ? "Trabajo" : "Work"}
@@ -58,7 +51,6 @@ export function WorkExperience() {
         <DrawRule className="mt-10 block h-px w-full bg-white/10 light:bg-[rgb(var(--ink-rgb)/0.1)]" />
         <CaseJumpIndex projects={[...FEATURED_CASES, ...ARCHIVE_CASES]} isEs={isEs} language={language} />
       </header>
-      </div>
 
       {/* Reel cinematográfico (full-bleed) */}
       <WorkReel projects={FEATURED_CASES} />
