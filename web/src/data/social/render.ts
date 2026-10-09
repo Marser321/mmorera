@@ -1,4 +1,4 @@
-import { diapositivasDe, reelCasoBeats, reelTextoBeats, SLIDE_STILL_FRAMES } from "./timing";
+import { diapositivasDe, reelCasoBeats, reelComparacionBeats, reelConteoBeats, reelEncuestaBeats, reelTextoBeats, SLIDE_STILL_FRAMES } from "./timing";
 import type { Diapositiva, Formato, Pieza, Salida, Tono } from "./types";
 
 /**
@@ -14,11 +14,14 @@ export type SlideProps = { formato: Formato; slide: Diapositiva; pagina?: { n: n
 export type CarruselVideoProps = { formato: Formato; diapositivas: Diapositiva[]; tono: Tono; imagenes: ImagenesProp };
 export type ReelTextoProps = { salida: Extract<Salida, { plantilla: "reel-texto" }> };
 export type ReelCasoProps = { salida: Extract<Salida, { plantilla: "reel-caso" }>; nombre: string; placas: { og: string; hero: string } };
+export type ReelConteoProps = { salida: Extract<Salida, { plantilla: "reel-conteo" }> };
+export type ReelComparacionProps = { salida: Extract<Salida, { plantilla: "reel-comparacion" }> };
+export type ReelEncuestaProps = { salida: Extract<Salida, { plantilla: "reel-encuesta" }> };
 
 export type Trabajo = {
   archivo: string;
   composicion: string;
-  props: SlideProps | CarruselVideoProps | ReelTextoProps | ReelCasoProps;
+  props: SlideProps | CarruselVideoProps | ReelTextoProps | ReelCasoProps | ReelConteoProps | ReelComparacionProps | ReelEncuestaProps;
   tipo: "still" | "video";
   frame?: number;
 };
@@ -27,6 +30,9 @@ export const slideComposition = (formato: Formato) => `social-slide-${formato}`;
 export const carruselComposition = (formato: Formato) => `social-carrusel-${formato}`;
 export const REEL_TEXTO = "social-reel-texto";
 export const REEL_CASO = "social-reel-caso";
+export const REEL_CONTEO = "social-reel-conteo";
+export const REEL_COMPARACION = "social-reel-comparacion";
+export const REEL_ENCUESTA = "social-reel-encuesta";
 
 export type Fuentes = {
   imagenes: ImagenesProp;
@@ -82,6 +88,27 @@ function trabajosDeSalida(salida: Salida, fuentes: Fuentes): Trabajo[] {
       return [
         { archivo: `${salida.id}.mp4`, composicion: REEL_CASO, props, tipo: "video" },
         { archivo: `${salida.id}-portada.png`, composicion: REEL_CASO, props, tipo: "still", frame: gancho.duration - 12 },
+      ];
+    }
+    case "reel-conteo": {
+      const gancho = reelConteoBeats(salida)[0];
+      return [
+        { archivo: `${salida.id}.mp4`, composicion: REEL_CONTEO, props: { salida }, tipo: "video" },
+        { archivo: `${salida.id}-portada.png`, composicion: REEL_CONTEO, props: { salida }, tipo: "still", frame: gancho.duration - 12 },
+      ];
+    }
+    case "reel-comparacion": {
+      const gancho = reelComparacionBeats(salida)[0];
+      return [
+        { archivo: `${salida.id}.mp4`, composicion: REEL_COMPARACION, props: { salida }, tipo: "video" },
+        { archivo: `${salida.id}-portada.png`, composicion: REEL_COMPARACION, props: { salida }, tipo: "still", frame: gancho.duration - 12 },
+      ];
+    }
+    case "reel-encuesta": {
+      const gancho = reelEncuestaBeats(salida)[0];
+      return [
+        { archivo: `${salida.id}.mp4`, composicion: REEL_ENCUESTA, props: { salida }, tipo: "video" },
+        { archivo: `${salida.id}-portada.png`, composicion: REEL_ENCUESTA, props: { salida }, tipo: "still", frame: gancho.duration - 12 },
       ];
     }
   }

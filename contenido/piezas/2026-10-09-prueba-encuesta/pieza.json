@@ -1,0 +1,23 @@
+{
+  "id": "2026-10-09-prueba-encuesta",
+  "fecha": "2026-10-09",
+  "rama": "sistemas",
+  "serie": "Encuesta de arquitectura",
+  "titulo": "Prueba de encuesta animada",
+  "estado": "borrador",
+  "salidas": [
+    {
+      "id": "reel",
+      "plantilla": "reel-encuesta",
+      "para": ["instagram", "tiktok", "shorts"],
+      "pregunta": "¿Qué parte del flujo *falla más seguido*?",
+      "opciones": [
+        "El webhook del CRM",
+        "La respuesta del LLM",
+        "La cola de mensajes",
+        "La base de datos"
+      ],
+      "cta": "Comentá la letra y te paso el fix"
+    }
+  ]
+}

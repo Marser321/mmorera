@@ -2,9 +2,9 @@ import { layoutProblems } from "@/components/films/scenes/brand/layout/dataText"
 import { FORBIDDEN_CLAIMS } from "@/data/films/flagships/flagshipAssertions";
 import { FLAGSHIP_SLUGS } from "@/data/films/flagships/slugs";
 import { PROJECT_CASES } from "@/data/projectCases";
-import { plain, reelBeatLayout, reelCasoLayout, reelFirmaLayout, slideLayout, type ImageSizes } from "./layout";
+import { plain, reelBeatLayout, reelCasoLayout, reelComparacionLayout, reelConteoItemLayout, reelConteoNumeroLayout, reelEncuestaLayout, reelFirmaLayout, slideLayout, type ImageSizes } from "./layout";
 import { archivosChatGPT, archivosEsperados } from "./render";
-import { diapositivasDe, reelCasoBeats, reelTextoBeats, videoSeconds } from "./timing";
+import { diapositivasDe, reelCasoBeats, reelComparacionBeats, reelConteoBeats, reelEncuestaBeats, reelTextoBeats, videoSeconds } from "./timing";
 import { DURACION_MAXIMA, ESTADOS, PLATAFORMAS, RAMAS, SOCIAL_FORMATS, type Diapositiva, type Estado, type Pieza, type Plataforma, type Salida } from "./types";
 
 /**
@@ -74,6 +74,9 @@ function textosDeDiapositiva(slide: Diapositiva): string[] {
 export function textosDeSalida(salida: Salida): string[] {
   if (salida.plantilla === "reel-texto") return [salida.gancho, ...salida.pulsos.flatMap((p) => [p.kicker, p.texto].filter(Boolean) as string[]), salida.remate, salida.cta];
   if (salida.plantilla === "reel-caso") return [salida.gancho, ...salida.decisiones, salida.cierre];
+  if (salida.plantilla === "reel-conteo") return [salida.gancho, ...salida.items.flatMap((item) => [item.titulo, item.texto]), salida.remate, salida.cta];
+  if (salida.plantilla === "reel-comparacion") return [salida.gancho, salida.antes.rotulo, salida.antes.texto, salida.despues.rotulo, salida.despues.texto, salida.remate, salida.cta];
+  if (salida.plantilla === "reel-encuesta") return [salida.pregunta, ...salida.opciones, salida.cta];
   return diapositivasDe(salida).flatMap(textosDeDiapositiva);
 }
 
@@ -151,6 +154,26 @@ export function validarPieza(raw: unknown, entorno: Entorno): Problema[] {
       if (!(FLAGSHIP_SLUGS as readonly string[]).includes(salida.caso)) error(donde, `"${salida.caso}" no tiene film insignia (placas og/hero)`);
       if (!Array.isArray(salida.decisiones) || salida.decisiones.length !== 3) error(donde, "un reel de caso lleva exactamente 3 decisiones");
     }
+    if (salida.plantilla === "reel-conteo") {
+      if (!Array.isArray(salida.items) || salida.items.length < 3 || salida.items.length > 5) error(donde, "un reel de conteo lleva de 3 a 5 items");
+      for (const [i, item] of (salida.items ?? []).entries()) {
+        if (!isText(item.titulo)) error(`${donde}.items.${i + 1}`, "falta titulo");
+        if (!isText(item.texto)) error(`${donde}.items.${i + 1}`, "falta texto");
+      }
+      if (plain(salida.gancho).split(/\s+/).length > 14) aviso(donde, "el gancho pasa las 14 palabras: se lee lento");
+    }
+    if (salida.plantilla === "reel-comparacion") {
+      if (!salida.antes || !isText(salida.antes.rotulo) || !isText(salida.antes.texto)) error(donde, "falta rotulo o texto de antes");
+      if (!salida.despues || !isText(salida.despues.rotulo) || !isText(salida.despues.texto)) error(donde, "falta rotulo o texto de despues");
+      if (plain(salida.gancho).split(/\s+/).length > 14) aviso(donde, "el gancho pasa las 14 palabras: se lee lento");
+    }
+    if (salida.plantilla === "reel-encuesta") {
+      if (!isText(salida.pregunta)) error(donde, "falta pregunta");
+      if (!Array.isArray(salida.opciones) || salida.opciones.length < 2 || salida.opciones.length > 4) error(donde, "una encuesta lleva de 2 a 4 opciones");
+      for (const opt of salida.opciones ?? []) {
+        if (opt.length > 25) error(donde, `la opción "${opt}" pasa los 25 caracteres`);
+      }
+    }
 
     // Geometría: cada diapositiva y cada pulso entra en su zona segura.
     const formato = salida.plantilla === "carrusel" || salida.plantilla === "desafio" || salida.plantilla === "imagen" ? salida.formato : "reel";
@@ -178,6 +201,46 @@ export function validarPieza(raw: unknown, entorno: Entorno): Problema[] {
             : beat.rol === "remate"
               ? reelBeatLayout(beat.texto, "remate")
               : reelCasoLayout(beat.texto, beat.kicker ?? "", Boolean(beat.placa));
+        for (const problem of layoutProblems(layout.blocks, layout.safe)) error(`${donde}.${beat.id}`, problem);
+      }
+    }
+    if (salida.plantilla === "reel-conteo") {
+      for (const beat of reelConteoBeats(salida)) {
+        let layout;
+        if (beat.rol === "firma") layout = reelFirmaLayout(beat.texto);
+        else if (beat.id === "gancho") layout = reelBeatLayout(beat.texto, "gancho");
+        else if (beat.id.startsWith("num-")) layout = reelConteoNumeroLayout(parseInt(beat.texto, 10));
+        else if (beat.id.startsWith("item-")) {
+          const num = parseInt(beat.kicker?.replace("N.º ", "") ?? "1", 10);
+          const item = salida.items[num - 1] ?? { titulo: "", texto: "" };
+          layout = reelConteoItemLayout(item.titulo, item.texto, beat.kicker ?? `N.º ${num}`);
+        } else layout = reelBeatLayout(beat.texto, "remate");
+        for (const problem of layoutProblems(layout.blocks, layout.safe)) error(`${donde}.${beat.id}`, problem);
+      }
+    }
+    if (salida.plantilla === "reel-comparacion") {
+      for (const beat of reelComparacionBeats(salida)) {
+        let layout;
+        if (beat.rol === "firma") layout = reelFirmaLayout(beat.texto);
+        else if (beat.id === "gancho") layout = reelBeatLayout(beat.texto, "gancho");
+        else if (beat.id === "antes") layout = reelComparacionLayout("antes", salida.antes, salida.despues);
+        else if (beat.id === "despues") layout = reelComparacionLayout("despues", salida.antes, salida.despues);
+        else if (beat.id === "juntas") layout = reelComparacionLayout("juntas", salida.antes, salida.despues);
+        else layout = reelBeatLayout(beat.texto, "remate");
+        for (const problem of layoutProblems(layout.blocks, layout.safe)) error(`${donde}.${beat.id}`, problem);
+      }
+    }
+    if (salida.plantilla === "reel-encuesta") {
+      for (const beat of reelEncuestaBeats(salida)) {
+        let layout;
+        if (beat.rol === "firma") layout = reelFirmaLayout(beat.texto);
+        else if (beat.id === "gancho") layout = reelBeatLayout(beat.texto, "gancho");
+        else if (beat.id.startsWith("opcion-")) {
+          const i = parseInt(beat.id.replace("opcion-", ""), 10) - 1;
+          layout = reelEncuestaLayout(salida.pregunta, salida.opciones, i, i);
+        } else if (beat.id === "todas-juntas") {
+          layout = reelEncuestaLayout(salida.pregunta, salida.opciones, salida.opciones.length - 1, undefined, beat.texto);
+        } else layout = reelBeatLayout(beat.texto, "remate");
         for (const problem of layoutProblems(layout.blocks, layout.safe)) error(`${donde}.${beat.id}`, problem);
       }
     }

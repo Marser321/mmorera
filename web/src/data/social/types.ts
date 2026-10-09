@@ -77,6 +77,9 @@ export type Salida =
   | (SalidaBase & Estatica & { plantilla: "imagen"; formato: Formato; tono?: Tono; diapositiva: Diapositiva })
   | (SalidaBase & { plantilla: "reel-texto"; tono?: Tono; gancho: string; pulsos: Pulso[]; remate: string; cta: string })
   | (SalidaBase & { plantilla: "reel-caso"; caso: string; gancho: string; decisiones: string[]; cierre: string })
+  | (SalidaBase & { plantilla: "reel-conteo"; tono?: Tono; gancho: string; items: Array<{ titulo: string; texto: string }>; remate: string; cta: string })
+  | (SalidaBase & { plantilla: "reel-comparacion"; tono?: Tono; gancho: string; antes: { rotulo: string; texto: string }; despues: { rotulo: string; texto: string }; remate: string; cta: string })
+  | (SalidaBase & { plantilla: "reel-encuesta"; tono?: Tono; pregunta: string; opciones: string[]; cta: string })
   | (SalidaBase &
       Estatica & {
       plantilla: "desafio";

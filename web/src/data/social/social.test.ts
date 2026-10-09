@@ -5,9 +5,9 @@ import { tokens } from "@/components/social/SocialKit";
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { CONTENIDO, entornoDe, listarPiezas, revisarPieza } from "../../../scripts/lib/piezas";
-import { reelBeatLayout, reelCasoLayout, reelFirmaLayout, slideLayout } from "./layout";
+import { reelBeatLayout, reelCasoLayout, reelComparacionLayout, reelConteoItemLayout, reelConteoNumeroLayout, reelEncuestaLayout, reelFirmaLayout, slideLayout } from "./layout";
 import { archivosEsperados } from "./render";
-import { desafioDiapositivas, reelTextoBeats, videoSeconds } from "./timing";
+import { desafioDiapositivas, reelCasoBeats, reelComparacionBeats, reelConteoBeats, reelEncuestaBeats, reelTextoBeats, videoSeconds } from "./timing";
 import type { Diapositiva, Formato, Pieza } from "./types";
 import { validarPieza, type Entorno } from "./validate";
 
@@ -47,6 +47,36 @@ test("piezas de redes: geometría", async (t) => {
     const firma = reelFirmaLayout("Seguime para ver cómo lo construyo", "mmorera.agency/casos-de-exito/new-brothers-barberia");
     assert.deepEqual(layoutProblems(firma.blocks, firma.safe), []);
   });
+  await t.test("nuevas plantillas: geometría pura en zona segura", () => {
+    for (const n of [1, 3, 5]) {
+      const numLayout = reelConteoNumeroLayout(n);
+      assert.deepEqual(layoutProblems(numLayout.blocks, numLayout.safe), [], `conteo num ${n}`);
+    }
+    for (const [title, text] of [
+      ["Interfaces verificadas", "Los contratos de datos se definen antes de codificar la lógica."],
+      ["Un título intencionalmente largo para medir el límite", "Un texto explicativo completo que demuestra que el escalón tipográfico se adapta a la zona segura sin pisar elementos."],
+    ]) {
+      const itemLayout = reelConteoItemLayout(title, text, "N.º 3");
+      assert.deepEqual(layoutProblems(itemLayout.blocks, itemLayout.safe), [], `conteo item: ${title}`);
+    }
+
+    for (const etapa of ["antes", "despues", "juntas"] as const) {
+      const compLayout = reelComparacionLayout(
+        etapa,
+        { rotulo: "Antes", texto: "El lead llega a un correo que se revisa al día siguiente." },
+        { rotulo: "Después", texto: "El lead entra al CRM, recibe respuesta y queda agendado (datos de ejemplo)." },
+      );
+      assert.deepEqual(layoutProblems(compLayout.blocks, compLayout.safe), [], `comparacion ${etapa}`);
+    }
+
+    const opts = ["Responder consultas", "Conciliar facturas", "Agendar reuniones", "Actualizar bases"];
+    for (let i = 0; i < opts.length; i++) {
+      const encLayout = reelEncuestaLayout("¿Qué tarea te frena más?", opts, i, i);
+      assert.deepEqual(layoutProblems(encLayout.blocks, encLayout.safe), [], `encuesta paso ${i}`);
+    }
+    const todasLayout = reelEncuestaLayout("¿Qué tarea te frena más?", opts, opts.length - 1, undefined, "Comentá A, B, C o D");
+    assert.deepEqual(layoutProblems(todasLayout.blocks, todasLayout.safe), [], "encuesta todas juntas");
+  });
 });
 
 test("piezas de redes: énfasis y ritmo", () => {
@@ -68,6 +98,22 @@ test("piezas de redes: énfasis y ritmo", () => {
   assert.equal(beats.at(-2)?.tono, "claro", "el remate se invierte");
   beats.forEach((beat, index) => index && assert.equal(beat.from, beats[index - 1].from + beats[index - 1].duration));
   assert.equal(desafioDiapositivas({ id: "d", plantilla: "desafio", formato: "feed", para: ["linkedin"], titulo: "T", contexto: "C", problema: "P", decision: "D", resultado: "R", aprendizaje: "A" }).length, 7);
+
+  const conteoBeats = reelConteoBeats({ id: "c", plantilla: "reel-conteo", para: ["instagram"], gancho: "G", items: [{ titulo: "T1", texto: "X1" }, { titulo: "T2", texto: "X2" }, { titulo: "T3", texto: "X3" }], remate: "R", cta: "S" });
+  assert.equal(conteoBeats.at(-2)?.tono, "claro", "el remate de conteo se invierte");
+  assert.equal(conteoBeats.filter((b) => b.id.startsWith("num-")).length, 3);
+
+  const compBeats = reelComparacionBeats({ id: "cp", plantilla: "reel-comparacion", para: ["instagram"], gancho: "G", antes: { rotulo: "A", texto: "TA" }, despues: { rotulo: "D", texto: "TD" }, remate: "R", cta: "S" });
+  assert.ok(compBeats.some((b) => b.id === "antes"));
+  assert.ok(compBeats.some((b) => b.id === "despues"));
+  assert.ok(compBeats.some((b) => b.id === "juntas"));
+
+  const encBeats = reelEncuestaBeats({ id: "e", plantilla: "reel-encuesta", para: ["instagram"], pregunta: "P", opciones: ["O1", "O2", "O3"], cta: "S" });
+  assert.equal(encBeats.filter((b) => b.id.startsWith("opcion-")).length, 3);
+  assert.ok(encBeats.some((b) => b.id === "todas-juntas"));
+
+  const casoBeats = reelCasoBeats({ id: "cs", plantilla: "reel-caso", para: ["instagram"], caso: "new-brothers-barberia", gancho: "G", decisiones: ["D1", "D2", "D3"], cierre: "C" }, "New Brothers");
+  assert.equal(casoBeats.length, 6);
 });
 
 const ENTORNO_OK: Entorno = { carpeta: "2026-10-12-muestra", copy: "## LinkedIn\nTexto\n## Instagram\nTexto\n## TikTok y Shorts\nTexto\n## X\nTexto", imagen: () => undefined, salida: [] };

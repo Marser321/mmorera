@@ -1,0 +1,26 @@
+{
+  "id": "2026-10-09-prueba-comparacion",
+  "fecha": "2026-10-09",
+  "rama": "sistemas",
+  "serie": "Arquitectura de software",
+  "titulo": "Prueba de comparación",
+  "estado": "borrador",
+  "salidas": [
+    {
+      "id": "reel",
+      "plantilla": "reel-comparacion",
+      "para": ["instagram", "tiktok", "shorts"],
+      "gancho": "Dos formas de resolver *la captura de leads*",
+      "antes": {
+        "rotulo": "Antes",
+        "texto": "Un formulario suelto que manda un correo sin clasificar."
+      },
+      "despues": {
+        "rotulo": "Después",
+        "texto": "Un pipeline validado que sincroniza el CRM y responde en segundos."
+      },
+      "remate": "La diferencia no es estética. *Es ingeniería.*",
+      "cta": "Guardalo para tu próximo desarrollo"
+    }
+  ]
+}

@@ -3,7 +3,7 @@ import { AbsoluteFill, Img, interpolate, random, staticFile, useCurrentFrame, us
 import type { Box } from "@/lib/filmLayout";
 import type { SlideElement, SocialText } from "@/data/social/layout";
 import type { ImagenesProp } from "@/data/social/render";
-import type { Tono } from "@/data/social/types";
+import { socialSafeArea, type Tono } from "@/data/social/types";
 import { LogoMark } from "../films/scenes/LogoMark";
 import { CLAMP, EASE_IN_OUT, EASE_OUT, FILM_FONTS, progress } from "../films/scenes/theme";
 
@@ -18,11 +18,57 @@ export const SOCIAL_COLORS: Record<Tono, { bg: string; fg: string; body: string;
   claro: { bg: "#F3F0E8", fg: "#0B0C0E", body: "rgba(11,12,14,0.82)", muted: "rgba(11,12,14,0.6)", line: "rgba(11,12,14,0.2)", rgb: "11 12 14" },
 };
 
+/** Retícula técnica arquitectónica: viaja sutilmente con parallax. */
+export function TechnicalGrid({ tono, opacity = 0.035 }: { tono: Tono; opacity?: number }) {
+  const frame = useCurrentFrame();
+  const c = SOCIAL_COLORS[tono];
+  const y = (frame * 0.3) % 80;
+  return (
+    <AbsoluteFill
+      style={{
+        backgroundImage: `linear-gradient(${c.fg} 1px, transparent 1px), linear-gradient(90deg, ${c.fg} 1px, transparent 1px)`,
+        backgroundSize: "80px 80px",
+        backgroundPosition: `0px ${y}px`,
+        opacity,
+        pointerEvents: "none",
+      }}
+    />
+  );
+}
+
+/** Cruces técnicas de encuadre en las esquinas de la zona segura. */
+export function TechnicalCornerCrosses({ tono }: { tono: Tono }) {
+  const c = SOCIAL_COLORS[tono];
+  const safe = socialSafeArea("reel");
+  const size = 12;
+  const corners = [
+    { x: safe.x, y: safe.y },
+    { x: safe.x + safe.w, y: safe.y },
+    { x: safe.x, y: safe.y + safe.h },
+    { x: safe.x + safe.w, y: safe.y + safe.h },
+  ];
+  return (
+    <>
+      {corners.map((pos, i) => (
+        <div key={i} style={{ position: "absolute", left: pos.x - size / 2, top: pos.y - size / 2, width: size, height: size, pointerEvents: "none", opacity: 0.22 }}>
+          <div style={{ position: "absolute", left: size / 2 - 0.5, top: 0, width: 1, height: size, background: c.fg }} />
+          <div style={{ position: "absolute", left: 0, top: size / 2 - 0.5, width: size, height: 1, background: c.fg }} />
+        </div>
+      ))}
+    </>
+  );
+}
+
 /** Fondo y variables de color: el monograma (LogoMark) lee --color-foreground. */
-export function SocialFrame({ tono, children, style }: { tono: Tono; children: ReactNode; style?: CSSProperties }) {
+export function SocialFrame({ tono, children, style, showGrid = false }: { tono: Tono; children: ReactNode; style?: CSSProperties; showGrid?: boolean }) {
   const c = SOCIAL_COLORS[tono];
   const vars = { "--color-foreground": c.fg, "--color-background": c.bg, "--color-signal": c.fg, "--color-accent": c.fg, "--ink-rgb": c.rgb } as CSSProperties;
-  return <AbsoluteFill style={{ ...vars, background: c.bg, color: c.fg, overflow: "hidden", fontFamily: FILM_FONTS.body, ...style }}>{children}</AbsoluteFill>;
+  return (
+    <AbsoluteFill style={{ ...vars, background: c.bg, color: c.fg, overflow: "hidden", fontFamily: FILM_FONTS.body, ...style }}>
+      {showGrid ? <TechnicalGrid tono={tono} /> : null}
+      {children}
+    </AbsoluteFill>
+  );
 }
 
 const boxStyle = (box: Box): CSSProperties => ({ position: "absolute", left: box.x, top: box.y, width: box.w, height: box.h });
@@ -193,10 +239,23 @@ export function SegmentedProgress({ segments, box, tono }: { segments: Array<{ f
 /** Texto que aparece subiendo y aclarándose (cuerpos, rótulos, listas). */
 export function FadeText({ block, from, color, exitAt }: { block: SocialText; from: number; color: string; exitAt?: number }) {
   const frame = useCurrentFrame();
-  const show = progress(frame, from, from + 18, EASE_OUT);
+  const isNumero = block.id === "numero";
+  const show = isNumero || from === 0 ? 1 : progress(frame, from, from + 18, EASE_OUT);
   const out = exitAt === undefined ? 0 : progress(frame, exitAt, exitAt + 8, EASE_IN_OUT);
   return (
-    <div style={{ ...boxStyle(block.box), fontSize: block.size, lineHeight: block.lh, color, opacity: show * (1 - out), transform: `translateY(${(1 - show) * 18 - out * 18}px)`, whiteSpace: block.lines === 1 ? "nowrap" : "normal", ...fontOf(block) }}>
+    <div
+      style={{
+        ...boxStyle(block.box),
+        fontSize: block.size,
+        lineHeight: block.lh,
+        color,
+        opacity: show * (1 - out),
+        transform: isNumero ? undefined : `translateY(${(1 - show) * 18 - out * 18}px)`,
+        whiteSpace: block.lines === 1 ? "nowrap" : "normal",
+        textAlign: isNumero ? "center" : undefined,
+        ...fontOf(block),
+      }}
+    >
       {block.text}
     </div>
   );
@@ -234,11 +293,83 @@ export function ElementsLayer({ elements, tono, start = 4, step = 6, imagenes = 
           }
           case "image": {
             const src = imagenes[element.slot]?.src;
-            const show = progress(frame, from, from + 20, EASE_OUT);
-            const push = interpolate(frame, [0, 120], [1.06, 1], CLAMP);
+            const show = progress(frame, from, from + 16, EASE_OUT);
+            const push = interpolate(frame, [0, 120], [1.02, 1.08], CLAMP);
             return (
-              <div key={index} style={{ ...boxStyle(element.box), overflow: "hidden", borderRadius: 18, opacity: show, background: c.line }}>
-                {src ? <Img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", maxWidth: "none", transform: `scale(${push})`, filter: "grayscale(1) contrast(1.05)" }} /> : null}
+              <div
+                key={index}
+                style={{
+                  ...boxStyle(element.box),
+                  perspective: 1200,
+                  transformStyle: "preserve-3d",
+                  opacity: show,
+                }}
+              >
+                <div
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    borderRadius: 18,
+                    overflow: "hidden",
+                    border: `1px solid ${c.line}`,
+                    background: c.bg,
+                    boxShadow: "0 32px 64px -16px rgba(0,0,0,0.85), 0 0 0 1px rgba(243,240,232,0.06)",
+                    display: "flex",
+                    flexDirection: "column",
+                    transform: `rotateX(4deg) scale(${0.96 + 0.04 * show})`,
+                    transformOrigin: "center bottom",
+                  }}
+                >
+                  <div
+                    style={{
+                      height: 38,
+                      background: "rgba(243,240,232,0.04)",
+                      borderBottom: `1px solid ${c.line}`,
+                      display: "flex",
+                      alignItems: "center",
+                      padding: "0 14px",
+                      gap: 6,
+                    }}
+                  >
+                    <div style={{ width: 8, height: 8, borderRadius: 8, background: c.muted, opacity: 0.5 }} />
+                    <div style={{ width: 8, height: 8, borderRadius: 8, background: c.muted, opacity: 0.3 }} />
+                    <div style={{ width: 8, height: 8, borderRadius: 8, background: c.muted, opacity: 0.3 }} />
+                    <div
+                      style={{
+                        marginLeft: 10,
+                        padding: "2px 10px",
+                        borderRadius: 4,
+                        background: "rgba(243,240,232,0.05)",
+                        fontFamily: FILM_FONTS.mono,
+                        fontSize: 11,
+                        color: c.muted,
+                        letterSpacing: "0.05em",
+                        maxWidth: 260,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      mmorera.agency // system-viewport
+                    </div>
+                  </div>
+                  <div style={{ flex: 1, position: "relative", overflow: "hidden", background: c.line }}>
+                    {src ? (
+                      <Img
+                        src={src}
+                        alt=""
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          maxWidth: "none",
+                          transform: `scale(${push})`,
+                          filter: "grayscale(1) contrast(1.1)",
+                        }}
+                      />
+                    ) : null}
+                  </div>
+                </div>
               </div>
             );
           }

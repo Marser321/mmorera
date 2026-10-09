@@ -1,0 +1,23 @@
+{
+  "id": "2026-10-09-prueba-conteo",
+  "fecha": "2026-10-09",
+  "rama": "sistemas",
+  "serie": "Ingeniería de sistemas",
+  "titulo": "Prueba de conteo dinámico",
+  "estado": "borrador",
+  "salidas": [
+    {
+      "id": "reel",
+      "plantilla": "reel-conteo",
+      "para": ["instagram", "tiktok", "shorts"],
+      "gancho": "Tres decisiones que evitan *caídas en producción*",
+      "items": [
+        { "titulo": "Interfaces verificadas", "texto": "Los tipos y contratos se validan antes de escribir lógica." },
+        { "titulo": "Cero dependencias ciegas", "texto": "Cada librería externa tiene que justificar su peso." },
+        { "titulo": "Tests en cada commit", "texto": "Sin pruebas automáticas estás probando con usuarios reales." }
+      ],
+      "remate": "Menos complejidad innecesaria. *Más arquitectura sólida.*",
+      "cta": "Seguime: cuento cómo construir sistemas confiables"
+    }
+  ]
+}

@@ -432,3 +432,182 @@ export function reelFirmaLayout(cta: string, enlace = "mmorera.agency"): SlideLa
   const slide: Diapositiva = { tipo: "cierre", titulo: "Mario Morera", cta, enlace };
   return slideLayout("reel", slide);
 }
+
+/* ─── Plantillas Dinámicas Nuevas (Carril 2) ─── */
+
+/** Pulso de número para reel-conteo: número gigante en monoespaciada centrado en el área útil. */
+export function reelConteoNumeroLayout(numero: number): SlideLayout {
+  const safe = socialSafeArea("reel");
+  const counterH = textHeight(SPEC.reel.kicker, 1, LH.mono);
+  const counter: SlideElement = { kind: "text", rol: "contador", block: text("contador", { x: safe.x, y: safe.y, w: 240, h: counterH }, "00 / 00", SPEC.reel.kicker, 1, "mono"), order: 0, reveal: "fade" };
+  const size = 300;
+  const numText = String(numero);
+  const m = measure(numText, size, safe.w, "mono");
+  const areaH = safe.h - counterH - 40;
+  const numBox: Box = {
+    x: safe.x,
+    y: safe.y + counterH + 40 + Math.round((areaH - m.h) * 0.45),
+    w: safe.w,
+    h: m.h,
+  };
+  const numElement: SlideElement = {
+    kind: "text",
+    rol: "titulo",
+    block: text("numero", numBox, numText, size, m.lines, "mono", true),
+    order: 0,
+    reveal: "fade",
+  };
+  return result(safe, [counter, numElement]);
+}
+
+/** Pulso de ítem para reel-conteo: rótulo ("N.º X"), título grande y texto explicativo. */
+export function reelConteoItemLayout(titulo: string, texto: string, rotulo: string): SlideLayout {
+  const safe = socialSafeArea("reel");
+  const counterH = textHeight(SPEC.reel.kicker, 1, LH.mono);
+  const counter: SlideElement = { kind: "text", rol: "contador", block: text("contador", { x: safe.x, y: safe.y, w: 240, h: counterH }, "00 / 00", SPEC.reel.kicker, 1, "mono"), order: 0, reveal: "fade" };
+  const area = { x: safe.x, y: safe.y + counterH + 40, w: safe.w, h: safe.h - counterH - 40 };
+  const titleLadder = [108, 100, 92, 84, 76, 68, 62, 56, 52];
+  const bodyLadder = [50, 46, 42, 38, 34, 30, 28];
+  const steps = Math.max(titleLadder.length, bodyLadder.length);
+
+  const fit = pickStep(steps, (step) =>
+    stack(
+      [
+        { id: "kicker", rol: "kicker", value: rotulo, size: SPEC.reel.kicker, fuente: "mono", maxLines: 1, gapAfter: 32, reveal: "fade", order: 0 },
+        { id: "titulo", rol: "titulo", value: titulo, size: at(titleLadder, step), fuente: "display", maxLines: 4, gapAfter: 36, reveal: "words", order: 1 },
+        { id: "cuerpo", rol: "cuerpo", value: texto, size: at(bodyLadder, step), fuente: "cuerpo", maxLines: 6, gapAfter: 0, reveal: "words", order: 2 },
+      ],
+      area,
+    ),
+  );
+  shift(fit.placed, Math.max(0, (area.h - fit.h) * OPTICAL));
+  return result(safe, [counter, ...fit.placed]);
+}
+
+/** Pulso de comparación: pantalla partida ("antes", "despues" o "juntas"). */
+export function reelComparacionLayout(
+  etapa: "antes" | "despues" | "juntas",
+  antes: { rotulo: string; texto: string },
+  despues: { rotulo: string; texto: string },
+): SlideLayout {
+  const safe = socialSafeArea("reel");
+  const counterH = textHeight(SPEC.reel.kicker, 1, LH.mono);
+  const counter: SlideElement = { kind: "text", rol: "contador", block: text("contador", { x: safe.x, y: safe.y, w: 240, h: counterH }, "00 / 00", SPEC.reel.kicker, 1, "mono"), order: 0, reveal: "fade" };
+
+  const area = { x: safe.x, y: safe.y + counterH + 40, w: safe.w, h: safe.h - counterH - 40 };
+  const pad = 36;
+  const rotH = textHeight(SPEC.reel.kicker, 1, LH.mono);
+  const gapBetween = 36;
+  const panelH = Math.floor((area.h - gapBetween) / 2);
+  const innerW = area.w - pad * 2;
+  const bodyLadder = [54, 48, 44, 40, 36, 32, 28];
+
+  const fit = pickStep(bodyLadder.length, (step) => {
+    const size = at(bodyLadder, step);
+    const mAntes = measure(antes.texto, size, innerW, "cuerpo");
+    const mDesp = measure(despues.texto, size, innerW, "cuerpo");
+    const neededH = pad + rotH + 24 + Math.max(mAntes.h, mDesp.h) + pad;
+    const ok = mAntes.lines <= 6 && mDesp.lines <= 6 && neededH <= panelH;
+
+    const elements: SlideElement[] = [];
+
+    // Mitad superior: Antes (recuadro)
+    if (etapa === "antes" || etapa === "juntas") {
+      const yAntes = area.y;
+      elements.push({ kind: "panel", box: { x: area.x, y: yAntes, w: area.w, h: panelH }, order: 1, invert: false });
+      elements.push({ kind: "text", rol: "rotulo", block: text("rotulo.antes", { x: area.x + pad, y: yAntes + pad, w: innerW, h: rotH }, antes.rotulo, SPEC.reel.kicker, 1, "mono"), order: 1, reveal: "fade" });
+      elements.push({ kind: "text", rol: "cuerpo", block: text("texto.antes", { x: area.x + pad, y: yAntes + pad + rotH + 24, w: innerW, h: mAntes.h }, antes.texto, size, mAntes.lines, "cuerpo"), order: 1, reveal: "words" });
+    }
+
+    // Mitad inferior: Después (bloque sólido invertido)
+    if (etapa === "despues" || etapa === "juntas") {
+      const yDesp = area.y + panelH + gapBetween;
+      elements.push({ kind: "panel", box: { x: area.x, y: yDesp, w: area.w, h: panelH }, order: 2, invert: true });
+      elements.push({ kind: "text", rol: "rotulo", block: text("rotulo.despues", { x: area.x + pad, y: yDesp + pad, w: innerW, h: rotH }, despues.rotulo, SPEC.reel.kicker, 1, "mono"), order: 2, invert: true, reveal: "fade" });
+      elements.push({ kind: "text", rol: "cuerpo", block: text("texto.despues", { x: area.x + pad, y: yDesp + pad + rotH + 24, w: innerW, h: mDesp.h }, despues.texto, size, mDesp.lines, "cuerpo"), order: 2, invert: true, reveal: "words" });
+    }
+
+    return { elements, ok, h: area.h };
+  });
+
+  return result(safe, [counter, ...fit.elements]);
+}
+
+/** Pulso de encuesta: pregunta y opciones (individual con iluminación o todas juntas). */
+export function reelEncuestaLayout(
+  pregunta: string,
+  opciones: string[],
+  opcionVisibleHasta: number,
+  opcionActiva?: number,
+  llamado?: string,
+): SlideLayout {
+  const safe = socialSafeArea("reel");
+  const counterH = textHeight(SPEC.reel.kicker, 1, LH.mono);
+  const counter: SlideElement = { kind: "text", rol: "contador", block: text("contador", { x: safe.x, y: safe.y, w: 240, h: counterH }, "00 / 00", SPEC.reel.kicker, 1, "mono"), order: 0, reveal: "fade" };
+  const area = { x: safe.x, y: safe.y + counterH + 40, w: safe.w, h: safe.h - counterH - 40 };
+
+  const pillPad = 28;
+  const letH = textHeight(SPEC.reel.kicker, 1, LH.mono);
+  const letterW = Math.ceil(SPEC.reel.kicker * GLYPH_MONO_UPPER) + 8;
+  const titleLadder = [84, 76, 68, 62, 56, 50, 44];
+  const optionLadder = [44, 40, 36, 32, 28];
+
+  const fit = pickStep(titleLadder.length, (step) => {
+    const qSize = at(titleLadder, step);
+    const optSize = at(optionLadder, step);
+    const q = stack([{ id: "pregunta", rol: "titulo", value: pregunta, size: qSize, fuente: "display", maxLines: 4, gapAfter: 36, reveal: "words", order: 1 }], area);
+
+    let y = area.y + q.h + 36;
+    let ok = q.ok;
+    const elements: SlideElement[] = [...q.placed];
+
+    const count = Math.min(opciones.length, opcionVisibleHasta + 1);
+    const gap = 20;
+
+    for (let i = 0; i < count; i++) {
+      const option = opciones[i];
+      const innerW = area.w - pillPad * 2 - letterW - 20;
+      const m = measure(option, optSize, innerW, "cuerpo");
+      if (m.lines > 2) ok = false;
+      const boxH = Math.max(92, pillPad + m.h + pillPad - 8);
+      const isActiva = opcionActiva === i;
+
+      elements.push({ kind: "panel", box: { x: area.x, y, w: area.w, h: boxH }, order: 2 + i, invert: isActiva });
+      elements.push({
+        kind: "text",
+        rol: "letra",
+        block: text(`letra.${i}`, { x: area.x + pillPad, y: y + Math.round((boxH - letH) / 2), w: letterW, h: letH }, "ABCD"[i], SPEC.reel.kicker, 1, "mono"),
+        order: 2 + i,
+        invert: isActiva,
+        reveal: "fade",
+      });
+      elements.push({
+        kind: "text",
+        rol: "opcion",
+        block: text(`opcion.${i}`, { x: area.x + pillPad + letterW + 20, y: y + Math.round((boxH - m.h) / 2), w: innerW, h: m.h }, option, optSize, m.lines, "cuerpo"),
+        order: 2 + i,
+        invert: isActiva,
+        reveal: "fade",
+      });
+      y += boxH + gap;
+    }
+
+    if (llamado) {
+      const callH = textHeight(SPEC.reel.kicker, 1, LH.mono);
+      const callBox = { x: area.x, y: y + 10, w: area.w, h: callH };
+      elements.push({
+        kind: "text",
+        rol: "rotulo",
+        block: text("llamado", callBox, llamado, SPEC.reel.kicker, 1, "mono"),
+        order: 10,
+        reveal: "fade",
+      });
+      y += callH + 20;
+    }
+
+    const totalH = y - area.y;
+    return { elements, ok: ok && totalH <= area.h, h: totalH };
+  });
+
+  return result(safe, [counter, ...fit.elements]);
+}

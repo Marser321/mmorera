@@ -1,8 +1,8 @@
 import type { ComponentType } from "react";
 import { Composition, registerRoot } from "remotion";
-import { SocialCarruselVideo, SocialReelCaso, SocialReelTexto, SocialSlide } from "@/components/social/SocialCompositions";
-import { carruselComposition, REEL_CASO, REEL_TEXTO, slideComposition, type CarruselVideoProps, type ReelCasoProps, type ReelTextoProps, type SlideProps } from "@/data/social/render";
-import { carruselVideoFrames, reelCasoBeats, reelTextoBeats, SLIDE_STILL_FRAMES, totalFrames } from "@/data/social/timing";
+import { SocialCarruselVideo, SocialReelCaso, SocialReelComparacion, SocialReelConteo, SocialReelEncuesta, SocialReelTexto, SocialSlide } from "@/components/social/SocialCompositions";
+import { carruselComposition, REEL_CASO, REEL_COMPARACION, REEL_CONTEO, REEL_ENCUESTA, REEL_TEXTO, slideComposition, type CarruselVideoProps, type ReelCasoProps, type ReelComparacionProps, type ReelConteoProps, type ReelEncuestaProps, type ReelTextoProps, type SlideProps } from "@/data/social/render";
+import { carruselVideoFrames, reelCasoBeats, reelComparacionBeats, reelConteoBeats, reelEncuestaBeats, reelTextoBeats, SLIDE_STILL_FRAMES, totalFrames } from "@/data/social/timing";
 import { SOCIAL_FORMATS, SOCIAL_FPS, type Formato } from "@/data/social/types";
 import { FontGate } from "./FontGate";
 
@@ -26,6 +26,9 @@ const Slide = withFonts(SocialSlide);
 const Carrusel = withFonts(SocialCarruselVideo);
 const ReelTexto = withFonts(SocialReelTexto);
 const ReelCaso = withFonts(SocialReelCaso);
+const ReelConteo = withFonts(SocialReelConteo);
+const ReelComparacion = withFonts(SocialReelComparacion);
+const ReelEncuesta = withFonts(SocialReelEncuesta);
 
 const FORMATOS: Formato[] = ["reel", "feed", "cuadrado"];
 
@@ -37,6 +40,43 @@ const SAMPLE_CASO: ReelCasoProps = {
   salida: { id: "muestra", plantilla: "reel-caso", para: ["instagram"], caso: "new-brothers-barberia", gancho: "Un caso de muestra", decisiones: ["Primera", "Segunda", "Tercera"], cierre: "El cierre" },
   nombre: "New Brothers Barbería",
   placas: { og: "/portfolio/films/new-brothers-barberia/og-es.jpg", hero: "/portfolio/films/new-brothers-barberia/hero-es.jpg" },
+};
+const SAMPLE_CONTEO: ReelConteoProps = {
+  salida: {
+    id: "muestra-conteo",
+    plantilla: "reel-conteo",
+    para: ["instagram"],
+    gancho: "Tres decisiones de *arquitectura*",
+    items: [
+      { titulo: "Cero dependencias innecesarias", texto: "Menos capas implican menos puntos de fallo." },
+      { titulo: "Modelos de datos verificados", texto: "Las interfaces se definen antes de codificar." },
+      { titulo: "Cortes al milisegundo", texto: "El ritmo visual acompaña el cambio de idea." },
+    ],
+    remate: "Menos ruido. *Más precisión técnica.*",
+    cta: "Seguime para más criterio de ingeniería",
+  },
+};
+const SAMPLE_COMPARACION: ReelComparacionProps = {
+  salida: {
+    id: "muestra-comparacion",
+    plantilla: "reel-comparacion",
+    para: ["instagram"],
+    gancho: "Dos maneras de *pensar un formulario*",
+    antes: { rotulo: "Antes", texto: "Un correo estático que nadie revisa a tiempo." },
+    despues: { rotulo: "Después", texto: "Un flujo conectado que valida y clasifica en vivo." },
+    remate: "La diferencia es *un sistema real*.",
+    cta: "Guardalo para tu próximo desarrollo",
+  },
+};
+const SAMPLE_ENCUESTA: ReelEncuestaProps = {
+  salida: {
+    id: "muestra-encuesta",
+    plantilla: "reel-encuesta",
+    para: ["instagram"],
+    pregunta: "¿Qué componente te lleva *más tiempo*?",
+    opciones: ["Validación de esquemas", "Diseño de animaciones", "Pipes de integración", "Testing automatizado"],
+    cta: "Comentá tu letra para ver cómo resolverlo",
+  },
 };
 
 export function SocialRoot() {
@@ -86,6 +126,36 @@ export function SocialRoot() {
         width={SOCIAL_FORMATS.reel.width}
         height={SOCIAL_FORMATS.reel.height}
         defaultProps={SAMPLE_CASO}
+      />
+      <Composition
+        id={REEL_CONTEO}
+        component={ReelConteo}
+        durationInFrames={totalFrames(reelConteoBeats(SAMPLE_CONTEO.salida))}
+        calculateMetadata={({ props }: { props: ReelConteoProps }) => ({ durationInFrames: totalFrames(reelConteoBeats(props.salida)) })}
+        fps={SOCIAL_FPS}
+        width={SOCIAL_FORMATS.reel.width}
+        height={SOCIAL_FORMATS.reel.height}
+        defaultProps={SAMPLE_CONTEO}
+      />
+      <Composition
+        id={REEL_COMPARACION}
+        component={ReelComparacion}
+        durationInFrames={totalFrames(reelComparacionBeats(SAMPLE_COMPARACION.salida))}
+        calculateMetadata={({ props }: { props: ReelComparacionProps }) => ({ durationInFrames: totalFrames(reelComparacionBeats(props.salida)) })}
+        fps={SOCIAL_FPS}
+        width={SOCIAL_FORMATS.reel.width}
+        height={SOCIAL_FORMATS.reel.height}
+        defaultProps={SAMPLE_COMPARACION}
+      />
+      <Composition
+        id={REEL_ENCUESTA}
+        component={ReelEncuesta}
+        durationInFrames={totalFrames(reelEncuestaBeats(SAMPLE_ENCUESTA.salida))}
+        calculateMetadata={({ props }: { props: ReelEncuestaProps }) => ({ durationInFrames: totalFrames(reelEncuestaBeats(props.salida)) })}
+        fps={SOCIAL_FPS}
+        width={SOCIAL_FORMATS.reel.width}
+        height={SOCIAL_FORMATS.reel.height}
+        defaultProps={SAMPLE_ENCUESTA}
       />
     </>
   );

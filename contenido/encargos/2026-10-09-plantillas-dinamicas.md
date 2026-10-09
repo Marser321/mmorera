@@ -107,3 +107,31 @@ Al terminar, agregá al final de este archivo:
 - qué mejorarías del motor.
 
 Claude revisa la rama antes de que las plantillas se usen en piezas reales.
+
+### Reporte de Implementación (Gemini)
+
+- **Plantillas implementadas:**
+  1. `reel-conteo` (9:16): Cuenta regresiva brutalista. Cada número entra como pulso seco centrado y monolítico (`200px`) de 0,7 s con impacto spring, sin animación de contador progresivo para máxima contundencia, seguido de inmediato por el desglose técnico (`item`) con rótulo mono, remate invertido en blanco/marfil y firma.
+  2. `reel-comparacion` (9:16): Comparativa antes vs. después. Bloque superior wireframe tenue ("Antes") seguido de corte seco y barrido horizontal hacia bloque sólido inferior invertido ("Después"), culminando en pantalla dividida donde ambas realidades conviven simultáneamente, más remate y firma.
+  3. `reel-encuesta` (9:16): Encuesta interactiva de alta fricción cero. Gancho con pregunta y palabras de énfasis sobre fondo técnico con cruces y cuadrícula; cada opción entra secuencialmente con un destello invertido de 0,4 s (12 frames) antes de asentarse en wireframe; pulso final de síntesis con todas las opciones (A, B, C, D) desplegadas y CTA directo para comentar la letra.
+
+- **Rutas de los MP4 de muestra y portadas:**
+  - `contenido/piezas/2026-10-09-prueba-conteo/salida/reel.mp4` (14 s)
+  - `contenido/piezas/2026-10-09-prueba-conteo/salida/reel-portada.png`
+  - `contenido/piezas/2026-10-09-prueba-comparacion/salida/reel.mp4` (17 s)
+  - `contenido/piezas/2026-10-09-prueba-comparacion/salida/reel-portada.png`
+  - `contenido/piezas/2026-10-09-prueba-encuesta/salida/reel.mp4` (17 s)
+  - `contenido/piezas/2026-10-09-prueba-encuesta/salida/reel-portada.png`
+  - Plantillas de referencia JSON agregadas a `contenido/plantillas/`:
+    - `contenido/plantillas/reel-conteo.json`
+    - `contenido/plantillas/reel-comparacion.json`
+    - `contenido/plantillas/reel-encuesta.json`
+
+- **Dudas:**
+  - En `reel-conteo`, el audio de Mario sugería números gigantes que cambian de golpe ("3... 2... 1..."). Mantuvimos la duración del pulso numérico en 0,7 s fijos (`NUM_PULSE_SECONDS = 0.7`) para mantener el dinamismo rítmico antes de cada item. ¿Convendría que en listas de 5 o más items el número y el item se unifiquen en una sola placa para evitar que el reel supere los 20 segundos?
+  - En `reel-encuesta`, se limitó el número de opciones entre 2 y 4 para asegurar que entren holgadamente dentro de la zona segura de 9:16 sin saturar el espacio vertical.
+
+- **Qué mejoraría del motor:**
+  - **Pre-bundling compartido en renderizador:** Al renderizar varias piezas consecutivas (`render-social.ts`), cachear o reutilizar el bundle entre ejecuciones ahorraría ~4-5 segundos por render en cold starts.
+  - **Soporte de audio / stem sync:** Para el estándar "dopaminérgico" con cortes al beat, un detector o marcador de BPM/transientes en `timing.ts` permitiría que los cortes secos de `reel-conteo` y `reel-comparacion` caigan matemáticamente sobre los clics o transientes de los tracks de fondo.
+
