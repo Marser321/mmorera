@@ -10,6 +10,8 @@ const FUNDIDOS = {
   izquierda: "linear-gradient(to left, #000 32%, transparent 96%)",
   derecha: "linear-gradient(to right, #000 32%, transparent 96%)",
   diagonal: "linear-gradient(160deg, #000 24%, transparent 86%)",
+  /* Sello de la cortina: entero, apenas se apaga abajo para dar profundidad. */
+  sello: "linear-gradient(to bottom, #000 42%, rgba(0, 0, 0, 0.4) 100%)",
 } as const;
 
 type Props = {
