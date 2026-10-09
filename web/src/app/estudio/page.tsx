@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { StudioExperience } from "@/components/premium/StudioExperience";
 
-export const metadata: Metadata = { title: "Estudio", description: "Dirección visual, experiencias web, motion y tecnología creativa.", alternates: { canonical: "/estudio", languages: { es: "/estudio", en: "/en/estudio" } } };
+export const metadata: Metadata = pageMetadata("estudio", "es");
 export default function StudioPage() { return <StudioExperience />; }

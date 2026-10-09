@@ -1,16 +1,10 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { AplicarOS } from "@/components/portfolio-isolated/AplicarOS";
 import { SITE_IDENTITY } from "@/config/site";
 import { MotionBackdrop } from "@/components/shared/MotionBackdrop";
 import { MOTION_ASSETS } from "@/data/motionAssets";
-export const metadata: Metadata = {
-  title: "Tell me what you want to move",
-  description: "Three steps to understand the context and reply with the most useful next step.",
-  alternates: {
-    canonical: "/en/aplicar",
-    languages: { es: "/aplicar", en: "/en/aplicar" },
-  },
-};
+export const metadata: Metadata = pageMetadata("hablemos", "en");
 export default function EnglishApplicationPage() {
   return (
     <main

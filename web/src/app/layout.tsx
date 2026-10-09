@@ -9,6 +9,7 @@ import { Footer } from "@/components/sections/footer";
 import { WhatsAppFab } from "@/components/shared/WhatsAppFab";
 import { CursorLabel } from "@/components/motion/CursorLabel";
 import { PageCurtain } from "@/components/motion/PageCurtain";
+import { jsonLdHtml, pageMetadata, personaJsonLd, sitioJsonLd } from "@/lib/seo";
 
 const displayFont = Unbounded({
   subsets: ["latin"], display: "swap", variable: "--ff-display", weight: ["400", "500", "700", "900"],
@@ -20,26 +21,21 @@ const monoFont = Space_Mono({
   subsets: ["latin"], display: "swap", variable: "--ff-mono", weight: ["400", "700"],
 });
 
-const { canonical, metadata: siteMetadata } = SITE_IDENTITY;
+const { canonical } = SITE_IDENTITY;
+
+// Por defecto, los metadatos del inicio (cada página fija pisa los suyos con
+// `pageMetadata`). El título por defecto no lleva la plantilla.
+const inicio = pageMetadata("inicio", "es");
 
 export const metadata: Metadata = {
+  ...inicio,
   metadataBase: new URL(canonical),
-  title: { default: siteMetadata.title.es, template: "%s — Mario Morera" },
-  description: siteMetadata.description.es,
-  keywords: ["Creative Technologist", "Product Design", "WebGL", "IA", "Automatización", "CRM", "Mario Morera"],
+  title: { default: (inicio.title as { absolute: string }).absolute, template: "%s — Mario Morera" },
+  applicationName: SITE_IDENTITY.brand,
   authors: [{ name: SITE_IDENTITY.brand, url: canonical }],
   creator: SITE_IDENTITY.brand,
-  alternates: { canonical: "/", languages: { es: "/", en: "/en" } },
-  openGraph: {
-    type: "website", url: canonical,
-    title: siteMetadata.title.es, description: siteMetadata.description.es,
-    siteName: SITE_IDENTITY.brand,
-    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: siteMetadata.title.es }],
-  },
-  twitter: {
-    card: "summary_large_image", title: siteMetadata.title.es,
-    description: siteMetadata.description.es, images: ["/twitter-image"],
-  },
+  publisher: SITE_IDENTITY.brand,
+  formatDetection: { telephone: false, email: false, address: false },
 };
 
 export const viewport = {
@@ -48,25 +44,18 @@ export const viewport = {
 
 /* Anti-FOUC: aplica el tema persistido antes del primer paint. El server
    siempre emite `dark` (default de marca); si el visitante eligió light, este
-   script lo cambia en <html> antes de que exista contenido pintado. */
-const themeInitScript = `(function(){try{if(localStorage.getItem("mm-theme")==="light"){var r=document.documentElement;r.classList.remove("dark");r.classList.add("light");r.style.colorScheme="light";var m=document.querySelector('meta[name="theme-color"]');m&&m.setAttribute("content","#F3F0E8")}}catch(e){}})()`;
-
-const personJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Person",
-  name: SITE_IDENTITY.brand,
-  url: canonical,
-  jobTitle: SITE_IDENTITY.role.es,
-  description: siteMetadata.description.es,
-  email: `mailto:${SITE_IDENTITY.contact.email}`,
-};
+   script lo cambia en <html> antes de que exista contenido pintado. También
+   corrige el idioma en /en (un solo layout raíz emite `lang="es"`), para
+   lectores de pantalla y buscadores que leen el atributo. */
+const themeInitScript = `(function(){try{var p=location.pathname;if(p==="/en"||p.indexOf("/en/")===0)document.documentElement.lang="en";if(localStorage.getItem("mm-theme")==="light"){var r=document.documentElement;r.classList.remove("dark");r.classList.add("light");r.style.colorScheme="light";var m=document.querySelector('meta[name="theme-color"]');m&&m.setAttribute("content","#F3F0E8")}}catch(e){}})()`;
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="es" className={`dark ${bodyFont.variable} ${displayFont.variable} ${monoFont.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdHtml(personaJsonLd()) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdHtml(sitioJsonLd()) }} />
       </head>
       <body className="min-h-screen overflow-x-hidden bg-background font-sans text-foreground antialiased">
         <AppProviders>

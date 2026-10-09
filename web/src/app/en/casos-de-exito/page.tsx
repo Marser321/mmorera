@@ -1,4 +1,17 @@
 import type { Metadata } from "next";
+import { jsonLdHtml, listaCasosJsonLd, pageMetadata } from "@/lib/seo";
+import { ARCHIVE_CASES, FEATURED_CASES } from "@/data/projectCases";
 import { WorkExperience } from "@/components/premium/WorkExperience";
-export const metadata: Metadata = { title: "Work", description: "Real cases and demos of experiences, products and systems.", alternates: { canonical: "/en/casos-de-exito", languages: { es: "/casos-de-exito", en: "/en/casos-de-exito" } } };
-export default function EnglishWorkPage() { return <WorkExperience />; }
+export const metadata: Metadata = pageMetadata("trabajo", "en");
+
+// El archivo como lista para los buscadores, en el mismo orden que se ve.
+const casosJsonLd = jsonLdHtml(listaCasosJsonLd([...FEATURED_CASES, ...ARCHIVE_CASES], "en"));
+
+export default function EnglishWorkPage() {
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: casosJsonLd }} />
+      <WorkExperience />
+    </>
+  );
+}

@@ -837,11 +837,15 @@ test("publica canonical, hreflang, OG, JSON-LD y sitemap canónicos", async ({ p
   await expect(page.locator('link[rel="alternate"][hreflang="es"]')).toHaveAttribute("href", "https://mmorera.agency");
   await expect(page.locator('link[rel="alternate"][hreflang="en"]')).toHaveAttribute("href", "https://mmorera.agency/en");
   await expect(page.locator('meta[property="og:site_name"]')).toHaveAttribute("content", "Mario Morera");
-  const jsonLd = JSON.parse(await page.locator('script[type="application/ld+json"]').textContent() ?? "{}");
+  await expect(page.locator('link[rel="alternate"][hreflang="x-default"]')).toHaveAttribute("href", "https://mmorera.agency");
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", "https://mmorera.agency/og/inicio-es.jpg");
+  const [jsonLd, sitio] = await page.locator('script[type="application/ld+json"]').evaluateAll((scripts) => scripts.map((s) => JSON.parse(s.textContent ?? "{}")));
   expect(jsonLd["@type"]).toBe("Person");
   expect(jsonLd.url).toBe("https://mmorera.agency");
   expect(jsonLd.homeLocation).toBeUndefined();
   expect(jsonLd.sameAs).toBeUndefined();
+  expect(sitio["@type"]).toBe("WebSite");
+  expect(sitio.publisher["@id"]).toBe(jsonLd["@id"]);
   expect(await page.content()).not.toMatch(/Uruguay|es-UY|es_UY/);
   const sitemap = await request.get("/sitemap.xml");
   expect(sitemap.ok()).toBeTruthy();
