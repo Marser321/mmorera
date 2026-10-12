@@ -10,7 +10,9 @@ import {
   Building2,
   CalendarDays,
   FileCheck2,
+  LoaderCircle,
   Megaphone,
+  Send,
   RotateCcw,
   ShieldCheck,
   Workflow,
@@ -49,6 +51,9 @@ export function BotDemoGallery() {
   const reduceMotion = useReducedMotion();
   const [activeId, setActiveId] = useState<BotDemoId>("agency");
   const [lines, setLines] = useState<ChatLine[]>(() => [openingLine("agency", language)]);
+  const [draft, setDraft] = useState("");
+  const [pending, setPending] = useState(false);
+  const [guidedOnly, setGuidedOnly] = useState(false);
   const conversationRef = useRef<HTMLDivElement>(null);
   const activeDemo = getBotDemo(activeId);
 
@@ -59,14 +64,57 @@ export function BotDemoGallery() {
   }, [lines, reduceMotion]);
 
   function selectDemo(nextId: BotDemoId) {
+    setDraft("");
+    setGuidedOnly(false);
     setActiveId(nextId);
     setLines([openingLine(nextId, language)]);
   }
 
-  function choosePrompt(promptId: string) {
+  async function sendMessage(rawText: string) {
+    const content = rawText.trim();
+    if (!content || pending || content.length > 600 || guidedOnly) return;
+    const prior = lines.filter((line) => line.id !== "opening");
+    const nextLines = [...prior, { id: `visitor-${Date.now()}`, speaker: "visitor" as const, text: content }];
+    setPending(true);
+    setDraft("");
+    setLines((current) => [...current, { id: `visitor-${Date.now()}`, speaker: "visitor", text: content }]);
+    try {
+      const response = await fetch("/api/bot-studio/chat", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        cache: "no-store",
+        body: JSON.stringify({
+          demoId: activeId,
+          language,
+          messages: nextLines.map((line) => ({
+            role: line.speaker === "visitor" ? "user" : "assistant",
+            content: line.text,
+          })),
+        }),
+      });
+      const payload = await response.json() as { message?: string };
+      if (!payload.message) throw new Error("empty response");
+      setLines((current) => [...current, { id: `assistant-${Date.now()}`, speaker: "assistant", text: payload.message! }]);
+      if (!response.ok) setGuidedOnly(true);
+    } catch {
+      setGuidedOnly(true);
+      setLines((current) => [...current, {
+        id: `assistant-${Date.now()}`,
+        speaker: "assistant",
+        text: isEs
+          ? "El chat gratuito no está disponible ahora. Puedes continuar con el recorrido guiado de muestra."
+          : "The free chat is unavailable right now. You can continue with the guided sample.",
+      }]);
+    } finally {
+      setPending(false);
+    }
+  }
+
+  function chooseGuidedPrompt(promptId: string) {
     const prompt = activeDemo.prompts.find((item) => item.id === promptId);
     if (!prompt) return;
     const position = lines.length;
+    setGuidedOnly(true);
     setLines((current) => [
       ...current,
       { id: `visitor-${position}`, speaker: "visitor", text: prompt.label[language] },
@@ -75,6 +123,8 @@ export function BotDemoGallery() {
   }
 
   function resetConversation() {
+    setDraft("");
+    setGuidedOnly(false);
     setLines([openingLine(activeId, language)]);
   }
 
@@ -97,8 +147,8 @@ export function BotDemoGallery() {
               <Bot className="h-5 w-5 shrink-0 text-signal" aria-hidden="true" />
               <p>
                 {isEs
-                  ? "Son conversaciones guionadas con contenido ficticio. No usan IA en vivo ni conectan servicios."
-                  : "These are scripted conversations with fictional content. They use no live AI and connect to no services."}
+                  ? "Habla libremente con un perfil ficticio. No se crea una cuenta, no se guardan mensajes y no hay herramientas ni datos reales conectados."
+                  : "Chat freely with a fictional profile. No account is created, messages are not saved, and no tools or real data are connected."}
               </p>
             </div>
           </div>
@@ -145,13 +195,13 @@ export function BotDemoGallery() {
                   </span>
                   <div>
                     <h3 className="text-sm font-semibold text-foreground">{activeDemo.name[language]}</h3>
-                    <p className="mt-0.5 text-xs text-foreground/55">{isEs ? "Asistente de muestra" : "Sample assistant"}</p>
+                    <p className="mt-0.5 text-xs text-foreground/55">{guidedOnly ? (isEs ? "Recorrido guiado" : "Guided sample") : (isEs ? "Respuesta con modelo gratuito" : "Free-model response")}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
                   <span className="inline-flex items-center gap-2 text-xs text-foreground/55">
                     <span className="h-1.5 w-1.5 rounded-full bg-signal" />
-                    {isEs ? "Simulación local" : "Local simulation"}
+                    {guidedOnly ? (isEs ? "Muestra" : "Sample") : "OpenRouter · free"}
                   </span>
                   <button
                     type="button"
@@ -166,7 +216,7 @@ export function BotDemoGallery() {
 
               <div className="grid min-h-[500px] lg:grid-cols-[minmax(0,1fr)_minmax(245px,.72fr)]">
                 <div className="flex min-h-[430px] flex-col border-b border-white/10 p-5 sm:p-7 lg:border-b-0 lg:border-r light:border-[rgb(var(--ink-rgb)/0.1)]">
-                  <div ref={conversationRef} className="min-h-0 flex-1 space-y-4 overflow-y-auto pr-1" aria-live="polite" aria-relevant="additions text">
+                  <div ref={conversationRef} className="min-h-0 flex-1 space-y-4 overflow-y-auto pr-1" aria-live="polite" aria-relevant="additions text" aria-busy={pending}>
                     {lines.map((line) => {
                       const isAssistant = line.speaker === "assistant";
                       return (
@@ -183,7 +233,52 @@ export function BotDemoGallery() {
                         </motion.div>
                       );
                     })}
+                    {pending && (
+                      <div className="flex items-center gap-2 text-xs text-foreground/55" role="status">
+                        <LoaderCircle className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
+                        {isEs ? "Preparando una respuesta…" : "Preparing a reply…"}
+                      </div>
+                    )}
                   </div>
+                  <form
+                    className="mt-5 border-t border-white/10 pt-4 light:border-[rgb(var(--ink-rgb)/0.1)]"
+                    onSubmit={(event) => { event.preventDefault(); void sendMessage(draft); }}
+                  >
+                    <label htmlFor="bot-demo-message" className="sr-only">{isEs ? "Escribe un mensaje" : "Write a message"}</label>
+                    <div className="flex items-end gap-2 rounded-xl border border-white/15 bg-background p-2 focus-within:ring-2 focus-within:ring-signal light:border-[rgb(var(--ink-rgb)/0.14)] light:bg-[rgb(var(--ink-rgb)/0.035)]">
+                      <textarea
+                        id="bot-demo-message"
+                        value={draft}
+                        onChange={(event) => setDraft(event.target.value.slice(0, 600))}
+                        maxLength={600}
+                        rows={2}
+                        disabled={pending || guidedOnly}
+                        placeholder={isEs ? "Escribe tu pregunta…" : "Write your question…"}
+                        className="min-h-12 flex-1 resize-y bg-transparent px-2 py-1.5 text-sm leading-5 text-foreground outline-none placeholder:text-foreground/40 disabled:opacity-50"
+                      />
+                      <button
+                        type="submit"
+                        disabled={pending || guidedOnly || !draft.trim()}
+                        className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-foreground text-background transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal"
+                        aria-label={isEs ? "Enviar mensaje" : "Send message"}
+                      >
+                        <Send className="h-4 w-4" aria-hidden="true" />
+                      </button>
+                    </div>
+                    <div className="mt-2 flex justify-between gap-3 text-[11px] leading-4 text-foreground/45">
+                      <span>{isEs ? "No incluyas datos personales. Un proveedor gratuito procesa el texto." : "Leave out personal data. A free provider processes the text."}</span>
+                      <span className="shrink-0">{draft.length}/600</span>
+                    </div>
+                    {guidedOnly && (
+                      <button
+                        type="button"
+                        onClick={resetConversation}
+                        className="mt-3 text-xs text-foreground/65 underline decoration-foreground/25 underline-offset-4 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal"
+                      >
+                        {isEs ? "Reiniciar chat en vivo" : "Restart live chat"}
+                      </button>
+                    )}
+                  </form>
                   <p className="mt-5 border-t border-white/10 pt-4 text-xs leading-5 text-foreground/50 light:border-[rgb(var(--ink-rgb)/0.1)]">
                     {isEs ? "El recorrido vive solo en esta pestaña. Al reiniciar o salir, desaparece." : "This journey lives only in this tab. It disappears when you restart or leave."}
                   </p>
@@ -195,20 +290,35 @@ export function BotDemoGallery() {
                       {isEs ? "¿Qué quieres explorar?" : "What would you like to explore?"}
                     </p>
                     <p className="mt-1 text-xs leading-5 text-foreground/55">
-                      {isEs ? "Elige una pregunta de este rubro." : "Choose a question for this industry."}
+                      {isEs ? "Inicia el chat con un ejemplo." : "Start the chat with an example."}
                     </p>
                     <div className="mt-5 space-y-2.5">
                       {activeDemo.prompts.map((prompt) => (
                         <button
                           key={prompt.id}
                           type="button"
-                          onClick={() => choosePrompt(prompt.id)}
+                          onClick={() => guidedOnly ? chooseGuidedPrompt(prompt.id) : void sendMessage(prompt.label[language])}
+                          disabled={pending}
                           className="group flex w-full items-center justify-between gap-3 rounded-lg border border-white/10 px-3.5 py-3 text-left text-sm leading-5 text-foreground/75 transition-colors hover:border-white/25 hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal light:border-[rgb(var(--ink-rgb)/0.12)] light:hover:border-[rgb(var(--ink-rgb)/0.25)] light:hover:bg-[rgb(var(--ink-rgb)/0.04)]"
                         >
                           <span>{prompt.label[language]}</span>
                           <ArrowRight className="h-3.5 w-3.5 shrink-0 text-foreground/40 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                         </button>
                       ))}
+                    </div>
+                    <div className="mt-5 border-t border-white/10 pt-4 light:border-[rgb(var(--ink-rgb)/0.1)]">
+                      <p className="text-xs leading-5 text-foreground/55">
+                        {isEs ? "Si el modelo gratuito no responde, el chat muestra el estado y puedes seguir con estas respuestas guiadas." : "If the free model is unavailable, the chat shows its status and you can continue with these guided replies."}
+                      </p>
+                      {!guidedOnly && (
+                        <button
+                          type="button"
+                          onClick={() => setGuidedOnly(true)}
+                          className="mt-2 text-xs text-foreground/65 underline decoration-foreground/25 underline-offset-4 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal"
+                        >
+                          {isEs ? "Abrir recorrido guiado" : "Open guided sample"}
+                        </button>
+                      )}
                     </div>
                   </div>
                   <div className="mt-7 flex items-start gap-3 border-t border-white/10 pt-5 light:border-[rgb(var(--ink-rgb)/0.1)]">
@@ -296,8 +406,8 @@ export function BotDemoGallery() {
           <p className="mt-5 flex items-center gap-2 text-xs text-foreground/45">
             <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
             {isEs
-              ? "Las demostraciones no envían mensajes, no reservan, no cotizan, no capturan datos ni llaman modelos."
-              : "The demos don’t send messages, book appointments, quote prices, collect data, or call models."}
+              ? "Las demos no envían mensajes, reservan, cotizan ni capturan datos. El texto del chat se procesa en OpenRouter con un modelo gratuito y no se guarda en esta web."
+              : "The demos do not send messages, book appointments, quote, or collect data. Chat text is processed by OpenRouter with a free model and is not stored by this site."}
           </p>
         </div>
       </section>
