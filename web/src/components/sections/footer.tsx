@@ -52,6 +52,7 @@ export function Footer() {
         <div className="flex flex-col items-start gap-3 text-sm">
           <Link href={localePath(language, "/casos-de-exito")} className="text-foreground/55 hover:text-foreground">{isEs ? "Casos de Éxito" : "Case Studies"}</Link>
           <Link href={localePath(language, "/sistemas")} className="text-foreground/55 hover:text-foreground">{isEs ? "Sistemas & CRM" : "Systems & CRM"}</Link>
+          <Link href={localePath(language, "/demos/bots")} className="text-foreground/55 hover:text-foreground">{isEs ? "Demos de bots" : "Bot demos"}</Link>
           <Link href={localePath(language, "/estudio")} className="text-foreground/55 hover:text-foreground">{isEs ? "Estudio de Diseño" : "Design Studio"}</Link>
           <Link href={localePath(language, "/aplicar")} className="text-foreground/55 hover:text-foreground">{isEs ? "Iniciar Proyecto" : "Start Project"}</Link>
           <Link href={localePath(language, "/privacidad")} className="text-foreground/55 hover:text-foreground">{isEs ? "Privacidad" : "Privacy"}</Link>
