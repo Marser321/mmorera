@@ -2,7 +2,7 @@
 
 Esta carpeta es de donde salen todas las publicaciones: LinkedIn, Instagram, TikTok, YouTube Shorts y X, en español y a diario. Todo lo que se publica nace acá, se valida acá y queda registrado acá.
 
-**Sistema vigente desde el 28/10/2026:** las piezas nuevas se escriben con [`marca/guion.md`](marca/guion.md) (insight, gancho, puentes, prueba visible y oferta) y se producen por tandas de 3 a 5 ([`tandas/README.md`](tandas/README.md)). ChatGPT solo genera placas sin texto dentro de un Proyecto por tanda. La tipografía y la composición se hacen en HTML sobre [`diseno/kit.css`](diseno/kit.css): `npx tsx scripts/render-laminas.ts <id>` deja `salida/lamina-NN.png` y `salida/carrusel.pdf`, y `npx tsx scripts/placa-marca.ts <id>` pasa las placas a la paleta de la marca (desde `web/`). Claude (Opus) escribe y dirige; el navegador lo maneja un agente con modelo chico.
+**Sistema vigente desde el 28/10/2026:** las piezas nuevas se escriben con [`marca/guion.md`](marca/guion.md) (insight, gancho, puentes, prueba visible y oferta) y se producen por tandas de 3 a 5 ([`tandas/README.md`](tandas/README.md)). ChatGPT solo genera placas sin texto dentro de un Proyecto por tanda. La tipografía y la composición se hacen en HTML sobre [`diseno/kit.css`](diseno/kit.css): `npx tsx scripts/render-laminas.ts <id>` deja `salida/lamina-NN.png` y `salida/carrusel.pdf`, y `npx tsx scripts/placa-marca.ts <id>` pasa las placas a la paleta de la marca (desde `web/`). Claude (Opus) escribe y dirige; el navegador lo maneja un agente con modelo chico. Cada tanda mejora un punto concreto respecto de la anterior: [`mejoras.md`](mejoras.md).
 
 ## Cómo se conecta todo
 
@@ -89,6 +89,8 @@ Si la versión de ChatGPT está completa, el publicador usa esa; si no, la de c�
 - **El publicador es `agentes/publicador.md`,** no el `publisher_agent.py` de content-os.
 
 ## Prompts listos para pegar
+
+- **Codex:** `agentes/PROMPT-codex.md` hace tandas completas dentro del repo, con placas de su propio generador de imágenes. El plan vigente, de 36 piezas en 9 tandas, está en `encargos/2026-10-28-codex-tandas.md`.
 
 - **Gemini:** `agentes/PROMPT-gemini.md` (producción de piezas y plantillas animadas nuevas).
 - **Agente del navegador:** `agentes/PROMPT-navegador.md`, con dos prompts: A, diseño en ChatGPT; B, publicación diaria.

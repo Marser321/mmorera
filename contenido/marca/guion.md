@@ -4,6 +4,21 @@ Método único para carruseles y piezas estáticas de LinkedIn e Instagram. Reem
 
 La regla de fondo: **Claude escribe todo el texto. ChatGPT nunca redacta; solo genera imágenes sin texto.** El diseño compone el texto exacto en código.
 
+## Desde dónde se vende (Mario, 28/10/2026)
+
+> «No quiero vender desde el hambre, quiero vender desde el alto valor.» Pocas personas que quieran dar pasos específicos ahora, con beneficios específicos. «Yo no subcontrato a nadie»: Mario atiende y se involucra personalmente. Esa capa humana, que casi ninguna agencia puede ofrecer hoy, es el diferencial.
+
+En el texto eso significa:
+
+- **Transparencia antes que impresión.** Se cuenta qué hace Mario, cómo y con qué límites. Nada que no pueda hacer ni que no haya hecho. Si algo depende de un tercero, de una herramienta o de un dato del cliente, se dice.
+- **Seguridad tranquila.** Es el tono de alguien que sabe y no necesita convencerte: cercano, neutro, sin grandilocuencia y sin pedir permiso. No hay «¿te interesa?», urgencia inventada, descuentos ni «sin compromiso».
+- **Para pocos, con criterio de encaje.** La oferta dice para quién es y deja ver para quién no. Filtra en vez de perseguir: se le habla a la persona que ya tiene un paso concreto en mente.
+- **La capa humana se muestra, no se declara.** «Atención personalizada» no dice nada. «Hablás conmigo. Lo construyo yo. Si algo falla, me escribís a mí» sí, y es verificable.
+- **El valor viene antes del pedido.** Cada pieza enseña algo que se usa sin contratar. La oferta es el paso siguiente para quien quiere ir más rápido o más profundo, no el precio de la información.
+- **Pasos específicos, beneficios específicos.** Se ofrece un primer paso con alcance y entregable claros (una sesión de diagnóstico, una automatización concreta, una revisión con devolución escrita). Nunca «transformación digital» ni «llevar tu negocio al siguiente nivel».
+
+**Pilares de contenido:** la IA aplicada es el más importante: qué se puede delegar hoy, cómo funcionan modelos, aplicaciones, arneses y agentes, y cómo elegir sin perderse en la novedad de la semana. Lo acompañan automatizaciones, CRM, landings y marketing. Las ideas por pilar están en [`../ideas-pilares.md`](../ideas-pilares.md).
+
 ---
 
 ## 1. Lo que dice el estudio (28/10/2026)
@@ -78,6 +93,12 @@ Cinco roles. Un carrusel de 5 láminas usa uno por lámina; uno de 7 u 8 estira 
 | **Criterio** | La regla que la persona se lleva | Afirmativa y aplicable mañana; es lo que se guarda |
 | **Oferta** | El paso concreto con Mario | Sección 7 |
 
+**Formatos más cortos.** Con menos de 5 láminas, el arco se comprime, pero no pierde la prueba ni la oferta:
+
+- **Tarjeta (1):** la lámina es el gancho y el criterio. El caption hace el giro, da la prueba y la oferta.
+- **Carrusel de 3:** gancho; prueba o criterio, en una lámina 2 que se entiende sola; oferta con el criterio resumido en una línea.
+- **Carrusel de 4:** gancho, giro, prueba o criterio, y oferta.
+
 **Puentes entre láminas.** Cada lámina termina con una de estas cuatro salidas:
 
 1. **Pensamiento incompleto:** la frase se cierra en la siguiente.
@@ -100,20 +121,22 @@ Mario autorizó (28/10) usar como prueba:
 
 Lo que sigue prohibido: cifras de resultado, testimonios inventados, interfaces con números falsos presentadas como reales y experiencias que Mario no confirmó.
 
-## 7. La oferta: vender desde la seguridad
+## 7. La oferta: vender desde el alto valor
 
-El cierre no pide permiso, ofrece un trabajo. La fórmula es:
+El cierre no pide permiso ni regala trabajo como anzuelo: ofrece un primer paso a quien encaja. La fórmula es:
 
-> **Qué hago** (alcance concreto) + **qué me mandás para empezar** + **qué te devuelvo**.
+> **Qué hago** (alcance concreto) + **cómo trabajo** (directo conmigo) + **para quién es** + **el primer paso**.
 
-- "Diseño formularios de presupuesto que piden lo que hace falta para cotizar. Mandame el tuyo y te devuelvo las preguntas que le faltan."
-- "Implemento landings con la definición de terminado escrita y probada. Si tenés una por entregar, pasame el diseño y te mando qué pruebas va a pasar."
+- "Diseño formularios de presupuesto para empresas que cotizan a medida. Lo hago yo, de principio a fin. Si querés que tu próxima consulta llegue con lo necesario para cotizar, escribime y lo vemos con tu caso."
+- "Implemento landings para agencias con «terminado» escrito y probado antes de empezar. Trabajás conmigo, sin intermediarios. Si tenés una por arrancar, contame qué está aprobado."
+- "Doy sesiones de asesoría sobre IA aplicada a tu negocio: qué conviene delegar, con qué herramienta y quién revisa. Son pocas y con tiempo. Si ya tenés una tarea en mente, empezamos por esa."
 
 Reglas:
 
-- Sin precio, gratuidad, plazos ni disponibilidad que Mario no haya confirmado. "Te devuelvo" describe un trabajo, no promete que sea gratis. Si Mario define una condición, se agrega.
+- Sin precio, gratuidad, plazos, cupos ni disponibilidad que Mario no haya confirmado. «Pocas» y «directo conmigo» son verdad porque Mario lo definió así. Un número de cupos solo va si él lo da.
 - Una sola oferta por pieza, ligada al problema de esa pieza.
-- La lámina de oferta repite el verbo del servicio en grande y deja el paso abajo. El caption repite el paso con otras palabras.
+- La lámina de oferta repite el verbo del servicio en grande, nombra la capa humana en una línea y deja el paso abajo. El caption repite el paso con otras palabras.
+- Las piezas del piloto del 28/10 usan la fórmula anterior («te devuelvo…»). Pasarlas a esta es el ciclo 02 de [`../mejoras.md`](../mejoras.md).
 
 ## 8. Caption por plataforma
 
@@ -134,6 +157,16 @@ Los captions no repiten el carrusel: lo complementan.
 | "conviene", "es recomendable" | la indicación: "pedí", "sacá", "agregá" |
 | "si te pasa, escribime" | la oferta con alcance (sección 7) |
 | "revisamos por dónde empezar" | qué se revisa y qué se devuelve |
+
+**Muletillas de hambre.** También se sacan, porque venden desde la necesidad y no desde el valor:
+
+| En vez de | Escribí |
+|---|---|
+| "¿te interesa?", "¿hablamos?", "consultá sin compromiso" | el primer paso concreto y para quién es |
+| "aprovechá", "últimos lugares", "por tiempo limitado" | nada, salvo una condición real que Mario confirmó |
+| "te ayudo a hacer crecer tu negocio" | qué hacés, en qué parte y qué cambia |
+| "soluciones a medida", "atención personalizada" | "lo hago yo", "hablás conmigo", "si algo falla, me escribís a mí" |
+| "mandame tu X y te lo reviso gratis" | una conversación de encaje o un primer paso con alcance |
 
 **Señales de texto genérico (slop):**
 

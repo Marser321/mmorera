@@ -9,6 +9,7 @@ Mario diseña y programa sistemas: sitios, CRM, automatizaciones e IA aplicada, 
 - **Un aprendizaje por pieza.** Si hay dos, son dos piezas.
 - **Datos solo si son verificables** (ver `reglas.md`). Ante la duda, se describe lo que se construyó, no lo que "logró".
 - **Cerrar con una pregunta o un paso:** comentar, guardar, seguir o visitar el caso.
+- **Vender desde el alto valor, no desde el hambre.** Transparente, cercano y tranquilo. Pocas personas, pasos específicos y la capa humana de trabajar directo con Mario, que no subcontrata. Detalle en `guion.md`, sección «Desde dónde se vende».
 
 ## Nunca
 

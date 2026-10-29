@@ -6,7 +6,12 @@ Por qué así: con instrucciones fijas, un brief por pieza y referencias, ChatGP
 
 Ejemplo completo: [`2026-10-28-piloto/`](2026-10-28-piloto/). Ahí está [`comparacion.html`](2026-10-28-piloto/comparacion.html), con las piezas antes y después.
 
-## Quién hace qué
+## Dos rutas
+
+- **Desde Codex** (la ruta preferida desde el 28/10/2026): Codex hace la tanda entera dentro del repo y genera las placas con su propio generador de imágenes, sin navegador. La carpeta de la tanda guarda igual `instrucciones.md`, `brief-tanda.md` y `pedidos.md`, que son el contexto que Codex le pasa al generador. Prompt: [`../agentes/PROMPT-codex.md`](../agentes/PROMPT-codex.md). Plan vigente: [`../encargos/2026-10-28-codex-tandas.md`](../encargos/2026-10-28-codex-tandas.md).
+- **Desde Claude con ChatGPT:** la que se usó en el piloto, descrita abajo. Las placas salen de un Proyecto de ChatGPT que maneja un agente con modelo chico.
+
+## Quién hace qué (ruta ChatGPT)
 
 | Paso | Quién | Modelo |
 |---|---|---|
@@ -31,6 +36,7 @@ tandas/<AAAA-MM-DD>-<slug>/
 
 ## Paso a paso
 
+0. **Leer la bitácora.** En `../mejoras.md`, tomar el punto de mejora abierto (skill `contenido-mejora-continua`) y aplicarlo desde el brief.
 1. **Elegir las piezas.** Pueden ser de 3 a 5 del calendario, o nuevas, con una persona y una dificultad distinta por pieza. Para cada una: `piezas/<id>/brief.md` con insight, ganchos, guion lámina por lámina, oferta y acento ([`../marca/guion.md`](../marca/guion.md)).
 2. **Leer.** Hacer una sola lectura con la rúbrica de [`../agentes/lector-de-audiencia.md`](../agentes/lector-de-audiencia.md). No pasa al arte sin 2 en Curiosidad y en Novedad.
 3. **Preparar la tanda.** Crear la carpeta con `instrucciones.md`, `brief-tanda.md`, `referencias/` y `pedidos.md`. Para que ChatGPT vea dónde va el texto, se puede sumar a `referencias/` el wireframe de la portada: `npx tsx scripts/render-laminas.ts <id> --guias` (desde `web/`).
@@ -42,7 +48,8 @@ tandas/<AAAA-MM-DD>-<slug>/
    - `npx tsx scripts/check-pieza.ts <id>` valida la pieza.
 
    Se revisa cada PNG y una miniatura a 360 px.
-8. **Entregar a Mario.** Las piezas quedan en `borrador` con su brief, copy, texto alternativo y salidas. Mario ajusta la postura y la oferta y aprueba. Publicar exige además una instrucción suya para esa pieza y esa plataforma (`../agentes/publicador.md`).
+8. **Cerrar el ciclo de mejora.** Verificar el punto aplicado, registrar el resultado en `../mejoras.md` y proponer el siguiente.
+9. **Entregar a Mario.** Las piezas quedan en `borrador` con su brief, copy, texto alternativo y salidas. Mario ajusta la postura y la oferta y aprueba. Publicar exige además una instrucción suya para esa pieza y esa plataforma (`../agentes/publicador.md`).
 
 ## Lo que aprendimos en la primera tanda (28/10)
 
