@@ -67,9 +67,12 @@ type SalidaBase = { id: string; para: Plataforma[] };
 /**
  * Quién diseña las piezas estáticas (carrusel, desafío, imagen): ChatGPT, con
  * el sistema de diseño de contenido/marca/chatgpt-diseno.md y el código como
- * respaldo (por defecto), o solo el código.
+ * respaldo (por defecto), o solo el código. Con "html" la pieza se compone a
+ * mano en piezas/<id>/diseno.html sobre contenido/diseno/kit.css (ChatGPT solo
+ * aporta placas sin texto) y sale con scripts/render-laminas.ts:
+ * salida/lamina-NN.png y salida/carrusel.pdf.
  */
-export type Generador = "chatgpt" | "codigo";
+export type Generador = "chatgpt" | "codigo" | "html";
 type Estatica = { generador?: Generador };
 
 export type Salida =

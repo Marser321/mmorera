@@ -23,7 +23,7 @@ import os from "node:os";
 import path from "node:path";
 import sharp from "sharp";
 import { SECCION_COPY, validarPieza } from "../src/data/social/validate";
-import { archivosChatGPT, archivosEsperados } from "../src/data/social/render";
+import { archivoLamina, archivosChatGPT, archivosEsperados, CARRUSEL_PDF, usaHtml } from "../src/data/social/render";
 import { PLATAFORMAS, SOCIAL_FORMATS, type Estado, type Pieza, type Plataforma } from "../src/data/social/types";
 import { carpetaDe, CONTENIDO, entornoDe, guardarPieza, leerPieza, listarPiezas, revisarPieza, seccionCopy } from "./lib/piezas";
 
@@ -57,6 +57,12 @@ function archivosPorPlataforma(pieza: Pieza) {
   const carpeta = carpetaDe(pieza.id);
   const out = new Map<Plataforma, string[]>();
   for (const salida of pieza.salidas) {
+    // Láminas de diseno.html: LinkedIn sube el PDF como documento; el resto, las PNG en orden.
+    if (usaHtml(salida)) {
+      const pngs = Array.from({ length: entornoDe(pieza.id).laminas ?? 0 }, (_, index) => path.join(carpeta, "salida", archivoLamina(index + 1)));
+      for (const p of salida.para) out.set(p, [...(out.get(p) ?? []), ...(p === "linkedin" ? [path.join(carpeta, "salida", CARRUSEL_PDF)] : pngs)]);
+      continue;
+    }
     const gpt = archivosChatGPT(salida);
     const gptListo = gpt.length > 0 && gpt.every((file) => existsSync(path.join(carpeta, "imagenes", file)));
     const codigo = files.filter((file) => file.startsWith(`${salida.id}.`) || file.startsWith(`${salida.id}-`));

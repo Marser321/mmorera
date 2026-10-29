@@ -2,6 +2,8 @@
 
 Esta carpeta es de donde salen todas las publicaciones: LinkedIn, Instagram, TikTok, YouTube Shorts y X, en español y a diario. Todo lo que se publica nace acá, se valida acá y queda registrado acá.
 
+**Sistema vigente desde el 28/10/2026:** las piezas nuevas se escriben con [`marca/guion.md`](marca/guion.md) (insight, gancho, puentes, prueba visible y oferta) y se producen por tandas de 3 a 5 ([`tandas/README.md`](tandas/README.md)). ChatGPT solo genera placas sin texto dentro de un Proyecto por tanda. La tipografía y la composición se hacen en HTML sobre [`diseno/kit.css`](diseno/kit.css): `npx tsx scripts/render-laminas.ts <id>` deja `salida/lamina-NN.png` y `salida/carrusel.pdf`, y `npx tsx scripts/placa-marca.ts <id>` pasa las placas a la paleta de la marca (desde `web/`). Claude (Opus) escribe y dirige; el navegador lo maneja un agente con modelo chico.
+
 ## Cómo se conecta todo
 
 ```

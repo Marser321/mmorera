@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Formato · Diagrama de recorrido</title>
+<link rel="stylesheet" href="../kit.css">
+<!--
+  Diagrama de recorrido: el camino de una consulta dibujado como un plano de
+  línea, con estaciones, horas y el tramo donde se corta. Sirve cuando el
+  problema no está en un paso sino entre dos.
+
+  - La línea es geometría exacta (SVG en coordenadas de lámina): llena
+    donde el recorrido funciona, cortada y punteada donde se rompe.
+  - Señal: el nodo roto, con recuadro, flecha y nota. Nada más en verde.
+  - Las horas van en mono porque son dato.
+-->
+<style>
+  .recorrido .titulo {
+    position: absolute;
+    top: var(--my);
+    left: var(--mx);
+    width: 908px;
+  }
+
+  .recorrido .trazo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+
+  .estacion {
+    position: absolute;
+    left: 244px;
+    z-index: 2;
+  }
+
+  .estacion .rotulo {
+    margin-bottom: 12px;
+  }
+
+  .estacion .subtitulo {
+    font-size: 64px;
+  }
+
+  .estacion .detalle {
+    margin-top: 14px;
+  }
+
+  .estacion.rota .subtitulo {
+    color: var(--tinta-3);
+  }
+
+  .recorrido .nota {
+    position: absolute;
+    top: 966px;
+    left: 712px;
+    width: 282px;
+  }
+</style>
+</head>
+<body>
+
+<section class="lamina recorrido" aria-label="Recorrido de una consulta: llega, se responde y el seguimiento se corta">
+  <h2 class="titulo zona-texto"><span class="tenue">La respuesta salió.</span><br>El seguimiento, no.</h2>
+
+  <svg class="trazo" viewBox="0 0 1080 1350" aria-hidden="true">
+    <g fill="none" stroke-linecap="butt">
+      <!-- Tramo que funciona: consulta → respuesta y un poco más. -->
+      <path d="M166 470 V836" stroke="#ECE7DD" stroke-width="10"/>
+      <!-- Corte: la línea termina en seco. -->
+      <path d="M142 836 H190" stroke="#ECE7DD" stroke-width="6"/>
+      <!-- Lo que tendría que pasar y no tiene dueño. -->
+      <path d="M166 904 V1010" stroke="#6E6A62" stroke-width="6" stroke-dasharray="12 12"/>
+      <path d="M148 904 H184" stroke="#6E6A62" stroke-width="4"/>
+    </g>
+    <circle cx="166" cy="470" r="28" fill="#0B0B0A" stroke="#ECE7DD" stroke-width="10"/>
+    <circle cx="166" cy="730" r="28" fill="#0B0B0A" stroke="#ECE7DD" stroke-width="10"/>
+    <circle cx="166" cy="1010" r="28" fill="#0B0B0A" stroke="#6E6A62" stroke-width="5" stroke-dasharray="9 8"/>
+  </svg>
+
+  <div class="zona-texto estacion" style="top:408px">
+    <p class="rotulo">Día 1 · 23:45</p>
+    <p class="subtitulo">Consulta</p>
+    <p class="detalle">Entra desde la web.</p>
+  </div>
+
+  <div class="zona-texto estacion" style="top:668px">
+    <p class="rotulo">Día 2 · 09:10</p>
+    <p class="subtitulo">Respuesta</p>
+    <p class="detalle">La contestás a primera hora.</p>
+  </div>
+
+  <div class="zona-texto estacion rota" style="top:948px">
+    <p class="rotulo">Día 4 · sin fecha</p>
+    <p class="subtitulo">Seguimiento</p>
+    <p class="detalle">Nadie lo tiene agendado.</p>
+  </div>
+
+  <span class="marca" style="--x:110px;--y:924px;--w:550px;--h:192px"></span>
+  <span class="flecha" style="--x:704px;--y:983px;--largo:40px;--angulo:180deg"></span>
+  <p class="nota">Sin responsable ni fecha. Acá se enfría la consulta.</p>
+
+  <footer class="folio">
+    <i class="monograma"></i>
+    <span class="progreso" style="--n:3;--total:6"></span>
+    <span class="contador"><b>03</b>/06</span>
+  </footer>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Formato · Objeto metáfora</title>
+<link rel="stylesheet" href="../kit.css">
+<!--
+  Objeto metáfora: un still life que dice la idea sin explicarla, con una
+  frase corta. No es a sangre: la placa se presenta enmarcada, como en un
+  catálogo, con su epígrafe en el canto y el aire a la izquierda.
+
+  - La placa se pide como objeto aislado, luz lateral dura, fondo de pared.
+  - La frase: dos tiempos, sin explicación. Si necesita explicarse, es otro
+    formato.
+  - Sin señal: el objeto ya marca. El acento queda para otra lámina.
+  - Placa de prueba: recorte de noche.png (2026-10-14-lead-23-45) hasta tener
+    la placa propia.
+-->
+<style>
+  .objeto .placa {
+    position: absolute;
+    top: var(--my);
+    right: var(--mx);
+    width: 660px;
+    height: 825px;
+  }
+
+  .objeto .placa img {
+    --recorte: inset(520px 180px 180px 380px);
+  }
+
+  .objeto .epigrafe {
+    position: absolute;
+    top: var(--my);
+    left: 296px;
+    height: 825px;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    text-align: left;
+    font-size: 16px;
+    letter-spacing: 0.1em;
+  }
+
+  .objeto .frase {
+    position: absolute;
+    top: 1004px;
+    left: var(--mx);
+    width: 908px;
+    font-size: 84px;
+  }
+</style>
+</head>
+<body>
+
+<section class="lamina objeto" aria-label="Objeto: una silla vacía. La web está abierta, nadie atiende.">
+  <figure class="placa">
+    <img src="../../piezas/2026-10-14-lead-23-45/imagenes/noche.png" alt="Silla de oficina vacía frente a un escritorio, de noche.">
+  </figure>
+  <p class="epigrafe rotulo">Fig. 1 · Silla vacía, 23:45</p>
+
+  <p class="titulo frase zona-texto"><span class="tenue">La web está abierta.</span><br>Nadie atiende.</p>
+
+  <footer class="folio">
+    <i class="monograma"></i>
+    <span class="progreso" style="--n:6;--total:6"></span>
+    <span class="contador"><b>06</b>/06</span>
+  </footer>
+</section>
+
+</body>
+</html>

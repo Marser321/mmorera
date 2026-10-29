@@ -3,7 +3,7 @@ import { FORBIDDEN_CLAIMS } from "@/data/films/flagships/flagshipAssertions";
 import { FLAGSHIP_SLUGS } from "@/data/films/flagships/slugs";
 import { PROJECT_CASES } from "@/data/projectCases";
 import { plain, reelBeatLayout, reelCasoLayout, reelComparacionLayout, reelConteoItemLayout, reelConteoNumeroLayout, reelEncuestaLayout, reelFirmaLayout, slideLayout, type ImageSizes } from "./layout";
-import { archivosChatGPT, archivosEsperados } from "./render";
+import { archivosChatGPT, archivosEsperados, archivosLaminas, usaHtml } from "./render";
 import { diapositivasDe, reelCasoBeats, reelComparacionBeats, reelConteoBeats, reelEncuestaBeats, reelTextoBeats, videoSeconds } from "./timing";
 import { DURACION_MAXIMA, ESTADOS, PLATAFORMAS, RAMAS, SOCIAL_FORMATS, type Diapositiva, type Estado, type Pieza, type Plataforma, type Salida } from "./types";
 
@@ -26,6 +26,8 @@ export type Entorno = {
   salida: string[];
   /** Medida de un archivo de imagenes/ por su nombre (las diapositivas de ChatGPT), si existe. */
   archivoImagen?: (file: string) => { w: number; h: number } | undefined;
+  /** Láminas de diseno.html (cada <section class="lamina">); undefined si no hay diseno.html. */
+  laminas?: number;
 };
 
 const ESTADO_INDEX = (estado: Estado) => ESTADOS.indexOf(estado);
@@ -175,6 +177,14 @@ export function validarPieza(raw: unknown, entorno: Entorno): Problema[] {
       }
     }
 
+    // Láminas en HTML: las compone diseno.html y las revisa el render, no la geometría de Remotion.
+    const html = usaHtml(salida);
+    if (html) {
+      if (entorno.laminas === undefined) error(donde, 'generador html: falta diseno.html (una <section class="lamina"> por lámina, con contenido/diseno/kit.css)');
+      else if (entorno.laminas === 0) error(donde, 'diseno.html no tiene ninguna <section class="lamina">');
+      else if (salida.plantilla !== "imagen" && entorno.laminas !== slides.length) aviso(donde, `diseno.html tiene ${entorno.laminas} lámina(s) y la salida declara ${slides.length} diapositiva(s)`);
+    }
+
     // Geometría: cada diapositiva y cada pulso entra en su zona segura.
     const formato = salida.plantilla === "carrusel" || salida.plantilla === "desafio" || salida.plantilla === "imagen" ? salida.formato : "reel";
     slides.forEach((slide, index) => {
@@ -183,6 +193,7 @@ export function validarPieza(raw: unknown, entorno: Entorno): Problema[] {
         if (slide.opciones.length < 2 || slide.opciones.length > 4) error(`${donde}.${index + 1}`, "una encuesta lleva de 2 a 4 opciones");
         for (const option of slide.opciones) if (option.length > 25) error(`${donde}.${index + 1}`, `"${option}" pasa los 25 caracteres (límite de las encuestas nativas)`);
       }
+      if (html) return;
       const layout = slideLayout(formato, slide, slides.length > 1 ? { n: index + 1, total: slides.length } : undefined, sizes);
       for (const problem of layoutProblems(layout.blocks, layout.safe)) error(`${donde}.${index + 1}`, problem);
     });
@@ -280,6 +291,7 @@ export function validarPieza(raw: unknown, entorno: Entorno): Problema[] {
   // 7. Renders cuando la pieza está lista.
   if (estadoIndex >= LISTO) {
     for (const file of archivosEsperados(pieza)) if (!entorno.salida.includes(file)) error("salida", `falta ${file} (npx tsx scripts/render-social.ts ${pieza.id})`);
+    if (pieza.salidas.some(usaHtml)) for (const file of archivosLaminas(entorno.laminas ?? 0)) if (!entorno.salida.includes(file)) error("salida", `falta ${file} (npx tsx scripts/render-laminas.ts ${pieza.id})`);
   }
   if (pieza.postura && estadoIndex < ESTADO_INDEX("aprobado")) aviso("postura", "es una opinión: Mario ajusta la postura antes de aprobar");
   if (pieza.estado === "publicado" && !(pieza.publicaciones ?? []).length) error("publicaciones", "una pieza publicada lleva la URL de cada publicación");

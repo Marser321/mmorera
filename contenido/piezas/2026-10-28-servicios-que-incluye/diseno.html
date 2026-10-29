@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>«¿Qué incluye?»</title>
+<link rel="stylesheet" href="../../diseno/kit.css">
+<!--
+  Pieza 2026-10-28-servicios-que-incluye · v1 (método marca/guion.md).
+  Guion y veracidad en brief.md. La v0 (una tarjeta) está en v0/.
+  Señal: marca lo que se recibe (una vez por lámina).
+-->
+<style>
+  /* ─── 01 Portada ─── */
+  .portada .placa-foto { --degrade-largo: 56%; --sombra-pie: 0.8; }
+  .portada .placa-foto img { --foco: 50% 100%; }
+  .portada .titulares { position: absolute; top: 112px; left: var(--mx); width: 908px; z-index: 2; }
+  .portada .rotulo { color: var(--tinta); margin-bottom: 30px; }
+  .portada .titular { font-size: 156px; line-height: 0.88; letter-spacing: -0.045em; margin-left: -0.06em; }
+  .portada .bajada { margin-top: 38px; width: 760px; text-wrap: balance; font-size: 44px; line-height: 1.08; letter-spacing: -0.025em; font-weight: 500; color: var(--tinta-2); }
+  .portada .folio .rotulo { color: var(--tinta); }
+  .portada .progreso { position: relative; margin-right: 6px; background: var(--tinta); }
+  .portada .progreso::after { content: ""; position: absolute; top: 50%; right: -6px; width: 18px; height: 18px; background: var(--tinta); clip-path: polygon(0 0, 100% 50%, 0 100%, 26% 50%); transform: translateY(-50%); }
+
+  .interior .titulo { position: absolute; top: var(--my); left: var(--mx); width: 908px; font-size: 78px; }
+  .rotulo-sup { position: absolute; top: 64px; left: var(--mx); }
+  .pie-ejemplo { position: absolute; left: var(--mx); bottom: 140px; font-size: 17px; }
+
+  /* ─── 02 Contraste ─── */
+  .columnas { position: absolute; top: 450px; left: var(--mx); right: var(--mx); height: 610px; display: grid; grid-template-columns: 1fr 1fr; }
+  .columna { padding: 44px 40px; display: flex; flex-direction: column; }
+  .columna.dice { border: 1px solid var(--linea); border-right: 0; border-radius: 18px 0 0 18px; }
+  .columna.banda-marfil { border-radius: 0 18px 18px 0; }
+  .columna .rotulo { margin-bottom: auto; }
+  .columna ul { list-style: none; display: flex; flex-direction: column; gap: 26px; }
+  .columna li { font-size: 54px; font-weight: 500; letter-spacing: -0.035em; line-height: 1; }
+  .columna.dice li { color: var(--tinta-3); }
+
+  /* ─── 03 Página antes / después ─── */
+  .pagina { position: absolute; left: var(--mx); right: var(--mx); border-radius: 18px; }
+  .pagina.vieja { top: 400px; padding: 52px 44px 40px; border: 1px solid var(--linea); background: var(--marco); }
+  .pagina.nueva { top: 690px; padding: 52px 44px 40px; }
+  .pestana { position: absolute; top: -15px; left: 32px; padding: 6px 12px 5px; border-radius: 6px; font-size: 17px; background: var(--pared); color: var(--tinta-2); border: 1px solid var(--linea); }
+  .banda-marfil .pestana { color: var(--marfil); border-color: var(--pared); }
+  .pagina h3 { font-size: 38px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.1; }
+  .pagina.vieja p { margin-top: 14px; font-size: 28px; line-height: 1.3; color: var(--tinta-2); width: 640px; }
+  .pagina .pregunta { position: absolute; right: 40px; bottom: 40px; font-size: 22px; color: var(--tinta-3); }
+  .bloques { margin-top: 26px; display: flex; flex-direction: column; }
+  .bloques div { display: grid; grid-template-columns: 236px 1fr; gap: 20px; padding: 18px 0; border-top: 1px solid var(--linea); }
+  .bloques .rotulo { padding-top: 6px; color: var(--tinta); }
+  .bloques p { font-size: 28px; line-height: 1.28; letter-spacing: -0.012em; }
+
+  /* ─── 04 Lista ─── */
+  .lista .titulo { font-size: 82px; }
+  .respuestas { position: absolute; top: 410px; left: var(--mx); right: var(--mx); list-style: none; display: flex; flex-direction: column; gap: 46px; }
+  .respuestas li { display: grid; grid-template-columns: 148px 1fr; align-items: start; }
+  .respuestas .indice { --t-indice: 150px; margin-top: -6px; }
+  .respuestas .clave .indice { color: var(--senal); }
+  .respuestas h3 { font-size: 52px; font-weight: 500; letter-spacing: -0.03em; line-height: 1.04; text-wrap: balance; }
+  .respuestas .mono { margin-top: 12px; font-size: 24px; line-height: 1.35; color: var(--tinta-2); }
+  .prueba-rapida { position: absolute; left: var(--mx); right: var(--mx); top: 1000px; padding-top: 26px; border-top: 1px solid var(--linea); font-size: 32px; line-height: 1.22; letter-spacing: -0.015em; }
+  .prueba-rapida .rotulo { display: block; margin-bottom: 10px; }
+  .guardar { position: absolute; left: var(--mx); bottom: 160px; display: flex; align-items: center; gap: 18px; }
+  .guardar .rotulo { color: var(--tinta); }
+  .marcador { width: 26px; height: 34px; background: var(--tinta); clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 74%, 0 100%); }
+
+  /* ─── 05 Oferta ─── */
+  .oferta .gigante { position: absolute; right: -250px; bottom: -170px; --monograma: 1040px; color: var(--marfil); opacity: 0.06; }
+  .oferta .rotulo-sup { top: var(--my); color: var(--tinta); }
+  .oferta .titular { position: absolute; top: 172px; left: var(--mx); width: 908px; font-size: 108px; line-height: 0.9; }
+  .oferta .paso { position: absolute; left: var(--mx); right: var(--mx); top: 790px; padding-top: 34px; border-top: 1px solid var(--tinta-3); display: grid; grid-template-columns: 1fr 64px; gap: 32px; align-items: end; }
+  .oferta .paso .rotulo { margin-bottom: 18px; }
+  .oferta .paso .cuerpo { font-size: 42px; line-height: 1.16; letter-spacing: -0.02em; }
+  .oferta .paso .flecha { --largo: 64px; --punta: 26px; color: var(--tinta); position: relative; left: auto; top: auto; transform: none; margin-bottom: 14px; }
+  .oferta .canal { position: absolute; left: var(--mx); top: 1090px; font-size: 18px; }
+</style>
+</head>
+<body>
+
+<!-- 01 · Gancho -->
+<section class="lamina portada" aria-label="Portada: ¿qué incluye? Si te lo preguntan, tu página contesta otra cosa">
+  <figure class="placa-foto" data-texto="arriba">
+    <img src="imagenes/portada.png" alt="Caja de cartón entreabierta sobre una superficie oscura, con luz lateral.">
+  </figure>
+  <div class="titulares zona-texto">
+    <p class="rotulo">Para consultores y servicios profesionales</p>
+    <h1 class="titular">«¿Qué incluye?»</h1>
+    <p class="bajada">Si te lo preguntan, tu página contesta otra cosa.</p>
+  </div>
+  <footer class="folio">
+    <i class="monograma"></i>
+    <span class="rotulo">Deslizá</span>
+    <span class="progreso" style="--n:1;--total:5"></span>
+    <span class="contador"><b>01</b>/05</span>
+  </footer>
+</section>
+
+<!-- 02 · Giro -->
+<section class="lamina interior" aria-label="La página dice cómo trabajás; la persona quiere saber qué recibe">
+  <h2 class="titulo zona-texto"><span class="tenue">Tu página dice cómo trabajás.</span> La persona quiere saber qué recibe.</h2>
+  <div class="columnas zona-texto">
+    <div class="columna dice">
+      <p class="rotulo">Lo que dice la página</p>
+      <ul><li>Método</li><li>Experiencia</li><li>Beneficios</li></ul>
+    </div>
+    <div class="columna banda-marfil">
+      <p class="rotulo">Lo que pregunta la persona</p>
+      <ul><li><span class="resaltado">Qué recibo</span></li><li>Qué no</li><li>Cómo empezamos</li></ul>
+    </div>
+  </div>
+  <footer class="folio">
+    <i class="monograma"></i>
+    <span class="progreso" style="--n:2;--total:5"></span>
+    <span class="contador"><b>02</b>/05</span>
+  </footer>
+</section>
+
+<!-- 03 · Prueba -->
+<section class="lamina interior" aria-label="Ejemplo: la misma página de servicio antes y después">
+  <h2 class="titulo zona-texto"><span class="tenue">Mismo servicio.</span> Ahora se entiende qué se compra.</h2>
+  <div class="pagina vieja zona-texto">
+    <span class="pestana rotulo">Antes</span>
+    <h3>Consultoría estratégica integral</h3>
+    <p>Acompañamos a tu empresa con un enfoque personalizado para potenciar sus resultados.</p>
+    <span class="pregunta mono">¿Y qué recibo?</span>
+  </div>
+  <div class="pagina nueva banda-marfil zona-texto">
+    <span class="pestana rotulo">Después</span>
+    <h3>Diagnóstico de procesos</h3>
+    <div class="bloques">
+      <div><span class="rotulo"><span class="resaltado">Incluye</span></span><p>2 reuniones de diagnóstico, un informe con 5 prioridades y un plan de 90 días.</p></div>
+      <div><span class="rotulo">No incluye</span><p>La implementación del plan.</p></div>
+      <div><span class="rotulo">Cómo empezamos</span><p>Agendás la primera reunión y te llega un cuestionario.</p></div>
+    </div>
+  </div>
+  <p class="pie-ejemplo rotulo">Ejemplo recreado · datos de muestra</p>
+  <footer class="folio">
+    <i class="monograma"></i>
+    <span class="progreso" style="--n:3;--total:5"></span>
+    <span class="contador"><b>03</b>/05</span>
+  </footer>
+</section>
+
+<!-- 04 · Criterio -->
+<section class="lamina interior lista" aria-label="Tres respuestas que tu página tiene que dar">
+  <p class="rotulo rotulo-sup">Antes del primer mensaje</p>
+  <h2 class="titulo zona-texto">Tres respuestas que tu página tiene que dar.</h2>
+  <ol class="respuestas zona-texto">
+    <li class="clave"><span class="indice">1</span><div><h3>Qué tenés en la mano al terminar.</h3><p class="mono">lo que se entrega, contado</p></div></li>
+    <li><span class="indice">2</span><div><h3>Qué queda afuera.</h3><p class="mono">parece que resta: es lo que hace creíble la 1</p></div></li>
+    <li><span class="indice">3</span><div><h3>Qué pasa después de decir que sí.</h3><p class="mono">el primer paso, con una acción concreta</p></div></li>
+  </ol>
+  <p class="prueba-rapida"><span class="rotulo">La prueba</span>Pedile a alguien que no te conoce que lea tu página y te cuente qué compraría.</p>
+  <p class="guardar"><i class="marcador"></i><span class="rotulo">Guardala para cuando actualices tu web</span></p>
+  <footer class="folio">
+    <i class="monograma"></i>
+    <span class="progreso" style="--n:4;--total:5"></span>
+    <span class="contador"><b>04</b>/05</span>
+  </footer>
+</section>
+
+<!-- 05 · Oferta -->
+<section class="lamina oferta" aria-label="Reescribo páginas de servicio para que se entienda qué se compra. Mandame tu página.">
+  <i class="monograma gigante"></i>
+  <p class="rotulo rotulo-sup">Lo que hago</p>
+  <h2 class="titular zona-texto">Reescribo páginas de servicio para que se entienda qué se compra.</h2>
+  <div class="paso zona-texto">
+    <div>
+      <p class="rotulo">Para empezar</p>
+      <p class="cuerpo">Mandame tu página. Te devuelvo las tres respuestas que le faltan, escritas.</p>
+    </div>
+    <span class="flecha"></span>
+  </div>
+  <p class="canal rotulo">Por mensaje directo · Mario Morera</p>
+  <footer class="folio">
+    <span class="progreso" style="--n:5;--total:5"></span>
+    <span class="contador"><b>05</b>/05</span>
+  </footer>
+</section>
+
+</body>
+</html>

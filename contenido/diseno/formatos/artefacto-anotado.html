@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Formato · Artefacto anotado</title>
+<link rel="stylesheet" href="../kit.css">
+<!--
+  Artefacto anotado: un formulario, un mail, una página o una salida de
+  terminal, recreado en CSS o capturado, con las marcas en señal. Es la
+  prueba visible: el lector ve el error y la corrección en la cosa misma.
+
+  - Va en par, antes y después, con la misma geometría: el ojo compara solo.
+  - Antes: artefacto oscuro, recuadro + flecha + nota en señal sobre el error.
+  - Después: artefacto en marfil (la corrección se ilumina). Sobre marfil la
+    señal no contrasta, así que la marca es un .resaltado y la nota queda en
+    el margen oscuro.
+  - Siempre rotulado "Ejemplo recreado" y sin datos de clientes.
+-->
+<style>
+  .artefacto .titulo {
+    position: absolute;
+    top: var(--my);
+    left: var(--mx);
+    width: 908px;
+    font-size: 80px;
+  }
+
+  /* La hoja: el artefacto, a escala de pantalla real. */
+  .hoja {
+    position: absolute;
+    top: 322px;
+    left: var(--mx);
+    width: 600px;
+    padding: 46px 44px 48px;
+    border: 1px solid var(--linea);
+    border-radius: 18px;
+    background: var(--marco);
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+  }
+
+  .hoja.banda-marfil {
+    border-color: transparent;
+    background: var(--marfil);
+  }
+
+  .pestana {
+    position: absolute;
+    top: -15px;
+    left: 32px;
+    padding: 6px 12px 5px;
+    border-radius: 6px;
+    font-size: 17px;
+    background: var(--pared);
+    color: var(--tinta-2);
+    border: 1px solid var(--linea);
+  }
+
+  .banda-marfil .pestana {
+    background: var(--pared);
+    color: var(--marfil);
+    border-color: var(--pared);
+  }
+
+  .hoja-titulo {
+    font-size: 36px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+
+  .campo {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    border-radius: 12px;
+  }
+
+  .campo > span {
+    font-size: 22px;
+    line-height: 1;
+    color: var(--tinta-2);
+  }
+
+  .entrada {
+    display: flex;
+    align-items: center;
+    height: 70px;
+    padding: 0 22px;
+    border: 1px solid #34342F;
+    border-radius: 10px;
+    background: #0F0F0E;
+    font-size: 26px;
+    font-style: normal;
+    color: #D9D4CA;
+    letter-spacing: -0.01em;
+  }
+
+  .entrada.area {
+    align-items: flex-start;
+    height: 184px;
+    padding-top: 20px;
+    line-height: 1.36;
+  }
+
+  .boton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 72px;
+    margin-top: 8px;
+    border-radius: 10px;
+    background: var(--marfil);
+    color: var(--pared);
+    font-size: 26px;
+    font-weight: 500;
+  }
+
+  /* Después: controles en marfil. */
+  .banda-marfil .campo > span {
+    color: var(--tinta);
+    font-weight: 500;
+  }
+
+  .banda-marfil .entrada {
+    border-color: #CFC9BD;
+    background: #F5F1E9;
+    color: var(--pared);
+  }
+
+  .banda-marfil .boton {
+    background: var(--pared);
+    color: var(--marfil);
+  }
+
+  .opciones {
+    display: flex;
+    gap: 12px;
+  }
+
+  .opcion {
+    display: flex;
+    align-items: center;
+    height: 58px;
+    padding: 0 24px;
+    border: 1px solid #CFC9BD;
+    border-radius: 29px;
+    font-size: 24px;
+    color: var(--tinta-2);
+  }
+
+  .opcion.elegida {
+    border-color: var(--pared);
+    background: var(--pared);
+    color: var(--marfil);
+  }
+
+  .adjunto {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    height: 120px;
+    padding: 16px 20px;
+    border: 2px dashed #BDB6A8;
+    border-radius: 10px;
+  }
+
+  .adjunto .miniatura {
+    width: 82px;
+    height: 82px;
+    border-radius: 6px;
+    background:
+      linear-gradient(160deg, rgb(255 255 255 / 0.16), rgb(0 0 0 / 0) 55%),
+      linear-gradient(180deg, #8E897F 0 58%, #5E5A52 58% 100%);
+  }
+
+  .adjunto .mono {
+    font-size: 21px;
+    line-height: 1.3;
+    color: var(--tinta-2);
+  }
+
+  .adjunto .mono b {
+    display: block;
+    font-weight: 400;
+    color: var(--tinta);
+  }
+
+  /* El margen: donde va la anotación. */
+  .al-margen {
+    position: absolute;
+    left: 736px;
+    width: 258px;
+  }
+
+  .pie-ejemplo {
+    position: absolute;
+    left: var(--mx);
+    bottom: 150px;
+    font-size: 17px;
+  }
+
+  .antes .campo-mensaje {
+    --holgura: 14px;
+  }
+
+  .antes .nota {
+    top: 742px;
+  }
+
+  .despues .nota {
+    top: 709px;
+  }
+</style>
+</head>
+<body>
+
+<section class="lamina artefacto antes" aria-label="Antes: formulario con nombre, email y mensaje">
+  <h2 class="titulo zona-texto"><span class="tenue">Nombre, email, mensaje.</span><br>Con eso no se cotiza.</h2>
+
+  <div class="hoja zona-texto">
+    <span class="pestana rotulo">Antes</span>
+    <p class="hoja-titulo">Pedí tu presupuesto</p>
+    <div class="campo"><span>Nombre</span><i class="entrada">Laura</i></div>
+    <div class="campo"><span>Email</span><i class="entrada">laura@correo.com</i></div>
+    <div class="campo campo-mensaje marcado"><span>Mensaje</span><i class="entrada area">Hola, quiero un presupuesto para instalar un aire. Gracias.</i></div>
+    <span class="boton">Enviar</span>
+  </div>
+
+  <span class="flecha" style="--x:728px;--y:830px;--largo:52px;--angulo:180deg"></span>
+  <p class="nota al-margen">Esto es todo lo que llega. Sin medidas, sin lugar, sin foto.</p>
+
+  <p class="pie-ejemplo rotulo">Ejemplo recreado</p>
+  <footer class="folio">
+    <i class="monograma"></i>
+    <span class="progreso" style="--n:2;--total:6"></span>
+    <span class="contador"><b>02</b>/06</span>
+  </footer>
+</section>
+
+<section class="lamina artefacto despues" aria-label="Después: formulario que pregunta qué, dónde y una foto">
+  <h2 class="titulo zona-texto"><span class="tenue">Qué, dónde y una foto.</span><br>Con eso, sí.</h2>
+
+  <div class="hoja banda-marfil zona-texto">
+    <span class="pestana rotulo">Después</span>
+    <p class="hoja-titulo">Pedí tu presupuesto</p>
+    <div class="campo">
+      <span>¿Qué hay que hacer?</span>
+      <div class="opciones"><i class="opcion elegida">Instalar</i><i class="opcion">Reparar</i><i class="opcion">Mantener</i></div>
+    </div>
+    <div class="campo"><span>¿Dónde es?</span><i class="entrada">Centro · piso 3, sin ascensor</i></div>
+    <div class="campo">
+      <span><span class="resaltado">Medidas o una foto del lugar</span></span>
+      <div class="adjunto"><i class="miniatura"></i><p class="mono"><b>pared-living.jpg</b>2,4 MB · subida</p></div>
+    </div>
+    <div class="campo">
+      <span>¿Hace falta visita?</span>
+      <div class="opciones"><i class="opcion">Sí</i><i class="opcion elegida">No sé</i><i class="opcion">No</i></div>
+    </div>
+    <span class="boton">Pedir presupuesto</span>
+  </div>
+
+  <span class="flecha" style="--x:728px;--y:777px;--largo:52px;--angulo:180deg"></span>
+  <p class="nota al-margen">Con la foto se sabe si hay que ir. Ahí empieza el precio.</p>
+
+  <p class="pie-ejemplo rotulo">Ejemplo recreado</p>
+  <footer class="folio">
+    <i class="monograma"></i>
+    <span class="progreso" style="--n:3;--total:6"></span>
+    <span class="contador"><b>03</b>/06</span>
+  </footer>
+</section>
+
+</body>
+</html>

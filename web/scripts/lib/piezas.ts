@@ -1,6 +1,7 @@
 import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { mediaSize } from "../../src/lib/mediaSize";
+import { contarLaminas } from "../../src/data/social/render";
 import type { Pieza } from "../../src/data/social/types";
 import { validarPieza, type Entorno, type Problema } from "../../src/data/social/validate";
 
@@ -47,6 +48,7 @@ export function guardarPieza(pieza: Pieza) {
 export function entornoDe(id: string): Entorno {
   const carpeta = carpetaDe(id);
   const copyFile = path.join(carpeta, "copy.md");
+  const disenoFile = path.join(carpeta, "diseno.html");
   const salida = path.join(carpeta, "salida");
   return {
     carpeta: id,
@@ -62,6 +64,7 @@ export function entornoDe(id: string): Entorno {
       const size = mediaSize(readFileSync(full), full);
       return { w: size.width, h: size.height };
     },
+    laminas: existsSync(disenoFile) ? contarLaminas(readFileSync(disenoFile, "utf8")) : undefined,
   };
 }
 

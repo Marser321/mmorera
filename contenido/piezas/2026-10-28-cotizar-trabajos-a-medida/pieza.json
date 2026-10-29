@@ -1,0 +1,95 @@
+{
+  "id": "2026-10-28-cotizar-trabajos-a-medida",
+  "fecha": "2026-10-28",
+  "rama": "sistemas",
+  "serie": "Problemas concretos, decisiones claras",
+  "titulo": "El formulario corto no te ahorra trabajo.",
+  "estado": "borrador",
+  "fuente": {
+    "tipo": "capacidad",
+    "nota": "Escenario general. El chat y los formularios son ejemplos recreados y rotulados. Sin casos ni datos de clientes."
+  },
+  "ejemplo": true,
+  "postura": true,
+  "imagenes": [
+    {
+      "slot": "portada",
+      "formato": "feed",
+      "prompt": "Cinta métrica metálica sobre superficie oscura, luz lateral, tercio superior libre."
+    }
+  ],
+  "salidas": [
+    {
+      "id": "carrusel",
+      "plantilla": "carrusel",
+      "generador": "html",
+      "formato": "feed",
+      "tono": "oscuro",
+      "para": [
+        "instagram",
+        "linkedin"
+      ],
+      "diapositivas": [
+        {
+          "tipo": "portada",
+          "kicker": "PARA QUIEN COTIZA TRABAJOS A MEDIDA",
+          "titulo": "El formulario corto no te ahorra trabajo.",
+          "bajada": "Lo pasa a WhatsApp, de a una pregunta.",
+          "direccionVisual": "Portada fotográfica: placa de la cinta métrica (imagenes/portada.png)."
+        },
+        {
+          "tipo": "texto",
+          "kicker": "EJEMPLO RECREADO",
+          "titulo": "Lo que el formulario no pregunta, lo preguntás vos.",
+          "cuerpo": "Hola, ¿cuánto sale? / ¿Qué medida tiene? / ¿Dónde es? / ¿Me mandás una foto? / ¿Hay que retirar la vieja? 4 preguntas antes de poder calcular.",
+          "direccionVisual": "Artefacto: hilo de mensajes recreado; la señal enmarca las cuatro preguntas."
+        },
+        {
+          "tipo": "texto",
+          "kicker": "EL FORMULARIO TÍPICO",
+          "titulo": "Pide cómo contactarte. No cómo cotizar.",
+          "cuerpo": "Nombre, email, teléfono y mensaje. Ningún campo cambia el precio.",
+          "direccionVisual": "Artefacto anotado: formulario oscuro con recuadro y nota en señal."
+        },
+        {
+          "tipo": "texto",
+          "kicker": "EL FORMULARIO QUE COTIZA",
+          "titulo": "Este pide lo que cambia el precio.",
+          "cuerpo": "¿Qué trabajo es? ¿Dónde es? Medida aproximada o una foto. ¿Hay algo que retirar? Cada una cambia el precio o decide si hay visita.",
+          "direccionVisual": "Artefacto anotado: formulario en marfil con llave en señal sobre los cuatro campos."
+        },
+        {
+          "tipo": "lista",
+          "kicker": "LA REGLA",
+          "titulo": "Cada pregunta cambia el precio o decide la visita.",
+          "items": [
+            "Si no cambia nada, sacala.",
+            "Si cambia algo y falta, la vas a hacer vos.",
+            "Al lado de cada campo, decí para qué es."
+          ],
+          "direccionVisual": "Lista que se guarda; resaltado en señal sobre «cambia el precio»."
+        },
+        {
+          "tipo": "cierre",
+          "titulo": "Diseño formularios que dejan cotizar.",
+          "cta": "Mandame el link del tuyo. Te devuelvo qué preguntas le faltan y cuáles sobran.",
+          "direccionVisual": "Cierre con monograma monumental."
+        }
+      ]
+    }
+  ],
+  "historial": [
+    {
+      "fecha": "2026-10-28",
+      "estado": "borrador",
+      "quien": "Codex",
+      "nota": "Copy revisado por lector independiente: 9/10. Ajustes de precisión incorporados. Arte propio estático; revisión de Mario pendiente."
+    },
+    {
+      "fecha": "2026-10-28",
+      "estado": "borrador",
+      "quien": "Claude",
+      "nota": "v1 con el método marca/guion.md: brief con insight, guion con puentes, placa de ChatGPT sin texto (tanda 2026-10-28-piloto) y diseno.html sobre el kit. La v0 está en v0/. Falta la revisión de Mario."
+    }
+  ]
+}

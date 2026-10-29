@@ -1,57 +1,33 @@
 # Agente de ChatGPT (navegador)
 
-Trabajás en el ChatGPT de Mario, desde el navegador. Tenés dos tareas:
+Trabajás en el ChatGPT de Mario, desde el navegador. **Este agente lo corre un modelo chico (Sonnet o menor):** ejecuta, no decide el arte. Claude (Opus) escribe los pedidos y revisa las imágenes.
 
-1. **Diseñar las diapositivas completas** de carruseles, desafíos, tarjetas, encuestas y sorteos, con el sistema de diseño de la marca.
-2. **Generar imágenes sueltas** (fotos en B/N) que piden algunas piezas.
+Tu tarea es **generar placas sin texto por tanda, dentro de un Proyecto de ChatGPT**, y dejarlas en cada pieza. ChatGPT ya no diseña láminas completas para las piezas nuevas.
 
-Antes de empezar, leé `../marca/identidad.md`, `../marca/chatgpt-diseno.md` y `../marca/imagenes-chatgpt.md`.
+Antes de empezar, leé `../tandas/README.md` y `../marca/imagenes-chatgpt.md`.
 
-## 1 · Diapositivas completas
+## Tanda nueva
 
-**Qué falta.** Desde `web/`:
-```bash
-npx tsx scripts/contenido.ts chatgpt              # qué salidas tienen diapositivas pendientes
-npx tsx scripts/chatgpt-prompts.ts --pendientes   # escribe los pedidos de cada pieza en piezas/<id>/chatgpt.md
-```
+La carpeta `../tandas/<AAAA-MM-DD>-<slug>/` ya trae `instrucciones.md`, `brief-tanda.md`, `pedidos.md` y `referencias/`. La prepara Claude, no vos.
 
-**Por cada salida pendiente** (un carrusel, una tarjeta, una encuesta…):
+1. **Proyecto:** en ChatGPT, «Añadir nuevo proyecto», con el nombre que indica `pedidos.md` (por ejemplo, «MMORERA · Tanda 02 · <tema>»). Elegí **Memoria solo del proyecto**.
+2. **Instrucciones:** en Ajustes del proyecto, pegá el contenido de `instrucciones.md` y guardá.
+3. **Fuentes:** subí `brief-tanda.md` y los archivos de `referencias/` a la pestaña Fuentes del Proyecto.
+4. **Un chat por pieza:** pegá el pedido de `pedidos.md` tal cual, sin cambiarlo. Esperá la imagen; tarda entre 1 y 2 minutos.
+5. **Descarga:** bajá la imagen. Desde la consola de la página se puede hacer con un `fetch` del `blob:` de la imagen y un enlace con `download`. Nombre: `mmorera-<pieza>-<slot>-v1.png`.
+6. **Copia:** pasala de Descargas a `../piezas/<id>/imagenes/<slot>-v1.png`.
+7. **Registro:** anotá en `pedidos.md` el enlace del chat y si hubo algún problema.
 
-1. Abrí `piezas/<id>/chatgpt.md`.
-2. **Conversación nueva** en ChatGPT: una por salida, así el estilo queda parejo dentro de la serie.
-3. Pegá el bloque **"Sistema de diseño"**, una sola vez al principio.
-4. Pegá el pedido de la **diapositiva 1**. Esperá la imagen.
-5. Pasá el **control de calidad** del final de `chatgpt.md`. Lo más importante: el texto tiene que ser **exactamente** el pedido. Revisalo letra por letra: tildes, ¿ ¡, comas y puntos.
-6. **Si falla,** escribí en la misma conversación:
-   ```
-   Regenerá la diapositiva 1 corrigiendo: <el problema concreto, por ejemplo "dice 'barbero' y tiene que decir 'barbería'">
-   ```
-   Hasta 5 intentos por diapositiva.
-7. **Descargá** la imagen aprobada y seguí con la diapositiva 2, 3… **en orden**.
-8. **Importá** las descargas a la pieza:
-   ```bash
-   npx tsx scripts/contenido.ts importar <id> <salida>
-   ```
-   Toma las N imágenes más nuevas de la carpeta Descargas, en el orden en que bajaron, las recorta a la medida exacta y las guarda como `imagenes/gpt-<salida>-01.png`, `-02.png`, etc. Si descargaste en otra carpeta, pasala al final del comando.
-9. Confirmá que `npx tsx scripts/check-pieza.ts <id>` no muestre errores en esa salida.
+No elijas ni corrijas por tu cuenta. Si Claude te pide una corrección, escribila en el mismo chat, con el texto exacto que te pasó.
 
-**Si después de 5 intentos una diapositiva no sale bien,** no la fuerces:
-- No importes esa salida. Se publicará la versión de código, que siempre existe.
-- Anotá el problema en `piezas/<id>/imagenes/NOTAS.md`.
+## Piezas anteriores (generador `chatgpt`)
 
-## 2 · Imágenes sueltas (fotos en B/N)
-
-Algunas piezas piden una foto (una diapositiva de tipo `imagen`) para la versión de código. Para verlas, corré `npx tsx scripts/check-pieza.ts --todas`: las que faltan muestran `aviso imagenes.<slot>: imagen pendiente`.
-
-1. **El pedido** está en `pieza.json`, en `imagenes`: `slot`, `formato` y `prompt`.
-2. **Armá el prompt:** el estilo base de `../marca/imagenes-chatgpt.md`, más el `prompt` del slot y su formato.
-3. **Generá y elegí:** hasta 10 tandas, con el control de calidad de `imagenes-chatgpt.md`.
-4. **Guardá** la elegida como `piezas/<id>/imagenes/<slot>.png`.
+Las piezas creadas antes del 28/10/2026 con láminas completas de ChatGPT siguen su flujo viejo: `../marca/chatgpt-diseno.md`, `scripts/chatgpt-prompts.ts` y `contenido.ts importar`. No se usa para piezas nuevas.
 
 ## Reglas
 
-- **El texto de las diapositivas se copia de `chatgpt.md`, nunca de memoria.** Si ChatGPT "mejora" una frase, se regenera.
-- **Nada de color, logos, interfaces inventadas, caras reconocibles ni porcentajes.**
-- **No cambiás `pieza.json` ni `copy.md`.** Si algo del texto está mal, anotalo en `NOTAS.md`.
-- **No publicás nada.** Lo hace el publicador, y solo con la pieza aprobada por Mario.
-- **Te detenés y avisás** si ChatGPT pide iniciar sesión, verificar algo, aceptar términos o cambiar un plan.
+- Una cuenta: la que esté iniciada en el Chrome de Mario. Si aparece inicio de sesión, verificación, CAPTCHA, aceptación de términos o cambio de plan, **te detenés y avisás**.
+- Si ChatGPT muestra un límite de uso, te detenés y avisás con el texto exacto y la hora en que se restablece.
+- No cambies `pieza.json`, `copy.md`, `brief.md` ni `diseno.html`.
+- No borres proyectos ni chats, no compartas y no toques los ajustes de la cuenta.
+- No publicás nada. Lo hace el publicador, y solo con la pieza aprobada por Mario y su instrucción explícita.

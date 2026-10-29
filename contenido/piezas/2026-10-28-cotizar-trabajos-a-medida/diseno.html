@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>El formulario corto no te ahorra trabajo.</title>
+<link rel="stylesheet" href="../../diseno/kit.css">
+<!--
+  Pieza 2026-10-28-cotizar-trabajos-a-medida · v1 (método marca/guion.md).
+  Guion y veracidad en brief.md. La v0 está en v0/.
+  Señal: marca los datos que cambian el precio (una vez por lámina).
+-->
+<style>
+  /* ─── 01 Portada ─── */
+  .portada .placa-foto { --degrade-largo: 60%; --sombra-pie: 0.8; }
+  .portada .placa-foto img { --foco: 50% 100%; }
+  .portada .titulares { position: absolute; top: 112px; left: var(--mx); width: 900px; z-index: 2; }
+  .portada .rotulo { color: var(--tinta); margin-bottom: 34px; }
+  .portada .titular { font-size: 118px; line-height: 0.9; }
+  .portada .bajada { margin-top: 36px; width: 760px; text-wrap: balance; font-size: 44px; line-height: 1.08; letter-spacing: -0.025em; font-weight: 500; color: var(--tinta-2); }
+  .portada .credito { position: absolute; left: 38px; bottom: 180px; z-index: 2; writing-mode: vertical-rl; transform: rotate(180deg); font-size: 16px; letter-spacing: 0.1em; }
+  .portada .folio .rotulo { color: var(--tinta); }
+  .portada .progreso { position: relative; margin-right: 6px; background: var(--tinta); }
+  .portada .progreso::after { content: ""; position: absolute; top: 50%; right: -6px; width: 18px; height: 18px; background: var(--tinta); clip-path: polygon(0 0, 100% 50%, 0 100%, 26% 50%); transform: translateY(-50%); }
+
+  /* Títulos de lámina interior. */
+  .interior .titulo { position: absolute; top: var(--my); left: var(--mx); width: 908px; font-size: 78px; }
+  .interior .rotulo-sup { position: absolute; top: 64px; left: var(--mx); }
+  .pie-ejemplo { position: absolute; left: var(--mx); bottom: 140px; font-size: 17px; }
+
+  /* ─── 02 Chat ─── */
+  .chat { position: absolute; top: 400px; left: var(--mx); right: var(--mx); display: flex; flex-direction: column; gap: 40px; }
+  .lamina .burbuja { max-width: 660px; padding: 24px 32px 22px; border-radius: 30px; font-size: 40px; line-height: 1.16; letter-spacing: -0.015em; }
+  .burbuja .hora { display: block; margin-top: 10px; font: 400 17px/1 var(--mono); letter-spacing: 0.04em; color: var(--tinta-3); }
+  .entra { align-self: flex-start; border: 1px solid var(--linea); border-bottom-left-radius: 8px; color: var(--tinta-2); }
+  .sale { align-self: flex-end; background: #1D1D1B; border-bottom-right-radius: 8px; color: var(--tinta); }
+  .sale b { font-weight: 500; }
+  .preguntas { position: relative; align-self: flex-end; display: flex; flex-direction: column; gap: 18px; align-items: flex-end; padding: 26px; }
+  .chat .marca-chat { position: absolute; inset: 0; border: 4px solid var(--senal); border-radius: 22px; pointer-events: none; }
+  .chat .nota-chat { position: absolute; right: calc(100% + 34px); top: 50%; width: 210px; transform: translateY(-50%); }
+  .chat .nota-chat b { display: block; font: 500 120px/0.8 var(--display); letter-spacing: -0.05em; margin-bottom: 14px; }
+
+  /* ─── 03 y 04 Formulario ─── */
+  .hoja { position: absolute; top: 352px; left: var(--mx); width: 610px; padding: 44px 42px 46px; border: 1px solid var(--linea); border-radius: 18px; background: var(--marco); display: flex; flex-direction: column; gap: 24px; }
+  .hoja.banda-marfil { border-color: transparent; background: var(--marfil); top: 330px; gap: 20px; }
+  .pestana { position: absolute; top: -15px; left: 32px; padding: 6px 12px 5px; border-radius: 6px; font-size: 17px; background: var(--pared); color: var(--tinta-2); border: 1px solid var(--linea); }
+  .banda-marfil .pestana { color: var(--marfil); border-color: var(--pared); }
+  .hoja-titulo { font-size: 36px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 4px; }
+  .campo { display: flex; flex-direction: column; gap: 10px; }
+  .campo > span { font-size: 22px; line-height: 1; color: var(--tinta-2); }
+  .entrada { display: flex; align-items: center; height: 66px; padding: 0 22px; border: 1px solid #34342F; border-radius: 10px; background: #0F0F0E; font-size: 25px; color: #D9D4CA; letter-spacing: -0.01em; }
+  .entrada.area { align-items: flex-start; height: 150px; padding-top: 18px; line-height: 1.36; }
+  .boton { display: flex; align-items: center; justify-content: center; height: 70px; margin-top: 6px; border-radius: 10px; background: var(--marfil); color: var(--pared); font-size: 26px; font-weight: 500; }
+  .banda-marfil .campo > span { color: var(--tinta); font-weight: 500; }
+  .banda-marfil .entrada { height: 60px; border-color: #CFC9BD; background: #F5F1E9; color: var(--pared); }
+  .banda-marfil .boton { background: var(--pared); color: var(--marfil); }
+  .ayuda { font: 400 18px/1.3 var(--mono); color: var(--tinta-2); letter-spacing: -0.01em; }
+  .opciones { display: flex; gap: 10px; }
+  .opcion { display: flex; align-items: center; height: 54px; padding: 0 22px; border: 1px solid #CFC9BD; border-radius: 27px; font-size: 23px; color: var(--tinta-2); }
+  .opcion.elegida { border-color: var(--pared); background: var(--pared); color: var(--marfil); }
+  .adjunto { display: flex; align-items: center; gap: 18px; height: 96px; padding: 12px 18px; border: 2px dashed #BDB6A8; border-radius: 10px; }
+  .adjunto .miniatura { width: 70px; height: 70px; border-radius: 6px; background: linear-gradient(160deg, rgb(255 255 255 / 0.16), rgb(0 0 0 / 0) 55%), linear-gradient(180deg, #8E897F 0 58%, #5E5A52 58% 100%); }
+  .adjunto .mono { font-size: 20px; line-height: 1.3; color: var(--tinta-2); }
+  .adjunto .mono b { display: block; font-weight: 400; color: var(--tinta); }
+  .contacto { display: flex; gap: 10px; }
+  .contacto .entrada { flex: 1; }
+  .al-margen { position: absolute; left: 744px; width: 250px; }
+  .antes .grupo { --holgura: 14px; border-radius: 12px; display: flex; flex-direction: column; gap: 24px; }
+  .despues .llave { position: absolute; left: 712px; width: 18px; border: 4px solid var(--senal); border-left: 0; border-radius: 0 12px 12px 0; }
+
+  /* ─── 05 Regla ─── */
+  .regla .titulo { font-size: 82px; }
+  .pasos { position: absolute; top: 400px; left: var(--mx); right: var(--mx); list-style: none; display: flex; flex-direction: column; gap: 64px; }
+  .pasos li { display: grid; grid-template-columns: 148px 1fr; align-items: start; }
+  .pasos .indice { --t-indice: 150px; margin-top: -6px; }
+  .pasos h3 { text-wrap: balance; font-size: 52px; font-weight: 500; letter-spacing: -0.03em; line-height: 1.04; }
+  .pasos .mono { margin-top: 14px; font-size: 24px; line-height: 1.35; color: var(--tinta-2); }
+  .guardar { position: absolute; left: var(--mx); bottom: 170px; display: flex; align-items: center; gap: 18px; }
+  .guardar .rotulo { color: var(--tinta); }
+  .marcador { width: 26px; height: 34px; background: var(--tinta); clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 74%, 0 100%); }
+
+  /* ─── 06 Oferta ─── */
+  .oferta .gigante { position: absolute; right: -250px; bottom: -170px; --monograma: 1040px; color: var(--marfil); opacity: 0.06; }
+  .oferta .rotulo-sup { position: absolute; top: var(--my); left: var(--mx); color: var(--tinta); }
+  .oferta .titular { position: absolute; top: 172px; left: var(--mx); width: 908px; font-size: 132px; line-height: 0.9; }
+  .oferta .paso { position: absolute; left: var(--mx); right: var(--mx); top: 760px; padding-top: 34px; border-top: 1px solid var(--tinta-3); display: grid; grid-template-columns: 1fr 64px; gap: 32px; align-items: end; }
+  .oferta .paso .rotulo { margin-bottom: 18px; }
+  .oferta .paso .cuerpo { font-size: 42px; line-height: 1.16; letter-spacing: -0.02em; }
+  .oferta .paso .flecha { --largo: 64px; --punta: 26px; color: var(--tinta); position: relative; left: auto; top: auto; transform: none; margin-bottom: 14px; }
+  .oferta .canal { position: absolute; left: var(--mx); top: 1050px; font-size: 18px; }
+</style>
+</head>
+<body>
+
+<!-- 01 · Gancho -->
+<section class="lamina portada" aria-label="Portada: el formulario corto no te ahorra trabajo">
+  <figure class="placa-foto" data-texto="arriba">
+    <img src="imagenes/portada.png" alt="Cinta métrica metálica apoyada sobre una superficie oscura, con luz lateral.">
+  </figure>
+  <div class="titulares zona-texto">
+    <p class="rotulo">Para quien cotiza trabajos a medida</p>
+    <h1 class="titular">El formulario corto no te ahorra trabajo.</h1>
+    <p class="bajada">Lo pasa a WhatsApp, de a una pregunta.</p>
+  </div>
+  <footer class="folio">
+    <i class="monograma"></i>
+    <span class="rotulo">Deslizá</span>
+    <span class="progreso" style="--n:1;--total:6"></span>
+    <span class="contador"><b>01</b>/06</span>
+  </footer>
+</section>
+
+<!-- 02 · Giro -->
+<section class="lamina interior" aria-label="Ejemplo de chat: cuatro preguntas antes de poder cotizar">
+  <h2 class="titulo zona-texto"><span class="tenue">Lo que el formulario no pregunta,</span> lo preguntás vos.</h2>
+  <div class="chat zona-texto">
+    <p class="burbuja entra">Hola, ¿cuánto sale?<span class="hora">Lunes 9:12</span></p>
+    <div class="preguntas">
+      <span class="marca-chat"></span>
+      <p class="nota nota-chat"><b class="dato">4</b>preguntas antes de poder calcular.</p>
+      <p class="burbuja sale">¿Qué <b>medida</b> tiene?<span class="hora">9:20</span></p>
+      <p class="burbuja sale">¿<b>Dónde</b> es?<span class="hora">9:21</span></p>
+      <p class="burbuja sale">¿Me mandás una <b>foto</b>?<span class="hora">11:48</span></p>
+      <p class="burbuja sale">¿Hay que <b>retirar</b> la vieja?<span class="hora">16:05</span></p>
+    </div>
+  </div>
+  <p class="pie-ejemplo rotulo">Ejemplo recreado · sin datos de clientes</p>
+  <footer class="folio">
+    <i class="monograma"></i>
+    <span class="progreso" style="--n:2;--total:6"></span>
+    <span class="contador"><b>02</b>/06</span>
+  </footer>
+</section>
+
+<!-- 03 · Prueba (antes) -->
+<section class="lamina interior antes" aria-label="Antes: formulario típico con nombre, email, teléfono y mensaje">
+  <h2 class="titulo zona-texto"><span class="tenue">Pide cómo contactarte.</span><br>No cómo cotizar.</h2>
+  <div class="hoja zona-texto">
+    <span class="pestana rotulo">El formulario típico</span>
+    <p class="hoja-titulo">Pedí tu presupuesto</p>
+    <div class="grupo marcado">
+      <div class="campo"><span>Nombre</span><i class="entrada">Laura</i></div>
+      <div class="campo"><span>Email</span><i class="entrada">laura@correo.com</i></div>
+      <div class="campo"><span>Teléfono</span><i class="entrada">099 000 000</i></div>
+      <div class="campo"><span>Mensaje</span><i class="entrada area">Hola, ¿cuánto sale cambiar una ventana?</i></div>
+    </div>
+    <span class="boton">Enviar</span>
+  </div>
+  <span class="flecha" style="--x:738px;--y:760px;--largo:52px;--angulo:180deg"></span>
+  <p class="nota al-margen" style="top:716px">Ningún campo cambia el precio.</p>
+  <p class="pie-ejemplo rotulo">Ejemplo recreado</p>
+  <footer class="folio">
+    <i class="monograma"></i>
+    <span class="progreso" style="--n:3;--total:6"></span>
+    <span class="contador"><b>03</b>/06</span>
+  </footer>
+</section>
+
+<!-- 04 · Prueba (después) -->
+<section class="lamina interior despues" aria-label="Después: formulario que pregunta qué trabajo, dónde, medida o foto y qué retirar">
+  <h2 class="titulo zona-texto"><span class="tenue">Este pide</span><br>lo que cambia el precio.</h2>
+  <div class="hoja banda-marfil zona-texto">
+    <span class="pestana rotulo">El formulario que cotiza</span>
+    <div class="campo">
+      <span>¿Qué trabajo es?</span>
+      <div class="opciones"><i class="opcion elegida">Aberturas</i><i class="opcion">Climatización</i><i class="opcion">Otro</i></div>
+    </div>
+    <div class="campo"><span>¿Dónde es?</span><i class="entrada">Barrio o ciudad</i></div>
+    <div class="campo">
+      <span>Medida aproximada o una foto</span>
+      <div class="adjunto"><i class="miniatura"></i><p class="mono"><b>ventana-cocina.jpg</b>subida</p></div>
+      <p class="ayuda">Con una foto te pasamos un rango sin visitar.</p>
+    </div>
+    <div class="campo">
+      <span>¿Hay algo que retirar?</span>
+      <div class="opciones"><i class="opcion">Sí</i><i class="opcion elegida">No</i><i class="opcion">No sé</i></div>
+    </div>
+    <div class="contacto"><i class="entrada">Nombre</i><i class="entrada">WhatsApp</i></div>
+    <span class="boton">Pedir presupuesto</span>
+  </div>
+  <span class="llave" style="top:372px;height:492px"></span>
+  <p class="nota al-margen" style="top:540px">Cada una de estas cuatro cambia el precio o decide si hay visita.</p>
+  <p class="pie-ejemplo rotulo">Ejemplo recreado</p>
+  <footer class="folio">
+    <i class="monograma"></i>
+    <span class="progreso" style="--n:4;--total:6"></span>
+    <span class="contador"><b>04</b>/06</span>
+  </footer>
+</section>
+
+<!-- 05 · Criterio -->
+<section class="lamina interior regla" aria-label="La regla: cada pregunta cambia el precio o decide la visita">
+  <p class="rotulo rotulo-sup">La regla</p>
+  <h2 class="titulo zona-texto">Cada pregunta <span class="resaltado">cambia el precio</span> o decide la visita.</h2>
+  <ol class="pasos zona-texto">
+    <li><span class="indice">1</span><div><h3>Si no cambia nada, sacala.</h3><p class="mono">menos campos, los que importan</p></div></li>
+    <li><span class="indice">2</span><div><h3>Si cambia algo y falta, la vas a hacer vos.</h3><p class="mono">por mensaje, después, de a una</p></div></li>
+    <li><span class="indice">3</span><div><h3>Al lado de cada campo, decí para qué es.</h3><p class="mono">«con una foto te pasamos un rango»</p></div></li>
+  </ol>
+  <p class="guardar"><i class="marcador"></i><span class="rotulo">Guardala para cuando revises tu formulario</span></p>
+  <footer class="folio">
+    <i class="monograma"></i>
+    <span class="progreso" style="--n:5;--total:6"></span>
+    <span class="contador"><b>05</b>/06</span>
+  </footer>
+</section>
+
+<!-- 06 · Oferta -->
+<section class="lamina oferta" aria-label="Diseño formularios que dejan cotizar. Mandame el link del tuyo.">
+  <i class="monograma gigante"></i>
+  <p class="rotulo rotulo-sup">Lo que hago</p>
+  <h2 class="titular zona-texto">Diseño formularios que dejan cotizar.</h2>
+  <div class="paso zona-texto">
+    <div>
+      <p class="rotulo">Para empezar</p>
+      <p class="cuerpo">Mandame el link del tuyo. Te devuelvo qué preguntas le faltan y cuáles sobran.</p>
+    </div>
+    <span class="flecha"></span>
+  </div>
+  <p class="canal rotulo">Por mensaje directo · Mario Morera</p>
+  <footer class="folio">
+    <span class="progreso" style="--n:6;--total:6"></span>
+    <span class="contador"><b>06</b>/06</span>
+  </footer>
+</section>
+
+</body>
+</html>

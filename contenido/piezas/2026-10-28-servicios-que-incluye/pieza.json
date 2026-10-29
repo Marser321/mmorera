@@ -1,0 +1,101 @@
+{
+  "id": "2026-10-28-servicios-que-incluye",
+  "fecha": "2026-10-28",
+  "rama": "criterio",
+  "serie": "Problemas concretos, decisiones claras",
+  "titulo": "«¿Qué incluye?»",
+  "estado": "borrador",
+  "fuente": {
+    "tipo": "capacidad",
+    "nota": "Escenario general. Las dos versiones de la página son ejemplos recreados con datos de muestra. Sin casos ni datos de clientes."
+  },
+  "ejemplo": true,
+  "postura": true,
+  "imagenes": [
+    {
+      "slot": "portada",
+      "formato": "feed",
+      "prompt": "Caja de cartón entreabierta sobre superficie oscura, tercio superior libre."
+    }
+  ],
+  "salidas": [
+    {
+      "id": "carrusel",
+      "plantilla": "carrusel",
+      "generador": "html",
+      "formato": "feed",
+      "tono": "oscuro",
+      "para": [
+        "instagram",
+        "linkedin"
+      ],
+      "diapositivas": [
+        {
+          "tipo": "portada",
+          "kicker": "PARA CONSULTORES Y SERVICIOS PROFESIONALES",
+          "titulo": "«¿Qué incluye?»",
+          "bajada": "Si te lo preguntan, tu página contesta otra cosa.",
+          "direccionVisual": "Portada fotográfica: placa de la caja entreabierta (imagenes/portada.png)."
+        },
+        {
+          "tipo": "comparacion",
+          "titulo": "Tu página dice cómo trabajás. La persona quiere saber qué recibe.",
+          "antes": {
+            "rotulo": "Lo que dice la página",
+            "texto": "Método, experiencia, beneficios"
+          },
+          "despues": {
+            "rotulo": "Lo que pregunta la persona",
+            "texto": "Qué recibo, qué no, cómo empezamos"
+          },
+          "direccionVisual": "Columnas en contraste; resaltado en «Qué recibo»."
+        },
+        {
+          "tipo": "comparacion",
+          "kicker": "EJEMPLO RECREADO",
+          "titulo": "Mismo servicio. Ahora se entiende qué se compra.",
+          "antes": {
+            "rotulo": "Antes",
+            "texto": "Consultoría estratégica integral. Acompañamos a tu empresa con un enfoque personalizado para potenciar sus resultados."
+          },
+          "despues": {
+            "rotulo": "Después",
+            "texto": "Incluye 2 reuniones de diagnóstico, un informe con 5 prioridades y un plan de 90 días. No incluye la implementación. Cómo empezamos: agendás la primera reunión y te llega un cuestionario."
+          },
+          "direccionVisual": "Artefacto: página antes y después; «Incluye» en resaltado."
+        },
+        {
+          "tipo": "lista",
+          "kicker": "ANTES DEL PRIMER MENSAJE",
+          "titulo": "Tres respuestas que tu página tiene que dar.",
+          "items": [
+            "Qué tenés en la mano al terminar.",
+            "Qué queda afuera.",
+            "Qué pasa después de decir que sí."
+          ],
+          "direccionVisual": "Lista que se guarda; índice 1 en señal."
+        },
+        {
+          "tipo": "cierre",
+          "titulo": "Reescribo páginas de servicio para que se entienda qué se compra.",
+          "cta": "Mandame tu página. Te devuelvo las tres respuestas que le faltan, escritas.",
+          "direccionVisual": "Cierre con monograma monumental."
+        }
+      ]
+    }
+  ],
+  "historial": [
+    {
+      "fecha": "2026-10-28",
+      "estado": "borrador",
+      "quien": "Codex",
+      "nota": "Copy revisado por lector independiente: 9/10. Ajustes de precisión incorporados. Arte propio estático; revisión de Mario pendiente."
+    },
+    {
+      "fecha": "2026-10-28",
+      "estado": "borrador",
+      "quien": "Claude",
+      "nota": "v1 con el método marca/guion.md: brief con insight, guion con puentes, placa de ChatGPT sin texto (tanda 2026-10-28-piloto) y diseno.html sobre el kit. La v0 está en v0/. Falta la revisión de Mario."
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Formato · Postura en banda marfil</title>
+<link rel="stylesheet" href="../kit.css">
+<!--
+  Postura: una frase de Mario, afirmada, en la banda marfil. Contraste
+  máximo (negro sobre marfil) y nada más en la lámina.
+
+  - La tensión la da la escala: la primera frase plantea, la segunda decide.
+  - Señal: el resaltado detrás de las palabras que cambian la lectura. Sobre
+    marfil es la única forma de usar la señal.
+  - La pieza lleva "postura": true; Mario ajusta la frase antes de aprobar.
+-->
+<style>
+  .postura .banda-marfil {
+    position: absolute;
+    top: 232px;
+    left: 0;
+    right: 0;
+    height: 886px;
+    padding: 82px var(--mx) 88px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .postura .planteo {
+    font-size: 84px;
+  }
+
+  .postura .decision {
+    font-size: 136px;
+    line-height: 0.9;
+    letter-spacing: -0.038em;
+  }
+</style>
+</head>
+<body>
+
+<section class="lamina postura" aria-label="Postura: nadie compra tu servicio, compran lo que entienden que reciben">
+  <div class="banda-marfil zona-texto">
+    <p class="titulo planteo">Nadie compra<br>tu servicio.</p>
+    <p class="titulo decision">Compran lo que<br><span class="resaltado">entienden</span><br>que reciben.</p>
+  </div>
+
+  <footer class="folio">
+    <i class="monograma"></i>
+    <span class="progreso" style="--n:5;--total:6"></span>
+    <span class="contador"><b>05</b>/06</span>
+  </footer>
+</section>
+
+</body>
+</html>

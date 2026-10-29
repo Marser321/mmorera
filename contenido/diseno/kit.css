@@ -1,0 +1,541 @@
+/*
+ * Kit de láminas · MMORERA
+ * ════════════════════════
+ * Base para componer en HTML las láminas estáticas de redes (1080×1350). Cada
+ * pieza tiene su contenido/piezas/<id>/diseno.html, con una
+ * <section class="lamina"> por lámina, que importa este archivo y suma su
+ * propia composición en un <style>. Se diseña por pieza: los formatos de
+ * formatos/ son referencias, no plantillas para rellenar.
+ *
+ * Render, desde web/:
+ *   npx tsx scripts/render-laminas.ts <id|ruta.html>          → salida/lamina-NN.png y salida/carrusel.pdf
+ *   npx tsx scripts/render-laminas.ts <id|ruta.html> --guias  → salida/guias/ (wireframes para ChatGPT)
+ *
+ * Reglas:
+ * - Pared en blanco y negro más una señal (#71F3A2). La señal cumple una sola
+ *   función por pieza (marcar el error, la corrección o el dato clave) y
+ *   aparece como mucho una vez por lámina. Nunca de relleno.
+ * - Sobre marfil la señal no tiene contraste (1,1:1): ahí solo va como
+ *   .resaltado, una barra detrás de texto negro.
+ * - Títulos en Familjen Grotesk 500, tracking -0,035em. Space Mono solo para
+ *   lo que es dato: horas, medidas, rótulos de un artefacto, notas y contador.
+ * - En modo guías (body.guias) se ocultan las fotos y los textos: quedan en
+ *   gris la zona de imagen (.placa-foto, .placa) y la de texto (.zona-texto).
+ */
+
+@font-face {
+  font-family: "Familjen Grotesk";
+  src: url("fuentes/familjen-grotesk.woff2") format("woff2");
+  font-weight: 400 700;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Space Mono";
+  src: url("fuentes/space-mono-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: block;
+}
+
+:root {
+  /* Pared: escalones del negro y el blanco roto (web/src/app/globals.css). */
+  --pared: #0B0B0A;
+  --relieve: #121211;
+  --marco: #181816;
+  --marfil: #ECE7DD;
+  /* La señal del sitio (--color-signal): el único acento. */
+  --senal: #71F3A2;
+
+  /* Tinta sobre pared. Contraste contra #0B0B0A: 16:1, 7,4:1 y 3,7:1 (solo texto grande o trazos). */
+  --fondo: var(--pared);
+  --tinta: var(--marfil);
+  --tinta-2: #A29E95;
+  --tinta-3: #6E6A62;
+  --linea: #2B2B28;
+
+  /* Lienzo 4:5 con margen del 8 % en cada eje. */
+  --ancho: 1080px;
+  --alto: 1350px;
+  --mx: 86px;
+  --my: 108px;
+
+  /* Escala tipográfica (px de lienzo; en el teléfono se ve a ~1/3). */
+  --display: "Familjen Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --mono: "Space Mono", "Courier New", monospace;
+  --t-portada: 128px;
+  --t-titulo: 88px;
+  --t-subtitulo: 60px;
+  --t-cuerpo: 38px;
+  --t-detalle: 30px;
+  --t-nota: 25px;
+  --t-rotulo: 20px;
+  --t-indice: 176px;
+  --tracking: -0.035em;
+  --lh-titulo: 0.94;
+  --lh-cuerpo: 1.24;
+
+  /* Grano de pared: ruido fractal gris, estirado alrededor del 50 % para mezclarlo en overlay
+     (texturiza sin aclarar la pared ni ensuciar el marfil). */
+  --grano: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='5' intercept='-2.05'/%3E%3CfeFuncG type='linear' slope='5' intercept='-2.05'/%3E%3CfeFuncB type='linear' slope='5' intercept='-2.05'/%3E%3CfeFuncA type='linear' slope='0' intercept='1'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+
+  /* Monograma MM: los trazos de web/src/data/brand/logoPaths.ts, sin redibujar. */
+  --monograma-trazo: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 2239.69 1885.03%22%3E%3Cpath d=%22M815.2,1678.45c53.34,18.76,107.18,30.56,162.35,36.55c71.79,7.79,143.27,6.1,214.13-8.11 c116.94-23.44,223.95-69.37,318.79-142.56c43.96-33.92,84.58-71.31,120.12-114c67.17-80.69,116.93-170.81,146.81-271.79 c25.69-86.82,35.15-175.33,28.13-265.45c-8.22-105.63-36.43-205.74-86.87-299.08c-16-29.61-34.5-57.87-51.85-86.75 c-1.07-1.79-2.08-3.62-3.37-5.85c29.48-28.97,58.67-57.65,88.74-87.19c6.31,7.99,12.13,14.82,17.37,22.08 c70.57,97.72,118.37,205.71,143.95,323.39c25.47,117.19,27.89,234.78,4.92,352.85c-19.61,100.8-55.64,195.18-108.61,282.89 c-56.9,94.22-129.34,174.78-216.24,242.52c-77.45,60.37-162.54,106.4-255.14,138.33c-100.66,34.71-204.34,49.74-310.93,46.32 c-94.14-3.02-185.28-20.56-273.54-52.92c-72.55-26.6-140.03-63.03-203.29-107.51c-57.92-40.72-110.49-87.29-157.07-140.6 c-70.97-81.22-125.78-172.14-163.09-273.44c-41.17-111.78-59.83-227.12-52.57-346.22c6.51-106.71,30.76-209.21,74.46-306.99 c23.01-51.48,50.58-100.29,83.13-146.3c2.47-3.5,5.23-6.79,9.02-11.69c119.39,111.43,237.49,223.32,356.25,334.51 c118.57,111.02,237.51,221.65,356.77,332.9c142.56-136.51,284.44-272.37,428.51-410.32c0,283.68,0,563.96,0,844.9 c-65.71,0-130.71,0-197.34,0c0-140.67,0-280.49,0-420.32c-0.83-0.29-1.66-0.58-2.49-0.87c-75.34,73.4-150.69,146.8-226.86,221.01 C824.73,1137.2,590.83,916.38,355.23,693.95c-5.67,16.13-10.76,29.75-15.25,43.56c-31.66,97.47-43.71,197.41-34.64,299.43 c6.82,76.71,25.92,150.66,56.94,221.31c32.37,73.72,74.21,141.43,127.51,201.99c76.37,86.76,167.6,152.87,273.7,198.42 C780.14,1665.79,797.29,1671.72,815.2,1678.45z%22/%3E%3Cpath d=%22M436.4,471.91c-20.17-18.97-39.65-37.34-60.31-56.83c54.23-66.94,116.72-124.1,187.26-172.25 c125.19-85.44,262.95-136.4,414.38-150.07c331.54-29.93,599.33,129.61,742.38,302.16c-220.33,215.66-440.73,431.39-661.53,647.52 c-23.38-22.17-45.89-43.62-68.51-64.95c-77.03-72.66-154.12-145.27-231.16-217.92c-40.57-38.26-80.99-76.67-121.74-114.74 c-6.46-6.04-9.34-12.18-9.28-21.27c0.44-69.2,0.32-138.4,0.38-207.59c0-4.2,0-8.41,1.3-13.33c30.35,25.91,58.38,53.68,86.81,81.02 c28.35,27.26,56.75,54.48,85.08,81.76c28.65,27.58,57.23,55.24,85.88,82.82c28.35,27.28,56.72,54.52,85.13,81.74 c28.64,27.44,57.34,54.82,86.9,83.07c152.34-147.32,303.87-293.86,455.45-440.44c-108.04-91.2-310.17-186.62-549.53-155.23 c-203.64,26.71-368.64,123.28-499.25,282.84C456.26,490.86,446.67,481.69,436.4,471.91z%22/%3E%3Cpath d=%22M628.46,1257.76c0-77.77,0-154.25,0-231.38c6.01,0.11,8.59,4.51,11.73,7.45c45.67,42.87,91.21,85.87,136.8,128.82 c13.84,13.03,27.61,26.13,41.68,38.92c5.17,4.7,7.37,9.74,7.35,16.91c-0.24,110.22-0.19,220.44-0.24,330.66 c0,2.93-0.32,5.87-0.55,9.7c-65.64,0-130.54,0-196.76,0C628.46,1458.49,628.46,1358.77,628.46,1257.76z%22/%3E%3C/svg%3E");
+}
+
+/* ─── Vista previa en el navegador (el render la anula) ─── */
+
+html,
+body {
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  padding: 40px 0;
+  background: #050505;
+}
+
+::selection {
+  background: var(--senal);
+  color: var(--pared);
+}
+
+/* ─── Lámina ─── */
+
+.lamina {
+  position: relative;
+  flex: none;
+  width: var(--ancho);
+  height: var(--alto);
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--fondo);
+  color: var(--tinta);
+  font-family: var(--display);
+  font-size: var(--t-cuerpo);
+  font-weight: 400;
+  line-height: var(--lh-cuerpo);
+  font-kerning: normal;
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+.lamina *,
+.lamina *::before,
+.lamina *::after {
+  box-sizing: border-box;
+}
+
+.lamina :is(h1, h2, h3, p, ol, ul, figure, figcaption) {
+  margin: 0;
+  padding: 0;
+}
+
+/* Familjen no tiene cursiva: <i> se usa como pieza gráfica, nunca inclinada. */
+.lamina i {
+  font-style: normal;
+}
+
+/* Grano: es lo que hace pared. Va detrás del contenido, sobre el fondo, para que el texto quede limpio
+   (la placa de ChatGPT ya trae el suyo). */
+.lamina::before,
+.banda-marfil:not(.lamina)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+  background: var(--grano) 0 0 / 320px 320px;
+  mix-blend-mode: overlay;
+  opacity: 0.6;
+}
+
+/* Caja dentro del margen del 8 %. */
+.caja {
+  position: absolute;
+  inset: var(--my) var(--mx);
+}
+
+/* ─── Tipografía ─── */
+
+.titular,
+.titulo,
+.subtitulo {
+  font-family: var(--display);
+  font-weight: 500;
+  letter-spacing: var(--tracking);
+  line-height: var(--lh-titulo);
+  text-wrap: balance;
+}
+
+.titular {
+  font-size: var(--t-portada);
+}
+
+.titulo {
+  font-size: var(--t-titulo);
+}
+
+.subtitulo {
+  font-size: var(--t-subtitulo);
+  line-height: 1;
+}
+
+.cuerpo {
+  font-size: var(--t-cuerpo);
+  line-height: var(--lh-cuerpo);
+  letter-spacing: -0.012em;
+  text-wrap: pretty;
+}
+
+.detalle {
+  font-size: var(--t-detalle);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--tinta-2);
+  text-wrap: pretty;
+}
+
+.rotulo {
+  font-family: var(--mono);
+  font-size: var(--t-rotulo);
+  line-height: 1.3;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tinta-2);
+}
+
+.mono {
+  font-family: var(--mono);
+  letter-spacing: 0;
+}
+
+.tenue {
+  color: var(--tinta-2);
+}
+
+/* El dato clave en señal, como texto (solo sobre pared). */
+.dato {
+  color: var(--senal);
+}
+
+/* ─── Banda marfil: la lámina o la franja invertida ─── */
+
+.banda-marfil {
+  --fondo: var(--marfil);
+  --tinta: var(--pared);
+  --tinta-2: #4A4740; /* 7,5:1 sobre marfil */
+  --tinta-3: #6B665D; /* 4,6:1 */
+  --linea: #C9C3B7;
+  background: var(--fondo);
+  color: var(--tinta);
+}
+
+/* Una franja dentro de la lámina lleva su propio grano (especificidad cero: la composición la ubica). */
+:where(.banda-marfil:not(.lamina)) {
+  position: relative;
+  isolation: isolate;
+}
+
+/* ─── Placa: la imagen de ChatGPT ─── */
+
+/* A sangre, con un degradé de pared del lado del texto (data-texto: arriba, abajo, izquierda o derecha). */
+.placa-foto {
+  --degrade-hacia: 180deg;
+  --degrade-fuerza: 0.9;
+  --degrade-largo: 58%;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: var(--relieve);
+}
+
+.placa-foto[data-texto="abajo"] {
+  --degrade-hacia: 0deg;
+}
+
+.placa-foto[data-texto="izquierda"] {
+  --degrade-hacia: 90deg;
+}
+
+.placa-foto[data-texto="derecha"] {
+  --degrade-hacia: 270deg;
+}
+
+/* --sombra-pie (0 a 1) oscurece además el pie, para que el folio se lea sobre la foto. */
+.placa-foto::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(0deg, rgb(11 11 10 / var(--sombra-pie, 0)) 0, rgb(11 11 10 / 0) 260px),
+    linear-gradient(
+      var(--degrade-hacia),
+      rgb(11 11 10 / var(--degrade-fuerza)) 0%,
+      rgb(11 11 10 / calc(var(--degrade-fuerza) * 0.5)) calc(var(--degrade-largo) * 0.55),
+      rgb(11 11 10 / 0) var(--degrade-largo)
+    );
+}
+
+/* Enmarcada: la ubica la composición. --recorte elige la parte de la imagen (object-view-box). */
+.placa {
+  position: relative;
+  overflow: hidden;
+  background: var(--relieve);
+}
+
+.placa-foto img,
+.placa img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--foco, 50% 50%);
+  object-view-box: var(--recorte, none);
+}
+
+/* ─── Anotación: recuadro, flecha y nota en señal ─── */
+
+/* Recuadro suelto, en coordenadas de lámina. */
+.marca {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--w);
+  height: var(--h);
+  z-index: 10;
+  border: 4px solid var(--senal);
+  border-radius: 10px;
+  pointer-events: none;
+}
+
+/* Recuadro alrededor de un elemento propio. */
+.marcado {
+  outline: 4px solid var(--senal);
+  outline-offset: var(--holgura, 12px);
+}
+
+/* Flecha: nace en (--x, --y), mide --largo y gira --angulo (0deg apunta a la derecha). */
+.flecha {
+  --largo: 120px;
+  --angulo: 0deg;
+  --grosor: 4px;
+  --punta: 24px;
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  z-index: 10;
+  width: var(--largo);
+  height: var(--punta);
+  color: var(--senal);
+  background: linear-gradient(currentColor, currentColor) 0 50% / calc(100% - var(--punta) * 0.5) var(--grosor) no-repeat;
+  transform: translateY(-50%) rotate(var(--angulo));
+  transform-origin: 0 50%;
+}
+
+.flecha::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: var(--punta);
+  height: var(--punta);
+  background: currentColor;
+  clip-path: polygon(0 0, 100% 50%, 0 100%, 26% 50%);
+}
+
+/* En el renglón (por ejemplo, junto a "Deslizá"). */
+.flecha.en-linea {
+  position: relative;
+  left: auto;
+  top: auto;
+  display: inline-block;
+  vertical-align: middle;
+  transform: none;
+}
+
+.nota {
+  font-family: var(--mono);
+  font-size: var(--t-nota);
+  line-height: 1.36;
+  letter-spacing: -0.01em;
+  color: var(--senal);
+  text-wrap: pretty;
+}
+
+/* ─── Resaltado: barra señal detrás de texto negro (sirve sobre pared y sobre marfil) ─── */
+
+.resaltado {
+  color: var(--pared);
+  background: linear-gradient(var(--senal), var(--senal)) 0 62% / 100% 0.92em no-repeat;
+  padding: 0 0.1em;
+  margin: 0 -0.04em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* ─── Índices, contador y progreso ─── */
+
+.indice {
+  font-family: var(--display);
+  font-size: var(--t-indice);
+  font-weight: 500;
+  line-height: 0.76;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--tinta-3);
+}
+
+.contador {
+  font-family: var(--mono);
+  font-size: var(--t-rotulo);
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: var(--tinta-2);
+  white-space: nowrap;
+}
+
+.contador b {
+  font-weight: 400;
+  color: var(--tinta);
+}
+
+/* Barra de avance: --n de --total. */
+.progreso {
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(90deg, var(--tinta) calc(var(--n, 1) / var(--total, 1) * 100%), var(--linea) 0);
+}
+
+/* Pie de lámina: monograma, avance y contador en una línea. */
+.folio {
+  position: absolute;
+  left: var(--mx);
+  right: var(--mx);
+  bottom: 64px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.folio.arriba {
+  top: 56px;
+  bottom: auto;
+}
+
+/* ─── Monograma ─── */
+
+.monograma {
+  display: inline-block;
+  flex: none;
+  width: var(--monograma, 46px);
+  aspect-ratio: 2239.69 / 1885.03;
+  background: currentColor;
+  -webkit-mask: var(--monograma-trazo) center / contain no-repeat;
+  mask: var(--monograma-trazo) center / contain no-repeat;
+}
+
+/* ─── Guías: wireframe de zonas para pedir la placa a ChatGPT ─── */
+
+.guias .lamina {
+  --fondo: #1C1C1B;
+  background: var(--fondo);
+}
+
+.guias .lamina::before,
+.guias .banda-marfil::after {
+  display: none;
+}
+
+.guias .lamina *:not(.placa-foto, .placa, .zona-texto) {
+  visibility: hidden;
+}
+
+.guias .placa-foto,
+.guias .placa,
+.guias .zona-texto {
+  visibility: visible;
+  outline: none;
+}
+
+.guias .placa-foto,
+.guias .placa {
+  background: #77756F;
+}
+
+.guias .placa-foto::after {
+  display: none;
+}
+
+.guias .zona-texto {
+  background: #C4C1BA;
+  color: transparent;
+}
+
+.guias :is(.placa-foto, .placa, .zona-texto)::before {
+  position: absolute;
+  z-index: 1;
+  padding: 14px 18px;
+  font: 400 22px/1 var(--mono);
+  letter-spacing: 0.08em;
+  color: #0B0B0A;
+  visibility: visible;
+}
+
+.guias :is(.placa-foto, .placa)::before {
+  content: "IMAGEN";
+  right: 0;
+  bottom: 0;
+}
+
+.guias .zona-texto::before {
+  content: "TEXTO · SIN IMAGEN";
+  left: 0;
+  top: 0;
+}
+
+/* Ancla del rótulo sin pisar la posición que le dé la composición (especificidad cero). */
+:where(.guias .zona-texto) {
+  position: relative;
+}
+
+/* ─── PDF: una página por lámina ─── */
+
+/* Chrome redondea el papel hacia arriba a centésimas de pulgada: 1350 px (14,0625 in) sale de
+   14,07 in y deja una línea blanca abajo. Se pide justo 14,07 in y la lámina crece lo mismo
+   (0,72 px) solo en el PDF; los PNG siguen en 1080×1350. */
+@page {
+  size: 1080px 1350.72px;
+  margin: 0;
+}
+
+@media print {
+  html {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  body {
+    display: block;
+    padding: 0;
+    background: none;
+  }
+
+  .lamina {
+    height: 1350.72px;
+    break-after: page;
+    break-inside: avoid;
+  }
+
+  .lamina:last-child {
+    break-after: auto;
+  }
+}

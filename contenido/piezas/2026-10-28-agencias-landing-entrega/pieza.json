@@ -1,0 +1,100 @@
+{
+  "id": "2026-10-28-agencias-landing-entrega",
+  "fecha": "2026-10-28",
+  "rama": "oficio",
+  "serie": "Problemas concretos, decisiones claras",
+  "titulo": "¿Cuándo está terminada una landing?",
+  "estado": "borrador",
+  "fuente": {
+    "tipo": "capacidad",
+    "nota": "Escenario general para agencias. La prueba es trabajo propio: nombres reales de web/e2e/site.spec.ts y total de npx playwright test --list (52, 28/10/2026). Sin datos de clientes."
+  },
+  "postura": true,
+  "imagenes": [
+    {
+      "slot": "portada",
+      "formato": "feed",
+      "prompt": "Nivel de burbuja sobre concreto, cámara baja, mitad superior libre."
+    }
+  ],
+  "salidas": [
+    {
+      "id": "carrusel",
+      "plantilla": "carrusel",
+      "generador": "html",
+      "formato": "feed",
+      "tono": "oscuro",
+      "para": [
+        "instagram",
+        "linkedin"
+      ],
+      "diapositivas": [
+        {
+          "tipo": "portada",
+          "kicker": "PARA AGENCIAS",
+          "titulo": "¿Cuándo está terminada una landing?",
+          "bajada": "Si no lo escribieron antes, cambia en cada revisión.",
+          "direccionVisual": "Portada fotográfica: placa del nivel de burbuja (imagenes/portada.png)."
+        },
+        {
+          "tipo": "tarjeta",
+          "texto": "«Terminada» no es que se parezca al diseño. Es que pasa pruebas que acordaron antes.",
+          "direccionVisual": "Postura en lámina marfil; resaltado en «pasa pruebas»."
+        },
+        {
+          "tipo": "lista",
+          "kicker": "MI SITIO · PRUEBAS REALES",
+          "titulo": "Mi sitio tiene 52 pruebas escritas.",
+          "items": [
+            "valida el brief por pasos y enfoca el primer error",
+            "muestra un error recuperable si falla el envío",
+            "mantiene la composición sin desborde en tablet y pantalla ancha",
+            "ofrece un único menú móvil con rutas, idioma, tema y CTA",
+            "publica canonical, hreflang, OG, JSON-LD y sitemap canónicos"
+          ],
+          "direccionVisual": "Artefacto: terminal con líneas reales; 52 en señal."
+        },
+        {
+          "tipo": "lista",
+          "kicker": "EL MÍNIMO",
+          "titulo": "Cinco pruebas que una landing de campaña tiene que pasar.",
+          "items": [
+            "El formulario envía y la consulta llega adonde la esperan.",
+            "Quien consulta ve el próximo paso.",
+            "En el celular, nada tapa el botón.",
+            "Si el envío falla, la persona sabe qué hacer.",
+            "La conversión se registra una sola vez."
+          ],
+          "direccionVisual": "Lista que se guarda; resaltado en «tiene que pasar»."
+        },
+        {
+          "tipo": "texto",
+          "kicker": "CON LAS PRUEBAS ESCRITAS",
+          "titulo": "Un cambio fuera de la lista es un pedido nuevo. No una corrección.",
+          "cuerpo": "Diseño aprobado, pruebas escritas, implementación y entrega. En las pruebas escritas se define qué es terminado.",
+          "direccionVisual": "Diagrama de recorrido con la estación «Pruebas escritas» marcada en señal."
+        },
+        {
+          "tipo": "cierre",
+          "titulo": "Implemento landings con «terminado» escrito y probado.",
+          "cta": "Pasame el diseño aprobado. Te devuelvo la lista de pruebas que va a pasar antes de entregarla.",
+          "direccionVisual": "Cierre con monograma monumental."
+        }
+      ]
+    }
+  ],
+  "historial": [
+    {
+      "fecha": "2026-10-28",
+      "estado": "borrador",
+      "quien": "Codex",
+      "nota": "Copy revisado por lector independiente: 9/10. Ajustes de precisión incorporados. Arte propio estático; revisión de Mario pendiente."
+    },
+    {
+      "fecha": "2026-10-28",
+      "estado": "borrador",
+      "quien": "Claude",
+      "nota": "v1 con el método marca/guion.md: brief con insight, guion con puentes, placa de ChatGPT sin texto (tanda 2026-10-28-piloto) y diseno.html sobre el kit. La v0 está en v0/. Falta la revisión de Mario."
+    }
+  ]
+}

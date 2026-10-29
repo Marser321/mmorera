@@ -35,3 +35,6 @@ contenido/**/imagenes/*.webp
 # Se regeneran: `npx tsx scripts/contenido.ts revision` y `npx tsx scripts/chatgpt-prompts.ts <id>`
 contenido/REVISION.md
 contenido/piezas/*/chatgpt.md
+# Referencias de las tandas de ChatGPT: imágenes de estilo, como las demás imágenes de contenido
+contenido/tandas/*/referencias/*.png
+contenido/tandas/*/referencias/*.jpg

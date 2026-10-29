@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Piloto 28/10 · antes y después</title>
+<style>
+  @font-face { font-family: "Familjen"; src: url("../../diseno/fuentes/familjen-grotesk.woff2") format("woff2"); font-weight: 400 700; }
+  @font-face { font-family: "SpaceMono"; src: url("../../diseno/fuentes/space-mono-regular.woff2") format("woff2"); }
+  :root { --pared: #0B0B0A; --relieve: #121211; --marco: #181816; --marfil: #ECE7DD; --tenue: rgba(236,231,221,.58); --linea: rgba(236,231,221,.16); --senal: #71F3A2; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--pared); color: var(--marfil); font-family: "Familjen", system-ui, sans-serif; }
+  header, section { padding: 56px clamp(16px, 5vw, 72px); }
+  header { border-bottom: 1px solid var(--linea); }
+  .rotulo { font-family: "SpaceMono", ui-monospace, monospace; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--tenue); }
+  h1 { font-size: clamp(36px, 6vw, 72px); font-weight: 500; letter-spacing: -.035em; line-height: .95; margin: 16px 0 12px; max-width: 18ch; }
+  header p { color: var(--tenue); max-width: 60ch; font-size: 18px; line-height: 1.45; margin: 0; }
+  section { border-bottom: 1px solid var(--linea); }
+  h2 { font-size: clamp(26px, 3.4vw, 40px); font-weight: 500; letter-spacing: -.03em; margin: 10px 0 24px; max-width: 26ch; }
+  .claves { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin-bottom: 32px; }
+  .claves div { background: var(--relieve); border: 1px solid var(--linea); padding: 16px 18px; }
+  .claves b { display: block; font-family: "SpaceMono", monospace; font-weight: 400; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--senal); margin-bottom: 8px; }
+  .claves span { font-size: 16px; line-height: 1.4; }
+  .fila { margin-top: 28px; }
+  .fila .rotulo { display: flex; gap: 12px; align-items: center; margin-bottom: 12px; }
+  .fila .rotulo::after { content: ""; flex: 1; height: 1px; background: var(--linea); }
+  .tira { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 12px; scroll-snap-type: x mandatory; scrollbar-color: #4A4740 transparent; scrollbar-width: thin; }
+  .tira img { width: clamp(200px, 22vw, 300px); aspect-ratio: 4 / 5; object-fit: cover; flex: none; border: 1px solid var(--linea); background: var(--marco); scroll-snap-align: start; cursor: zoom-in; }
+  .tira img.falta { display: none; }
+  .antes img { opacity: .9; }
+  dialog { border: 0; padding: 0; background: transparent; max-width: 96vw; }
+  dialog::backdrop { background: rgba(0,0,0,.88); }
+  dialog img { max-height: 92vh; max-width: 92vw; display: block; }
+</style>
+</head>
+<body>
+<header>
+  <div class="rotulo">Tanda 01 · Piloto · 28/10/2026</div>
+  <h1>Las mismas tres piezas, antes y después.</h1>
+  <p>Arriba de cada pieza, la versión que había (código, solo tipografía). Abajo, la nueva: brief con insight, guion con puentes, placa de ChatGPT sin texto y tipografía compuesta en código. Tocá una lámina para verla grande.</p>
+</header>
+
+<section data-pieza="2026-10-28-cotizar-trabajos-a-medida" data-antes="carrusel" data-n-antes="5" data-n-despues="6">
+  <div class="rotulo">Pieza 1 · Empresas que cotizan trabajos a medida</div>
+  <h2>El formulario corto no te ahorra trabajo.</h2>
+  <div class="claves">
+    <div><b>Insight</b><span>Cada dato que el formulario no pide, lo pedís vos después, por WhatsApp, de a uno.</span></div>
+    <div><b>Prueba</b><span>El chat del ida y vuelta y el formulario antes y después, recreados como ejemplo.</span></div>
+    <div><b>Oferta</b><span>Mandame el link de tu formulario y te devuelvo qué le falta y qué le sobra.</span></div>
+  </div>
+</section>
+
+<section data-pieza="2026-10-28-agencias-landing-entrega" data-antes="carrusel" data-n-antes="4" data-n-despues="6">
+  <div class="rotulo">Pieza 2 · Agencias con diseño aprobado</div>
+  <h2>¿Cuándo está terminada una landing?</h2>
+  <div class="claves">
+    <div><b>Insight</b><span>Terminada es que pasa pruebas acordadas antes. Con la lista escrita, un cambio nuevo es un pedido nuevo.</span></div>
+    <div><b>Prueba</b><span>Trabajo propio: las 52 pruebas escritas del sitio de Mario, con nombres reales.</span></div>
+    <div><b>Oferta</b><span>Pasame el diseño aprobado y te devuelvo la lista de pruebas que va a pasar.</span></div>
+  </div>
+</section>
+
+<section data-pieza="2026-10-28-servicios-que-incluye" data-antes="tarjeta" data-n-antes="1" data-n-despues="5">
+  <div class="rotulo">Pieza 3 · Consultores y servicios profesionales</div>
+  <h2>«¿Qué incluye?»</h2>
+  <div class="claves">
+    <div><b>Insight</b><span>La página dice cómo trabajás; la persona quiere saber qué recibe. Decir qué no incluye hace creíble lo que sí.</span></div>
+    <div><b>Prueba</b><span>La misma página de servicio en dos versiones, recreada como ejemplo.</span></div>
+    <div><b>Oferta</b><span>Mandame tu página y te devuelvo las tres respuestas que le faltan, escritas.</span></div>
+  </div>
+</section>
+
+<dialog id="visor"><img alt=""></dialog>
+
+<script>
+  const pad = (n) => String(n).padStart(2, "0");
+  const visor = document.getElementById("visor");
+  function tira(titulo, clase, rutas) {
+    const fila = document.createElement("div");
+    fila.className = "fila " + clase;
+    fila.innerHTML = '<div class="rotulo">' + titulo + "</div>";
+    const cont = document.createElement("div");
+    cont.className = "tira";
+    rutas.forEach((src, i) => {
+      const img = new Image();
+      img.loading = "lazy";
+      img.alt = titulo + " · lámina " + (i + 1);
+      img.src = src;
+      img.onerror = () => img.classList.add("falta");
+      img.onclick = () => { visor.querySelector("img").src = src; visor.showModal(); };
+      cont.appendChild(img);
+    });
+    fila.appendChild(cont);
+    return fila;
+  }
+  visor.addEventListener("click", () => visor.close());
+  document.querySelectorAll("section[data-pieza]").forEach((s) => {
+    const base = "../../piezas/" + s.dataset.pieza;
+    const antes = Array.from({ length: +s.dataset.nAntes }, (_, i) => base + "/v0/salida/" + s.dataset.antes + "-" + pad(i + 1) + ".png");
+    const despues = Array.from({ length: +s.dataset.nDespues }, (_, i) => base + "/salida/lamina-" + pad(i + 1) + ".png");
+    s.appendChild(tira("Antes · v0", "antes", antes));
+    s.appendChild(tira("Después · v1", "despues", despues));
+  });
+</script>
+</body>
+</html>

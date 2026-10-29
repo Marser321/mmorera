@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Formato · Portada fotográfica</title>
+<link rel="stylesheet" href="../kit.css">
+<!--
+  Portada fotográfica: la placa de ChatGPT a sangre y el titular compuesto en
+  su zona libre. Es la lámina que frena el pulgar: una escena con hora u objeto,
+  y la tensión puesta en el titular, no en la foto.
+
+  - La placa se pide sin texto y con la zona del titular libre (acá, arriba a
+    la izquierda). El degradé del kit (data-texto) asegura la lectura.
+  - Señal: el dato clave del gancho, una sola vez. Acá, la hora.
+  - Prueba de teléfono: a 360 px de ancho el titular tiene que leerse.
+  - Placa de prueba: noche.png de la pieza 2026-10-14-lead-23-45.
+-->
+<style>
+  .portada .placa-foto {
+    --degrade-largo: 64%;
+    --sombra-pie: 0.85;
+  }
+
+  .portada .placa-foto img {
+    --foco: 50% 60%;
+  }
+
+  .portada .titulares {
+    position: absolute;
+    top: 146px;
+    left: var(--mx);
+    width: 840px;
+    z-index: 2;
+  }
+
+  .portada .titular {
+    line-height: 0.9;
+  }
+
+  .portada .titular .dato {
+    letter-spacing: -0.03em;
+  }
+
+  .portada .subtitulo {
+    margin-top: 42px;
+  }
+
+  /* Crédito de foto en el canto, como en una revista. */
+  .portada .credito {
+    position: absolute;
+    left: 38px;
+    bottom: 168px;
+    z-index: 2;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-size: 16px;
+    letter-spacing: 0.1em;
+  }
+
+  /* En la portada el avance termina en punta: invita a deslizar. */
+  .portada .progreso {
+    position: relative;
+    margin-right: 6px;
+    background: var(--tinta);
+  }
+
+  .portada .progreso::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -6px;
+    width: 18px;
+    height: 18px;
+    background: var(--tinta);
+    clip-path: polygon(0 0, 100% 50%, 0 100%, 26% 50%);
+    transform: translateY(-50%);
+  }
+
+  .portada .folio .rotulo {
+    color: var(--tinta);
+  }
+</style>
+</head>
+<body>
+
+<section class="lamina portada" aria-label="Portada: llegó a las 23:45, la vieron a las 9:10">
+  <figure class="placa-foto" data-texto="arriba">
+    <img src="../../piezas/2026-10-14-lead-23-45/imagenes/noche.png" alt="Escritorio vacío de noche, con una lámpara encendida y la silla corrida.">
+  </figure>
+
+  <div class="titulares zona-texto">
+    <h1 class="titular">Llegó a las<br><span class="dato">23:45.</span></h1>
+    <p class="subtitulo">La vieron a las 9:10.</p>
+  </div>
+
+  <p class="credito rotulo">Escena recreada · sin datos de clientes</p>
+
+  <footer class="folio">
+    <i class="monograma"></i>
+    <span class="rotulo">Deslizá</span>
+    <span class="progreso" style="--n:1;--total:6"></span>
+    <span class="contador"><b>01</b>/06</span>
+  </footer>
+</section>
+
+</body>
+</html>

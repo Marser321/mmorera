@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Formato · Lista que se guarda</title>
+<link rel="stylesheet" href="../kit.css">
+<!--
+  Lista que se guarda: una herramienta, no una opinión. El lector la guarda
+  porque la va a usar la próxima vez (o se la manda a quien la tiene que usar).
+
+  - Índices grandes: el orden es el de la revisión, de lo visible a lo que
+    nadie mira.
+  - Cada punto es una prueba concreta con su dato en mono (una medida, una
+    herramienta), no un consejo.
+  - Señal: el punto que define la lista (el índice y su nota), una vez.
+  - Cierra con el pedido de guardado, no con un "seguime".
+-->
+<style>
+  .lista .titulo {
+    position: absolute;
+    top: var(--my);
+    left: var(--mx);
+    width: 908px;
+  }
+
+  .pruebas {
+    position: absolute;
+    top: 352px;
+    left: var(--mx);
+    right: var(--mx);
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .pruebas li {
+    display: grid;
+    grid-template-columns: 148px 1fr;
+    align-items: start;
+  }
+
+  .pruebas .indice {
+    --t-indice: 150px;
+    margin-top: -6px;
+  }
+
+  .pruebas h3 {
+    font-size: 46px;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1.04;
+  }
+
+  .pruebas .mono {
+    margin-top: 12px;
+    font-size: 21px;
+    line-height: 1.35;
+    color: var(--tinta-2);
+  }
+
+  .pruebas .clave .indice {
+    color: var(--senal);
+  }
+
+  .pruebas .clave .nota {
+    margin-top: 8px;
+    font-size: 21px;
+  }
+
+  .guardar {
+    position: absolute;
+    left: var(--mx);
+    bottom: 170px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .guardar .rotulo {
+    color: var(--tinta);
+  }
+
+  /* Marcador dibujado: el gesto de guardar. */
+  .marcador {
+    width: 26px;
+    height: 34px;
+    background: var(--tinta);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 74%, 0 100%);
+  }
+</style>
+</head>
+<body>
+
+<section class="lamina lista" aria-label="Lista: cinco pruebas antes de decir que una landing está terminada">
+  <h2 class="titulo zona-texto">«Terminada»<br><span class="tenue">quiere decir esto.</span></h2>
+
+  <ol class="pruebas zona-texto">
+    <li>
+      <span class="indice">1</span>
+      <div><h3>Se ve entera en el teléfono.</h3><p class="mono">390 px de ancho, sin desborde lateral</p></div>
+    </li>
+    <li>
+      <span class="indice">2</span>
+      <div><h3>El formulario le llega a alguien.</h3><p class="mono">envío de prueba a la bandeja y al CRM</p></div>
+    </li>
+    <li>
+      <span class="indice">3</span>
+      <div><h3>Cada botón va adonde dice.</h3><p class="mono">enlaces, anclas y WhatsApp</p></div>
+    </li>
+    <li>
+      <span class="indice">4</span>
+      <div><h3>Carga rápido con datos móviles.</h3><p class="mono">Lighthouse en modo móvil</p></div>
+    </li>
+    <li class="clave">
+      <span class="indice">5</span>
+      <div><h3>Alguien sabe qué hacer después.</h3><p class="mono">quién edita y quién responde, por escrito</p><p class="nota">La que casi nadie escribe.</p></div>
+    </li>
+  </ol>
+
+  <p class="guardar"><i class="marcador"></i><span class="rotulo">Guardala para la próxima entrega</span></p>
+
+  <footer class="folio">
+    <i class="monograma"></i>
+    <span class="progreso" style="--n:4;--total:6"></span>
+    <span class="contador"><b>04</b>/06</span>
+  </footer>
+</section>
+
+</body>
+</html>

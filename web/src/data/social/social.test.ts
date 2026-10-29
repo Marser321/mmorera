@@ -6,7 +6,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { CONTENIDO, entornoDe, listarPiezas, revisarPieza } from "../../../scripts/lib/piezas";
 import { reelBeatLayout, reelCasoLayout, reelComparacionLayout, reelConteoItemLayout, reelConteoNumeroLayout, reelEncuestaLayout, reelFirmaLayout, slideLayout } from "./layout";
-import { archivosEsperados } from "./render";
+import { archivosEsperados, contarLaminas } from "./render";
 import { desafioDiapositivas, reelCasoBeats, reelComparacionBeats, reelConteoBeats, reelEncuestaBeats, reelTextoBeats, videoSeconds } from "./timing";
 import type { Diapositiva, Formato, Pieza } from "./types";
 import { validarPieza, type Entorno } from "./validate";
@@ -150,6 +150,22 @@ test("piezas de redes: validador", async (t) => {
   await t.test("datos de ejemplo: alguna pantalla lo dice", () => {
     const problemas = validarPieza({ ...PIEZA_OK, ejemplo: true }, ENTORNO_OK);
     assert.ok(problemas.some((p) => p.mensaje.includes("datos de ejemplo")));
+  });
+  await t.test("generador html: pide diseno.html y sus láminas, no imágenes de ChatGPT", () => {
+    const diapositivas: Diapositiva[] = [
+      { tipo: "portada", titulo: "Llegó a las 23:45. La vieron a las 9:10." },
+      { tipo: "texto", titulo: "La respuesta salió", cuerpo: "El seguimiento, no." },
+      { tipo: "cierre", titulo: "¿Quién la retoma?", cta: "Contame cómo lo resolvés." },
+    ];
+    const pieza: Pieza = { ...PIEZA_OK, salidas: [{ id: "carrusel", plantilla: "carrusel", generador: "html", formato: "feed", para: ["linkedin", "instagram"], diapositivas }] };
+    assert.ok(validarPieza(pieza, ENTORNO_OK).some((p) => p.nivel === "error" && p.mensaje.includes("falta diseno.html")));
+    const conDiseno = validarPieza(pieza, { ...ENTORNO_OK, laminas: 3 });
+    assert.deepEqual(conDiseno.filter((p) => p.nivel === "error"), []);
+    assert.ok(!conDiseno.some((p) => p.mensaje.includes("ChatGPT")));
+    assert.ok(validarPieza(pieza, { ...ENTORNO_OK, laminas: 4 }).some((p) => p.nivel === "aviso" && p.mensaje.includes("4 lámina(s)")));
+    const faltan = validarPieza({ ...pieza, estado: "listo" }, { ...ENTORNO_OK, laminas: 3 }).filter((p) => p.donde === "salida");
+    assert.deepEqual(faltan.map((p) => p.mensaje.split(" ")[1]), ["lamina-01.png", "lamina-02.png", "lamina-03.png", "carrusel.pdf"]);
+    assert.equal(contarLaminas('<section class="lamina portada">a</section><section class="laminas">b</section><section id="x" class="lamina">c</section>'), 2);
   });
 });
 

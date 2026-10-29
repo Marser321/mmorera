@@ -45,6 +45,8 @@ export type Fuentes = {
 const two = (n: number) => String(n).padStart(2, "0");
 
 function trabajosDeSalida(salida: Salida, fuentes: Fuentes): Trabajo[] {
+  // La compone diseno.html y la exporta scripts/render-laminas.ts, no Remotion.
+  if (usaHtml(salida)) return [];
   switch (salida.plantilla) {
     case "carrusel":
     case "desafio": {
@@ -118,10 +120,25 @@ export function trabajosDe(pieza: Pieza, fuentes: Fuentes): Trabajo[] {
   return pieza.salidas.flatMap((salida) => trabajosDeSalida(salida, fuentes));
 }
 
+const esEstatica = (salida: Salida) => salida.plantilla === "carrusel" || salida.plantilla === "desafio" || salida.plantilla === "imagen";
+
 /** ¿Esta salida la diseña ChatGPT (con el código de respaldo)? */
 export function usaChatGPT(salida: Salida) {
-  return (salida.plantilla === "carrusel" || salida.plantilla === "desafio" || salida.plantilla === "imagen") && salida.generador !== "codigo";
+  return esEstatica(salida) && (salida.generador ?? "chatgpt") === "chatgpt";
 }
+
+/** ¿Esta salida se compone en piezas/<id>/diseno.html con contenido/diseno/kit.css? */
+export function usaHtml(salida: Salida) {
+  return esEstatica(salida) && salida.generador === "html";
+}
+
+/** Archivos que deja render-laminas en salida/: una PNG por lámina y el PDF de LinkedIn. */
+export const archivoLamina = (n: number) => `lamina-${two(n)}.png`;
+export const CARRUSEL_PDF = "carrusel.pdf";
+export const archivosLaminas = (total: number) => [...Array.from({ length: total }, (_, index) => archivoLamina(index + 1)), CARRUSEL_PDF];
+
+/** Cuántas láminas trae un diseno.html: cada <section class="lamina">. */
+export const contarLaminas = (html: string) => (html.match(/<section\b[^>]*\bclass="(?:[^"]*\s)?lamina(?:\s[^"]*)?"/g) ?? []).length;
 
 /** Imágenes que entrega ChatGPT para una salida: imagenes/gpt-<salida>-01.png, -02.png… */
 export function archivosChatGPT(salida: Salida): string[] {

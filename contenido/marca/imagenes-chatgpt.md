@@ -1,55 +1,54 @@
-# Imágenes con ChatGPT
+# Placas con ChatGPT
 
-El agente del navegador genera las imágenes en el ChatGPT de Mario: hasta 10 tandas por imagen. El texto **nunca** va en la imagen; lo pone el código. La imagen es atmósfera o metáfora; el mensaje lo dice la tipografía.
+ChatGPT genera **placas fotográficas sin texto**: el objeto metáfora de una portada, una escena o una textura. Encima, el código compone la tipografía exacta (`../diseno/kit.css`). ChatGPT nunca escribe texto en la imagen ni redacta copy.
 
-## Estilo base (va en todos los prompts)
+Las placas se piden **por tanda, dentro de un Proyecto de ChatGPT** con instrucciones y brief fijos. Así ChatGPT inventa menos y la serie sale pareja. El flujo completo está en [`../tandas/README.md`](../tandas/README.md). Lo maneja un agente con modelo chico (Sonnet o menor), nunca Opus.
+
+## Dirección de la serie (va en las instrucciones del Proyecto)
+
+Partir de este bloque y ajustarlo solo si la tanda lo pide. Ejemplo vivo: `../tandas/2026-10-28-piloto/instrucciones.md`.
 
 ```
-Fotografía editorial en blanco y negro, alto contraste, grano fino, mucho espacio negativo.
-Composición minimalista con un solo sujeto. Luz lateral dura, sombras profundas.
-Sin texto, sin letras, sin números, sin logos, sin marcas de agua, sin interfaces de pantalla legibles.
-Sin rostros visibles. Estética sobria y precisa, como una revista de arquitectura.
+Sos el fotógrafo de still life de MMORERA. En este proyecto generás SOLO placas fotográficas SIN TEXTO; encima se compone la tipografía en código.
+- Blanco y negro: negros mates cercanos a #0B0B0A, luces marfil cálidas cercanas a #ECE7DD, alto contraste, grano fino.
+- Luz: una sola fuente dura, lateral, desde la izquierda y un poco alta. Sombras largas y negras. Sin relleno ni contraluz.
+- Materiales reales: papel, metal cepillado, aluminio, concreto, madera gastada, cartón.
+- Lente de 50 a 85 mm. Un solo objeto protagonista y mucho espacio negativo.
+- ZONA LIBRE: cada pedido indica dónde va el titular; esa zona queda en negro casi plano, sin objetos ni brillos.
+- Estética de catálogo de herramientas o revista de arquitectura. Nada de stock ni render 3D brillante.
+- Prohibido: texto, letras, números, graduaciones, marcas, logos o etiquetas (aunque sean ilegibles); pantallas, caras, personas; humo, partículas, destellos.
+- Vertical 4:5 (1080×1350) salvo otro pedido. Una imagen por pedido.
 ```
 
-## Sujetos que encajan
+## Brief de placa (va en `brief-tanda.md`, uno por pieza)
 
-| Tema | Ideas de sujeto |
+| Campo | Qué dice |
 |---|---|
-| Sistemas y automatización | Engranajes de reloj abiertos, cables ordenados en un rack, una fila de interruptores, agua que pasa por canales |
-| Criterio e IA | Una pieza de ajedrez sola, una lupa sobre papel, dos caminos en un bosque, una mano que corrige con lápiz |
-| Oficio, diseño y código | Manos sobre un teclado (sin pantalla legible), una regla y una escuadra, una maqueta de cartón, bocetos sobre una mesa |
-| Casos (negocios) | El objeto del rubro en abstracto: una tijera de barbero, una manguera con agua en contraluz, un estetoscopio, un volante |
-| Comunidad | Sillas vacías alrededor de una mesa, un micrófono de pie, papeles con marcas de votación (sin texto legible) |
+| **De qué trata** | La pieza en dos líneas, para que ChatGPT entienda el contexto |
+| **Titular que irá encima** | Entre comillas y con la aclaración «no se dibuja» |
+| **Metáfora** | Por qué este objeto: «medir antes de cotizar», «lo terminado se mide» |
+| **Placa** | Objeto, material, superficie, luz y lo que **no** tiene (sin graduaciones, sin etiqueta) |
+| **Cámara** | Ángulo y altura: a ras, 35 a 45° o cenital |
+| **Objeto** | Dónde va en el cuadro: tercio inferior, a la derecha… |
+| **Zona libre** | Porcentaje y posición donde va el titular |
 
-## Plantilla de prompt
+Objetos que funcionaron: cinta métrica, nivel de burbuja y caja de cartón entreabierta (tanda del 28/10). Otros candidatos: escuadra, llave, sobre cerrado, regla, sello, carpeta, interruptor, silla vacía (`noche.png`). Que cada objeto cumpla una metáfora del insight, no que decore.
 
-```
-[Estilo base]
-Sujeto: <sujeto concreto, una frase>.
-Encuadre: <primer plano | plano medio | cenital>, sujeto en el <tercio izquierdo | centro | tercio inferior>, el resto en negro.
-Formato: <4:5 vertical | 9:16 vertical | 1:1 cuadrado>.
-```
+## Después de generar
 
-**Formato por slot** (lo dice `pieza.json` en `imagenes[].formato`):
-- `feed` → 4:5 (1080×1350)
-- `reel` → 9:16 (1080×1920)
-- `cuadrado` → 1:1 (1080×1080)
+1. **Elegir** con estos criterios:
+   - no tiene ningún texto, número, graduación ni logo (revisar con zoom);
+   - la zona libre está limpia;
+   - el objeto se reconoce a 360 px;
+   - la luz viene de la izquierda;
+   - no hay geometría rota.
+2. **Guardar el original** como `piezas/<id>/imagenes/<slot>-v1.png` (si hubo más intentos, `-v2`, `-v3`).
+3. **Convertir a la marca** desde `web/`: `npx tsx scripts/placa-marca.ts <id> [slot]`. Deja `imagenes/<slot>.png` en pared y marfil, a 1080×1350. ChatGPT suele devolver color aunque se le pida blanco y negro: no se gastan intentos en eso.
+4. **Ver la placa compuesta** en la lámina antes de darla por buena: el degradé del kit (`data-texto`) asegura la lectura del titular.
 
-## Control de calidad (elegir entre las tandas)
-
-Una imagen se descarta si:
-- tiene texto, letras o números, aunque sean ilegibles;
-- tiene logos o marcas;
-- tiene una cara reconocible;
-- tiene manos o dedos deformes;
-- tiene objetos imposibles;
-- es en color (el render la pasa a grises, pero mejor que venga en B/N);
-- tiene el sujeto donde va el texto: revisá el encuadre que pide el prompt.
-
-Si después de 10 tandas ninguna sirve, el agente deja la mejor como `<slot>-candidata.png` y anota el problema en `imagenes/NOTAS.md`. No inventa otra solución.
+Si después de 4 intentos ninguna sirve, se deja la mejor como `<slot>-candidata.png` y el problema se anota en `imagenes/NOTAS.md`.
 
 ## Dónde se guardan
 
-- La elegida va en `piezas/<id>/imagenes/<slot>.png`; el validador la busca con ese nombre.
-- Las descartadas que valga la pena conservar van como `<slot>-alt-1.png`, `<slot>-alt-2.png`, etc.
-- Medida: la proporción del formato (el validador acepta hasta un 3 % de diferencia). Si ChatGPT entrega otra medida, se recorta al formato sin deformar.
+- `piezas/<id>/imagenes/` no va a git: guarda el original y la convertida.
+- La tanda conserva en `../tandas/<tanda>/pedidos.md` qué se pidió, el enlace de cada chat y el resultado.

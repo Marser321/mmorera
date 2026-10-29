@@ -1,5 +1,7 @@
 # Sistema de diseño para ChatGPT (carruseles y piezas estáticas)
 
+> **Solo para piezas anteriores al 28/10/2026 (generador `chatgpt`).** Para piezas nuevas, ChatGPT ya no diseña láminas completas, porque componer tipografía es lo que peor hace. Genera solo placas sin texto dentro de un Proyecto por tanda (`../tandas/README.md`, `imagenes-chatgpt.md`). La tipografía y la composición se hacen en código (`../diseno/kit.css`), con la paleta pared (`#0B0B0A`, `#ECE7DD`) y la señal `#71F3A2`. Los hex de abajo son los de esa etapa.
+
 ChatGPT diseña cada diapositiva completa, texto incluido. Para que todas parezcan de la misma marca, cada conversación empieza pegando el bloque de abajo. Después van los pedidos de cada diapositiva, que se generan solos:
 
 ```bash
