@@ -144,6 +144,10 @@ export const PROJECT_CASES: ProjectCase[] = [
     evidence: [liveEvidence],
     stack: ["Next.js", "Tailwind CSS", "i18n /en · /es", t("Cotización por pasos", "Multi-step quoting")], media: [{ src: "/portfolio/truckers-cover.png", alt: t("Web de Truckers Choice", "Truckers Choice website") }],
     liveUrl: "https://truckers-choice-web-site.vercel.app/",
+    // «Pruébalo tú»: rutas verificadas en T38 (docs/triada/gemini/T38-pruebalo.md).
+    tryIt: [
+      { href: t("https://truckers-choice-web-site.vercel.app/es/contact", "https://truckers-choice-web-site.vercel.app/en/contact"), label: t("Prueba la cotización en 3 pasos", "Try the 3-step quote"), kind: "live", note: t("Sitio real: puedes recorrer los pasos sin enviar la solicitud.", "Live site: you can go through the steps without sending the request.") },
+    ],
     demoUrl: "https://truckers-choice-web-site.vercel.app/en",
     accent: "#FFB020",
     status: "featured",
@@ -172,6 +176,10 @@ export const PROJECT_CASES: ProjectCase[] = [
     stack: ["Next.js", "Tailwind CSS", "Playfair Display", "i18n EN/ES"],
     media: [{ src: "/portfolio/rangel-oviedo-cover.jpg", alt: t("Sitio de Rangel Oviedo Group", "Rangel Oviedo Group website") }],
     liveUrl: "https://rangeloviedo-tor8.vercel.app/",
+    // «Pruébalo tú»: rutas verificadas en T38 (docs/triada/gemini/T38-pruebalo.md).
+    tryIt: [
+      { href: t("https://rangeloviedo-tor8.vercel.app/#perfiles", "https://rangeloviedo-tor8.vercel.app/#perfiles"), label: t("Mira el diagnóstico por 4 perfiles", "See the 4-profile diagnosis"), kind: "live" },
+    ],
     embeddable: false,
     accent: "#C9A864",
     status: "featured",
@@ -199,6 +207,10 @@ export const PROJECT_CASES: ProjectCase[] = [
     stack: ["React", "Tailwind CSS", t("Reserva por pasos", "Multi-step booking"), t("Consentimiento digital", "Digital consent")],
     media: [{ src: "/portfolio/mrstudio-tattoo-cover.jpg", alt: t("Sitio de Mr. Studio Tattoo", "Mr. Studio Tattoo website") }],
     liveUrl: "https://www.mrstudiotattoo.com/",
+    // «Pruébalo tú»: rutas verificadas en T38 (docs/triada/gemini/T38-pruebalo.md).
+    tryIt: [
+      { href: t("https://www.mrstudiotattoo.com/booking", "https://www.mrstudiotattoo.com/booking"), label: t("Prueba la reserva guiada con selector anatómico", "Try the guided booking with the body selector"), kind: "live", note: t("Es el estudio real: recórrela sin confirmar la reserva.", "This is the real studio: go through it without confirming a booking.") },
+    ],
     accent: "#2A4DE8",
     status: "featured",
   },
