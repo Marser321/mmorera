@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, ArrowUpRight, MessageCircle } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { localePath, SITE_IDENTITY } from "@/config/site";
-import type { ProjectCase } from "@/types/site";
+import type { ProjectCase, LocalizedText } from "@/types/site";
 import { PROJECT_CASES } from "@/data/projectCases";
 import { getCaseMedia } from "@/data/caseMedia";
 import { getCaseMetrics, isShowcaseWorthy, pageSpeedReportUrl, type CaseMetrics } from "@/data/caseMetrics";
@@ -94,7 +94,7 @@ function MetricsBand({ metrics, liveUrl, isEs }: { metrics: CaseMetrics; liveUrl
             rel="noreferrer"
             className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-signal hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
-            {isEs ? "Verificalo vos mismo" : "Verify it yourself"}
+            {isEs ? "Compruébalo tú mismo" : "Verify it yourself"}
             <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
           </a>
         </div>
@@ -141,7 +141,7 @@ export function CaseStudy({ project, underTheHood }: { project: ProjectCase; und
             <Link href={localePath(language, "/casos-de-exito")} className="inline-flex items-center gap-2 rounded-md text-sm text-foreground/60 light:text-muted-foreground hover:text-foreground light:hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white light:ring-ring"><ArrowLeft className="h-4 w-4" />{isEs ? "Volver al archivo" : "Back to archive"}</Link>
             <div className="mt-12 grid gap-8 lg:grid-cols-[1.25fr_.75fr] lg:items-end">
               <div>
-                <div className="flex flex-wrap gap-3 font-mono text-[10px] uppercase tracking-[.16em] text-accent">{project.kind && <span>{project.kind[language]}</span>}{project.year && <span>{project.year}</span>}{project.stack.slice(0, 3).map((item) => <span key={item}>{item}</span>)}</div>
+                <div className="flex flex-wrap gap-3 font-mono text-[10px] uppercase tracking-[.16em] text-accent">{project.kind && <span>{project.kind[language]}</span>}{project.year && <span>{project.year}</span>}{project.stack.slice(0, 3).map((item: string | LocalizedText) => typeof item === "string" ? item : item[language]).map((item) => <span key={item}>{item}</span>)}</div>
                 <SplitReveal as="h1" mode="load" text={project.title[language]} className="mt-5 text-[clamp(3.2rem,8.5vw,9rem)] font-medium leading-[.87] tracking-[-.075em] text-foreground" />
               </div>
               <div className="lg:pb-3">
@@ -203,7 +203,7 @@ export function CaseStudy({ project, underTheHood }: { project: ProjectCase; und
           <aside className="grid gap-8 sm:grid-cols-2 lg:grid-cols-1 lg:self-start">
             {project.client && <div><p className={label}>{isEs ? "Cliente" : "Client"}</p><p className="mt-3 text-sm leading-6 text-foreground/65 light:text-muted-foreground">{project.client[language]}</p></div>}
             <div><p className={label}>{isEs ? "Rol" : "Role"}</p><p className="mt-3 text-sm leading-6 text-foreground/65 light:text-muted-foreground">{project.role[language]}</p></div>
-            <div><p className={label}>Stack</p><div className="mt-3 flex flex-wrap gap-2">{project.stack.map((item) => <span key={item} className="rounded-full border border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)] px-3 py-1.5 text-xs text-foreground/55 light:text-muted-foreground">{item}</span>)}</div></div>
+            <div><p className={label}>Stack</p><div className="mt-3 flex flex-wrap gap-2">{project.stack.map((item: string | LocalizedText) => typeof item === "string" ? item : item[language]).map((item) => <span key={item} className="rounded-full border border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)] px-3 py-1.5 text-xs text-foreground/55 light:text-muted-foreground">{item}</span>)}</div></div>
             {project.liveUrl && <div><p className={label}>{isEs ? "En producción" : "In production"}</p><a href={project.liveUrl} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-1.5 text-sm text-signal hover:underline">{hostname(project.liveUrl)}<ArrowUpRight className="h-3.5 w-3.5" /></a></div>}
           </aside>
           <details className="group border-y border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)]">
@@ -251,12 +251,12 @@ export function CaseStudy({ project, underTheHood }: { project: ProjectCase; und
       <section className="banda-marfil mt-28 px-5 py-16 sm:px-8 sm:py-24 lg:px-12">
         <div className="mx-auto grid max-w-[1480px] gap-8 md:grid-cols-[1.3fr_auto] md:items-center">
           <h2 className="text-[clamp(2.2rem,4.5vw,4.6rem)] font-medium leading-[0.98] tracking-[-0.055em] text-foreground">
-            {isEs ? "¿Querés algo así para tu negocio?" : "Want something like this for your business?"}
+            {isEs ? "¿Quieres algo así para tu negocio?" : "Want something like this for your business?"}
           </h2>
           <div className="flex flex-wrap gap-3">
             <Magnetic>
               <Link href={`${localePath(language, "/aplicar")}?caso=${project.slug}`} className="pressable inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3.5 text-sm font-semibold text-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-                {isEs ? "Contame tu proyecto" : "Tell me about your project"}<ArrowUpRight className="h-4 w-4" />
+                {isEs ? "Cuéntame tu proyecto" : "Tell me about your project"}<ArrowUpRight className="h-4 w-4" />
               </Link>
             </Magnetic>
             <Magnetic>

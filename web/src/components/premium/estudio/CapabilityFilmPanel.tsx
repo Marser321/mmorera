@@ -19,7 +19,7 @@ import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 const COPY = {
     es: {
         eyebrow: "Film de la capacidad",
-        hint: "Abrí otra familia en la órbita para ver su film.",
+        hint: "Abre otra familia en la órbita para ver su film.",
         cases: "Casos que lo demuestran",
         open: (name: string) => `Ver ${name} en su film`,
     },

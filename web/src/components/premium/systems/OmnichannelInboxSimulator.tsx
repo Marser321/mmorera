@@ -159,10 +159,6 @@ export function OmnichannelInboxSimulator() {
                       </h3>
                       <p className="text-xs text-foreground/50 truncate">{lead.companyName}</p>
 
-                      <div className="mt-2.5 pt-2 border-t border-white/8 flex items-center justify-between text-[11px] font-mono">
-                        <span className="text-foreground/55">{isEs ? "Valor:" : "Value:"}</span>
-                        <span className="text-foreground/80 font-bold">${lead.dealValueUsd} USD</span>
-                      </div>
                     </button>
                   );
                 })}
@@ -269,20 +265,6 @@ export function OmnichannelInboxSimulator() {
                   {isEs ? "Dossier del Prospecto" : "Prospect Dossier"}
                 </span>
                 <span className="text-[10px] font-mono text-foreground/55">{isEs ? "Ejemplo" : "Sample"}</span>
-              </div>
-
-              {/* Métricas clave */}
-              <div className="grid grid-cols-2 gap-3 mb-5">
-                <div className="rounded-2xl border border-white/8 bg-background/50 p-3 text-center">
-                  <span className="text-[10px] font-mono uppercase text-foreground/55 block">{isEs ? "Intención · ejemplo" : "Intent · sample"}</span>
-                  <span className="text-xl font-bold font-mono text-signal">{activeLead.intentScore}/100</span>
-                  <span className="text-[10px] font-mono text-signal/80">{isEs ? "A+ Calificado" : "A+ Qualified"}</span>
-                </div>
-                <div className="rounded-2xl border border-white/8 bg-background/50 p-3 text-center">
-                  <span className="text-[10px] font-mono uppercase text-foreground/55 block">{isEs ? "Oportunidad" : "Opportunity"}</span>
-                  <span className="text-xl font-bold font-mono text-foreground">${activeLead.dealValueUsd}</span>
-                  <span className="text-[10px] font-mono text-foreground/50">{isEs ? "USD estimados" : "Est. USD"}</span>
-                </div>
               </div>
 
               <p className="text-xs text-foreground/65 leading-relaxed mb-5">

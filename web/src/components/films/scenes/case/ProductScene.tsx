@@ -1,3 +1,4 @@
+import type { LocalizedText } from "@/types/site";
 import { useState } from "react";
 import { Html5Video, Img, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
 import { CASE_CHAPTER_LABELS, type CaseFilmScript } from "@/data/films/caseFilms";
@@ -80,7 +81,7 @@ export function ProductScene({ script, language, portrait, width, height, durati
 
       {/* Stack como créditos */}
       <div style={{ position: "absolute", left: portrait ? 72 : 150, right: portrait ? 72 : 150, bottom: portrait ? height * 0.07 : height * 0.1, display: "flex", flexWrap: "wrap", gap: portrait ? 14 : 10 }}>
-        {script.stack.map((item, index) => (
+        {script.stack.map((item: string | LocalizedText) => typeof item === "string" ? item : item[language]).map((item, index) => (
           <span
             key={item}
             style={{

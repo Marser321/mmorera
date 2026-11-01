@@ -120,12 +120,12 @@ export function InteractiveDesignTokenStudio() {
         </div>
         <h2 className="mt-4 text-3xl font-medium tracking-tight text-foreground sm:text-5xl">
           {isEs
-            ? "Sintetizá la identidad visual de tu producto en tiempo real."
+            ? "Sintetiza la identidad visual de tu producto en tiempo real."
             : "Synthesize your product's visual identity in real time."}
         </h2>
         <p className="mt-4 text-base leading-relaxed text-foreground/70 sm:text-lg">
           {isEs
-            ? "Explorá cómo la paleta cromática, el radio de curvatura y la refracción de vidrio transforman la experiencia antes de escribir una sola línea de código. Exportá la configuración lista para Tailwind CSS."
+            ? "Explora cómo la paleta cromática, el radio de curvatura y la refracción de vidrio transforman la experiencia antes de escribir una sola línea de código. Exporta la configuración lista para Tailwind CSS."
             : "Explore how color harmony, curvature physics, and glass refraction reshape the experience before writing a single line of code. Export production-ready Tailwind CSS configurations."}
         </p>
       </div>
@@ -197,7 +197,7 @@ export function InteractiveDesignTokenStudio() {
           <div>
             <label className="font-mono text-xs uppercase tracking-wider text-foreground/80 flex items-center gap-2">
               <Sliders className="h-4 w-4 text-foreground/60" />
-              <span>{isEs ? "Radio de Curvatura" : "Corner Curvature"}</span>
+              <span>{isEs ? "Radio de Curvatura" : "Corner Radius"}</span>
             </label>
 
             <div className="mt-3.5 grid gap-3 sm:grid-cols-3">
@@ -443,7 +443,7 @@ export function InteractiveDesignTokenStudio() {
           <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.02] p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
             <span className="text-xs text-foreground/70 text-center sm:text-left">
               {isEs
-                ? `¿Querés esta estética "${activeTheme.name.es}" en tu propio sistema?`
+                ? `¿Quieres esta estética "${activeTheme.name.es}" en tu propio sistema?`
                 : `Want this "${activeTheme.name.en}" design language on your system?`}
             </span>
             <a
@@ -452,7 +452,7 @@ export function InteractiveDesignTokenStudio() {
               rel="noopener noreferrer"
               className="pressable shrink-0 inline-flex items-center gap-2 rounded-xl bg-signal px-4 py-2.5 text-xs font-semibold text-black transition-transform hover:-translate-y-0.5"
             >
-              <span>{isEs ? "Consultar por WhatsApp" : "Inquire on WhatsApp"}</span>
+              <span>{isEs ? "Consultar por WhatsApp" : "Chat on WhatsApp"}</span>
               <ArrowUpRight className="h-3.5 w-3.5" />
             </a>
           </div>

@@ -490,7 +490,7 @@ export function TechRadarBackstageStudio() {
                   <div className="mt-4 rounded-xl border border-signal/20 bg-signal/[0.04] p-3">
                     <div className="flex items-center gap-1.5 text-xs font-mono font-semibold text-signal">
                       <Sparkles className="h-3.5 w-3.5" />
-                      <span>{isEs ? "Criterio de Mario Morera:" : "Mario Morera Thesis:"}</span>
+                      <span>{isEs ? "Criterio de Mario Morera:" : "Mario's take:"}</span>
                     </div>
                     <p className="mt-1 text-xs text-white/80">
                       {isEs ? alert.practicalRecommendation.es : alert.practicalRecommendation.en}
@@ -820,7 +820,7 @@ export function TechRadarBackstageStudio() {
                   className="inline-flex items-center gap-1.5 rounded-lg border border-signal/40 bg-signal/15 px-3 py-1.5 text-xs font-mono font-medium text-signal transition-all hover:bg-signal/25"
                 >
                   <MessageCircle className="h-3.5 w-3.5" />
-                  <span>{isEs ? "Cotizar esta arquitectura" : "Quote this architecture"}</span>
+                  <span>{isEs ? "Cotizar esta arquitectura" : "Get an estimate for this setup"}</span>
                 </a>
               </div>
             </div>
@@ -891,7 +891,7 @@ export function TechRadarBackstageStudio() {
                   type="text"
                   placeholder={
                     isEs
-                      ? "O ingresá un tema libre: 'Por qué no usar WhatsApp Web con 5 vendedores'..."
+                      ? "O escribe un tema libre: 'Por qué no usar WhatsApp Web con 5 vendedores'..."
                       : "Or type a custom topic: 'Why WhatsApp Web breaks with 5 sales reps'..."
                   }
                   value={customTopic}
@@ -1092,7 +1092,7 @@ export function TechRadarBackstageStudio() {
                   className="inline-flex items-center gap-1.5 rounded-xl border border-signal/50 bg-signal/20 px-4 py-2.5 text-xs font-mono font-bold text-signal transition-all hover:bg-signal/30 active:scale-95"
                 >
                   <MessageCircle className="h-4 w-4" />
-                  <span>{isEs ? "Enviar a mi WhatsApp" : "Send to my WhatsApp"}</span>
+                  <span>{isEs ? "Enviar a mi WhatsApp" : "Send via WhatsApp"}</span>
                 </a>
               </div>
             </div>

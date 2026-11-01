@@ -19,11 +19,11 @@ export default function EnglishApplicationPage() {
             Brief · 03 steps
           </p>
           <h1 className="mt-5 text-[clamp(3.2rem,7vw,6.5rem)] font-medium leading-[.91] tracking-[-.065em] text-foreground">
-            Tell me what you want to move.
+            Tell me what you want to build or automate.
           </h1>
         </div>
         <p className="max-w-xl text-lg leading-7 text-foreground/55 md:justify-self-end">
-          Three steps. Enough context to understand the project and reply with judgment.
+          Three steps. Enough context to understand the project and reply with a clear next step.
         </p>
       </header>
       <div id="brief-form">
