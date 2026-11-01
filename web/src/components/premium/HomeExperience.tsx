@@ -25,7 +25,7 @@ import { MonogramaFundido } from "@/components/marca/MonogramaFundido";
 // Cada una es su propio límite de Suspense, así React hidrata por partes en
 // vez de bloquear el hilo principal con todo el Home de una vez.
 const ServicesSection = dynamic(() => import("@/components/premium/home/ServicesSection").then((m) => m.ServicesSection));
-const ProjectIndex = dynamic(() => import("@/components/premium/ProjectIndex").then((m) => m.ProjectIndex));
+const TryItCards = dynamic(() => import("@/components/premium/home/TryItCards").then((m) => m.TryItCards));
 const HowIWorkSection = dynamic(() => import("@/components/premium/home/HowIWorkSection").then((m) => m.HowIWorkSection));
 const AplicarOS = dynamic(() => import("@/components/portfolio-isolated/AplicarOS").then((m) => m.AplicarOS));
 import { MOTION_ASSETS } from "@/data/motionAssets";
@@ -49,8 +49,8 @@ const copy = {
     talkWhatsapp: "Hablar por WhatsApp",
     startProject: "Ver proyectos",
     archiveEyebrow: "Proyectos",
-    archiveTitle: "Trabajo real, en producción.",
-    archiveBody: "Sitios y sistemas operando hoy. Abre cada caso para verlo en vivo.",
+    archiveTitle: "Tres sistemas que puedes abrir hoy.",
+    archiveBody: "Cada tarjeta dice qué es: implementado o demo. Ábrelo y pruébalo.",
     archiveCta: "Ver todos los casos",
     contactEyebrow: "Contacto",
     contactTitle: "¿Trabajamos juntos?",
@@ -76,8 +76,8 @@ const copy = {
     talkWhatsapp: "Chat on WhatsApp",
     startProject: "View projects",
     archiveEyebrow: "Projects",
-    archiveTitle: "Real work, in production.",
-    archiveBody: "Sites and systems running today. Open each case to see it live.",
+    archiveTitle: "Three systems you can open today.",
+    archiveBody: "Each card says what it is: live or demo. Open it and try it.",
     archiveCta: "See all cases",
     contactEyebrow: "Contact",
     contactTitle: "Let's work together.",
@@ -230,7 +230,7 @@ export function HomeExperience() {
       {/* ─── 3. PROYECTOS EN PRODUCCIÓN (Índice con preview viva) ─── */}
       <section id="proyectos" className="scroll-mt-20 bg-background px-5 py-20 sm:px-8 sm:py-28 lg:px-12 border-t border-white/10 light:border-[rgb(var(--ink-rgb)/0.1)]">
         <div className="mx-auto max-w-[1480px]">
-          <div className="grid gap-6 py-8 md:grid-cols-[.4fr_1.6fr] md:items-end md:py-12">
+          <div className="grid gap-6 py-8 md:grid-cols-[1.2fr_.8fr] md:items-end md:py-12">
             <div>
               <Reveal as="p" x={-20} y={0} className="font-mono text-[10px] uppercase tracking-[.2em] text-signal">
                 {c.archiveEyebrow}
@@ -252,7 +252,7 @@ export function HomeExperience() {
           </div>
 
           <Reveal y={24}>
-            <ProjectIndex projects={FEATURED_CASES} />
+            <TryItCards projects={FEATURED_CASES} />
           </Reveal>
         </div>
       </section>
