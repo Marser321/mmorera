@@ -59,7 +59,7 @@ Cada dueño cambia solo el estado de sus tarjetas. Claude escribe y ordena las t
 | ID | Tarea | Dueño | Apoyo | Archivos permitidos | Listo cuando | Depende | Estado |
 |---|---|---|---|---|---|---|---|
 | **T12** | Auditoría de `/en`: cada página y caso tiene su versión en inglés completa | **Gemini** audita | **Codex** corrige rutas; Claude, los textos | Gemini: `docs/triada/gemini/T12-ingles.md` | Lista de faltantes resuelta | — | para revisar · las correcciones van en T25 del plan |
-| **T13** | Deuda técnica: 29 avisos de lint y los 17 e2e de `site.spec.ts` que fallaban desde `b184b16` | **Codex** | — | los archivos señalados por lint y `e2e/site.spec.ts` | 0 avisos y e2e verdes, o cada fallo restante explicado | — | pendiente |
+| **T13** | Deuda técnica: 29 avisos de lint y los 17 e2e de `site.spec.ts` que fallaban desde `b184b16` | **Codex** | — | los archivos señalados por lint y `e2e/site.spec.ts` | 0 avisos y e2e verdes, o cada fallo restante explicado | — | para revisar |
 | **T14** | Filtros por rubro en `/casos-de-exito` y «Casos parecidos» al final de cada caso | **Codex** | Claude define los rubros | `WorkExperience.tsx` y la página del caso | Filtros con teclado; la URL guarda el filtro | — | pendiente · Ajuste: filtro primero por servicio (4) y después por rubro |
 | **T15** | Acortar el home según D4 | **Codex** | Claude decide qué se va | componentes del home | Home cerca de 10.000 px en escritorio | D4 | reemplazada por T21 + T22 |
 | **T16** | Pasada de **Impeccable** (`/impeccable audit` y `polish`) después de las fases 1 y 2 | **Claude** | Gemini, QA visual | — | Puntaje igual o mejor que el 15/20 del 8/10 | Fases 1 y 2 | pendiente |
