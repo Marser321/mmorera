@@ -3,8 +3,8 @@ import type { SiteIdentity } from "@/types/site";
 export const SITE_IDENTITY: SiteIdentity = {
   brand: "Mario Morera",
   role: {
-    es: "Creative Technologist & Systems Builder",
-    en: "Creative Technologist & Systems Builder",
+    es: "AI Automation & Operations · Orquestador de tecnología",
+    en: "AI Automation & Operations · Technology orchestrator",
   },
   canonical: "https://mmorera.agency",
   locale: { default: "es", alternate: "en" },
@@ -14,12 +14,12 @@ export const SITE_IDENTITY: SiteIdentity = {
   },
   metadata: {
     title: {
-      es: "Mario Morera — Creative Technologist & Systems Builder",
-      en: "Mario Morera — Creative Technologist & Systems Builder",
+      es: "Mario Morera — AI Automation & Operations",
+      en: "Mario Morera — AI Automation & Operations",
     },
     description: {
-      es: "Diseño y construyo experiencias, productos y sistemas, del concepto a la operación.",
-      en: "I design and build experiences, products and systems, from concept to operations.",
+      es: "Orquesto la tecnología de negocios y equipos: webs, automatizaciones, agentes de IA y contenido con IA. Trabajas directo conmigo, en remoto.",
+      en: "I orchestrate technology for businesses and teams: websites, automations, AI agents and AI content. You work directly with me, remotely.",
     },
   },
 };

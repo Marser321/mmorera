@@ -129,9 +129,9 @@ export function SocialShareImage() {
                         Mario Morera
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 14, fontSize: 27, letterSpacing: 4, textTransform: "uppercase" }}>
-                        <span style={{ color: "rgba(255,255,255,0.72)" }}>Creative Technologist</span>
+                        <span style={{ color: "rgba(255,255,255,0.72)" }}>AI Automation</span>
                         <span style={{ color: SIGNAL, fontWeight: 700 }}>×</span>
-                        <span style={{ color: "rgba(255,255,255,0.72)" }}>Systems Builder</span>
+                        <span style={{ color: "rgba(255,255,255,0.72)" }}>Operations</span>
                     </div>
                 </div>
             </div>

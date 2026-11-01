@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(canonical),
   title: { default: siteMetadata.title.es, template: "%s — Mario Morera" },
   description: siteMetadata.description.es,
-  keywords: ["Creative Technologist", "Product Design", "WebGL", "IA", "Automatización", "CRM", "Mario Morera"],
+  keywords: ["AI Automation", "AI Operations", "Agentes de IA", "Automatización", "CRM", "Contenido con IA", "Mario Morera"],
   authors: [{ name: SITE_IDENTITY.brand, url: canonical }],
   creator: SITE_IDENTITY.brand,
   alternates: { canonical: "/", languages: { es: "/", en: "/en" } },

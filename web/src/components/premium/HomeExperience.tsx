@@ -36,18 +36,18 @@ import { MOTION_ASSETS } from "@/data/motionAssets";
 
 const copy = {
   es: {
-    eyebrow: "Mario Morera · Creative Technologist & Systems Builder",
-    title: "Todo tu ecosistema digital, resuelto por una sola persona.",
-    intro: "Webs que venden, reservas y cobros automáticos, CRM e inteligencia artificial aplicada. Diseño y desarrollo de punta a punta, sin intermediarios.",
+    eyebrow: "Mario Morera · AI Automation & Operations",
+    title: "Orquesto la tecnología de tu negocio: web, agentes de IA y contenido.",
+    intro: "Diseño y conecto tu sitio, tus automatizaciones, agentes que atienden por ti y sistemas que producen contenido. Coordino personas, herramientas y modelos de IA para que funcionen como un equipo. Hablas conmigo y lo construyo yo.",
     services: [
-      { id: "web-ecommerce", label: "Webs & E-commerce" },
-      { id: "booking-payments", label: "Reservas & Cobros" },
-      { id: "crm-automation", label: "CRM & Automatización" },
-      { id: "ai-software", label: "IA a medida" },
+      { id: "web-ecommerce", label: "Webs y landings" },
+      { id: "booking-payments", label: "Agentes de IA" },
+      { id: "crm-automation", label: "Automatización y CRM" },
+      { id: "ai-software", label: "Contenido con IA" },
     ],
-    servicesHint: "Pasá por un servicio",
+    servicesHint: "Pasa por un servicio",
     talkWhatsapp: "Hablar por WhatsApp",
-    startProject: "Iniciar Proyecto",
+    startProject: "Ver proyectos",
     archiveEyebrow: "Proyectos",
     archiveTitle: "Trabajo real, en producción.",
     archiveBody: "Sitios y sistemas operando hoy. Abrí cada caso para verlo en vivo.",
@@ -58,18 +58,18 @@ const copy = {
     capacity: "Cupos limitados · 4 a 5 proyectos por trimestre",
   },
   en: {
-    eyebrow: "Mario Morera · Creative Technologist & Systems Builder",
-    title: "Your entire digital ecosystem, engineered by one person.",
-    intro: "Websites that sell, automated bookings and payments, CRM and applied AI. Design and development end to end, with no intermediaries.",
+    eyebrow: "Mario Morera · AI Automation & Operations",
+    title: "I orchestrate your business technology: web, AI agents and content.",
+    intro: "I design and connect your website, your automations, agents that answer for you and systems that produce content. I coordinate people, tools and AI models so they work as one team. You talk to me, and I build it.",
     services: [
-      { id: "web-ecommerce", label: "Websites & E-commerce" },
-      { id: "booking-payments", label: "Bookings & Payments" },
-      { id: "crm-automation", label: "CRM & Automation" },
-      { id: "ai-software", label: "Custom AI" },
+      { id: "web-ecommerce", label: "Websites & landings" },
+      { id: "booking-payments", label: "AI agents" },
+      { id: "crm-automation", label: "Automation & CRM" },
+      { id: "ai-software", label: "AI content" },
     ],
     servicesHint: "Hover a service",
     talkWhatsapp: "Chat on WhatsApp",
-    startProject: "Start Project",
+    startProject: "View projects",
     archiveEyebrow: "Projects",
     archiveTitle: "Real work, in production.",
     archiveBody: "Sites and systems running today. Open each case to see it live.",
@@ -86,7 +86,7 @@ const authorManifestoCopy = {
     eyebrow: "Perfil & Filosofía",
     convergence: "Una sola dirección",
     headline: "Una sola dirección para todo lo que una idea necesita.",
-    body: "Diseño de alto impacto, arquitectura en Next.js 16 y automatización con IA. Sin intermediarios, directo a producción.",
+    body: "Diseño, desarrollo en Next.js y automatización con IA, coordinados por una misma persona de la idea a la entrega.",
     principleLabel: "Principio",
     principle: "Sistemas propios con identidad clara, construidos para operar y facturar.",
     signature: "Mario Morera",
@@ -95,7 +95,7 @@ const authorManifestoCopy = {
     eyebrow: "Profile & Philosophy",
     convergence: "One direction",
     headline: "One direction for everything an idea needs.",
-    body: "High-impact design, Next.js 16 architecture, and AI automation. Zero intermediaries, shipped straight to production.",
+    body: "Design, Next.js development and AI automation, coordinated by the same person from idea to delivery.",
     principleLabel: "Principle",
     principle: "Proprietary systems with clear identity, engineered to operate and generate revenue.",
     signature: "Mario Morera",
@@ -211,7 +211,7 @@ export function HomeExperience() {
             <div className="fade-up-in mt-6 flex flex-wrap items-center gap-3.5" style={{ animationDelay: "0.6s" }}>
               <Magnetic>
                 <a
-                  href="#contacto"
+                  href="#proyectos"
                   className="pressable inline-flex items-center gap-2.5 rounded-full bg-foreground px-6 py-3.5 text-sm font-semibold text-background transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   {c.startProject}

@@ -18,91 +18,91 @@ export interface ServiceSolution {
 export const SERVICE_SOLUTIONS: ServiceSolution[] = [
   {
     id: "web-ecommerce",
-    tag: t("Presencia & Conversión", "Presence & Conversion"),
-    title: t("Desarrollo Web & E-commerce Next.js", "Next.js Web & E-commerce Development"),
-    headline: t("Sitios ultrarrápidos diseñados para vender, no para lucir en una plantilla.", "Ultra-fast sites built to convert, not just look like a template."),
+    tag: t("Presencia", "Presence"),
+    title: t("Webs y landings", "Websites & landings"),
+    headline: t("Sitios rápidos y claros, pensados para que la persona entienda y te escriba.", "Fast, clear sites built so people understand you and get in touch."),
     description: t(
-      "Desarrollo a medida con Next.js 16, TypeScript y TailwindCSS. Carga instantánea en móviles, SEO técnico impecable y dirección de arte que proyecta autoridad inmediata.",
-      "Custom development with Next.js 16, TypeScript, and TailwindCSS. Instant mobile loading, clean technical SEO, and art direction that commands authority."
+      "Desarrollo a medida con Next.js, TypeScript y Tailwind: diseño propio, versión bilingüe y SEO técnico cuidado. Lo diseño y lo programo yo.",
+      "Custom development with Next.js, TypeScript and Tailwind: original design, bilingual versions and careful technical SEO. I design it and I build it."
     ),
     deliverables: [
-      t("Arquitectura a medida sin plantillas genéricas", "Tailored architecture with zero generic templates"),
-      t("Rendimiento 95+ en Google PageSpeed y Core Web Vitals", "95+ performance on Google PageSpeed & Core Web Vitals"),
-      t("Catálogo de productos o CMS dinámico integrado", "Dynamic product catalog or integrated headless CMS"),
-      t("Diseño bilingüe (i18n) y responsive optimizado", "Fully responsive and bilingual (i18n) ready"),
+      t("Diseño a medida, sin plantillas genéricas", "Custom design, no generic templates"),
+      t("Rendimiento medido antes de entregar", "Performance measured before handoff"),
+      t("Catálogo o CMS para que actualices el contenido", "Catalog or CMS so you can update the content"),
+      t("Versión bilingüe y adaptada al teléfono", "Bilingual and built for the phone"),
     ],
     idealFor: t(
-      "Empresas, estudios y marcas que quieren dejar atrás webs lentas y transmitir confianza de primer nivel.",
-      "Companies, studios, and brands wanting to replace slow sites with top-tier credibility."
+      "Empresas, estudios y marcas que necesitan una web que explique bien lo que hacen.",
+      "Companies, studios and brands that need a site that explains clearly what they do."
     ),
     accent: "#55D8FF",
     proofSlug: "lb-elite-wash-detail",
   },
   {
     id: "booking-payments",
-    tag: t("Operación Autoservicio", "Self-Service Operations"),
-    title: t("Sistemas de Reserva, Cobros & WhatsApp", "Booking, Payment & WhatsApp Systems"),
-    headline: t("Tus clientes reservan solos y tu negocio se ordena en un panel propio.", "Clients book on their own and your business runs from its own panel."),
+    tag: t("Agentes de IA", "AI agents"),
+    title: t("Agentes de IA instalados para tu negocio", "AI agents installed for your business"),
+    headline: t("Un agente que atiende, responde y agenda por ti, con una persona cuando hace falta.", "An agent that answers, replies and books for you, with a person when it matters."),
     description: t(
-      "Reserva online paso a paso, agenda sin solapes, ficha de cliente, cobro y cierre de caja, y contacto por WhatsApp desde el mismo sistema. Si el negocio necesita cobrar online, se integra la pasarela.",
-      "Step-by-step online booking, no double booking, client files, checkout and cash close, and WhatsApp contact from the same system. If the business needs online payments, the gateway is integrated."
+      "Instalo y configuro agentes con Claude, GPT u OpenClaw conectados a WhatsApp, a tu web o a tu agenda. Las cuentas quedan a tu nombre, con documentación y traspaso a tu equipo cuando el agente no puede resolver.",
+      "I install and configure agents built on Claude, GPT or OpenClaw, connected to WhatsApp, your website or your calendar. Accounts stay in your name, with documentation and a handoff to your team when the agent can't resolve something."
     ),
     deliverables: [
-      t("Reserva online y agenda sin solapes", "Online booking with no double booking"),
-      t("Cobro en mostrador, caja y cierre diario", "Counter checkout, cash register and daily close"),
-      t("Ficha de cliente, historial y reactivación por WhatsApp", "Client files, history and WhatsApp reactivation"),
-      t("Pasarela de pago online cuando hace falta (Stripe / Mercado Pago)", "Online payment gateway when needed (Stripe / Mercado Pago)"),
+      t("Agente conectado a tus canales (WhatsApp, web, correo)", "Agent connected to your channels (WhatsApp, web, email)"),
+      t("Respuestas desde tus datos, que puedes editar sin programar", "Answers from your own data, editable without code"),
+      t("Traspaso a una persona cuando hace falta", "Handoff to a person when needed"),
+      t("Cuentas a tu nombre y documentación de entrega", "Accounts in your name and handoff documentation"),
     ],
     idealFor: t(
-      "Barberías, clínicas, detailing, consultorios y negocios de servicios con agenda activa.",
-      "Barbershops, clinics, detailing services, practices, and appointment-based businesses."
+      "Negocios de servicios y equipos sin personal técnico que quieren delegar la atención repetitiva.",
+      "Service businesses and teams without technical staff who want to delegate repetitive support."
     ),
     accent: "#71F3A2",
     proofSlug: "new-brothers-barberia",
   },
   {
     id: "crm-automation",
-    tag: t("Cero Fuga de Oportunidades", "Zero Opportunity Leak"),
-    title: t("Arquitectura CRM & Automatización Operativa", "CRM Architecture & Operations Automation"),
-    headline: t("Un sistema que responde prospectos en <5 minutos y ordena todo tu embudo.", "A system that responds to leads in <5 minutes and organizes your entire pipeline."),
+    tag: t("Procesos conectados", "Connected processes"),
+    title: t("Automatización y CRM", "Automation & CRM"),
+    headline: t("Formularios, agenda y CRM conectados, para que ninguna consulta quede sin seguimiento.", "Forms, calendar and CRM connected, so no enquiry goes without follow-up."),
     description: t(
-      "Diseño e implementación de CRM a medida para flujos livianos, o configuración y operación experta sobre plataformas consolidadas (GoHighLevel, HubSpot) para equipos de venta activos.",
-      "Custom lightweight CRM design, or expert setup and operation on platforms like GoHighLevel or HubSpot for active sales teams."
+      "Flujos con n8n, Make o GoHighLevel según tu proceso: cada consulta entra al CRM, se avisa a quien corresponde y el seguimiento sale solo. Para flujos livianos, también construyo herramientas a medida.",
+      "Workflows with n8n, Make or GoHighLevel shaped around your process: every enquiry lands in the CRM, the right person is notified and follow-up goes out on its own. For lighter flows, I also build custom tools."
     ),
     deliverables: [
-      t("Respuesta automática exprés para multiplicar el cierre", "Express automated follow-up to maximize conversions"),
-      t("Pipeline visual para ver en qué estado está cada cliente", "Visual pipeline showing the exact stage of every prospect"),
-      t("Integración con formularios web, llamadas y redes", "Complete integration with forms, calls, and social ads"),
-      t("Sincronización de datos con alertas a tu equipo", "Real-time sync and instant alerts to your team"),
+      t("Seguimiento automático de cada consulta", "Automatic follow-up on every enquiry"),
+      t("Pipeline para ver en qué etapa está cada cliente", "A pipeline showing each client's stage"),
+      t("Reservas y agenda conectadas al CRM", "Bookings and calendar connected to the CRM"),
+      t("Avisos a tu equipo cuando algo necesita una persona", "Alerts to your team when something needs a person"),
     ],
     idealFor: t(
-      "Empresas B2B y negocios que invierten en publicidad y no quieren perder prospectos por demoras.",
-      "B2B firms and businesses running ads that cannot afford losing leads to slow replies."
+      "Negocios que reciben consultas por varios canales y necesitan ordenarlas.",
+      "Businesses receiving enquiries across several channels that need to keep them in order."
     ),
     accent: "#B68CFF",
     proofSlug: "rangel-oviedo-group",
   },
   {
     id: "ai-software",
-    tag: t("Escala con IA", "AI Scalability"),
-    title: t("Interfaces con IA & Software a Medida", "AI Interfaces & Custom Software"),
-    headline: t("Agentes inteligentes y herramientas internas que hacen el trabajo repetitivo.", "Intelligent agents and internal tools that handle repetitive workflows."),
+    tag: t("Fábricas de contenido", "Content factories"),
+    title: t("Fábricas de contenido con IA", "AI content factories"),
+    headline: t("Sistemas que producen piezas y videos para tu marca, con tu criterio en cada entrega.", "Systems that produce posts and videos for your brand, with your judgment in every delivery."),
     description: t(
-      "Herramientas internas y chatbots entrenados con los manuales y procesos de tu negocio para responder dudas frecuentes, filtrar prospectos y operar 24/7 sin sumar sueldos fijos.",
-      "Internal tools and AI assistants trained on your business procedures to answer questions, qualify leads, and operate 24/7 without overhead."
+      "Conecto modelos de lenguaje, generación de imagen y video y edición por código en un flujo que convierte un brief en posts, carruseles y reels. Una persona revisa cada pieza antes de publicarla.",
+      "I connect language models, image and video generation and code-based editing into a flow that turns a brief into posts, carousels and reels. A person reviews every piece before it's published."
     ),
     deliverables: [
-      t("Asistentes inteligentes 24/7 entrenados con tus datos", "24/7 smart assistants trained on your private knowledge"),
-      t("Filtro predictivo y calificación previa de leads", "Predictive filtering and pre-qualification of prospects"),
-      t("Paneles y herramientas internas de gestión rápida", "Custom internal dashboards and management tools"),
-      t("Conexión con bases de datos y APIs externas", "Secure database and external API integrations"),
+      t("Flujo de producción de contenido con IA para tu marca", "An AI content production flow for your brand"),
+      t("Plantillas de diseño y video consistentes", "Consistent design and video templates"),
+      t("Variantes para probar qué funciona", "Variants to test what works"),
+      t("Revisión humana antes de publicar", "Human review before publishing"),
     ],
     idealFor: t(
-      "Negocios en crecimiento que necesitan atender más clientes sin colapsar su equipo humano.",
-      "Growing companies that need to serve more clients without overwhelming their team."
+      "Marcas y equipos de marketing que necesitan constancia sin perder calidad.",
+      "Brands and marketing teams that need consistency without losing quality."
     ),
     accent: "#E59500",
-    proofSlug: "lnb-saas",
+    proofSlug: "ad-media-solution",
   },
 ];
 
@@ -137,7 +137,7 @@ export const DECISION_TOPICS: DecisionTopic[] = [
         subtitle: t("Cero suscripciones caras. Hecho exactamente para tu flujo.", "Zero bloated subscriptions. Built specifically for your workflow."),
         pros: [
           t("Cero cuotas mensuales de licencias por usuario", "Zero monthly per-user licensing fees"),
-          t("Se aprende en 5 minutos: solo lo que tu negocio necesita", "Learned in 5 minutes: only what your business actually needs"),
+          t("Fácil de aprender: solo lo que tu negocio necesita", "Easy to learn: only what your business actually needs"),
           t("Conectado directamente a tu WhatsApp, web y base de datos", "Directly linked to your WhatsApp, web, and database"),
           t("Carga instantánea y máxima agilidad en el celular", "Instant load and maximum speed on mobile"),
         ],
@@ -181,7 +181,7 @@ export const DECISION_TOPICS: DecisionTopic[] = [
     options: [
       {
         title: t("Enfoque Editorial & De Alto Impacto", "High-Impact & Editorial Approach"),
-        subtitle: t("El diseño visual es el 80% de la justificación del precio.", "Visual art direction justifies 80% of premium pricing."),
+        subtitle: t("El diseño visual sostiene un precio más alto.", "Visual art direction supports premium pricing."),
         pros: [
           t("Fotografía protagónica, paletas oscuras y tipografía de lujo", "Protagonist visuals, dark palettes, and luxury typography"),
           t("Genera estatus y filtra a clientes que buscan precio bajo", "Builds prestige and filters out low-budget tire-kickers"),
