@@ -81,7 +81,7 @@ export function AplicarOS() {
     }, [submitted, touched]);
 
     const steps = useMemo(() => [
-        { title: isEs ? 'Vos' : 'You', icon: User },
+        { title: isEs ? 'Tus datos' : 'You', icon: User },
         { title: isEs ? 'Contexto' : 'Context', icon: Layers3 },
         { title: isEs ? 'Proyecto' : 'Project', icon: Sparkles },
     ], [isEs]);
@@ -119,12 +119,12 @@ export function AplicarOS() {
             if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) errors.email = isEs ? 'Ingresá un email válido.' : 'Enter a valid email.';
         }
         if (targetStep === 1) {
-            if (!formData.projectStage) errors.projectStage = isEs ? 'Elegí el momento del proyecto.' : 'Choose the project stage.';
-            if (!formData.teamContext) errors.teamContext = isEs ? 'Elegí el contexto del equipo.' : 'Choose the team context.';
+            if (!formData.projectStage) errors.projectStage = isEs ? 'Elige el momento del proyecto.' : 'Choose the project stage.';
+            if (!formData.teamContext) errors.teamContext = isEs ? 'Elige el contexto del equipo.' : 'Choose the team context.';
         }
         if (targetStep === 2) {
-            if (formData.challenge.trim().length < 20) errors.mensaje = isEs ? 'Contame un poco más: usá al menos 20 caracteres.' : 'Tell me a little more: use at least 20 characters.';
-            if (!formData.timeline) errors.timeline = isEs ? 'Elegí un momento estimado de inicio.' : 'Choose an estimated start time.';
+            if (formData.challenge.trim().length < 20) errors.mensaje = isEs ? 'Cuéntame un poco más: usa al menos 20 caracteres.' : 'Tell me a little more: use at least 20 characters.';
+            if (!formData.timeline) errors.timeline = isEs ? 'Elige un momento estimado de inicio.' : 'Choose an estimated start time.';
         }
         return errors;
     }, [formData, isEs]);
@@ -186,7 +186,7 @@ export function AplicarOS() {
             setSubmitted(true);
             setTouched(false);
         } catch {
-            setSubmitError(isEs ? 'No pude enviar el contexto. Probá nuevamente o escribime por email.' : 'I could not send the context. Try again or contact me by email.');
+            setSubmitError(isEs ? 'No pude enviar el contexto. Prueba de nuevo o escríbeme por email.' : 'I could not send the context. Try again or contact me by email.');
         } finally {
             setSubmitting(false);
         }
@@ -325,7 +325,7 @@ export function AplicarOS() {
                         {step === 2 && (
                             <div className="space-y-7">
                                 <div>
-                                    <label htmlFor="brief-project" className="mb-2 block font-mono text-[9px] font-bold uppercase tracking-wider text-zinc-500 light:text-muted-foreground">{isEs ? '¿Qué querés cambiar, construir o hacer posible?' : 'What do you want to change, build or make possible?'}</label>
+                                    <label htmlFor="brief-project" className="mb-2 block font-mono text-[9px] font-bold uppercase tracking-wider text-zinc-500 light:text-muted-foreground">{isEs ? '¿Qué quieres cambiar, construir o hacer posible?' : 'What do you want to change, build or make possible?'}</label>
                                     <textarea id="brief-project" name="mensaje" value={formData.challenge} onChange={(event) => updateField('challenge', event.target.value, 'mensaje')} autoComplete="off" maxLength={2000} rows={6} aria-invalid={Boolean(fieldErrors.mensaje)} aria-describedby={fieldErrors.mensaje ? 'brief-project-error' : undefined} placeholder={isEs ? 'El contexto, qué existe hoy y qué debería cambiar…' : 'The context, what exists today and what should change…'} className={`${inputClass} resize-y`} />
                                     <div className="flex items-start justify-between gap-4">{errorText('mensaje')}<span className="ml-auto mt-2 font-mono text-[9px] tabular-nums text-foreground/30">{formData.challenge.length}/2000</span></div>
                                 </div>

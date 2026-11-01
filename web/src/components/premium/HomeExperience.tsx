@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { ArrowUpRight, MessageCircle } from "lucide-react";
-import { localePath } from "@/config/site";
+import { localePath, SITE_IDENTITY } from "@/config/site";
 import { useLanguage } from "@/context/LanguageContext";
 import { useActiveTech } from "@/context/ActiveTechContext";
 import { SERVICE_SOLUTIONS } from "@/data/solutionsData";
@@ -50,12 +50,16 @@ const copy = {
     startProject: "Ver proyectos",
     archiveEyebrow: "Proyectos",
     archiveTitle: "Trabajo real, en producción.",
-    archiveBody: "Sitios y sistemas operando hoy. Abrí cada caso para verlo en vivo.",
+    archiveBody: "Sitios y sistemas operando hoy. Abre cada caso para verlo en vivo.",
     archiveCta: "Ver todos los casos",
-    contactEyebrow: "Contacto Directo",
-    contactTitle: "¿Qué querés construir o automatizar?",
-    contactBody: "Completá el brief en 2 minutos o escribime directo por WhatsApp.",
-    capacity: "Cupos limitados · 4 a 5 proyectos por trimestre",
+    contactEyebrow: "Contacto",
+    contactTitle: "¿Trabajamos juntos?",
+    contactBody: "Si buscas a alguien para tu equipo o tienes un proyecto concreto, escríbeme por el camino que corresponda. Te respondo yo.",
+    roleCta: "Consultar por un puesto",
+    roleHint: "Te comparto mi CV y disponibilidad",
+    roleSubject: "Puesto · Mario Morera",
+    projectCta: "Consultar por un proyecto",
+    projectHint: "Brief de 2 minutos, aquí abajo",
   },
   en: {
     eyebrow: "Mario Morera · AI Automation & Operations",
@@ -74,10 +78,14 @@ const copy = {
     archiveTitle: "Real work, in production.",
     archiveBody: "Sites and systems running today. Open each case to see it live.",
     archiveCta: "See all cases",
-    contactEyebrow: "Direct Contact",
-    contactTitle: "What do you want to build or automate?",
-    contactBody: "Fill out the 2-minute brief or message me directly on WhatsApp.",
-    capacity: "Limited spots · 4 to 5 projects per quarter",
+    contactEyebrow: "Contact",
+    contactTitle: "Shall we work together?",
+    contactBody: "Whether you're hiring for your team or have a specific project, reach out the way that fits. I'll reply myself.",
+    roleCta: "Discuss a role",
+    roleHint: "I'll share my CV and availability",
+    roleSubject: "Role · Mario Morera",
+    projectCta: "Discuss a project",
+    projectHint: "2-minute brief, right below",
   },
 };
 
@@ -301,13 +309,33 @@ export function HomeExperience() {
           <Reveal as="p" className="mx-auto mt-4 max-w-xl text-sm sm:text-base leading-relaxed text-foreground/60">
             {c.contactBody}
           </Reveal>
-          <Reveal as="p" className="mt-5 inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3.5 py-1 font-mono text-[11px] text-amber-400">
-            {c.capacity}
-          </Reveal>
+          {/* Dos caminos: empleadores y clientes no llenan el mismo formulario. */}
+          <div className="mt-7 grid gap-3 sm:grid-cols-2">
+            <a
+              href={`mailto:${SITE_IDENTITY.contact.email}?subject=${encodeURIComponent(c.roleSubject)}`}
+              className="pressable group rounded-2xl border border-white/15 bg-background/60 px-5 py-4 text-left transition-colors hover:border-signal/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring light:border-[rgb(var(--ink-rgb)/0.15)]"
+            >
+              <span className="flex items-center justify-between gap-3 text-sm font-semibold text-foreground">
+                {c.roleCta}
+                <ArrowUpRight className="h-4 w-4 shrink-0 text-foreground/50 transition-colors group-hover:text-signal" />
+              </span>
+              <span className="mt-1 block font-mono text-[11px] text-foreground/55">{c.roleHint}</span>
+            </a>
+            <a
+              href="#brief"
+              className="pressable group rounded-2xl border border-white/15 bg-background/60 px-5 py-4 text-left transition-colors hover:border-signal/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring light:border-[rgb(var(--ink-rgb)/0.15)]"
+            >
+              <span className="flex items-center justify-between gap-3 text-sm font-semibold text-foreground">
+                {c.projectCta}
+                <ArrowUpRight className="h-4 w-4 shrink-0 rotate-90 text-foreground/50 transition-colors group-hover:text-signal" />
+              </span>
+              <span className="mt-1 block font-mono text-[11px] text-foreground/55">{c.projectHint}</span>
+            </a>
+          </div>
         </div>
 
         {/* Embedded Brief Form */}
-        <div className="mt-8">
+        <div id="brief" className="mt-8 scroll-mt-20">
           <AplicarOS />
         </div>
       </section>
