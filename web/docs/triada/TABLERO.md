@@ -5,6 +5,10 @@ Protocolo: [`README.md`](README.md). Evidencia del mercado: [`../MEJORAS-DESDE-E
 **Estados:** `pendiente` · `bloqueada (D#)` · `en curso` · `para revisar` · `devuelta` · `integrada` · `publicada`.
 Cada dueño cambia solo el estado de sus tarjetas. Claude escribe y ordena las tarjetas.
 
+## Principio de la web (Mario, 1/11)
+
+> **La web es una muestra viva de lo que puedo construir para el cliente.** No tiene que abrumar: tiene que transmitir, con buen estilo y efectos con intención, lo que haría por él. Cada efecto tiene que servir para entender algo; si solo decora, se baja o se quita. Con más exposición, también tiene que estar en regla: privacidad, términos y cookies.
+
 ## Decisiones de Mario (bloquean tareas)
 
 | ID | Decisión | Opciones | Recomendación de Claude | Estado |
@@ -14,17 +18,18 @@ Cada dueño cambia solo el estado de sus tarjetas. Claude escribe y ordena las t
 | **D3** | Qué apps de fábrica de contenido se publican y con qué nombre | Depende del código que vas a compartir | — | pendiente (falta el código) |
 | **D4** | Acortar el home (hoy unos 14.200 px; el perfil ocupa 4.600) | Recortar el perfil · Fusionar orquestación con método · Ambas | Ambas, después de D1 | pendiente |
 | **D5** | Testimonios en video de clientes | Pedir permiso a cada cliente · No usar | Pedir permiso; se rotulan como testimonio, nunca como métrica | pendiente |
+| **D7** | **Ley aplicable de los textos legales** y si se puede nombrar el país (hoy un test lo prohíbe en el código público) | Nombrar el país solo en las páginas legales · Usar un texto sin jurisdicción | Nombrarlo solo en las páginas legales, con una excepción en el test para `/privacidad`, `/terminos` y `/cookies`. Que lo revise un abogado | pendiente |
 | **D6** | Demo en vivo de un agente (un número o un chat de prueba en la web) | Chat web · WhatsApp de prueba · Número de voz | Chat web primero: es lo más barato y lo que más vende el servicio | pendiente |
 
 ## Fase 1 · Que la web diga lo que vendes hoy
 
 | ID | Tarea | Dueño | Apoyo | Archivos permitidos | Listo cuando | Depende | Estado |
 |---|---|---|---|---|---|---|---|
-| **T01** | Héroe y metadata con el posicionamiento de D1, en ES y EN | Claude escribe los textos → **Codex** implementa | Gemini critica la preview | `src/components/premium/HomeExperience.tsx`, `src/config/site.ts` (solo Claude) | La primera pantalla dice qué haces y para quién, en ES y EN, a 390 px y en escritorio. Sin «una sola persona» ni promesas sin fuente. Title, description y OG actualizados | D1 ✓ | **para revisar** · hecha por Claude, ver [entregas/T01-T05.md](entregas/T01-T05.md) |
-| **T02** | Contacto con dos caminos: «Consultar por un puesto» y «Consultar por un proyecto» | **Codex** | Claude escribe los textos | componentes de `#contacto`, `src/app/aplicar/**` si hace falta | Cada camino abre un contacto que funciona. Sin cupos ni «4 a 5 proyectos por trimestre». Probado con teclado | — | pendiente |
+| **T01** | Héroe y metadata con el posicionamiento de D1, en ES y EN | Claude escribe los textos → **Codex** implementa | Gemini critica la preview | `src/components/premium/HomeExperience.tsx`, `src/config/site.ts` (solo Claude) | La primera pantalla dice qué haces y para quién, en ES y EN, a 390 px y en escritorio. Sin «una sola persona» ni promesas sin fuente. Title, description y OG actualizados | D1 ✓ | **integrada** en `triada/web` (e47d3d7) · [entregas/T01-T05.md](entregas/T01-T05.md) |
+| **T02** | Contacto con dos caminos: «Consultar por un puesto» y «Consultar por un proyecto» | **Codex** | Claude escribe los textos | componentes de `#contacto`, `src/app/aplicar/**` si hace falta | Cada camino abre un contacto que funciona. Sin cupos ni «4 a 5 proyectos por trimestre». Probado con teclado | — | **integrada** en `triada/web` (9512a53), hecha por Claude |
 | **T03** | Verificar los 3 casos de portada (Fenix, L&B y New Brothers): qué está implementado, qué es demo y qué es concepto | **Gemini** | Claude corrige `projectCases.ts` | `docs/triada/gemini/T03-verificacion.md` y capturas en `docs/triada/gemini/T03/` | Cada capacidad de cada caso tiene su prueba (URL, captura, recorrido) o queda rotulada Demo o Concepto | — | pendiente |
 | **T04** | Proyectos: tres tarjetas verificadas primero y después el riel de films | **Codex** | Claude escribe los textos; datos de T03 | componentes de `#proyectos` | La primera vista de proyectos muestra 3 tarjetas con su estado real y «Ver todos los casos» | T03 | bloqueada (T03) |
-| **T05** | Sacar los claims sin prueba de servicios (95+ PageSpeed, «<5 minutos», «24/7», «proven live») | Claude reescribe `solutionsData.ts` → **Codex** ajusta los componentes | — | `src/data/solutionsData.ts` (Claude), `ServicesSection.tsx` (Codex) | `grep` sin esas promesas. Cada bloque enlaza a un caso | — | **para revisar** · junto con T01 |
+| **T05** | Sacar los claims sin prueba de servicios (95+ PageSpeed, «<5 minutos», «24/7», «proven live») | Claude reescribe `solutionsData.ts` → **Codex** ajusta los componentes | — | `src/data/solutionsData.ts` (Claude), `ServicesSection.tsx` (Codex) | `grep` sin esas promesas. Cada bloque enlaza a un caso | — | **integrada** junto con T01 |
 
 ## Fase 2 · Las páginas que pide el mercado
 
@@ -46,11 +51,13 @@ Cada dueño cambia solo el estado de sus tarjetas. Claude escribe y ordena las t
 | **T14** | Filtros por rubro en `/casos-de-exito` y «Casos parecidos» al final de cada caso | **Codex** | Claude define los rubros | `WorkExperience.tsx` y la página del caso | Filtros con teclado; la URL guarda el filtro | — | pendiente |
 | **T15** | Acortar el home según D4 | **Codex** | Claude decide qué se va | componentes del home | Home cerca de 10.000 px en escritorio | D4 | bloqueada (D4) |
 | **T16** | Pasada de **Impeccable** (`/impeccable audit` y `polish`) después de las fases 1 y 2 | **Claude** | Gemini, QA visual | — | Puntaje igual o mejor que el 15/20 del 8/10 | Fases 1 y 2 | pendiente |
+| **T17** | **Páginas legales:** privacidad (ampliada), términos y cookies, en ES y EN, más los enlaces en el pie y la línea de aceptación en el formulario | Claude escribe los textos ([briefs/T17-legal.md](briefs/T17-legal.md) y [-en](briefs/T17-legal-en.md)) → **Codex** arma las páginas | Gemini revisa que coincidan con lo que el sitio hace de verdad | `src/app/privacidad/**`, `src/app/terminos/**`, `src/app/cookies/**`, sus pares en `src/app/en/**`, `src/components/sections/footer.tsx`, la línea legal de `AplicarOS.tsx` y `src/app/sitemap.ts` | Las 3 páginas en ES y EN, enlazadas desde el pie de todas las páginas. La política de cookies describe lo que el sitio guarda de verdad. Los marcadores `[JURISDICCIÓN]` quedan como `TODO(Mario)` hasta D7 | D7 (solo para publicar) | pendiente |
+| **T18** | **Pulido de «muestra viva»:** efectos con intención y sin abrumar. Movimiento coherente (mismas curvas y duraciones), estados de hover y foco en todos los elementos interactivos, una página 404 con estilo propio, cargas sin saltos, efectos pesados aligerados en el teléfono, y `prefers-reduced-motion` respetado en todo | **Codex** | Claude define qué efectos se quedan; Gemini mira la preview | componentes compartidos de movimiento (`src/components/shared/**`, `src/hooks/**`), `src/app/not-found.tsx` y ajustes puntuales anotados en la entrega. **No toca `HomeExperience.tsx`** mientras Claude trabaje ahí | Un inventario de efectos en la entrega (dónde, qué hace y si se queda, se baja o se va). Sin saltos de diseño al cargar. Rendimiento en el teléfono igual o mejor que antes | — | pendiente |
 
 ## Para arrancar ya (sin decisiones pendientes)
 
 - **Gemini:** T03 (verificar casos), T09 (elegir las piezas de video) y T12 (auditoría de inglés).
-- **Codex:** T13 (deuda técnica), T02 (contacto) y T11 (lab).
+- **Codex:** T17 (páginas legales), T13 (deuda técnica), T18 (pulido) y T11 (lab). El arranque está en [codex/ARRANQUE-1.md](codex/ARRANQUE-1.md).
 - **Claude:** los textos de T02 y T05, y armar la rama `triada/web`.
 - **Mario:** D2 y D6 (desbloquean T07), D3 con el código de las apps (T08), D4 (T15) y D5.
 - **D1 decidida el 1/11 (opción c):** T01, T06 y T10 quedan libres.
