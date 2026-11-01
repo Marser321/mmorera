@@ -26,7 +26,7 @@ Cada dueño cambia solo el estado de sus tarjetas. Claude escribe y ordena las t
 | **D11** | ¿`/fabricas` sale antes de las apps (D3)? | a) Esperar · b) Salir con el sistema de contenido propio (M3) y la galería T09 | b) | pendiente |
 | **D12** | Medición | a) Sin analítica; prueba con personas (T34) · b) Analítica sin cookies, con T17 actualizado | a) por ahora | pendiente |
 | **D14** | Qué CV se publica en `/cv` (y, mientras no exista, si el camino «Puesto» enlaza a tu LinkedIn: hace falta la URL confirmada) | a) Uno de los PDF de `output/pdf/` · b) Un CV nuevo con el título de D1 («AI Automation & Operations») y sin nombrar el país | b): los PDF actuales dicen «Frontend» o «CRM y automatización» y no coinciden con el héroe | pendiente |
-| **D15** | ¿Prometer un tiempo de respuesta en el contacto? (la crítica sugiere «menos de 24 horas laborables») | a) No prometer plazo; dejar «Te respondo yo» · b) Un plazo que puedas sostener siempre, por ejemplo «en un día hábil» | a), salvo que puedas cumplir b) todas las semanas: una promesa incumplida pesa más que no prometer | pendiente |
+| **D15** | ¿Prometer un tiempo de respuesta en el contacto? (la crítica sugiere «menos de 24 horas laborables») | a) No prometer plazo; dejar «Te respondo yo» · b) Un plazo que puedas sostener siempre, por ejemplo «en un día hábil» | a), salvo que puedas cumplir b) todas las semanas: una promesa incumplida pesa más que no prometer | **decidida 1/11: a)** — no se promete plazo; el contacto dice «Te respondo yo» |
 | **D13** | Foto en «Cómo trabajo» | a) Una foto real · b) Solo el monograma · c) Video corto | a) | pendiente |
 
 ## Base · que la rama de la tríada contenga lo que ya está publicado
