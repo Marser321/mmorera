@@ -23,7 +23,22 @@ export default function LegalPage() {
           title: "Qué uso hoy",
           content: (
             <>
-                <p>El sitio <strong>no usa cookies de publicidad ni de seguimiento de terceros.</strong> Solo guarda en tu navegador preferencias que tú eliges, como el tema claro u oscuro o el idioma, para recordarlas en tu próxima visita. Eso funciona sin identificarte.</p>
+                <p>El sitio <strong>no usa cookies de publicidad ni de seguimiento de terceros.</strong> Solo guarda en el almacenamiento local de tu navegador tres preferencias, para que el sitio se vea como lo dejaste:</p>
+                <ul>
+                  <li><strong>Tema</strong> (claro u oscuro).</li>
+                  <li><strong>Idioma</strong> que elegiste.</li>
+                  <li><strong>Recorrido</strong> que estabas viendo (diseño o software), que se actualiza al visitar esas secciones.</li>
+                </ul>
+                <p>Nada de eso te identifica ni se envía a terceros.</p>
+            </>
+          ),
+        },
+        {
+          id: "demos-de-otros-sitios",
+          title: "Demos de otros sitios",
+          content: (
+            <>
+                <p>Algunos casos abren, dentro de una ventana, una demo del sitio de un cliente. Ese sitio es de un tercero y puede usar sus propias cookies según su política. Solo se carga si tú abres la demo.</p>
             </>
           ),
         },
