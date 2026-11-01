@@ -32,7 +32,6 @@ export const metadata: Metadata = {
   metadataBase: new URL(canonical),
   title: { default: (inicio.title as { absolute: string }).absolute, template: "%s — Mario Morera" },
   applicationName: SITE_IDENTITY.brand,
-  keywords: ["AI Automation", "AI Operations", "Agentes de IA", "Automatización", "CRM", "Contenido con IA", "Mario Morera"],
   authors: [{ name: SITE_IDENTITY.brand, url: canonical }],
   creator: SITE_IDENTITY.brand,
   publisher: SITE_IDENTITY.brand,

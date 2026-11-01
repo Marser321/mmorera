@@ -130,5 +130,11 @@ export const PORTADAS_OG: Record<PaginaSeoData["portada"], PortadaOg> = {
   },
 };
 
+/** Palabras clave del sitio, por idioma (van en los metadatos de cada página fija). */
+export const KEYWORDS: Record<Language, string[]> = {
+  es: ["AI Automation", "AI Operations", "Agentes de IA", "Automatización", "CRM", "Contenido con IA", "Mario Morera"],
+  en: ["AI Automation", "AI Operations", "AI agents", "Automation", "CRM", "AI content", "Mario Morera"],
+};
+
 /** Dónde vive cada portada (la generan con `scripts/og-images.ts`). */
 export const portadaPath = (portada: PaginaSeoData["portada"], language: Language) => `/og/${portada}-${language}.jpg`;

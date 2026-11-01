@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { SITE_IDENTITY, localePath } from "@/config/site";
-import { PAGINAS_SEO, PORTADAS_OG, portadaPath, type Language, type PaginaSeo } from "@/data/seo/paginas";
+import { KEYWORDS, PAGINAS_SEO, PORTADAS_OG, portadaPath, type Language, type PaginaSeo } from "@/data/seo/paginas";
 
 export const OG_SIZE = { width: 1200, height: 630 } as const;
 export const OG_LOCALE: Record<Language, string> = { es: "es_ES", en: "en_US" };
@@ -38,6 +38,7 @@ export function pageMetadata(pagina: PaginaSeo, language: Language): Metadata {
   return {
     title: data.tituloAbsoluto ? { absolute: title } : title,
     description,
+    keywords: KEYWORDS[language],
     alternates: { canonical: url, languages: idiomasDe(data.path) },
     openGraph: {
       type: "website",

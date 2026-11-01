@@ -10,7 +10,7 @@ T21, T23, T04, T30 y T29 están integradas en `triada/web`. Excelente trabajo: e
 - los textos `TODO(Claude)`: el aviso de «sitio externo» y el de correo seleccionado;
 - en el menú, «Sobre mí · CV» quedó como un solo ítem, como dice el brief. Mi arranque anterior fue ambiguo.
 
-Siguen 4 tarjetas, en este orden. Todas salen de la punta de `triada/web`, cada una en su worktree, salvo que se indique otra cosa. **No sincronices el tablero en mi worktree.**
+Siguen 5 tarjetas, en este orden. Todas salen de la punta de `triada/web`, cada una en su worktree, salvo que se indique otra cosa. **No sincronices el tablero en mi worktree.**
 
 ## 1. T35 · e2e del recorrido nuevo
 
@@ -75,6 +75,16 @@ Sale de la rama de T26. Brief con los textos exactos: **`web/docs/triada/briefs/
   - dejan de montarse la órbita, el estudio de *design tokens* y el bloque de «una sola intención».
   - **No borres** el estudio de tokens: va al Lab (T11).
 - **Listo cuando:** cada página dice en su primera pantalla qué se contrata y para quién, y se ve en ES y EN a 390 y 1440 px, con teclado y movimiento reducido.
+
+## 5. T37 · Ajustes de la crítica de Gemini (cuando quieras, desde `triada/web`)
+
+- **Un solo patrón de acceso al contacto en todo el sitio (D9).** Hoy el home tiene la cápsula «Hablemos» y las demás páginas, un botón circular de WhatsApp (`WhatsAppFab`).
+  - En las páginas internas va la misma cápsula «Hablemos» / «Let's talk», con el mismo estilo, y lleva a `/aplicar` (o `/en/aplicar`). El WhatsApp sigue disponible en el contacto y en `/aplicar`.
+  - En `/aplicar`, la cápsula no se muestra.
+- **La cápsula en el teléfono:** súbela por encima de la barra de gestos (por ejemplo, `bottom-5` más el `safe-area`), para que no tape la última línea de texto.
+- **`ServicesSection.tsx:231`:** el rótulo «Live» del escenario pasa a «En vivo» / «Live».
+- **La consigna del héroe** («Pasa por un servicio» / «Hover a service») se muestra solo en dispositivos con hover (`@media (hover: hover)`), no por ancho de pantalla.
+- **Listo cuando:** la cápsula es la misma en `/`, `/casos-de-exito`, un caso, `/sistemas`, `/estudio` y sus pares en EN; no tapa texto a 390 px; teclado y movimiento reducido funcionan.
 
 ## Al terminar cada tarjeta
 
