@@ -4,7 +4,7 @@ Pegar en Codex **después** del prompt fijo `web/docs/triada/PROMPT-codex.md`, c
 
 ---
 
-Mario aprobó el plan de experiencia (`web/docs/triada/PLAN-experiencia.md`). Ese plan baja el home de unos 14.700 px a unos 8.500, quitando lo que repite. Tienes 3 tarjetas, en este orden. Están en `web/docs/triada/TABLERO.md`.
+Mario aprobó el plan de experiencia (`web/docs/triada/PLAN-experiencia.md`). Ese plan baja el home de unos 14.700 px a unos 8.500, quitando lo que repite. Tienes 4 tarjetas, en este orden. Están en `web/docs/triada/TABLERO.md`.
 
 **Antes de empezar:**
 - **Partir siempre de `triada/web`** (su punta actual). Desde T19 contiene lo que está en producción: marca «pared», SEO por página y rótulos «Ejemplo». La rama está solo en local, así que trabajas sobre este mismo repo, cada tarea en su worktree:
@@ -58,6 +58,12 @@ Mario aprobó el plan de experiencia (`web/docs/triada/PLAN-experiencia.md`). Es
   - si el problema es del test o de la app, arréglalo sin cambiar textos;
   - si hace falta decidir algo, explícalo en la entrega.
 - **No toques** los archivos de T22 y T24 (`HomeExperience.tsx`, `WorkExperience.tsx`, `IslandBar.tsx`, `TechParticleField.tsx` y `particleSequence.ts`). Si tienen avisos, anótalos en la entrega.
+
+## 4. T25 · Pasada de texto: voseo, calcos y cifras
+
+- Brief con los textos exactos y los archivos: `web/docs/triada/briefs/T25-texto.md`. Copia los textos tal cual.
+- Incluye cambiar el tipo de `stack` a `(string | LocalizedText)[]`. Cuando el tipo esté listo, avisa en la entrega: Claude carga los valores en inglés.
+- Arranca después de T13, desde la punta de `triada/web`, para no chocar con T22 y T24.
 
 ## Al terminar cada tarjeta
 

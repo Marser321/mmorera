@@ -126,7 +126,7 @@ export const DECISION_TOPICS: DecisionTopic[] = [
   {
     id: "crm-choice",
     category: t("Sistemas Comerciales", "Commercial Systems"),
-    question: t("¿Necesitás un CRM gigante como HubSpot/GoHighLevel o una herramienta a medida?", "Do you need a heavy CRM like HubSpot/GoHighLevel or a custom-built tool?"),
+    question: t("¿Necesitas un CRM gigante como HubSpot/GoHighLevel o una herramienta a medida?", "Do you need a heavy CRM like HubSpot/GoHighLevel or a custom-built tool?"),
     summary: t(
       "Muchos negocios pagan cientos de dólares al mes en herramientas que su equipo termina abandonando por complejas. La elección correcta depende de tu volumen y cómo vendés.",
       "Many businesses pay hundreds monthly for complex software their teams end up abandoning. The right choice depends on your volume and sales process."
@@ -155,10 +155,10 @@ export const DECISION_TOPICS: DecisionTopic[] = [
           t("Telefonía integrada (VoIP), SMS y email marketing masivo", "Integrated VoIP calling, SMS, and massive email marketing"),
           t("Múltiples pipelines de venta y comisiones por vendedor", "Multiple sales pipelines and rep commission tracking"),
           t("Ecosistema maduro con cientos de integraciones nativas", "Mature ecosystem with hundreds of native integrations"),
-          t("Ideal cuando tenés personal dedicado a operar el CRM", "Ideal when you have dedicated staff to operate the CRM"),
+          t("Ideal cuando tienes personal dedicado a operar el CRM", "Ideal when you have dedicated staff to operate the CRM"),
         ],
         whenToChoose: t(
-          "Cuando tenés un equipo comercial de 4+ personas haciendo llamadas y seguimiento constante.",
+          "Cuando tienes un equipo comercial de 4+ personas haciendo llamadas y seguimiento constante.",
           "When you have a commercial team of 4+ reps actively making outbound calls and follow-ups."
         ),
         recommendedFor: t("Agencias, empresas de seguros, inmobiliarias masivas y B2B de alto volumen.", "Agencies, insurance firms, large real estate teams, and high-volume B2B."),
@@ -227,7 +227,7 @@ export const DECISION_TOPICS: DecisionTopic[] = [
           t("Automatizaciones de seguimiento implacables (evita que se enfríen prospectos)", "Relentless automated nurture flows to keep leads hot"),
           t("Ideal para delegar sub-cuentas a sucursales o clientes con marca blanca", "Sub-account architecture perfect for branches and clients"),
         ],
-        whenToChoose: t("Si vendés servicios, citas, consultas, o si querés sustituir 6 suscripciones distintas (ClickFunnels + Calendly + Mailchimp + Twilio) por una sola.", "If you sell appointments, high-ticket services, or want to replace 6 subscriptions into one consolidated platform."),
+        whenToChoose: t("Si vendes servicios, citas o consultas, o si quieres sustituir 6 suscripciones distintas (ClickFunnels + Calendly + Mailchimp + Twilio) por una sola.", "If you sell appointments, high-ticket services, or want to replace 6 subscriptions into one consolidated platform."),
         recommendedFor: t("Agencias, clínicas estéticas, academias, firmas legales y servicios locales.", "Agencies, aesthetic clinics, academies, legal firms, and local services."),
         badge: t("Recomendado Todo-en-Uno", "Top All-In-One"),
       },
@@ -240,7 +240,7 @@ export const DECISION_TOPICS: DecisionTopic[] = [
           t("A Medida (Supabase + n8n): Propiedad 100% de tus datos con cero costos recurrentes", "Custom (Supabase + n8n): 100% data ownership with zero recurring SaaS fees"),
           t("Integración profunda con stacks de código Next.js y APIs REST", "Deep integration with modern Next.js code stacks and REST APIs"),
         ],
-        whenToChoose: t("HubSpot si tenés un equipo corporativo con presupuesto alto. Pipedrive o A Medida si buscás foco puro en cerrar tratos sin complejidad.", "HubSpot if you have a well-funded enterprise sales team. Pipedrive or Custom if you want zero bloat and high closing velocity."),
+        whenToChoose: t("HubSpot si tienes un equipo corporativo con presupuesto alto. Pipedrive o A Medida si buscas foco puro en cerrar tratos sin complejidad.", "HubSpot if you have a well-funded enterprise sales team. Pipedrive or Custom if you want zero bloat and high closing velocity."),
         recommendedFor: t("Startups B2B, empresas de software, distribuidores mayoristas y operaciones ágiles.", "B2B SaaS, tech startups, wholesale distributors, and lean teams."),
         badge: t("Corporativo & Especializado", "Corporate & Specialized"),
       },

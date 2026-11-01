@@ -76,9 +76,9 @@ export const PAGINAS_SEO: Record<PaginaSeo, PaginaSeoData> = {
   },
   hablemos: {
     path: "/aplicar",
-    title: { es: "Contame tu proyecto", en: "Tell me about your project" },
+    title: { es: "Cuéntame tu proyecto", en: "Tell me about your project" },
     description: {
-      es: "Tres pasos para contarme qué querés construir o automatizar. Con ese contexto te respondo con el próximo paso útil para tu proyecto.",
+      es: "Tres pasos para contarme qué quieres construir o automatizar. Con ese contexto te respondo con el próximo paso útil para tu proyecto.",
       en: "Three steps to tell me what you want to build or automate. With that context, I reply with the most useful next step for your project.",
     },
     portada: "hablemos",
@@ -125,7 +125,7 @@ export const PORTADAS_OG: Record<PaginaSeoData["portada"], PortadaOg> = {
   hablemos: {
     eco: { es: "Hablemos", en: "Let’s talk" },
     rotulo: { es: "Mario Morera · Brief", en: "Mario Morera · Brief" },
-    titular: { es: "Contame qué querés mover.", en: "Tell me what you want to move." },
+    titular: { es: "Cuéntame qué quieres construir o automatizar.", en: "Tell me what you want to build or automate." },
     servicios: { es: "Brief en tres pasos", en: "A three-step brief" },
   },
 };
