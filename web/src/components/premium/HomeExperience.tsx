@@ -52,14 +52,18 @@ const copy = {
     archiveTitle: "Tres sistemas que puedes abrir hoy.",
     archiveBody: "Cada tarjeta dice qué es: implementado o demo. Ábrelo y pruébalo.",
     archiveCta: "Ver todos los casos",
-    contactEyebrow: "Contacto",
-    contactTitle: "¿Trabajamos juntos?",
-    contactBody: "Si buscas a alguien para tu equipo o tienes un proyecto concreto, escríbeme por el camino que corresponda. Te respondo yo.",
+    contactEyebrow: "Hablemos",
+    contactTitle: "¿Un puesto o un proyecto?",
+    contactBody: "Si buscas a alguien para tu equipo o tienes un proyecto concreto, elige el camino que corresponda. Te respondo yo.",
     roleCta: "Consultar por un puesto",
     roleHint: "Te comparto mi CV y disponibilidad",
     roleSubject: "Puesto · Mario Morera",
+    roleCopyEmail: "Copiar correo",
+    emailCopied: "Correo copiado",
+    emailCopyFallback: "TODO(Claude): correo seleccionado; cópialo con el teclado.",
+    quickLine: "¿Prefieres una consulta rápida? Escríbeme por WhatsApp.",
     projectCta: "Consultar por un proyecto",
-    projectHint: "Brief de 2 minutos, aquí abajo",
+    projectHint: "Brief de 2 minutos; se abre aquí",
   },
   en: {
     eyebrow: "Mario Morera · AI Automation & Operations",
@@ -79,14 +83,18 @@ const copy = {
     archiveTitle: "Three systems you can open today.",
     archiveBody: "Each card says what it is: live or demo. Open it and try it.",
     archiveCta: "See all cases",
-    contactEyebrow: "Contact",
-    contactTitle: "Let's work together.",
-    contactBody: "Whether you're hiring for your team or have a specific project, reach out the way that fits. I'll reply myself.",
+    contactEyebrow: "Let's talk",
+    contactTitle: "A role or a project?",
+    contactBody: "Whether you're hiring for your team or have a specific project, pick the path that fits. I'll reply myself.",
     roleCta: "Discuss a role",
     roleHint: "I'll share my resume and availability",
     roleSubject: "Role · Mario Morera",
+    roleCopyEmail: "Copy email",
+    emailCopied: "Email copied",
+    emailCopyFallback: "TODO(Claude): email selected; copy it with your keyboard.",
+    quickLine: "Prefer a quick question? Message me on WhatsApp.",
     projectCta: "Discuss a project",
-    projectHint: "2-minute brief, right below",
+    projectHint: "2-minute brief; opens right here",
   },
 };
 
@@ -94,6 +102,51 @@ export function HomeExperience() {
   const { language } = useLanguage();
   const heroRef = useRef<HTMLElement>(null);
   const c = copy[language];
+  const [briefOpen, setBriefOpen] = useState(false);
+  const [emailStatus, setEmailStatus] = useState<"idle" | "copied" | "selected">("idle");
+  const briefRef = useRef<HTMLDivElement>(null);
+  const roleEmailRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    const openFromHash = () => { if (window.location.hash === "#brief") setBriefOpen(true); };
+    openFromHash();
+    window.addEventListener("hashchange", openFromHash);
+    return () => window.removeEventListener("hashchange", openFromHash);
+  }, []);
+
+  useEffect(() => {
+    if (!briefOpen || !briefRef.current) return;
+    const focusFirst = () => {
+      const input = briefRef.current?.querySelector<HTMLElement>('input:not([type="hidden"]):not([tabindex="-1"]), textarea, select');
+      if (!input) return false;
+      input.focus();
+      return true;
+    };
+    if (focusFirst()) return;
+    const observer = new MutationObserver(() => { if (focusFirst()) observer.disconnect(); });
+    observer.observe(briefRef.current, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, [briefOpen]);
+
+  async function copyRoleEmail() {
+    try {
+      await navigator.clipboard.writeText(SITE_IDENTITY.contact.email);
+      setEmailStatus("copied");
+    } catch {
+      // El correo sigue disponible aunque el navegador deniegue el portapapeles.
+      const email = roleEmailRef.current;
+      if (email) {
+        email.focus();
+        const range = document.createRange();
+        range.selectNodeContents(email);
+        const selection = window.getSelection();
+        selection?.removeAllRanges();
+        selection?.addRange(range);
+      }
+      setEmailStatus("selected");
+    }
+  }
+
   const { setFocusTechName } = useActiveTech();
   const [focusedService, setFocusedService] = useState<string | null>(null);
   const focusedSolution = SERVICE_SOLUTIONS.find((service) => service.id === focusedService);
@@ -278,31 +331,29 @@ export function HomeExperience() {
           </Reveal>
           {/* Dos caminos: empleadores y clientes no llenan el mismo formulario. */}
           <div className="mt-7 grid gap-3 sm:grid-cols-2">
-            <a
-              href={`mailto:${SITE_IDENTITY.contact.email}?subject=${encodeURIComponent(c.roleSubject)}`}
-              className="pressable group rounded-2xl border border-white/15 bg-background/60 px-5 py-4 text-left transition-colors hover:border-signal/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring light:border-[rgb(var(--ink-rgb)/0.15)]"
-            >
-              <span className="flex items-center justify-between gap-3 text-sm font-semibold text-foreground">
-                {c.roleCta}
-                <ArrowUpRight className="h-4 w-4 shrink-0 text-foreground/50 transition-colors group-hover:text-signal" />
-              </span>
-              <span className="mt-1 block font-mono text-[11px] text-foreground/55">{c.roleHint}</span>
-            </a>
-            <a
-              href="#brief"
-              className="pressable group rounded-2xl border border-white/15 bg-background/60 px-5 py-4 text-left transition-colors hover:border-signal/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring light:border-[rgb(var(--ink-rgb)/0.15)]"
-            >
+            <div className="rounded-2xl border border-foreground/15 bg-background/60 px-5 py-4 text-left">
+              <a href={`mailto:${SITE_IDENTITY.contact.email}?subject=${encodeURIComponent(c.roleSubject)}`} className="inline-flex min-h-11 items-center gap-3 text-sm font-semibold text-foreground hover:text-signal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                {c.roleCta}<ArrowUpRight aria-hidden="true" className="h-4 w-4 shrink-0" />
+              </a>
+              <p className="mt-1 text-xs leading-relaxed text-foreground/75">{c.roleHint}</p>
+              <p ref={roleEmailRef} tabIndex={-1} className="mt-3 break-all text-sm text-foreground/80 select-text">{SITE_IDENTITY.contact.email}</p>
+              <button type="button" onClick={copyRoleEmail} className="mt-2 inline-flex min-h-11 items-center text-sm font-semibold text-signal hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{c.roleCopyEmail}</button>
+              <p aria-live="polite" aria-atomic="true" className="text-xs leading-relaxed text-foreground/75">{emailStatus === "copied" ? c.emailCopied : emailStatus === "selected" ? c.emailCopyFallback : ""}</p>
+              {/* Ver CV queda oculto hasta que exista /cv (T06). */}
+            </div>
+            <button type="button" aria-expanded={briefOpen} aria-controls="brief" onClick={() => setBriefOpen((open) => !open)} className="group rounded-2xl border border-foreground/15 bg-background/60 px-5 py-4 text-left transition-colors hover:border-signal/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
               <span className="flex items-center justify-between gap-3 text-sm font-semibold text-foreground">
                 {c.projectCta}
-                <ArrowUpRight className="h-4 w-4 shrink-0 rotate-90 text-foreground/50 transition-colors group-hover:text-signal" />
+                <ArrowUpRight aria-hidden="true" className={`h-4 w-4 shrink-0 text-foreground/50 ${briefOpen ? "-rotate-45" : "rotate-90"}`} />
               </span>
-              <span className="mt-1 block font-mono text-[11px] text-foreground/55">{c.projectHint}</span>
-            </a>
+              <span className="mt-1 block text-xs leading-relaxed text-foreground/75">{c.projectHint}</span>
+            </button>
           </div>
+          <a href={SITE_IDENTITY.contact.whatsapp} target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex min-h-11 items-center text-sm leading-relaxed text-foreground/75 underline underline-offset-4 hover:text-signal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{c.quickLine}</a>
         </div>
 
-        {/* Embedded Brief Form */}
-        <div id="brief" className="relative z-10 mt-8 scroll-mt-20">
+        {/* Mantener montado conserva el borrador; hidden evita espacio y tabulación al cerrar. */}
+        <div id="brief" ref={briefRef} hidden={!briefOpen} className="relative z-10 mt-8 scroll-mt-20">
           <AplicarOS />
         </div>
       </section>

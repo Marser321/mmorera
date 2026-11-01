@@ -1,7 +1,7 @@
 import type { ContactFormData } from "@/types";
 
 export const PROJECT_STAGE_VALUES = ["idea", "new-version", "grow", "connect"] as const;
-export const TEAM_CONTEXT_VALUES = ["solo", "small-team", "multiple-areas", "external-direction"] as const;
+export const TEAM_CONTEXT_VALUES = ["solo", "small-team", "multiple-areas", "external-direction", "agency"] as const;
 export const TIMELINE_VALUES = ["now", "1-3-months", "this-semester", "exploring"] as const;
 
 export type ProjectStage = (typeof PROJECT_STAGE_VALUES)[number];
@@ -89,6 +89,7 @@ export const BRIEF_VALUE_LABELS = {
     connect: "Varias piezas necesitan conectarse",
   },
   teamContext: {
+    agency: "Soy una agencia o un equipo y quiero sumarte a un proyecto.",
     solo: "Lo lidera personalmente",
     "small-team": "Hay un equipo pequeño involucrado",
     "multiple-areas": "Participan varias áreas",
