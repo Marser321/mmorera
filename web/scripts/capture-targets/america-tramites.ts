@@ -1,5 +1,5 @@
 import path from "node:path";
-import type { Browser, Page } from "playwright";
+import type { Browser } from "playwright";
 import { HIDE_FLOATING, JPEG, readOnly, shotsDir, type CaptureTarget } from "../lib/capture";
 
 export const target: CaptureTarget = {

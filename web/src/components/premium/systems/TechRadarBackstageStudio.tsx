@@ -4,23 +4,14 @@ import { useState, useMemo, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Radio,
-  SlidersHorizontal,
   Video,
   Copy,
   Check,
-  ExternalLink,
   MessageCircle,
   AlertCircle,
-  Zap,
-  Bot,
-  Database,
-  PhoneCall,
   Sparkles,
   Layers,
   ArrowRight,
-  ShieldCheck,
-  Clock,
-  Terminal,
   Play,
   Pause,
   RotateCcw,
@@ -28,10 +19,8 @@ import {
   TrendingUp,
   RefreshCw,
   Search,
-  FileText,
   CheckCircle2,
   Target,
-  Share2,
 } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import {
@@ -43,7 +32,6 @@ import {
   generateCustomBlueprint,
   generateFormattedBlueprintText,
   type TechAlert,
-  type ModelUseCaseRecommendation,
   type ContentBlueprint,
   type ParallelCrawlerAgent,
 } from "@/data/techRadarData";

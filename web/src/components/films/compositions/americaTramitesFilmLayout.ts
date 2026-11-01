@@ -32,6 +32,8 @@ export type AtStagedFormLayout = {
 export const AT_CAPTURE_ASPECT = 1920 / 1080;
 
 export function atStagedFormLayout(format: FilmFormatName, copy: AtCopy, _language: FilmLanguage): AtStagedFormLayout {
+  // Preserve the bilingual call signature; copy already supplies the language.
+  void _language;
   const { title, body } = kitBands(format);
   const portrait = format === "portrait";
 

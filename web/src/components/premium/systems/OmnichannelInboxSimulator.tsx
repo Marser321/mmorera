@@ -22,7 +22,6 @@ export function OmnichannelInboxSimulator() {
   const isEs = language === "es";
 
   const [selectedLeadId, setSelectedLeadId] = useState<string>("lead-1");
-  const [triggeredAction, setTriggeredAction] = useState<string | null>(null);
   const [actionFeedbackText, setActionFeedbackText] = useState<string | null>(null);
   const actionTimerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -37,15 +36,13 @@ export function OmnichannelInboxSimulator() {
     [selectedLeadId]
   );
 
-  const handleTriggerAction = (actionId: string, feedback: string) => {
+  const handleTriggerAction = (feedback: string) => {
     if (typeof navigator !== "undefined" && "vibrate" in navigator) {
       try { navigator.vibrate(12); } catch {}
     }
     if (actionTimerRef.current) clearTimeout(actionTimerRef.current);
-    setTriggeredAction(actionId);
     setActionFeedbackText(feedback);
     actionTimerRef.current = setTimeout(() => {
-      setTriggeredAction(null);
       setActionFeedbackText(null);
       actionTimerRef.current = null;
     }, 4000);
@@ -130,7 +127,6 @@ export function OmnichannelInboxSimulator() {
                       key={lead.id}
                       onClick={() => {
                         setSelectedLeadId(lead.id);
-                        setTriggeredAction(null);
                         setActionFeedbackText(null);
                       }}
                       className={`w-full text-left rounded-2xl p-4 border transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 ${
@@ -301,7 +297,7 @@ export function OmnichannelInboxSimulator() {
                 {activeLead.availableActions.map((action) => (
                   <button
                     key={action.id}
-                    onClick={() => handleTriggerAction(action.id, action.actionFeedback[language])}
+                    onClick={() => handleTriggerAction(action.actionFeedback[language])}
                     className="w-full pressable text-left rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 p-3 text-xs font-mono text-foreground transition-all flex items-center justify-between"
                   >
                     <span>{action.label[language]}</span>
