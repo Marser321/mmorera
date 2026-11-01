@@ -8,7 +8,7 @@
  */
 
 export type Language = "es" | "en";
-export type PaginaSeo = "inicio" | "trabajo" | "sistemas" | "estudio" | "hablemos" | "privacidad";
+export type PaginaSeo = "inicio" | "trabajo" | "sistemas" | "estudio" | "hablemos" | "privacidad" | "cv";
 
 type Texto = Record<Language, string>;
 
@@ -29,8 +29,8 @@ export interface PaginaSeoData {
   tituloAbsoluto?: boolean;
   title: Texto;
   description: Texto;
-  /** Qué portada usa (privacidad reusa la del inicio). */
-  portada: Exclude<PaginaSeo, "privacidad">;
+  /** Qué portada usa (privacidad y cv reusan la del inicio). */
+  portada: Exclude<PaginaSeo, "privacidad" | "cv">;
 }
 
 export const PAGINAS_SEO: Record<PaginaSeo, PaginaSeoData> = {
@@ -89,6 +89,15 @@ export const PAGINAS_SEO: Record<PaginaSeo, PaginaSeoData> = {
     description: {
       es: "Qué información recibo cuando me escribes por el formulario, el email o WhatsApp, para qué la uso, con quién se comparte y cómo puedes pedir que la borre.",
       en: "What information I receive when you write through the form, email or WhatsApp, what I use it for, who it is shared with and how to ask me to delete it.",
+    },
+    portada: "inicio",
+  },
+  cv: {
+    path: "/cv",
+    title: { es: "Sobre mí y CV", en: "About & resume" },
+    description: {
+      es: "Mario Morera, AI Automation & Operations: webs, automatizaciones, agentes de IA y contenido con IA. Datos rápidos, casos y CV en PDF para descargar.",
+      en: "Mario Morera, AI Automation & Operations: websites, automations, AI agents and AI content. Quick facts, case studies and a downloadable PDF resume.",
     },
     portada: "inicio",
   },

@@ -1,11 +1,12 @@
 "use client";
 
-import { MonogramaFundido } from "@/components/marca/MonogramaFundido";
+import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
 
 const copy = {
   es: {
     eyebrow: "Cómo trabajo",
+    photoAlt: "Mario Morera frente a una interfaz de diseño en su pantalla",
     title: "Hablas conmigo y lo construyo yo.",
     body: "Las cuentas y los accesos quedan a tu nombre. Te entrego el sistema documentado y explicado. Si algo falla, me escribes a mí.",
     steps: [
@@ -16,6 +17,7 @@ const copy = {
   },
   en: {
     eyebrow: "How I work",
+    photoAlt: "Mario Morera in front of a design interface on his screen",
     title: "You talk to me, and I build it.",
     body: "Accounts and access stay in your name. You get the system documented and explained. If something breaks, you write to me.",
     steps: [
@@ -34,8 +36,10 @@ export function HowIWorkSection() {
     <section id="perfil" aria-labelledby="how-i-work-title" className="relative scroll-mt-20 overflow-x-clip border-t border-foreground/10 bg-background px-5 py-20 sm:px-8 sm:py-28 lg:px-12">
       <div className="mx-auto max-w-[1480px]">
         <div className="grid items-center gap-8 md:grid-cols-[1fr_2fr] lg:gap-20">
-          {/* Una firma estática acompaña la lectura, también con movimiento reducido. */}
-          <MonogramaFundido fundido="diagonal" className="mx-auto w-36 sm:w-52 md:w-full md:max-w-80" />
+          {/* Retrato del film de autor (D13): la misma estética de las cinemáticas, quieto. */}
+          <div className="relative mx-auto aspect-[4/5] w-full max-w-72 overflow-hidden rounded-2xl border border-foreground/15 md:max-w-sm">
+            <Image src="/profile/author-film/poster-mobile.webp" alt={c.photoAlt} fill sizes="(min-width: 768px) 24rem, 18rem" className="object-cover object-left-top" />
+          </div>
           <div className="max-w-3xl">
             <p className="text-xs font-medium uppercase tracking-[.16em] text-signal">{c.eyebrow}</p>
             <h2 id="how-i-work-title" className="mt-3 text-[clamp(2.2rem,4.5vw,4.2rem)] font-medium leading-[1.04] tracking-[-.04em] text-foreground">{c.title}</h2>
