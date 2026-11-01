@@ -190,7 +190,7 @@ export function CaseStudy({ project, underTheHood }: { project: ProjectCase; und
                     <span>{link.label[language]}{link.kind === "demo" && <span className="ml-2 inline-block rounded border border-current px-1.5 py-0.5 text-[10px]">Demo</span>}</span>
                     <ArrowUpRight aria-hidden="true" className="h-4 w-4 shrink-0" />
                   </a>
-                  {external && <span id={noticeId} className="sr-only">{isEs ? "TODO(Claude): abre un sitio externo en una pestaña nueva." : "TODO(Claude): opens an external site in a new tab."}</span>}
+                  {external && <span id={noticeId} className="sr-only">{isEs ? "(se abre en otro sitio, en una pestaña nueva)" : "(opens another site in a new tab)"}</span>}
                   {link.note && <p className="mt-2 text-xs leading-relaxed text-foreground/75">{link.note[language]}</p>}
                 </li>;
               })}

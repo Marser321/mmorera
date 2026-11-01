@@ -17,11 +17,16 @@ Abre `http://localhost:3012` (si no responde, pídele a Mario que levante la pre
 - hay un solo botón flotante, «Hablemos»;
 - el fondo de partículas ya no desfila logos;
 - se corrigieron los textos con voseo y el inglés.
+- el perfil y el método se fusionaron en un tramo «Cómo trabajo»;
+- en lugar del índice de proyectos hay 3 tarjetas «Pruébalo tú»;
+- el menú pasó a «Servicios ▾ · Casos · Sobre mí · CV»;
+- el brief del contacto queda plegado hasta que eliges «Consultar por un proyecto»;
+- los casos de portada tienen «Pruébalo tú» y la arquitectura queda plegada.
 
 **Marca:**
 - qué se entiende más rápido que en tus capturas de T34;
 - qué se perdió o quedó suelto;
-- dónde el home sigue abrumando. Todavía faltan el tramo «Cómo trabajo», que reemplaza al perfil y al método, y las tarjetas «Pruébalo tú»: márcalo de todos modos, sirve para comprobar si el plan apunta bien;
+- dónde el home sigue abrumando, y si el recorrido nuevo se entiende de punta a punta;
 - el botón flotante: si ayuda, si molesta o si tapa algo en el teléfono;
 - cualquier fuga de español en `/en` o de inglés en `/`.
 
