@@ -3,10 +3,11 @@ import { describe, test } from "node:test";
 import {
   PARTICLE_IDENTIFIABLE_PROGRESS,
   createParticleSequenceState,
-  nextParticleSequenceIndex,
+  resolveInteractiveParticleScene,
   reduceParticleSequence,
   type ParticleSequenceTarget,
 } from "./particleSequence";
+import { resolveParticleScene } from "@/data/particleScenes";
 
 function target(name: string, index: number): ParticleSequenceTarget<string> {
   return { name, index, cacheKey: `${name}:16000`, payload: name };
@@ -61,10 +62,32 @@ describe("particle sequence controller", () => {
     assert.equal(state.phase, "hold");
   });
 
-  test("wraps sequence indices safely", () => {
-    assert.equal(nextParticleSequenceIndex(0, 3), 1);
-    assert.equal(nextParticleSequenceIndex(2, 3), 0);
-    assert.equal(nextParticleSequenceIndex(0, 0), 0);
+  test("keeps route and family scenes unformed without explicit focus", () => {
+    for (const route of ["/", "/en", "/sistemas", "/en/sistemas", "/estudio", "/en/estudio"]) {
+      for (const families of [[], ["Automation", "CRM", "AI"]] as const) {
+        const scene = resolveInteractiveParticleScene(resolveParticleScene(route, [...families]), null);
+        assert.equal(scene.mode, "ambient");
+        assert.deepEqual(scene.techNames, []);
+      }
+    }
+  });
+
+  test("locks the requested service until focus is released", () => {
+    const route = resolveParticleScene("/");
+    const focused = resolveInteractiveParticleScene(route, "service:web-ecommerce");
+    assert.equal(focused.mode, "locked");
+    assert.deepEqual(focused.techNames, ["service:web-ecommerce"]);
+    const idle = resolveInteractiveParticleScene(focused, null);
+    assert.equal(idle.mode, "ambient");
+    assert.deepEqual(idle.techNames, []);
+  });
+
+  test("clears both targets and the label when a formation finishes dissolving", () => {
+    let state = reduceParticleSequence(createParticleSequenceState<string>(), { type: "mount", target: target("service:web-ecommerce", 0) });
+    state = reduceParticleSequence(state, { type: "confirm" });
+    state = reduceParticleSequence(state, { type: "begin-dissolve" });
+    state = reduceParticleSequence(state, { type: "clear" });
+    assert.deepEqual(state, createParticleSequenceState<string>());
   });
 
   test("realigns a shared technology to the first slot of a new scene", () => {
