@@ -42,7 +42,7 @@ export interface CaseFilmScript {
   constraints: Localized[];
   decisions: Localized[];
   result: Localized;
-  stack: string[];
+  stack: ProjectCase["stack"];
   hostname: string | null;
   reel: { mp4: string; webm: string; poster: string } | null;
   shots: { desktop: string[]; mobile: string[] };

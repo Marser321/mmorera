@@ -73,7 +73,7 @@ export function caseJsonLd(project: ProjectCase, language: Language) {
     ...(project.year ? { dateCreated: project.year } : {}),
     ...(project.kind ? { genre: project.kind[language] } : {}),
     ...(client ? { about: { "@type": "Organization", name: client } } : {}),
-    keywords: project.stack.join(", "),
+    keywords: project.stack.map((item) => (typeof item === "string" ? item : item[language])).join(", "),
   };
   const breadcrumbs = {
     "@type": "BreadcrumbList",

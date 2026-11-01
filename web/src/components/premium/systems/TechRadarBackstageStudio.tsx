@@ -190,8 +190,7 @@ export function TechRadarBackstageStudio() {
   const convertNewsToBlueprint = (alert: TechAlert) => {
     const generated = generateCustomBlueprint(
       isEs ? alert.title.es : alert.title.en,
-      activeFormat,
-      language
+      activeFormat
     );
     setCustomBlueprint(generated);
     setActiveTab("studio");
@@ -199,7 +198,7 @@ export function TechRadarBackstageStudio() {
 
   const handleGenerateCustom = () => {
     if (!customTopic.trim()) return;
-    const generated = generateCustomBlueprint(customTopic.trim(), activeFormat, language);
+    const generated = generateCustomBlueprint(customTopic.trim(), activeFormat);
     setCustomBlueprint(generated);
   };
 

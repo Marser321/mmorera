@@ -84,16 +84,16 @@ describe("tech radar and backstage content studio data model", () => {
   });
 
   it("dynamically generates custom blueprints for any topic and format", () => {
-    const customReel = generateCustomBlueprint("DeepSeek R1 en local", "reel", "es");
+    const customReel = generateCustomBlueprint("DeepSeek R1 en local", "reel");
     assert.equal(customReel.format, "reel");
     assert.equal(customReel.anchorPoints.es.length, 3);
     assert.ok(customReel.hook.es.includes("DeepSeek R1 en local"));
 
-    const customYt = generateCustomBlueprint("WhatsApp API Pricing", "youtube", "en");
+    const customYt = generateCustomBlueprint("WhatsApp API Pricing", "youtube");
     assert.equal(customYt.format, "youtube");
     assert.equal(customYt.anchorPoints.en.length, 3);
 
-    const customLi = generateCustomBlueprint("GoHighLevel vs Supabase", "linkedin", "es");
+    const customLi = generateCustomBlueprint("GoHighLevel vs Supabase", "linkedin");
     assert.equal(customLi.format, "linkedin");
     assert.equal(customLi.anchorPoints.es.length, 3);
   });

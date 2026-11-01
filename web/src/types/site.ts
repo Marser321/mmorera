@@ -49,7 +49,8 @@ export interface ProjectCase {
   decisions: LocalizedText[];
   result: LocalizedText;
   evidence: LocalizedText[];
-  stack: string[];
+  /** Tecnologías y capacidades; las que se traducen van como `LocalizedText`. */
+  stack: (string | LocalizedText)[];
   media: { src: string; alt: LocalizedText }[];
   /** Hold the generic Remotion case film until the owner supplies this case's cinematic. */
   cinematicPending?: boolean;
