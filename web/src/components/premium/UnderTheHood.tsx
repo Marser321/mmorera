@@ -6,6 +6,7 @@ import { getCaseBrand } from "@/data/brands/caseBrands";
 import type { FilmLanguage } from "@/data/films/filmTypes";
 import { cn } from "@/lib/utils";
 import { ArchitecturePoster } from "./ArchitectureArt";
+import { ArchitectureDisclosure } from "./CaseStudy";
 import { ArchitectureExplorerMount } from "./ArchitectureExplorerMount";
 import { buildArchitectureModel, diagramSummary, narrowAspect, SITE_FONTS, SITE_PALETTE, themeVars } from "./underTheHoodModel";
 import styles from "./UnderTheHood.module.css";
@@ -73,6 +74,7 @@ export async function UnderTheHood({ slug, language, brandSlug }: UnderTheHoodPr
 
   return (
     <section className="mx-auto mt-20 max-w-[1480px] px-5 sm:px-8 lg:px-12" aria-labelledby="case-architecture">
+      <ArchitectureDisclosure language={language}>
       <div className="grid gap-5 lg:grid-cols-[1fr_minmax(0,28rem)] lg:items-end">
         <div>
           <p className={label}>{copy.kicker}</p>
@@ -134,6 +136,7 @@ export async function UnderTheHood({ slug, language, brandSlug }: UnderTheHoodPr
           </>
         ) : null}
       </div>
+      </ArchitectureDisclosure>
     </section>
   );
 }

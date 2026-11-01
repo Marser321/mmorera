@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, type ReactNode } from "react";
+import { useId, useMemo, useState, type ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -108,6 +108,23 @@ function MetricsBand({ metrics, liveUrl, isEs }: { metrics: CaseMetrics; liveUrl
   );
 }
 
+/** Disclosure de cliente; UnderTheHood conserva sus datos y póster en el servidor. */
+export function ArchitectureDisclosure({ language, children }: { language: "es" | "en"; children: ReactNode }) {
+  const [open, setOpen] = useState(false);
+  const id = useId();
+  const panelId = `architecture-${id}`;
+  return (
+    <div data-architecture-disclosure>
+      <button type="button" aria-expanded={open} aria-controls={panelId} onClick={() => setOpen((value) => !value)} className="inline-flex min-h-12 items-center gap-3 rounded-xl border border-foreground/20 px-5 py-3 text-sm font-semibold text-foreground hover:border-signal/50 hover:text-signal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+        {language === "es" ? "Ver arquitectura" : "See the architecture"}
+        <ArrowUpRight aria-hidden="true" className={`h-4 w-4 ${open ? "-rotate-45" : "rotate-90"}`} />
+      </button>
+      {/* Sin animación de altura: apertura inmediata, también con movimiento reducido. */}
+      <div id={panelId} hidden={!open} className="pt-8">{children}</div>
+    </div>
+  );
+}
+
 /**
  * `underTheHood`: sección "Bajo el capó" (server component con el diagrama de
  * arquitectura del caso), si el caso la tiene. Va después del film.
@@ -160,6 +177,26 @@ export function CaseStudy({ project, underTheHood }: { project: ProjectCase; und
             </div>
           </div>
         </header>
+
+        {Boolean(project.tryIt?.length) && (
+          <section aria-labelledby="case-try-it" className="mx-auto mt-12 max-w-[1480px] px-5 sm:px-8 lg:px-12">
+            <h2 id="case-try-it" className="text-2xl font-medium tracking-[-.03em] text-foreground sm:text-3xl">{isEs ? "Pruébalo tú" : "Try it"}</h2>
+            <ul className="mt-5 grid max-w-4xl gap-5 sm:grid-cols-2">
+              {project.tryIt?.map((link, index) => {
+                const external = /^https?:\/\//.test(link.href[language]);
+                const noticeId = `case-try-${project.slug}-${index}-notice`;
+                return <li key={link.href[language]}>
+                  <a href={link.href[language]} target={external ? "_blank" : undefined} rel={external ? "noopener noreferrer" : undefined} aria-describedby={external ? noticeId : undefined} className="inline-flex min-h-12 w-full items-center justify-between gap-3 rounded-xl border border-signal/40 px-4 py-3 text-sm font-semibold text-signal hover:bg-signal/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                    <span>{link.label[language]}{link.kind === "demo" && <span className="ml-2 inline-block rounded border border-current px-1.5 py-0.5 text-[10px]">Demo</span>}</span>
+                    <ArrowUpRight aria-hidden="true" className="h-4 w-4 shrink-0" />
+                  </a>
+                  {external && <span id={noticeId} className="sr-only">{isEs ? "TODO(Claude): abre un sitio externo en una pestaña nueva." : "TODO(Claude): opens an external site in a new tab."}</span>}
+                  {link.note && <p className="mt-2 text-xs leading-relaxed text-foreground/75">{link.note[language]}</p>}
+                </li>;
+              })}
+            </ul>
+          </section>
+        )}
 
         {/* Film "Cómo lo resolví": el tráiler del caso con el sitio real */}
         {!project.cinematicPending && <CaseFilmSection script={film} language={language} />}
