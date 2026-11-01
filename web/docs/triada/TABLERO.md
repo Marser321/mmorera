@@ -25,7 +25,7 @@ Cada dueño cambia solo el estado de sus tarjetas. Claude escribe y ordena las t
 
 | ID | Tarea | Dueño | Apoyo | Archivos permitidos | Listo cuando | Depende | Estado |
 |---|---|---|---|---|---|---|---|
-| **T19** | Poner `triada/web` al día con `origin/main` (venía 9 commits atrás: marca «pared», SEO por página, rótulos «Ejemplo», films por capacidad, Impeccable) y decidir el trabajo sin commitear del checkout principal | **Claude** | Mario decide el trabajo sin commitear | la fusión y `src/data/seo/paginas.ts` | `triada/web..origin/main` = 0; preview con la marca y T01–T17; lint, tests y build en verde | — | **integrada** · [entregas/T19.md](entregas/T19.md) |
+| **T19** | Poner `triada/web` al día con `origin/main` (venía 9 commits atrás: marca «pared», SEO por página, rótulos «Ejemplo», films por capacidad, Impeccable) y decidir el trabajo sin commitear del checkout principal | **Claude** | Mario decide el trabajo sin commitear | la fusión y `src/data/seo/paginas.ts` | `triada/web..origin/main` = 0; preview con la marca y T01–T17; lint, tests y build en verde | — | **integrada** (4b7bd47) · [entregas/T19.md](entregas/T19.md). Mario, 1/11: los reels de servicios quedan fuera de `triada/web` |
 
 ## Fase 1 · Que la web diga lo que vendes hoy
 
