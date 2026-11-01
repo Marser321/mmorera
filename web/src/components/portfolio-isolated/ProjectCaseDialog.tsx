@@ -35,7 +35,7 @@ export function ProjectCaseDialog({ project }: { project: ProjectData }) {
         >
             {/* Header siempre visible: badge + título + categorías */}
             <div className="shrink-0 border-b border-white/5 px-4 py-3 pr-12 sm:px-6 sm:py-4">
-                <span className="mb-2 inline-block rounded border border-violet-500/20 bg-violet-500/20 px-2 py-0.5 text-[8px] font-black uppercase tracking-widest text-violet-400">
+                <span className="mb-2 inline-block rounded border border-violet-500/20 bg-violet-500/20 px-2 py-0.5 text-[9px] font-black uppercase tracking-widest text-violet-400">
                     {language === 'es' ? 'Caso de Estudio' : 'Case Study'}
                 </span>
                 <DialogTitle className="max-w-[min(100%,52rem)] break-words text-xl font-black uppercase leading-tight tracking-tight text-white [text-wrap:balance] sm:text-2xl lg:text-3xl">
@@ -45,7 +45,7 @@ export function ProjectCaseDialog({ project }: { project: ProjectData }) {
                     {project.category[language].map((c) => (
                         <span
                             key={c}
-                            className="rounded-full border border-white/10 bg-white/[0.05] px-2 py-0.5 text-[9px] font-bold uppercase leading-tight tracking-wider text-zinc-300"
+                            className="rounded-full border border-white/10 bg-white/[0.05] px-2 py-0.5 text-[10px] font-bold uppercase leading-tight tracking-wider text-zinc-300"
                         >
                             {c}
                         </span>
@@ -133,7 +133,7 @@ export function ProjectCaseDialog({ project }: { project: ProjectData }) {
                     {/* Métrica Destacada */}
                     <div className="mt-6 flex shrink-0 flex-col gap-3 rounded-xl border border-white/5 bg-white/[0.01] p-4 shadow-[inset_0_0_15px_rgba(255,255,255,0.01)] sm:flex-row sm:items-center sm:justify-between">
                         <div className="min-w-0">
-                            <span className="block font-mono text-[8px] uppercase tracking-wider text-zinc-500">
+                            <span className="block font-mono text-[9px] uppercase tracking-wider text-zinc-500">
                                 {language === 'es' ? 'Métrica de Éxito' : 'Success Metric'}
                             </span>
                             <span className="mt-0.5 block break-words text-sm font-bold uppercase leading-tight tracking-tight text-white">

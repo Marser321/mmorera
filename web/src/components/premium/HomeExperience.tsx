@@ -20,6 +20,7 @@ import { FEATURED_CASES } from "@/data/projectCases";
 import { IslandBar } from "@/components/layout/IslandBar";
 import type { AuthorManifestoCopy } from "@/components/premium/AuthorManifestoScene";
 import { MotionBackdrop } from "@/components/shared/MotionBackdrop";
+import { MonogramaFundido } from "@/components/marca/MonogramaFundido";
 
 // Secciones bajo el pliegue en chunks propios (con SSR: el HTML no cambia).
 // Cada una es su propio límite de Suspense, así React hidrata por partes en
@@ -207,7 +208,7 @@ export function HomeExperience() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -12 }}
                     transition={{ duration: 0.28, ease: EASE_OUT }}
-                    className={focusedSolution ? "text-sm text-foreground/80" : "font-mono text-[10px] uppercase tracking-[0.16em] text-foreground/35 max-sm:hidden"}
+                    className={focusedSolution ? "text-sm text-foreground/80" : "font-mono text-[10px] uppercase tracking-[0.16em] text-foreground/55 max-sm:hidden"}
                   >
                     {focusedSolution ? focusedSolution.headline[language] : `↳ ${c.servicesHint}`}
                   </motion.p>
@@ -295,8 +296,10 @@ export function HomeExperience() {
       <WorkflowSection />
 
       {/* ─── 7. CONTACTO DIRECTO & FORMULARIO INTERACTIVO ─── */}
-      <section id="contacto" className="scroll-mt-20 relative isolate overflow-hidden border-t border-white/10 bg-card/40 px-5 py-20 sm:px-8 sm:py-28 lg:px-12 light:border-[rgb(var(--ink-rgb)/0.1)] light:bg-card/20">
+      <section id="contacto" className="scroll-mt-20 relative isolate overflow-hidden border-t border-white/10 bg-relieve px-5 py-20 sm:px-8 sm:py-28 lg:px-12 light:border-[rgb(var(--ink-rgb)/0.1)] light:bg-card/20">
         <MotionBackdrop asset={MOTION_ASSETS.opening} intensity={0.28} scrim="center" />
+        {/* Monograma fundido en el margen: firma el cierre sin pisar el texto. */}
+        <MonogramaFundido className="absolute left-[-7vw] top-10 z-0 w-[min(34vw,520px)] max-lg:hidden" fundido="diagonal" />
         <div className="relative z-10 mx-auto max-w-3xl text-center">
           <Reveal as="p" className="font-mono text-[10px] uppercase tracking-[0.2em] text-signal">
             {c.contactEyebrow}
@@ -335,7 +338,7 @@ export function HomeExperience() {
         </div>
 
         {/* Embedded Brief Form */}
-        <div id="brief" className="mt-8 scroll-mt-20">
+        <div id="brief" className="relative z-10 mt-8 scroll-mt-20">
           <AplicarOS />
         </div>
       </section>

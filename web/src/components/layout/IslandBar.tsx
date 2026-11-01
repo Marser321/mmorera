@@ -77,7 +77,7 @@ export function IslandBar() {
         aria-label={isEs ? "Barra de navegación flotante" : "Floating navigation dock"}
         className="pointer-events-auto max-w-full"
       >
-        <div className="flex items-center gap-0.5 sm:gap-1.5 rounded-full border border-white/14 bg-[#070809]/92 p-1 sm:p-2 shadow-[0_16px_48px_rgba(0,0,0,0.65)] backdrop-blur-2xl transition-all duration-300 light:border-[rgb(var(--ink-rgb)/0.12)] light:bg-card/95 light:shadow-[0_12px_36px_rgb(20_23_26/0.18)]">
+        <div className="flex items-center gap-0.5 sm:gap-1.5 rounded-full border border-white/14 bg-background/92 p-1 sm:p-2 shadow-[0_16px_48px_rgba(0,0,0,0.65)] backdrop-blur-2xl transition-all duration-300 light:border-[rgb(var(--ink-rgb)/0.12)] light:bg-card/95 light:shadow-[0_12px_36px_rgb(20_23_26/0.18)]">
           {NAV_ITEMS.map((item) => {
             const isActive = activeSection === item.id;
             const isHovered = hoveredId === item.id;

@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
  * `muted`, usadas para los estados de práctica de la órbita de capacidades.
  */
 const badgeVariants = cva(
-    "inline-flex items-center rounded-full border px-2.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.16em] transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background",
+    "inline-flex items-center rounded-full border px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background",
     {
         variants: {
             variant: {

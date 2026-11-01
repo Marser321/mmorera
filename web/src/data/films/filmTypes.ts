@@ -64,6 +64,8 @@ export interface UseCaseFilmScript {
   caseSlug?: string;
   /** Título del caso real (se valida contra PROJECT_CASES en los tests). */
   caseTitle?: Localized;
+  /** Ejemplos: casos reales que resuelven algo parecido ("Visto en"), con el capítulo de su film. */
+  seenIn?: Array<{ slug: string; chapter: string }>;
   category: Localized;
   title: Localized;
   problem: {

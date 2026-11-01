@@ -1,5 +1,5 @@
 /**
- * Trazos del monograma MM (fuente: src/app/icon.svg). Compartidos por el logo
+ * Trazos del monograma MM (el vector oficial; scripts/brand-icons.ts arma los íconos con ellos). Compartidos por el logo
  * de la interfaz y por los films, que los animan por separado.
  */
 

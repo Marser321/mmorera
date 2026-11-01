@@ -35,16 +35,16 @@ export type StillKind = "og" | "hero";
 export const FLAGSHIP_STILLS: Record<FlagshipSlug, Record<StillKind, number>> = {
   "ad-media-solution": { og: 215, hero: 1150 },
   "america-tramites": { og: 215, hero: 750 },
-  "autohub-360": { og: 80, hero: 650 },
+  "autohub-360": { og: 250, hero: 650 },
   "doge-sm": { og: 215, hero: 750 },
   evowrap: { og: 215, hero: 900 },
   "fenix-medical-center": { og: 190, hero: 1000 },
-  "hub-profesional-ai": { og: 150, hero: 750 },
+  "hub-profesional-ai": { og: 192, hero: 750 },
   "lb-elite-wash-detail": { og: 420, hero: 1000 },
-  "lnb-saas": { og: 215, hero: 825 },
+  "lnb-saas": { og: 192, hero: 825 },
   "mr-studio-tattoo": { og: 215, hero: 1050 },
   "new-brothers-barberia": { og: 215, hero: 1300 },
-  "punta-360": { og: 215, hero: 825 },
+  "punta-360": { og: 192, hero: 825 },
   "rangel-oviedo-group": { og: 215, hero: 750 },
   "truckers-choice": { og: 215, hero: 730 },
 };
@@ -66,6 +66,13 @@ export const FLAGSHIP_SECONDS: Record<FlagshipSlug, number> = {
   "rangel-oviedo-group": 77,
   "truckers-choice": 75.5,
 };
+
+/** Duración del film como en un reproductor (79,5 s → "1:20"); undefined si el caso no tiene film. */
+export function flagshipRuntime(slug: string) {
+  if (!hasFlagshipFilm(slug)) return undefined;
+  const total = Math.round(FLAGSHIP_SECONDS[slug as FlagshipSlug]);
+  return `${Math.floor(total / 60)}:${String(total % 60).padStart(2, "0")}`;
+}
 
 export const STILL_SIZE: Record<StillKind, { w: number; h: number }> = { og: { w: 1200, h: 630 }, hero: { w: 1600, h: 900 } };
 

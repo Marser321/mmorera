@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { SystemsExperience } from "@/components/premium/SystemsExperience";
 
-export const metadata: Metadata = { title: "Sistemas", description: "CRM, automatización e IA conectados a la operación real.", alternates: { canonical: "/sistemas", languages: { es: "/sistemas", en: "/en/sistemas" } } };
+export const metadata: Metadata = pageMetadata("sistemas", "es");
 export default function SystemsPage() { return <SystemsExperience />; }

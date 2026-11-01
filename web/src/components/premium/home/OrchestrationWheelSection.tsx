@@ -140,7 +140,7 @@ export function OrchestrationWheelSection() {
 
         {/* Floating Tech Badges / Periferia con logotipos auténticos */}
         <div className="mt-8 flex flex-wrap items-center gap-2.5">
-          <span className="font-mono text-[10px] uppercase tracking-wider text-foreground/45 mr-2">
+          <span className="font-mono text-[10px] uppercase tracking-wider text-foreground/55 mr-2">
             {isEs ? "Ecosistema Central:" : "Core Ecosystem:"}
           </span>
           {FLOATING_TECH_BADGES.map((b, idx) => {
@@ -210,7 +210,7 @@ export function OrchestrationWheelSection() {
                         {tech.Icon ? (
                           <tech.Icon aria-hidden="true" className="h-3.5 w-3.5 shrink-0 opacity-80" />
                         ) : (
-                          <span className="font-mono text-[9px] font-semibold opacity-60">{tech.fallback}</span>
+                          <span className="font-mono text-[10px] font-semibold opacity-60">{tech.fallback}</span>
                         )}
                         <span>{tech.name}</span>
                       </span>

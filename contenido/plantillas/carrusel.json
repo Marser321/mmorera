@@ -1,0 +1,27 @@
+{
+  "id": "2026-01-01-plantilla-carrusel",
+  "fecha": "2026-01-01",
+  "rama": "sistemas",
+  "serie": "Así funciona",
+  "titulo": "Carrusel de valor (4:5)",
+  "estado": "borrador",
+  "fuente": { "tipo": "sitio", "nota": "Casos de uso de /sistemas" },
+  "imagenes": [{ "slot": "portada", "formato": "feed", "prompt": "Una fila de interruptores de luz antiguos, uno solo encendido, sobre pared negra." }],
+  "salidas": [
+    {
+      "id": "carrusel",
+      "plantilla": "carrusel",
+      "formato": "feed",
+      "video": true,
+      "para": ["instagram", "linkedin"],
+      "diapositivas": [
+        { "tipo": "portada", "kicker": "Así funciona", "titulo": "Qué pasa con un lead que llega a las *23:45*", "bajada": "El mismo formulario, con y sin sistema." },
+        { "tipo": "imagen", "kicker": "La escena", "imagen": "portada", "titulo": "Nadie mira el correo a esa hora", "pie": "Y la persona sigue buscando." },
+        { "tipo": "lista", "kicker": "El sistema", "titulo": "Tres pasos que no necesitan a nadie despierto", "items": ["El formulario crea el contacto en el CRM.", "Sale una respuesta con el siguiente paso.", "Queda una tarea para el equipo a primera hora."] },
+        { "tipo": "comparacion", "kicker": "Antes y después", "titulo": "La misma consulta", "antes": { "rotulo": "Sin sistema", "texto": "Se responde al otro día, cuando ya habló con otro." }, "despues": { "rotulo": "Con sistema", "texto": "Recibe respuesta y un horario para hablar (datos de ejemplo)." } },
+        { "tipo": "cierre", "titulo": "¿Tu formulario contesta de noche?", "cta": "Guardalo para revisarlo con tu equipo.", "enlace": "mmorera.agency/sistemas" }
+      ]
+    }
+  ],
+  "ejemplo": true
+}

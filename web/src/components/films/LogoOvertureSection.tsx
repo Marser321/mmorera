@@ -74,7 +74,7 @@ export function LogoOvertureSection() {
           <button
             type="button"
             onClick={replay}
-            className="pressable absolute bottom-3 right-3 inline-flex items-center gap-2 rounded-full border border-white/14 px-3.5 py-2 font-mono text-[9px] uppercase tracking-[.16em] text-foreground/70 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal light:border-[rgb(var(--ink-rgb)/0.14)]"
+            className="pressable absolute bottom-3 right-3 inline-flex items-center gap-2 rounded-full border border-white/14 px-3.5 py-2 font-mono text-[10px] uppercase tracking-[.16em] text-foreground/70 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal light:border-[rgb(var(--ink-rgb)/0.14)]"
           >
             <RotateCcw className="h-3 w-3" />
             {isEs ? "Ver de nuevo" : "Replay"}

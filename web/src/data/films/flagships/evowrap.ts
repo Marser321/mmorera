@@ -186,8 +186,8 @@ export const EVO_CHAPTERS: FlagshipChapter[] = [
     id: "specs",
     label: L("Especificaciones", "Specifications"),
     caption: L(
-      "Métricas técnicas, catálogo estructurado y agendamiento vehicular directo.",
-      "Technical metrics, structured catalog, and direct vehicle scheduling.",
+      "Especificaciones técnicas, catálogo estructurado y agenda directa del vehículo.",
+      "Technical specifications, a structured catalog and direct vehicle booking.",
     ),
     from: EVO_TIMELINE.specs.from,
     durationInFrames: EVO_TIMELINE.specs.duration + EVO_TIMELINE.signature.duration,

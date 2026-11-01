@@ -126,16 +126,16 @@ export function Navbar() {
                 <Link href={profileLink.href} onClick={() => setUtilityOpen(false)} className="flex rounded-xl px-3 py-3 text-sm transition-colors hover:bg-white/[.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring light:hover:bg-[rgb(var(--ink-rgb)/0.06)]">{profileLink.label}</Link>
                 <div className="my-2 h-px bg-white/10 light:bg-[rgb(var(--ink-rgb)/0.1)]" />
                 <div className="flex items-center justify-between gap-4 px-3 py-2">
-                  <span className="font-mono text-[9px] uppercase tracking-[.16em] text-foreground/42">{copy.language}</span>
+                  <span className="font-mono text-[10px] uppercase tracking-[.16em] text-foreground/55">{copy.language}</span>
                   <div className="flex gap-1">
                     {(["es", "en"] as const).map((lang) => (
-                      <button key={lang} type="button" onClick={() => { setLanguage(lang); setUtilityOpen(false); }} aria-pressed={language === lang} className={`rounded-full px-2.5 py-1 font-mono text-[10px] uppercase tracking-[.12em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${language === lang ? "bg-primary text-primary-foreground" : "text-foreground/48 hover:text-foreground"}`}>{lang}</button>
+                      <button key={lang} type="button" onClick={() => { setLanguage(lang); setUtilityOpen(false); }} aria-pressed={language === lang} className={`rounded-full px-2.5 py-1 font-mono text-[10px] uppercase tracking-[.12em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${language === lang ? "bg-primary text-primary-foreground" : "text-foreground/60 hover:text-foreground"}`}>{lang}</button>
                     ))}
                   </div>
                 </div>
                 <button type="button" onClick={() => { toggleTheme(); setUtilityOpen(false); }} className="flex w-full items-center justify-between rounded-xl px-3 py-3 text-sm transition-colors hover:bg-white/[.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring light:hover:bg-[rgb(var(--ink-rgb)/0.06)]">
                   <span>{copy.theme}</span>
-                  <span className="flex items-center gap-2 text-foreground/48">{theme === "light" ? copy.toDark : copy.toLight}{theme === "light" ? <Moon aria-hidden="true" className="h-4 w-4" /> : <Sun aria-hidden="true" className="h-4 w-4" />}</span>
+                  <span className="flex items-center gap-2 text-foreground/60">{theme === "light" ? copy.toDark : copy.toLight}{theme === "light" ? <Moon aria-hidden="true" className="h-4 w-4" /> : <Sun aria-hidden="true" className="h-4 w-4" />}</span>
                 </button>
               </div>
             )}

@@ -1,14 +1,8 @@
 import type { Metadata } from "next";
 import { LegalDocument } from "@/app/privacidad/_components/LegalDocument";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Privacy policy",
-  description: "What information I receive when you write to me, what I use it for and how you can ask me to delete it.",
-  alternates: {
-    canonical: "/en/privacidad",
-    languages: { es: "/privacidad", en: "/en/privacidad" },
-  },
-};
+export const metadata: Metadata = pageMetadata("privacidad", "en");
 
 export default function LegalPage() {
   return (

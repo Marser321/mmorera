@@ -1,0 +1,11 @@
+{
+  "id": "2026-01-01-plantilla-tarjeta",
+  "fecha": "2026-01-01",
+  "rama": "criterio",
+  "titulo": "Tarjeta de opinión (1:1)",
+  "estado": "borrador",
+  "postura": true,
+  "salidas": [
+    { "id": "tarjeta", "plantilla": "imagen", "formato": "cuadrado", "para": ["linkedin", "x"], "diapositiva": { "tipo": "tarjeta", "kicker": "Criterio", "texto": "Dejá de pedir *una web*. Pedí un sistema que conteste a las 23:45." } }
+  ]
+}

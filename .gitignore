@@ -25,3 +25,13 @@ public/_showreel/
 LyB Elite Wash Details/
 content-os/
 .vscode/
+
+# Contenido de redes: imágenes generadas y renders (binarios; los sincroniza OneDrive)
+contenido/**/salida/
+contenido/**/imagenes/*.png
+contenido/**/imagenes/*.jpg
+contenido/**/imagenes/*.jpeg
+contenido/**/imagenes/*.webp
+# Se regeneran: `npx tsx scripts/contenido.ts revision` y `npx tsx scripts/chatgpt-prompts.ts <id>`
+contenido/REVISION.md
+contenido/piezas/*/chatgpt.md

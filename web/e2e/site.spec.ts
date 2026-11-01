@@ -191,6 +191,8 @@ test("sistemas narra casos de uso con films interactivos", async ({ page }) => {
     await expect(leadTab).toHaveAttribute("aria-selected", "true", { timeout: 1_000 });
   }).toPass({ timeout: 15_000 });
   await expect(page.getByText("Flujo de ejemplo con datos de muestra")).toBeVisible();
+  // Un ejemplo enlaza al caso real que resuelve algo parecido, en el capítulo de su film.
+  await expect(page.getByRole("link", { name: "Visto en AD Media Solution" })).toHaveAttribute("href", /\/casos-de-exito\/ad-media-solution#film-speed-to-lead$/);
   await page.getByRole("button", { name: /01 · Edge Worker Ingesta/ }).click();
   const inspector = page.getByRole("dialog", { name: /Etapa 1/ });
   await expect(inspector).toBeVisible();
@@ -511,6 +513,47 @@ test("el archivo de casos lleva a cada caso en un clic", async ({ page }) => {
   await expect(page.locator('[data-film-stage="flagship"]')).toHaveCount(1);
 });
 
+test("cada tarjeta del trabajo lleva un botón visible a su caso", async ({ page }) => {
+  await page.goto("/casos-de-exito");
+  // Seis del reel y nueve del archivo: cada uno con su botón "Ver el caso (y su film)".
+  await expect(page.getByRole("link", { name: /Ver el caso/ })).toHaveCount(15);
+  const archive = page.getByRole("region", { name: "Experiencias, productos y sistemas." });
+  const card = archive.getByRole("link", { name: /La Nueva Brasil/ });
+  await expect(card).toContainText("Ver el caso y su film");
+  await card.click();
+  await expect(page).toHaveURL(/\/casos-de-exito\/lnb-saas$/, { timeout: 30_000 });
+});
+
+test("cada caso termina con casos parecidos que abren su film", async ({ page }) => {
+  await page.goto("/casos-de-exito/new-brothers-barberia");
+  const related = page.getByRole("region", { name: "Otros casos que resuelven algo parecido." });
+  await related.scrollIntoViewIfNeeded();
+  const links = related.getByRole("link");
+  await expect(links).toHaveCount(3);
+  for (const link of await links.all()) await expect(link).toHaveAttribute("href", /\/casos-de-exito\/[a-z0-9-]+#film$/);
+});
+
+test.describe("estudio con movimiento reducido", () => {
+  test.use({ contextOptions: { reducedMotion: "reduce" } });
+
+  test("cada capacidad tiene su film y los casos que la demuestran", async ({ page }) => {
+    await page.goto("/estudio");
+    await expect(page.getByText("Film de la capacidad")).toBeVisible();
+    await expect(page.locator('[data-film-stage="capability"]')).toHaveCount(1);
+    // Abrir una familia en la órbita cambia el film y la lista de casos.
+    const node = page.getByRole("button", { name: "IA aplicada", exact: true });
+    await expect(async () => {
+      await node.click();
+      await expect(page.getByRole("heading", { level: 3, name: "IA aplicada" })).toBeVisible({ timeout: 1_000 });
+    }).toPass({ timeout: 15_000 });
+    const fenix = page.getByRole("link", { name: /1\.096 videos médicos/ });
+    await expect(fenix).toHaveAttribute("href", /\/casos-de-exito\/fenix-medical-center#film-brain$/);
+    await fenix.click();
+    await expect(page).toHaveURL(/\/casos-de-exito\/fenix-medical-center#film-brain$/, { timeout: 30_000 });
+    await expect(page.locator('[data-film-stage="flagship"]')).toHaveCount(1);
+  });
+});
+
 test("el perfil abre con la entrada del monograma", async ({ page }) => {
   await page.goto("/");
   const overture = page.locator('#perfil [data-film-stage="logo"]');
@@ -708,8 +751,8 @@ test("cruza el fondo abstracto con el tema y mantiene Perfil oscuro", async ({ p
 
   await page.goto("/#perfil");
   const manifesto = page.getByTestId("author-manifesto");
-  await expect.poll(() => manifesto.evaluate((section) => getComputedStyle(section).backgroundColor)).toBe("rgb(5, 6, 7)");
-  await expect.poll(() => manifesto.evaluate((section) => getComputedStyle(section).color)).toBe("rgb(243, 240, 232)");
+  await expect.poll(() => manifesto.evaluate((section) => getComputedStyle(section).backgroundColor)).toBe("rgb(11, 11, 10)");
+  await expect.poll(() => manifesto.evaluate((section) => getComputedStyle(section).color)).toBe("rgb(236, 231, 221)");
 });
 
 test("mantiene posters estaticos sin montar videos con movimiento reducido", async ({ browser }) => {
@@ -794,11 +837,15 @@ test("publica canonical, hreflang, OG, JSON-LD y sitemap canónicos", async ({ p
   await expect(page.locator('link[rel="alternate"][hreflang="es"]')).toHaveAttribute("href", "https://mmorera.agency");
   await expect(page.locator('link[rel="alternate"][hreflang="en"]')).toHaveAttribute("href", "https://mmorera.agency/en");
   await expect(page.locator('meta[property="og:site_name"]')).toHaveAttribute("content", "Mario Morera");
-  const jsonLd = JSON.parse(await page.locator('script[type="application/ld+json"]').textContent() ?? "{}");
+  await expect(page.locator('link[rel="alternate"][hreflang="x-default"]')).toHaveAttribute("href", "https://mmorera.agency");
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", "https://mmorera.agency/og/inicio-es.jpg");
+  const [jsonLd, sitio] = await page.locator('script[type="application/ld+json"]').evaluateAll((scripts) => scripts.map((s) => JSON.parse(s.textContent ?? "{}")));
   expect(jsonLd["@type"]).toBe("Person");
   expect(jsonLd.url).toBe("https://mmorera.agency");
   expect(jsonLd.homeLocation).toBeUndefined();
   expect(jsonLd.sameAs).toBeUndefined();
+  expect(sitio["@type"]).toBe("WebSite");
+  expect(sitio.publisher["@id"]).toBe(jsonLd["@id"]);
   expect(await page.content()).not.toMatch(/Uruguay|es-UY|es_UY/);
   const sitemap = await request.get("/sitemap.xml");
   expect(sitemap.ok()).toBeTruthy();

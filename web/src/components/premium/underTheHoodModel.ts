@@ -232,16 +232,16 @@ export type CasePalette = CaseBrand["palette"];
 
 /** Paleta neutra (tokens oscuros del sitio) para casos sin marca cargada. */
 export const SITE_PALETTE: CasePalette = {
-  bg: "#070809",
-  surface: "#0D1114",
-  raised: "#141A1F",
-  line: "#263038",
-  text: "#F3F0E8",
-  muted: "#9AA3AD",
+  bg: "#0B0B0A",
+  surface: "#121211",
+  raised: "#181816",
+  line: "#2B2B28",
+  text: "#ECE7DD",
+  muted: "#A29E95",
   accent: "#55D8FF",
   accentSoft: "#71F3A2",
   accentDeep: "#0A7EA4",
-  onAccent: "#070809",
+  onAccent: "#0B0B0A",
 };
 
 export const THEME_KEYS = ["canvas", "surface", "raised", "line", "text", "muted", "accent", "accent-soft", "accent-ink", "danger", "route", "plate", "pill-mix", "pill-ink", "border-mix", "tab-bg", "tab-ink"] as const;

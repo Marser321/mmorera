@@ -90,7 +90,7 @@ export function ProjectIndex({ projects }: { projects: ProjectCase[] }) {
                   </h3>
                   <p className="text-sm leading-snug text-foreground/55 md:text-right">
                     {hasFlagshipFilm(project.slug) ? (
-                      <span className="mb-1.5 flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[.16em] text-signal md:justify-end">
+                      <span className="mb-1.5 flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[.16em] text-signal md:justify-end">
                         <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-signal" />
                         {language === "es" ? "Film insignia" : "Flagship film"}
                       </span>

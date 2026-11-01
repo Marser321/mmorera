@@ -275,13 +275,13 @@ export function RadialOrbitalTimeline({
                                 </span>
                                 <span
                                     className={cn(
-                                        "whitespace-nowrap font-mono text-[9px] uppercase tracking-[0.16em] transition-colors",
+                                        "whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.16em] transition-colors",
                                         // En móvil el radio es pequeño y nueve etiquetas se pisan:
                                         // quedan solo los iconos y el título lo da la ficha abierta.
                                         compact && !isActive && "sr-only",
                                         isActive
                                             ? "text-foreground"
-                                            : "text-foreground/45 group-hover:text-foreground/85"
+                                            : "text-foreground/55 group-hover:text-foreground/85"
                                     )}
                                 >
                                     {node.title}
@@ -317,7 +317,7 @@ export function RadialOrbitalTimeline({
                 </div>
             )}
 
-            <p className="mt-6 text-center font-mono text-[9px] uppercase tracking-[0.16em] text-foreground/30">
+            <p className="mt-6 text-center font-mono text-[10px] uppercase tracking-[0.16em] text-foreground/55">
                 {labels.hint}
             </p>
         </div>
@@ -347,7 +347,7 @@ function OrbitDetail({
             <CardHeader className="p-5 pb-2">
                 <div className="flex items-center justify-between gap-4">
                     <Badge variant={node.status.variant}>{node.status.label}</Badge>
-                    <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-foreground/40">
+                    <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-foreground/55">
                         {node.meta}
                     </span>
                 </div>
@@ -357,7 +357,7 @@ function OrbitDetail({
                 <p className="text-sm leading-6 text-foreground/60">{node.body}</p>
 
                 <div className="mt-5 border-t border-white/10 pt-4 light:border-[rgb(var(--ink-rgb)/0.1)]">
-                    <div className="flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.16em] text-foreground/40">
+                    <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.16em] text-foreground/55">
                         <span>{labels.level}</span>
                         <span>{node.level}</span>
                     </div>
@@ -370,7 +370,7 @@ function OrbitDetail({
 
                 {node.relatedIds.length > 0 && (
                     <div className="mt-5 border-t border-white/10 pt-4 light:border-[rgb(var(--ink-rgb)/0.1)]">
-                        <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-foreground/40">
+                        <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-foreground/55">
                             {labels.related}
                         </p>
                         <div className="mt-3 flex flex-wrap gap-2">

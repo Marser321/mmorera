@@ -63,7 +63,8 @@ export function GlobalBackground() {
       />
       <div
         className="absolute inset-0"
-        style={{ background: `radial-gradient(circle at 77% 28%, transparent 0%, ${mist(8)} 38%, ${mist(62)} 86%, var(--color-background) 100%)` }}
+        // Viñeteado suave: la pared se ve pareja, sin el "fondo de galaxia" en los bordes.
+        style={{ background: `radial-gradient(circle at 77% 28%, transparent 0%, ${mist(6)} 38%, ${mist(40)} 86%, ${mist(64)} 100%)` }}
       />
       <div
         className="absolute inset-0"

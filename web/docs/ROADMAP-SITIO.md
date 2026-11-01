@@ -94,11 +94,53 @@ Ordenadas por impacto y esfuerzo:
 
      Varios buscan piezas que el home ya no monta: `nucleo-decision` solo lo usaba `MethodTimeline`, que ningún archivo importaba. Hay que rehacerlos contra el home actual.
    - Con Turbopack (`npm run dev`) fallan además, por tiempos, la navegación compacta y el menú móvil: el clic llega antes de hidratar. Con webpack pasan.
+   - **2026-10-08:** la suite completa contra `next start` da 34 OK y 17 fallas, las mismas de esta lista. "Cuatro viewports" y "la apertura móvil" ahora pasan. Entran en su lugar la navegación compacta y el menú móvil, que también fallan contra mmorera.agency sin los cambios del día: no las causó esta tanda. Las e2e nuevas (botones del trabajo, casos parecidos, films de Estudio, "Visto en") pasan.
 7. **Coherencia de datos:**
    - `projectCases.ts` presenta "Speed-to-Lead en menos de 30 s" como restricción de AD Media. Es una meta, no una medición: reformularla.
    - Corregir las descripciones de LNB y Hub Profesional AI.
 
-## 4. Decisiones de Mario (2026-10-07)
+## 4. Hecho el 2026-10-08: todo conectado, films por capacidad e Impeccable
+
+- **Acceso a los casos desde tres lugares:**
+  - **Trabajo:** cada tarjeta del archivo (`magic-bento`) lleva un botón visible "Ver el caso y su film", con el acento de la tarjeta; antes era un rótulo de 9 px al 30 %. En el reel el botón principal dice "Ver el caso y su film · 1:15" (`flagshipRuntime` en `flagships/slugs.ts`).
+  - **Estudio:** cada familia de la órbita muestra su film corto y "Casos que lo demuestran".
+  - **Sistemas:** los casos de uso de ejemplo enlazan "Visto en" al caso real, en el capítulo de su film (`seenIn` en `systemsFilms.ts`).
+  - **Dentro de cada caso:** "Casos parecidos", 3 casos que comparten capacidades, antes de "Siguiente proyecto".
+- **Mapa capacidad → casos** (`data/capabilityCases.ts`, con test): qué caso demuestra cada familia y en qué capítulo de su film. Lo usan Estudio, los films por capacidad y "Casos parecidos" (`relatedCases`).
+- **Films por capacidad** (9 films de 21,5 a 26 s, ES/EN, 16:9 y 4:5):
+  - Escenas: la familia con su órbita y sus herramientas, el montaje de sus casos (cuadro protagonista de cada film insignia con su frase) y la firma.
+  - Composición: `compositions/CapabilityFilm.tsx`.
+  - Datos: `data/films/capabilityFilms.ts`.
+  - Geometría y test: `capabilityFilmLayout.ts`.
+  - En el sitio: `premium/estudio/CapabilityFilmPanel.tsx`, al lado de la órbita.
+  - Export: `npx tsx scripts/render-films.ts --capabilities`.
+- **Honestidad:**
+  - Las demos con cifras quedan rotuladas como ejemplo (bandeja omnicanal, estudio de tokens).
+  - La telemetría de `/sistemas` distingue objetivos de mediciones.
+  - Los capítulos de films que decían "Métricas" o "Impacto" ahora dicen "Lo construido".
+- **Impeccable** (skill de diseño): instalada y aplicada. Informe, puntaje antes/después y propuestas grandes pendientes en `docs/IMPECCABLE-AUDITORIA.md`. El arreglo principal: `/casos-de-exito` medía 1560 px de ancho en el teléfono, también en producción.
+
+## 5. Sistema de contenido para redes (2026-10-08)
+
+- **`contenido/` en la raíz:** la fuente de las redes.
+  - Tiene marca, voz, reglas, ramas, calendario, piezas, manuales de agentes (publicador, imágenes, Gemini), encargos y métricas.
+  - Decisiones de Mario: publicar solo lo aprobado, en LinkedIn, Instagram, TikTok, Shorts y X, en español, a diario.
+- **Kit de animación para redes:**
+  - `src/components/social/`, `src/data/social/` (layout, ritmo, render y validador, con tests) y `src/remotion/socialRoot.tsx`.
+  - Plantillas: `reel-texto`, `reel-caso`, `carrusel` (también en video), `desafio` e `imagen` (tarjeta, encuesta, sorteo).
+  - Estética: blanco y negro, Familjen Grotesk y Space Mono, "lento con pulso".
+- **Scripts:**
+  - `render-social.ts`, `check-pieza.ts` y `contenido.ts` (estados, aprobación, lista del día, revisión).
+  - `scripts/lib/remotionBundle.ts`, compartido con `render-films.ts`.
+- **Primeras 2 semanas producidas** (12 al 25 de octubre, 14 piezas). Las semanas 3 y 4 quedan encargadas a Gemini (`contenido/encargos/`).
+- **`web/vercel.json`:** un commit que no toca `web/` no redespliega el sitio (compara contra el último despliegue).
+- **Versión 2 del kit** (la primera le pareció a Mario demasiado sobria). Sigue en blanco y negro, pero:
+  - **Reels:** cada corte entra con una transición (golpe, barrido, zoom o flash), los números cuentan, una palabra o un número gigante hace de eco y hay grano de película.
+  - **Ritmo:** pulsos más cortos, tipografía más grande y barra de progreso por segmentos.
+  - **Carruseles:** alternan blanco y negro, con número gigante, un hilo continuo entre diapositivas y "Deslizá".
+- **ChatGPT diseña las piezas estáticas completas**, con el código de respaldo: `scripts/chatgpt-prompts.ts`, `contenido.ts chatgpt` e `importar`, y el manual `contenido/agentes/chatgpt.md`. Los prompts para pegar están en `contenido/agentes/PROMPT-*.md`.
+
+## 6. Decisiones de Mario (2026-10-07)
 
 - **Casos de archivo:** film insignia completo (70–80 s) para cada uno.
 - **LNB y Hub Profesional AI:** film con lo que hay hoy en vivo, corrigiendo el caso.

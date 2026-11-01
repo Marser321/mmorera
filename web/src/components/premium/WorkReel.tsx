@@ -4,7 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion, useMotionValue, useMotionValueEvent, useScroll, useSpring, useTransform, type MotionValue } from "framer-motion";
 import { useEffect, useRef, useState, type PointerEvent } from "react";
-import { ArrowRight, ArrowUpRight, ExternalLink } from "lucide-react";
+import { ArrowUpRight, ExternalLink, Play } from "lucide-react";
+import { flagshipRuntime } from "@/data/films/flagships/slugs";
 import { useLanguage } from "@/context/LanguageContext";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { localePath } from "@/config/site";
@@ -64,8 +65,10 @@ function PanelActions({ project, compact = false }: { project: ProjectCase; comp
         href={localePath(language, `/casos-de-exito/${project.slug}`)}
         className="pressable inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full bg-foreground px-5 py-2 font-mono text-[11px] uppercase tracking-[.14em] text-background transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
       >
-        {isEs ? "Ver el caso" : "View the case"}
-        <ArrowRight className="h-3.5 w-3.5" />
+        <Play className="h-3 w-3 fill-current" aria-hidden="true" />
+        {flagshipRuntime(project.slug)
+          ? `${isEs ? "Ver el caso y su film" : "View the case and its film"} · ${flagshipRuntime(project.slug)}`
+          : isEs ? "Ver el caso" : "View the case"}
       </Link>
       <DialogTrigger asChild>
         <button
@@ -163,7 +166,7 @@ function ReelPanel({
                 {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
               </span>
               <span aria-hidden className="h-px w-8 bg-white/15 light:bg-[rgb(var(--ink-rgb)/0.15)]" />
-              <span className="text-foreground/40">
+              <span className="text-foreground/55">
                 {project.tracks.map((track) => trackLabels[language][track]).join(" · ")}
               </span>
             </div>
@@ -214,7 +217,7 @@ function ReelPanel({
               </div>
             </motion.div>
             {domain && (
-              <div className="mt-3 flex items-center gap-2 font-mono text-[10px] tracking-[.12em] text-foreground/35">
+              <div className="mt-3 flex items-center gap-2 font-mono text-[10px] tracking-[.12em] text-foreground/55">
                 <span aria-hidden className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: accent }} />
                 <span>{domain}</span>
               </div>
@@ -245,13 +248,13 @@ function ReelCardSimple({ project, index, total }: { project: ProjectCase; index
             className="object-cover"
           />
           <div className="absolute inset-0 bg-[linear-gradient(to_top,color-mix(in_srgb,var(--color-background)_100%,transparent)_0%,color-mix(in_srgb,var(--color-background)_30%,transparent)_45%,transparent_100%)]" />
-          <div className="absolute left-4 top-4 rounded-full border border-white/10 bg-background/60 px-2.5 py-1 font-mono text-[9px] text-foreground/65 backdrop-blur-md light:border-[rgb(var(--ink-rgb)/0.1)]">
+          <div className="absolute left-4 top-4 rounded-full border border-white/10 bg-background/60 px-2.5 py-1 font-mono text-[10px] text-foreground/65 backdrop-blur-md light:border-[rgb(var(--ink-rgb)/0.1)]">
             {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
           </div>
         </div>
 
         <div className="p-5">
-          <div className="flex flex-wrap items-center gap-2 font-mono text-[9px] uppercase tracking-[.16em]">
+          <div className="flex flex-wrap items-center gap-2 font-mono text-[10px] uppercase tracking-[.16em]">
             <span style={{ color: accent }}>{project.tracks.map((track) => trackLabels[language][track]).join(" · ")}</span>
           </div>
           <h3 className="mt-3 break-words text-2xl font-medium leading-tight tracking-[-.04em] text-foreground [text-wrap:balance]">
@@ -262,14 +265,14 @@ function ReelCardSimple({ project, index, total }: { project: ProjectCase; index
           <p className="mt-3 text-sm leading-6 text-foreground/52">{project.summary[language]}</p>
           <div className="mt-4 flex flex-wrap gap-1.5">
             {project.stack.slice(0, 3).map((item) => (
-              <span key={item} className="rounded-full border border-white/10 bg-white/[0.03] px-2 py-1 font-mono text-[9px] text-foreground/45 light:border-[rgb(var(--ink-rgb)/0.1)] light:bg-[rgb(var(--ink-rgb)/0.03)]">
+              <span key={item} className="rounded-full border border-white/10 bg-white/[0.03] px-2 py-1 font-mono text-[10px] text-foreground/55 light:border-[rgb(var(--ink-rgb)/0.1)] light:bg-[rgb(var(--ink-rgb)/0.03)]">
                 {item}
               </span>
             ))}
           </div>
           <PanelActions project={project} compact />
           {domain && (
-            <div className="mt-4 flex items-center gap-2 font-mono text-[9px] tracking-[.12em] text-foreground/30">
+            <div className="mt-4 flex items-center gap-2 font-mono text-[10px] tracking-[.12em] text-foreground/55">
               <span aria-hidden className="h-1 w-1 rounded-full" style={{ backgroundColor: accent }} />
               <span>{domain}</span>
             </div>
@@ -321,6 +324,8 @@ export function WorkReel({ projects }: { projects: ProjectCase[] }) {
     return (
       // El ref sigue enganchado: useScroll lo exige aunque el carrusel no lo use.
       <section ref={sectionRef} aria-label={isEs ? "Proyectos destacados" : "Featured projects"} className="relative py-12">
+        {/* Los títulos de cada caso son h3: este h2 mantiene el orden de encabezados. */}
+        <h2 className="sr-only">{isEs ? "Proyectos destacados" : "Featured projects"}</h2>
         <div
           role="region"
           aria-label={isEs ? "Proyectos destacados" : "Featured projects"}
@@ -333,7 +338,7 @@ export function WorkReel({ projects }: { projects: ProjectCase[] }) {
             ))}
           </div>
         </div>
-        <p className="mt-2 px-5 font-mono text-[10px] uppercase tracking-[.2em] text-foreground/30 sm:px-8">
+        <p className="mt-2 px-5 font-mono text-[10px] uppercase tracking-[.2em] text-foreground/55 sm:px-8">
           {isEs ? "Deslizá →" : "Swipe →"}
         </p>
       </section>
@@ -348,6 +353,7 @@ export function WorkReel({ projects }: { projects: ProjectCase[] }) {
       className="relative"
       style={{ height: `${total * 85}vh` }}
     >
+      <h2 className="sr-only">{isEs ? "Proyectos destacados" : "Featured projects"}</h2>
       <div className="sticky top-0 flex h-[100svh] flex-col justify-center overflow-hidden">
         <motion.div ref={trackRef} style={{ x }} className="flex">
           {projects.map((project, index) => (
@@ -357,11 +363,11 @@ export function WorkReel({ projects }: { projects: ProjectCase[] }) {
 
         {/* Overlay inferior: hint + contador + progreso */}
         <div className="pointer-events-none absolute inset-x-0 bottom-7 flex flex-col items-center gap-3">
-          <motion.span style={{ opacity: hintOpacity }} className="font-mono text-[10px] uppercase tracking-[.2em] text-foreground/35">
+          <motion.span style={{ opacity: hintOpacity }} className="font-mono text-[10px] uppercase tracking-[.2em] text-foreground/55">
             {isEs ? "Scrolleá ↓" : "Scroll ↓"}
           </motion.span>
           <div className="flex items-center gap-4">
-            <span className="font-mono text-[10px] tabular-nums tracking-[.2em] text-foreground/45">
+            <span className="font-mono text-[10px] tabular-nums tracking-[.2em] text-foreground/55">
               {String(current).padStart(2, "0")} / {String(total).padStart(2, "0")}
             </span>
             <div className="relative h-px w-44 overflow-hidden bg-white/10 light:bg-[rgb(var(--ink-rgb)/0.1)]">

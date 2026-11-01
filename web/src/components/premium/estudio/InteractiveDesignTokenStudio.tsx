@@ -1,18 +1,15 @@
 "use client";
 
 import { useState, useMemo, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   Palette,
   Sliders,
-  Code2,
   Copy,
   Check,
-  Sparkles,
   ArrowUpRight,
   Layers,
   CircleDot,
-  Shield,
   Zap,
 } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
@@ -22,7 +19,6 @@ import {
   GLASS_PRESETS,
   generateTailwindConfigSnippet,
   generateCssVariablesSnippet,
-  type ColorThemePreset,
   type RadiusPreset,
   type GlassPreset,
 } from "@/data/designTokenData";
@@ -135,7 +131,8 @@ export function InteractiveDesignTokenStudio() {
       </div>
 
       {/* Studio Workbench */}
-      <div className="relative z-10 mt-10 grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+      {/* min-w-0 en las columnas: el bloque de código no ensancha la grilla en el teléfono. */}
+      <div className="relative z-10 mt-10 grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start [&>*]:min-w-0">
         {/* Left Controls */}
         <div className="space-y-8">
           {/* Step 1: Color Themes */}
@@ -318,7 +315,7 @@ export function InteractiveDesignTokenStudio() {
         {/* Right: Live Interactive Card Canvas */}
         <div className="relative">
           <div className="font-mono text-xs uppercase tracking-wider text-foreground/50 mb-3 flex items-center justify-between">
-            <span>{isEs ? "RENDERIZADO EN VIVO DE COMPONENTES" : "LIVE COMPONENT CANVAS"}</span>
+            <span>{isEs ? "Vista de ejemplo · componente en vivo" : "Sample view · live component"}</span>
             <span style={{ color: activeTheme.accentColor }}>{activeTheme.name[language]}</span>
           </div>
 
@@ -352,9 +349,10 @@ export function InteractiveDesignTokenStudio() {
                   <Zap className="h-5 w-5" />
                 </div>
                 <div>
-                  <h4 className="font-semibold text-foreground text-base">
+                  {/* Contenido de la tarjeta de muestra: no es un encabezado de la página. */}
+                  <p className="font-semibold text-foreground text-base">
                     Next.js 16 Edge Node
-                  </h4>
+                  </p>
                   <p className="text-xs text-foreground/50 font-mono">
                     Production Cluster · v3.4.0
                   </p>
@@ -371,7 +369,7 @@ export function InteractiveDesignTokenStudio() {
                 }}
               >
                 <CircleDot className="h-3 w-3 animate-pulse" />
-                99 PageSpeed
+                {isEs ? "Ejemplo" : "Sample"}
               </span>
             </div>
 
@@ -389,13 +387,13 @@ export function InteractiveDesignTokenStudio() {
                 style={{ borderRadius: `${Math.max(6, activeRadius.px * 0.7)}px` }}
               >
                 <div className="font-mono text-[10px] uppercase text-foreground/50">
-                  {isEs ? "TIEMPO DE CARGA" : "LOAD TIME"}
+                  {isEs ? "Radio" : "Radius"}
                 </div>
                 <div
                   className="mt-1 font-mono text-2xl font-bold"
                   style={{ color: activeTheme.accentColor }}
                 >
-                  28ms
+                  {activeRadius.px}px
                 </div>
               </div>
 
@@ -404,13 +402,13 @@ export function InteractiveDesignTokenStudio() {
                 style={{ borderRadius: `${Math.max(6, activeRadius.px * 0.7)}px` }}
               >
                 <div className="font-mono text-[10px] uppercase text-foreground/50">
-                  {isEs ? "EFICIENCIA EN FRONTIER" : "FRONTIER LEVERAGE"}
+                  {isEs ? "Desenfoque" : "Blur"}
                 </div>
                 <div
                   className="mt-1 font-mono text-2xl font-bold"
                   style={{ color: activeTheme.secondaryColor }}
                 >
-                  12.4x
+                  {activeGlass.blurPx}px
                 </div>
               </div>
             </div>

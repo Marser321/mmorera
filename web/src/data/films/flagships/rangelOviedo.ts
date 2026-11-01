@@ -160,7 +160,7 @@ export const ROG_CHAPTERS: FlagshipChapter[] = [
   },
   {
     id: "closing",
-    label: L("Equipo y métricas", "Team & metrics"),
+    label: L("Equipo y lo construido", "Team & what was built"),
     caption: L("Los pilares del equipo y lo que el sitio tiene construido.", "The team pillars and what the site has built."),
     from: ROG_TIMELINE.pillars.from,
     durationInFrames: ROG_TIMELINE.pillars.duration + ROG_TIMELINE.metrics.duration + ROG_TIMELINE.signature.duration,

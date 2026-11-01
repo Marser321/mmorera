@@ -55,6 +55,7 @@ const config: Config = {
         signal: { DEFAULT: color("signal"), foreground: color("signal-foreground") },
         destructive: { DEFAULT: color("destructive"), foreground: color("destructive-foreground") },
         border: color("border"),
+        relieve: color("relieve"),
         ring: color("ring"),
         input: color("input"),
         "track-create": color("track-create"),

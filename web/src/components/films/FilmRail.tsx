@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Play } from "lucide-react";
 import { localePath } from "@/config/site";
 import { useLanguage } from "@/context/LanguageContext";
-import { FLAGSHIP_SECONDS, flagshipStill, hasFlagshipFilm, type FlagshipSlug } from "@/data/films/flagships/slugs";
+import { flagshipRuntime, flagshipStill, hasFlagshipFilm, type FlagshipSlug } from "@/data/films/flagships/slugs";
 import { PROJECT_CASES } from "@/data/projectCases";
 
 const COPY = {
@@ -16,11 +16,6 @@ const COPY = {
 /** En el orden del archivo de casos (Fénix primero). */
 const FILM_CASES = PROJECT_CASES.filter((project) => hasFlagshipFilm(project.slug));
 
-/** Duración como en un reproductor: 79,5 s → "1:20". */
-const runtime = (value: number) => {
-  const total = Math.round(value);
-  return `${Math.floor(total / 60)}:${String(total % 60).padStart(2, "0")}`;
-};
 
 /**
  * Riel de films del home: cada tarjeta muestra la apertura del film (marca y
@@ -74,7 +69,7 @@ export function FilmRail() {
                   <span className="truncate text-base font-medium tracking-[-0.02em] text-foreground">{project.title[language]}</span>
                   <span className="inline-flex shrink-0 items-center gap-1.5 font-mono text-[10px] tracking-[.08em] text-signal">
                     <Play className="h-2.5 w-2.5 fill-current" aria-hidden="true" />
-                    {c.watch} · {runtime(FLAGSHIP_SECONDS[slug])}
+                    {c.watch} · {flagshipRuntime(slug)}
                   </span>
                 </div>
               </Link>

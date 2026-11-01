@@ -6,6 +6,7 @@ import { ArrowUpRight, MessageCircle } from "lucide-react";
 import { SITE_IDENTITY, localePath } from "@/config/site";
 import { useLanguage } from "@/context/LanguageContext";
 import { Magnetic } from "@/components/motion/Magnetic";
+import { MonogramaFundido } from "@/components/marca/MonogramaFundido";
 
 // El Home y /aplicar ya terminan en el formulario: ahí no se repite el cierre.
 const CTA_HIDDEN = new Set(["/", "/en", "/aplicar", "/en/aplicar"]);
@@ -16,7 +17,9 @@ export function Footer() {
   const pathname = usePathname();
   const showCta = !CTA_HIDDEN.has(pathname);
   return (
-    <footer className="relative z-20 border-t border-white/10 bg-background/92 px-5 py-12 backdrop-blur-xl light:border-[rgb(var(--ink-rgb)/0.1)] sm:px-8 lg:px-12">
+    <footer className="relative z-20 overflow-hidden border-t border-white/10 bg-background/92 px-5 py-12 backdrop-blur-xl light:border-[rgb(var(--ink-rgb)/0.1)] sm:px-8 lg:px-12">
+      {/* Marca de agua: el monograma grande, recortado abajo a la derecha. */}
+      <MonogramaFundido intensidad="marca" fundido="pie" className="absolute bottom-[-90px] right-[-5vw] -z-10 w-[min(56vw,580px)]" />
       {showCta && (
         <div className="mx-auto mb-16 max-w-[1480px] border-b border-white/10 pb-16 pt-8 light:border-[rgb(var(--ink-rgb)/0.1)] sm:pt-12">
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-signal">
@@ -60,7 +63,7 @@ export function Footer() {
           <a href={SITE_IDENTITY.contact.whatsapp} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-foreground/55 hover:text-foreground">WhatsApp <ArrowUpRight className="h-3.5 w-3.5" /></a>
         </div>
       </div>
-      <div className="mx-auto mt-10 flex max-w-[1480px] flex-col gap-2 border-t border-white/10 pt-5 font-mono text-[10px] uppercase tracking-[0.12em] text-foreground/30 light:border-[rgb(var(--ink-rgb)/0.1)] sm:flex-row sm:justify-between">
+      <div className="mx-auto mt-10 flex max-w-[1480px] flex-col gap-2 border-t border-white/10 pt-5 font-mono text-[10px] uppercase tracking-[0.12em] text-foreground/55 light:border-[rgb(var(--ink-rgb)/0.1)] sm:flex-row sm:justify-between">
         <span>© Mario Morera</span><span>mmorera.agency</span>
       </div>
     </footer>

@@ -230,8 +230,8 @@ export const HUB_PROFESIONAL_CHAPTERS: ReadonlyArray<FlagshipChapter> = [
     id: "signature",
     from: 1740,
     durationInFrames: 405,
-    label: { es: "Métricas & Firma", en: "Metrics & Signature" },
-    caption: { es: "Métricas de satisfacción, activos y cierre de autoridad", en: "Satisfaction metrics, assets and authority closing" },
+    label: { es: "Lo construido y firma", en: "What was built & signature" },
+    caption: { es: "Plantillas, protocolo y check-list que hay en producción", en: "Templates, protocol and checklist in production" },
   },
 ];
 

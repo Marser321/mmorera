@@ -8,7 +8,7 @@ export const THEME_STORAGE_KEY = 'mm-theme';
 
 /** Color de la barra del navegador por tema (meta theme-color). */
 const THEME_COLOR: Record<Theme, string> = {
-    dark: '#070809',
+    dark: '#0B0B0A',
     light: '#F3F0E8',
 };
 

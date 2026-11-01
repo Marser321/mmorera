@@ -194,8 +194,8 @@ export const PUNTA_CHAPTERS: ReadonlyArray<FlagshipChapter> = [
     id: "signature",
     from: 1740,
     durationInFrames: 405,
-    label: { es: "Impacto & Firma", en: "Impact & Signature" },
-    caption: { es: "Métricas de efectividad y cierre de marca", en: "Effectiveness metrics and brand closing" },
+    label: { es: "Lo construido y firma", en: "What was built & signature" },
+    caption: { es: "Disciplinas, pasos y planes que hay en producción", en: "Disciplines, steps and plans in production" },
   },
 ];
 
