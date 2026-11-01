@@ -18,7 +18,7 @@ export interface ServiceSolution {
 export const SERVICE_SOLUTIONS: ServiceSolution[] = [
   {
     id: "web-ecommerce",
-    tag: t("Presencia", "Presence"),
+    tag: t("Presencia", "Web presence"),
     title: t("Webs y landings", "Websites & landings"),
     headline: t("Sitios rápidos y claros, pensados para que la persona entienda y te escriba.", "Fast, clear sites built so people understand you and get in touch."),
     description: t(
@@ -27,13 +27,12 @@ export const SERVICE_SOLUTIONS: ServiceSolution[] = [
     ),
     deliverables: [
       t("Diseño a medida, sin plantillas genéricas", "Custom design, no generic templates"),
-      t("Rendimiento medido antes de entregar", "Performance measured before handoff"),
       t("Catálogo o CMS para que actualices el contenido", "Catalog or CMS so you can update the content"),
       t("Versión bilingüe y adaptada al teléfono", "Bilingual and built for the phone"),
     ],
     idealFor: t(
-      "Empresas, estudios y marcas que necesitan una web que explique bien lo que hacen.",
-      "Companies, studios and brands that need a site that explains clearly what they do."
+      "Negocios que reciben consultas y pierden ventas porque su web no explica lo que hacen.",
+      "Businesses that get enquiries but lose sales because their site doesn't explain what they do."
     ),
     accent: "#55D8FF",
     proofSlug: "lb-elite-wash-detail",
@@ -48,7 +47,6 @@ export const SERVICE_SOLUTIONS: ServiceSolution[] = [
       "I install and configure agents built on Claude, GPT or OpenClaw, connected to WhatsApp, your website or your calendar. Accounts stay in your name, with documentation and a handoff to your team when the agent can't resolve something."
     ),
     deliverables: [
-      t("Agente conectado a tus canales (WhatsApp, web, correo)", "Agent connected to your channels (WhatsApp, web, email)"),
       t("Respuestas desde tus datos, que puedes editar sin programar", "Answers from your own data, editable without code"),
       t("Traspaso a una persona cuando hace falta", "Handoff to a person when needed"),
       t("Cuentas a tu nombre y documentación de entrega", "Accounts in your name and handoff documentation"),
@@ -62,7 +60,7 @@ export const SERVICE_SOLUTIONS: ServiceSolution[] = [
   },
   {
     id: "crm-automation",
-    tag: t("Procesos conectados", "Connected processes"),
+    tag: t("Procesos conectados", "Connected workflows"),
     title: t("Automatización y CRM", "Automation & CRM"),
     headline: t("Formularios, agenda y CRM conectados, para que ninguna consulta quede sin seguimiento.", "Forms, calendar and CRM connected, so no enquiry goes without follow-up."),
     description: t(
@@ -73,7 +71,6 @@ export const SERVICE_SOLUTIONS: ServiceSolution[] = [
       t("Seguimiento automático de cada consulta", "Automatic follow-up on every enquiry"),
       t("Pipeline para ver en qué etapa está cada cliente", "A pipeline showing each client's stage"),
       t("Reservas y agenda conectadas al CRM", "Bookings and calendar connected to the CRM"),
-      t("Avisos a tu equipo cuando algo necesita una persona", "Alerts to your team when something needs a person"),
     ],
     idealFor: t(
       "Negocios que reciben consultas por varios canales y necesitan ordenarlas.",
@@ -92,9 +89,8 @@ export const SERVICE_SOLUTIONS: ServiceSolution[] = [
       "I connect language models, image and video generation and code-based editing into a flow that turns a brief into posts, carousels and reels. A person reviews every piece before it's published."
     ),
     deliverables: [
-      t("Flujo de producción de contenido con IA para tu marca", "An AI content production flow for your brand"),
+      t("Guiones, carruseles y piezas de video a partir de un brief", "Scripts, carousels and video pieces from a single brief"),
       t("Plantillas de diseño y video consistentes", "Consistent design and video templates"),
-      t("Variantes para probar qué funciona", "Variants to test what works"),
       t("Revisión humana antes de publicar", "Human review before publishing"),
     ],
     idealFor: t(
