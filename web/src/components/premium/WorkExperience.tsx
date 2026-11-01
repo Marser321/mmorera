@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { WorkReel } from "./WorkReel";
+import { FilmRail } from "@/components/films/FilmRail";
 import { CaseBento } from "./CaseBento";
 import { ARCHIVE_CASES, FEATURED_CASES } from "@/data/projectCases";
 import { hasFlagshipFilm } from "@/data/films/flagships/slugs";
@@ -26,7 +27,7 @@ export function WorkExperience() {
   const total = FEATURED_CASES.length + ARCHIVE_CASES.length;
 
   return (
-    <main id="contenido-principal" className="bg-transparent pb-28 pt-36 lg:pt-44">
+    <main id="contenido-principal" className="overflow-x-clip bg-transparent pb-28 pt-36 lg:pt-44">
       <ScrollProgressBar />
 
       {/* Header compacto */}
@@ -54,6 +55,10 @@ export function WorkExperience() {
 
       {/* Reel cinematográfico (full-bleed) */}
       <WorkReel projects={FEATURED_CASES} />
+
+      <div className="mx-auto w-full max-w-[1480px] px-5 pt-16 sm:px-8 sm:pt-24 lg:px-12">
+        <FilmRail />
+      </div>
 
       {/* Archivo de Proyectos & Sistemas */}
       <section className="mx-auto w-full max-w-[1480px] px-5 pt-16 sm:px-8 sm:pt-24 lg:px-12" aria-labelledby="archive-work">
