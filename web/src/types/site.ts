@@ -28,6 +28,16 @@ export interface ParticleSceneDefinition {
   fallback: string;
 }
 
+/** Un enlace «Pruébalo tú»: una ruta verificada (T28) que cualquiera puede abrir. */
+export interface TryItLink {
+  href: LocalizedText;
+  label: LocalizedText;
+  /** "live": el sistema real del cliente; "demo": una instancia con datos de muestra. */
+  kind: "live" | "demo";
+  /** Aviso corto bajo el botón, por ejemplo que no hace falta enviar nada. */
+  note?: LocalizedText;
+}
+
 export interface ProjectCase {
   slug: string;
   title: LocalizedText;
@@ -52,6 +62,8 @@ export interface ProjectCase {
   year?: string;
   client?: LocalizedText;
   kind?: LocalizedText;
+  /** Rutas para probar el sistema (verificadas por Gemini en T28). */
+  tryIt?: TryItLink[];
 }
 
 export interface SiteIdentity {

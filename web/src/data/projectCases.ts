@@ -43,6 +43,10 @@ export const PROJECT_CASES: ProjectCase[] = [
     stack: ["Next.js 16", "GoHighLevel", "next-intl", "Playwright"],
     media: [{ src: "/portfolio/brands/fenix-medical-center/shots/site-hbot.jpg", alt: t("Página de oxígeno hiperbárico de Fenix Medical Center", "Fenix Medical Center hyperbaric oxygen page") }],
     liveUrl: "https://fenixmedicalcenters.com",
+    // «Pruébalo tú»: rutas verificadas en T28 (docs/triada/gemini/T28-pruebalo.md).
+    tryIt: [
+      { href: t("https://fenixmedicalcenters.com/es/contacto", "https://fenixmedicalcenters.com/en/contacto"), label: t("Mira el formulario sin texto libre", "See the form with no free-text field"), kind: "live", note: t("Es el sitio real de la clínica: míralo, no hace falta enviarlo.", "This is the clinic's live site: look around, no need to submit it.") },
+    ],
     accent: "#cb9334",
     client: t("Fenix Medical Group Inc · Duluth, Georgia (EE. UU.)", "Fenix Medical Group Inc · Duluth, Georgia (USA)"),
     kind: t("Salud y longevidad", "Health and longevity"),
@@ -86,6 +90,10 @@ export const PROJECT_CASES: ProjectCase[] = [
     stack: ["Vanilla JS", "GoHighLevel", "Serverless API", "Webhooks"],
     media: [{ src: "/portfolio/lb-elite-cover.jpg", alt: t("Sitio de L&B Elite Wash & Detail", "L&B Elite Wash & Detail website") }],
     liveUrl: "https://l-b-five.vercel.app/",
+    // «Pruébalo tú»: rutas verificadas en T28 (docs/triada/gemini/T28-pruebalo.md).
+    tryIt: [
+      { href: t("https://l-b-five.vercel.app/#quoter", "https://l-b-five.vercel.app/#quoter"), label: t("Cotiza por vehículo", "Get a quote by vehicle"), kind: "live", note: t("Sitio real: puedes cotizar sin reservar.", "Live site: you can get a quote without booking.") },
+    ],
     accent: "#1E6FE6",
     status: "featured",
   },
@@ -103,6 +111,11 @@ export const PROJECT_CASES: ProjectCase[] = [
     stack: ["Next.js", "Supabase", "PostgreSQL", "POS", "IA"],
     media: [{ src: "/portfolio/nb-barber-cover.jpg", alt: t("Sitio de New Brothers Barbería", "New Brothers Barbershop website") }],
     liveUrl: "https://nb-barber.vercel.app/",
+    // «Pruébalo tú»: rutas verificadas en T28 (docs/triada/gemini/T28-pruebalo.md).
+    tryIt: [
+      { href: t("https://nb-barber.vercel.app/reservar", "https://nb-barber.vercel.app/reservar"), label: t("Prueba la reserva en 6 pasos", "Try the 6-step booking"), kind: "demo" },
+      { href: t("https://nb-barber.vercel.app/admin-login", "https://nb-barber.vercel.app/admin-login"), label: t("Entra al CRM demo", "Open the demo CRM"), kind: "demo", note: t("Con el botón de acceso demo; incluye el asistente con base de conocimiento.", "Use the demo access button; it includes the assistant with its knowledge base.") },
+    ],
     accent: "#D4AF37",
     status: "featured",
   },
