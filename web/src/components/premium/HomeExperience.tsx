@@ -18,7 +18,6 @@ import { Magnetic } from "@/components/motion/Magnetic";
 import { Reveal } from "@/components/scroll/Reveal";
 import { FEATURED_CASES } from "@/data/projectCases";
 import { IslandBar } from "@/components/layout/IslandBar";
-import type { AuthorManifestoCopy } from "@/components/premium/AuthorManifestoScene";
 import { MotionBackdrop } from "@/components/shared/MotionBackdrop";
 import { MonogramaFundido } from "@/components/marca/MonogramaFundido";
 
@@ -27,9 +26,7 @@ import { MonogramaFundido } from "@/components/marca/MonogramaFundido";
 // vez de bloquear el hilo principal con todo el Home de una vez.
 const ServicesSection = dynamic(() => import("@/components/premium/home/ServicesSection").then((m) => m.ServicesSection));
 const ProjectIndex = dynamic(() => import("@/components/premium/ProjectIndex").then((m) => m.ProjectIndex));
-const LogoOvertureSection = dynamic(() => import("@/components/films/LogoOvertureSection").then((m) => m.LogoOvertureSection));
-const AuthorManifestoScene = dynamic(() => import("@/components/premium/AuthorManifestoScene").then((m) => m.AuthorManifestoScene));
-const WorkflowSection = dynamic(() => import("@/components/premium/home/WorkflowSection").then((m) => m.WorkflowSection));
+const HowIWorkSection = dynamic(() => import("@/components/premium/home/HowIWorkSection").then((m) => m.HowIWorkSection));
 const AplicarOS = dynamic(() => import("@/components/portfolio-isolated/AplicarOS").then((m) => m.AplicarOS));
 import { MOTION_ASSETS } from "@/data/motionAssets";
 
@@ -87,27 +84,6 @@ const copy = {
     projectHint: "2-minute brief, right below",
   },
 };
-
-const authorManifestoCopy = {
-  es: {
-    eyebrow: "Perfil & Filosofía",
-    convergence: "Una sola dirección",
-    headline: "Una sola dirección para todo lo que una idea necesita.",
-    body: "Diseño, desarrollo en Next.js y automatización con IA, coordinados por una misma persona de la idea a la entrega.",
-    principleLabel: "Principio",
-    principle: "Sistemas propios con identidad clara, construidos para operar y facturar.",
-    signature: "Mario Morera",
-  },
-  en: {
-    eyebrow: "Profile & Philosophy",
-    convergence: "One direction",
-    headline: "One direction for everything an idea needs.",
-    body: "Design, Next.js development and AI automation, coordinated by the same person from idea to delivery.",
-    principleLabel: "Principle",
-    principle: "Proprietary systems with clear identity, engineered to operate and generate revenue.",
-    signature: "Mario Morera",
-  },
-} satisfies Record<"es" | "en", AuthorManifestoCopy>;
 
 export function HomeExperience() {
   const { language } = useLanguage();
@@ -275,18 +251,7 @@ export function HomeExperience() {
         </div>
       </section>
 
-      {/* ─── 5. PERFIL & FILOSOFÍA (Cinemática interactiva) ─── */}
-      <div id="perfil" className="scroll-mt-20">
-        {/* Entrada del monograma: el prompt de código que gira hasta ser la doble M */}
-        <LogoOvertureSection />
-        <AuthorManifestoScene
-          language={language}
-          copy={authorManifestoCopy[language]}
-        />
-      </div>
-
-      {/* ─── 6. METODOLOGÍA (4 fases claras) ─── */}
-      <WorkflowSection />
+      <HowIWorkSection />
 
       {/* ─── 7. CONTACTO DIRECTO & FORMULARIO INTERACTIVO ─── */}
       <section id="contacto" className="scroll-mt-20 relative isolate overflow-hidden border-t border-white/10 bg-relieve px-5 py-20 sm:px-8 sm:py-28 lg:px-12 light:border-[rgb(var(--ink-rgb)/0.1)] light:bg-card/20">
