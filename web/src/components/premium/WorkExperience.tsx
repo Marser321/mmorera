@@ -75,7 +75,7 @@ export function WorkExperience() {
       <section className="banda-marfil mt-24 px-5 py-16 sm:px-8 sm:py-24 lg:px-12">
         <div className="mx-auto flex w-full max-w-[1480px] flex-wrap items-end justify-between gap-8">
           <p className="max-w-4xl text-[clamp(2.2rem,4.2vw,4.4rem)] font-medium leading-[.95] tracking-[-.055em] text-foreground">
-            {isEs ? "¿Qué querés hacer posible?" : "What do you want to make possible?"}
+            {isEs ? "¿Qué quieres hacer posible?" : "What do you want to make possible?"}
           </p>
           <Link
             href={localePath(language, "/aplicar")}

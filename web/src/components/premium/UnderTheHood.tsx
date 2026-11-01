@@ -16,7 +16,7 @@ const COPY = {
   es: {
     kicker: "Arquitectura del sistema",
     title: "Bajo el capó.",
-    intro: "Las piezas reales del sistema y cómo se hablan: elegí un recorrido o abrí un componente.",
+    intro: "Las piezas reales del sistema y cómo se hablan: elige un recorrido o abre un componente.",
     components: "Componentes",
     connections: "Conexiones",
     paths: "Recorridos guiados",

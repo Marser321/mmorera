@@ -115,8 +115,8 @@ export function AplicarOS() {
     const validateStep = useCallback((targetStep: number) => {
         const errors: Partial<Record<LeadField, string>> = {};
         if (targetStep === 0) {
-            if (formData.name.trim().length < 2) errors.nombre = isEs ? 'Ingresá tu nombre.' : 'Enter your name.';
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) errors.email = isEs ? 'Ingresá un email válido.' : 'Enter a valid email.';
+            if (formData.name.trim().length < 2) errors.nombre = isEs ? 'Escribe tu nombre.' : 'Enter your name.';
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) errors.email = isEs ? 'Escribe un email válido.' : 'Enter a valid email.';
         }
         if (targetStep === 1) {
             if (!formData.projectStage) errors.projectStage = isEs ? 'Elige el momento del proyecto.' : 'Choose the project stage.';

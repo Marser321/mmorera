@@ -198,7 +198,7 @@ export function UseCaseFilmRoom() {
             </h2>
           </div>
           <p className="font-mono text-[10px] uppercase tracking-widest text-foreground/55 light:text-muted-foreground/85">
-            {isEs ? "Tocá un nodo para inspeccionarlo" : "Tap a node to inspect it"}
+            {isEs ? "Toca un nodo para inspeccionarlo" : "Tap a node to inspect it"}
           </p>
         </div>
 

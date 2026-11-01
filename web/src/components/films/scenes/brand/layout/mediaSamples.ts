@@ -53,7 +53,7 @@ export const MEDIA_SAMPLES: Record<MediaLanguage, MediaSample> = {
       { title: "Angiogénesis", body: "Se estudia su papel en la formación de nuevos vasos." },
     ],
     steps: ["Día", "Hora", "Tus datos"],
-    phoneSteps: ["Elegí el día", "Elegí la hora", "Tus datos"],
+    phoneSteps: ["Elige el día", "Elige la hora", "Tus datos"],
   },
   en: {
     plateCaption: { kicker: "Arrival", text: "The visit begins before you walk in." },

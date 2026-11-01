@@ -38,10 +38,10 @@ const COPY = {
         eyebrow: "01 · Capacidades",
         title: "Nueve familias que trabajan juntas.",
         intro:
-            "No son habilidades sueltas en una lista: cada familia se apoya en las demás. Abrí una para ver qué resuelve y con qué herramientas.",
+            "No son habilidades sueltas en una lista: cada familia se apoya en las demás. Abre una para ver qué resuelve y con qué herramientas.",
         level: "Profundidad de práctica",
         related: "Familias conectadas",
-        hint: "Tocá un nodo para abrirlo · Esc para cerrar",
+        hint: "Toca un nodo para abrirlo · Esc para cerrar",
         tools: "Herramientas",
         toolsCount: (n: number) => `${n} herramientas`,
     },

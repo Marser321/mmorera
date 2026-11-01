@@ -45,7 +45,7 @@ const COPY = {
     tablist: "Recorridos del diagrama",
     all: "Todo",
     allTitle: "Todo el sistema",
-    hint: "Abrí un componente para ver qué recibe, a dónde envía y en qué recorridos aparece.",
+    hint: "Abre un componente para ver qué recibe, a dónde envía y en qué recorridos aparece.",
     close: "Cerrar detalle",
     appears: "Aparece en",
     incoming: "Recibe de",

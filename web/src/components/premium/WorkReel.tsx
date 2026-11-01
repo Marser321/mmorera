@@ -9,7 +9,7 @@ import { flagshipRuntime } from "@/data/films/flagships/slugs";
 import { useLanguage } from "@/context/LanguageContext";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { localePath } from "@/config/site";
-import type { ProjectCase, TrackId } from "@/types/site";
+import type { ProjectCase, TrackId, LocalizedText } from "@/types/site";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { LiveDemoModal } from "./LiveDemoModal";
 import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
@@ -180,7 +180,7 @@ function ReelPanel({
             <p className="mt-6 max-w-xl text-base leading-7 text-foreground/55">{project.summary[language]}</p>
 
             <div className="mt-7 flex flex-wrap gap-2">
-              {project.stack.slice(0, 4).map((item) => (
+              {project.stack.slice(0, 4).map((item: string | LocalizedText) => typeof item === "string" ? item : item[language]).map((item) => (
                 <span
                   key={item}
                   className="rounded-full border border-white/12 bg-white/[0.03] px-3 py-1 font-mono text-[10px] uppercase tracking-[.08em] text-foreground/50 light:border-[rgb(var(--ink-rgb)/0.12)] light:bg-[rgb(var(--ink-rgb)/0.03)]"
@@ -264,7 +264,7 @@ function ReelCardSimple({ project, index, total }: { project: ProjectCase; index
           </h3>
           <p className="mt-3 text-sm leading-6 text-foreground/52">{project.summary[language]}</p>
           <div className="mt-4 flex flex-wrap gap-1.5">
-            {project.stack.slice(0, 3).map((item) => (
+            {project.stack.slice(0, 3).map((item: string | LocalizedText) => typeof item === "string" ? item : item[language]).map((item) => (
               <span key={item} className="rounded-full border border-white/10 bg-white/[0.03] px-2 py-1 font-mono text-[10px] text-foreground/55 light:border-[rgb(var(--ink-rgb)/0.1)] light:bg-[rgb(var(--ink-rgb)/0.03)]">
                 {item}
               </span>
@@ -339,7 +339,7 @@ export function WorkReel({ projects }: { projects: ProjectCase[] }) {
           </div>
         </div>
         <p className="mt-2 px-5 font-mono text-[10px] uppercase tracking-[.2em] text-foreground/55 sm:px-8">
-          {isEs ? "Deslizá →" : "Swipe →"}
+          {isEs ? "Desliza →" : "Swipe →"}
         </p>
       </section>
     );
@@ -364,7 +364,7 @@ export function WorkReel({ projects }: { projects: ProjectCase[] }) {
         {/* Overlay inferior: hint + contador + progreso */}
         <div className="pointer-events-none absolute inset-x-0 bottom-7 flex flex-col items-center gap-3">
           <motion.span style={{ opacity: hintOpacity }} className="font-mono text-[10px] uppercase tracking-[.2em] text-foreground/55">
-            {isEs ? "Scrolleá ↓" : "Scroll ↓"}
+            {isEs ? "Desplázate ↓" : "Scroll ↓"}
           </motion.span>
           <div className="flex items-center gap-4">
             <span className="font-mono text-[10px] tabular-nums tracking-[.2em] text-foreground/55">
