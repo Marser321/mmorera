@@ -370,6 +370,8 @@ export function AplicarOS() {
                         </button>
                     </div>
 
+                    {step === steps.length - 1 && <p className="mt-4 text-sm leading-6 text-foreground/75">{isEs ? 'Al enviar, aceptas la ' : 'By sending, you agree to the '}<a href={isEs ? '/privacidad' : '/en/privacidad'} className="text-foreground underline decoration-foreground/30 underline-offset-4 hover:decoration-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-signal">{isEs ? 'política de privacidad' : 'privacy policy'}</a>.</p>}
+
                     <div aria-live="polite" aria-atomic="true">
                         {submitError && <p role="alert" className="mt-4 rounded-xl border border-red-400/25 bg-red-400/[0.06] px-4 py-3 text-sm leading-5 text-red-200 light:border-destructive/30 light:bg-destructive/10 light:text-destructive">{submitError}</p>}
                     </div>

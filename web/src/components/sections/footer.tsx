@@ -51,7 +51,9 @@ export function Footer() {
           <Link href={localePath(language, "/sistemas")} className="text-foreground/55 hover:text-foreground">{isEs ? "Sistemas & CRM" : "Systems & CRM"}</Link>
           <Link href={localePath(language, "/estudio")} className="text-foreground/55 hover:text-foreground">{isEs ? "Estudio de Diseño" : "Design Studio"}</Link>
           <Link href={localePath(language, "/aplicar")} className="text-foreground/55 hover:text-foreground">{isEs ? "Iniciar Proyecto" : "Start Project"}</Link>
-          <Link href={localePath(language, "/privacidad")} className="text-foreground/55 hover:text-foreground">{isEs ? "Privacidad" : "Privacy"}</Link>
+          <Link href={localePath(language, "/privacidad")} className="text-foreground/75 underline decoration-foreground/30 underline-offset-4 hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-signal">{isEs ? "Privacidad" : "Privacy"}</Link>
+          <Link href={localePath(language, "/terminos")} className="text-foreground/75 underline decoration-foreground/30 underline-offset-4 hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-signal">{isEs ? "Términos" : "Terms"}</Link>
+          <Link href={localePath(language, "/cookies")} className="text-foreground/75 underline decoration-foreground/30 underline-offset-4 hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-signal">{isEs ? "Cookies" : "Cookies"}</Link>
         </div>
         <div className="flex flex-col items-start gap-3 text-sm">
           <a href={`mailto:${SITE_IDENTITY.contact.email}`} className="inline-flex items-center gap-2 text-foreground">Email <ArrowUpRight className="h-3.5 w-3.5" /></a>
