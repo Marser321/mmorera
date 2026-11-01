@@ -473,8 +473,8 @@ test("un enlace con #film-<capítulo> abre el film en ese capítulo y se puede c
   expect(await page.evaluate("navigator.clipboard.readText()")).toMatch(/\/casos-de-exito\/mr-studio-tattoo#film-consent$/);
 });
 
-test("el riel de films del home abre el caso directo en su film", async ({ page }) => {
-  await page.goto("/");
+test("el riel de films del archivo abre el caso directo en su film", async ({ page }) => {
+  await page.goto("/casos-de-exito");
   const rail = page.getByRole("region", { name: "Cada caso, contado como un film." });
   await rail.scrollIntoViewIfNeeded();
   await expect(rail.getByRole("link")).toHaveCount(FLAGSHIP_CASES.length);
