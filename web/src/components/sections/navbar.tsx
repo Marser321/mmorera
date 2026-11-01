@@ -11,13 +11,13 @@ import { useTheme } from "@/context/ThemeContext";
 
 const labels = {
   es: {
-    work: "Trabajo", systems: "Sistemas", studio: "Estudio", profile: "Perfil",
+    services: "Servicios", work: "Casos", systems: "Automatización y CRM", studio: "Webs y landings", agents: "Agentes de IA", content: "Contenido con IA", profile: "Sobre mí", cv: "CV",
     cta: "Hablemos", menu: "Abrir menú", close: "Cerrar menú", utility: "Abrir utilidades",
     toLight: "Cambiar a modo claro", toDark: "Cambiar a modo oscuro", language: "Idioma", theme: "Tema",
   },
   en: {
-    work: "Work", systems: "Systems", studio: "Studio", profile: "Profile",
-    cta: "Let’s talk", menu: "Open menu", close: "Close menu", utility: "Open utilities",
+    services: "Services", work: "Cases", systems: "Automation & CRM", studio: "Websites & landing pages", agents: "AI agents", content: "AI content", profile: "About", cv: "Resume",
+    cta: "Let's talk", menu: "Open menu", close: "Close menu", utility: "Open utilities",
     toLight: "Switch to light mode", toDark: "Switch to dark mode", language: "Language", theme: "Theme",
   },
 };
@@ -28,19 +28,57 @@ export function Navbar() {
   const { theme, toggle: toggleTheme } = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [utilityOpen, setUtilityOpen] = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
+  const servicesRef = useRef<HTMLDivElement>(null);
+  const servicesButtonRef = useRef<HTMLButtonElement>(null);
   const utilityRef = useRef<HTMLDivElement>(null);
   const utilityButtonRef = useRef<HTMLButtonElement>(null);
   const mobileButtonRef = useRef<HTMLButtonElement>(null);
   const firstMobileLinkRef = useRef<HTMLAnchorElement>(null);
   const copy = labels[language];
   const themeLabel = theme === "light" ? copy.toDark : copy.toLight;
+  // T06/T07/T08: cambiar estos destinos cuando existan las páginas.
+  const profileLink = { label: copy.profile, href: `${localePath(language, "/")}#perfil` };
   const primaryLinks = [
     { label: copy.work, href: localePath(language, "/casos-de-exito") },
-    { label: copy.systems, href: localePath(language, "/sistemas") },
-    { label: copy.studio, href: localePath(language, "/estudio") },
+    profileLink,
+    { label: copy.cv, href: profileLink.href },
   ];
-  const profileLink = { label: copy.profile, href: `${localePath(language, "/")}#perfil` };
-  const mobileLinks = [...primaryLinks, profileLink];
+  const serviceLinks = [
+    { label: copy.studio, href: localePath(language, "/estudio") },
+    { label: copy.agents, href: `${localePath(language, "/")}#servicios` },
+    { label: copy.systems, href: localePath(language, "/sistemas") },
+    { label: copy.content, href: `${localePath(language, "/")}#servicios` },
+  ];
+  const contactHref = pathname === "/" || pathname === "/en" ? "#contacto" : localePath(language, "/aplicar");
+  const mobileLinks = [...serviceLinks, ...primaryLinks];
+
+  function openServices(last = false) {
+    setServicesOpen(true);
+    requestAnimationFrame(() => {
+      const links = servicesRef.current?.querySelectorAll<HTMLAnchorElement>("a");
+      links?.[last ? links.length - 1 : 0]?.focus();
+    });
+  }
+
+  useEffect(() => {
+    if (!servicesOpen) return;
+    const outside = (event: PointerEvent) => {
+      if (!servicesRef.current?.contains(event.target as Node)) setServicesOpen(false);
+    };
+    const escape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      setServicesOpen(false);
+      servicesButtonRef.current?.focus();
+    };
+    document.addEventListener("pointerdown", outside);
+    document.addEventListener("keydown", escape);
+    return () => {
+      document.removeEventListener("pointerdown", outside);
+      document.removeEventListener("keydown", escape);
+    };
+  }, [servicesOpen]);
 
   useEffect(() => {
     if (!mobileOpen) return;
@@ -104,8 +142,27 @@ export function Navbar() {
 
         {/* Centrado Absoluto en Escritorio */}
         <nav className="absolute left-1/2 -translate-x-1/2 hidden items-center gap-8 lg:flex" aria-label={language === "es" ? "Navegación principal" : "Main navigation"}>
+          <div ref={servicesRef} className="relative" onBlur={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setServicesOpen(false);
+          }} onKeyDown={(event) => {
+            const links = [...event.currentTarget.querySelectorAll<HTMLAnchorElement>("a")];
+            const index = links.indexOf(document.activeElement as HTMLAnchorElement);
+            if (index < 0 || !["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
+            event.preventDefault();
+            const next = event.key === "Home" ? 0 : event.key === "End" ? links.length - 1 : (index + (event.key === "ArrowDown" ? 1 : -1) + links.length) % links.length;
+            links[next]?.focus();
+          }}>
+            <button ref={servicesButtonRef} type="button" aria-expanded={servicesOpen} aria-controls="services-menu" onClick={() => servicesOpen ? setServicesOpen(false) : openServices()} onKeyDown={(event) => {
+              if (event.key === "ArrowDown" || event.key === "ArrowUp") { event.preventDefault(); openServices(event.key === "ArrowUp"); }
+            }} className="flex min-h-11 items-center gap-1 rounded-md text-sm text-foreground/75 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+              {copy.services}<span aria-hidden="true">▾</span>
+            </button>
+            {servicesOpen && <div id="services-menu" className="absolute left-0 top-full w-72 rounded-xl border border-foreground/15 bg-popover p-2 shadow-lg">
+              {serviceLinks.map((item) => <Link key={item.label} href={item.href} onClick={() => setServicesOpen(false)} className="flex min-h-12 items-center rounded-lg px-3 py-2 text-sm text-foreground/80 hover:bg-foreground/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{item.label}</Link>)}
+            </div>}
+          </div>
           {primaryLinks.map((item) => (
-            <Link key={item.href} href={item.href} className={`relative rounded-md py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${isActive(item.href) ? "text-foreground" : "text-foreground/58 hover:text-foreground"}`}>
+            <Link key={item.label} href={item.href} className={`relative rounded-md py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${isActive(item.href) ? "text-foreground" : "text-foreground/58 hover:text-foreground"}`}>
               {item.label}
               {isActive(item.href) && <span aria-hidden="true" className="absolute inset-x-0 -bottom-1 mx-auto h-px w-4 bg-accent" />}
             </Link>
@@ -113,12 +170,12 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Link href={localePath(language, "/aplicar")} className="hidden rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none lg:inline-flex">
+          <Link href={contactHref} className="hidden rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none lg:inline-flex">
             {copy.cta}
           </Link>
 
           <div ref={utilityRef} className="relative hidden lg:block">
-            <button ref={utilityButtonRef} type="button" onClick={() => { if (typeof navigator !== "undefined" && "vibrate" in navigator) { try { navigator.vibrate(8); } catch {} } setUtilityOpen((value) => !value); }} aria-expanded={utilityOpen} aria-controls="desktop-utility-menu" aria-label={copy.utility} className="grid h-10 w-10 place-items-center rounded-full border border-white/12 text-foreground/62 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring light:border-[rgb(var(--ink-rgb)/0.12)]">
+            <button ref={utilityButtonRef} type="button" onClick={() => setUtilityOpen((value) => !value)} aria-expanded={utilityOpen} aria-controls="desktop-utility-menu" aria-label={copy.utility} className="grid h-10 w-10 place-items-center rounded-full border border-white/12 text-foreground/62 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring light:border-[rgb(var(--ink-rgb)/0.12)]">
               <MoreHorizontal aria-hidden="true" className="h-5 w-5" />
             </button>
             {utilityOpen && (
@@ -141,17 +198,18 @@ export function Navbar() {
             )}
           </div>
 
-          <button ref={mobileButtonRef} type="button" onClick={() => { if (typeof navigator !== "undefined" && "vibrate" in navigator) { try { navigator.vibrate(10); } catch {} } setMobileOpen((value) => !value); }} aria-expanded={mobileOpen} aria-controls="mobile-menu" aria-label={mobileOpen ? copy.close : copy.menu} className="grid h-10 w-10 place-items-center rounded-full border border-white/12 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring light:border-[rgb(var(--ink-rgb)/0.12)] lg:hidden">
+          <button ref={mobileButtonRef} type="button" onClick={() => setMobileOpen((value) => !value)} aria-expanded={mobileOpen} aria-controls="mobile-menu" aria-label={mobileOpen ? copy.close : copy.menu} className="grid h-10 w-10 place-items-center rounded-full border border-white/12 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring light:border-[rgb(var(--ink-rgb)/0.12)] lg:hidden">
             {mobileOpen ? <X aria-hidden="true" className="h-5 w-5" /> : <Menu aria-hidden="true" className="h-5 w-5" />}
           </button>
         </div>
       </div>
 
       {mobileOpen && (
-        <div id="mobile-menu" className="fixed inset-0 -z-10 flex min-h-[100dvh] flex-col overscroll-contain bg-background px-6 pb-[max(2rem,env(safe-area-inset-bottom))] pt-28 lg:hidden">
-          <nav className="flex flex-1 flex-col justify-center items-center text-center gap-2" aria-label={language === "es" ? "Navegación móvil" : "Mobile navigation"}>
+        <div id="mobile-menu" className="fixed inset-0 -z-10 flex h-[100dvh] flex-col overflow-y-auto overscroll-contain bg-background px-6 pb-[max(2rem,env(safe-area-inset-bottom))] pt-28 lg:hidden">
+          <nav className="flex flex-1 flex-col items-center gap-1 text-center" aria-label={language === "es" ? "Navegación móvil" : "Mobile navigation"}>
+            <p className="mb-1 text-xs font-medium uppercase tracking-widest text-signal">{copy.services}</p>
             {mobileLinks.map((item, index) => (
-              <Link ref={index === 0 ? firstMobileLinkRef : undefined} key={item.href} href={item.href} onClick={() => setMobileOpen(false)} className="w-full border-b border-white/10 py-5 text-center text-[clamp(2rem,9vw,3.8rem)] font-medium leading-none tracking-[-0.05em] text-foreground transition-colors hover:text-signal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring light:border-[rgb(var(--ink-rgb)/0.1)]">
+              <Link ref={index === 0 ? firstMobileLinkRef : undefined} key={item.label} href={item.href} onClick={() => setMobileOpen(false)} className="w-full border-b border-white/10 py-3 text-center text-[clamp(1.15rem,5vw,1.8rem)] font-medium leading-none tracking-[-0.03em] text-foreground transition-colors hover:text-signal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring light:border-[rgb(var(--ink-rgb)/0.1)]">
                 {item.label}
               </Link>
             ))}
@@ -165,7 +223,7 @@ export function Navbar() {
                 {theme === "light" ? <Moon aria-hidden="true" className="h-4 w-4" /> : <Sun aria-hidden="true" className="h-4 w-4" />}
               </button>
             </div>
-            <Link href={localePath(language, "/aplicar")} onClick={() => setMobileOpen(false)} className="rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{copy.cta}</Link>
+            <Link href={contactHref} onClick={() => setMobileOpen(false)} className="rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{copy.cta}</Link>
           </div>
         </div>
       )}

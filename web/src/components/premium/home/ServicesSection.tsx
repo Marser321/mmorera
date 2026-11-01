@@ -28,18 +28,20 @@ import type { Language } from "@/context/LanguageContext";
 const copy = {
   es: {
     eyebrow: "Servicios",
-    title: "Cuatro cosas que hago y conecto entre sí.",
-    intro: "Elige lo que necesitas resolver. Cada servicio enlaza al caso más cercano que ya construí.",
-    talk: "Hablemos de esto",
+    title: "¿Qué necesitas resolver?",
+    intro: "Cuatro cosas que hago y conecto entre sí. Cada una, al lado del caso más cercano que ya construí.",
+    howItWorks: "Ver cómo funciona →",
+    talk: "Hablemos de tu caso",
     seenIn: "Caso relacionado",
     viewCase: "Ver caso",
     idealFor: "Ideal para",
   },
   en: {
     eyebrow: "Services",
-    title: "Four things I do, and connect to each other.",
-    intro: "Pick what you need solved. Each service links to the closest case I've already built.",
-    talk: "Let's talk about this",
+    title: "What do you need solved?",
+    intro: "Four things I build and connect. Each one next to the closest case I've already built.",
+    howItWorks: "See how it works →",
+    talk: "Let's talk about your case",
     seenIn: "Related case",
     viewCase: "View case",
     idealFor: "Ideal for",
@@ -131,6 +133,7 @@ export function ServicesSection() {
             {SERVICE_SOLUTIONS.map((service, index) => {
               const project = getProjectCase(service.proofSlug);
               const isActive = index === active;
+              const servicePath = service.id === "web-ecommerce" ? "/estudio" : service.id === "crm-automation" ? "/sistemas" : null;
               return (
                 <article
                   key={service.id}
@@ -179,13 +182,11 @@ export function ServicesSection() {
                   </div>
 
                   <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">
-                    <a
-                      href="#contacto"
-                      className="pressable inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-3 text-sm font-semibold text-background transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    >
-                      {c.talk}
-                      <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-                    </a>
+                    {servicePath && (
+                      <Link href={localePath(language, servicePath)} className="inline-flex min-h-11 items-center text-sm font-semibold text-signal hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                        {c.howItWorks}
+                      </Link>
+                    )}
                     {project && (
                       <Link
                         href={localePath(language, `/casos-de-exito/${project.slug}`)}
@@ -277,6 +278,9 @@ export function ServicesSection() {
             </div>
           </div>
         </div>
+        <a href="#contacto" className="mt-8 inline-flex min-h-12 items-center gap-2 rounded-full bg-foreground px-6 py-3 text-sm font-semibold text-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+          {c.talk}<ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+        </a>
       </div>
     </section>
   );

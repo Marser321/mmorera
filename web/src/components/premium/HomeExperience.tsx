@@ -30,11 +30,14 @@ const HowIWorkSection = dynamic(() => import("@/components/premium/home/HowIWork
 const AplicarOS = dynamic(() => import("@/components/portfolio-isolated/AplicarOS").then((m) => m.AplicarOS));
 import { MOTION_ASSETS } from "@/data/motionAssets";
 
+// Cambiar a "/cv" cuando exista T06.
+const CV_DESTINATION = "#contacto";
+
 const copy = {
   es: {
     eyebrow: "Mario Morera · AI Automation & Operations",
     title: "Orquesto la tecnología de tu negocio: web, agentes de IA y contenido.",
-    intro: "Diseño y conecto tu sitio, tus automatizaciones, agentes que atienden por ti y sistemas que producen contenido. Coordino personas, herramientas y modelos de IA para que funcionen como un equipo. Hablas conmigo y lo construyo yo.",
+    intro: "Diseño y conecto tu web, tus automatizaciones, agentes que atienden por ti y sistemas que producen contenido. Hablas conmigo y lo construyo yo; coordino a tu equipo, las herramientas y los modelos de IA para que trabajen juntos.",
     services: [
       { id: "web-ecommerce", label: "Webs y landings" },
       { id: "booking-payments", label: "Agentes de IA" },
@@ -42,6 +45,7 @@ const copy = {
       { id: "ai-software", label: "Contenido con IA" },
     ],
     servicesHint: "Pasa por un servicio",
+    cvLink: "¿Buscas a alguien para tu equipo? Ver CV →",
     talkWhatsapp: "Hablar por WhatsApp",
     startProject: "Ver proyectos",
     archiveEyebrow: "Proyectos",
@@ -60,7 +64,7 @@ const copy = {
   en: {
     eyebrow: "Mario Morera · AI Automation & Operations",
     title: "I orchestrate your business technology: web, AI agents and content.",
-    intro: "I design and connect your website, your automations, agents that answer for you and systems that produce content. I coordinate people, tools and AI models so they work as one team. You talk to me, and I build it.",
+    intro: "I design and connect your website, your automations, agents that answer for you and systems that produce content. You talk to me and I build it; I coordinate your team, the tools and the AI models so they work together.",
     services: [
       { id: "web-ecommerce", label: "Websites & landing pages" },
       { id: "booking-payments", label: "AI agents" },
@@ -68,6 +72,7 @@ const copy = {
       { id: "ai-software", label: "AI content" },
     ],
     servicesHint: "Hover a service",
+    cvLink: "Hiring for your team? View my resume →",
     talkWhatsapp: "Chat on WhatsApp",
     startProject: "View projects",
     archiveEyebrow: "Projects",
@@ -207,13 +212,14 @@ export function HomeExperience() {
                   href="https://wa.me/59892323675?text=Hola%20Mario,%20estoy%20viendo%20tu%20sitio%20y%20quiero%20hacerte%20una%20consulta"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="pressable inline-flex items-center gap-2.5 rounded-full border border-[#25D366]/40 bg-[#25D366]/15 px-6 py-3.5 text-sm font-semibold text-[#25D366] backdrop-blur-md transition-all hover:bg-[#25D366]/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366]"
+                  className="pressable inline-flex items-center gap-2.5 rounded-full border border-signal/40 bg-signal/15 px-6 py-3.5 text-sm font-semibold text-signal backdrop-blur-md transition-all hover:bg-signal/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal"
                 >
                   <MessageCircle className="h-4 w-4" />
                   {c.talkWhatsapp}
                 </a>
               </Magnetic>
             </div>
+            <Link href={CV_DESTINATION.startsWith("#") ? CV_DESTINATION : localePath(language, CV_DESTINATION)} className="mt-5 inline-flex min-h-11 items-center text-sm text-foreground/75 underline underline-offset-4 hover:text-signal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{c.cvLink}</Link>
           </div>
         </div>
       </section>

@@ -47,20 +47,20 @@ export function Footer() {
       <div className="mx-auto grid max-w-[1480px] gap-10 md:grid-cols-[1.5fr_1fr_1fr]">
         <div>
           <p className="text-xl font-semibold tracking-[-0.03em] text-foreground">{SITE_IDENTITY.brand}</p>
-          <p className="mt-3 max-w-md text-sm leading-6 text-foreground/50">{isEs ? "Diseño, producto y sistemas bajo una sola dirección." : "Design, product and systems under one direction."}</p>
+          <p className="mt-3 max-w-md text-sm leading-6 text-foreground/50">{isEs ? "AI Automation & Operations. Trabajas directo conmigo." : "AI Automation & Operations. You work directly with me."}</p>
         </div>
         <div className="flex flex-col items-start gap-3 text-sm">
-          <Link href={localePath(language, "/casos-de-exito")} className="text-foreground/55 hover:text-foreground">{isEs ? "Casos de Éxito" : "Case Studies"}</Link>
-          <Link href={localePath(language, "/sistemas")} className="text-foreground/55 hover:text-foreground">{isEs ? "Sistemas & CRM" : "Systems & CRM"}</Link>
-          <Link href={localePath(language, "/estudio")} className="text-foreground/55 hover:text-foreground">{isEs ? "Estudio de Diseño" : "Design Studio"}</Link>
-          <Link href={localePath(language, "/aplicar")} className="text-foreground/55 hover:text-foreground">{isEs ? "Iniciar Proyecto" : "Start Project"}</Link>
+          <Link href={localePath(language, "/casos-de-exito")} className="text-foreground/55 hover:text-foreground">{isEs ? "Casos" : "Cases"}</Link>
+          <Link href={localePath(language, "/sistemas")} className="text-foreground/55 hover:text-foreground">{isEs ? "Automatización y CRM" : "Automation & CRM"}</Link>
+          <Link href={localePath(language, "/estudio")} className="text-foreground/55 hover:text-foreground">{isEs ? "Webs y landings" : "Websites & landing pages"}</Link>
+          <Link href={localePath(language, "/aplicar")} className="text-foreground/55 hover:text-foreground">{isEs ? "Cuéntame tu proyecto" : "Tell me about your project"}</Link>
           <Link href={localePath(language, "/privacidad")} className="text-foreground/75 underline decoration-foreground/30 underline-offset-4 hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-signal">{isEs ? "Privacidad" : "Privacy"}</Link>
           <Link href={localePath(language, "/terminos")} className="text-foreground/75 underline decoration-foreground/30 underline-offset-4 hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-signal">{isEs ? "Términos" : "Terms"}</Link>
           <Link href={localePath(language, "/cookies")} className="text-foreground/75 underline decoration-foreground/30 underline-offset-4 hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-signal">{isEs ? "Cookies" : "Cookies"}</Link>
         </div>
         <div className="flex flex-col items-start gap-3 text-sm">
           <a href={`mailto:${SITE_IDENTITY.contact.email}`} className="inline-flex items-center gap-2 text-foreground">Email <ArrowUpRight className="h-3.5 w-3.5" /></a>
-          <a href={SITE_IDENTITY.contact.whatsapp} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-foreground/55 hover:text-foreground">WhatsApp <ArrowUpRight className="h-3.5 w-3.5" /></a>
+          {pathname !== "/" && pathname !== "/en" && <a href={SITE_IDENTITY.contact.whatsapp} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-foreground/55 hover:text-foreground">WhatsApp <ArrowUpRight className="h-3.5 w-3.5" /></a>}
         </div>
       </div>
       <div className="mx-auto mt-10 flex max-w-[1480px] flex-col gap-2 border-t border-white/10 pt-5 font-mono text-[10px] uppercase tracking-[0.12em] text-foreground/55 light:border-[rgb(var(--ink-rgb)/0.1)] sm:flex-row sm:justify-between">
