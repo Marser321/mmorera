@@ -97,6 +97,7 @@ export function AplicarOS() {
         { value: 'small-team', es: 'Hay un equipo pequeño involucrado.', en: 'A small team is involved.' },
         { value: 'multiple-areas', es: 'Participan varias áreas.', en: 'Several areas are involved.' },
         { value: 'external-direction', es: 'Busco dirección externa de punta a punta.', en: 'I am looking for end-to-end external direction.' },
+        { value: 'agency', es: 'Soy una agencia o un equipo y quiero sumarte a un proyecto.', en: "We're an agency or team and want to bring you onto a project." },
     ], []);
     const timelines = useMemo(() => [
         { value: 'now', es: 'Quiero empezar ahora.', en: 'I want to start now.' },
