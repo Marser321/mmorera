@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowLeft, ArrowUpRight, MessageCircle } from "lucide-react";
+import { TryItButtons } from "@/components/shared/TryItButtons";
 import { useLanguage } from "@/context/LanguageContext";
 import { localePath, SITE_IDENTITY } from "@/config/site";
 import type { ProjectCase, LocalizedText } from "@/types/site";
@@ -181,20 +182,7 @@ export function CaseStudy({ project, underTheHood }: { project: ProjectCase; und
         {Boolean(project.tryIt?.length) && (
           <section aria-labelledby="case-try-it" className="mx-auto mt-12 max-w-[1480px] px-5 sm:px-8 lg:px-12">
             <h2 id="case-try-it" className="text-2xl font-medium tracking-[-.03em] text-foreground sm:text-3xl">{isEs ? "Pruébalo tú" : "Try it"}</h2>
-            <ul className="mt-5 grid max-w-4xl gap-5 sm:grid-cols-2">
-              {project.tryIt?.map((link, index) => {
-                const external = /^https?:\/\//.test(link.href[language]);
-                const noticeId = `case-try-${project.slug}-${index}-notice`;
-                return <li key={link.href[language]}>
-                  <a href={link.href[language]} target={external ? "_blank" : undefined} rel={external ? "noopener noreferrer" : undefined} aria-describedby={external ? noticeId : undefined} className="inline-flex min-h-12 w-full items-center justify-between gap-3 rounded-xl border border-signal/40 px-4 py-3 text-sm font-semibold text-signal hover:bg-signal/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-                    <span>{link.label[language]}{link.kind === "demo" && <span className="ml-2 inline-block rounded border border-current px-1.5 py-0.5 text-[10px]">Demo</span>}</span>
-                    <ArrowUpRight aria-hidden="true" className="h-4 w-4 shrink-0" />
-                  </a>
-                  {external && <span id={noticeId} className="sr-only">{isEs ? "(se abre en otro sitio, en una pestaña nueva)" : "(opens another site in a new tab)"}</span>}
-                  {link.note && <p className="mt-2 text-xs leading-relaxed text-foreground/75">{link.note[language]}</p>}
-                </li>;
-              })}
-            </ul>
+            <div className="mt-5 max-w-4xl"><TryItButtons links={project.tryIt} language={language} idPrefix={`case-try-${project.slug}`} columns /></div>
           </section>
         )}
 

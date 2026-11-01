@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { TryItButtons } from "@/components/shared/TryItButtons";
 import { localePath } from "@/config/site";
 import { useLanguage } from "@/context/LanguageContext";
 import { flagshipRuntime } from "@/data/films/flagships/slugs";
@@ -27,20 +27,7 @@ export function TryItCards({ projects }: { projects: ProjectCase[] }) {
             <div className="flex flex-1 flex-col p-5 sm:p-6">
               <h3 id={`try-${project.slug}`} className="text-2xl font-medium leading-tight tracking-[-.03em] text-foreground">{project.title[language]}</h3>
               <p className="mt-4 text-sm leading-relaxed text-foreground/75">{project.summary[language]}</p>
-              <ul className="mt-6 space-y-4">
-                {project.tryIt?.map((link, index) => {
-                  const external = /^https?:\/\//.test(link.href[language]);
-                  const noticeId = `try-${project.slug}-${index}-notice`;
-                  return <li key={link.href[language]}>
-                    <a href={link.href[language]} target={external ? "_blank" : undefined} rel={external ? "noopener noreferrer" : undefined} aria-describedby={external ? noticeId : undefined} className="inline-flex min-h-12 w-full items-center justify-between gap-3 rounded-xl border border-signal/40 px-4 py-3 text-sm font-semibold text-signal hover:bg-signal/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-                      <span>{link.label[language]}{link.kind === "demo" && <span className="ml-2 inline-block rounded border border-current px-1.5 py-0.5 text-[10px]">Demo</span>}</span>
-                      <ArrowUpRight aria-hidden="true" className="h-4 w-4 shrink-0" />
-                    </a>
-                    {external && <span id={noticeId} className="sr-only">{isEs ? "(se abre en otro sitio, en una pestaña nueva)" : "(opens another site in a new tab)"}</span>}
-                    {link.note && <p className="mt-2 text-xs leading-relaxed text-foreground/75">{link.note[language]}</p>}
-                  </li>;
-                })}
-              </ul>
+              <div className="mt-6"><TryItButtons links={project.tryIt} language={language} idPrefix={`try-${project.slug}`} /></div>
               <div className="mt-auto flex flex-col items-start gap-1 pt-6">
                 {runtime && <Link href={`${casePath}#film`} className="inline-flex min-h-11 items-center text-sm font-semibold text-foreground hover:text-signal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{isEs ? "Ver el film" : "Watch the film"} · {runtime}</Link>}
                 <Link href={casePath} className="inline-flex min-h-11 items-center text-sm text-foreground/75 underline underline-offset-4 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{isEs ? "Ver caso" : "View case"}</Link>
