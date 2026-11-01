@@ -1,6 +1,6 @@
 # T17 · Legal pages, English (`/en/privacidad`, `/en/terminos`, `/en/cookies`)
 
-Same structure as `T17-legal.md`. Placeholders `[JURISDICTION]` and `[PUBLICATION DATE]` follow decision D7.
+Same structure as `T17-legal.md`. Governing law: Uruguay (D7, decided 1/11). `[PUBLICATION DATE]` is filled in on publication.
 
 ---
 
@@ -35,7 +35,7 @@ Each provider handles data under its own policies and only to deliver that servi
 While the conversation is active and up to 24 months after the last contact, unless you ask me to delete it sooner or a legal obligation requires keeping it longer.
 
 ### Your rights
-You can ask me to **access**, **correct** or **delete** your data, or **object** to its use, by writing to mario@mmorera.agency. I reply within the time limits of the applicable law ([JURISDICTION]).
+You can ask me to **access**, **correct** or **delete** your data, or **object** to its use, by writing to mario@mmorera.agency. I reply within the time limits set by Uruguay's Personal Data Protection Law No. 18,331. If you believe your rights weren't respected, you can file a complaint with the Personal Data Regulatory and Control Unit (URCDP).
 
 ### Cookies
 See the [cookie policy](/en/cookies).
@@ -78,7 +78,7 @@ I take care that the site works and that its information is accurate, but it may
 Don't use the site or its forms to send spam, illegal content or malicious code, or to try to access systems you're not authorized to access.
 
 ### Governing law
-These terms are governed by the laws of [JURISDICTION]. If there's a disagreement, let's first try to resolve it by talking: mario@mmorera.agency.
+These terms are governed by the laws of the Oriental Republic of Uruguay, and any dispute is submitted to its competent courts. If there's a disagreement, let's first try to resolve it by talking: mario@mmorera.agency.
 
 ### Changes
 I may update these terms; the date above shows the current version.

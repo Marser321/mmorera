@@ -7,7 +7,7 @@
 **Voz:** español neutro con tuteo; inglés claro.
 **Diseño:** el de la `/privacidad` actual (título grande, secciones con `h2`, una sola columna de lectura), con un índice de anclas arriba y la fecha de «Última actualización».
 
-**D7 (decide Mario):** la ley aplicable y el país del responsable. Un test del repo prohíbe nombrar el país en el código público (`publicContent.test.ts`), pero un texto legal lo necesita. Hasta que Mario decida, el texto lleva `[JURISDICCIÓN]` y `[PAÍS]`, y Codex los deja como `TODO(Mario)` visibles **solo en desarrollo**: no se publica con marcadores.
+**D7 (decidida por Mario el 1/11):** rige la ley de **Uruguay**, y el país se nombra **solo en las 3 páginas legales**. El test `publicContent.test.ts`, que prohíbe nombrar el país en el código público, recibe una excepción **solo** para `src/app/privacidad/**`, `src/app/terminos/**`, `src/app/cookies/**` y sus pares en `src/app/en/**`. El resto del sitio sigue sin nombrarlo.
 
 ---
 
@@ -42,7 +42,7 @@ Cada proveedor trata los datos según sus propias políticas y solo para prestar
 Mientras la conversación siga activa y hasta 24 meses después del último contacto, salvo que pidas borrarlos antes o que una obligación legal exija conservarlos más tiempo.
 
 ### Tus derechos
-Puedes pedirme **acceder** a tus datos, **corregirlos**, **borrarlos** u **oponerte** a su uso, escribiendo a mario@mmorera.agency. Respondo dentro de los plazos de la ley aplicable ([JURISDICCIÓN]).
+Puedes pedirme **acceder** a tus datos, **corregirlos**, **borrarlos** u **oponerte** a su uso, escribiendo a mario@mmorera.agency. Respondo dentro de los plazos que fija la Ley N.º 18.331 de Protección de Datos Personales de Uruguay. Si consideras que no se respetaron tus derechos, puedes presentar un reclamo ante la Unidad Reguladora y de Control de Datos Personales (URCDP).
 
 ### Cookies
 Ver la [política de cookies](/cookies).
@@ -85,7 +85,7 @@ Cuido que el sitio funcione y que la información sea correcta, pero puede tener
 No uses el sitio ni sus formularios para enviar spam, contenido ilegal o código malicioso, ni para intentar acceder a sistemas que no te corresponden.
 
 ### Ley aplicable
-Estos términos se rigen por las leyes de [JURISDICCIÓN]. Ante un desacuerdo, primero intentemos resolverlo conversando: mario@mmorera.agency.
+Estos términos se rigen por las leyes de la República Oriental del Uruguay, y cualquier controversia se somete a sus tribunales competentes. Ante un desacuerdo, primero intentemos resolverlo conversando: mario@mmorera.agency.
 
 ### Cambios
 Puedo actualizar estos términos; la fecha de arriba indica la versión vigente.

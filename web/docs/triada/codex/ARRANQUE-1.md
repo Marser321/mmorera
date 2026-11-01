@@ -26,7 +26,7 @@ En el worktree, `web/node_modules` no existe. Instalá con `npm ci` dentro de `w
 - **Pie:** enlaces Privacidad · Términos · Cookies en `src/components/sections/footer.tsx`, ES y EN.
 - **Formulario:** en `AplicarOS.tsx`, **solo** la línea «Al enviar, aceptas la política de privacidad» junto al botón de enviar.
 - **Sitemap:** sumar las 6 rutas en `src/app/sitemap.ts`.
-- **Marcadores:** `[JURISDICCIÓN]`, `[PAÍS]` y `[fecha de publicación]` quedan como `TODO(Mario)`, visibles en desarrollo. Un test del repo prohíbe nombrar el país en el código público, así que no lo escribas hasta que Mario decida (D7).
+- **Ley aplicable (D7, decidida):** Uruguay, nombrado **solo** en las 3 páginas legales. Ajustá `src/data/publicContent.test.ts` para excluir **solo** `src/app/{privacidad,terminos,cookies}/**` y sus pares en `src/app/en/**`. El resto del sitio sigue sin nombrar el país, y el test lo sigue controlando. `[fecha de publicación]` queda como `TODO(Mario)`.
 - **Verificá lo real:** buscá analítica, píxeles o scripts de terceros, y qué se guarda en `localStorage` o en cookies (tema, idioma). Anotá en la entrega todo lo que el texto de cookies no mencione.
 
 ### 2. T13 · Deuda técnica
