@@ -1,5 +1,5 @@
 import type { LocalizedText } from "@/types/site";
-import type { VideoGalleryItem } from "@/types/briefToPiece";
+import type { VideoGalleryEntry } from "@/types/briefToPiece";
 
 const t = (es: string, en: string): LocalizedText => ({ es, en });
 
@@ -9,7 +9,7 @@ const t = (es: string, en: string): LocalizedText => ({ es, en });
  * Los reels del 12 al 25/10 quedan fuera hasta volver a renderizarse en tuteo.
  * Videos comprimidos a 720 px de ancho en public/portfolio/video-ia/.
  */
-export const VIDEO_GALLERY: VideoGalleryItem[] = [
+export const VIDEO_GALLERY: VideoGalleryEntry[] = [
   {
     slug: "ai-pizza-spec",
     title: t("Luna Forno · anuncio de prueba", "Luna Forno · spec ad"),

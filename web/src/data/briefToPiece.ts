@@ -1,5 +1,5 @@
 import type { LocalizedText } from "@/types/site";
-import type { BriefToPiece } from "@/types/briefToPiece";
+import type { BriefToPieceItem } from "@/types/briefToPiece";
 
 const t = (es: string, en: string): LocalizedText => ({ es, en });
 
@@ -18,7 +18,7 @@ const STAGE = {
 
 const img = (slug: string, file: string, es: string, en: string) => ({ src: `/portfolio/fabrica/${slug}/${file}`, alt: t(es, en) });
 
-export const BRIEF_TO_PIECE: BriefToPiece[] = [
+export const BRIEF_TO_PIECE: BriefToPieceItem[] = [
   {
     slug: "del-pedido-a-la-pieza",
     title: t("De «necesito una web» a saber qué construir", "From “I need a website” to knowing what to build"),

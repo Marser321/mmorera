@@ -6,7 +6,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const base = SITE_IDENTITY.canonical;
   const core = ["", "/casos-de-exito", "/sistemas", "/estudio", "/cv", "/aplicar", "/privacidad", "/terminos", "/cookies"];
   const cases = PROJECT_CASES.map(({ slug }) => `/casos-de-exito/${slug}`);
-  return [...core, ...cases].flatMap((route) => {
+  return [...core, "/fabricas", ...cases].flatMap((route) => {
     const english = route ? `/en${route}` : "/en";
     // x-default: la versión en español, para quien no habla ninguno de los dos.
     const languages = { es: `${base}${route}`, en: `${base}${english}`, "x-default": `${base}${route}` };
