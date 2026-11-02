@@ -1,118 +1,89 @@
-# T09 · Galería «Video y contenido con IA»
+# T09 · Galería «Video y contenido con IA» · Versión rehecha
 
 Documento de inventario y selección de piezas para la galería vertical de `/fabricas` (decisión **D11**).
 
 - **Dueño:** Gemini
-- **Fecha:** 1 de noviembre de 2026
-- **Voz:** Español neutro con tuteo, sin voseo.
+- **Fecha:** 1 de noviembre de 2026 (Rehecho según `ARRANQUE-6.md`)
+- **Voz:** Español neutro con tuteo, sin voseo (auditoría cuadro por cuadro en cada video y póster).
 - **Regla:** Sin datos de clientes, sin copiar archivos MP4 pesados a `public/`. Los pósters se alojan en `web/public/portfolio/video-ia/`.
 
 ---
 
-## 1. Criterio de selección
+## 1. Auditoría de voseo y descarte de reels
 
-Se seleccionaron **8 piezas verticales y cortas** (relación 9:16, 1080×1920 px), con una duración de entre 8 y 24 segundos. 
-Las piezas cubren los dos grandes motores de producción del estudio:
-1. **Sistema de contenido propio:** Piezas didácticas y metodológicas producidas con texto de Claude, placas sin texto de ChatGPT y composición/render headless por código.
-2. **Cinemáticas con código (Remotion):** Pieza de concepto comercial animada íntegramente mediante código React/Remotion y generación de imagen base por IA.
+En cumplimiento estricto de las directivas de `ARRANQUE-6.md`, se auditaron los 7 reels de entre el 12 y el 25/10 previamente seleccionados. Se confirmó la presencia de voseo visible en pantalla (títulos, subtítulos y llamadas a la acción):
 
-Todas las piezas fueron verificadas contra la exposición de datos de clientes: **0% de datos privados, 0 marcas comerciales reales ajenas, 0 métricas engañosas**.
+- `encuesta-automatizar`: *«¿Qué tarea repetís más a mano?»*, *«¿Cuál de estas seguís haciendo…?»*
+- `tres-preguntas-landing`: *«Tenés abierta una plantilla…»*, *«definí qué necesita…»*, *«Si querés que pida…»*, *«qué ofrecés…»*, *«No necesitás llenar…»*
+- `deja-de-pedir-una-web`: *«Imaginá esto…»*
+- `lead-23-45`: *«Vos ya cerraste el día…»*, *«mientras dormís…»*
+- `agente-sin-tests`: *«Imaginá que una reserva…»*, *«probá tres caminos…»*, *«revisá cuatro cosas…»*
+- `films-con-codigo`: *«¿qué querés explicar?»*, *«Cuando mostrás un proyecto…»*
+- `formulario-medico`: *«preguntá…»*, *«no lo pidas…»*, *«podés solicitarlo…»*
 
----
-
-## 2. Inventario de piezas seleccionadas
-
-| # | Slug / Título | Origen del archivo | Duración | Peso original | Herramientas declaradas | Póster en `public/portfolio/video-ia/` | Estado de cliente |
-|---|---|---|---|---|---|---|---|
-| 01 | **encuesta-automatizar**<br>«¿Qué tarea repetís más a mano?» | `contenido/piezas/2026-10-16-encuesta-automatizar/salida/reel.mp4` | 15.8 s | 3.73 MB *(< 4 MB)* | Sistema de contenido MMORERA · Texto de Claude · Render headless HTML | `encuesta-automatizar-poster.webp`<br>`encuesta-automatizar-poster.jpg` | Verificado limpio (encuesta comunitaria) |
-| 02 | **tres-preguntas-landing**<br>«Landing: primero, qué necesita saber la persona» | `contenido/piezas/2026-10-17-tres-preguntas-landing/salida/reel.mp4` | 19.6 s | 5.23 MB *(> 4 MB)* | Sistema de contenido MMORERA · Guion de Claude · Render headless HTML | `tres-preguntas-landing-poster.webp`<br>`tres-preguntas-landing-poster.jpg` | Verificado limpio (criterio metodológico) |
-| 03 | **deja-de-pedir-una-web**<br>«La web quedó publicada. ¿Quién la cuida después?» | `contenido/piezas/2026-10-19-deja-de-pedir-una-web/salida/reel.mp4` | 17.0 s | 4.19 MB *(> 4 MB)* | Sistema de contenido MMORERA · Placas de ChatGPT · Texto y revisiones de Claude | `deja-de-pedir-una-web-poster.webp`<br>`deja-de-pedir-una-web-poster.jpg` | Verificado limpio (escenario de mantenimiento) |
-| 04 | **lead-23-45**<br>«Una consulta llega a las 23:45» | `contenido/piezas/2026-10-14-lead-23-45/salida/reel.mp4` | 22.4 s | 5.98 MB *(> 4 MB)* | Sistema de contenido MMORERA · Placa fotográfica de ChatGPT · Guion de Claude | `lead-23-45-poster.webp`<br>`lead-23-45-poster.jpg` | Verificado limpio (simulación con datos de ejemplo) |
-| 05 | **agente-sin-tests**<br>«El mensaje salió. ¿Usó el dato correcto?» | `contenido/piezas/2026-10-12-agente-sin-tests/salida/reel.mp4` | 22.6 s | 6.09 MB *(> 4 MB)* | Sistema de contenido MMORERA · Placas de ChatGPT · Texto de Claude | `agente-sin-tests-poster.webp`<br>`agente-sin-tests-poster.jpg` | Verificado limpio (escenario técnico ilustrativo) |
-| 06 | **films-con-codigo**<br>«Captura, recorrido o diagrama: ¿qué querés explicar?» | `contenido/piezas/2026-10-22-films-con-codigo/salida/reel.mp4` | 23.1 s | 5.73 MB *(> 4 MB)* | Sistema de contenido MMORERA · Placas de ChatGPT · Texto editorial de Claude | `films-con-codigo-poster.webp`<br>`films-con-codigo-poster.jpg` | Verificado limpio (criterio de formatos motion) |
-| 07 | **formulario-medico**<br>«¿Este dato hace falta ahora?» | `contenido/piezas/2026-10-21-formulario-medico/salida/reel.mp4` | 21.4 s | 7.42 MB *(> 4 MB)* | Sistema de contenido MMORERA · Placas de ChatGPT · Copy de Claude | `formulario-medico-poster.webp`<br>`formulario-medico-poster.jpg` | Verificado limpio (caso didáctico de fricción) |
-| 08 | **ai-pizza-spec**<br>«Luna Forno · Fictional AI Spec Ad» | `output/services/ai-pizza-spec-v1/ai-pizza-spec-ad-v1.mp4` | 8.0 s | 4.93 MB *(> 4 MB)* | Remotion (`AiPizzaConcept.tsx`) · OpenAI ImageGen · FFmpeg | `ai-pizza-spec-poster.webp`<br>`ai-pizza-spec-poster.jpg` | Verificado limpio (rotulado explícito: *Fictional spec ad · Not client work*) |
+**Acción ejecutada:** Los 7 reels quedan descartados para la galería pública actual, y se eliminaron los 14 pósters asociados (`.webp` y `.jpg`) de `web/public/portfolio/video-ia/`.
 
 ---
 
-## 3. Detalle individual de cada pieza
+## 2. Piezas verticales verificadas sin voseo (Inspección de 3 cuadros)
 
-### 01 · `encuesta-automatizar`
-- **Archivo de origen:** `contenido/piezas/2026-10-16-encuesta-automatizar/salida/reel.mp4`
-- **Dimensiones:** 1080 × 1920 (9:16 vertical)
-- **Duración:** 15.8 segundos
-- **Peso:** 3.73 MB (no requiere compresión inmediata, cumple el umbral < 4 MB)
-- **Herramientas:** Sistema de contenido MMORERA; copy generado por Claude (revisión triple de claridad en `REVISION-LECTOR-*.md`); composición sobre `diseno/kit.css` y render automatizado.
-- **Póster generado:** [`web/public/portfolio/video-ia/encuesta-automatizar-poster.webp`](file:///c:/Users/morer/OneDrive/Desktop/MMORERA/web/public/portfolio/video-ia/encuesta-automatizar-poster.webp) (41.2 KB) y `.jpg` (98.4 KB).
-- **Verificación de clientes:** Sin datos de clientes. El texto plantea una consulta abierta sobre qué tarea manual quita más tiempo en un equipo.
+Se exploraron todas las piezas verticales disponibles en el repositorio (desde el 29/10 y en `output/`), revisando minuciosamente 3 cuadros clave (inicio, mitad y final) de cada una para verificar que no contengan voseo ni datos de clientes:
 
-### 02 · `tres-preguntas-landing`
-- **Archivo de origen:** `contenido/piezas/2026-10-17-tres-preguntas-landing/salida/reel.mp4`
-- **Dimensiones:** 1080 × 1920 (9:16 vertical)
-- **Duración:** 19.6 segundos
-- **Peso:** 5.23 MB (anotado para que Codex lo comprima por debajo de 3 MB)
-- **Herramientas:** Claude Opus (copywriter con verificación en `REVISION-LECTOR-2026-10-12-CLARIDAD.md`); maquetación tipográfica de alto contraste; render headless.
-- **Póster generado:** [`web/public/portfolio/video-ia/tres-preguntas-landing-poster.webp`](file:///c:/Users/morer/OneDrive/Desktop/MMORERA/web/public/portfolio/video-ia/tres-preguntas-landing-poster.webp) (37.5 KB) y `.jpg` (87.4 KB).
-- **Verificación de clientes:** Declarado formalmente en `pieza.json` como capacidad metodológica sin cliente ni resultado atribuido.
-
-### 03 · `deja-de-pedir-una-web`
-- **Archivo de origen:** `contenido/piezas/2026-10-19-deja-de-pedir-una-web/salida/reel.mp4`
-- **Dimensiones:** 1080 × 1920 (9:16 vertical)
-- **Duración:** 17.0 segundos
-- **Peso:** 4.19 MB (levemente superior a 4 MB; Codex puede optimizar la tasa de bits)
-- **Herramientas:** ChatGPT (placas fotográficas de taller sin texto, especificadas en `chatgpt.md`); Claude (redacción de copy y control de tono en 3 rondas); render HTML a video.
-- **Póster generado:** [`web/public/portfolio/video-ia/deja-de-pedir-una-web-poster.webp`](file:///c:/Users/morer/OneDrive/Desktop/MMORERA/web/public/portfolio/video-ia/deja-de-pedir-una-web-poster.webp) (24.1 KB) y `.jpg` (63.3 KB).
-- **Verificación de clientes:** Sin referencias a clientes reales. Escenario hipotético sobre traspaso de responsabilidades técnicas.
-
-### 04 · `lead-23-45`
-- **Archivo de origen:** `contenido/piezas/2026-10-14-lead-23-45/salida/reel.mp4`
-- **Dimensiones:** 1080 × 1920 (9:16 vertical)
-- **Duración:** 22.4 segundos
-- **Peso:** 5.98 MB (anotado para compresión de Codex)
-- **Herramientas:** ChatGPT (still life oscuro sin texto); Claude (copywriting de flujo automatizado de atención nocturna); motor de renderizado de reels.
-- **Póster generado:** [`web/public/portfolio/video-ia/lead-23-45-poster.webp`](file:///c:/Users/morer/OneDrive/Desktop/MMORERA/web/public/portfolio/video-ia/lead-23-45-poster.webp) (34.0 KB) y `.jpg` (82.7 KB).
-- **Verificación de clientes:** Simulación didáctica identificada expresamente en `pieza.json` como escenario recreado con datos sintéticos.
-
-### 05 · `agente-sin-tests`
-- **Archivo de origen:** `contenido/piezas/2026-10-12-agente-sin-tests/salida/reel.mp4`
-- **Dimensiones:** 1080 × 1920 (9:16 vertical)
-- **Duración:** 22.6 segundos
-- **Peso:** 6.09 MB (anotado para compresión de Codex)
-- **Herramientas:** ChatGPT (placa still life); Claude (guion con advertencia de control de calidad en automatizaciones); render HTML sobre `kit.css`.
-- **Póster generado:** [`web/public/portfolio/video-ia/agente-sin-tests-poster.webp`](file:///c:/Users/morer/OneDrive/Desktop/MMORERA/web/public/portfolio/video-ia/agente-sin-tests-poster.webp) (34.2 KB) y `.jpg` (85.1 KB).
-- **Verificación de clientes:** Sin datos personales, números de contacto ni nombres de empresas cliente.
-
-### 06 · `films-con-codigo`
-- **Archivo de origen:** `contenido/piezas/2026-10-22-films-con-codigo/salida/reel.mp4`
-- **Dimensiones:** 1080 × 1920 (9:16 vertical)
-- **Duración:** 23.1 segundos
-- **Peso:** 5.73 MB (anotado para compresión de Codex)
-- **Herramientas:** ChatGPT (placas sin texto); Claude (guion técnico sobre cinemáticas con Remotion y código); render headless.
-- **Póster generado:** [`web/public/portfolio/video-ia/films-con-codigo-poster.webp`](file:///c:/Users/morer/OneDrive/Desktop/MMORERA/web/public/portfolio/video-ia/films-con-codigo-poster.webp) (34.8 KB) y `.jpg` (85.1 KB).
-- **Verificación de clientes:** Criterio didáctico sobre diseño de cinemáticas para interfaces web.
-
-### 07 · `formulario-medico`
-- **Archivo de origen:** `contenido/piezas/2026-10-21-formulario-medico/salida/reel.mp4`
-- **Dimensiones:** 1080 × 1920 (9:16 vertical)
-- **Duración:** 21.4 segundos
-- **Peso:** 7.42 MB (anotado para compresión de Codex)
-- **Herramientas:** ChatGPT (placa de still life); Claude (copy sobre reducción de fricción en formularios); render HTML a video.
-- **Póster generado:** [`web/public/portfolio/video-ia/formulario-medico-poster.webp`](file:///c:/Users/morer/OneDrive/Desktop/MMORERA/web/public/portfolio/video-ia/formulario-medico-poster.webp) (41.7 KB) y `.jpg` (92.2 KB).
-- **Verificación de clientes:** Sin nombres de clínicas reales ni pacientes. Escenario conceptual de simplificación de campos.
-
-### 08 · `ai-pizza-spec`
+### Pieza 01 · `ai-pizza-spec` (Luna Forno)
 - **Archivo de origen:** `output/services/ai-pizza-spec-v1/ai-pizza-spec-ad-v1.mp4`
-- **Dimensiones:** 1080 × 1920 (9:16 vertical)
-- **Duración:** 8.0 segundos
-- **Peso:** 4.93 MB (anotado para compresión de Codex)
-- **Herramientas:** Remotion (`output/services/website-showreel/src/AiPizzaConcept.tsx`); OpenAI ImageGen (imagen fotográfica de la pizza horneada); FFmpeg (renderizado y codificación H.264).
-- **Póster generado:** [`web/public/portfolio/video-ia/ai-pizza-spec-poster.webp`](file:///c:/Users/morer/OneDrive/Desktop/MMORERA/web/public/portfolio/video-ia/ai-pizza-spec-poster.webp) (214.2 KB) y `.jpg` (326.8 KB).
-- **Verificación de clientes:** Expresamente rotulado en pantalla: *«FICTIONAL SPEC AD · AI-GENERATED CONCEPT · NOT CLIENT WORK»*. Marca ficticia «Luna Forno» sin datos de clientes.
+- **Dimensiones:** 1080 × 1920 (9:16 vertical) · **Duración:** 8.0 s · **Peso:** 4.93 MB
+- **Inspección de cuadros:**
+  - *Cuadro 1 (1.0 s):* Logo y tipografía inglesa «Luna Forno · Wood-Fired Craft».
+  - *Cuadro 2 (4.0 s):* Toma macro de pizza horneada con animación de vapor generada por IA.
+  - *Cuadro 3 (7.0 s):* Rótulo legal transparente: *«FICTIONAL SPEC AD · AI-GENERATED CONCEPT · NOT CLIENT WORK»*.
+- **Voz y datos:** 100% en inglés, 0% datos de clientes (marca ficticia declarada).
+- **Póster en `public/portfolio/video-ia/`:** [`ai-pizza-spec-poster.webp`](file:///c:/Users/morer/OneDrive/Desktop/MMORERA/web/public/portfolio/video-ia/ai-pizza-spec-poster.webp) (219 KB) y `.jpg` (334 KB).
+
+### Pieza 02 · `short-form-motion-v3` (Showcase de edición y ritmo)
+- **Archivo de origen:** `output/services/gallery-v3/short-form-v3/short-form-motion-v3.mp4`
+- **Dimensiones:** 1080 × 1920 (9:16 vertical) · **Duración:** 13.4 s · **Peso:** 5.18 MB
+- **Inspección de cuadros:**
+  - *Cuadro 1 (1.5 s):* «MMORERA / MOTION EDIT · 01 / THE OPENING: Make the first second count.» / Rótulo: *«Original edit / AI-generated source footage»*.
+  - *Cuadro 2 (6.7 s):* «02 / THE CUT: Change the pace. Keep the focus.»
+  - *Cuadro 3 (12.0 s):* «03 / THE FINISH: Clear type. Room to breathe.»
+- **Voz y datos:** 100% en inglés técnico/cinemático, 0% datos de clientes, sin voseo.
+- **Póster en `public/portfolio/video-ia/`:** [`short-form-motion-v3-poster.webp`](file:///c:/Users/morer/OneDrive/Desktop/MMORERA/web/public/portfolio/video-ia/short-form-motion-v3-poster.webp) (34.7 KB) y `.jpg` (86.2 KB).
+
+### Pieza 03 · `vertical-edit-sample` (Muestra de ritmo y resguardo móvil)
+- **Archivo de origen:** `output/services/gallery-v3/vertical-edit-sample-v2.mp4`
+- **Dimensiones:** 1080 × 1920 (9:16 vertical) · **Duración:** 9.0 s · **Peso:** 1.99 MB *(< 2 MB)*
+- **Inspección de cuadros:**
+  - *Cuadro 1 (1.5 s):* Visual 3D de escritorio de desarrollo con subtítulo inferior: «A clear hook.» / Rótulo: *«ORIGINAL EDITING SAMPLE»*.
+  - *Cuadro 2 (4.5 s):* «Readable captions.» sobre la zona de lectura segura.
+  - *Cuadro 3 (7.5 s):* «Intentional pacing.» con llamada visual de ritmo.
+- **Voz y datos:** 100% en inglés, 0% datos de clientes, sin voseo.
+- **Póster en `public/portfolio/video-ia/`:** [`vertical-edit-sample-poster.webp`](file:///c:/Users/morer/OneDrive/Desktop/MMORERA/web/public/portfolio/video-ia/vertical-edit-sample-poster.webp) (41.0 KB) y `.jpg` (89.1 KB).
 
 ---
 
-## 4. Notas para la implementación de Codex
+## 3. Lista para Claude: reels para re-renderizar en tuteo
 
-1. **Compresión pendiente:** 7 de los 8 videos superan los 4 MB (entre 4.19 y 7.42 MB). Cuando Codex prepare la galería para producción, se sugiere comprimir los videos con H.264 / CRF 26 o AV1 para dejarlos en torno a 1.5–2.5 MB por pieza.
-2. **Carga diferida:** Los pósters en `web/public/portfolio/video-ia/` pesan entre 24 KB y 41 KB (a excepción del visual complejo de pizza en 214 KB), lo cual permite una carga instantánea con `<video poster="..." preload="none">`.
-3. **Respeto a movimiento reducido:** En dispositivos con `prefers-reduced-motion: reduce`, el componente de la galería debe mostrar los pósters estáticos y requerir un clic o interacción explícita para reproducir el video.
+Al quedar 3 piezas verificadas (menos de las 6 requeridas para una cuadrícula completa), se detalla la propuesta exacta para volver a renderizar los reels más valiosos en **tuteo neutro**. Claude decide la prioridad y los renderiza con su motor:
+
+| Prioridad | Slug original | Frase con voseo en pantalla | Cómo queda en tuteo (propuesta exacta) | Motivo de valor para `/fabricas` |
+|---|---|---|---|---|
+| **1** | `encuesta-automatizar` | «¿Qué tarea repetís más a mano?»<br>«¿Cuál de estas seguís haciendo más a mano?» | «¿Qué tarea **repites** más a mano?»<br>«¿Cuál de estas **sigues** haciendo más a mano?» | Muestra cómo la fábrica produce contenido interactivo de consulta directa. |
+| **2** | `tres-preguntas-landing` | «Tenés abierta una plantilla… definí qué necesita… Si querés que pida… qué ofrecés… No necesitás llenar…» | «**Tienes** abierta una plantilla… **define** qué necesita… Si **quieres** que pida… qué **ofreces**… No **necesitas** llenar…» | Demuestra criterio metodológico de conversión y diseño web. |
+| **3** | `films-con-codigo` | «¿qué querés explicar?»<br>«Cuando mostrás un proyecto…» | «¿Qué **quieres** explicar?»<br>«Cuando **muestras** un proyecto…» | Explica directamente el servicio de cinemáticas y motion con código. |
+| **4** | `lead-23-45` | «Vos ya cerraste el día…»<br>«mientras dormís…» | «**Tú ya cerraste** el día…» (o «Tu jornada ya terminó»)<br>«mientras **duermes**…» | Conecta la fábrica de contenido con la automatización de atención nocturna. |
+| **5** | `agente-sin-tests` | «Imaginá que una reserva…»<br>«probá tres caminos…»<br>«revisá cuatro cosas…» | «**Imagina** que una reserva…»<br>«**prueba** tres caminos…»<br>«**revisa** cuatro cosas…» | Refuerza la seriedad técnica y el control de calidad en agentes. |
+| **6** | `deja-de-pedir-una-web` | «Imaginá esto: hay que cambiar…» | «**Imagina** esto: hay que cambiar…» | Introduce el mantenimiento responsable tras el lanzamiento web. |
+| **7** | `formulario-medico` | «preguntá… no lo pidas… podés solicitarlo…» | «**pregunta**… no lo pidas… **puedes** solicitarlo…» | Ilustra la reducción de fricción en formularios y experiencia de usuario. |
+
+*Recomendación:* Con volver a renderizar los 3 primeros (`encuesta-automatizar`, `tres-preguntas-landing` y `films-con-codigo`), la galería alcanza las 6 piezas óptimas requeridas (3 cinemáticas en inglés + 3 reels didácticos en tuteo).
+
+---
+
+## 4. Estado de los activos en `web/public/portfolio/video-ia/`
+
+Se encuentran generados y listos para carga diferida:
+- `ai-pizza-spec-poster.webp` (219.3 KB) y `.jpg` (334.6 KB)
+- `short-form-motion-v3-poster.webp` (34.7 KB) y `.jpg` (86.2 KB)
+- `vertical-edit-sample-poster.webp` (41.0 KB) y `.jpg` (89.1 KB)
+
+Todos los pósters de los reels descartados fueron borrados de `public/`.
