@@ -114,7 +114,7 @@ export const PROJECT_CASES: ProjectCase[] = [
     // «Pruébalo tú»: rutas verificadas en T28 (docs/triada/gemini/T28-pruebalo.md).
     tryIt: [
       { href: t("https://nb-barber.vercel.app/reservar", "https://nb-barber.vercel.app/reservar"), label: t("Prueba la reserva en 6 pasos", "Try the 6-step booking"), kind: "demo" },
-      { href: t("https://nb-barber.vercel.app/admin-login", "https://nb-barber.vercel.app/admin-login"), label: t("Entra al CRM demo", "Open the demo CRM"), kind: "demo", note: t("Con el botón de acceso demo; incluye el asistente con base de conocimiento.", "Use the demo access button; it includes the assistant with its knowledge base.") },
+      { href: t("https://nb-barber.vercel.app/admin-login", "https://nb-barber.vercel.app/admin-login"), label: t("Entra al CRM", "Open the CRM"), kind: "demo", note: t("Con el botón de acceso demo; incluye el asistente con base de conocimiento.", "Use the demo access button; it includes the assistant with its knowledge base.") },
     ],
     accent: "#D4AF37",
     status: "featured",

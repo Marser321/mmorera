@@ -8,7 +8,7 @@
  */
 
 export type Language = "es" | "en";
-export type PaginaSeo = "inicio" | "trabajo" | "sistemas" | "estudio" | "hablemos" | "privacidad" | "cv";
+export type PaginaSeo = "inicio" | "trabajo" | "sistemas" | "estudio" | "hablemos" | "privacidad" | "cv" | "fabricas";
 
 type Texto = Record<Language, string>;
 
@@ -29,8 +29,8 @@ export interface PaginaSeoData {
   tituloAbsoluto?: boolean;
   title: Texto;
   description: Texto;
-  /** Qué portada usa (privacidad y cv reusan la del inicio). */
-  portada: Exclude<PaginaSeo, "privacidad" | "cv">;
+  /** Qué portada usa (privacidad, cv y fabricas reusan la del inicio). */
+  portada: Exclude<PaginaSeo, "privacidad" | "cv" | "fabricas">;
 }
 
 export const PAGINAS_SEO: Record<PaginaSeo, PaginaSeoData> = {
@@ -89,6 +89,15 @@ export const PAGINAS_SEO: Record<PaginaSeo, PaginaSeoData> = {
     description: {
       es: "Qué información recibo cuando me escribes por el formulario, el email o WhatsApp, para qué la uso, con quién se comparte y cómo puedes pedir que la borre.",
       en: "What information I receive when you write through the form, email or WhatsApp, what I use it for, who it is shared with and how to ask me to delete it.",
+    },
+    portada: "inicio",
+  },
+  fabricas: {
+    path: "/fabricas",
+    title: { es: "Contenido con IA para marcas", en: "AI content for brands" },
+    description: {
+      es: "Sistemas que convierten un brief en posts, carruseles y videos para tu marca, con revisión humana en cada pieza. Así se hace una pieza real, etapa por etapa.",
+      en: "Systems that turn a brief into posts, carousels and videos for your brand, with human review on every piece. See how a real piece is made, stage by stage.",
     },
     portada: "inicio",
   },

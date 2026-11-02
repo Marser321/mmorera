@@ -9,7 +9,7 @@ T27, T37 y T39 están integradas en `triada/web`. Gracias por la lista exacta de
 - **la foto** reemplaza al monograma en `#perfil` (D13);
 - **el CV y el SEO de `/cv`** ya están (D14).
 
-Siguen 2 tarjetas, desde la punta de `triada/web`, cada una en su worktree. **No sincronices el tablero en mi worktree.**
+Siguen 3 tarjetas, desde la punta de `triada/web`, cada una en su worktree. **No sincronices el tablero en mi worktree.**
 
 ## 1. T40 · e2e de las páginas de servicio y la foto
 
@@ -36,6 +36,12 @@ Brief con los textos exactos: **`web/docs/triada/briefs/T06-cv.md`**.
   - conectar el `cvLink` del héroe (`CV_DESTINATION`), el ítem «Sobre mí · CV» del menú y «Ver CV» en el contacto.
 - **«Con qué trabajo»:** reutiliza `OrchestrationWheelSection` en versión simple, o una lista con los datos de `skillOrbit`. Elige lo más liviano y explícalo.
 - **Listo cuando:** `/cv` y `/en/cv` se ven a 390 y 1440 px, con teclado y movimiento reducido; los PDF abren; y el texto no nombra el país (lo controla `publicContent`).
+
+## 3. T08 · Página `/fabricas` (después de T06)
+
+Brief: **`web/docs/triada/briefs/T08-fabricas.md`**. Los datos de la página (`SERVICE_PAGES.fabricas`) y el SEO ya están en `triada/web`.
+- Arma la ruta con la plantilla y los dos componentes del slot: `BriefToPiece` y `VideoGallery`. Usa fixtures de test: los datos reales los cargo yo cuando Gemini rehaga T33 y T09.
+- **No enlaces `/fabricas` desde el menú ni desde el home** hasta que estén los datos reales.
 
 ## Al terminar cada tarjeta
 

@@ -77,7 +77,7 @@ export const SERVICE_PAGES = {
     ),
     proof: {
       title: t("Sistemas que ya construí", "Systems I've already built"),
-      slugs: ["rangel-oviedo-group", "lb-elite-wash-detail", "new-brothers-barberia"],
+      slugs: ["rangel-oviedo-group", "lb-elite-wash-detail", "ad-media-solution"],
     },
     hiring: HIRING,
     closing: {
@@ -106,8 +106,8 @@ export const SERVICE_PAGES = {
         "Businesses that get enquiries but lose sales because their site doesn't explain what they do."
       ),
       notFor: t(
-        "Si tu web ya funciona y solo quieres cambiar textos, no hace falta rehacerla.",
-        "If your site already works and you only want to change the copy, there's no need to rebuild it."
+        "Si tu web ya te trae consultas y solo quieres cambiar algunos textos, no hace falta rehacerla.",
+        "If your site already brings you enquiries and you only want to change some copy, there's no need to rebuild it."
       ),
     },
     deliverables: deliverablesOf("web-ecommerce"),
@@ -132,4 +132,44 @@ export const SERVICE_PAGES = {
       cta: { label: t("Hablemos de tu web", "Let's talk about your website") },
     },
   },
-} satisfies Record<"sistemas" | "estudio", ServicePageContent>;
+  /** /fabricas → «Contenido con IA» (T08, D11). El slot muestra «Del brief a la pieza» (T33) y la galería (T09). */
+  fabricas: {
+    hero: {
+      eyebrow: t("Contenido con IA", "AI content"),
+      title: t("Contenido constante para tu marca, con tu criterio en cada pieza.", "Steady content for your brand, with your judgment in every piece."),
+      body: t(
+        "Armo sistemas que convierten un brief en posts, carruseles y videos: modelos de lenguaje, imagen generada y edición por código, con una persona que revisa cada pieza antes de publicarla. Es el mismo sistema con el que hago mi propio contenido.",
+        "I build systems that turn a brief into posts, carousels and videos: language models, generated images and code-based editing, with a person reviewing every piece before it's published. It's the same system I use for my own content."
+      ),
+      cta: { label: t("Hablemos de tu contenido", "Let's talk about your content") },
+    },
+    audience: {
+      title: AUDIENCE_TITLE,
+      for: t(
+        "Marcas y equipos de marketing que necesitan publicar con constancia sin bajar la calidad.",
+        "Brands and marketing teams that need to publish consistently without lowering the quality."
+      ),
+      notFor: t(
+        "Si buscas cientos de videos baratos por semana, esto no es para ti: aquí cada pieza pasa por una revisión.",
+        "If you're after hundreds of cheap videos a week, this isn't for you: here every piece gets reviewed."
+      ),
+    },
+    deliverables: deliverablesOf("ai-software"),
+    tools: t(
+      "Con Claude para el texto, imagen generada sin texto para las placas y Remotion para componer y animar por código.",
+      "With Claude for the copy, text-free generated images for the backgrounds and Remotion to compose and animate in code."
+    ),
+    howItWorks: {
+      title: t("Del brief a la pieza", "From brief to piece"),
+      body: t(
+        "Así se hizo una pieza real de mi propio contenido, etapa por etapa: qué hizo la IA y qué decidió una persona.",
+        "How a real piece of my own content was made, stage by stage: what the AI did and what a person decided."
+      ),
+    },
+    hiring: HIRING,
+    closing: {
+      title: t("¿Quieres publicar con constancia sin perder tu voz?", "Want to publish consistently without losing your voice?"),
+      cta: { label: t("Hablemos de tu contenido", "Let's talk about your content") },
+    },
+  },
+} satisfies Record<"sistemas" | "estudio" | "fabricas", ServicePageContent>;
