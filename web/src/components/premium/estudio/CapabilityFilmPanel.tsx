@@ -38,7 +38,7 @@ const caseHref = (language: Language, slug: string, chapter: string) => localePa
  * resuelve, con qué herramientas y los casos que la demuestran, cada uno
  * enlazado al capítulo de su film. Se reproduce al verse, una vez.
  */
-export function CapabilityFilmPanel({ family, language }: { family: Family; language: Language }) {
+export function CapabilityFilmPanel({ family, language, showHint = true }: { family: Family; language: Language; showHint?: boolean }) {
     const c = COPY[language];
     const node = SKILL_ORBIT.find((item) => item.id === family)!;
     const format = useFilmFormat();
@@ -94,7 +94,7 @@ export function CapabilityFilmPanel({ family, language }: { family: Family; lang
                 <span aria-hidden className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: node.color }} />
                 {node.label[language]}
             </h3>
-            <p className="mt-2 text-sm text-foreground/50">{c.hint}</p>
+            {showHint && <p className="mt-2 text-sm text-foreground/50">{c.hint}</p>}
 
             <FilmStage
                 key={family}

@@ -37,17 +37,23 @@ const copy = {
 
 const heading = "text-balance text-2xl font-medium leading-tight tracking-[-.03em] text-foreground sm:text-3xl";
 
-/** Lectura en servidor: familias y herramientas, sin órbita ni niveles de dominio. */
-export function CvDocument({ language }: { language: "es" | "en" }) {
+/**
+ * Lectura en servidor: familias y herramientas, sin órbita ni niveles de dominio.
+ * `embedded`: va dentro de /sobre-mi, debajo de la película de autor (sección
+ * `#cv` con título H2; la página tiene su propio H1).
+ */
+export function CvDocument({ language, embedded = false }: { language: "es" | "en"; embedded?: boolean }) {
   const c = copy[language];
   const primaryPdf = `/cv/mario-morera-cv-${language}.pdf`;
   const otherPdf = `/cv/mario-morera-cv-${language === "es" ? "en" : "es"}.pdf`;
 
-  return <main id="contenido-principal" lang={language} tabIndex={-1} className="focus:outline-none bg-background px-5 pb-28 pt-32 sm:px-8 sm:pt-40 lg:px-12">
+  const Root = embedded ? "section" : "main";
+  const Title = embedded ? "h2" : "h1";
+  return <Root {...(embedded ? { id: "cv", "aria-labelledby": "cv-title", className: "scroll-mt-24 bg-background px-5 pb-28 pt-20 sm:px-8 sm:pt-28 lg:px-12" } : { id: "contenido-principal", lang: language, tabIndex: -1, className: "focus:outline-none bg-background px-5 pb-28 pt-32 sm:px-8 sm:pt-40 lg:px-12" })}>
     <article className="mx-auto max-w-5xl">
       <header className="max-w-4xl">
         <p className="text-xs font-medium uppercase tracking-[.16em] text-signal">{c.eyebrow}</p>
-        <h1 className="mt-4 text-balance text-[clamp(2.2rem,4.5vw,4rem)] font-medium leading-[1.04] tracking-[-.04em] text-foreground">{c.title}</h1>
+        <Title id="cv-title" className="mt-4 text-balance text-[clamp(2.2rem,4.5vw,4rem)] font-medium leading-[1.04] tracking-[-.04em] text-foreground">{c.title}</Title>
         <p className="mt-6 max-w-3xl text-base leading-relaxed text-foreground/75 sm:text-lg">{c.intro}</p>
         <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">
           <a href={primaryPdf} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-12 items-center gap-3 rounded-full bg-foreground px-6 py-3 text-sm font-semibold text-background hover:bg-signal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{c.pdf}<ArrowUpRight aria-hidden="true" className="h-4 w-4 shrink-0" /></a>
@@ -94,5 +100,5 @@ export function CvDocument({ language }: { language: "es" | "en" }) {
         <CvContactActions language={language} email={SITE_IDENTITY.contact.email} />
       </section>
     </article>
-  </main>;
+  </Root>;
 }

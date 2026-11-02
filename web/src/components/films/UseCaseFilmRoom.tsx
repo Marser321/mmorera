@@ -27,8 +27,10 @@ function tap() {
  * Sala de casos de uso de /sistemas: un solo Player cuyo guion cambia con
  * las pestañas. Se reproduce al entrar en pantalla, pausa al salir, avanza
  * solo al siguiente caso y cada nodo del flujo abre su inspector.
+ * En /casos-de-uso/<caso>, `only` deja un solo film y `showHeader={false}`
+ * cede el encabezado a la página (su H1).
  */
-export function UseCaseFilmRoom() {
+export function UseCaseFilmRoom({ only, showHeader = true, allHref }: { only?: string; showHeader?: boolean; allHref?: string } = {}) {
   const { language } = useLanguage();
   const isEs = language === "es";
   const format = useFilmFormat();
@@ -43,7 +45,8 @@ export function UseCaseFilmRoom() {
   /** Cuadro al que ir cuando el Player termine de cargar (un nodo tocado antes de tiempo). */
   const pendingSeekRef = useRef<number | null>(null);
 
-  const film = USE_CASE_FILMS[active];
+  const films = useMemo(() => (only ? USE_CASE_FILMS.filter((item) => item.id === only) : USE_CASE_FILMS), [only]);
+  const film = films[active] ?? films[0];
   const systemChapter = film.chapters[2];
   const caseTitle = film.caseTitle?.[language];
   const badgeLabel = film.kind === "real"
@@ -83,12 +86,12 @@ export function UseCaseFilmRoom() {
     }
     if (!player) return;
     if (reducedMotion) {
-      player.seekTo(USE_CASE_FILMS[index].chapters[2].from + USE_CASE_FILMS[index].chapters[2].durationInFrames - 24);
+      player.seekTo(films[index].chapters[2].from + films[index].chapters[2].durationInFrames - 24);
       return;
     }
     player.seekTo(0);
     if (visibleRef.current && !userPausedRef.current) player.play();
-  }, [clearAdvance, player, reducedMotion]);
+  }, [clearAdvance, films, player, reducedMotion]);
 
   // Reproduce solo mientras se ve; respeta la pausa manual y reduced-motion.
   useEffect(() => {
@@ -102,15 +105,15 @@ export function UseCaseFilmRoom() {
   useEffect(() => {
     if (!player) return;
     const onEnded = () => {
-      if (userPausedRef.current || reducedMotion) return;
-      advanceTimerRef.current = window.setTimeout(() => selectFilm((active + 1) % USE_CASE_FILMS.length, false), ADVANCE_DELAY_MS);
+      if (userPausedRef.current || reducedMotion || films.length < 2) return;
+      advanceTimerRef.current = window.setTimeout(() => selectFilm((active + 1) % films.length, false), ADVANCE_DELAY_MS);
     };
     player.addEventListener("ended", onEnded);
     return () => {
       player.removeEventListener("ended", onEnded);
       clearAdvance();
     };
-  }, [active, clearAdvance, player, reducedMotion, selectFilm]);
+  }, [active, clearAdvance, films.length, player, reducedMotion, selectFilm]);
 
   useEffect(() => {
     const pauseHidden = () => {
@@ -188,22 +191,27 @@ export function UseCaseFilmRoom() {
   ) : null;
 
   return (
-    <section className="relative isolate border-y border-white/10 bg-card px-5 py-16 light:border-[rgb(var(--ink-rgb)/0.1)] sm:px-8 lg:px-12 lg:py-24" aria-labelledby="use-cases-title">
+    <section className="relative isolate border-y border-white/10 bg-card px-5 py-16 light:border-[rgb(var(--ink-rgb)/0.1)] sm:px-8 lg:px-12 lg:py-24" {...(showHeader ? { "aria-labelledby": "use-cases-title" } : { "aria-label": film.title[language] })}>
       <div className="mx-auto max-w-[1480px]">
         <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
-          <div>
+          {showHeader && <div>
             <p className="font-mono text-[10px] uppercase tracking-[.18em] text-foreground/55 light:text-muted-foreground/85">02 · {isEs ? "Casos de uso" : "Use cases"}</p>
             <h2 id="use-cases-title" className="mt-4 text-3xl font-medium tracking-[-.04em] text-foreground sm:text-5xl">
               {isEs ? "Del problema al sistema, paso a paso." : "From problem to system, step by step."}
             </h2>
-          </div>
+            {allHref && (
+              <Link href={allHref} className="mt-4 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-signal underline underline-offset-4 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal">
+                {isEs ? "Ver todos los casos de uso" : "See all use cases"}<ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            )}
+          </div>}
           <p className="font-mono text-[10px] uppercase tracking-widest text-foreground/55 light:text-muted-foreground/85">
             {isEs ? "Toca un nodo para inspeccionarlo" : "Tap a node to inspect it"}
           </p>
         </div>
 
-        <div role="tablist" aria-label={isEs ? "Casos de uso" : "Use cases"} className="mt-10 grid gap-2 md:grid-cols-3">
-          {USE_CASE_FILMS.map((item, index) => {
+        {films.length > 1 && <div role="tablist" aria-label={isEs ? "Casos de uso" : "Use cases"} className="mt-10 grid gap-2 md:grid-cols-3">
+          {films.map((item, index) => {
             const selected = index === active;
             return (
               <button
@@ -230,10 +238,10 @@ export function UseCaseFilmRoom() {
               </button>
             );
           })}
-        </div>
+        </div>}
 
         {/* El film + capítulos entran en una pantalla de escritorio */}
-        <div id="use-case-panel" role="tabpanel" aria-labelledby={`use-case-tab-${film.id}`} className="mx-auto mt-6" style={{ maxWidth: "min(100%, calc((100svh - 230px) * 16 / 9))" }}>
+        <div id="use-case-panel" {...(films.length > 1 ? { role: "tabpanel", "aria-labelledby": `use-case-tab-${film.id}` } : {})} className="mx-auto mt-6" style={{ maxWidth: "min(100%, calc((100svh - 230px) * 16 / 9))" }}>
           <FilmStage
             source={source}
             format={format}

@@ -68,7 +68,7 @@ export const USE_CASE_SLUGS: Record<string, string> = {
   "cold-lead-revival": "ningun-lead-se-enfria",
 };
 
-export const useCaseFromSlug = (slug: string): string | undefined =>
+export const findUseCaseBySlug = (slug: string): string | undefined =>
   Object.keys(USE_CASE_SLUGS).find((id) => USE_CASE_SLUGS[id] === slug);
 
 /** El servicio que resuelve cada caso de uso. */
@@ -92,6 +92,8 @@ export const USE_CASES_PAGE = {
     back: t("Todos los casos de uso", "All use cases"),
     service: t("El servicio que lo resuelve", "The service that solves it"),
     seenIn: t("Visto en", "Seen in"),
+    story: t("El caso, en texto", "The case, in text"),
+    others: t("Otros casos de uso", "Other use cases"),
   },
 };
 
@@ -143,5 +145,22 @@ export const LAB_PAGE = {
       body: t("Una bandeja que junta WhatsApp, Instagram y formularios, con un agente que responde. Datos de ejemplo.", "An inbox that brings together WhatsApp, Instagram and forms, with an agent that replies. Sample data."),
     },
   },
+  try: t("Probar la demo", "Try the demo"),
   back: t("Volver al Lab", "Back to the Lab"),
 };
+
+/** Slug de cada demo del Lab. */
+export const LAB_SLUGS = { tokens: "identidad-visual", inbox: "bandeja" } as const;
+
+/* ─── Puertas a las ramas (portada, /estudio) ─── */
+
+export const EXPLORE_DOORS = {
+  title: t("Explora más", "Explore more"),
+  doors: {
+    capacidades: { path: "/capacidades", title: t("Capacidades", "Capabilities"), body: t("Nueve capacidades. Toca una y mira cómo responde el sitio.", "Nine capabilities. Tap one and watch the site respond.") },
+    casosDeUso: { path: "/casos-de-uso", title: t("Casos de uso", "Use cases"), body: t("Problemas reales, contados como films.", "Real problems, told as films.") },
+    lab: { path: "/lab", title: t("Lab", "Lab"), body: t("Demos que puedes tocar.", "Demos you can play with.") },
+  },
+};
+
+export type ExploreDoor = keyof typeof EXPLORE_DOORS.doors;

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
+import { localePath } from "@/config/site";
 import { useLanguage } from "@/context/LanguageContext";
 import { useActiveTech } from "@/context/ActiveTechContext";
 import { ServicePage } from "@/components/service/ServicePage";
@@ -24,5 +25,5 @@ export function SystemsExperience({ content }: { content: ServicePageContent }) 
     observer.observe(heroRef.current);
     return () => observer.disconnect();
   }, [setHeroVisible]);
-  return <ServicePage content={content} language={language} heroRef={heroRef} howItWorks={<><ScrollFilm /><UseCaseFilmRoom /></>} />;
+  return <ServicePage content={content} language={language} heroRef={heroRef} howItWorks={<><ScrollFilm /><UseCaseFilmRoom allHref={localePath(language, "/casos-de-uso")} /></>} />;
 }

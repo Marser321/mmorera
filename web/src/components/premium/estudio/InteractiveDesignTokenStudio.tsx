@@ -24,7 +24,8 @@ import {
 } from "@/data/designTokenData";
 import { WHATSAPP_PHONE_NUMBER } from "@/data/whatsappScopeData";
 
-export function InteractiveDesignTokenStudio() {
+/** `showHeader={false}`: en /lab/identidad-visual el encabezado lo pone la página. */
+export function InteractiveDesignTokenStudio({ showHeader = true }: { showHeader?: boolean } = {}) {
   const { language } = useLanguage();
   const isEs = language === "es";
 
@@ -109,7 +110,7 @@ export function InteractiveDesignTokenStudio() {
       />
 
       {/* Header */}
-      <div className="relative z-10 max-w-3xl">
+      {showHeader && <div className="relative z-10 max-w-3xl">
         <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3.5 py-1 text-xs font-mono text-foreground/80">
           <Palette className="h-3.5 w-3.5" style={{ color: activeTheme.accentColor }} />
           <span>
@@ -128,11 +129,11 @@ export function InteractiveDesignTokenStudio() {
             ? "Explora cómo la paleta cromática, el radio de curvatura y la refracción de vidrio transforman la experiencia antes de escribir una sola línea de código. Exporta la configuración lista para Tailwind CSS."
             : "Explore how color harmony, curvature physics, and glass refraction reshape the experience before writing a single line of code. Export production-ready Tailwind CSS configurations."}
         </p>
-      </div>
+      </div>}
 
       {/* Studio Workbench */}
       {/* min-w-0 en las columnas: el bloque de código no ensancha la grilla en el teléfono. */}
-      <div className="relative z-10 mt-10 grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start [&>*]:min-w-0">
+      <div className={`relative z-10 ${showHeader ? "mt-10" : ""} grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start [&>*]:min-w-0`}>
         {/* Left Controls */}
         <div className="space-y-8">
           {/* Step 1: Color Themes */}

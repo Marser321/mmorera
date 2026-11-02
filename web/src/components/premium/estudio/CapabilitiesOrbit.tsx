@@ -1,6 +1,8 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import { useActiveTech } from "@/context/ActiveTechContext";
 import type { Language } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
@@ -44,6 +46,7 @@ const COPY = {
         hint: "Toca un nodo para abrirlo · Esc para cerrar",
         tools: "Herramientas",
         toolsCount: (n: number) => `${n} herramientas`,
+        open: "Ver esta capacidad",
     },
     en: {
         eyebrow: "01 · Capabilities",
@@ -55,10 +58,21 @@ const COPY = {
         hint: "Tap a node to open it · Esc to close",
         tools: "Tools",
         toolsCount: (n: number) => `${n} tools`,
+        open: "See this capability",
     },
 } as const;
 
-export function CapabilitiesOrbit({ language }: { language: Language }) {
+interface CapabilitiesOrbitProps {
+    language: Language;
+    /** En /capacidades la página trae su H1: la órbita no repite su encabezado. */
+    showHeader?: boolean;
+    /** Familias que dibuja el fondo con la órbita cerrada. */
+    defaultFamilies?: Family[];
+    /** Enlace a la página de cada familia (/capacidades/<familia>). */
+    familyHref?: (family: Family) => string;
+}
+
+export function CapabilitiesOrbit({ language, showHeader = true, defaultFamilies = STUDIO_FAMILIES, familyHref }: CapabilitiesOrbitProps) {
     const { theme } = useTheme();
     const { setActiveFamilies } = useActiveTech();
     const c = COPY[language];
@@ -89,17 +103,18 @@ export function CapabilitiesOrbit({ language }: { language: Language }) {
     // (`activeTechName` lo escribe el propio campo, no esta sección).
     const handleActiveChange = useCallback(
         (id: string | null) => {
-            setActiveFamilies(id ? [id as Family] : STUDIO_FAMILIES);
+            setActiveFamilies(id ? [id as Family] : defaultFamilies);
             if (id) setFilmFamily(id as Family);
         },
-        [setActiveFamilies]
+        [setActiveFamilies, defaultFamilies]
     );
 
     return (
         // overflow-x-clip: antes de medirse, la órbita usa un radio de 200 px y en
         // el teléfono los nodos sobresalían 27 px (scroll lateral al cargar).
-        <section className="mt-24 overflow-x-clip border-y border-white/10 bg-relieve px-5 py-20 sm:px-8 lg:px-12 lg:py-28 light:border-[rgb(var(--ink-rgb)/0.1)] light:bg-card">
+        <section className={`${showHeader ? "mt-24" : ""} overflow-x-clip border-y border-white/10 bg-relieve px-5 py-20 sm:px-8 lg:px-12 lg:py-28 light:border-[rgb(var(--ink-rgb)/0.1)] light:bg-card`}>
             <div className="mx-auto max-w-[1480px]">
+                {showHeader && <>
                 <p className="font-mono text-[10px] uppercase tracking-[.18em] text-foreground/55">
                     {c.eyebrow}
                 </p>
@@ -114,6 +129,7 @@ export function CapabilitiesOrbit({ language }: { language: Language }) {
                     </Reveal>
                 </div>
                 <DrawRule className="mt-12 block h-px w-full bg-white/10 light:bg-[rgb(var(--ink-rgb)/0.1)]" />
+                </>}
 
                 <div className="mt-6 grid gap-14 lg:grid-cols-2 lg:items-start lg:gap-12">
                     <RadialOrbitalTimeline
@@ -122,7 +138,8 @@ export function CapabilitiesOrbit({ language }: { language: Language }) {
                         onActiveChange={handleActiveChange}
                         renderExtra={(node) => {
                             const techs = techsForFamily(node.id as Family);
-                            if (techs.length === 0) return null;
+                            const href = familyHref?.(node.id as Family);
+                            if (techs.length === 0 && !href) return null;
                             return (
                                 <div className="mt-5 border-t border-white/10 pt-4 light:border-[rgb(var(--ink-rgb)/0.1)]">
                                     <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-foreground/55">
@@ -135,6 +152,11 @@ export function CapabilitiesOrbit({ language }: { language: Language }) {
                                             </span>
                                         ))}
                                     </div>
+                                    {href && (
+                                        <Link href={href} className="mt-4 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-signal underline underline-offset-4 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                                            {c.open}<ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                                        </Link>
+                                    )}
                                 </div>
                             );
                         }}

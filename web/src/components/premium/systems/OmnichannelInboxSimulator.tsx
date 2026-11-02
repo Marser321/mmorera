@@ -9,6 +9,7 @@ import {
   OMNICHANNEL_LEADS,
   type OmnichannelLead,
 } from "@/data/omnichannelInboxData";
+import { WHATSAPP_PHONE_NUMBER } from "@/data/whatsappScopeData";
 import {
   Inbox,
   Sparkles,
@@ -17,7 +18,8 @@ import {
   ArrowRight,
 } from "lucide-react";
 
-export function OmnichannelInboxSimulator() {
+/** `showHeader={false}`: en /lab/bandeja el encabezado lo pone la página; el rótulo de datos de ejemplo queda. */
+export function OmnichannelInboxSimulator({ showHeader = true }: { showHeader?: boolean } = {}) {
   const { language } = useLanguage();
   const isEs = language === "es";
 
@@ -52,7 +54,7 @@ export function OmnichannelInboxSimulator() {
     const text = isEs
       ? `Hola Mario, estuve probando el Simulador de Bandeja Unificada en tu web con el caso de ${activeLead.channelLabel}. Me interesa evaluar la centralización de canales y agentes de respuesta rápida para mi empresa.`
       : `Hi Mario, I was testing your Omnichannel Unified Inbox simulator with the ${activeLead.channelLabel} case. I'd like to centralize our customer messaging and fast-reply AI agents.`;
-    return `https://wa.me/59892323675?text=${encodeURIComponent(text)}`;
+    return `https://wa.me/${WHATSAPP_PHONE_NUMBER}?text=${encodeURIComponent(text)}`;
   }, [activeLead, isEs]);
 
   return (
@@ -77,18 +79,18 @@ export function OmnichannelInboxSimulator() {
               className="h-2.5 w-2.5 rounded-full shadow-[0_0_12px_currentColor] transition-colors duration-500"
               style={{ backgroundColor: activeLead.channelColor, color: activeLead.channelColor }}
             />
-            <p
+            {showHeader && <p
               className="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] transition-colors duration-500"
               style={{ color: activeLead.channelColor }}
             >
               {isEs ? "03 · Bandeja Omnicanal & Speed-to-Lead" : "03 · Omnichannel Inbox & Speed-to-Lead"}
-            </p>
+            </p>}
             {/* Demo: prospectos, puntajes y tiempos son de ejemplo, no de un cliente. */}
             <span className="ml-1 rounded-full border border-white/15 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-foreground/60 light:border-[rgb(var(--ink-rgb)/0.16)]">
               {isEs ? "Datos de ejemplo" : "Sample data"}
             </span>
           </div>
-          <SplitReveal
+          {showHeader && <><SplitReveal
             as="h2"
             text={
               isEs
@@ -101,11 +103,11 @@ export function OmnichannelInboxSimulator() {
             {isEs
               ? "WhatsApp Business, Instagram DM, formularios web y pauta publicitaria sincronizados en tiempo real. Tu equipo y los agentes de IA atienden desde una sola consola, sin prospectos perdidos entre pestañas ni olvidos."
               : "WhatsApp Business, Instagram DMs, web forms, and ad campaigns synced in real time. Your team and AI agents respond from one console, so no lead gets lost between tabs."}
-          </Reveal>
+          </Reveal></>}
         </div>
 
         {/* ─── STAGE PRINCIPAL DE LA BANDEJA (3 PANELES) ─── */}
-        <div className="mt-10 grid gap-6 lg:grid-cols-[0.8fr_1.4fr_0.9fr]">
+        <div className={`${showHeader ? "mt-10" : "mt-6"} grid gap-6 lg:grid-cols-[0.8fr_1.4fr_0.9fr]`}>
           {/* Panel 1: Lista de Prospectos Multicanal */}
           <div className="rounded-3xl border border-white/14 bg-card/60 p-5 backdrop-blur-xl flex flex-col justify-between">
             <div>

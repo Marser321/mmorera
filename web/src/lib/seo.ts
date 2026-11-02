@@ -54,6 +54,26 @@ export function pageMetadata(pagina: PaginaSeo, language: Language): Metadata {
   };
 }
 
+/**
+ * Metadatos de una página de rama (una familia de capacidades, un caso de uso):
+ * canónica, hreflang, OG y X, con la portada del inicio. El título lleva la
+ * plantilla «— Mario Morera» del layout.
+ */
+export function branchMetadata(path: string, language: Language, title: string, description: string): Metadata {
+  const url = localePath(language, path);
+  const fullTitle = `${title} — ${SITE_IDENTITY.brand}`;
+  const image = { url: portadaPath("inicio", language), ...OG_SIZE, alt: PORTADAS_OG.inicio.titular[language], type: "image/jpeg" };
+  const text = recortarDescripcion(description);
+  return {
+    title,
+    description: text,
+    keywords: KEYWORDS[language],
+    alternates: { canonical: url, languages: idiomasDe(path) },
+    openGraph: { type: "website", url, siteName: SITE_IDENTITY.brand, title: fullTitle, description: text, locale: OG_LOCALE[language], alternateLocale: [OG_LOCALE[OTRO[language]]], images: [image] },
+    twitter: { card: "summary_large_image", title: fullTitle, description: text, images: [{ url: image.url, alt: image.alt }] },
+  };
+}
+
 /** JSON listo para `<script type="application/ld+json">`: sin `<` que cierre la etiqueta. */
 export const jsonLdHtml = (data: unknown) => JSON.stringify(data).replace(/</g, "\\u003c");
 

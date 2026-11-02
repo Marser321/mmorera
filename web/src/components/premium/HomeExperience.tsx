@@ -20,6 +20,7 @@ import { FEATURED_CASES } from "@/data/projectCases";
 import { IslandBar } from "@/components/layout/IslandBar";
 import { MotionBackdrop } from "@/components/shared/MotionBackdrop";
 import { MonogramaFundido } from "@/components/marca/MonogramaFundido";
+import { ExploreDoors } from "@/components/branches/ExploreDoors";
 
 // Secciones bajo el pliegue en chunks propios (con SSR: el HTML no cambia).
 // Cada una es su propio límite de Suspense, así React hidrata por partes en
@@ -30,7 +31,7 @@ const HowIWorkSection = dynamic(() => import("@/components/premium/home/HowIWork
 const AplicarOS = dynamic(() => import("@/components/portfolio-isolated/AplicarOS").then((m) => m.AplicarOS));
 import { MOTION_ASSETS } from "@/data/motionAssets";
 
-const CV_DESTINATION = "/cv";
+const CV_DESTINATION = "/sobre-mi#cv";
 
 const copy = {
   es: {
@@ -311,6 +312,11 @@ export function HomeExperience() {
         </div>
       </section>
 
+      {/* ─── 3b. EXPLORA MÁS: puertas a las ramas (capacidades, casos de uso, Lab) ─── */}
+      <div className="bg-background pb-16 sm:pb-20">
+        <ExploreDoors language={language} doors={["capacidades", "casosDeUso", "lab"]} />
+      </div>
+
       <HowIWorkSection />
 
       {/* ─── 7. CONTACTO DIRECTO & FORMULARIO INTERACTIVO ─── */}
@@ -339,7 +345,7 @@ export function HomeExperience() {
               <p className="mt-1 text-xs leading-relaxed text-foreground/75">{c.roleHint}</p>
               <p ref={roleEmailRef} tabIndex={-1} className="mt-3 break-all text-sm text-foreground/80 select-text">{SITE_IDENTITY.contact.email}</p>
               <div className="mt-2 flex flex-wrap items-center gap-x-5">
-                <Link href={localePath(language, "/cv")} className="inline-flex min-h-11 items-center text-sm font-semibold text-signal hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{c.roleViewCv}</Link>
+                <Link href={localePath(language, "/sobre-mi#cv")} className="inline-flex min-h-11 items-center text-sm font-semibold text-signal hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{c.roleViewCv}</Link>
                 <button type="button" onClick={copyRoleEmail} className="inline-flex min-h-11 items-center text-sm font-semibold text-signal hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{c.roleCopyEmail}</button>
               </div>
               <p aria-live="polite" aria-atomic="true" className="text-xs leading-relaxed text-foreground/75">{emailStatus === "copied" ? c.emailCopied : emailStatus === "selected" ? c.emailCopyFallback : ""}</p>

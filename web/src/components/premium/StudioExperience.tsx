@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { useLanguage } from "@/context/LanguageContext";
 import { useActiveTech } from "@/context/ActiveTechContext";
 import { ServicePage } from "@/components/service/ServicePage";
+import { ExploreDoors } from "@/components/branches/ExploreDoors";
 import { getProjectCase } from "@/data/projectCases";
 import { getCaseMedia } from "@/data/caseMedia";
 import { getCaseMetrics } from "@/data/caseMetrics";
@@ -70,5 +71,5 @@ export function StudioExperience({ content }: { content: ServicePageContent }) {
     observer.observe(heroRef.current);
     return () => observer.disconnect();
   }, [setHeroVisible]);
-  return <ServicePage content={content} language={language} heroRef={heroRef} howItWorks={<WebCaseFilms label={content.howItWorks?.title?.[language]} />} />;
+  return <ServicePage content={content} language={language} heroRef={heroRef} howItWorks={<><WebCaseFilms label={content.howItWorks?.title?.[language]} /><ExploreDoors language={language} doors={["capacidades", "lab"]} as="h3" className="mt-12" /></>} />;
 }

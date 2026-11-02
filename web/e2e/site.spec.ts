@@ -68,8 +68,8 @@ test("navega por la cabecera y conserva un único canvas", async ({ page }) => {
 test("mantiene el menú por servicios con teclado y oculta redes no verificadas", async ({ page }) => {
   await page.goto("/");
   const header = page.locator("header").first();
-  await expect(header.getByRole("link", { name: "Casos", exact: true })).toBeVisible();
-  await expect(header.getByRole("link", { name: "Sobre mí · CV", exact: true })).toHaveAttribute("href", "/cv");
+  await expect(header.getByRole("link", { name: "Capacidades", exact: true })).toHaveAttribute("href", "/capacidades");
+  await expect(header.getByRole("link", { name: "Sobre mí · CV", exact: true })).toHaveAttribute("href", "/sobre-mi");
   await expect(header.getByRole("link", { name: "Hablemos", exact: true })).toHaveAttribute("href", "#contacto");
   await expect(page.locator('a[href*="linkedin"], a[href*="github"]')).toHaveCount(0);
   const button = header.locator('button[aria-controls="services-menu"]');
@@ -86,6 +86,19 @@ test("mantiene el menú por servicios con teclado y oculta redes no verificadas"
   await page.keyboard.press("Home"); await expect(links.first()).toBeFocused();
   await page.keyboard.press("Escape");
   await expect(button).toHaveAttribute("aria-expanded", "false"); await expect(button).toBeFocused();
+  await expect(page.locator('#services-menu')).toHaveCount(0);
+  const cases = header.locator('button[aria-controls="cases-menu"]');
+  await expect(cases).toHaveText(/Casos/);
+  await expect(async () => {
+    if (await cases.getAttribute("aria-expanded") !== "true") { await cases.focus(); await cases.press("Enter"); }
+    await expect(cases).toHaveAttribute("aria-expanded", "true", { timeout: 1000 });
+  }).toPass({ timeout: 10000 });
+  const caseLinks = page.locator("#cases-menu a");
+  await expect(caseLinks).toHaveCount(2);
+  await expect(caseLinks.first()).toHaveAttribute("href", "/casos-de-exito");
+  await expect(caseLinks.last()).toHaveAttribute("href", "/casos-de-uso");
+  await page.keyboard.press("Escape");
+  await expect(cases).toHaveAttribute("aria-expanded", "false");
 });
 
 test("ofrece un único menú móvil con rutas, idioma, tema y CTA", async ({ browser }) => {
@@ -99,7 +112,8 @@ test("ofrece un único menú móvil con rutas, idioma, tema y CTA", async ({ bro
     if (await menuButton.getAttribute("aria-expanded") !== "true") await menuButton.click();
     await expect(menuButton).toHaveAttribute("aria-expanded", "true", { timeout: 1_000 });
   }).toPass({ timeout: 10_000 });
-  await expect(page.getByRole("navigation", { name: "Navegación móvil" }).getByRole("link")).toHaveCount(6);
+  await expect(page.getByRole("navigation", { name: "Navegación móvil" }).getByRole("link")).toHaveCount(8);
+  await expect(page.getByRole("navigation", { name: "Navegación móvil" }).getByRole("link", { name: "Agentes de IA" })).toHaveAttribute("href", "/agentes");
   await expect(page.locator("#mobile-menu").getByRole("link", { name: "Hablemos" })).toBeVisible();
   await expect(page.getByRole("button", { name: "English" })).toBeVisible();
   await context.close();
@@ -764,5 +778,72 @@ test("publica canonical, hreflang, OG, JSON-LD y sitemap canónicos", async ({ p
   expect(await page.content()).not.toMatch(/Uruguay|es-UY|es_UY/);
   const sitemap = await request.get("/sitemap.xml");
   expect(sitemap.ok()).toBeTruthy();
-  await expect(sitemap.text()).resolves.toContain("https://mmorera.agency/en/casos-de-exito/autohub-360");
+  const xml = await sitemap.text();
+  expect(xml).toContain("https://mmorera.agency/en/casos-de-exito/autohub-360");
+  for (const route of ["/sobre-mi", "/agentes", "/capacidades/ia-aplicada", "/casos-de-uso/lead-de-las-23-45", "/lab/bandeja"]) expect(xml).toContain(`https://mmorera.agency${route}<`);
+  expect(xml).not.toContain("https://mmorera.agency/cv<");
+});
+
+test("abre las ramas: capacidades, casos de uso y Lab", async ({ page }) => {
+  test.setTimeout(90_000);
+  await page.goto("/");
+  const doors = page.locator("[data-explore-doors]");
+  await expect(doors.getByRole("link")).toHaveCount(3);
+  await expect(doors.getByRole("link").first()).toHaveAttribute("href", "/capacidades");
+  await expect(page.getByRole("navigation", { name: "Barra de navegación flotante" }).getByRole("button", { name: "Casos" })).toBeVisible();
+
+  await page.goto("/capacidades");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Nueve capacidades que se conectan entre sí.");
+  const families = page.locator('section[aria-labelledby="capacidades-todas"] a');
+  await expect(families).toHaveCount(9);
+  await families.filter({ hasText: "CRM & operación" }).click();
+  await expect(page).toHaveURL(/\/capacidades\/crm-y-operacion$/, { timeout: 30_000 });
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("CRM & operación");
+  await expect(page.locator('section[aria-labelledby="familia-servicio"] a')).toHaveAttribute("href", "/sistemas");
+  await page.goto("/en/capacidades/ia-aplicada");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Applied AI");
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://mmorera.agency/en/capacidades/ia-aplicada");
+
+  await page.goto("/casos-de-uso");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Problemas reales, contados de punta a punta.");
+  await expect(page.locator('main a[href^="/casos-de-uso/"]')).toHaveCount(3);
+  await page.goto("/casos-de-uso/lead-de-las-23-45");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("El lead de las 23:45");
+  await expect(page.getByRole("tab")).toHaveCount(0);
+  await expect(page.locator('section[aria-labelledby="caso-texto"] li')).toHaveCount(4);
+  await expect(page.getByRole("link", { name: "Visto en AD Media Solution" })).toHaveAttribute("href", /\/casos-de-exito\/ad-media-solution#film-speed-to-lead$/);
+  await expect(page.locator('section[aria-labelledby="caso-servicio"] a')).toHaveAttribute("href", "/agentes");
+
+  await page.goto("/lab");
+  await expect(page.locator('main a[href^="/lab/"]')).toHaveCount(2);
+  await page.goto("/lab/bandeja");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Bandeja con agente");
+  await expect(page.getByText("Datos de ejemplo", { exact: true })).toBeVisible();
+  await page.goto("/en/lab/identidad-visual");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Visual identity studio");
+});
+
+test("la demo guiada del agente responde, reconoce su límite y pasa a una persona", async ({ page }) => {
+  await page.goto("/agentes");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Un agente que atiende, responde y agenda por ti, con una persona cuando hace falta.");
+  await expect(page.getByText("Demo guiada · respuestas escritas de antemano · datos de muestra")).toBeVisible();
+  const log = page.getByRole("log", { name: "Conversación de ejemplo" });
+  await expect(log).toContainText("Hola, soy el asistente de la barbería.");
+  await page.getByRole("button", { name: "¿Abren el sábado?" }).click();
+  await expect(log).toContainText("el sábado abrimos de 9:00 a 14:00");
+  await page.getByRole("button", { name: "Prefiero hablar con alguien." }).click();
+  await expect(log).toContainText("La conversación pasó a una persona del equipo, con todo el contexto.");
+  await expect(page.getByRole("button", { name: "¿Cuánto sale un corte con barba?" })).toHaveCount(0);
+  await page.getByRole("button", { name: "Volver a empezar" }).click();
+  await expect(page.getByRole("button", { name: "¿Abren el sábado?" })).toBeVisible();
+  await expect(log).not.toContainText("La conversación pasó a una persona");
+});
+
+test("el CV vive en «Sobre mí», con la película de autor arriba", async ({ page }) => {
+  await page.goto("/cv");
+  await expect(page).toHaveURL(/\/sobre-mi#cv$/);
+  await expect(page.locator("#cv")).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
+  await page.goto("/en/cv");
+  await expect(page).toHaveURL(/\/en\/sobre-mi#cv$/);
 });

@@ -1,12 +1,15 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
+import { localePath } from "@/config/site";
 import { useLanguage } from "@/context/LanguageContext";
 
 const copy = {
   es: {
     eyebrow: "Cómo trabajo",
     photoAlt: "Mario Morera frente a una interfaz de diseño en su pantalla",
+    filmLink: "Ver la película completa →",
     title: "Hablas conmigo y lo construyo yo.",
     body: "Las cuentas y los accesos quedan a tu nombre. Te entrego el sistema documentado y explicado. Si algo falla, me escribes a mí.",
     steps: [
@@ -18,6 +21,7 @@ const copy = {
   en: {
     eyebrow: "How I work",
     photoAlt: "Mario Morera in front of a design interface on his screen",
+    filmLink: "Watch the full film →",
     title: "You talk to me, and I build it.",
     body: "Accounts and access stay in your name. You get the system documented and explained. If something breaks, you write to me.",
     steps: [
@@ -44,7 +48,8 @@ export function HowIWorkSection() {
             <p className="text-xs font-medium uppercase tracking-[.16em] text-signal">{c.eyebrow}</p>
             <h2 id="how-i-work-title" className="mt-3 text-[clamp(2.2rem,4.5vw,4.2rem)] font-medium leading-[1.04] tracking-[-.04em] text-foreground">{c.title}</h2>
             <p className="mt-5 max-w-2xl text-base leading-relaxed text-foreground/75 sm:text-lg">{c.body}</p>
-            {/* proofLink se habilita cuando exista el caso de T10. */}
+            {/* La película de autor completa vive en /sobre-mi (1/11). proofLink espera T10. */}
+            <Link href={localePath(language, "/sobre-mi")} className="mt-6 inline-flex min-h-11 items-center text-sm font-semibold text-signal underline underline-offset-4 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{c.filmLink}</Link>
           </div>
         </div>
         <ol className="mt-12 grid gap-8 border-t border-foreground/15 pt-8 md:mt-16 md:grid-cols-3 md:gap-10">
