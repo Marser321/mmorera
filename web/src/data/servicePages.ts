@@ -1,5 +1,6 @@
 import type { LocalizedText } from "@/types/site";
 import type { ServicePageContent } from "@/types/servicePage";
+import { SERVICE_SOLUTIONS } from "./solutionsData";
 
 const t = (es: string, en: string): LocalizedText => ({ es, en });
 
@@ -40,6 +41,12 @@ const HIRING: ServicePageContent["hiring"] = {
 
 const AUDIENCE_TITLE = t("Para quién es", "Who it's for");
 
+/** Los entregables viven en solutionsData (una sola fuente); el home ya no los muestra en Webs y CRM (T39). */
+const deliverablesOf = (id: string): ServicePageContent["deliverables"] => ({
+  title: t("Qué incluye", "What's included"),
+  items: SERVICE_SOLUTIONS.find((service) => service.id === id)?.deliverables ?? [],
+});
+
 export const SERVICE_PAGES = {
   /** /sistemas → «Automatización y CRM». El film de apertura trae su propio título. */
   sistemas: {
@@ -63,6 +70,7 @@ export const SERVICE_PAGES = {
         "If you get a few enquiries a week and answer them easily, you don't need this yet."
       ),
     },
+    deliverables: deliverablesOf("crm-automation"),
     tools: t(
       "Con n8n, Make o GoHighLevel según tu proceso, o una herramienta a medida si el flujo es liviano.",
       "With n8n, Make or GoHighLevel depending on your process, or a custom tool when the flow is light."
@@ -102,6 +110,7 @@ export const SERVICE_PAGES = {
         "If your site already works and you only want to change the copy, there's no need to rebuild it."
       ),
     },
+    deliverables: deliverablesOf("web-ecommerce"),
     tools: t(
       "Con Next.js, TypeScript y Tailwind, y un CMS cuando necesitas actualizar el contenido.",
       "With Next.js, TypeScript and Tailwind, plus a CMS when you need to update content."

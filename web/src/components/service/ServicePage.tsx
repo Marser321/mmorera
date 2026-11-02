@@ -17,7 +17,7 @@ export interface ServicePageProps {
 }
 
 export function ServicePage({ content, language, howItWorks, heroRef }: ServicePageProps) {
-  const { hero, audience, tools, proof, hiring, closing } = content;
+  const { hero, audience, deliverables, tools, proof, hiring, closing } = content;
   const cases = proof?.slugs.flatMap(slug => { const project = getProjectCase(slug); return project ? [project] : []; }) ?? [];
   const cta = (action: ServicePageCta) => <Link href={localePath(language, action.href ?? "/aplicar")} className="inline-flex min-h-12 items-center gap-3 rounded-full bg-foreground px-6 py-3 text-sm font-semibold text-background hover:opacity-85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{action.label[language]}<ArrowUpRight aria-hidden="true" className="h-4 w-4" /></Link>;
 
@@ -35,6 +35,11 @@ export function ServicePage({ content, language, howItWorks, heroRef }: ServiceP
         <p className="text-lg leading-relaxed text-foreground">{audience.for[language]}</p>
         {audience.notFor && <p className="text-base leading-relaxed text-foreground/75">{audience.notFor[language]}</p>}
       </div>
+    </section>}
+
+    {deliverables && deliverables.items.length > 0 && <section data-service-section="deliverables" className={`${container} pb-10 sm:pb-14`}>
+      {deliverables.title && <h2 className={heading}>{deliverables.title[language]}</h2>}
+      <ul className="mt-5 grid max-w-5xl gap-3 md:grid-cols-3">{deliverables.items.map(item => <li key={item[language]} className="border-t border-foreground/15 pt-3 text-base leading-relaxed text-foreground">{item[language]}</li>)}</ul>
     </section>}
 
     {tools && <p data-service-section="tools" className={`${container} pb-12 text-sm leading-relaxed text-foreground/75`}>{tools[language]}</p>}

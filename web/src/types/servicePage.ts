@@ -10,6 +10,8 @@ export interface ServicePageCta {
 export interface ServicePageContent {
   hero: { eyebrow?: LocalizedText; title: LocalizedText; body?: LocalizedText; cta?: ServicePageCta };
   audience?: { title?: LocalizedText; for: LocalizedText; notFor?: LocalizedText };
+  /** Qué incluye: los entregables que el home ya no muestra (T39). */
+  deliverables?: { title?: LocalizedText; items: LocalizedText[] };
   tools?: LocalizedText;
   /** El componente interactivo se pasa como slot, nunca como dato serializado. */
   howItWorks?: { title?: LocalizedText; body?: LocalizedText };

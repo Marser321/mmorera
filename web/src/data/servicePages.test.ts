@@ -12,6 +12,7 @@ describe("páginas de servicio", () => {
       const texts = JSON.stringify(content);
       assert.doesNotMatch(texts, /"es":""|"en":""/, `${page} tiene un texto vacío`);
       assert.doesNotMatch(texts, /TODO/, `${page} conserva un TODO`);
+      assert.equal(content.deliverables?.items.length, 3, `${page} no muestra sus 3 entregables`);
     }
   });
 });

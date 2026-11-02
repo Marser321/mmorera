@@ -28,7 +28,7 @@ export const SERVICE_SOLUTIONS: ServiceSolution[] = [
     deliverables: [
       t("Diseño a medida, sin plantillas genéricas", "Custom design, no generic templates"),
       t("Catálogo o CMS para que actualices el contenido", "Catalog or CMS so you can update the content"),
-      t("Versión bilingüe y adaptada al teléfono", "Bilingual and built for the phone"),
+      t("Versión bilingüe y adaptada al teléfono", "Bilingual and mobile-friendly"),
     ],
     idealFor: t(
       "Negocios que reciben consultas y pierden ventas porque su web no explica lo que hacen.",
