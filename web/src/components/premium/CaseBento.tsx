@@ -5,7 +5,7 @@ import { localePath } from "@/config/site";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
 import { themedAccent } from "@/data/particleScenes";
-import type { ProjectCase } from "@/types/site";
+import type { ProjectCase, LocalizedText } from "@/types/site";
 import { MagicBento, type BentoItem } from "@/components/ui/magic-bento";
 import { hasFlagshipFilm } from "@/data/films/flagships/slugs";
 
@@ -32,7 +32,7 @@ export function CaseBento({
         () =>
             projects.map((project, index) => ({
                 id: project.slug,
-                label: project.kind?.[language] ?? project.stack[0],
+                label: project.kind?.[language] ?? project.stack.map((item: string | LocalizedText) => typeof item === "string" ? item : item[language])[0],
                 title: project.title[language],
                 description: project.summary[language],
                 href: localePath(language, `/casos-de-exito/${project.slug}`),

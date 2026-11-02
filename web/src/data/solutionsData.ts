@@ -18,91 +18,87 @@ export interface ServiceSolution {
 export const SERVICE_SOLUTIONS: ServiceSolution[] = [
   {
     id: "web-ecommerce",
-    tag: t("Presencia & Conversión", "Presence & Conversion"),
-    title: t("Desarrollo Web & E-commerce Next.js", "Next.js Web & E-commerce Development"),
-    headline: t("Sitios ultrarrápidos diseñados para vender, no para lucir en una plantilla.", "Ultra-fast sites built to convert, not just look like a template."),
+    tag: t("Presencia", "Web presence"),
+    title: t("Webs y landings", "Websites & landings"),
+    headline: t("Sitios rápidos y claros, pensados para que la persona entienda y te escriba.", "Fast, clear sites built so people understand you and get in touch."),
     description: t(
-      "Desarrollo a medida con Next.js 16, TypeScript y TailwindCSS. Carga instantánea en móviles, SEO técnico impecable y dirección de arte que proyecta autoridad inmediata.",
-      "Custom development with Next.js 16, TypeScript, and TailwindCSS. Instant mobile loading, clean technical SEO, and art direction that commands authority."
+      "Desarrollo a medida con Next.js, TypeScript y Tailwind: diseño propio, versión bilingüe y SEO técnico cuidado. Lo diseño y lo programo yo.",
+      "Custom development with Next.js, TypeScript and Tailwind: original design, bilingual versions and careful technical SEO. I design it and I build it."
     ),
     deliverables: [
-      t("Arquitectura a medida sin plantillas genéricas", "Tailored architecture with zero generic templates"),
-      t("Rendimiento 95+ en Google PageSpeed y Core Web Vitals", "95+ performance on Google PageSpeed & Core Web Vitals"),
-      t("Catálogo de productos o CMS dinámico integrado", "Dynamic product catalog or integrated headless CMS"),
-      t("Diseño bilingüe (i18n) y responsive optimizado", "Fully responsive and bilingual (i18n) ready"),
+      t("Diseño a medida, sin plantillas genéricas", "Custom design, no generic templates"),
+      t("Catálogo o CMS para que actualices el contenido", "Catalog or CMS so you can update the content"),
+      t("Versión bilingüe y adaptada al teléfono", "Bilingual and mobile-friendly"),
     ],
     idealFor: t(
-      "Empresas, estudios y marcas que quieren dejar atrás webs lentas y transmitir confianza de primer nivel.",
-      "Companies, studios, and brands wanting to replace slow sites with top-tier credibility."
+      "Negocios que reciben consultas y pierden ventas porque su web no explica lo que hacen.",
+      "Businesses that get enquiries but lose sales because their site doesn't explain what they do."
     ),
     accent: "#55D8FF",
     proofSlug: "lb-elite-wash-detail",
   },
   {
     id: "booking-payments",
-    tag: t("Operación Autoservicio", "Self-Service Operations"),
-    title: t("Sistemas de Reserva, Cobros & WhatsApp", "Booking, Payment & WhatsApp Systems"),
-    headline: t("Tus clientes reservan solos y tu negocio se ordena en un panel propio.", "Clients book on their own and your business runs from its own panel."),
+    tag: t("Agentes de IA", "AI agents"),
+    title: t("Agentes de IA instalados para tu negocio", "AI agents installed for your business"),
+    headline: t("Un agente que atiende, responde y agenda por ti, con una persona cuando hace falta.", "An agent that answers, replies and books for you, with a person when it matters."),
     description: t(
-      "Reserva online paso a paso, agenda sin solapes, ficha de cliente, cobro y cierre de caja, y contacto por WhatsApp desde el mismo sistema. Si el negocio necesita cobrar online, se integra la pasarela.",
-      "Step-by-step online booking, no double booking, client files, checkout and cash close, and WhatsApp contact from the same system. If the business needs online payments, the gateway is integrated."
+      "Instalo y configuro agentes con Claude, GPT u OpenClaw conectados a WhatsApp, a tu web o a tu agenda. Las cuentas quedan a tu nombre, con documentación y traspaso a tu equipo cuando el agente no puede resolver.",
+      "I install and configure agents built on Claude, GPT or OpenClaw, connected to WhatsApp, your website or your calendar. Accounts stay in your name, with documentation and a handoff to your team when the agent can't resolve something."
     ),
     deliverables: [
-      t("Reserva online y agenda sin solapes", "Online booking with no double booking"),
-      t("Cobro en mostrador, caja y cierre diario", "Counter checkout, cash register and daily close"),
-      t("Ficha de cliente, historial y reactivación por WhatsApp", "Client files, history and WhatsApp reactivation"),
-      t("Pasarela de pago online cuando hace falta (Stripe / Mercado Pago)", "Online payment gateway when needed (Stripe / Mercado Pago)"),
+      t("Respuestas desde tus datos, que puedes editar sin programar", "Answers from your own data, editable without code"),
+      t("Traspaso a una persona cuando hace falta", "Handoff to a person when needed"),
+      t("Cuentas a tu nombre y documentación de entrega", "Accounts in your name and handoff documentation"),
     ],
     idealFor: t(
-      "Barberías, clínicas, detailing, consultorios y negocios de servicios con agenda activa.",
-      "Barbershops, clinics, detailing services, practices, and appointment-based businesses."
+      "Negocios de servicios y equipos sin personal técnico que quieren delegar la atención repetitiva.",
+      "Service businesses and teams without technical staff who want to delegate repetitive support."
     ),
     accent: "#71F3A2",
     proofSlug: "new-brothers-barberia",
   },
   {
     id: "crm-automation",
-    tag: t("Cero Fuga de Oportunidades", "Zero Opportunity Leak"),
-    title: t("Arquitectura CRM & Automatización Operativa", "CRM Architecture & Operations Automation"),
-    headline: t("Un sistema que responde prospectos en <5 minutos y ordena todo tu embudo.", "A system that responds to leads in <5 minutes and organizes your entire pipeline."),
+    tag: t("Procesos conectados", "Connected workflows"),
+    title: t("Automatización y CRM", "Automation & CRM"),
+    headline: t("Formularios, agenda y CRM conectados, para que ninguna consulta quede sin seguimiento.", "Forms, calendar and CRM connected, so no enquiry goes without follow-up."),
     description: t(
-      "Diseño e implementación de CRM a medida para flujos livianos, o configuración y operación experta sobre plataformas consolidadas (GoHighLevel, HubSpot) para equipos de venta activos.",
-      "Custom lightweight CRM design, or expert setup and operation on platforms like GoHighLevel or HubSpot for active sales teams."
+      "Flujos con n8n, Make o GoHighLevel según tu proceso: cada consulta entra al CRM, se avisa a quien corresponde y el seguimiento sale solo. Para flujos livianos, también construyo herramientas a medida.",
+      "Workflows with n8n, Make or GoHighLevel shaped around your process: every enquiry lands in the CRM, the right person is notified and follow-up goes out on its own. For lighter flows, I also build custom tools."
     ),
     deliverables: [
-      t("Respuesta automática exprés para multiplicar el cierre", "Express automated follow-up to maximize conversions"),
-      t("Pipeline visual para ver en qué estado está cada cliente", "Visual pipeline showing the exact stage of every prospect"),
-      t("Integración con formularios web, llamadas y redes", "Complete integration with forms, calls, and social ads"),
-      t("Sincronización de datos con alertas a tu equipo", "Real-time sync and instant alerts to your team"),
+      t("Seguimiento automático de cada consulta", "Automatic follow-up on every enquiry"),
+      t("Pipeline para ver en qué etapa está cada cliente", "A pipeline showing each client's stage"),
+      t("Reservas y agenda conectadas al CRM", "Bookings and calendar connected to the CRM"),
     ],
     idealFor: t(
-      "Empresas B2B y negocios que invierten en publicidad y no quieren perder prospectos por demoras.",
-      "B2B firms and businesses running ads that cannot afford losing leads to slow replies."
+      "Negocios que reciben consultas por varios canales y necesitan ordenarlas.",
+      "Businesses receiving enquiries across several channels that need to keep them in order."
     ),
     accent: "#B68CFF",
     proofSlug: "rangel-oviedo-group",
   },
   {
     id: "ai-software",
-    tag: t("Escala con IA", "AI Scalability"),
-    title: t("Interfaces con IA & Software a Medida", "AI Interfaces & Custom Software"),
-    headline: t("Agentes inteligentes y herramientas internas que hacen el trabajo repetitivo.", "Intelligent agents and internal tools that handle repetitive workflows."),
+    tag: t("Fábricas de contenido", "Content factories"),
+    title: t("Fábricas de contenido con IA", "AI content factories"),
+    headline: t("Sistemas que producen piezas y videos para tu marca, con tu criterio en cada entrega.", "Systems that produce posts and videos for your brand, with your judgment in every delivery."),
     description: t(
-      "Herramientas internas y chatbots entrenados con los manuales y procesos de tu negocio para responder dudas frecuentes, filtrar prospectos y operar 24/7 sin sumar sueldos fijos.",
-      "Internal tools and AI assistants trained on your business procedures to answer questions, qualify leads, and operate 24/7 without overhead."
+      "Conecto modelos de lenguaje, generación de imagen y video y edición por código en un flujo que convierte un brief en posts, carruseles y reels. Una persona revisa cada pieza antes de publicarla.",
+      "I connect language models, image and video generation and code-based editing into a flow that turns a brief into posts, carousels and reels. A person reviews every piece before it's published."
     ),
     deliverables: [
-      t("Asistentes inteligentes 24/7 entrenados con tus datos", "24/7 smart assistants trained on your private knowledge"),
-      t("Filtro predictivo y calificación previa de leads", "Predictive filtering and pre-qualification of prospects"),
-      t("Paneles y herramientas internas de gestión rápida", "Custom internal dashboards and management tools"),
-      t("Conexión con bases de datos y APIs externas", "Secure database and external API integrations"),
+      t("Guiones, carruseles y piezas de video a partir de un brief", "Scripts, carousels and video pieces from a single brief"),
+      t("Plantillas de diseño y video consistentes", "Consistent design and video templates"),
+      t("Revisión humana antes de publicar", "Human review before publishing"),
     ],
     idealFor: t(
-      "Negocios en crecimiento que necesitan atender más clientes sin colapsar su equipo humano.",
-      "Growing companies that need to serve more clients without overwhelming their team."
+      "Marcas y equipos de marketing que necesitan constancia sin perder calidad.",
+      "Brands and marketing teams that need consistency without losing quality."
     ),
     accent: "#E59500",
-    proofSlug: "lnb-saas",
+    proofSlug: "ad-media-solution",
   },
 ];
 
@@ -126,7 +122,7 @@ export const DECISION_TOPICS: DecisionTopic[] = [
   {
     id: "crm-choice",
     category: t("Sistemas Comerciales", "Commercial Systems"),
-    question: t("¿Necesitás un CRM gigante como HubSpot/GoHighLevel o una herramienta a medida?", "Do you need a heavy CRM like HubSpot/GoHighLevel or a custom-built tool?"),
+    question: t("¿Necesitas un CRM gigante como HubSpot/GoHighLevel o una herramienta a medida?", "Do you need a heavy CRM like HubSpot/GoHighLevel or a custom-built tool?"),
     summary: t(
       "Muchos negocios pagan cientos de dólares al mes en herramientas que su equipo termina abandonando por complejas. La elección correcta depende de tu volumen y cómo vendés.",
       "Many businesses pay hundreds monthly for complex software their teams end up abandoning. The right choice depends on your volume and sales process."
@@ -137,7 +133,7 @@ export const DECISION_TOPICS: DecisionTopic[] = [
         subtitle: t("Cero suscripciones caras. Hecho exactamente para tu flujo.", "Zero bloated subscriptions. Built specifically for your workflow."),
         pros: [
           t("Cero cuotas mensuales de licencias por usuario", "Zero monthly per-user licensing fees"),
-          t("Se aprende en 5 minutos: solo lo que tu negocio necesita", "Learned in 5 minutes: only what your business actually needs"),
+          t("Fácil de aprender: solo lo que tu negocio necesita", "Easy to learn: only what your business actually needs"),
           t("Conectado directamente a tu WhatsApp, web y base de datos", "Directly linked to your WhatsApp, web, and database"),
           t("Carga instantánea y máxima agilidad en el celular", "Instant load and maximum speed on mobile"),
         ],
@@ -155,10 +151,10 @@ export const DECISION_TOPICS: DecisionTopic[] = [
           t("Telefonía integrada (VoIP), SMS y email marketing masivo", "Integrated VoIP calling, SMS, and massive email marketing"),
           t("Múltiples pipelines de venta y comisiones por vendedor", "Multiple sales pipelines and rep commission tracking"),
           t("Ecosistema maduro con cientos de integraciones nativas", "Mature ecosystem with hundreds of native integrations"),
-          t("Ideal cuando tenés personal dedicado a operar el CRM", "Ideal when you have dedicated staff to operate the CRM"),
+          t("Ideal cuando tienes personal dedicado a operar el CRM", "Ideal when you have dedicated staff to operate the CRM"),
         ],
         whenToChoose: t(
-          "Cuando tenés un equipo comercial de 4+ personas haciendo llamadas y seguimiento constante.",
+          "Cuando tienes un equipo comercial de 4+ personas haciendo llamadas y seguimiento constante.",
           "When you have a commercial team of 4+ reps actively making outbound calls and follow-ups."
         ),
         recommendedFor: t("Agencias, empresas de seguros, inmobiliarias masivas y B2B de alto volumen.", "Agencies, insurance firms, large real estate teams, and high-volume B2B."),
@@ -181,7 +177,7 @@ export const DECISION_TOPICS: DecisionTopic[] = [
     options: [
       {
         title: t("Enfoque Editorial & De Alto Impacto", "High-Impact & Editorial Approach"),
-        subtitle: t("El diseño visual es el 80% de la justificación del precio.", "Visual art direction justifies 80% of premium pricing."),
+        subtitle: t("El diseño visual sostiene un precio más alto.", "Visual art direction supports premium pricing."),
         pros: [
           t("Fotografía protagónica, paletas oscuras y tipografía de lujo", "Protagonist visuals, dark palettes, and luxury typography"),
           t("Genera estatus y filtra a clientes que buscan precio bajo", "Builds prestige and filters out low-budget tire-kickers"),
@@ -227,7 +223,7 @@ export const DECISION_TOPICS: DecisionTopic[] = [
           t("Automatizaciones de seguimiento implacables (evita que se enfríen prospectos)", "Relentless automated nurture flows to keep leads hot"),
           t("Ideal para delegar sub-cuentas a sucursales o clientes con marca blanca", "Sub-account architecture perfect for branches and clients"),
         ],
-        whenToChoose: t("Si vendés servicios, citas, consultas, o si querés sustituir 6 suscripciones distintas (ClickFunnels + Calendly + Mailchimp + Twilio) por una sola.", "If you sell appointments, high-ticket services, or want to replace 6 subscriptions into one consolidated platform."),
+        whenToChoose: t("Si vendes servicios, citas o consultas, o si quieres sustituir 6 suscripciones distintas (ClickFunnels + Calendly + Mailchimp + Twilio) por una sola.", "If you sell appointments, high-ticket services, or want to replace 6 subscriptions into one consolidated platform."),
         recommendedFor: t("Agencias, clínicas estéticas, academias, firmas legales y servicios locales.", "Agencies, aesthetic clinics, academies, legal firms, and local services."),
         badge: t("Recomendado Todo-en-Uno", "Top All-In-One"),
       },
@@ -240,7 +236,7 @@ export const DECISION_TOPICS: DecisionTopic[] = [
           t("A Medida (Supabase + n8n): Propiedad 100% de tus datos con cero costos recurrentes", "Custom (Supabase + n8n): 100% data ownership with zero recurring SaaS fees"),
           t("Integración profunda con stacks de código Next.js y APIs REST", "Deep integration with modern Next.js code stacks and REST APIs"),
         ],
-        whenToChoose: t("HubSpot si tenés un equipo corporativo con presupuesto alto. Pipedrive o A Medida si buscás foco puro en cerrar tratos sin complejidad.", "HubSpot if you have a well-funded enterprise sales team. Pipedrive or Custom if you want zero bloat and high closing velocity."),
+        whenToChoose: t("HubSpot si tienes un equipo corporativo con presupuesto alto. Pipedrive o A Medida si buscas foco puro en cerrar tratos sin complejidad.", "HubSpot if you have a well-funded enterprise sales team. Pipedrive or Custom if you want zero bloat and high closing velocity."),
         recommendedFor: t("Startups B2B, empresas de software, distribuidores mayoristas y operaciones ágiles.", "B2B SaaS, tech startups, wholesale distributors, and lean teams."),
         badge: t("Corporativo & Especializado", "Corporate & Specialized"),
       },
@@ -252,41 +248,3 @@ export const DECISION_TOPICS: DecisionTopic[] = [
   },
 ];
 
-export const WORKFLOW_STAGES = [
-  {
-    step: "01",
-    title: t("Diagnóstico & Criterio", "Diagnosis & Strategic Alignment"),
-    description: t(
-      "Analizamos tu flujo actual, detectamos cuellos de botella y definimos el alcance exacto sin humo.",
-      "We analyze your current flow, isolate bottlenecks, and define the exact scope without hype."
-    ),
-    badge: t("Sin Compromiso", "No Commitment"),
-  },
-  {
-    step: "02",
-    title: t("Dirección de Arte & Arquitectura", "Art Direction & Architecture"),
-    description: t(
-      "Estructura visual, experiencia de usuario y arquitectura técnica creadas a medida de tu negocio.",
-      "Tailored visual hierarchy, user journey, and technical architecture designed for conversions."
-    ),
-    badge: t("Diseño a Medida", "Custom Design"),
-  },
-  {
-    step: "03",
-    title: t("Construcción en Producción (Next.js)", "Production Build (Next.js)"),
-    description: t(
-      "Desarrollo en Next.js 16 y automatizaciones conectadas en sprints ágiles de 1 a 3 semanas.",
-      "Next.js 16 build and connected automations shipped in agile 1-3 week sprints."
-    ),
-    badge: t("Velocidad Extrema", "Extreme Speed"),
-  },
-  {
-    step: "04",
-    title: t("Despliegue & Operación Continua", "Deployment & Active Operations"),
-    description: t(
-      "Despliegue en producción con monitoreo en vivo y comunicación directa por WhatsApp sin intermediarios.",
-      "Live production launch with real-time telemetry and direct WhatsApp communication."
-    ),
-    badge: t("Acompañamiento Real", "Real Support"),
-  },
-];

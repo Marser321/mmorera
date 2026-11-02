@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { ArrowUpRight, MessageCircle } from "lucide-react";
-import { localePath } from "@/config/site";
+import { localePath, SITE_IDENTITY } from "@/config/site";
 import { useLanguage } from "@/context/LanguageContext";
 import { useActiveTech } from "@/context/ActiveTechContext";
 import { SERVICE_SOLUTIONS } from "@/data/solutionsData";
@@ -18,95 +18,137 @@ import { Magnetic } from "@/components/motion/Magnetic";
 import { Reveal } from "@/components/scroll/Reveal";
 import { FEATURED_CASES } from "@/data/projectCases";
 import { IslandBar } from "@/components/layout/IslandBar";
-import type { AuthorManifestoCopy } from "@/components/premium/AuthorManifestoScene";
 import { MotionBackdrop } from "@/components/shared/MotionBackdrop";
 import { MonogramaFundido } from "@/components/marca/MonogramaFundido";
+import { ExploreDoors } from "@/components/branches/ExploreDoors";
 
 // Secciones bajo el pliegue en chunks propios (con SSR: el HTML no cambia).
 // Cada una es su propio límite de Suspense, así React hidrata por partes en
 // vez de bloquear el hilo principal con todo el Home de una vez.
 const ServicesSection = dynamic(() => import("@/components/premium/home/ServicesSection").then((m) => m.ServicesSection));
-const ProjectIndex = dynamic(() => import("@/components/premium/ProjectIndex").then((m) => m.ProjectIndex));
-const FilmRail = dynamic(() => import("@/components/films/FilmRail").then((m) => m.FilmRail));
-const OrchestrationWheelSection = dynamic(() => import("@/components/premium/home/OrchestrationWheelSection").then((m) => m.OrchestrationWheelSection));
-const LogoOvertureSection = dynamic(() => import("@/components/films/LogoOvertureSection").then((m) => m.LogoOvertureSection));
-const AuthorManifestoScene = dynamic(() => import("@/components/premium/AuthorManifestoScene").then((m) => m.AuthorManifestoScene));
-const WorkflowSection = dynamic(() => import("@/components/premium/home/WorkflowSection").then((m) => m.WorkflowSection));
+const TryItCards = dynamic(() => import("@/components/premium/home/TryItCards").then((m) => m.TryItCards));
+const HowIWorkSection = dynamic(() => import("@/components/premium/home/HowIWorkSection").then((m) => m.HowIWorkSection));
 const AplicarOS = dynamic(() => import("@/components/portfolio-isolated/AplicarOS").then((m) => m.AplicarOS));
 import { MOTION_ASSETS } from "@/data/motionAssets";
 
+const CV_DESTINATION = "/sobre-mi#cv";
+
 const copy = {
   es: {
-    eyebrow: "Mario Morera · Creative Technologist & Systems Builder",
-    title: "Todo tu ecosistema digital, resuelto por una sola persona.",
-    intro: "Webs que venden, reservas y cobros automáticos, CRM e inteligencia artificial aplicada. Diseño y desarrollo de punta a punta, sin intermediarios.",
+    eyebrow: "Mario Morera · AI Automation & Operations",
+    title: "Orquesto la tecnología de tu negocio: web, agentes de IA y contenido.",
+    intro: "Diseño y conecto tu web, tus automatizaciones, agentes que atienden por ti y sistemas que producen contenido. Hablas conmigo y lo construyo yo; coordino a tu equipo, las herramientas y los modelos de IA para que trabajen juntos.",
     services: [
-      { id: "web-ecommerce", label: "Webs & E-commerce" },
-      { id: "booking-payments", label: "Reservas & Cobros" },
-      { id: "crm-automation", label: "CRM & Automatización" },
-      { id: "ai-software", label: "IA a medida" },
+      { id: "web-ecommerce", label: "Webs y landings" },
+      { id: "booking-payments", label: "Agentes de IA" },
+      { id: "crm-automation", label: "Automatización y CRM" },
+      { id: "ai-software", label: "Contenido con IA" },
     ],
-    servicesHint: "Pasá por un servicio",
+    servicesHint: "Pasa por un servicio",
+    cvLink: "¿Buscas a alguien para tu equipo? Ver CV →",
     talkWhatsapp: "Hablar por WhatsApp",
-    startProject: "Iniciar Proyecto",
+    startProject: "Ver proyectos",
     archiveEyebrow: "Proyectos",
-    archiveTitle: "Trabajo real, en producción.",
-    archiveBody: "Sitios y sistemas operando hoy. Abrí cada caso para verlo en vivo.",
+    archiveTitle: "Tres sistemas que puedes abrir hoy.",
+    archiveBody: "Cada tarjeta dice qué es: implementado o demo. Ábrelo y pruébalo.",
     archiveCta: "Ver todos los casos",
-    contactEyebrow: "Contacto Directo",
-    contactTitle: "¿Qué querés construir o automatizar?",
-    contactBody: "Completá el brief en 2 minutos o escribime directo por WhatsApp.",
-    capacity: "Cupos limitados · 4 a 5 proyectos por trimestre",
+    contactEyebrow: "Hablemos",
+    contactTitle: "¿Un puesto o un proyecto?",
+    contactBody: "Si buscas a alguien para tu equipo o tienes un proyecto concreto, elige el camino que corresponda. Te respondo yo.",
+    roleCta: "Consultar por un puesto",
+    roleHint: "Te comparto mi CV y disponibilidad",
+    roleSubject: "Puesto · Mario Morera",
+    roleViewCv: "Ver CV",
+    roleCopyEmail: "Copiar correo",
+    emailCopied: "Correo copiado",
+    emailCopyFallback: "El correo quedó seleccionado: cópialo con Ctrl+C (Cmd+C en Mac).",
+    quickLine: "¿Prefieres una consulta rápida? Escríbeme por WhatsApp.",
+    projectCta: "Consultar por un proyecto",
+    projectHint: "Brief de 2 minutos; se abre aquí",
   },
   en: {
-    eyebrow: "Mario Morera · Creative Technologist & Systems Builder",
-    title: "Your entire digital ecosystem, engineered by one person.",
-    intro: "Websites that sell, automated bookings and payments, CRM and applied AI. Design and development end to end, with no intermediaries.",
+    eyebrow: "Mario Morera · AI Automation & Operations",
+    title: "I orchestrate your business technology: web, AI agents and content.",
+    intro: "I design and connect your website, your automations, agents that answer for you and systems that produce content. You talk to me and I build it; I coordinate your team, the tools and the AI models so they work together.",
     services: [
-      { id: "web-ecommerce", label: "Websites & E-commerce" },
-      { id: "booking-payments", label: "Bookings & Payments" },
-      { id: "crm-automation", label: "CRM & Automation" },
-      { id: "ai-software", label: "Custom AI" },
+      { id: "web-ecommerce", label: "Websites & landing pages" },
+      { id: "booking-payments", label: "AI agents" },
+      { id: "crm-automation", label: "Automation & CRM" },
+      { id: "ai-software", label: "AI content" },
     ],
     servicesHint: "Hover a service",
+    cvLink: "Hiring for your team? View my resume →",
     talkWhatsapp: "Chat on WhatsApp",
-    startProject: "Start Project",
+    startProject: "View projects",
     archiveEyebrow: "Projects",
-    archiveTitle: "Real work, in production.",
-    archiveBody: "Sites and systems running today. Open each case to see it live.",
+    archiveTitle: "Three systems you can open today.",
+    archiveBody: "Each card says what it is: live or demo. Open it and try it.",
     archiveCta: "See all cases",
-    contactEyebrow: "Direct Contact",
-    contactTitle: "What do you want to build or automate?",
-    contactBody: "Fill out the 2-minute brief or message me directly on WhatsApp.",
-    capacity: "Limited spots · 4 to 5 projects per quarter",
+    contactEyebrow: "Let's talk",
+    contactTitle: "A role or a project?",
+    contactBody: "Whether you're hiring for your team or have a specific project, pick the path that fits. I'll reply myself.",
+    roleCta: "Discuss a role",
+    roleHint: "I'll share my resume and availability",
+    roleSubject: "Role · Mario Morera",
+    roleViewCv: "View resume",
+    roleCopyEmail: "Copy email",
+    emailCopied: "Email copied",
+    emailCopyFallback: "The email is selected: copy it with Ctrl+C (Cmd+C on Mac).",
+    quickLine: "Prefer a quick question? Message me on WhatsApp.",
+    projectCta: "Discuss a project",
+    projectHint: "2-minute brief; opens right here",
   },
 };
-
-const authorManifestoCopy = {
-  es: {
-    eyebrow: "Perfil & Filosofía",
-    convergence: "Una sola dirección",
-    headline: "Una sola dirección para todo lo que una idea necesita.",
-    body: "Diseño de alto impacto, arquitectura en Next.js 16 y automatización con IA. Sin intermediarios, directo a producción.",
-    principleLabel: "Principio",
-    principle: "Sistemas propios con identidad clara, construidos para operar y facturar.",
-    signature: "Mario Morera",
-  },
-  en: {
-    eyebrow: "Profile & Philosophy",
-    convergence: "One direction",
-    headline: "One direction for everything an idea needs.",
-    body: "High-impact design, Next.js 16 architecture, and AI automation. Zero intermediaries, shipped straight to production.",
-    principleLabel: "Principle",
-    principle: "Proprietary systems with clear identity, engineered to operate and generate revenue.",
-    signature: "Mario Morera",
-  },
-} satisfies Record<"es" | "en", AuthorManifestoCopy>;
 
 export function HomeExperience() {
   const { language } = useLanguage();
   const heroRef = useRef<HTMLElement>(null);
   const c = copy[language];
+  const [briefOpen, setBriefOpen] = useState(false);
+  const [emailStatus, setEmailStatus] = useState<"idle" | "copied" | "selected">("idle");
+  const briefRef = useRef<HTMLDivElement>(null);
+  const roleEmailRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    const openFromHash = () => { if (window.location.hash === "#brief") setBriefOpen(true); };
+    openFromHash();
+    window.addEventListener("hashchange", openFromHash);
+    return () => window.removeEventListener("hashchange", openFromHash);
+  }, []);
+
+  useEffect(() => {
+    if (!briefOpen || !briefRef.current) return;
+    const focusFirst = () => {
+      const input = briefRef.current?.querySelector<HTMLElement>('input:not([type="hidden"]):not([tabindex="-1"]), textarea, select');
+      if (!input) return false;
+      input.focus();
+      return true;
+    };
+    if (focusFirst()) return;
+    const observer = new MutationObserver(() => { if (focusFirst()) observer.disconnect(); });
+    observer.observe(briefRef.current, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, [briefOpen]);
+
+  async function copyRoleEmail() {
+    try {
+      await navigator.clipboard.writeText(SITE_IDENTITY.contact.email);
+      setEmailStatus("copied");
+    } catch {
+      // El correo sigue disponible aunque el navegador deniegue el portapapeles.
+      const email = roleEmailRef.current;
+      if (email) {
+        email.focus();
+        const range = document.createRange();
+        range.selectNodeContents(email);
+        const selection = window.getSelection();
+        selection?.removeAllRanges();
+        selection?.addRange(range);
+      }
+      setEmailStatus("selected");
+    }
+  }
+
   const { setFocusTechName } = useActiveTech();
   const [focusedService, setFocusedService] = useState<string | null>(null);
   const focusedSolution = SERVICE_SOLUTIONS.find((service) => service.id === focusedService);
@@ -200,7 +242,7 @@ export function HomeExperience() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -12 }}
                     transition={{ duration: 0.28, ease: EASE_OUT }}
-                    className={focusedSolution ? "text-sm text-foreground/80" : "font-mono text-[10px] uppercase tracking-[0.16em] text-foreground/55 max-sm:hidden"}
+                    className={focusedSolution ? "text-sm text-foreground/80" : "font-mono text-[10px] uppercase tracking-[0.16em] text-foreground/55 hidden [@media(hover:hover)]:block"}
                   >
                     {focusedSolution ? focusedSolution.headline[language] : `↳ ${c.servicesHint}`}
                   </motion.p>
@@ -212,7 +254,7 @@ export function HomeExperience() {
             <div className="fade-up-in mt-6 flex flex-wrap items-center gap-3.5" style={{ animationDelay: "0.6s" }}>
               <Magnetic>
                 <a
-                  href="#contacto"
+                  href="#proyectos"
                   className="pressable inline-flex items-center gap-2.5 rounded-full bg-foreground px-6 py-3.5 text-sm font-semibold text-background transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   {c.startProject}
@@ -225,13 +267,14 @@ export function HomeExperience() {
                   href="https://wa.me/59892323675?text=Hola%20Mario,%20estoy%20viendo%20tu%20sitio%20y%20quiero%20hacerte%20una%20consulta"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="pressable inline-flex items-center gap-2.5 rounded-full border border-[#25D366]/40 bg-[#25D366]/15 px-6 py-3.5 text-sm font-semibold text-[#25D366] backdrop-blur-md transition-all hover:bg-[#25D366]/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366]"
+                  className="pressable inline-flex items-center gap-2.5 rounded-full border border-signal/40 bg-signal/15 px-6 py-3.5 text-sm font-semibold text-signal backdrop-blur-md transition-all hover:bg-signal/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal"
                 >
                   <MessageCircle className="h-4 w-4" />
                   {c.talkWhatsapp}
                 </a>
               </Magnetic>
             </div>
+            <Link href={CV_DESTINATION.startsWith("#") ? CV_DESTINATION : localePath(language, CV_DESTINATION)} className="mt-5 inline-flex min-h-11 items-center text-sm text-foreground/75 underline underline-offset-4 hover:text-signal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{c.cvLink}</Link>
           </div>
         </div>
       </section>
@@ -242,7 +285,7 @@ export function HomeExperience() {
       {/* ─── 3. PROYECTOS EN PRODUCCIÓN (Índice con preview viva) ─── */}
       <section id="proyectos" className="scroll-mt-20 bg-background px-5 py-20 sm:px-8 sm:py-28 lg:px-12 border-t border-white/10 light:border-[rgb(var(--ink-rgb)/0.1)]">
         <div className="mx-auto max-w-[1480px]">
-          <div className="grid gap-6 py-8 md:grid-cols-[.4fr_1.6fr] md:items-end md:py-12">
+          <div className="grid gap-6 py-8 md:grid-cols-[1.2fr_.8fr] md:items-end md:py-12">
             <div>
               <Reveal as="p" x={-20} y={0} className="font-mono text-[10px] uppercase tracking-[.2em] text-signal">
                 {c.archiveEyebrow}
@@ -263,29 +306,18 @@ export function HomeExperience() {
             </div>
           </div>
 
-          <FilmRail />
-
           <Reveal y={24}>
-            <ProjectIndex projects={FEATURED_CASES} />
+            <TryItCards projects={FEATURED_CASES} />
           </Reveal>
         </div>
       </section>
 
-      {/* ─── 4. LA RUEDA INTERACTIVA DE ORQUESTACIÓN (Stack conectado) ─── */}
-      <OrchestrationWheelSection />
-
-      {/* ─── 5. PERFIL & FILOSOFÍA (Cinemática interactiva) ─── */}
-      <div id="perfil" className="scroll-mt-20">
-        {/* Entrada del monograma: el prompt de código que gira hasta ser la doble M */}
-        <LogoOvertureSection />
-        <AuthorManifestoScene
-          language={language}
-          copy={authorManifestoCopy[language]}
-        />
+      {/* ─── 3b. EXPLORA MÁS: puertas a las ramas (capacidades, casos de uso, Lab) ─── */}
+      <div className="bg-background pb-16 sm:pb-20">
+        <ExploreDoors language={language} doors={["capacidades", "casosDeUso", "lab"]} />
       </div>
 
-      {/* ─── 6. METODOLOGÍA (4 fases claras) ─── */}
-      <WorkflowSection />
+      <HowIWorkSection />
 
       {/* ─── 7. CONTACTO DIRECTO & FORMULARIO INTERACTIVO ─── */}
       <section id="contacto" className="scroll-mt-20 relative isolate overflow-hidden border-t border-white/10 bg-relieve px-5 py-20 sm:px-8 sm:py-28 lg:px-12 light:border-[rgb(var(--ink-rgb)/0.1)] light:bg-card/20">
@@ -304,13 +336,34 @@ export function HomeExperience() {
           <Reveal as="p" className="mx-auto mt-4 max-w-xl text-sm sm:text-base leading-relaxed text-foreground/60">
             {c.contactBody}
           </Reveal>
-          <Reveal as="p" className="mt-5 inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3.5 py-1 font-mono text-[11px] text-amber-400">
-            {c.capacity}
-          </Reveal>
+          {/* Dos caminos: empleadores y clientes no llenan el mismo formulario. */}
+          <div className="mt-7 grid gap-3 sm:grid-cols-2">
+            <div className="rounded-2xl border border-foreground/15 bg-background/60 px-5 py-4 text-left">
+              <a href={`mailto:${SITE_IDENTITY.contact.email}?subject=${encodeURIComponent(c.roleSubject)}`} className="inline-flex min-h-11 items-center gap-3 text-sm font-semibold text-foreground hover:text-signal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                {c.roleCta}<ArrowUpRight aria-hidden="true" className="h-4 w-4 shrink-0" />
+              </a>
+              <p className="mt-1 text-xs leading-relaxed text-foreground/75">{c.roleHint}</p>
+              <p ref={roleEmailRef} tabIndex={-1} className="mt-3 break-all text-sm text-foreground/80 select-text">{SITE_IDENTITY.contact.email}</p>
+              <div className="mt-2 flex flex-wrap items-center gap-x-5">
+                <Link href={localePath(language, "/sobre-mi#cv")} className="inline-flex min-h-11 items-center text-sm font-semibold text-signal hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{c.roleViewCv}</Link>
+                <button type="button" onClick={copyRoleEmail} className="inline-flex min-h-11 items-center text-sm font-semibold text-signal hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{c.roleCopyEmail}</button>
+              </div>
+              <p aria-live="polite" aria-atomic="true" className="text-xs leading-relaxed text-foreground/75">{emailStatus === "copied" ? c.emailCopied : emailStatus === "selected" ? c.emailCopyFallback : ""}</p>
+
+            </div>
+            <button type="button" aria-expanded={briefOpen} aria-controls="brief" onClick={() => setBriefOpen((open) => !open)} className="group rounded-2xl border border-foreground/15 bg-background/60 px-5 py-4 text-left transition-colors hover:border-signal/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+              <span className="flex items-center justify-between gap-3 text-sm font-semibold text-foreground">
+                {c.projectCta}
+                <ArrowUpRight aria-hidden="true" className={`h-4 w-4 shrink-0 text-foreground/50 ${briefOpen ? "-rotate-45" : "rotate-90"}`} />
+              </span>
+              <span className="mt-1 block text-xs leading-relaxed text-foreground/75">{c.projectHint}</span>
+            </button>
+          </div>
+          <a href={SITE_IDENTITY.contact.whatsapp} target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex min-h-11 items-center text-sm leading-relaxed text-foreground/75 underline underline-offset-4 hover:text-signal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{c.quickLine}</a>
         </div>
 
-        {/* Embedded Brief Form */}
-        <div className="relative z-10 mt-8">
+        {/* Mantener montado conserva el borrador; hidden evita espacio y tabulación al cerrar. */}
+        <div id="brief" ref={briefRef} hidden={!briefOpen} className="relative z-10 mt-8 scroll-mt-20">
           <AplicarOS />
         </div>
       </section>

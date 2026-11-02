@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { WorkReel } from "./WorkReel";
+import { FilmRail } from "@/components/films/FilmRail";
 import { CaseBento } from "./CaseBento";
 import { ARCHIVE_CASES, FEATURED_CASES } from "@/data/projectCases";
 import { hasFlagshipFilm } from "@/data/films/flagships/slugs";
@@ -26,7 +27,7 @@ export function WorkExperience() {
   const total = FEATURED_CASES.length + ARCHIVE_CASES.length;
 
   return (
-    <main id="contenido-principal" className="bg-transparent pb-28 pt-36 lg:pt-44">
+    <main id="contenido-principal" className="overflow-x-clip bg-transparent pb-28 pt-36 lg:pt-44">
       <ScrollProgressBar />
 
       {/* Header compacto */}
@@ -55,6 +56,10 @@ export function WorkExperience() {
       {/* Reel cinematográfico (full-bleed) */}
       <WorkReel projects={FEATURED_CASES} />
 
+      <div className="mx-auto w-full max-w-[1480px] px-5 pt-16 sm:px-8 sm:pt-24 lg:px-12">
+        <FilmRail />
+      </div>
+
       {/* Archivo de Proyectos & Sistemas */}
       <section className="mx-auto w-full max-w-[1480px] px-5 pt-16 sm:px-8 sm:pt-24 lg:px-12" aria-labelledby="archive-work">
         <div className="mb-10">
@@ -75,7 +80,7 @@ export function WorkExperience() {
       <section className="banda-marfil mt-24 px-5 py-16 sm:px-8 sm:py-24 lg:px-12">
         <div className="mx-auto flex w-full max-w-[1480px] flex-wrap items-end justify-between gap-8">
           <p className="max-w-4xl text-[clamp(2.2rem,4.2vw,4.4rem)] font-medium leading-[.95] tracking-[-.055em] text-foreground">
-            {isEs ? "¿Qué querés hacer posible?" : "What do you want to make possible?"}
+            {isEs ? "¿Qué quieres hacer posible?" : "What do you want to make possible?"}
           </p>
           <Link
             href={localePath(language, "/aplicar")}

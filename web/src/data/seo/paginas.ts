@@ -8,7 +8,7 @@
  */
 
 export type Language = "es" | "en";
-export type PaginaSeo = "inicio" | "trabajo" | "sistemas" | "estudio" | "hablemos" | "privacidad";
+export type PaginaSeo = "inicio" | "trabajo" | "sistemas" | "estudio" | "hablemos" | "privacidad" | "cv" | "fabricas" | "agentes" | "capacidades" | "casosDeUso" | "sobreMi" | "lab";
 
 type Texto = Record<Language, string>;
 
@@ -29,8 +29,8 @@ export interface PaginaSeoData {
   tituloAbsoluto?: boolean;
   title: Texto;
   description: Texto;
-  /** Qué portada usa (privacidad reusa la del inicio). */
-  portada: Exclude<PaginaSeo, "privacidad">;
+  /** Qué portada usa (privacidad, cv y fabricas reusan la del inicio). */
+  portada: Exclude<PaginaSeo, "privacidad" | "cv" | "fabricas" | "agentes" | "capacidades" | "casosDeUso" | "sobreMi" | "lab">;
 }
 
 export const PAGINAS_SEO: Record<PaginaSeo, PaginaSeoData> = {
@@ -38,12 +38,12 @@ export const PAGINAS_SEO: Record<PaginaSeo, PaginaSeoData> = {
     path: "/",
     tituloAbsoluto: true,
     title: {
-      es: "Mario Morera · Diseño web, CRM y automatización con IA",
-      en: "Mario Morera · Web design, CRM and AI automation",
+      es: "Mario Morera — AI Automation & Operations",
+      en: "Mario Morera — AI Automation & Operations",
     },
     description: {
-      es: "Diseño y desarrollo sitios web, CRM, automatizaciones e IA aplicada para negocios: del concepto a la operación, con un solo responsable de punta a punta.",
-      en: "I design and build websites, CRMs, automations and applied AI for businesses: from concept to operations, with one person accountable end to end.",
+      es: "Orquesto la tecnología de negocios y equipos: webs, automatizaciones, agentes de IA y contenido con IA. Trabajas directo conmigo, en remoto.",
+      en: "I orchestrate technology for businesses and teams: websites, automations, AI agents and AI content. You work directly with me, remotely.",
     },
     portada: "inicio",
   },
@@ -58,37 +58,100 @@ export const PAGINAS_SEO: Record<PaginaSeo, PaginaSeoData> = {
   },
   sistemas: {
     path: "/sistemas",
-    title: { es: "CRM, automatización e IA para negocios", en: "CRM, automation and AI for businesses" },
+    title: { es: "Automatización y CRM para negocios", en: "Automation & CRM for businesses" },
     description: {
-      es: "CRM, automatización de procesos e IA aplicada dentro de un flujo que tu equipo puede ver y usar: captación, seguimiento y atención, conectados.",
-      en: "CRM, process automation and applied AI inside a flow your team can see and use: lead capture, follow-up and support, connected.",
+      es: "Conecto formularios, agenda, WhatsApp y CRM para que cada consulta entre ordenada, le llegue a quien corresponde y el seguimiento salga solo.",
+      en: "I connect forms, calendar, WhatsApp and CRM so every enquiry comes in organized, reaches the right person and the follow-up goes out on its own.",
     },
     portada: "sistemas",
   },
   estudio: {
     path: "/estudio",
-    title: { es: "Diseño web, motion y dirección de arte", en: "Web design, motion and art direction" },
+    title: { es: "Webs y landings a medida", en: "Custom websites & landing pages" },
     description: {
-      es: "Dirección de arte, diseño web, motion y desarrollo frontend: experiencias donde la forma, la interacción y el código responden a la misma intención.",
-      en: "Art direction, web design, motion and frontend development: experiences where form, interaction and code answer to the same intent.",
+      es: "Diseño y programo sitios y landings a medida: claros, rápidos en el teléfono, en dos idiomas si hace falta y fáciles de actualizar.",
+      en: "I design and build custom websites and landing pages: clear, fast on the phone, bilingual when needed and easy to update.",
     },
     portada: "estudio",
   },
   hablemos: {
     path: "/aplicar",
-    title: { es: "Contame tu proyecto", en: "Tell me about your project" },
+    title: { es: "Cuéntame tu proyecto", en: "Tell me about your project" },
     description: {
-      es: "Tres pasos para contarme qué querés construir o automatizar. Con ese contexto te respondo con el próximo paso útil para tu proyecto.",
+      es: "Tres pasos para contarme qué quieres construir o automatizar. Con ese contexto te respondo con el próximo paso útil para tu proyecto.",
       en: "Three steps to tell me what you want to build or automate. With that context, I reply with the most useful next step for your project.",
     },
     portada: "hablemos",
   },
   privacidad: {
     path: "/privacidad",
-    title: { es: "Privacidad", en: "Privacy" },
+    title: { es: "Política de privacidad", en: "Privacy policy" },
     description: {
-      es: "Cómo se usan los datos que enviás en el brief de proyecto: qué se recopila, para qué se usa y cómo pedir acceso, corrección o eliminación.",
-      en: "How the data you send in the project brief is used: what is collected, what it is for, and how to request access, correction or deletion.",
+      es: "Qué información recibo cuando me escribes por el formulario, el email o WhatsApp, para qué la uso, con quién se comparte y cómo puedes pedir que la borre.",
+      en: "What information I receive when you write through the form, email or WhatsApp, what I use it for, who it is shared with and how to ask me to delete it.",
+    },
+    portada: "inicio",
+  },
+  fabricas: {
+    path: "/fabricas",
+    title: { es: "Contenido con IA para marcas", en: "AI content for brands" },
+    description: {
+      es: "Sistemas que convierten un brief en posts, carruseles y videos para tu marca, con revisión humana en cada pieza. Así se hace una pieza real, etapa por etapa.",
+      en: "Systems that turn a brief into posts, carousels and videos for your brand, with human review on every piece. See how a real piece is made, stage by stage.",
+    },
+    portada: "inicio",
+  },
+  agentes: {
+    path: "/agentes",
+    title: { es: "Agentes de IA para tu negocio", en: "AI agents for your business" },
+    description: {
+      es: "Agentes que atienden, responden y agendan por ti en WhatsApp, tu web o tu agenda, con cuentas a tu nombre y traspaso a una persona cuando hace falta.",
+      en: "Agents that answer, reply and book for you on WhatsApp, your website or calendar, with accounts in your name and a handoff to a person when it matters.",
+    },
+    portada: "inicio",
+  },
+  capacidades: {
+    path: "/capacidades",
+    title: { es: "Capacidades: IA, automatización, web y más", en: "Capabilities: AI, automation, web and more" },
+    description: {
+      es: "Nueve capacidades que se conectan: IA aplicada, automatización, CRM, web y dirección visual. Cada una con su film, sus herramientas y los casos que la prueban.",
+      en: "Nine connected capabilities: applied AI, automation, CRM, web and visual direction. Each one with its film, its tools and the cases that prove it.",
+    },
+    portada: "inicio",
+  },
+  casosDeUso: {
+    path: "/casos-de-uso",
+    title: { es: "Casos de uso de punta a punta", en: "End-to-end use cases" },
+    description: {
+      es: "Problemas reales contados en films cortos: el problema, el diagnóstico, el sistema y qué cambia. Casos reales y ejemplos con datos de muestra, rotulados.",
+      en: "Real problems told in short films: the problem, the diagnosis, the system and what changes. Real cases and labeled examples with sample data.",
+    },
+    portada: "inicio",
+  },
+  sobreMi: {
+    path: "/sobre-mi",
+    title: { es: "Sobre mí y CV", en: "About me & resume" },
+    description: {
+      es: "Mario Morera, AI Automation & Operations: la película de autor, cómo trabajo y el CV en PDF. Webs, automatizaciones, agentes de IA y contenido con IA.",
+      en: "Mario Morera, AI Automation & Operations: the author film, how I work and the PDF resume. Websites, automations, AI agents and AI content.",
+    },
+    portada: "inicio",
+  },
+  lab: {
+    path: "/lab",
+    title: { es: "Lab: demos interactivas", en: "Lab: interactive demos" },
+    description: {
+      es: "Piezas interactivas del sitio para probar una por una: un estudio de identidad visual, una bandeja con agente y demos de motion. Con datos de ejemplo.",
+      en: "Interactive pieces of the site to try one by one: a visual identity studio, an inbox with an agent and motion demos. With sample data.",
+    },
+    portada: "inicio",
+  },
+  cv: {
+    path: "/cv",
+    title: { es: "Sobre mí y CV", en: "About & resume" },
+    description: {
+      es: "Mario Morera, AI Automation & Operations: webs, automatizaciones, agentes de IA y contenido con IA. Datos rápidos, casos y CV en PDF para descargar.",
+      en: "Mario Morera, AI Automation & Operations: websites, automations, AI agents and AI content. Quick facts, case studies and a downloadable PDF resume.",
     },
     portada: "inicio",
   },
@@ -97,12 +160,12 @@ export const PAGINAS_SEO: Record<PaginaSeo, PaginaSeoData> = {
 export const PORTADAS_OG: Record<PaginaSeoData["portada"], PortadaOg> = {
   inicio: {
     eco: { es: "Morera", en: "Morera" },
-    rotulo: { es: "Mario Morera · Diseño, producto y sistemas", en: "Mario Morera · Design, product and systems" },
+    rotulo: { es: "Mario Morera · AI Automation & Operations", en: "Mario Morera · AI Automation & Operations" },
     titular: {
-      es: "Todo tu ecosistema digital, resuelto por una sola persona.",
-      en: "Your entire digital ecosystem, engineered by one person.",
+      es: "Orquesto la tecnología de tu negocio: web, agentes de IA y contenido.",
+      en: "I orchestrate your business technology: web, AI agents and content.",
     },
-    servicios: { es: "Web · CRM · Automatización · IA", en: "Web · CRM · Automation · AI" },
+    servicios: { es: "Web · Agentes de IA · Automatización · Contenido", en: "Web · AI agents · Automation · Content" },
   },
   trabajo: {
     eco: { es: "Trabajo", en: "Work" },
@@ -111,23 +174,29 @@ export const PORTADAS_OG: Record<PaginaSeoData["portada"], PortadaOg> = {
     servicios: { es: "Casos · Demos · Implementaciones", en: "Cases · Demos · Implementations" },
   },
   sistemas: {
-    eco: { es: "Sistemas", en: "Systems" },
-    rotulo: { es: "Mario Morera · Sistemas", en: "Mario Morera · Systems" },
-    titular: { es: "Conecto lo que hoy trabaja separado.", en: "I connect what works separately today." },
-    servicios: { es: "CRM · Automatización · IA", en: "CRM · Automation · AI" },
+    eco: { es: "CRM", en: "CRM" },
+    rotulo: { es: "Mario Morera · Automatización y CRM", en: "Mario Morera · Automation & CRM" },
+    titular: { es: "Que ninguna consulta quede sin seguimiento.", en: "So no enquiry goes without follow-up." },
+    servicios: { es: "Formularios · Agenda · WhatsApp · CRM", en: "Forms · Calendar · WhatsApp · CRM" },
   },
   estudio: {
-    eco: { es: "Estudio", en: "Studio" },
-    rotulo: { es: "Mario Morera · Estudio", en: "Mario Morera · Studio" },
-    titular: { es: "La tecnología también puede tener pulso.", en: "Technology can have a pulse, too." },
-    servicios: { es: "Diseño · Motion · Código", en: "Design · Motion · Code" },
+    eco: { es: "Webs", en: "Websites" },
+    rotulo: { es: "Mario Morera · Webs y landings", en: "Mario Morera · Websites & landing pages" },
+    titular: { es: "Una web que explica lo que haces y hace que te escriban.", en: "A website that explains what you do and gets people to reach out." },
+    servicios: { es: "Diseño · Desarrollo · Dos idiomas", en: "Design · Development · Bilingual" },
   },
   hablemos: {
     eco: { es: "Hablemos", en: "Let’s talk" },
     rotulo: { es: "Mario Morera · Brief", en: "Mario Morera · Brief" },
-    titular: { es: "Contame qué querés mover.", en: "Tell me what you want to move." },
+    titular: { es: "Cuéntame qué quieres construir o automatizar.", en: "Tell me what you want to build or automate." },
     servicios: { es: "Brief en tres pasos", en: "A three-step brief" },
   },
+};
+
+/** Palabras clave del sitio, por idioma (van en los metadatos de cada página fija). */
+export const KEYWORDS: Record<Language, string[]> = {
+  es: ["AI Automation", "AI Operations", "Agentes de IA", "Automatización", "CRM", "Contenido con IA", "Mario Morera"],
+  en: ["AI Automation", "AI Operations", "AI agents", "Automation", "CRM", "AI content", "Mario Morera"],
 };
 
 /** Dónde vive cada portada (la generan con `scripts/og-images.ts`). */

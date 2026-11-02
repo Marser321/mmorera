@@ -60,7 +60,7 @@ export function LogoOvertureSection() {
   const source = useMemo<FilmSource>(() => ({ kind: "logo", durationInFrames: LOGO_OVERTURE_FRAMES, props: { language } }), [language]);
 
   return (
-    <section className="relative px-5 pb-6 pt-20 sm:px-8 lg:px-12" aria-label="Mario Morera · Creative Technologist & Systems Builder">
+    <section className="relative px-5 pb-6 pt-20 sm:px-8 lg:px-12" aria-label="Mario Morera · AI Automation & Operations">
       <div className="relative mx-auto max-w-[1280px]">
         <FilmStage
           source={source}

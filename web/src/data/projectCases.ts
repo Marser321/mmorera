@@ -30,10 +30,10 @@ export const PROJECT_CASES: ProjectCase[] = [
       t("Pacientes hispanos: sitio bilingüe y precios claros.", "Hispanic patients: a bilingual site and clear prices."),
     ],
     decisions: [
-      t("Un registro de 109 afirmaciones con redacción permitida y prohibida.", "A registry of 109 claims with permitted and prohibited wording."),
+      t("Un registro interno de 109 afirmaciones con redacción permitida y prohibida (herramienta de trabajo; no se ve en el sitio).", "An internal registry of 109 claims with permitted and prohibited wording (a working tool; not shown on the site)."),
       t("Formulario de 7 campos sin texto libre, con llave fail-closed hacia GoHighLevel.", "A 7-field form with no free text and a fail-closed switch into GoHighLevel."),
       t("Reserva en 3 pasos contra la agenda real del CRM.", "A 3-step booking against the CRM's real calendar."),
-      t("Una base de 1.096 videos médicos públicos para escribir guiones con búsqueda por palabras clave.", "A base of 1,096 public medical videos to write scripts with keyword search."),
+      t("Una base interna de 1.096 videos médicos públicos para escribir guiones con búsqueda por palabras clave (herramienta de trabajo; no se ve en el sitio).", "An internal base of 1,096 public medical videos for writing scripts with keyword search (a working tool; not shown on the site)."),
     ],
     result: t(
       "Un sitio de 40 páginas en dos idiomas, con reserva conectada al CRM y una fábrica de contenido que no promete de más.",
@@ -43,6 +43,10 @@ export const PROJECT_CASES: ProjectCase[] = [
     stack: ["Next.js 16", "GoHighLevel", "next-intl", "Playwright"],
     media: [{ src: "/portfolio/brands/fenix-medical-center/shots/site-hbot.jpg", alt: t("Página de oxígeno hiperbárico de Fenix Medical Center", "Fenix Medical Center hyperbaric oxygen page") }],
     liveUrl: "https://fenixmedicalcenters.com",
+    // «Pruébalo tú»: rutas verificadas en T28 (docs/triada/gemini/T28-pruebalo.md).
+    tryIt: [
+      { href: t("https://fenixmedicalcenters.com/es/contacto", "https://fenixmedicalcenters.com/en/contacto"), label: t("Mira el formulario sin texto libre", "See the form with no free-text field"), kind: "live", note: t("Es el sitio real de la clínica: míralo, no hace falta enviarlo.", "This is the clinic's live site: look around, no need to submit it.") },
+    ],
     accent: "#cb9334",
     client: t("Fenix Medical Group Inc · Duluth, Georgia (EE. UU.)", "Fenix Medical Group Inc · Duluth, Georgia (USA)"),
     kind: t("Salud y longevidad", "Health and longevity"),
@@ -86,6 +90,10 @@ export const PROJECT_CASES: ProjectCase[] = [
     stack: ["Vanilla JS", "GoHighLevel", "Serverless API", "Webhooks"],
     media: [{ src: "/portfolio/lb-elite-cover.jpg", alt: t("Sitio de L&B Elite Wash & Detail", "L&B Elite Wash & Detail website") }],
     liveUrl: "https://l-b-five.vercel.app/",
+    // «Pruébalo tú»: rutas verificadas en T28 (docs/triada/gemini/T28-pruebalo.md).
+    tryIt: [
+      { href: t("https://l-b-five.vercel.app/#quoter", "https://l-b-five.vercel.app/#quoter"), label: t("Cotiza por vehículo", "Get a quote by vehicle"), kind: "live", note: t("Sitio real: puedes cotizar sin reservar.", "Live site: you can get a quote without booking.") },
+    ],
     accent: "#1E6FE6",
     status: "featured",
   },
@@ -100,9 +108,14 @@ export const PROJECT_CASES: ProjectCase[] = [
     decisions: [t("Reserva en seis pasos, una decisión por paso.", "Six-step booking, one decision per step."), t("Un CRM propio sobre Supabase en lugar de uno externo.", "Its own CRM on Supabase instead of an external one."), t("Las reglas del negocio viven en la base: agenda sin solapes, cierre de caja y liquidaciones.", "Business rules live in the database: no double booking, cash close and barber payouts.")],
     result: t("La reserva se vuelve autoservicio y el negocio se gestiona desde su propio panel: agenda, clientes, caja, stock y liquidaciones.", "Booking becomes self-service and the business runs from its own panel: schedule, clients, cash, stock and payouts."),
     evidence: [liveEvidence],
-    stack: ["Next.js", "Supabase", "PostgreSQL", "POS", "IA"],
+    stack: ["Next.js", "Supabase", "PostgreSQL", "POS", t("IA", "AI")],
     media: [{ src: "/portfolio/nb-barber-cover.jpg", alt: t("Sitio de New Brothers Barbería", "New Brothers Barbershop website") }],
     liveUrl: "https://nb-barber.vercel.app/",
+    // «Pruébalo tú»: rutas verificadas en T28 (docs/triada/gemini/T28-pruebalo.md).
+    tryIt: [
+      { href: t("https://nb-barber.vercel.app/reservar", "https://nb-barber.vercel.app/reservar"), label: t("Prueba la reserva en 6 pasos", "Try the 6-step booking"), kind: "demo" },
+      { href: t("https://nb-barber.vercel.app/admin-login", "https://nb-barber.vercel.app/admin-login"), label: t("Entra al CRM", "Open the CRM"), kind: "demo", note: t("Con el botón de acceso demo; incluye el asistente con base de conocimiento.", "Use the demo access button; it includes the assistant with its knowledge base.") },
+    ],
     accent: "#D4AF37",
     status: "featured",
   },
@@ -129,8 +142,12 @@ export const PROJECT_CASES: ProjectCase[] = [
       "One place to start any filing, in the trucker's language. The form is in preview mode today.",
     ),
     evidence: [liveEvidence],
-    stack: ["Next.js", "Tailwind CSS", "i18n /en · /es", "Cotización por pasos"], media: [{ src: "/portfolio/truckers-cover.png", alt: t("Web de Truckers Choice", "Truckers Choice website") }],
+    stack: ["Next.js", "Tailwind CSS", "i18n /en · /es", t("Cotización por pasos", "Multi-step quoting")], media: [{ src: "/portfolio/truckers-cover.png", alt: t("Web de Truckers Choice", "Truckers Choice website") }],
     liveUrl: "https://truckers-choice-web-site.vercel.app/",
+    // «Pruébalo tú»: rutas verificadas en T38 (docs/triada/gemini/T38-pruebalo.md).
+    tryIt: [
+      { href: t("https://truckers-choice-web-site.vercel.app/es/contact", "https://truckers-choice-web-site.vercel.app/en/contact"), label: t("Prueba la cotización en 3 pasos", "Try the 3-step quote"), kind: "live", note: t("Sitio real: puedes recorrer los pasos sin enviar la solicitud.", "Live site: you can go through the steps without sending the request.") },
+    ],
     demoUrl: "https://truckers-choice-web-site.vercel.app/en",
     accent: "#FFB020",
     status: "featured",
@@ -159,6 +176,10 @@ export const PROJECT_CASES: ProjectCase[] = [
     stack: ["Next.js", "Tailwind CSS", "Playfair Display", "i18n EN/ES"],
     media: [{ src: "/portfolio/rangel-oviedo-cover.jpg", alt: t("Sitio de Rangel Oviedo Group", "Rangel Oviedo Group website") }],
     liveUrl: "https://rangeloviedo-tor8.vercel.app/",
+    // «Pruébalo tú»: rutas verificadas en T38 (docs/triada/gemini/T38-pruebalo.md).
+    tryIt: [
+      { href: t("https://rangeloviedo-tor8.vercel.app/#perfiles", "https://rangeloviedo-tor8.vercel.app/#perfiles"), label: t("Mira el diagnóstico por 4 perfiles", "See the 4-profile diagnosis"), kind: "live" },
+    ],
     embeddable: false,
     accent: "#C9A864",
     status: "featured",
@@ -183,9 +204,13 @@ export const PROJECT_CASES: ProjectCase[] = [
     ],
     result: t("Cada cita llega al artista con zona, tamaño, concepto y consentimiento resueltos.", "Every appointment reaches the artist with placement, size, concept and consent settled."),
     evidence: [liveEvidence],
-    stack: ["React", "Tailwind CSS", "Reserva por pasos", "Consentimiento digital"],
+    stack: ["React", "Tailwind CSS", t("Reserva por pasos", "Multi-step booking"), t("Consentimiento digital", "Digital consent")],
     media: [{ src: "/portfolio/mrstudio-tattoo-cover.jpg", alt: t("Sitio de Mr. Studio Tattoo", "Mr. Studio Tattoo website") }],
     liveUrl: "https://www.mrstudiotattoo.com/",
+    // «Pruébalo tú»: rutas verificadas en T38 (docs/triada/gemini/T38-pruebalo.md).
+    tryIt: [
+      { href: t("https://www.mrstudiotattoo.com/booking", "https://www.mrstudiotattoo.com/booking"), label: t("Prueba la reserva guiada con selector anatómico", "Try the guided booking with the body selector"), kind: "live", note: t("Es el estudio real: recórrela sin confirmar la reserva.", "This is the real studio: go through it without confirming a booking.") },
+    ],
     accent: "#2A4DE8",
     status: "featured",
   },
@@ -417,7 +442,7 @@ export const PROJECT_CASES: ProjectCase[] = [
       "An institutional portal with transparency where users understand the scope before seeking support.",
     ),
     evidence: [liveEvidence],
-    stack: ["React", "Tailwind CSS", "Vite", "Validación en cliente"],
+    stack: ["React", "Tailwind CSS", "Vite", t("Validación en cliente", "Client-side validation")],
     media: [{ src: "/portfolio/america-cover.png", alt: t("Portal de América Trámites", "América Trámites portal") }],
     liveUrl: "https://atreact.vercel.app/",
     accent: "#BE0000",
@@ -455,7 +480,7 @@ export const PROJECT_CASES: ProjectCase[] = [
       "A digital presence with Titanium Noir aesthetics and a transparent catalog of methods, memberships and supplies.",
     ),
     evidence: [liveEvidence],
-    stack: ["Next.js", "Tailwind CSS", "TypeScript", "Catálogo de tienda"],
+    stack: ["Next.js", "Tailwind CSS", "TypeScript", t("Catálogo de tienda", "Store catalog")],
     media: [{ src: "/portfolio/brands/doge-sm/shots/hero.jpg", alt: t("Portal de DOGE.S.M LLC", "DOGE.S.M LLC portal") }],
     liveUrl: "https://doge-27dp.vercel.app/",
     accent: "#D62828",

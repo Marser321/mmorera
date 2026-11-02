@@ -17,6 +17,9 @@ const createConfig = (phase: string): NextConfig => ({
   },
   async redirects() {
     return [
+      // El CV vive dentro de «Sobre mí», debajo de la película de autor (1/11).
+      { source: "/cv", destination: "/sobre-mi#cv", permanent: false },
+      { source: "/en/cv", destination: "/en/sobre-mi#cv", permanent: false },
       {
         source: "/casos-de-exito/booking-barberia",
         destination: "/casos-de-exito/new-brothers-barberia",

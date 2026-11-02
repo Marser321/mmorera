@@ -156,7 +156,7 @@ export const OMNICHANNEL_LEADS: OmnichannelLead[] = [
         id: "m-22",
         sender: "ai_agent",
         text: {
-          es: "¡Hola Dra. Lucía! Sí, la evaluación incluye escaneo intraoral 3D sin costo. ¿Preferís horario de mañana o tarde?",
+          es: "¡Hola Dra. Lucía! Sí, la evaluación incluye escaneo intraoral 3D sin costo. ¿Prefieres horario de mañana o de tarde?",
           en: "Hi Dr. Lucia! Yes, evaluation includes a complimentary 3D intraoral scan. Do you prefer morning or afternoon?",
         },
         timestamp: "03:42 PM",

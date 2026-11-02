@@ -20,7 +20,7 @@ export default function ApplicationPage() {
             Brief · 03 pasos
           </p>
           <h1 className="mt-5 text-[clamp(3.2rem,7vw,6.5rem)] font-medium leading-[.91] tracking-[-.065em] text-foreground">
-            Contame qué querés mover.
+            Cuéntame qué quieres construir o automatizar.
           </h1>
         </div>
         <p className="max-w-xl text-lg leading-7 text-foreground/55 md:justify-self-end">

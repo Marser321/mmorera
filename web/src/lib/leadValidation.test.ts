@@ -26,6 +26,14 @@ describe('project brief validation', () => {
     assert.match(composeLeadMessage(result.data), /Timeline: En 1–3 meses/);
   });
 
+  test('accepts agency context and preserves it in the lead message', () => {
+    const result = validateAndNormalizeLead({ ...validLead, teamContext: 'agency' });
+    assert.equal(result.success, true);
+    if (!result.success) return;
+    assert.equal(result.data.teamContext, 'agency');
+    assert.match(composeLeadMessage(result.data), /Team: Soy una agencia o un equipo y quiero sumarte a un proyecto\./);
+  });
+
   test('rejects invalid stage, team, timing and short project descriptions', () => {
     const result = validateAndNormalizeLead({
       ...validLead,

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { SITE_IDENTITY, localePath } from "@/config/site";
-import { PAGINAS_SEO, PORTADAS_OG, portadaPath, type Language, type PaginaSeo } from "@/data/seo/paginas";
+import { KEYWORDS, PAGINAS_SEO, PORTADAS_OG, portadaPath, type Language, type PaginaSeo } from "@/data/seo/paginas";
 
 export const OG_SIZE = { width: 1200, height: 630 } as const;
 export const OG_LOCALE: Record<Language, string> = { es: "es_ES", en: "en_US" };
@@ -38,6 +38,7 @@ export function pageMetadata(pagina: PaginaSeo, language: Language): Metadata {
   return {
     title: data.tituloAbsoluto ? { absolute: title } : title,
     description,
+    keywords: KEYWORDS[language],
     alternates: { canonical: url, languages: idiomasDe(data.path) },
     openGraph: {
       type: "website",
@@ -50,6 +51,26 @@ export function pageMetadata(pagina: PaginaSeo, language: Language): Metadata {
       images: [image],
     },
     twitter: { card: "summary_large_image", title: fullTitle, description, images: [{ url: image.url, alt: image.alt }] },
+  };
+}
+
+/**
+ * Metadatos de una página de rama (una familia de capacidades, un caso de uso):
+ * canónica, hreflang, OG y X, con la portada del inicio. El título lleva la
+ * plantilla «— Mario Morera» del layout.
+ */
+export function branchMetadata(path: string, language: Language, title: string, description: string): Metadata {
+  const url = localePath(language, path);
+  const fullTitle = `${title} — ${SITE_IDENTITY.brand}`;
+  const image = { url: portadaPath("inicio", language), ...OG_SIZE, alt: PORTADAS_OG.inicio.titular[language], type: "image/jpeg" };
+  const text = recortarDescripcion(description);
+  return {
+    title,
+    description: text,
+    keywords: KEYWORDS[language],
+    alternates: { canonical: url, languages: idiomasDe(path) },
+    openGraph: { type: "website", url, siteName: SITE_IDENTITY.brand, title: fullTitle, description: text, locale: OG_LOCALE[language], alternateLocale: [OG_LOCALE[OTRO[language]]], images: [image] },
+    twitter: { card: "summary_large_image", title: fullTitle, description: text, images: [{ url: image.url, alt: image.alt }] },
   };
 }
 
@@ -76,6 +97,8 @@ export function personaJsonLd() {
       "CRM",
       "Automatización de procesos",
       "Inteligencia artificial aplicada",
+      "Agentes de IA",
+      "Contenido con IA",
       "Dirección de arte",
       "Motion design",
     ],

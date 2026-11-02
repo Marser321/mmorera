@@ -81,7 +81,7 @@ export function AplicarOS() {
     }, [submitted, touched]);
 
     const steps = useMemo(() => [
-        { title: isEs ? 'Vos' : 'You', icon: User },
+        { title: isEs ? 'Tus datos' : 'You', icon: User },
         { title: isEs ? 'Contexto' : 'Context', icon: Layers3 },
         { title: isEs ? 'Proyecto' : 'Project', icon: Sparkles },
     ], [isEs]);
@@ -97,6 +97,7 @@ export function AplicarOS() {
         { value: 'small-team', es: 'Hay un equipo pequeño involucrado.', en: 'A small team is involved.' },
         { value: 'multiple-areas', es: 'Participan varias áreas.', en: 'Several areas are involved.' },
         { value: 'external-direction', es: 'Busco dirección externa de punta a punta.', en: 'I am looking for end-to-end external direction.' },
+        { value: 'agency', es: 'Soy una agencia o un equipo y quiero sumarte a un proyecto.', en: "We're an agency or team and want to bring you onto a project." },
     ], []);
     const timelines = useMemo(() => [
         { value: 'now', es: 'Quiero empezar ahora.', en: 'I want to start now.' },
@@ -115,16 +116,16 @@ export function AplicarOS() {
     const validateStep = useCallback((targetStep: number) => {
         const errors: Partial<Record<LeadField, string>> = {};
         if (targetStep === 0) {
-            if (formData.name.trim().length < 2) errors.nombre = isEs ? 'Ingresá tu nombre.' : 'Enter your name.';
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) errors.email = isEs ? 'Ingresá un email válido.' : 'Enter a valid email.';
+            if (formData.name.trim().length < 2) errors.nombre = isEs ? 'Escribe tu nombre.' : 'Enter your name.';
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) errors.email = isEs ? 'Escribe un email válido.' : 'Enter a valid email.';
         }
         if (targetStep === 1) {
-            if (!formData.projectStage) errors.projectStage = isEs ? 'Elegí el momento del proyecto.' : 'Choose the project stage.';
-            if (!formData.teamContext) errors.teamContext = isEs ? 'Elegí el contexto del equipo.' : 'Choose the team context.';
+            if (!formData.projectStage) errors.projectStage = isEs ? 'Elige el momento del proyecto.' : 'Choose the project stage.';
+            if (!formData.teamContext) errors.teamContext = isEs ? 'Elige el contexto del equipo.' : 'Choose the team context.';
         }
         if (targetStep === 2) {
-            if (formData.challenge.trim().length < 20) errors.mensaje = isEs ? 'Contame un poco más: usá al menos 20 caracteres.' : 'Tell me a little more: use at least 20 characters.';
-            if (!formData.timeline) errors.timeline = isEs ? 'Elegí un momento estimado de inicio.' : 'Choose an estimated start time.';
+            if (formData.challenge.trim().length < 20) errors.mensaje = isEs ? 'Cuéntame un poco más: usa al menos 20 caracteres.' : 'Tell me a little more: use at least 20 characters.';
+            if (!formData.timeline) errors.timeline = isEs ? 'Elige un momento estimado de inicio.' : 'Choose an estimated start time.';
         }
         return errors;
     }, [formData, isEs]);
@@ -186,7 +187,7 @@ export function AplicarOS() {
             setSubmitted(true);
             setTouched(false);
         } catch {
-            setSubmitError(isEs ? 'No pude enviar el contexto. Probá nuevamente o escribime por email.' : 'I could not send the context. Try again or contact me by email.');
+            setSubmitError(isEs ? 'No pude enviar el contexto. Prueba de nuevo o escríbeme por email.' : 'I could not send the context. Try again or contact me by email.');
         } finally {
             setSubmitting(false);
         }
@@ -325,7 +326,7 @@ export function AplicarOS() {
                         {step === 2 && (
                             <div className="space-y-7">
                                 <div>
-                                    <label htmlFor="brief-project" className="mb-2 block font-mono text-[10px] font-bold uppercase tracking-wider text-zinc-400 light:text-muted-foreground">{isEs ? '¿Qué querés cambiar, construir o hacer posible?' : 'What do you want to change, build or make possible?'}</label>
+                                    <label htmlFor="brief-project" className="mb-2 block font-mono text-[10px] font-bold uppercase tracking-wider text-zinc-400 light:text-muted-foreground">{isEs ? '¿Qué quieres cambiar, construir o hacer posible?' : 'What do you want to change, build or make possible?'}</label>
                                     <textarea id="brief-project" name="mensaje" value={formData.challenge} onChange={(event) => updateField('challenge', event.target.value, 'mensaje')} autoComplete="off" maxLength={2000} rows={6} aria-invalid={Boolean(fieldErrors.mensaje)} aria-describedby={fieldErrors.mensaje ? 'brief-project-error' : undefined} placeholder={isEs ? 'El contexto, qué existe hoy y qué debería cambiar…' : 'The context, what exists today and what should change…'} className={`${inputClass} resize-y`} />
                                     <div className="flex items-start justify-between gap-4">{errorText('mensaje')}<span className="ml-auto mt-2 font-mono text-[10px] tabular-nums text-foreground/55">{formData.challenge.length}/2000</span></div>
                                 </div>
@@ -369,6 +370,8 @@ export function AplicarOS() {
                             <ArrowRight aria-hidden="true" className="h-4 w-4" />
                         </button>
                     </div>
+
+                    {step === steps.length - 1 && <p className="mt-4 text-sm leading-6 text-foreground/75">{isEs ? 'Al enviar, aceptas la ' : 'By sending, you agree to the '}<a href={isEs ? '/privacidad' : '/en/privacidad'} className="text-foreground underline decoration-foreground/30 underline-offset-4 hover:decoration-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-signal">{isEs ? 'política de privacidad' : 'privacy policy'}</a>.</p>}
 
                     <div aria-live="polite" aria-atomic="true">
                         {submitError && <p role="alert" className="mt-4 rounded-xl border border-red-400/25 bg-red-400/[0.06] px-4 py-3 text-sm leading-5 text-red-200 light:border-destructive/30 light:bg-destructive/10 light:text-destructive">{submitError}</p>}

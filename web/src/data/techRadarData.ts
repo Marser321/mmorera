@@ -517,10 +517,8 @@ export function calculateMultiModelArbitrage(monthlyOps: number): MultiModelArbi
 
 export function generateCustomBlueprint(
   title: string,
-  format: "reel" | "youtube" | "linkedin",
-  language: "es" | "en" = "es"
+  format: "reel" | "youtube" | "linkedin"
 ): ContentBlueprint {
-  const isEs = language === "es";
 
   if (format === "reel") {
     return {

@@ -9,6 +9,7 @@ import {
   OMNICHANNEL_LEADS,
   type OmnichannelLead,
 } from "@/data/omnichannelInboxData";
+import { WHATSAPP_PHONE_NUMBER } from "@/data/whatsappScopeData";
 import {
   Inbox,
   Sparkles,
@@ -17,12 +18,12 @@ import {
   ArrowRight,
 } from "lucide-react";
 
-export function OmnichannelInboxSimulator() {
+/** `showHeader={false}`: en /lab/bandeja el encabezado lo pone la página; el rótulo de datos de ejemplo queda. */
+export function OmnichannelInboxSimulator({ showHeader = true }: { showHeader?: boolean } = {}) {
   const { language } = useLanguage();
   const isEs = language === "es";
 
   const [selectedLeadId, setSelectedLeadId] = useState<string>("lead-1");
-  const [triggeredAction, setTriggeredAction] = useState<string | null>(null);
   const [actionFeedbackText, setActionFeedbackText] = useState<string | null>(null);
   const actionTimerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -37,15 +38,13 @@ export function OmnichannelInboxSimulator() {
     [selectedLeadId]
   );
 
-  const handleTriggerAction = (actionId: string, feedback: string) => {
+  const handleTriggerAction = (feedback: string) => {
     if (typeof navigator !== "undefined" && "vibrate" in navigator) {
       try { navigator.vibrate(12); } catch {}
     }
     if (actionTimerRef.current) clearTimeout(actionTimerRef.current);
-    setTriggeredAction(actionId);
     setActionFeedbackText(feedback);
     actionTimerRef.current = setTimeout(() => {
-      setTriggeredAction(null);
       setActionFeedbackText(null);
       actionTimerRef.current = null;
     }, 4000);
@@ -55,7 +54,7 @@ export function OmnichannelInboxSimulator() {
     const text = isEs
       ? `Hola Mario, estuve probando el Simulador de Bandeja Unificada en tu web con el caso de ${activeLead.channelLabel}. Me interesa evaluar la centralización de canales y agentes de respuesta rápida para mi empresa.`
       : `Hi Mario, I was testing your Omnichannel Unified Inbox simulator with the ${activeLead.channelLabel} case. I'd like to centralize our customer messaging and fast-reply AI agents.`;
-    return `https://wa.me/59892323675?text=${encodeURIComponent(text)}`;
+    return `https://wa.me/${WHATSAPP_PHONE_NUMBER}?text=${encodeURIComponent(text)}`;
   }, [activeLead, isEs]);
 
   return (
@@ -80,18 +79,18 @@ export function OmnichannelInboxSimulator() {
               className="h-2.5 w-2.5 rounded-full shadow-[0_0_12px_currentColor] transition-colors duration-500"
               style={{ backgroundColor: activeLead.channelColor, color: activeLead.channelColor }}
             />
-            <p
+            {showHeader && <p
               className="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] transition-colors duration-500"
               style={{ color: activeLead.channelColor }}
             >
               {isEs ? "03 · Bandeja Omnicanal & Speed-to-Lead" : "03 · Omnichannel Inbox & Speed-to-Lead"}
-            </p>
+            </p>}
             {/* Demo: prospectos, puntajes y tiempos son de ejemplo, no de un cliente. */}
             <span className="ml-1 rounded-full border border-white/15 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-foreground/60 light:border-[rgb(var(--ink-rgb)/0.16)]">
               {isEs ? "Datos de ejemplo" : "Sample data"}
             </span>
           </div>
-          <SplitReveal
+          {showHeader && <><SplitReveal
             as="h2"
             text={
               isEs
@@ -104,11 +103,11 @@ export function OmnichannelInboxSimulator() {
             {isEs
               ? "WhatsApp Business, Instagram DM, formularios web y pauta publicitaria sincronizados en tiempo real. Tu equipo y los agentes de IA atienden desde una sola consola, sin prospectos perdidos entre pestañas ni olvidos."
               : "WhatsApp Business, Instagram DMs, web forms, and ad campaigns synced in real time. Your team and AI agents respond from one console, so no lead gets lost between tabs."}
-          </Reveal>
+          </Reveal></>}
         </div>
 
         {/* ─── STAGE PRINCIPAL DE LA BANDEJA (3 PANELES) ─── */}
-        <div className="mt-10 grid gap-6 lg:grid-cols-[0.8fr_1.4fr_0.9fr]">
+        <div className={`${showHeader ? "mt-10" : "mt-6"} grid gap-6 lg:grid-cols-[0.8fr_1.4fr_0.9fr]`}>
           {/* Panel 1: Lista de Prospectos Multicanal */}
           <div className="rounded-3xl border border-white/14 bg-card/60 p-5 backdrop-blur-xl flex flex-col justify-between">
             <div>
@@ -130,7 +129,6 @@ export function OmnichannelInboxSimulator() {
                       key={lead.id}
                       onClick={() => {
                         setSelectedLeadId(lead.id);
-                        setTriggeredAction(null);
                         setActionFeedbackText(null);
                       }}
                       className={`w-full text-left rounded-2xl p-4 border transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 ${
@@ -163,10 +161,6 @@ export function OmnichannelInboxSimulator() {
                       </h3>
                       <p className="text-xs text-foreground/50 truncate">{lead.companyName}</p>
 
-                      <div className="mt-2.5 pt-2 border-t border-white/8 flex items-center justify-between text-[11px] font-mono">
-                        <span className="text-foreground/55">{isEs ? "Valor:" : "Value:"}</span>
-                        <span className="text-foreground/80 font-bold">${lead.dealValueUsd} USD</span>
-                      </div>
                     </button>
                   );
                 })}
@@ -275,20 +269,6 @@ export function OmnichannelInboxSimulator() {
                 <span className="text-[10px] font-mono text-foreground/55">{isEs ? "Ejemplo" : "Sample"}</span>
               </div>
 
-              {/* Métricas clave */}
-              <div className="grid grid-cols-2 gap-3 mb-5">
-                <div className="rounded-2xl border border-white/8 bg-background/50 p-3 text-center">
-                  <span className="text-[10px] font-mono uppercase text-foreground/55 block">{isEs ? "Intención · ejemplo" : "Intent · sample"}</span>
-                  <span className="text-xl font-bold font-mono text-signal">{activeLead.intentScore}/100</span>
-                  <span className="text-[10px] font-mono text-signal/80">{isEs ? "A+ Calificado" : "A+ Qualified"}</span>
-                </div>
-                <div className="rounded-2xl border border-white/8 bg-background/50 p-3 text-center">
-                  <span className="text-[10px] font-mono uppercase text-foreground/55 block">{isEs ? "Oportunidad" : "Opportunity"}</span>
-                  <span className="text-xl font-bold font-mono text-foreground">${activeLead.dealValueUsd}</span>
-                  <span className="text-[10px] font-mono text-foreground/50">{isEs ? "USD estimados" : "Est. USD"}</span>
-                </div>
-              </div>
-
               <p className="text-xs text-foreground/65 leading-relaxed mb-5">
                 {activeLead.summary[language]}
               </p>
@@ -301,7 +281,7 @@ export function OmnichannelInboxSimulator() {
                 {activeLead.availableActions.map((action) => (
                   <button
                     key={action.id}
-                    onClick={() => handleTriggerAction(action.id, action.actionFeedback[language])}
+                    onClick={() => handleTriggerAction(action.actionFeedback[language])}
                     className="w-full pressable text-left rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 p-3 text-xs font-mono text-foreground transition-all flex items-center justify-between"
                   >
                     <span>{action.label[language]}</span>

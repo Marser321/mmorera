@@ -60,7 +60,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body className="min-h-screen overflow-x-hidden bg-background font-sans text-foreground antialiased">
         <AppProviders>
           <a href="#contenido-principal" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded-full focus:bg-foreground focus:px-5 focus:py-3 focus:text-background">
-            Saltar al contenido principal
+            <span lang="es" className="[html[lang=en]_&]:hidden">Saltar al contenido principal</span>
+            <span lang="en" className="hidden [html[lang=en]_&]:inline">Skip to main content</span>
           </a>
           <GlobalBackground />
           <Navbar />

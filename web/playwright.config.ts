@@ -20,14 +20,8 @@ export default defineConfig({
   projects: [
     {
       name: "chromium",
-      testIgnore: ["**/._*", "**/*.webkit.spec.ts"],
-      use: { ...devices["Desktop Chrome"] },
-    },
-    {
-      name: "webkit-mobile-film",
-      testMatch: "**/*.webkit.spec.ts",
       testIgnore: "**/._*",
-      use: { ...devices["iPhone 13"] },
+      use: { ...devices["Desktop Chrome"] },
     },
   ],
   webServer: externalBaseUrl

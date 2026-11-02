@@ -133,7 +133,7 @@ export function OrchestrationWheelSection() {
           />
           <Reveal as="p" className="mt-5 text-base leading-relaxed text-foreground/60 sm:text-lg">
             {isEs
-              ? "Cada nodo no es una habilidad aislada: gira y se conecta con el resto del sistema. Tocá cualquier punto de la órbita para ver qué problema resuelve y cómo transforma el flujo operativo."
+              ? "Cada nodo no es una habilidad aislada: gira y se conecta con el resto del sistema. Toca cualquier punto de la órbita para ver qué problema resuelve y cómo transforma el flujo operativo."
               : "Each node is not a siloed skill: it orbits and connects with the rest of the stack. Tap any node to inspect its problem space and how it transforms operations."}
           </Reveal>
         </div>
@@ -191,7 +191,7 @@ export function OrchestrationWheelSection() {
             labels={{
               level: isEs ? "Nivel de Dominio en Producción" : "Production Mastery Level",
               related: isEs ? "Familias Conectadas en el Flujo" : "Connected Workflow Families",
-              hint: isEs ? "Tocá un nodo para explorar la conexión · Esc para cerrar" : "Tap a node to explore connections · Esc to close",
+              hint: isEs ? "Toca un nodo para explorar la conexión · Esc para cerrar" : "Tap a node to explore connections · Esc to close",
             }}
             onActiveChange={handleActiveChange}
             renderExtra={(node) => {

@@ -39,6 +39,11 @@ export function resolveParticleSceneName(pathname: string, activeFamilies: Famil
     if (hasAny(activeFamilies, ["Web", "Backend", "Infrastructure", "AI"])) return "build";
   }
 
+  // Ramas (1/11): cada una con la escena de su tema.
+  if (normalized.startsWith("/capacidades") || normalized.startsWith("/lab")) return "studio";
+  if (normalized.startsWith("/fabricas")) return "create";
+  if (normalized.startsWith("/agentes")) return "operations";
+  if (normalized.startsWith("/casos-de-uso")) return "systems";
   if (normalized.startsWith("/estudio")) return "studio";
   if (normalized.startsWith("/sistemas")) return "systems";
   if (normalized.startsWith("/casos-de-exito")) return "cases";

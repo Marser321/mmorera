@@ -108,6 +108,6 @@ export async function submitLead(input: ContactFormData): Promise<SubmitLeadResu
         return { success: true }
     } catch (error) {
         console.error('Error al procesar lead:', error)
-        return { success: false, error: 'No pude enviar el contexto. Probá nuevamente o escribime por email.' }
+        return { success: false, error: 'No pude enviar el contexto. Prueba de nuevo o escríbeme por email.' }
     }
 }

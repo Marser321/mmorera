@@ -1,12 +1,18 @@
 import type { MetadataRoute } from "next";
 import { SITE_IDENTITY } from "@/config/site";
 import { PROJECT_CASES } from "@/data/projectCases";
+import { CAPABILITY_SLUGS, LAB_SLUGS, USE_CASE_SLUGS } from "@/data/branchPages";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = SITE_IDENTITY.canonical;
-  const core = ["", "/casos-de-exito", "/sistemas", "/estudio", "/aplicar", "/privacidad"];
+  const core = ["", "/casos-de-exito", "/sistemas", "/estudio", "/fabricas", "/agentes", "/sobre-mi", "/aplicar", "/privacidad", "/terminos", "/cookies"];
   const cases = PROJECT_CASES.map(({ slug }) => `/casos-de-exito/${slug}`);
-  return [...core, ...cases].flatMap((route) => {
+  const branches = [
+    "/capacidades", ...Object.values(CAPABILITY_SLUGS).map((slug) => `/capacidades/${slug}`),
+    "/casos-de-uso", ...Object.values(USE_CASE_SLUGS).map((slug) => `/casos-de-uso/${slug}`),
+    "/lab", ...Object.values(LAB_SLUGS).map((slug) => `/lab/${slug}`),
+  ];
+  return [...core, ...cases, ...branches].flatMap((route) => {
     const english = route ? `/en${route}` : "/en";
     // x-default: la versión en español, para quien no habla ninguno de los dos.
     const languages = { es: `${base}${route}`, en: `${base}${english}`, "x-default": `${base}${route}` };

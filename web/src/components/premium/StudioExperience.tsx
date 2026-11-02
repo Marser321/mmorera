@@ -1,72 +1,75 @@
 "use client";
 
-import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef, useSyncExternalStore } from "react";
+import dynamic from "next/dynamic";
 import { useLanguage } from "@/context/LanguageContext";
 import { useActiveTech } from "@/context/ActiveTechContext";
-import { localePath } from "@/config/site";
-import { CapabilitiesOrbit } from "@/components/premium/estudio/CapabilitiesOrbit";
-import { InteractiveDesignTokenStudio } from "@/components/premium/estudio/InteractiveDesignTokenStudio";
-import { MotionBackdrop } from "@/components/shared/MotionBackdrop";
-import { MOTION_ASSETS } from "@/data/motionAssets";
+import { ServicePage } from "@/components/service/ServicePage";
+import { ExploreDoors } from "@/components/branches/ExploreDoors";
+import { getProjectCase } from "@/data/projectCases";
+import { getCaseMedia } from "@/data/caseMedia";
+import { getCaseMetrics } from "@/data/caseMetrics";
+import { buildCaseFilm } from "@/data/films/caseFilms";
+import type { ServicePageContent } from "@/types/servicePage";
 
-export function StudioExperience() {
+const CaseFilmSection = dynamic(() => import("@/components/films/CaseFilmSection").then(m => m.CaseFilmSection));
+const WEB_FILM_SLUGS = ["mr-studio-tattoo", "truckers-choice", "lb-elite-wash-detail"];
+const projects = WEB_FILM_SLUGS.flatMap(slug => { const project = getProjectCase(slug); return project ? [project] : []; });
+
+const FILM_EVENT = "studio-film-change";
+function subscribeFilm(onChange: () => void) {
+  window.addEventListener("popstate", onChange);
+  window.addEventListener(FILM_EVENT, onChange);
+  return () => { window.removeEventListener("popstate", onChange); window.removeEventListener(FILM_EVENT, onChange); };
+}
+function currentFilm() {
+  const slug = new URLSearchParams(window.location.search).get("film");
+  return Math.max(0, projects.findIndex(item => item.slug === slug));
+}
+
+function WebCaseFilms({ label }: { label?: string }) {
   const { language } = useLanguage();
-  const { setActiveFamilies, setHeroVisible, activeTechName } = useActiveTech();
+  const active = useSyncExternalStore(subscribeFilm, currentFilm, () => 0);
+  const tabsRef = useRef<HTMLDivElement>(null);
+  const project = projects[active];
+  const script = useMemo(() => project ? buildCaseFilm(project, getCaseMedia(project.slug), getCaseMetrics(project.slug)) : null, [project]);
+  if (!project || !script) return null;
+  function select(index: number) {
+    // El enlace de compartir de CaseFilmSection conserva el caso elegido al recargar.
+    const url = new URL(window.location.href);
+    url.searchParams.set("film", projects[index].slug);
+    if (url.hash.startsWith("#film")) url.hash = "";
+    window.history.replaceState(window.history.state, "", url);
+    window.dispatchEvent(new Event(FILM_EVENT));
+    tabsRef.current?.querySelectorAll<HTMLButtonElement>("button")[index]?.focus();
+  }
+  return <>
+    <div ref={tabsRef} role="tablist" aria-label={label} className="mx-auto flex max-w-[1480px] flex-wrap gap-2 px-5 sm:px-8 lg:px-12" onKeyDown={event => {
+      if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+      event.preventDefault();
+      select(event.key === "Home" ? 0 : event.key === "End" ? projects.length - 1 : (active + (event.key === "ArrowRight" ? 1 : -1) + projects.length) % projects.length);
+    }}>
+      {projects.map((item, index) => <button key={item.slug} id={`web-film-tab-${item.slug}`} type="button" role="tab" tabIndex={active === index ? 0 : -1} aria-selected={active === index} aria-controls="web-film-panel" onClick={() => select(index)} className={`min-h-12 rounded-full border px-5 py-3 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${active === index ? "border-signal/40 bg-signal/10 text-signal" : "border-foreground/20 text-foreground/75 hover:text-foreground"}`}>{item.title[language]}</button>)}
+    </div>
+    <div id="web-film-panel" role="tabpanel" aria-labelledby={`web-film-tab-${project.slug}`}>
+      <CaseFilmSection key={project.slug} script={script} language={language} />
+    </div>
+  </>;
+}
+
+export function StudioExperience({ content }: { content: ServicePageContent }) {
+  const { language } = useLanguage();
+  const { setActiveFamilies, setHeroVisible } = useActiveTech();
   const heroRef = useRef<HTMLElement>(null);
-  const isEs = language === "es";
-  useEffect(() => { setActiveFamilies(["Media", "Marketing", "Web"]); return () => setActiveFamilies([]); }, [setActiveFamilies]);
   useEffect(() => {
-    const hero = heroRef.current;
-    if (!hero) return;
+    setActiveFamilies(["Media", "Marketing", "Web"]);
+    return () => setActiveFamilies([]);
+  }, [setActiveFamilies]);
+  useEffect(() => {
+    if (!heroRef.current) return;
     const observer = new IntersectionObserver(([entry]) => setHeroVisible(entry.isIntersecting), { threshold: 0.12 });
-    observer.observe(hero);
+    observer.observe(heroRef.current);
     return () => observer.disconnect();
   }, [setHeroVisible]);
-  return (
-    <main id="contenido-principal" className="bg-transparent pb-28 pt-36 sm:pt-44">
-      <section ref={heroRef} className="flex min-h-[72svh] items-end px-5 sm:px-8 lg:px-12"><div className="mx-auto grid w-full max-w-[1480px] gap-10 lg:grid-cols-[1.25fr_.75fr] lg:items-end"><div className="pb-4 lg:pb-8"><p className="font-mono text-[10px] uppercase tracking-[.18em] text-track-create">{isEs ? "Estudio" : "Studio"} · Design / Motion / Creative Tech</p><h1 className="mt-6 max-w-[940px] text-[clamp(3.5rem,7.4vw,8.2rem)] font-medium leading-[.87] tracking-[-.075em] text-foreground">{isEs ? "La tecnología también puede tener pulso." : "Technology can have a pulse, too."}</h1></div><div className="flex min-h-[42vh] flex-col justify-between border-t border-white/12 light:border-[rgb(var(--ink-rgb)/0.12)] pt-4 lg:mb-8"><div className="flex items-end justify-between gap-6"><div><p className="font-mono text-[10px] uppercase tracking-[.16em] text-foreground/55 light:text-muted-foreground/85">{isEs ? "Tecnología contextual" : "Contextual technology"}</p><p className="mt-2 text-2xl font-medium tracking-[-.035em] text-foreground">{activeTechName ?? "Figma"}</p></div><span className="h-2 w-2 rounded-full bg-track-create shadow-[0_0_18px_#B68CFF] light:shadow-none" /></div><p className="max-w-xl text-xl leading-8 text-foreground/62 light:text-muted-foreground">{isEs ? "Diseño y construyo experiencias donde forma, interacción y código responden a la misma intención." : "I design and build experiences where form, interaction and code answer to the same intent."}</p></div></div></section>
-      <CapabilitiesOrbit language={language} />
-      <InteractiveDesignTokenStudio />
-      {/* Cierre: la banda marfil de la página. El telar va con la variante del
-          fondo de la banda (la clara sobre marfil). */}
-      <section className="banda-marfil overflow-hidden px-5 py-16 sm:px-8 sm:py-24 lg:px-12">
-        <MotionBackdrop asset={MOTION_ASSETS.pulse} intensity={0.4} invertirTema />
-        <div className="relative z-10 mx-auto grid w-full max-w-[1480px] gap-8 lg:grid-cols-[1.2fr_.8fr] lg:items-center">
-          <div>
-            <p className="font-mono text-[10px] uppercase tracking-[.18em] text-accent">
-              02 · {isEs ? "Del concepto al navegador" : "From concept to browser"}
-            </p>
-            <h2 className="mt-3 text-[clamp(2.2rem,4.5vw,4.5rem)] font-medium leading-[.98] tracking-[-.055em] text-foreground">
-              {isEs ? "Una sola intención, de la dirección al código." : "One intent, from direction to code."}
-            </h2>
-          </div>
-          <div className="rounded-2xl border border-[rgb(var(--ink-rgb)/0.12)] bg-card p-6">
-            <p className="text-base leading-relaxed text-foreground/70">
-              {isEs
-                ? "Dirección de arte, prototipado e ingeniería frontend en una sola pasada. Cero intermediarios, fiel a lo diseñado."
-                : "Art direction, prototyping, and frontend engineering in a single pass. Zero handoff friction, shipped straight to production."}
-            </p>
-            <div className="mt-6 flex flex-wrap gap-5 border-t border-[rgb(var(--ink-rgb)/0.1)] pt-4">
-              <Link
-                href={localePath(language, "/casos-de-exito")}
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-signal hover:underline"
-              >
-                {isEs ? "Ver archivo de trabajo" : "View work archive"}
-                <ArrowUpRight className="h-3.5 w-3.5" />
-              </Link>
-              <Link
-                href={localePath(language, "/aplicar")}
-                className="inline-flex items-center gap-1.5 text-xs font-medium text-foreground/65 hover:text-foreground"
-              >
-                {isEs ? "Proponer un proyecto" : "Propose a project"}
-                <ArrowUpRight className="h-3.5 w-3.5" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-  );
+  return <ServicePage content={content} language={language} heroRef={heroRef} howItWorks={<><WebCaseFilms label={content.howItWorks?.title?.[language]} /><ExploreDoors language={language} doors={["capacidades", "lab"]} as="h3" className="mt-12" /></>} />;
 }

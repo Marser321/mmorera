@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Home, Layers, Sparkles, User, Briefcase, MessageCircle, Moon, Sun } from "lucide-react";
+import { Home, Layers, User, Briefcase, MessageCircle, Moon, Sun } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
 
@@ -10,8 +10,7 @@ const NAV_ITEMS = [
   { id: "hero", icon: Home, es: "Inicio", en: "Home" },
   { id: "servicios", icon: Layers, es: "Servicios", en: "Services" },
   { id: "proyectos", icon: Briefcase, es: "Casos", en: "Cases" },
-  { id: "orquestacion", icon: Sparkles, es: "Stack", en: "Stack" },
-  { id: "perfil", icon: User, es: "Perfil", en: "Profile" },
+  { id: "perfil", icon: User, es: "Cómo trabajo", en: "How I work" },
   { id: "contacto", icon: MessageCircle, es: "Contacto", en: "Contact" },
 ];
 
@@ -158,12 +157,12 @@ export function IslandBar() {
             whileHover={{ y: -3, scale: 1.04 }}
             whileTap={{ scale: 0.94 }}
             transition={{ type: "spring", stiffness: 450, damping: 25 }}
-            className="flex items-center justify-center gap-1.5 sm:gap-2 rounded-full bg-[#25D366]/20 border border-[#25D366]/40 px-2 sm:px-3.5 py-1.5 sm:py-2.5 text-xs sm:text-[13px] font-semibold text-[#25D366] hover:bg-[#25D366]/30 hover:shadow-[0_0_16px_rgba(37,211,102,0.35)] transition-all min-h-[38px] min-w-[38px] sm:min-h-[44px] sm:min-w-[44px] shrink-0"
+            className="flex items-center justify-center gap-1.5 sm:gap-2 rounded-full bg-signal/15 border border-signal/40 px-2 sm:px-3.5 py-1.5 sm:py-2.5 text-xs sm:text-[13px] font-semibold text-signal hover:bg-signal/25 hover:shadow-[0_0_16px_rgba(113,243,162,0.35)] transition-all min-h-[38px] min-w-[38px] sm:min-h-[44px] sm:min-w-[44px] shrink-0"
             title={isEs ? "Hablar por WhatsApp directo" : "Chat directly on WhatsApp"}
           >
             <span className="relative flex h-2 w-2 shrink-0">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#25D366] opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#25D366]" />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-signal opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-signal" />
             </span>
             <span className="hidden sm:inline">WhatsApp</span>
           </motion.a>

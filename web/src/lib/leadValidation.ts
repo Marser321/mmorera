@@ -1,7 +1,7 @@
 import type { ContactFormData } from "@/types";
 
 export const PROJECT_STAGE_VALUES = ["idea", "new-version", "grow", "connect"] as const;
-export const TEAM_CONTEXT_VALUES = ["solo", "small-team", "multiple-areas", "external-direction"] as const;
+export const TEAM_CONTEXT_VALUES = ["solo", "small-team", "multiple-areas", "external-direction", "agency"] as const;
 export const TIMELINE_VALUES = ["now", "1-3-months", "this-semester", "exploring"] as const;
 
 export type ProjectStage = (typeof PROJECT_STAGE_VALUES)[number];
@@ -42,12 +42,12 @@ export function validateAndNormalizeLead(input: ContactFormData): LeadValidation
   const timeline = clean(input.timeline, 32, true);
   const fieldErrors: Partial<Record<LeadField, string>> = {};
 
-  if (nombre.length < 2) fieldErrors.nombre = "Ingresá un nombre de al menos 2 caracteres.";
-  if (!EMAIL_PATTERN.test(email)) fieldErrors.email = "Ingresá un email válido.";
-  if (mensaje.length < 20) fieldErrors.mensaje = "Contame un poco más: usá al menos 20 caracteres.";
-  if (!isOneOf(projectStage, PROJECT_STAGE_VALUES)) fieldErrors.projectStage = "Elegí el momento actual del proyecto.";
-  if (!isOneOf(teamContext, TEAM_CONTEXT_VALUES)) fieldErrors.teamContext = "Elegí cómo está compuesto el equipo.";
-  if (!isOneOf(timeline, TIMELINE_VALUES)) fieldErrors.timeline = "Elegí un momento estimado de inicio.";
+  if (nombre.length < 2) fieldErrors.nombre = "Escribe un nombre de al menos 2 caracteres.";
+  if (!EMAIL_PATTERN.test(email)) fieldErrors.email = "Escribe un email válido.";
+  if (mensaje.length < 20) fieldErrors.mensaje = "Cuéntame un poco más: usa al menos 20 caracteres.";
+  if (!isOneOf(projectStage, PROJECT_STAGE_VALUES)) fieldErrors.projectStage = "Elige el momento actual del proyecto.";
+  if (!isOneOf(teamContext, TEAM_CONTEXT_VALUES)) fieldErrors.teamContext = "Elige cómo está compuesto el equipo.";
+  if (!isOneOf(timeline, TIMELINE_VALUES)) fieldErrors.timeline = "Elige un momento estimado de inicio.";
 
   if (Object.keys(fieldErrors).length > 0) return { success: false, fieldErrors };
 
@@ -89,6 +89,7 @@ export const BRIEF_VALUE_LABELS = {
     connect: "Varias piezas necesitan conectarse",
   },
   teamContext: {
+    agency: "Soy una agencia o un equipo y quiero sumarte a un proyecto.",
     solo: "Lo lidera personalmente",
     "small-team": "Hay un equipo pequeño involucrado",
     "multiple-areas": "Participan varias áreas",
