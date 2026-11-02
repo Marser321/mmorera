@@ -37,8 +37,8 @@ export function Navbar() {
   const firstMobileLinkRef = useRef<HTMLAnchorElement>(null);
   const copy = labels[language];
   const themeLabel = theme === "light" ? copy.toDark : copy.toLight;
-  // T06/T07/T08: cambiar estos destinos cuando existan las páginas.
-  const profileLink = { label: copy.profile, href: `${localePath(language, "/")}#perfil` };
+  // T07/T08: agentes y contenido mantienen sus destinos provisionales.
+  const profileLink = { label: copy.profile, href: localePath(language, "/cv") };
   const primaryLinks = [
     { label: copy.work, href: localePath(language, "/casos-de-exito") },
     profileLink,

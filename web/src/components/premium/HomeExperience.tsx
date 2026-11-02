@@ -30,8 +30,7 @@ const HowIWorkSection = dynamic(() => import("@/components/premium/home/HowIWork
 const AplicarOS = dynamic(() => import("@/components/portfolio-isolated/AplicarOS").then((m) => m.AplicarOS));
 import { MOTION_ASSETS } from "@/data/motionAssets";
 
-// Cambiar a "/cv" cuando exista T06.
-const CV_DESTINATION = "#contacto";
+const CV_DESTINATION = "/cv";
 
 const copy = {
   es: {
@@ -58,6 +57,7 @@ const copy = {
     roleCta: "Consultar por un puesto",
     roleHint: "Te comparto mi CV y disponibilidad",
     roleSubject: "Puesto · Mario Morera",
+    roleViewCv: "Ver CV",
     roleCopyEmail: "Copiar correo",
     emailCopied: "Correo copiado",
     emailCopyFallback: "El correo quedó seleccionado: cópialo con Ctrl+C (Cmd+C en Mac).",
@@ -89,6 +89,7 @@ const copy = {
     roleCta: "Discuss a role",
     roleHint: "I'll share my resume and availability",
     roleSubject: "Role · Mario Morera",
+    roleViewCv: "View resume",
     roleCopyEmail: "Copy email",
     emailCopied: "Email copied",
     emailCopyFallback: "The email is selected: copy it with Ctrl+C (Cmd+C on Mac).",
@@ -337,9 +338,12 @@ export function HomeExperience() {
               </a>
               <p className="mt-1 text-xs leading-relaxed text-foreground/75">{c.roleHint}</p>
               <p ref={roleEmailRef} tabIndex={-1} className="mt-3 break-all text-sm text-foreground/80 select-text">{SITE_IDENTITY.contact.email}</p>
-              <button type="button" onClick={copyRoleEmail} className="mt-2 inline-flex min-h-11 items-center text-sm font-semibold text-signal hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{c.roleCopyEmail}</button>
+              <div className="mt-2 flex flex-wrap items-center gap-x-5">
+                <Link href={localePath(language, "/cv")} className="inline-flex min-h-11 items-center text-sm font-semibold text-signal hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{c.roleViewCv}</Link>
+                <button type="button" onClick={copyRoleEmail} className="inline-flex min-h-11 items-center text-sm font-semibold text-signal hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{c.roleCopyEmail}</button>
+              </div>
               <p aria-live="polite" aria-atomic="true" className="text-xs leading-relaxed text-foreground/75">{emailStatus === "copied" ? c.emailCopied : emailStatus === "selected" ? c.emailCopyFallback : ""}</p>
-              {/* Ver CV queda oculto hasta que exista /cv (T06). */}
+
             </div>
             <button type="button" aria-expanded={briefOpen} aria-controls="brief" onClick={() => setBriefOpen((open) => !open)} className="group rounded-2xl border border-foreground/15 bg-background/60 px-5 py-4 text-left transition-colors hover:border-signal/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
               <span className="flex items-center justify-between gap-3 text-sm font-semibold text-foreground">
