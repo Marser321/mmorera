@@ -4,7 +4,7 @@ import { PROJECT_CASES } from "@/data/projectCases";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = SITE_IDENTITY.canonical;
-  const core = ["", "/casos-de-exito", "/sistemas", "/estudio", "/aplicar", "/privacidad", "/terminos", "/cookies"];
+  const core = ["", "/casos-de-exito", "/sistemas", "/estudio", "/cv", "/aplicar", "/privacidad", "/terminos", "/cookies"];
   const cases = PROJECT_CASES.map(({ slug }) => `/casos-de-exito/${slug}`);
   return [...core, ...cases].flatMap((route) => {
     const english = route ? `/en${route}` : "/en";
