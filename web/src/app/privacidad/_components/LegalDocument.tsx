@@ -24,7 +24,7 @@ export function LegalDocument({ language, label, title, intro, sections }: Legal
           <h1 className="text-balance text-[clamp(2.75rem,6.5vw,5rem)] font-medium leading-[1.04] tracking-[-0.04em] text-foreground">{title}</h1>
           <p className="mt-6 max-w-prose text-lg leading-8 text-foreground/75">{intro}</p>
           <p className="mt-5 text-sm leading-6 text-foreground/75">
-            {language === "es" ? "Última actualización" : "Last updated"}: TODO(Mario)
+            {language === "es" ? "Última actualización: 1 de noviembre de 2026" : "Last updated: November 1, 2026"}
           </p>
         </header>
         <nav aria-label={label} className="mt-10 border-y border-foreground/15 py-5">
