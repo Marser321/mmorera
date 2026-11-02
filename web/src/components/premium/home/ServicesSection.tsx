@@ -14,15 +14,16 @@ import { CaseReel } from "@/components/shared/CaseReel";
 import { Reveal } from "@/components/scroll/Reveal";
 import { SplitReveal } from "@/components/motion/SplitReveal";
 import { EASE_OUT } from "@/lib/motion";
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 import type { Language } from "@/context/LanguageContext";
 
 /**
- * Servicios como escenas: a la izquierda cada servicio ocupa su propio tramo
- * de scroll; a la derecha, un escenario fijo muestra el caso real que lo
+ * Servicios compactos: a la izquierda se lee la oferta; a la derecha,
+ * un escenario fijo muestra el caso real que lo
  * demuestra (reel grabado del sitio en vivo). Vender = promesa + prueba juntas.
  * El escenario es `sticky` CSS con IntersectionObserver: cero motion values
  * atados al scroll.
- * En mobile no hay pin: cada servicio lleva su prueba inline.
+ * En móvil los casos se abren con su enlace, sin repetir cuatro reels.
  */
 
 const copy = {
@@ -34,7 +35,7 @@ const copy = {
     talk: "Hablemos de tu caso",
     seenIn: "Caso relacionado",
     viewCase: "Ver caso",
-    idealFor: "Ideal para",
+    idealFor: "Para quién",
   },
   en: {
     eyebrow: "Services",
@@ -44,7 +45,7 @@ const copy = {
     talk: "Let's talk about your case",
     seenIn: "Related case",
     viewCase: "View case",
-    idealFor: "Ideal for",
+    idealFor: "Who it's for",
   },
 } as const;
 
@@ -85,6 +86,7 @@ function ProofMedia({
 export function ServicesSection() {
   const { language } = useLanguage();
   const c = copy[language];
+  const reducedMotion = useReducedMotionSafe();
   const [active, setActive] = useState(0);
   const blockRefs = useRef<(HTMLElement | null)[]>([]);
 
@@ -92,6 +94,9 @@ export function ServicesSection() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
+        // Con filas compactas pueden verse varias a la vez: el foco tiene prioridad.
+        const focusedIndex = blockRefs.current.findIndex(block => block?.contains(document.activeElement));
+        if (focusedIndex >= 0) { setActive(focusedIndex); return; }
         for (const entry of entries) {
           if (!entry.isIntersecting) continue;
           const index = Number((entry.target as HTMLElement).dataset.index);
@@ -110,7 +115,7 @@ export function ServicesSection() {
   return (
     <section
       id="servicios"
-      className="relative scroll-mt-24 border-t border-white/10 bg-background px-5 py-20 sm:px-8 sm:py-28 lg:px-12 light:border-[rgb(var(--ink-rgb)/0.1)]"
+      className="relative scroll-mt-24 border-t border-white/10 bg-background px-5 py-12 sm:px-8 sm:py-16 lg:px-12 light:border-[rgb(var(--ink-rgb)/0.1)]"
     >
       <div className="mx-auto max-w-[1480px]">
         <div className="max-w-3xl">
@@ -120,19 +125,18 @@ export function ServicesSection() {
           <SplitReveal
             as="h2"
             text={c.title}
-            className="mt-4 text-[clamp(2.25rem,4.5vw,4.5rem)] font-medium leading-[1.02] tracking-[-0.05em] text-foreground"
+            className="mt-3 text-[clamp(2rem,3.5vw,3rem)] font-medium leading-[1.08] tracking-[-0.04em] text-foreground"
           />
-          <Reveal as="p" className="mt-5 text-base leading-relaxed text-foreground/60 sm:text-lg">
+          <Reveal as="p" className="mt-4 text-base leading-relaxed text-foreground/75">
             {c.intro}
           </Reveal>
         </div>
 
-        <div className="mt-12 grid gap-10 lg:mt-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16">
+        <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-12">
           {/* Escenas de texto */}
           <div>
             {SERVICE_SOLUTIONS.map((service, index) => {
               const project = getProjectCase(service.proofSlug);
-              const isActive = index === active;
               const servicePath = service.id === "web-ecommerce" ? "/estudio" : service.id === "crm-automation" ? "/sistemas" : null;
               return (
                 <article
@@ -142,7 +146,8 @@ export function ServicesSection() {
                   }}
                   data-index={index}
                   aria-labelledby={`service-${service.id}`}
-                  className={`flex flex-col justify-center border-t border-white/10 py-10 transition-opacity duration-500 light:border-[rgb(var(--ink-rgb)/0.1)] lg:min-h-[78vh] lg:border-t-0 lg:py-0 ${isActive ? "lg:opacity-100" : "lg:opacity-30"}`}
+                  onFocus={() => setActive(index)}
+                  className="flex flex-col border-t border-foreground/15 py-6"
                 >
                   <div className="flex items-center gap-4">
                     <span className="font-mono text-sm text-foreground/60">0{index + 1}</span>
@@ -155,33 +160,26 @@ export function ServicesSection() {
                   </div>
                   <h3
                     id={`service-${service.id}`}
-                    className="mt-5 text-[clamp(1.9rem,3vw,3rem)] font-medium leading-[1.02] tracking-[-0.045em] text-foreground"
+                    className="mt-3 text-[clamp(1.5rem,2.2vw,2rem)] font-medium leading-[1.1] tracking-[-0.03em] text-foreground"
                   >
                     {service.title[language]}
                   </h3>
-                  <p className="mt-4 max-w-xl text-base leading-relaxed text-foreground/70 sm:text-lg">
+                  <p className="mt-3 max-w-prose text-base leading-relaxed text-foreground/75">
                     {service.headline[language]}
                   </p>
-                  <ul className="mt-6 space-y-2.5">
+                  {!servicePath && <ul className="mt-4 space-y-2">
                     {service.deliverables.slice(0, 3).map((item) => (
-                      <li key={item[language]} className="flex items-start gap-2.5 text-sm text-foreground/75 sm:text-base">
+                      <li key={item[language]} className="flex items-start gap-2.5 text-sm text-foreground/75">
                         <Check className="mt-0.5 h-4 w-4 shrink-0" style={{ color: service.accent }} aria-hidden="true" />
                         <span>{item[language]}</span>
                       </li>
                     ))}
-                  </ul>
-                  <p className="mt-6 max-w-xl font-mono text-[11px] leading-relaxed text-foreground/60">
-                    {c.idealFor}: {service.idealFor[language].split(".")[0].toLowerCase()}.
+                  </ul>}
+                  <p className="mt-3 text-xs leading-relaxed text-foreground/75">
+                    {c.idealFor}: {service.idealFor[language]}
                   </p>
 
-                  {/* Prueba inline (mobile/tablet) */}
-                  <div className="mt-7 lg:hidden">
-                    <div className="overflow-hidden rounded-2xl border border-white/10 light:border-[rgb(var(--ink-rgb)/0.1)]">
-                      <ProofMedia service={service} language={language} playing className="aspect-[16/10]" />
-                    </div>
-                  </div>
-
-                  <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">
+                  <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1">
                     {servicePath && (
                       <Link href={localePath(language, servicePath)} className="inline-flex min-h-11 items-center text-sm font-semibold text-signal hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                         {c.howItWorks}
@@ -204,7 +202,7 @@ export function ServicesSection() {
 
           {/* Escenario fijo con la prueba (desktop) */}
           <div className="hidden lg:block">
-            <div className="sticky top-[12vh] flex h-[76vh] flex-col justify-center">
+            <div className="sticky top-24 flex h-[min(72svh,620px)] flex-col justify-center">
               <div
                 aria-hidden="true"
                 className="pointer-events-none absolute -inset-10 -z-10 rounded-full opacity-25 blur-3xl transition-colors duration-700"
@@ -243,10 +241,10 @@ export function ServicesSection() {
                         // anterior sale hacia arriba y la siguiente entra desde abajo.
                         animate={{
                           opacity: isActive ? 1 : 0,
-                          y: isActive ? "0%" : index < active ? "-8%" : "8%",
-                          scale: isActive ? 1 : 1.04,
+                          y: reducedMotion ? "0%" : isActive ? "0%" : index < active ? "-8%" : "8%",
+                          scale: reducedMotion || isActive ? 1 : 1.04,
                         }}
-                        transition={{ duration: 0.9, ease: EASE_OUT }}
+                        transition={{ duration: reducedMotion ? 0 : 0.9, ease: EASE_OUT }}
                         style={{ zIndex: isActive ? 2 : 1 }}
                       >
                         <ProofMedia service={service} language={language} playing={isActive} className="h-full w-full" />
@@ -269,7 +267,7 @@ export function ServicesSection() {
                         style={{ backgroundColor: service.accent }}
                         initial={false}
                         animate={{ width: index <= active ? "100%" : "0%" }}
-                        transition={{ duration: 0.6, ease: EASE_OUT }}
+                        transition={{ duration: reducedMotion ? 0 : 0.6, ease: EASE_OUT }}
                       />
                     </span>
                   ))}
