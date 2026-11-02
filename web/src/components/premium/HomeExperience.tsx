@@ -26,7 +26,7 @@ import { ExploreDoors } from "@/components/branches/ExploreDoors";
 // Cada una es su propio límite de Suspense, así React hidrata por partes en
 // vez de bloquear el hilo principal con todo el Home de una vez.
 const ServicesSection = dynamic(() => import("@/components/premium/home/ServicesSection").then((m) => m.ServicesSection));
-const TryItCards = dynamic(() => import("@/components/premium/home/TryItCards").then((m) => m.TryItCards));
+const ProjectIndex = dynamic(() => import("@/components/premium/ProjectIndex").then((m) => m.ProjectIndex));
 const HowIWorkSection = dynamic(() => import("@/components/premium/home/HowIWorkSection").then((m) => m.HowIWorkSection));
 const AplicarOS = dynamic(() => import("@/components/portfolio-isolated/AplicarOS").then((m) => m.AplicarOS));
 import { MOTION_ASSETS } from "@/data/motionAssets";
@@ -49,8 +49,8 @@ const copy = {
     talkWhatsapp: "Hablar por WhatsApp",
     startProject: "Ver proyectos",
     archiveEyebrow: "Proyectos",
-    archiveTitle: "Tres sistemas que puedes abrir hoy.",
-    archiveBody: "Cada tarjeta dice qué es: implementado o demo. Ábrelo y pruébalo.",
+    archiveTitle: "Casos que puedes recorrer.",
+    archiveBody: "Cada caso muestra su reel. Ábrelo para ver si es implementado o demo, y probarlo.",
     archiveCta: "Ver todos los casos",
     contactEyebrow: "Hablemos",
     contactTitle: "¿Un puesto o un proyecto?",
@@ -81,8 +81,8 @@ const copy = {
     talkWhatsapp: "Chat on WhatsApp",
     startProject: "View projects",
     archiveEyebrow: "Projects",
-    archiveTitle: "Three systems you can open today.",
-    archiveBody: "Each card says what it is: live or demo. Open it and try it.",
+    archiveTitle: "Cases you can explore.",
+    archiveBody: "Each case plays its reel. Open it to see whether it is live or a demo, and try it.",
     archiveCta: "See all cases",
     contactEyebrow: "Let's talk",
     contactTitle: "A role or a project?",
@@ -285,7 +285,7 @@ export function HomeExperience() {
       {/* ─── 3. PROYECTOS EN PRODUCCIÓN (Índice con preview viva) ─── */}
       <section id="proyectos" className="scroll-mt-20 bg-background px-5 py-20 sm:px-8 sm:py-28 lg:px-12 border-t border-white/10 light:border-[rgb(var(--ink-rgb)/0.1)]">
         <div className="mx-auto max-w-[1480px]">
-          <div className="grid gap-6 py-8 md:grid-cols-[1.2fr_.8fr] md:items-end md:py-12">
+          <div className="grid gap-6 py-8 md:grid-cols-[.4fr_1.6fr] md:items-end md:py-12">
             <div>
               <Reveal as="p" x={-20} y={0} className="font-mono text-[10px] uppercase tracking-[.2em] text-signal">
                 {c.archiveEyebrow}
@@ -307,7 +307,7 @@ export function HomeExperience() {
           </div>
 
           <Reveal y={24}>
-            <TryItCards projects={FEATURED_CASES} />
+            <ProjectIndex projects={FEATURED_CASES} />
           </Reveal>
         </div>
       </section>

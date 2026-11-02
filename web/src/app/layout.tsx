@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Familjen_Grotesk, Space_Mono, Unbounded } from "next/font/google";
+import { Familjen_Grotesk, Space_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { SITE_IDENTITY } from "@/config/site";
 import { AppProviders } from "@/components/providers/AppProviders";
@@ -11,8 +12,12 @@ import { CursorLabel } from "@/components/motion/CursorLabel";
 import { PageCurtain } from "@/components/motion/PageCurtain";
 import { jsonLdHtml, pageMetadata, personaJsonLd, sitioJsonLd } from "@/lib/seo";
 
-const displayFont = Unbounded({
-  subsets: ["latin"], display: "swap", variable: "--ff-display", weight: ["400", "500", "700", "900"],
+// Unbounded va alojada en el sitio: desde el 2/11 Google la sirve a los
+// builders de Vercel con URLs `/l/font?kit=…` que Turbopack no resuelve y el
+// build falla. Es la variable (200–900), subconjunto latin, OFL.
+const displayFont = localFont({
+  src: [{ path: "./fonts/unbounded-latin.woff2", weight: "200 900", style: "normal" }],
+  display: "swap", variable: "--ff-display",
 });
 const bodyFont = Familjen_Grotesk({
   subsets: ["latin"], display: "swap", variable: "--ff-body", weight: ["400", "500", "600", "700"],

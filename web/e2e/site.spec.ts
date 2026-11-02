@@ -265,7 +265,7 @@ test("Cómo trabajo mantiene los tres pasos y el texto en ambos idiomas", async 
 });
 
 test("Pruébalo conserva rutas externas, notas y rótulos Demo", async ({ page }) => {
-  await page.goto("/#proyectos");
+  await page.goto("/casos-de-exito");
   const cards = page.locator("[data-try-it-cards] article");
   await expect(cards).toHaveCount(3);
   await expect(cards.locator("h3")).toHaveText(["Fenix Medical Center", "L&B Elite Wash & Detail", "New Brothers Barbería"]);
@@ -585,8 +585,8 @@ test("presenta el perfil y los proyectos con movimiento reducido en escritorio",
   const context = await browser.newContext({ baseURL: BASE_URL, viewport: { width: 1440, height: 900 }, reducedMotion: "reduce" });
   const page = await context.newPage(); await page.goto("/#perfil");
   await expect(page.locator("#perfil ol > li")).toHaveCount(3);
-  await expect(page.locator("[data-try-it-cards] article")).toHaveCount(3);
-  expect(await page.locator("#proyectos").evaluate(e => e.getBoundingClientRect().height)).toBeLessThanOrEqual(1400);
+  await expect(page.locator("#proyectos li")).toHaveCount(6);
+  expect(await page.locator("#proyectos").evaluate(e => e.getBoundingClientRect().height)).toBeLessThanOrEqual(1700);
   await expect(page.locator("#brief")).toBeHidden();
   await expect(page.locator("canvas")).toHaveCount(0);
   await context.close();

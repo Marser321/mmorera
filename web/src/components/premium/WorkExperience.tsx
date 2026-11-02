@@ -5,6 +5,7 @@ import { ArrowUpRight } from "lucide-react";
 import { WorkReel } from "./WorkReel";
 import { FilmRail } from "@/components/films/FilmRail";
 import { CaseBento } from "./CaseBento";
+import { TryItCards } from "./home/TryItCards";
 import { ARCHIVE_CASES, FEATURED_CASES } from "@/data/projectCases";
 import { hasFlagshipFilm } from "@/data/films/flagships/slugs";
 import type { ProjectCase } from "@/types/site";
@@ -52,6 +53,22 @@ export function WorkExperience() {
         <DrawRule className="mt-10 block h-px w-full bg-white/10 light:bg-[rgb(var(--ink-rgb)/0.1)]" />
         <CaseJumpIndex projects={[...FEATURED_CASES, ...ARCHIVE_CASES]} isEs={isEs} language={language} />
       </header>
+
+      {/* Pruébalo: los tres casos que se abren sin cuenta, con su rótulo honesto. */}
+      <section className="mx-auto w-full max-w-[1480px] px-5 pb-16 pt-12 sm:px-8 sm:pb-24 lg:px-12" aria-labelledby="try-it-work">
+        <div className="mb-10">
+          <p className="font-mono text-[10px] uppercase tracking-[.16em] text-accent">{isEs ? "Pruébalo" : "Try it"}</p>
+          <h2 id="try-it-work" className="mt-3 max-w-3xl text-[clamp(2.2rem,4.5vw,4.2rem)] font-medium leading-[.96] tracking-[-.055em] text-foreground">
+            {isEs ? "Tres sistemas que puedes abrir hoy." : "Three systems you can open today."}
+          </h2>
+          <p className="mt-4 max-w-xl text-base leading-relaxed text-foreground/60">
+            {isEs ? "Cada tarjeta dice qué es: implementado o demo. Ábrelo y pruébalo." : "Each card says what it is: live or demo. Open it and try it."}
+          </p>
+        </div>
+        <Reveal y={24}>
+          <TryItCards projects={FEATURED_CASES} />
+        </Reveal>
+      </section>
 
       {/* Reel cinematográfico (full-bleed) */}
       <WorkReel projects={FEATURED_CASES} />
