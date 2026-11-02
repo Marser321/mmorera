@@ -1,5 +1,3 @@
-import type { ParticleSceneDefinition } from "@/types/site";
-
 export const PARTICLE_IDENTIFIABLE_PROGRESS = 0.58;
 
 export type ParticleSequencePhase = "idle" | "assemble" | "hold" | "dissolve";
@@ -93,14 +91,6 @@ export function reduceParticleSequence<T>(
   }
 }
 
-/** D8: route/family sequences never start a formation without explicit focus. */
-export function resolveInteractiveParticleScene(
-  scene: ParticleSceneDefinition,
-  focusTechName: string | null,
-): ParticleSceneDefinition {
-  return {
-    ...scene,
-    mode: focusTechName ? "locked" : "ambient",
-    techNames: focusTechName ? [focusTechName] : [],
-  };
+export function nextParticleSequenceIndex(index: number, length: number): number {
+  return length > 0 ? (index + 1) % length : 0;
 }

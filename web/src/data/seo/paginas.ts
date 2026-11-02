@@ -8,7 +8,7 @@
  */
 
 export type Language = "es" | "en";
-export type PaginaSeo = "inicio" | "trabajo" | "sistemas" | "estudio" | "hablemos" | "privacidad" | "cv" | "fabricas" | "agentes";
+export type PaginaSeo = "inicio" | "trabajo" | "sistemas" | "estudio" | "hablemos" | "privacidad" | "cv" | "fabricas" | "agentes" | "capacidades" | "casosDeUso" | "sobreMi" | "lab";
 
 type Texto = Record<Language, string>;
 
@@ -30,7 +30,7 @@ export interface PaginaSeoData {
   title: Texto;
   description: Texto;
   /** Qué portada usa (privacidad, cv y fabricas reusan la del inicio). */
-  portada: Exclude<PaginaSeo, "privacidad" | "cv" | "fabricas" | "agentes">;
+  portada: Exclude<PaginaSeo, "privacidad" | "cv" | "fabricas" | "agentes" | "capacidades" | "casosDeUso" | "sobreMi" | "lab">;
 }
 
 export const PAGINAS_SEO: Record<PaginaSeo, PaginaSeoData> = {
@@ -107,6 +107,42 @@ export const PAGINAS_SEO: Record<PaginaSeo, PaginaSeoData> = {
     description: {
       es: "Agentes que atienden, responden y agendan por ti en WhatsApp, tu web o tu agenda, con cuentas a tu nombre y traspaso a una persona cuando hace falta.",
       en: "Agents that answer, reply and book for you on WhatsApp, your website or calendar, with accounts in your name and a handoff to a person when it matters.",
+    },
+    portada: "inicio",
+  },
+  capacidades: {
+    path: "/capacidades",
+    title: { es: "Capacidades: IA, automatización, web y más", en: "Capabilities: AI, automation, web and more" },
+    description: {
+      es: "Nueve capacidades que se conectan: IA aplicada, automatización, CRM, web y dirección visual. Cada una con su film, sus herramientas y los casos que la prueban.",
+      en: "Nine connected capabilities: applied AI, automation, CRM, web and visual direction. Each one with its film, its tools and the cases that prove it.",
+    },
+    portada: "inicio",
+  },
+  casosDeUso: {
+    path: "/casos-de-uso",
+    title: { es: "Casos de uso de punta a punta", en: "End-to-end use cases" },
+    description: {
+      es: "Problemas reales contados en films cortos: el problema, el diagnóstico, el sistema y qué cambia. Casos reales y ejemplos con datos de muestra, rotulados.",
+      en: "Real problems told in short films: the problem, the diagnosis, the system and what changes. Real cases and labeled examples with sample data.",
+    },
+    portada: "inicio",
+  },
+  sobreMi: {
+    path: "/sobre-mi",
+    title: { es: "Sobre mí y CV", en: "About me & resume" },
+    description: {
+      es: "Mario Morera, AI Automation & Operations: la película de autor, cómo trabajo y el CV en PDF. Webs, automatizaciones, agentes de IA y contenido con IA.",
+      en: "Mario Morera, AI Automation & Operations: the author film, how I work and the PDF resume. Websites, automations, AI agents and AI content.",
+    },
+    portada: "inicio",
+  },
+  lab: {
+    path: "/lab",
+    title: { es: "Lab: demos interactivas", en: "Lab: interactive demos" },
+    description: {
+      es: "Piezas interactivas del sitio para probar una por una: un estudio de identidad visual, una bandeja con agente y demos de motion. Con datos de ejemplo.",
+      en: "Interactive pieces of the site to try one by one: a visual identity studio, an inbox with an agent and motion demos. With sample data.",
     },
     portada: "inicio",
   },

@@ -1,6 +1,6 @@
 "use client";
 
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { usePathname } from "next/navigation";
 import {
   useCallback,
@@ -14,16 +14,15 @@ import {
 import * as THREE from "three";
 import { useActiveTech } from "@/context/ActiveTechContext";
 import { useTheme } from "@/context/ThemeContext";
-import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 import { PARTICLE_SCENE_LIMITS } from "@/data/particleSceneConfig";
 import { resolveParticleScene, themedAccent } from "@/data/particleScenes";
-import type { Tech } from "@/data/techStack";
+import { TECH_STACK, type Tech } from "@/data/techStack";
 import { SERVICE_GLYPH_TECHS } from "@/data/serviceGlyphs";
 import { particleScatter } from "@/lib/particleScatter";
 import {
   PARTICLE_IDENTIFIABLE_PROGRESS,
   createParticleSequenceState,
-  resolveInteractiveParticleScene,
+  nextParticleSequenceIndex,
   reduceParticleSequence,
   type ParticleSequenceEvent,
   type ParticleSequenceState,
@@ -35,7 +34,7 @@ import type { ParticleSceneDefinition } from "@/types/site";
 const LOGO_COUNT = { desktop: 16000, tablet: 8200, mobile: 2600 } as const;
 // Un glifo pedido por foco (hover en un servicio) tiene que responder rápido.
 const FOCUS_TIMING = { assembleMs: 650, holdMs: 4200, dissolveMs: 420 } as const;
-const DRAWABLE_TECHS: Tech[] = SERVICE_GLYPH_TECHS;
+const DRAWABLE_TECHS: Tech[] = [...TECH_STACK, ...SERVICE_GLYPH_TECHS];
 type PointerState = { x: number; y: number; active: boolean; pressed: boolean };
 type Environment = {
   mode: "webgl" | "fallback";
@@ -194,7 +193,6 @@ uniform vec2 uMouse;
 uniform float uMouseActive;
 uniform float uPixelRatio;
 uniform float uPointScale;
-uniform float uScatter;
 varying float vAlpha;
 varying float vMix;
 void main(){
@@ -202,9 +200,7 @@ void main(){
   vec2 drift=vec2(sin(uTime*(0.025+aDepth*0.03)+phase),cos(uTime*(0.02+aDepth*0.026)+phase*1.3));
   vec2 pos=position.xy+drift*(0.008+aDepth*0.018);
   pos+=uMouse*(0.006+aDepth*0.018)*uMouseActive;
-  float scatter=smoothstep(0.0,1.0,uScatter);
-  pos+=normalize(pos+vec2(0.0001))*scatter*(0.25+aDepth*0.6);
-  vAlpha=(0.15+aDepth*0.38)*(1.0-scatter*0.9);
+  vAlpha=(0.15+aDepth*0.38);
   vMix=aMix;
   gl_PointSize=aSize*uPointScale*(0.65+aDepth)*uPixelRatio;
   gl_Position=vec4(pos,0.45-aDepth*0.25,1.0);
@@ -244,15 +240,12 @@ attribute float aDepth;
 uniform float uTime;
 uniform vec2 uMouse;
 uniform float uMouseActive;
-uniform float uScatter;
 varying float vAlpha;
 void main(){
   vec2 pos=position.xy;
   pos+=vec2(sin(uTime*0.035+aDepth*5.0),cos(uTime*0.03+aDepth*4.0))*0.008;
   pos+=uMouse*(0.008+aDepth*0.012)*uMouseActive;
-  float scatter=smoothstep(0.0,1.0,uScatter);
-  pos+=normalize(pos+vec2(0.0001))*scatter*(0.25+aDepth*0.6);
-  vAlpha=(0.06+aDepth*0.08)*(1.0-scatter*0.9);
+  vAlpha=0.06+aDepth*0.08;
   gl_Position=vec4(pos,0.3,1.0);
 }
 `;
@@ -404,22 +397,20 @@ function AmbientPoints({
     uMouseActive: { value: 0 },
     uPixelRatio: { value: 1.5 },
     uPointScale: { value: pointScale },
-    uScatter: { value: particleScatter.get() },
     uAccent: { value: new THREE.Color(accent) },
     uBase: { value: new THREE.Color(physics.base) },
     uOpacity: { value: opacity },
     // eslint-disable-next-line react-hooks/exhaustive-deps -- uBase se sincroniza en useFrame
   }), [accent, opacity, pointScale]);
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
     const material = materialRef.current;
     const currentPointer = pointer.current;
     if (!material || !currentPointer) return;
-    // The background is still even when another context update invalidates it.
-    material.uniforms.uTime.value = 0;
+    material.uniforms.uTime.value += delta;
     material.uniforms.uPixelRatio.value = state.gl.getPixelRatio();
-    material.uniforms.uMouseActive.value = 0;
-    material.uniforms.uScatter.value = particleScatter.get();
+    material.uniforms.uMouse.value.set(currentPointer.x, currentPointer.y);
+    material.uniforms.uMouseActive.value += ((currentPointer.active ? 1 : 0) - material.uniforms.uMouseActive.value) * Math.min(1, delta * 2.5);
     material.uniforms.uAccent.value.set(accent);
     material.uniforms.uBase.value.set(physics.base);
     material.uniforms.uOpacity.value = opacity;
@@ -486,16 +477,15 @@ function ConstellationLines({
     uMouseActive: { value: 0 },
     uAccent: { value: new THREE.Color(accent) },
     uOpacity: { value: opacity },
-    uScatter: { value: particleScatter.get() },
   }), [accent, opacity]);
 
-  useFrame(() => {
+  useFrame((_, delta) => {
     const material = materialRef.current;
     const currentPointer = pointer.current;
     if (!material || !currentPointer) return;
-    material.uniforms.uTime.value = 0;
-    material.uniforms.uMouseActive.value = 0;
-    material.uniforms.uScatter.value = particleScatter.get();
+    material.uniforms.uTime.value += delta;
+    material.uniforms.uMouse.value.set(currentPointer.x, currentPointer.y);
+    material.uniforms.uMouseActive.value += ((currentPointer.active ? 1 : 0) - material.uniforms.uMouseActive.value) * Math.min(1, delta * 2.5);
     material.uniforms.uAccent.value.set(accent);
     material.uniforms.uOpacity.value = opacity;
   });
@@ -536,7 +526,7 @@ function StaticTechnologyMark({ scene, tech }: { scene: ParticleSceneDefinition;
   const Icon = tech.Icon;
   const mist = (pct: number) => `color-mix(in srgb, var(--color-background) ${pct}%, transparent)`;
   return (
-    <div data-particle-static={tech.name} aria-hidden="true" className="absolute inset-0 opacity-45">
+    <div className="absolute inset-0 opacity-45">
       <div className="absolute bottom-[10vh] left-1/2 grid h-[30vh] w-[84vw] -translate-x-1/2 place-items-center text-foreground sm:bottom-auto sm:left-auto sm:right-[5vw] sm:top-[17vh] sm:h-[62vh] sm:w-[40vw] sm:translate-x-0">
         {Icon ? <Icon className="h-full max-h-[54vh] w-full max-w-[35vw]" /> : <span className="font-heading text-[clamp(5rem,18vw,15rem)] font-black tracking-[-.1em]">{tech.fallback}</span>}
       </div>
@@ -583,13 +573,6 @@ async function waitForActiveDuration(
     if (isActive()) remaining -= elapsed;
   }
   return !signal.aborted;
-}
-
-/** Redraw the still background only when scroll changes its dispersion. */
-function ScatterRenderDriver() {
-  const invalidate = useThree((state) => state.invalidate);
-  useEffect(() => particleScatter.subscribe(() => invalidate()), [invalidate]);
-  return null;
 }
 
 function ParticleCanvas({
@@ -675,6 +658,7 @@ function ParticleCanvas({
         return;
       }
 
+      let currentIndex = 0;
       let needsAssembly = false;
       const firstTech = techs[0];
       const firstCacheKey = `${firstTech.name}:${geometryCount}`;
@@ -704,6 +688,7 @@ function ParticleCanvas({
       } else if (existing) {
         const alignedTarget = { ...existing, index: 0 };
         applySequenceEvent({ type: "align-current", target: alignedTarget });
+        currentIndex = 0;
         if (controllerRef.current.confirmedName !== existing.name) {
           applySequenceEvent({ type: "mount", target: alignedTarget });
           needsAssembly = true;
@@ -714,7 +699,31 @@ function ParticleCanvas({
       }
 
       if (needsAssembly && !(await assembleCurrent())) return;
+      currentIndex = controllerRef.current.current?.index ?? currentIndex;
 
+      if (scene.mode === "locked" || techs.length < 2) return;
+
+      while (!signal.aborted) {
+        const nextIndex = nextParticleSequenceIndex(currentIndex, techs.length);
+        const pendingTarget = loadTarget(techs[nextIndex], nextIndex)
+          .then((target) => ({ target, failed: false as const }))
+          .catch(() => ({ target: null, failed: true as const }));
+
+        if (!(await waitForActiveDuration(scene.timing.holdMs, isActive, signal))) return;
+        const result = await pendingTarget;
+        if (signal.aborted) return;
+        if (result.failed || !result.target) {
+          applySequenceEvent({ type: "retain-current" });
+          continue;
+        }
+
+        applySequenceEvent({ type: "queue", target: result.target });
+        applySequenceEvent({ type: "begin-dissolve" });
+        if (!(await waitForActiveDuration(scene.timing.dissolveMs, isActive, signal))) return;
+        applySequenceEvent({ type: "promote" });
+        currentIndex = nextIndex;
+        if (!(await assembleCurrent())) return;
+      }
     };
 
     void run();
@@ -725,6 +734,7 @@ function ParticleCanvas({
     scene.mode,
     scene.timing.assembleMs,
     scene.timing.dissolveMs,
+    scene.timing.holdMs,
     setActiveTechName,
     techSignature,
     techs,
@@ -750,14 +760,12 @@ function ParticleCanvas({
       data-particle-incoming={controller.incoming?.name ?? ""}
       data-particle-confirmed={controller.confirmedName ?? ""}
       data-particle-phase={controller.phase}
-      data-particle-render-mode={pageVisible ? controller.current ? "active" : "idle" : "paused"}
       data-particle-target-count={loadedTargetCount}
       dpr={[1, environment.isMobile ? 1.2 : 1.5]}
-      frameloop={pageVisible ? controller.current ? "always" : "demand" : "never"}
+      frameloop={pageVisible ? "always" : "never"}
       gl={{ alpha: true, antialias: false, depth: false, powerPreference: "low-power" }}
       style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
     >
-      <ScatterRenderDriver />
       <AmbientPoints pointer={pointer} accent={accent} count={environment.isMobile ? 90 : 220} opacity={ambientOpacity * 0.55} pointScale={0.7} salt={41} physics={physics} />
       <ConstellationLines pointer={pointer} accent={accent} isMobile={environment.isMobile} opacity={ambientOpacity} physics={physics} />
       <AmbientPoints pointer={pointer} accent={accent} count={environment.isMobile ? 70 : 150} opacity={ambientOpacity} pointScale={1.45} salt={61} physics={physics} />
@@ -777,8 +785,7 @@ function ParticleCanvas({
 
 export function TechParticleField() {
   const pathname = usePathname();
-  const reducedMotion = useReducedMotionSafe();
-  const { heroVisible, setActiveTechName, focusTechName } = useActiveTech();
+  const { activeFamilies, heroVisible, setActiveTechName, focusTechName } = useActiveTech();
   const [environment, setEnvironment] = useState<Environment | null>(null);
   const [pageVisible, setPageVisible] = useState(true);
   const [scatteredAway, setScatteredAway] = useState(false);
@@ -799,13 +806,12 @@ export function TechParticleField() {
       window.clearTimeout(timer);
     };
   }, []);
-  const routeScene = useMemo(() => resolveParticleScene(pathname), [pathname]);
+  const routeScene = useMemo(() => resolveParticleScene(pathname, activeFamilies), [activeFamilies, pathname]);
   // Un foco explícito (servicio enfocado) fija un solo glifo hasta que se suelta.
   const scene = useMemo<ParticleSceneDefinition>(
-    () => ({
-      ...resolveInteractiveParticleScene(routeScene, DRAWABLE_TECHS.some((tech) => tech.name === focusTechName) ? focusTechName : null),
-      timing: FOCUS_TIMING,
-    }),
+    () => focusTechName
+      ? { ...routeScene, mode: "locked", techNames: [focusTechName], timing: FOCUS_TIMING }
+      : routeScene,
     [focusTechName, routeScene],
   );
   const allTechs = useMemo(
@@ -820,10 +826,11 @@ export function TechParticleField() {
   useEffect(() => {
     const mobileQuery = window.matchMedia("(max-width: 768px)");
     const tabletQuery = window.matchMedia("(max-width: 1100px)");
+    const reduceQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     const syncEnvironment = () => setEnvironment({
       isMobile: mobileQuery.matches,
       isTablet: !mobileQuery.matches && tabletQuery.matches,
-      mode: !hasWebGL() ? "fallback" : "webgl",
+      mode: reduceQuery.matches || !hasWebGL() ? "fallback" : "webgl",
     });
     const onMove = (event: PointerEvent) => {
       pointer.current.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -840,6 +847,7 @@ export function TechParticleField() {
     syncEnvironment();
     mobileQuery.addEventListener("change", syncEnvironment);
     tabletQuery.addEventListener("change", syncEnvironment);
+    reduceQuery.addEventListener("change", syncEnvironment);
     window.addEventListener("pointermove", onMove, { passive: true });
     window.addEventListener("pointerleave", onLeave);
     window.addEventListener("pointerdown", onDown, { passive: true });
@@ -848,6 +856,7 @@ export function TechParticleField() {
     return () => {
       mobileQuery.removeEventListener("change", syncEnvironment);
       tabletQuery.removeEventListener("change", syncEnvironment);
+      reduceQuery.removeEventListener("change", syncEnvironment);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerleave", onLeave);
       window.removeEventListener("pointerdown", onDown);
@@ -857,7 +866,7 @@ export function TechParticleField() {
   }, []);
 
   if (!environment) return null;
-  if (reducedMotion || environment.mode === "fallback") return <StaticTechnologyMark scene={scene} tech={techs[0]} />;
+  if (environment.mode === "fallback") return <StaticTechnologyMark scene={scene} tech={techs[0]} />;
 
   return (
     <ParticleCanvas
