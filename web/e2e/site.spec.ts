@@ -55,8 +55,12 @@ test("navega por la cabecera y conserva un único canvas", async ({ page }) => {
   await systemsLink.focus();
   await systemsLink.press("Enter");
   await expect(page).toHaveURL(/\/sistemas$/, { timeout: 30_000 });
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("Conecto lo que hoy trabaja separado");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Que ninguna consulta quede sin seguimiento.");
   await expect(page.locator('canvas[data-e2e-persistent="true"]')).toHaveCount(1);
+  await expect(page.locator('[data-service-section="deliverables"] li')).toHaveCount(3);
+  await page.goto("/en/sistemas");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("So no enquiry goes without follow-up.");
+  await expect(page.locator('[data-service-section="deliverables"] li')).toHaveCount(3);
   expect(pageErrors).toEqual([]);
   expect(keyWarnings).toEqual([]);
 });
@@ -441,31 +445,42 @@ test("cada caso termina con casos parecidos que abren su film", async ({ page })
 test.describe("estudio con movimiento reducido", () => {
   test.use({ contextOptions: { reducedMotion: "reduce" } });
 
-  test("cada capacidad tiene su film y los casos que la demuestran", async ({ page }) => {
-    await page.goto("/estudio");
-    await expect(page.getByText("Film de la capacidad")).toBeVisible();
-    await expect(page.locator('[data-film-stage="capability"]')).toHaveCount(1);
-    // Abrir una familia en la órbita cambia el film y la lista de casos.
-    const node = page.getByRole("button", { name: "IA aplicada", exact: true });
-    await expect(async () => {
-      await node.click();
-      await expect(page.getByRole("heading", { level: 3, name: "IA aplicada" })).toBeVisible({ timeout: 1_000 });
-    }).toPass({ timeout: 15_000 });
-    const fenix = page.getByRole("link", { name: /1\.096 videos médicos/ });
-    await expect(fenix).toHaveAttribute("href", /\/casos-de-exito\/fenix-medical-center#film-brain$/);
-    await fenix.click();
-    await expect(page).toHaveURL(/\/casos-de-exito\/fenix-medical-center#film-brain$/, { timeout: 30_000 });
-    await expect(page.locator('[data-film-stage="flagship"]')).toHaveCount(1);
+  test("el selector de casos cambia el film con teclado y conserva la selección", async ({ page }) => {
+    for (const language of ["es", "en"] as const) {
+      await page.goto(language === "es" ? "/estudio" : "/en/estudio");
+      const tabs = page.locator('[role="tablist"] [role="tab"]');
+      await expect(tabs).toHaveText(["Mr. Studio Tattoo", "Truckers Choice", "L&B Elite Wash & Detail"]);
+      await expect(page.getByRole("heading", { level: 1 })).toHaveText(language === "es" ? "Una web que explica lo que haces y hace que te escriban." : "A website that explains what you do and gets people to reach out.");
+      await expect(page.locator('[data-service-section="deliverables"] li')).toHaveCount(3);
+      await expect(async () => {
+        await tabs.first().focus(); await page.keyboard.press("ArrowRight");
+        await expect(tabs.nth(1)).toHaveAttribute("aria-selected", "true", { timeout: 1000 });
+      }).toPass({ timeout: 10000 });
+      await expect(tabs.nth(1)).toBeFocused();
+      await expect(page).toHaveURL(/film=truckers-choice/);
+      await expect(page.locator('#web-film-panel [data-film-stage="flagship"]')).toHaveCount(1);
+      await page.reload();
+      await expect(tabs.nth(1)).toHaveAttribute("aria-selected", "true");
+      await tabs.nth(1).focus(); await page.keyboard.press("End");
+      await expect(tabs.last()).toBeFocused(); await expect(tabs.last()).toHaveAttribute("aria-selected", "true");
+      await page.keyboard.press("Home"); await expect(tabs.first()).toHaveAttribute("aria-selected", "true");
+      await expectStudioClosing(page, language);
+    }
   });
 });
 
-test("Cómo trabajo acompaña el texto con un monograma quieto", async ({ page }) => {
-  await page.goto("/#perfil");
-  const mark = page.locator("#perfil .monograma-fundido");
-  await expect(mark).toBeVisible();
-  const style = await mark.evaluate(e => ({ animation: getComputedStyle(e).animationName, transform: getComputedStyle(e).transform }));
-  expect(style).toEqual({ animation: "none", transform: "none" });
-  await expect(page.locator("#perfil ol > li")).toHaveCount(3);
+test("Cómo trabajo muestra una foto quieta y con alt en ambos idiomas", async ({ page }) => {
+  for (const width of [390, 1440]) for (const language of ["es", "en"] as const) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto(language === "es" ? "/#perfil" : "/en#perfil");
+    const photo = page.locator("#perfil img");
+    await expect(photo).toHaveAttribute("alt", language === "es" ? "Mario Morera frente a una interfaz de diseño en su pantalla" : "Mario Morera in front of a design interface on his screen");
+    await photo.scrollIntoViewIfNeeded();
+    await expect.poll(() => photo.evaluate(e => (e as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+    const style = await photo.evaluate(e => ({ animation: getComputedStyle(e).animationName, transform: getComputedStyle(e).transform }));
+    expect(style).toEqual({ animation: "none", transform: "none" });
+    await expect(page.locator("#perfil ol > li")).toHaveCount(3);
+  }
 });
 
 async function completeBrief(page: Page) {
@@ -543,7 +558,10 @@ test("ofrece fallback estático con touch y reduced motion", async ({ browser })
   const profile = page.locator("#perfil");
   await profile.scrollIntoViewIfNeeded();
   await expect(profile.locator("ol > li")).toHaveCount(3);
-  await expect(profile.locator(".monograma-fundido")).toBeVisible();
+  const photo = profile.locator("img");
+  await expect(photo).toHaveAttribute("alt", "Mario Morera frente a una interfaz de diseño en su pantalla");
+  await expect.poll(() => photo.evaluate(e => (e as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+  expect(await photo.evaluate(e => getComputedStyle(e).animationName)).toBe("none");
   await expect(page.locator("canvas")).toHaveCount(0);
   expect(pageErrors).toEqual([]);
   await context.close();
@@ -599,16 +617,24 @@ test("alterna al modo claro, lo persiste y mantiene la home legible", async ({ p
   expect(pageErrors).toEqual([]);
 });
 
+async function expectStudioClosing(page: Page, language: "es" | "en" = "es") {
+  const closing = page.locator('[data-service-section="closing"]');
+  await expect(closing).toHaveClass(/banda-marfil/);
+  await expect(closing.getByRole("heading", { level: 2 })).toHaveText(language === "es" ? "¿Tu web explica bien lo que haces?" : "Does your website explain what you do?");
+  await expect(closing.getByRole("link", { name: language === "es" ? "Hablemos de tu web" : "Let's talk about your website" })).toHaveAttribute("href", language === "es" ? "/aplicar" : "/en/aplicar");
+}
+
 test("monta los MP4 de preview solo en las rutas que los usan", async ({ page }) => {
   await installPreviewVideoFixture(page);
   const integrations = [
     { path: "/", assets: [{ id: "apertura-protegida", source: "minimalist-desktop.mp4" }] },
-    { path: "/estudio", assets: [{ id: "telar-pulso", source: "graphite-desktop.mp4" }] },
+    { path: "/estudio", assets: [] },
     { path: "/aplicar", assets: [{ id: "apertura-protegida", source: "minimalist-desktop.mp4" }] },
   ] as const;
 
   for (const integration of integrations) {
     await page.goto(integration.path);
+    if (integration.path === "/estudio") await expectStudioClosing(page);
     for (const asset of integration.assets) {
       const backdrop = page.locator(`[data-motion-asset="${asset.id}"]`);
       await expect(backdrop).toHaveCount(1);
@@ -656,7 +682,6 @@ test("mantiene posters estaticos sin montar videos con movimiento reducido", asy
 
   for (const { path, asset } of [
     { path: "/", asset: "apertura-protegida" },
-    { path: "/estudio", asset: "telar-pulso" },
     { path: "/aplicar", asset: "apertura-protegida" },
   ]) {
     await page.goto(path);
@@ -669,6 +694,9 @@ test("mantiene posters estaticos sin montar videos con movimiento reducido", asy
     await expect(page.locator("[data-motion-video]")).toHaveCount(0);
   }
 
+  await page.goto("/estudio");
+  await expectStudioClosing(page);
+  await expect(page.locator("[data-motion-video]")).toHaveCount(0);
   await context.close();
 });
 
@@ -703,10 +731,8 @@ test("usa Camera solo para Apertura móvil", async ({ browser }) => {
   await expect(opening.locator("video source[type='video/mp4']")).toHaveAttribute("src", /camera-mobile\.mp4$/);
 
   await page.goto("/estudio");
-  const pulse = page.locator('[data-motion-asset="telar-pulso"]');
-  await pulse.scrollIntoViewIfNeeded();
-  await expect(pulse).toHaveAttribute("data-motion-video-status", "ready");
-  await expect(pulse.locator("video source[type='video/mp4']")).toHaveAttribute("src", /graphite-mobile\.mp4$/);
+  await expectStudioClosing(page);
+  await expect(page.locator('video[data-motion-video-preview="true"]')).toHaveCount(0);
   await context.close();
 });
 
