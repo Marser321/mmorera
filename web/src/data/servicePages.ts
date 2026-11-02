@@ -172,4 +172,56 @@ export const SERVICE_PAGES = {
       cta: { label: t("Hablemos de tu contenido", "Let's talk about your content") },
     },
   },
-} satisfies Record<"sistemas" | "estudio" | "fabricas", ServicePageContent>;
+  /** /agentes → «Agentes de IA» (T07, D6). El slot muestra la demo guiada (T32). */
+  agentes: {
+    hero: {
+      eyebrow: t("Agentes de IA", "AI agents"),
+      title: t("Un agente que atiende, responde y agenda por ti, con una persona cuando hace falta.", "An agent that answers, replies and books for you, with a person when it matters."),
+      body: t(
+        "Instalo y configuro agentes conectados a WhatsApp, a tu web o a tu agenda, que responden con los datos de tu negocio. Las cuentas quedan a tu nombre y, cuando el agente no puede resolver, la conversación pasa a una persona de tu equipo.",
+        "I install and configure agents connected to WhatsApp, your website or your calendar, answering with your business data. Accounts stay in your name and, when the agent can't resolve something, the conversation goes to a person on your team."
+      ),
+      cta: { label: t("Hablemos de tu agente", "Let's talk about your agent") },
+    },
+    audience: {
+      title: AUDIENCE_TITLE,
+      for: t(
+        "Negocios de servicios y equipos sin personal técnico que quieren delegar la atención repetitiva.",
+        "Service businesses and teams without technical staff who want to delegate repetitive support."
+      ),
+      notFor: t(
+        "Si casi todas tus consultas necesitan el criterio de una persona experta, un agente no te va a ahorrar trabajo.",
+        "If almost every enquiry needs an expert's judgment, an agent won't save you work."
+      ),
+    },
+    deliverables: deliverablesOf("booking-payments"),
+    tools: t(
+      "Con Claude, GPT, OpenClaw o Hermes Agent según tu caso, conectados a tus canales por n8n o por API.",
+      "With Claude, GPT, OpenClaw or Hermes Agent depending on your case, connected to your channels through n8n or an API."
+    ),
+    howItWorks: {
+      title: t("Pruébalo: una conversación de ejemplo", "Try it: a sample conversation"),
+      body: t(
+        "Una demo guiada con respuestas escritas de antemano: muestra cómo responde el agente, qué hace cuando no sabe y cómo pasa la conversación a una persona.",
+        "A guided demo with pre-written answers: it shows how the agent replies, what it does when it doesn't know, and how it hands the conversation to a person."
+      ),
+    },
+    proof: {
+      title: t("Un asistente con base de conocimiento, en un CRM demo", "An assistant with a knowledge base, in a demo CRM"),
+      slugs: ["new-brothers-barberia"],
+    },
+    hiring: {
+      title: t("Cómo trabajamos", "How we work"),
+      steps: [
+        { title: t("Diagnóstico", "Diagnosis"), body: t("Vemos qué consultas se repiten y cuáles conviene que responda el agente, y cuáles no.", "We look at which enquiries repeat and which the agent should answer, and which it shouldn't.") },
+        { title: t("Instalación", "Installation"), body: t("Conecto el agente a tus canales, cargo tus datos y definimos juntos cuándo pasa a una persona.", "I connect the agent to your channels, load your data and we agree on when it hands over to a person.") },
+        { title: t("Mantenimiento", "Maintenance"), body: t("Ajusto las respuestas y revisamos juntos lo que el agente no supo resolver.", "I tune the answers and we review together what the agent couldn't resolve.") },
+      ],
+      price: t("El alcance y el precio se definen después del diagnóstico.", "Scope and price are set after the diagnosis."),
+    },
+    closing: {
+      title: t("¿Qué consulta te gustaría dejar de responder a mano?", "Which enquiry would you rather stop answering by hand?"),
+      cta: { label: t("Hablemos de tu agente", "Let's talk about your agent") },
+    },
+  },
+} satisfies Record<"sistemas" | "estudio" | "fabricas" | "agentes", ServicePageContent>;

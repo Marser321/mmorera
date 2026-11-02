@@ -69,7 +69,7 @@ test("mantiene el menú por servicios con teclado y oculta redes no verificadas"
   await page.goto("/");
   const header = page.locator("header").first();
   await expect(header.getByRole("link", { name: "Casos", exact: true })).toBeVisible();
-  await expect(header.getByRole("link", { name: "Sobre mí · CV", exact: true })).toHaveAttribute("href", "/#perfil");
+  await expect(header.getByRole("link", { name: "Sobre mí · CV", exact: true })).toHaveAttribute("href", "/cv");
   await expect(header.getByRole("link", { name: "Hablemos", exact: true })).toHaveAttribute("href", "#contacto");
   await expect(page.locator('a[href*="linkedin"], a[href*="github"]')).toHaveCount(0);
   const button = header.locator('button[aria-controls="services-menu"]');

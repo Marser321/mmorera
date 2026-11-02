@@ -47,7 +47,7 @@ export function Navbar() {
     { label: copy.studio, href: localePath(language, "/estudio") },
     { label: copy.agents, href: `${localePath(language, "/")}#servicios` },
     { label: copy.systems, href: localePath(language, "/sistemas") },
-    { label: copy.content, href: `${localePath(language, "/")}#servicios` },
+    { label: copy.content, href: localePath(language, "/fabricas") },
   ];
   const contactHref = pathname === "/" || pathname === "/en" ? "#contacto" : localePath(language, "/aplicar");
   const mobileLinks = [...serviceLinks, ...primaryLinks];

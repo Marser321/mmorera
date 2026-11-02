@@ -8,7 +8,7 @@
  */
 
 export type Language = "es" | "en";
-export type PaginaSeo = "inicio" | "trabajo" | "sistemas" | "estudio" | "hablemos" | "privacidad" | "cv" | "fabricas";
+export type PaginaSeo = "inicio" | "trabajo" | "sistemas" | "estudio" | "hablemos" | "privacidad" | "cv" | "fabricas" | "agentes";
 
 type Texto = Record<Language, string>;
 
@@ -30,7 +30,7 @@ export interface PaginaSeoData {
   title: Texto;
   description: Texto;
   /** Qué portada usa (privacidad, cv y fabricas reusan la del inicio). */
-  portada: Exclude<PaginaSeo, "privacidad" | "cv" | "fabricas">;
+  portada: Exclude<PaginaSeo, "privacidad" | "cv" | "fabricas" | "agentes">;
 }
 
 export const PAGINAS_SEO: Record<PaginaSeo, PaginaSeoData> = {
@@ -98,6 +98,15 @@ export const PAGINAS_SEO: Record<PaginaSeo, PaginaSeoData> = {
     description: {
       es: "Sistemas que convierten un brief en posts, carruseles y videos para tu marca, con revisión humana en cada pieza. Así se hace una pieza real, etapa por etapa.",
       en: "Systems that turn a brief into posts, carousels and videos for your brand, with human review on every piece. See how a real piece is made, stage by stage.",
+    },
+    portada: "inicio",
+  },
+  agentes: {
+    path: "/agentes",
+    title: { es: "Agentes de IA para tu negocio", en: "AI agents for your business" },
+    description: {
+      es: "Agentes que atienden, responden y agendan por ti en WhatsApp, tu web o tu agenda, con cuentas a tu nombre y traspaso a una persona cuando hace falta.",
+      en: "Agents that answer, reply and book for you on WhatsApp, your website or calendar, with accounts in your name and a handoff to a person when it matters.",
     },
     portada: "inicio",
   },

@@ -137,7 +137,7 @@ export function ServicesSection() {
           <div>
             {SERVICE_SOLUTIONS.map((service, index) => {
               const project = getProjectCase(service.proofSlug);
-              const servicePath = service.id === "web-ecommerce" ? "/estudio" : service.id === "crm-automation" ? "/sistemas" : null;
+              const servicePath = service.id === "web-ecommerce" ? "/estudio" : service.id === "crm-automation" ? "/sistemas" : service.id === "ai-software" ? "/fabricas" : null;
               return (
                 <article
                   key={service.id}
