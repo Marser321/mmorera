@@ -32,6 +32,10 @@ const color = (name: string) => withAlpha(name) as unknown as string;
    `light:` es la variante para el gemelo "Master Print" (ver LIGHT_MODE_DESIGN.md). */
 const lightVariant = plugin(({ addVariant }) => {
   addVariant("light", "html.light &");
+  // `touch:` = sin mouse fino (teléfono, tablet): lo que se recorre deslizando.
+  // Por CSS, así el servidor y la hidratación pintan lo mismo.
+  addVariant("touch", "@media not all and (hover: hover) and (pointer: fine)");
+  addVariant("fine", "@media (hover: hover) and (pointer: fine)");
 });
 
 const config: Config = {

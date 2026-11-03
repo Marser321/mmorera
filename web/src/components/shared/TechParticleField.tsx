@@ -18,11 +18,11 @@ import { PARTICLE_SCENE_LIMITS } from "@/data/particleSceneConfig";
 import { resolveParticleScene, themedAccent } from "@/data/particleScenes";
 import { TECH_STACK, type Tech } from "@/data/techStack";
 import { SERVICE_GLYPH_TECHS } from "@/data/serviceGlyphs";
+import { BRAND_GLYPH_TECHS } from "@/data/brandGlyphs";
 import { particleScatter } from "@/lib/particleScatter";
 import {
   PARTICLE_IDENTIFIABLE_PROGRESS,
   createParticleSequenceState,
-  nextParticleSequenceIndex,
   reduceParticleSequence,
   type ParticleSequenceEvent,
   type ParticleSequenceState,
@@ -34,7 +34,29 @@ import type { ParticleSceneDefinition } from "@/types/site";
 const LOGO_COUNT = { desktop: 16000, tablet: 8200, mobile: 2600 } as const;
 // Un glifo pedido por foco (hover en un servicio) tiene que responder rápido.
 const FOCUS_TIMING = { assembleMs: 650, holdMs: 4200, dissolveMs: 420 } as const;
-const DRAWABLE_TECHS: Tech[] = [...TECH_STACK, ...SERVICE_GLYPH_TECHS];
+const DRAWABLE_TECHS: Tech[] = [...TECH_STACK, ...SERVICE_GLYPH_TECHS, ...BRAND_GLYPH_TECHS];
+type IntroStep = { tech: Tech; holdMs: number; dissolveMs: number };
+
+// La obertura se ve una vez por sesión: al volver al home, el desfile sigue
+// sin repetir la entrada (la cortina de página ya firma cada cambio).
+const INTRO_KEY = "mm-obertura";
+let introSeen = false;
+function introAlreadySeen(): boolean {
+  if (introSeen) return true;
+  try {
+    return window.sessionStorage.getItem(INTRO_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+function markIntroSeen() {
+  introSeen = true;
+  try {
+    window.sessionStorage.setItem(INTRO_KEY, "1");
+  } catch {
+    // Sin almacenamiento, la marca en memoria alcanza para esta visita.
+  }
+}
 type PointerState = { x: number; y: number; active: boolean; pressed: boolean };
 type Environment = {
   mode: "webgl" | "fallback";
@@ -578,6 +600,7 @@ async function waitForActiveDuration(
 function ParticleCanvas({
   scene,
   techs,
+  intro,
   environment,
   pointer,
   pageVisible,
@@ -585,7 +608,9 @@ function ParticleCanvas({
   setActiveTechName,
 }: {
   scene: ParticleSceneDefinition;
+  /** La obertura va primero en `techs`; el desfile vuelve a empezar después de ella. */
   techs: Tech[];
+  intro: IntroStep[];
   environment: Environment;
   pointer: RefObject<PointerState>;
   pageVisible: boolean;
@@ -627,6 +652,12 @@ function ParticleCanvas({
     const abortController = new AbortController();
     const { signal } = abortController;
     const isActive = () => pageVisibleRef.current && heroVisibleRef.current;
+    const introCount = intro.length;
+    // Vista la obertura, se arranca directo por la primera herramienta.
+    const startIndex = introCount > 0 && introAlreadySeen() ? introCount : 0;
+    const holdFor = (index: number) => (index < introCount ? intro[index].holdMs : scene.timing.holdMs);
+    const dissolveFor = (index: number) => (index < introCount ? intro[index].dissolveMs : scene.timing.dissolveMs);
+    const nextIndexAfter = (index: number) => (index + 1 < techs.length ? index + 1 : introCount);
 
     const loadTarget = async (tech: Tech, index: number): Promise<LogoSequenceTarget> => ({
       name: tech.name,
@@ -658,9 +689,9 @@ function ParticleCanvas({
         return;
       }
 
-      let currentIndex = 0;
+      let currentIndex = startIndex;
       let needsAssembly = false;
-      const firstTech = techs[0];
+      const firstTech = techs[startIndex] ?? techs[0];
       const firstCacheKey = `${firstTech.name}:${geometryCount}`;
       const existing = controllerRef.current.current;
 
@@ -669,7 +700,7 @@ function ParticleCanvas({
 
         let firstTarget: LogoSequenceTarget;
         try {
-          firstTarget = await loadTarget(firstTech, 0);
+          firstTarget = await loadTarget(firstTech, startIndex);
         } catch {
           if (!signal.aborted) applySequenceEvent({ type: "retain-current" });
           return;
@@ -686,9 +717,9 @@ function ParticleCanvas({
         }
         needsAssembly = true;
       } else if (existing) {
-        const alignedTarget = { ...existing, index: 0 };
+        const alignedTarget = { ...existing, index: startIndex };
         applySequenceEvent({ type: "align-current", target: alignedTarget });
-        currentIndex = 0;
+        currentIndex = startIndex;
         if (controllerRef.current.confirmedName !== existing.name) {
           applySequenceEvent({ type: "mount", target: alignedTarget });
           needsAssembly = true;
@@ -704,12 +735,14 @@ function ParticleCanvas({
       if (scene.mode === "locked" || techs.length < 2) return;
 
       while (!signal.aborted) {
-        const nextIndex = nextParticleSequenceIndex(currentIndex, techs.length);
+        // Formada la doble M, la obertura cuenta como vista.
+        if (introCount > 0 && currentIndex === introCount - 1) markIntroSeen();
+        const nextIndex = nextIndexAfter(currentIndex);
         const pendingTarget = loadTarget(techs[nextIndex], nextIndex)
           .then((target) => ({ target, failed: false as const }))
           .catch(() => ({ target: null, failed: true as const }));
 
-        if (!(await waitForActiveDuration(scene.timing.holdMs, isActive, signal))) return;
+        if (!(await waitForActiveDuration(holdFor(currentIndex), isActive, signal))) return;
         const result = await pendingTarget;
         if (signal.aborted) return;
         if (result.failed || !result.target) {
@@ -719,7 +752,7 @@ function ParticleCanvas({
 
         applySequenceEvent({ type: "queue", target: result.target });
         applySequenceEvent({ type: "begin-dissolve" });
-        if (!(await waitForActiveDuration(scene.timing.dissolveMs, isActive, signal))) return;
+        if (!(await waitForActiveDuration(dissolveFor(currentIndex), isActive, signal))) return;
         applySequenceEvent({ type: "promote" });
         currentIndex = nextIndex;
         if (!(await assembleCurrent())) return;
@@ -731,6 +764,7 @@ function ParticleCanvas({
   }, [
     applySequenceEvent,
     geometryCount,
+    intro,
     scene.mode,
     scene.timing.assembleMs,
     scene.timing.dissolveMs,
@@ -810,7 +844,7 @@ export function TechParticleField() {
   // Un foco explícito (servicio enfocado) fija un solo glifo hasta que se suelta.
   const scene = useMemo<ParticleSceneDefinition>(
     () => focusTechName
-      ? { ...routeScene, mode: "locked", techNames: [focusTechName], timing: FOCUS_TIMING }
+      ? { ...routeScene, intro: undefined, mode: "locked", techNames: [focusTechName], timing: FOCUS_TIMING }
       : routeScene,
     [focusTechName, routeScene],
   );
@@ -818,9 +852,19 @@ export function TechParticleField() {
     () => scene.techNames.map((name) => DRAWABLE_TECHS.find((tech) => tech.name === name)).filter((tech): tech is Tech => Boolean(tech)),
     [scene.techNames],
   );
+  const intro = useMemo<IntroStep[]>(
+    () => (scene.intro ?? []).flatMap((step) => {
+      const tech = DRAWABLE_TECHS.find((item) => item.name === step.name);
+      return tech ? [{ tech, holdMs: step.holdMs, dissolveMs: step.dissolveMs }] : [];
+    }),
+    [scene.intro],
+  );
   const techs = useMemo(
-    () => allTechs.slice(0, environment?.isMobile ? PARTICLE_SCENE_LIMITS.mobile : PARTICLE_SCENE_LIMITS.desktop),
-    [allTechs, environment?.isMobile],
+    () => [
+      ...intro.map((step) => step.tech),
+      ...allTechs.slice(0, environment?.isMobile ? PARTICLE_SCENE_LIMITS.mobile : PARTICLE_SCENE_LIMITS.desktop),
+    ],
+    [allTechs, environment?.isMobile, intro],
   );
 
   useEffect(() => {
@@ -866,12 +910,14 @@ export function TechParticleField() {
   }, []);
 
   if (!environment) return null;
-  if (environment.mode === "fallback") return <StaticTechnologyMark scene={scene} tech={techs[0]} />;
+  // Sin movimiento, la obertura queda en su forma final: la doble M quieta.
+  if (environment.mode === "fallback") return <StaticTechnologyMark scene={scene} tech={intro.at(-1)?.tech ?? techs[0]} />;
 
   return (
     <ParticleCanvas
       scene={scene}
       techs={techs}
+      intro={intro}
       environment={environment}
       pointer={pointer}
       pageVisible={pageVisible && !scatteredAway}

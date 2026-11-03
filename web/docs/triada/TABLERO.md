@@ -125,6 +125,14 @@ Brief: [briefs/T42-ramas.md](briefs/T42-ramas.md). Datos y textos: `src/data/bra
 | **T44** | `/casos-de-uso` y 3 páginas con su film completo; «Ver todos» desde `/sistemas` | **Codex** | Claude: textos | `src/app/casos-de-uso/**`, `src/app/en/casos-de-uso/**`, `films/UseCaseFilmRoom.tsx` (solo el enlace) | 4 rutas en ES y EN | — | **publicada** · Claude, en su sesión (Mario, 1/11: «vamos a hacerlo todo acá»): `UseCaseFilmRoom` con `only`, `showHeader` y `allHref`; cada caso suma «El caso, en texto», su servicio y los otros dos |
 | **T45** | Menú con Capacidades y «Casos ▾», puertas «Explora más» en el home, pie y e2e de todo lo nuevo | **Codex** | Claude: textos | `sections/navbar.tsx`, `sections/footer.tsx`, `HomeExperience.tsx` (solo la franja), `e2e/site.spec.ts` | Suite e2e completa en verde | T42, T43, T44, T11 | **publicada** · Claude, en su sesión (Mario, 1/11: «vamos a hacerlo todo acá»): menú «Servicios ▾ · Capacidades · Casos ▾ · Sobre mí · CV» (en el móvil, dos grupos), «Explora más» en el home y en `/estudio`, pie con Servicios y Explora, sitemap con las ramas y sin `/cv`, e2e nuevos |
 
+## Fase F · La experiencia (Mario, 3/11: «es confusa, larga, se perdieron cinemáticas y efectos, no invita a recorrerla»)
+
+Diagnóstico y decisiones: [entregas/T46.md](entregas/T46.md). Rama `triada/claude/experiencia`, desde `origin/main`.
+
+| ID | Tarea | Dueño | Apoyo | Archivos permitidos | Listo cuando | Depende | Estado |
+|---|---|---|---|---|---|---|---|
+| **T46** | **El home como un film corto en cinco escenas:** obertura de partículas (prompt «>Σ» → doble M → desfile), servicios como cuatro puertas con su prueba en movimiento, casos en riel deslizable en el teléfono, la película de autor de vuelta en «Cómo trabajo» y capítulos 01–05; la barra superior se guarda al bajar y el dock marca el avance | **Claude** | Gemini, crítica en frío de la preview | `HomeExperience.tsx`, `home/ServicesStage.tsx` y `home/AuthorTrailer.tsx` (nuevos), `ProjectIndex.tsx`, `IslandBar.tsx`, `navbar.tsx`, `TechParticleField.tsx`, `data/brandGlyphs.tsx` (nuevo), `particleScenes.ts`, `solutionsData.ts` (`shortTitle` y `path`), `LogoOvertureSection.tsx` (póster), `globals.css`, `tailwind.config.ts` (variantes `touch:` y `fine:`), `e2e/site.spec.ts` | Home más corto con más cine; ES y EN; 390 y 1440; claro y oscuro; movimiento reducido; lint, tests, build y e2e en verde | — | **publicada** · Mario, 3/11: «Sí, publícalo». Lint 0, tests 1149/1149, build y e2e 54/54 · [entregas/T46.md](entregas/T46.md) |
+
 ## Para arrancar ya (1/11, después de integrar T21, T23, T04, T30 y T29)
 
 - **Codex:** T07, T32, T11 y T42–T45 las hizo Claude el 1/11 a pedido de Mario ([ARRANQUE-7](codex/ARRANQUE-7.md) queda sin efecto). Libre para lo que siga.

@@ -25,6 +25,8 @@ export interface ParticleSceneDefinition {
     holdMs: number;
     dissolveMs: number;
   };
+  /** Formas que se dibujan una sola vez por sesión antes del desfile (la obertura del home). */
+  intro?: readonly { name: string; holdMs: number; dissolveMs: number }[];
   fallback: string;
 }
 

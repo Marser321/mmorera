@@ -682,8 +682,9 @@ test("cruza el fondo abstracto con el tema y mantiene Cómo trabajo legible", as
   await page.goto("/#perfil");
   await expect(page.locator("html")).toHaveClass(/light/);
   await expect(page.locator("#perfil h2")).toHaveText("Hablas conmigo y lo construyo yo.");
-  const background = await page.locator("#perfil").evaluate(e => getComputedStyle(e).backgroundColor);
-  expect(background).not.toBe("rgb(11, 11, 10)");
+  // «Cómo trabajo» es la película de autor: queda en pared con texto blanco roto en los dos temas.
+  const colors = await page.locator("#perfil").evaluate(e => ({ background: getComputedStyle(e).backgroundColor, heading: getComputedStyle(e.querySelector("h2")!).color }));
+  expect(colors).toEqual({ background: "rgb(11, 11, 10)", heading: "rgb(236, 231, 221)" });
 });
 
 test("mantiene posters estaticos sin montar videos con movimiento reducido", async ({ browser }) => {
@@ -787,9 +788,10 @@ test("publica canonical, hreflang, OG, JSON-LD y sitemap canónicos", async ({ p
 test("abre las ramas: capacidades, casos de uso y Lab", async ({ page }) => {
   test.setTimeout(90_000);
   await page.goto("/");
-  const doors = page.locator("[data-explore-doors]");
-  await expect(doors.getByRole("link")).toHaveCount(3);
-  await expect(doors.getByRole("link").first()).toHaveAttribute("href", "/capacidades");
+  // Cada escena del home termina en la puerta de su rama.
+  const doors = page.locator("main [data-explore-door]");
+  await expect(doors).toHaveCount(4);
+  expect(await doors.evaluateAll((links) => links.map((link) => link.getAttribute("href")))).toEqual(["/capacidades", "/casos-de-uso", "/lab", "/sobre-mi"]);
   await expect(page.getByRole("navigation", { name: "Barra de navegación flotante" }).getByRole("button", { name: "Casos" })).toBeVisible();
 
   await page.goto("/capacidades");

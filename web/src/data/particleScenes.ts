@@ -47,6 +47,12 @@ export const PARTICLE_SCENES: Record<ParticleSceneId, ParticleSceneDefinition> =
     intensity: 0.92,
     interaction: "repel-attract",
     timing: TIMING,
+    // Obertura: el prompt «>Σ» se disuelve rápido en la doble M, que sostiene
+    // la marca antes de que empiece el desfile de herramientas.
+    intro: [
+      { name: "brand:prompt", holdMs: 2200, dissolveMs: 520 },
+      { name: "brand:mm", holdMs: 3200, dissolveMs: 900 },
+    ],
     fallback: "Tecnología actual formada con puntos marfil.",
   },
   create: {
