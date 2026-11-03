@@ -8,6 +8,21 @@ import { LOGO_OVERTURE_FRAMES } from "./compositions/logoOvertureTiming";
 import type { FilmSource } from "./FilmCanvas";
 import { FilmStage, useFilmFormat } from "./FilmStage";
 import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
+import { BRAND_GLYPHS } from "@/data/brandGlyphs";
+
+// Cuadro en que las dos flechas ya se unieron en «>Σ»: el póster lo pinta
+// quieto mientras carga el Player, y la película arranca desde ahí.
+const START_FRAME = 88;
+const PromptGlyph = BRAND_GLYPHS.prompt.Icon;
+
+function OverturePoster() {
+  return (
+    <div aria-hidden="true" className="absolute inset-0">
+      <div className="absolute inset-0 bg-[radial-gradient(40%_45%_at_50%_47%,rgba(113,243,162,.16),transparent_70%)]" />
+      <PromptGlyph className="absolute left-1/2 top-[47%] h-auto w-[22%] -translate-x-1/2 -translate-y-1/2 text-[#71F3A2] drop-shadow-[0_0_24px_rgba(113,243,162,.45)]" />
+    </div>
+  );
+}
 
 /**
  * Entrada del monograma antes del perfil: el prompt de código que gira hasta
@@ -29,7 +44,7 @@ export function LogoOvertureSection() {
     if (!player || reducedMotion) return;
     if (visible && !playedRef.current) {
       playedRef.current = true;
-      player.seekTo(0);
+      player.seekTo(START_FRAME);
       player.play();
     } else if (!visible) {
       player.pause();
@@ -67,7 +82,8 @@ export function LogoOvertureSection() {
           format={format}
           onPlayer={setPlayer}
           onVisibleChange={setVisible}
-          initialFrame={reducedMotion ? lastFrame : 0}
+          initialFrame={reducedMotion ? lastFrame : START_FRAME}
+          poster={player || reducedMotion ? undefined : <OverturePoster />}
           className="rounded-none border-0 bg-transparent"
         />
         {ended && !reducedMotion ? (

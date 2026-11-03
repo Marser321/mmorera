@@ -117,6 +117,32 @@ export function Navbar() {
   ];
   const contactHref = pathname === "/" || pathname === "/en" ? "#contacto" : localePath(language, "/aplicar");
   const exploreLinks: NavLink[] = [capabilitiesLink, ...caseLinks, profileLink];
+  const [tucked, setTucked] = useState(false);
+
+  // La barra se guarda al bajar (deja la pantalla a las escenas) y vuelve al
+  // primer gesto hacia arriba o cerca del principio. Nunca con un menú abierto.
+  useEffect(() => {
+    let lastY = window.scrollY;
+    let frame = 0;
+    const onScroll = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        frame = 0;
+        const y = window.scrollY;
+        const delta = y - lastY;
+        if (y < 120) setTucked(false);
+        else if (delta > 6) setTucked(true);
+        else if (delta < -6) setTucked(false);
+        lastY = y;
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.cancelAnimationFrame(frame);
+    };
+  }, []);
+  const hidden = tucked && !mobileOpen && !utilityOpen;
 
   useEffect(() => {
     if (!mobileOpen) return;
@@ -172,7 +198,12 @@ export function Navbar() {
   };
 
   return (
-    <header className="fixed inset-x-0 top-0 z-[100] px-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-6">
+    // Visible, la cabecera no lleva transform: el menú móvil (fixed) se ubica contra la ventana.
+    <header
+      data-tucked={hidden || undefined}
+      onFocusCapture={() => setTucked(false)}
+      className={`fixed inset-x-0 top-0 z-[100] px-3 pt-[max(0.75rem,env(safe-area-inset-top))] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none sm:px-6 ${hidden ? "-translate-y-[130%]" : ""}`}
+    >
       <div className="relative mx-auto flex h-16 max-w-[1480px] items-center justify-between rounded-xl border border-white/10 bg-background/72 px-4 shadow-[0_16px_46px_rgba(0,0,0,.24)] backdrop-blur-xl light:border-[rgb(var(--ink-rgb)/0.1)] light:shadow-[0_1px_2px_rgb(20_23_26_/_0.06),0_12px_32px_rgb(20_23_26_/_0.1)] sm:px-5">
         <Link href={localePath(language, "/")} className="group rounded-lg p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" aria-label="Mario Morera — Home">
           <LogoMM className="h-7 w-7 text-foreground transition-transform duration-500 group-hover:rotate-[-6deg] motion-reduce:transition-none" />

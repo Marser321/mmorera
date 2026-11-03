@@ -20,39 +20,41 @@ import { FEATURED_CASES } from "@/data/projectCases";
 import { IslandBar } from "@/components/layout/IslandBar";
 import { MotionBackdrop } from "@/components/shared/MotionBackdrop";
 import { MonogramaFundido } from "@/components/marca/MonogramaFundido";
-import { ExploreDoors } from "@/components/branches/ExploreDoors";
 
 // Secciones bajo el pliegue en chunks propios (con SSR: el HTML no cambia).
 // Cada una es su propio límite de Suspense, así React hidrata por partes en
 // vez de bloquear el hilo principal con todo el Home de una vez.
-const ServicesSection = dynamic(() => import("@/components/premium/home/ServicesSection").then((m) => m.ServicesSection));
+const ServicesStage = dynamic(() => import("@/components/premium/home/ServicesStage").then((m) => m.ServicesStage));
 const ProjectIndex = dynamic(() => import("@/components/premium/ProjectIndex").then((m) => m.ProjectIndex));
-const HowIWorkSection = dynamic(() => import("@/components/premium/home/HowIWorkSection").then((m) => m.HowIWorkSection));
+const AuthorTrailer = dynamic(() => import("@/components/premium/home/AuthorTrailer").then((m) => m.AuthorTrailer));
 const AplicarOS = dynamic(() => import("@/components/portfolio-isolated/AplicarOS").then((m) => m.AplicarOS));
 import { MOTION_ASSETS } from "@/data/motionAssets";
 
 const CV_DESTINATION = "/sobre-mi#cv";
 
+/*
+ * El home es un film corto en cinco escenas (3/11): 01 héroe con la obertura
+ * de partículas, 02 servicios como puertas, 03 casos con su reel, 04 la
+ * película de autor con el método y 05 el contacto. Cada escena dice una sola
+ * cosa y termina en una puerta a su rama; lo largo vive en las ramas.
+ */
 const copy = {
   es: {
     eyebrow: "Mario Morera · AI Automation & Operations",
-    title: "Orquesto la tecnología de tu negocio: web, agentes de IA y contenido.",
-    intro: "Diseño y conecto tu web, tus automatizaciones, agentes que atienden por ti y sistemas que producen contenido. Hablas conmigo y lo construyo yo; coordino a tu equipo, las herramientas y los modelos de IA para que trabajen juntos.",
-    services: [
-      { id: "web-ecommerce", label: "Webs y landings" },
-      { id: "booking-payments", label: "Agentes de IA" },
-      { id: "crm-automation", label: "Automatización y CRM" },
-      { id: "ai-software", label: "Contenido con IA" },
-    ],
+    title: "Orquesto la tecnología de tu negocio.",
+    intro: "Tu web, agentes de IA, automatizaciones y contenido, conectados para que trabajen juntos. Trabajas directo conmigo.",
     servicesHint: "Pasa por un servicio",
     cvLink: "¿Buscas a alguien para tu equipo? Ver CV →",
     talkWhatsapp: "Hablar por WhatsApp",
-    startProject: "Ver proyectos",
-    archiveEyebrow: "Proyectos",
+    startProject: "Ver el trabajo",
+    scrollCue: "Recorre",
+    archiveEyebrow: "03 — Casos",
     archiveTitle: "Casos que puedes recorrer.",
     archiveBody: "Cada caso muestra su reel. Ábrelo para ver si es implementado o demo, y probarlo.",
     archiveCta: "Ver todos los casos",
-    contactEyebrow: "Hablemos",
+    useCasesCta: "Casos de uso, contados como films",
+    labCta: "Lab: demos que puedes tocar",
+    contactEyebrow: "05 — Hablemos",
     contactTitle: "¿Un puesto o un proyecto?",
     contactBody: "Si buscas a alguien para tu equipo o tienes un proyecto concreto, elige el camino que corresponda. Te respondo yo.",
     roleCta: "Consultar por un puesto",
@@ -68,23 +70,20 @@ const copy = {
   },
   en: {
     eyebrow: "Mario Morera · AI Automation & Operations",
-    title: "I orchestrate your business technology: web, AI agents and content.",
-    intro: "I design and connect your website, your automations, agents that answer for you and systems that produce content. You talk to me and I build it; I coordinate your team, the tools and the AI models so they work together.",
-    services: [
-      { id: "web-ecommerce", label: "Websites & landing pages" },
-      { id: "booking-payments", label: "AI agents" },
-      { id: "crm-automation", label: "Automation & CRM" },
-      { id: "ai-software", label: "AI content" },
-    ],
+    title: "I orchestrate your business technology.",
+    intro: "Your website, AI agents, automations and content, connected so they work together. You work directly with me.",
     servicesHint: "Hover a service",
     cvLink: "Hiring for your team? View my resume →",
     talkWhatsapp: "Chat on WhatsApp",
-    startProject: "View projects",
-    archiveEyebrow: "Projects",
+    startProject: "See the work",
+    scrollCue: "Scroll",
+    archiveEyebrow: "03 — Cases",
     archiveTitle: "Cases you can explore.",
     archiveBody: "Each case plays its reel. Open it to see whether it is live or a demo, and try it.",
     archiveCta: "See all cases",
-    contactEyebrow: "Let's talk",
+    useCasesCta: "Use cases, told as films",
+    labCta: "Lab: demos you can try",
+    contactEyebrow: "05 — Let's talk",
     contactTitle: "A role or a project?",
     contactBody: "Whether you're hiring for your team or have a specific project, pick the path that fits. I'll reply myself.",
     roleCta: "Discuss a role",
@@ -190,18 +189,17 @@ export function HomeExperience() {
               </span>
             </div>
 
-            {/* Main Punchy Title */}
+            {/* Una frase: qué hace. El resto lo cuentan las escenas. */}
             <SplitReveal
               as="h1"
               mode="load"
               delay={0.1}
               text={c.title}
-              className="text-[clamp(2.5rem,5.5vw,5.5rem)] font-medium leading-[0.96] tracking-[-0.055em] text-foreground"
+              className="max-w-[13ch] text-[clamp(2.75rem,6.2vw,6.25rem)] font-medium leading-[0.94] tracking-[-0.06em] text-foreground"
             />
 
-            {/* Direct Subtitle */}
             <p
-              className="fade-up-in mt-6 max-w-2xl text-base leading-relaxed text-foreground/65 sm:text-xl font-light"
+              className="fade-up-in mt-6 max-w-xl text-base leading-relaxed text-foreground/70 sm:text-lg"
               style={{ animationDelay: "0.3s" }}
             >
               {c.intro}
@@ -210,9 +208,9 @@ export function HomeExperience() {
             {/* Servicios: al enfocarlos, las partículas dibujan su glifo */}
             <div className="fade-up-in mt-7" style={{ animationDelay: "0.45s" }}>
               <ul className="flex flex-wrap gap-2" onPointerLeave={() => setFocusedService(null)}>
-                {c.services.map((service) => {
+                {SERVICE_SOLUTIONS.map((service) => {
                   const active = focusedService === service.id;
-                  const accent = SERVICE_SOLUTIONS.find((item) => item.id === service.id)?.accent ?? "#71F3A2";
+                  const accent = service.accent;
                   return (
                     <li key={service.id}>
                       <a
@@ -227,7 +225,7 @@ export function HomeExperience() {
                           className="h-1.5 w-1.5 rounded-full transition-transform duration-300"
                           style={{ backgroundColor: accent, transform: active ? "scale(1.6)" : undefined }}
                         />
-                        {service.label}
+                        {service.shortTitle[language]}
                       </a>
                     </li>
                   );
@@ -274,18 +272,30 @@ export function HomeExperience() {
                 </a>
               </Magnetic>
             </div>
-            <Link href={CV_DESTINATION.startsWith("#") ? CV_DESTINATION : localePath(language, CV_DESTINATION)} className="mt-5 inline-flex min-h-11 items-center text-sm text-foreground/75 underline underline-offset-4 hover:text-signal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{c.cvLink}</Link>
+            <Link href={CV_DESTINATION.startsWith("#") ? CV_DESTINATION : localePath(language, CV_DESTINATION)} className="mt-4 inline-flex min-h-11 items-center text-sm text-foreground/65 underline decoration-foreground/25 underline-offset-4 hover:text-signal hover:decoration-signal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{c.cvLink}</Link>
           </div>
         </div>
+
+        {/* Invitación a recorrer: un punto que baja por una línea fina */}
+        <a
+          href="#servicios"
+          className="fade-up-in absolute bottom-10 right-12 hidden flex-col items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-foreground/55 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:flex"
+          style={{ animationDelay: "1.2s" }}
+        >
+          <span className="[writing-mode:vertical-rl]">{c.scrollCue}</span>
+          <span aria-hidden="true" className="relative block h-12 w-px overflow-hidden bg-foreground/15">
+            <span className="scroll-cue-dot absolute left-1/2 top-0 h-3 w-[3px] -translate-x-1/2 rounded-full bg-signal" />
+          </span>
+        </a>
       </section>
 
-      {/* ─── 2. SERVICIOS Y SOLUCIONES (4 servicios claros) ─── */}
-      <ServicesSection />
+      {/* ─── 2. SERVICIOS: cuatro puertas con su prueba en movimiento ─── */}
+      <ServicesStage />
 
-      {/* ─── 3. PROYECTOS EN PRODUCCIÓN (Índice con preview viva) ─── */}
-      <section id="proyectos" className="scroll-mt-20 bg-background px-5 py-20 sm:px-8 sm:py-28 lg:px-12 border-t border-white/10 light:border-[rgb(var(--ink-rgb)/0.1)]">
+      {/* ─── 3. CASOS: índice con el reel de cada uno ─── */}
+      <section id="proyectos" data-home-section="proyectos" className="scroll-mt-20 bg-background px-5 py-16 sm:px-8 sm:py-24 lg:px-12 border-t border-white/10 light:border-[rgb(var(--ink-rgb)/0.1)]">
         <div className="mx-auto max-w-[1480px]">
-          <div className="grid gap-6 py-8 md:grid-cols-[.4fr_1.6fr] md:items-end md:py-12">
+          <div className="grid gap-6 pb-8 md:grid-cols-[minmax(0,1fr)_minmax(0,28rem)] md:items-end md:pb-12">
             <div>
               <Reveal as="p" x={-20} y={0} className="font-mono text-[10px] uppercase tracking-[.2em] text-signal">
                 {c.archiveEyebrow}
@@ -294,33 +304,42 @@ export function HomeExperience() {
                 {c.archiveTitle}
               </h2>
             </div>
-            <div className="md:justify-self-end max-w-xl">
-              <p className="text-sm sm:text-base leading-relaxed text-foreground/60">{c.archiveBody}</p>
-              <Link
-                href={localePath(language, "/casos-de-exito")}
-                className="group mt-4 inline-flex items-center gap-2 text-sm font-semibold text-signal hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                {c.archiveCta}
-                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-              </Link>
-            </div>
+            <p className="text-sm leading-relaxed text-foreground/60 sm:text-base md:justify-self-end">{c.archiveBody}</p>
           </div>
 
           <Reveal y={24}>
             <ProjectIndex projects={FEATURED_CASES} />
           </Reveal>
+
+          {/* Puertas de la escena: el archivo completo, los casos contados como films y las demos */}
+          <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-2">
+            <Link
+              href={localePath(language, "/casos-de-exito")}
+              className="group inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-signal hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              {c.archiveCta}
+              <ArrowUpRight aria-hidden="true" className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            </Link>
+            {([["casos-de-uso", "/casos-de-uso", c.useCasesCta], ["lab", "/lab", c.labCta]] as const).map(([door, path, label]) => (
+              <Link
+                key={door}
+                href={localePath(language, path)}
+                data-explore-door={door}
+                className="group inline-flex min-h-11 items-center gap-2 text-sm text-foreground/70 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                {label}
+                <ArrowUpRight aria-hidden="true" className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* ─── 3b. EXPLORA MÁS: puertas a las ramas (capacidades, casos de uso, Lab) ─── */}
-      <div className="bg-background pb-16 sm:pb-20">
-        <ExploreDoors language={language} doors={["capacidades", "casosDeUso", "lab"]} />
-      </div>
+      {/* ─── 4. CÓMO TRABAJO: la película de autor con el método ─── */}
+      <AuthorTrailer />
 
-      <HowIWorkSection />
-
-      {/* ─── 7. CONTACTO DIRECTO & FORMULARIO INTERACTIVO ─── */}
-      <section id="contacto" className="scroll-mt-20 relative isolate overflow-hidden border-t border-white/10 bg-relieve px-5 py-20 sm:px-8 sm:py-28 lg:px-12 light:border-[rgb(var(--ink-rgb)/0.1)] light:bg-card/20">
+      {/* ─── 5. CONTACTO: dos caminos y el brief ─── */}
+      <section id="contacto" data-home-section="contacto" className="scroll-mt-20 relative isolate overflow-hidden border-t border-white/10 bg-relieve px-5 pb-16 pt-20 sm:px-8 sm:pb-20 sm:pt-28 lg:px-12 light:border-[rgb(var(--ink-rgb)/0.1)] light:bg-card/20">
         <MotionBackdrop asset={MOTION_ASSETS.opening} intensity={0.28} scrim="center" />
         {/* Monograma fundido en el margen: firma el cierre sin pisar el texto. */}
         <MonogramaFundido className="absolute left-[-7vw] top-10 z-0 w-[min(34vw,520px)] max-lg:hidden" fundido="diagonal" />

@@ -49,12 +49,16 @@ export function ProjectIndex({ projects }: { projects: ProjectCase[] }) {
       }}
       onPointerLeave={() => setActive(null)}
     >
-      <ul className="border-b border-white/10 light:border-[rgb(var(--ink-rgb)/0.1)]">
+      {/* En táctil el índice es un riel que se desliza; con mouse, la lista tipográfica. */}
+      <p aria-hidden="true" className="mb-4 hidden font-mono text-[10px] uppercase tracking-[0.16em] text-foreground/55 touch:block">
+        {isEs ? "Desliza para ver cada caso →" : "Swipe through the cases →"}
+      </p>
+      <ul className="border-b border-white/10 light:border-[rgb(var(--ink-rgb)/0.1)] touch:-mx-5 touch:flex touch:snap-x touch:snap-mandatory touch:gap-3 touch:overflow-x-auto touch:border-b-0 touch:px-5 touch:pb-2 touch:[scrollbar-width:none] sm:touch:-mx-8 sm:touch:px-8">
         {projects.map((project, index) => {
           const media = getCaseMedia(project.slug);
           const dimmed = active !== null && active !== index;
           return (
-            <li key={project.slug} className="border-t border-white/10 light:border-[rgb(var(--ink-rgb)/0.1)]">
+            <li key={project.slug} className="border-t border-white/10 light:border-[rgb(var(--ink-rgb)/0.1)] touch:w-[80vw] touch:max-w-[24rem] touch:shrink-0 touch:snap-start touch:scroll-ml-5 touch:border-t-0">
               <Link
                 href={localePath(language, `/casos-de-exito/${project.slug}`)}
                 onPointerEnter={(event) => {
@@ -67,37 +71,37 @@ export function ProjectIndex({ projects }: { projects: ProjectCase[] }) {
                   setLastActive(index);
                 }}
                 onBlur={() => setActive(null)}
-                className="group block py-7 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring sm:py-9"
+                className="group block py-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring sm:py-7 touch:py-0"
               >
                 {/* Reel inline en táctil (CSS, así SSR e hidratación coinciden) */}
-                <div className="mb-5 overflow-hidden rounded-2xl border border-white/10 light:border-[rgb(var(--ink-rgb)/0.1)] [@media(hover:hover)_and_(pointer:fine)]:hidden">
+                <div className="mb-4 overflow-hidden rounded-2xl border border-white/10 light:border-[rgb(var(--ink-rgb)/0.1)] fine:hidden">
                     {media ? (
-                      <CaseReel reel={media.reel} alt={project.title[language]} className="aspect-[16/10]" />
+                      <CaseReel reel={media.reel} alt={project.title[language]} className="aspect-[16/11]" sizes="80vw" />
                     ) : (
                       project.media[0] && (
-                        <div className="relative aspect-[16/10]">
-                          <Image src={project.media[0].src} alt={project.media[0].alt[language]} fill sizes="100vw" className="object-cover object-top" />
+                        <div className="relative aspect-[16/11]">
+                          <Image src={project.media[0].src} alt={project.media[0].alt[language]} fill sizes="80vw" className="object-cover object-top" />
                         </div>
                       )
                     )}
                 </div>
                 <div
-                  className={`grid items-baseline gap-x-8 gap-y-2 transition-[opacity,transform] duration-500 md:grid-cols-[3rem_minmax(0,1fr)_minmax(0,16rem)_auto] ${dimmed ? "opacity-30" : "opacity-100"} ${active === index ? "md:translate-x-3" : ""}`}
+                  className={`grid items-baseline gap-x-8 gap-y-2 transition-[opacity,transform] duration-500 fine:md:grid-cols-[3rem_minmax(0,1fr)_minmax(0,16rem)_auto] ${dimmed ? "opacity-30" : "opacity-100"} ${active === index ? "md:translate-x-3" : ""}`}
                 >
                   <span className="font-mono text-xs text-foreground/60">{String(index + 1).padStart(2, "0")}</span>
-                  <h3 className="text-[clamp(2rem,5vw,4.6rem)] font-medium leading-[0.95] tracking-[-0.055em] text-foreground">
+                  <h3 className="text-[clamp(1.9rem,4.4vw,4.1rem)] font-medium leading-[0.95] tracking-[-0.055em] text-foreground touch:text-[1.75rem]">
                     {project.title[language]}
                   </h3>
-                  <p className="text-sm leading-snug text-foreground/55 md:text-right">
+                  <p className="text-sm leading-snug text-foreground/55 fine:md:text-right">
                     {hasFlagshipFilm(project.slug) ? (
-                      <span className="mb-1.5 flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[.16em] text-signal md:justify-end">
+                      <span className="mb-1.5 flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[.16em] text-signal fine:md:justify-end">
                         <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-signal" />
                         {language === "es" ? "Film insignia" : "Flagship film"}
                       </span>
                     ) : null}
                     {project.summary[language].split(":")[0].split(".")[0]}
                   </p>
-                  <span className="hidden h-11 w-11 place-items-center rounded-full border border-white/15 text-foreground/70 transition-colors group-hover:border-signal group-hover:bg-signal group-hover:text-background md:grid light:border-[rgb(var(--ink-rgb)/0.15)]">
+                  <span className="hidden h-11 w-11 place-items-center rounded-full border border-white/15 text-foreground/70 transition-colors group-hover:border-signal group-hover:bg-signal group-hover:text-background fine:md:grid light:border-[rgb(var(--ink-rgb)/0.15)]">
                     <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
                   </span>
                 </div>

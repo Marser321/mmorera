@@ -1,17 +1,18 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
 import { Home, Layers, User, Briefcase, MessageCircle, Moon, Sun } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
 
+// Los cinco capítulos del home, con los mismos nombres que sus rótulos (01–05).
 const NAV_ITEMS = [
   { id: "hero", icon: Home, es: "Inicio", en: "Home" },
   { id: "servicios", icon: Layers, es: "Servicios", en: "Services" },
   { id: "proyectos", icon: Briefcase, es: "Casos", en: "Cases" },
   { id: "perfil", icon: User, es: "Cómo trabajo", en: "How I work" },
-  { id: "contacto", icon: MessageCircle, es: "Contacto", en: "Contact" },
+  { id: "contacto", icon: MessageCircle, es: "Hablemos", en: "Let's talk" },
 ];
 
 export function IslandBar() {
@@ -21,6 +22,9 @@ export function IslandBar() {
 
   const [activeSection, setActiveSection] = useState("hero");
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  // Cuánto del film va recorrido: una línea fina sobre la barra invita a seguir.
+  const { scrollYProgress } = useScroll();
+  const progress = useSpring(scrollYProgress, { stiffness: 140, damping: 30, mass: 0.4 });
 
   useEffect(() => {
     const sections = NAV_ITEMS.map((item) => document.getElementById(item.id)).filter(Boolean) as HTMLElement[];
@@ -76,7 +80,10 @@ export function IslandBar() {
         aria-label={isEs ? "Barra de navegación flotante" : "Floating navigation dock"}
         className="pointer-events-auto max-w-full"
       >
-        <div className="flex items-center gap-0.5 sm:gap-1.5 rounded-full border border-white/14 bg-background/92 p-1 sm:p-2 shadow-[0_16px_48px_rgba(0,0,0,0.65)] backdrop-blur-2xl transition-all duration-300 light:border-[rgb(var(--ink-rgb)/0.12)] light:bg-card/95 light:shadow-[0_12px_36px_rgb(20_23_26/0.18)]">
+        <div className="relative flex items-center gap-0.5 sm:gap-1.5 rounded-full border border-white/14 bg-background/92 p-1 sm:p-2 shadow-[0_16px_48px_rgba(0,0,0,0.65)] backdrop-blur-2xl transition-all duration-300 light:border-[rgb(var(--ink-rgb)/0.12)] light:bg-card/95 light:shadow-[0_12px_36px_rgb(20_23_26/0.18)]">
+          <span aria-hidden="true" className="pointer-events-none absolute inset-x-6 -top-px h-px overflow-hidden rounded-full bg-foreground/10">
+            <motion.span className="block h-full origin-left bg-signal" style={{ scaleX: progress }} />
+          </span>
           {NAV_ITEMS.map((item) => {
             const isActive = activeSection === item.id;
             const isHovered = hoveredId === item.id;
