@@ -24,8 +24,9 @@ export type BriefToPieceData = BriefToPieceItem[];
 export interface VideoGalleryEntry {
   slug: string;
   title: LocalizedText;
-  src: string;
-  poster: string;
+  /** Un archivo, o uno por idioma cuando la pieza lleva texto en pantalla. */
+  src: string | LocalizedText;
+  poster: string | LocalizedText;
   /** Duración en segundos. */
   duration: number;
   tools: LocalizedText;

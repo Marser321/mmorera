@@ -51,4 +51,5 @@ next-env.d.ts
 .film-frames/
 .remotion-bin/
 /renders/
+/public/render-cache/
 /media-kit/
