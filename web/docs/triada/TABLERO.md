@@ -140,3 +140,11 @@ Diagnóstico y decisiones: [entregas/T46.md](entregas/T46.md). Rama `triada/clau
 - **Gemini:** T33 y T09 integradas. Queda T34 (cuando Mario pase las respuestas) y la crítica en frío de `/fabricas`, `/cv` y `/agentes` cuando estén.
 - **Claude:** cargar los textos de T27 cuando T26 esté lista; borrar `WORKFLOW_STAGES` después de T36; textos de `/cv` (T06), que necesitan la decisión D14.
 - **Mario:** las entrevistas de T34 (solo tú puedes hacerlas), D3 (el código de las apps de contenido) y D5 (permiso de clientes para testimonios). Lo demás lo decidió Claude por delegación el 1/11.
+
+## Fase G · Contenido con IA (Mario, 4/11: «más representativo que esa cinemática vieja de Gemini»)
+
+Detalle: [entregas/T48.md](entregas/T48.md). Rama `triada/claude/trailer-fabricas`, desde `origin/main`.
+
+| ID | Tarea | Dueño | Apoyo | Archivos permitidos | Listo cuando | Depende | Estado |
+|---|---|---|---|---|---|---|---|
+| **T48** | **El trailer de la fábrica de contenido:** 46 s en 9:16, hecho en código con Remotion siguiendo el método de brag; una toma del film de autor pasa por reencuadre, subtítulos, color, escena con IA, ritmo, formatos e idiomas, revisión humana y el propio código del video; música sintetizada en el mismo pulso. Reemplaza a la edición corta con motion en la puerta «Contenido con IA» del home y abre la galería de `/fabricas` | **Claude** | — | `films/trailer/**` (nuevo), `remotion/trailerRoot.tsx`, `scripts/render-trailer.ts`, `scripts/trailer-soundtrack.py`, `data/videoGallery.ts`, `types/briefToPiece.ts`, `home/ServicesStage.tsx`, `fabricas/_components/FabricasDocument.tsx`, `public/portfolio/video-ia/fabrica-trailer-*` | ES y EN; cada corte en el pulso; texto en tuteo; lint, tipos, tests, build y e2e en verde | — | **publicada** · Mario, 4/11: «Sí, publícalos» (PR #22). Lint 0, tests 1154/1154, e2e 54/54, ES y EN revisados cuadro a cuadro · [entregas/T48.md](entregas/T48.md) |

@@ -1,0 +1,35 @@
+{
+  "fps": 30,
+  "bpm": 120,
+  "beat": 15,
+  "bar": 60,
+  "total": 1380,
+  "scenes": [
+    { "id": "hook", "from": 0, "duration": 120 },
+    { "id": "title", "from": 120, "duration": 120 },
+    { "id": "reframe", "from": 240, "duration": 120 },
+    { "id": "captions", "from": 360, "duration": 120 },
+    { "id": "color", "from": 480, "duration": 120 },
+    { "id": "ai", "from": 600, "duration": 120 },
+    { "id": "rhythm", "from": 720, "duration": 120 },
+    { "id": "formats", "from": 840, "duration": 120 },
+    { "id": "review", "from": 960, "duration": 120 },
+    { "id": "code", "from": 1080, "duration": 120 },
+    { "id": "finale", "from": 1200, "duration": 180 }
+  ],
+  "cues": {
+    "typingFrom": 14,
+    "typingFramesPerChar": 1.6,
+    "enter": 60,
+    "titleSlams": [120, 150, 165],
+    "titleSub": 185,
+    "captionWords": [375, 383, 390, 405, 413, 420],
+    "colorLooks": [555, 570, 585],
+    "aiReady": 660,
+    "drop": 720,
+    "formatsFlip": 900,
+    "reviewChecks": [990, 1005, 1020],
+    "reviewStamp": 1035,
+    "finale": 1200
+  }
+}

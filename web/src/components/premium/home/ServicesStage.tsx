@@ -9,7 +9,7 @@ import { SERVICE_SOLUTIONS, type ServiceSolution } from "@/data/solutionsData";
 import { getProjectCase } from "@/data/projectCases";
 import { getCaseMedia } from "@/data/caseMedia";
 import { AGENT_DEMO_SCRIPT } from "@/data/agentDemoScript";
-import { VIDEO_GALLERY } from "@/data/videoGallery";
+import { VIDEO_GALLERY, galleryMedia } from "@/data/videoGallery";
 import { CaseReel } from "@/components/shared/CaseReel";
 import { Reveal } from "@/components/scroll/Reveal";
 import { SplitReveal } from "@/components/motion/SplitReveal";
@@ -57,7 +57,7 @@ const copy = {
 
 type Copy = (typeof copy)[Language];
 
-const CONTENT_PIECE = VIDEO_GALLERY.find((piece) => piece.slug === "short-form-motion-v3") ?? VIDEO_GALLERY[0];
+const CONTENT_PIECE = VIDEO_GALLERY.find((piece) => piece.slug === "fabrica-trailer") ?? VIDEO_GALLERY[0];
 
 function visualLabel(service: ServiceSolution, c: Copy, language: Language): string {
   if (service.id === "booking-payments") return c.agentLabel;
@@ -122,25 +122,27 @@ function FlowGlimpse({ live, c }: { live: boolean; c: Copy }) {
   );
 }
 
-/** Una pieza vertical de la galería de contenido, centrada sobre su propio póster. */
-function ContentGlimpse({ live, reduced }: { live: boolean; reduced: boolean }) {
+/** El trailer de la fábrica, vertical, centrado sobre su propio póster. */
+function ContentGlimpse({ language, live, reduced }: { language: Language; live: boolean; reduced: boolean }) {
+  const src = galleryMedia(CONTENT_PIECE.src, language);
+  const poster = galleryMedia(CONTENT_PIECE.poster, language);
   const videoRef = useRef<HTMLVideoElement>(null);
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
     if (live) void video.play().catch(() => {});
     else video.pause();
-  }, [live]);
+  }, [live, src]);
   return (
     <div className="absolute inset-x-0 top-0 bottom-[30%] flex items-center justify-center">
       {/* eslint-disable-next-line @next/next/no-img-element -- póster decorativo de fondo, mismo archivo que el del video */}
-      <img src={CONTENT_PIECE.poster} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full scale-110 object-cover opacity-25" />
+      <img src={poster} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full scale-125 object-cover opacity-30 blur-2xl" />
       <div className="relative aspect-[9/16] h-[86%] overflow-hidden rounded-2xl border border-white/15 shadow-[0_30px_80px_-30px_rgba(0,0,0,.9)]">
         {reduced ? (
           // eslint-disable-next-line @next/next/no-img-element -- póster quieto con movimiento reducido
-          <img src={CONTENT_PIECE.poster} alt="" aria-hidden="true" className="h-full w-full object-cover" />
+          <img src={poster} alt="" aria-hidden="true" className="h-full w-full object-cover" />
         ) : (
-          <video ref={videoRef} src={CONTENT_PIECE.src} poster={CONTENT_PIECE.poster} muted loop playsInline preload="none" aria-hidden="true" className="h-full w-full object-cover" />
+          <video key={src} ref={videoRef} src={src} poster={poster} muted loop playsInline preload="none" aria-hidden="true" className="h-full w-full object-cover" />
         )}
       </div>
     </div>
@@ -150,7 +152,7 @@ function ContentGlimpse({ live, reduced }: { live: boolean; reduced: boolean }) 
 function DoorVisual({ service, language, live, reduced, c }: { service: ServiceSolution; language: Language; live: boolean; reduced: boolean; c: Copy }) {
   if (service.id === "booking-payments") return <ChatGlimpse language={language} live={live && !reduced} c={c} />;
   if (service.id === "crm-automation") return <FlowGlimpse live={live && !reduced} c={c} />;
-  if (service.id === "ai-software") return <ContentGlimpse live={live} reduced={reduced} />;
+  if (service.id === "ai-software") return <ContentGlimpse language={language} live={live} reduced={reduced} />;
   const media = getCaseMedia(service.proofSlug);
   return media ? <CaseReel reel={media.reel} alt="" playing={live} className="absolute inset-0 h-full w-full" sizes="(min-width: 1024px) 45vw, 100vw" /> : null;
 }
