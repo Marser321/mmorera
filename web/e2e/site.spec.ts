@@ -825,6 +825,24 @@ test("abre las ramas: capacidades, casos de uso y Lab", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Visual identity studio");
 });
 
+test("las ramas largas se recorren por capítulos desde la barra flotante", async ({ page }) => {
+  for (const { path, chapters, jump } of [
+    { path: "/sistemas", chapters: ["Para quién", "Cómo funciona", "Casos", "Contratar", "Hablemos"], jump: { name: "Contratar", id: "contratar" } },
+    { path: "/casos-de-exito", chapters: ["Pruébalo", "Destacados", "Films", "Archivo", "Hablemos"], jump: { name: "Archivo", id: "archivo" } },
+  ]) {
+    await page.goto(path);
+    const dock = page.getByRole("navigation", { name: "Barra de navegación flotante" });
+    await expect(dock.getByRole("button")).toHaveText([...chapters, ""]);
+    // WhatsApp va dentro de la barra: no queda el botón suelto.
+    await expect(page.getByRole("link", { name: "Escribir por WhatsApp" })).toHaveCount(0);
+    await dock.getByRole("button", { name: jump.name }).click();
+    await expect(page.locator(`#${jump.id}`)).toBeInViewport({ timeout: 10_000 });
+  }
+  // En las páginas sin barra sigue el acceso directo a WhatsApp.
+  await page.goto("/capacidades");
+  await expect(page.getByRole("link", { name: "Escribir por WhatsApp" })).toHaveCount(1);
+});
+
 test("la demo guiada del agente responde, reconoce su límite y pasa a una persona", async ({ page }) => {
   await page.goto("/agentes");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Un agente que atiende, responde y agenda por ti, con una persona cuando hace falta.");

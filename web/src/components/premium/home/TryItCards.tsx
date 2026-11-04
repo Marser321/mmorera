@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { TryItButtons } from "@/components/shared/TryItButtons";
 import { localePath } from "@/config/site";
@@ -19,11 +18,9 @@ export function TryItCards({ projects }: { projects: ProjectCase[] }) {
       {ORDER.map((slug) => projects.find((project) => project.slug === slug)).filter((project): project is ProjectCase => Boolean(project)).map((project) => {
         const runtime = flagshipRuntime(project.slug);
         const casePath = localePath(language, `/casos-de-exito/${project.slug}`);
+        // Sin captura: el reel de destacados, justo debajo, muestra cada sitio en grande.
         return (
           <article key={project.slug} className="flex min-w-0 flex-col overflow-hidden rounded-2xl border border-foreground/15 bg-card" aria-labelledby={`try-${project.slug}`}>
-            {project.media[0] && <div className="relative aspect-video border-b border-foreground/10">
-              <Image src={project.media[0].src} alt={project.media[0].alt[language]} fill sizes="(min-width: 1024px) 33vw, 100vw" className="object-cover object-top" />
-            </div>}
             <div className="flex flex-1 flex-col p-5 sm:p-6">
               <h3 id={`try-${project.slug}`} className="text-2xl font-medium leading-tight tracking-[-.03em] text-foreground">{project.title[language]}</h3>
               <p className="mt-4 text-sm leading-relaxed text-foreground/75">{project.summary[language]}</p>

@@ -16,11 +16,22 @@ import { TickerNumber } from "@/components/motion/TickerNumber";
 import { DrawRule } from "@/components/motion/DrawRule";
 import { Reveal } from "@/components/scroll/Reveal";
 import { ScrollProgressBar } from "@/components/scroll/ScrollProgressBar";
+import { ChapterDock, type DockChapter } from "@/components/layout/IslandBar";
+
+// Capítulos de la barra: se puede saltar el reel fijado sin recorrerlo entero.
+const CHAPTERS: DockChapter[] = [
+  { id: "pruebalo", icon: "pointer", es: "Pruébalo", en: "Try it" },
+  { id: "destacados", icon: "clapperboard", es: "Destacados", en: "Featured" },
+  { id: "films", icon: "film", es: "Films", en: "Films" },
+  { id: "archivo", icon: "grid", es: "Archivo", en: "Archive" },
+  { id: "hablemos", icon: "message", es: "Hablemos", en: "Let's talk" },
+];
 
 /**
- * WorkExperience — /casos-de-exito: header compacto, reel cinematográfico de
- * los destacados y archivo del resto. Framing: demos de capacidad, no
- * vitrinas infladas.
+ * WorkExperience — /casos-de-exito, en capítulos: pruébalo (lo que se abre
+ * hoy), el reel cinematográfico de los destacados, los films de cada caso, el
+ * archivo del resto y el cierre. Framing: demos de capacidad, no vitrinas
+ * infladas.
  */
 export function WorkExperience() {
   const { language } = useLanguage();
@@ -55,8 +66,8 @@ export function WorkExperience() {
       </header>
 
       {/* Pruébalo: los tres casos que se abren sin cuenta, con su rótulo honesto. */}
-      <section className="mx-auto w-full max-w-[1480px] px-5 pb-16 pt-12 sm:px-8 sm:pb-24 lg:px-12" aria-labelledby="try-it-work">
-        <div className="mb-10">
+      <section id="pruebalo" className="mx-auto w-full max-w-[1480px] scroll-mt-24 px-5 pb-16 pt-12 sm:px-8 sm:pb-20 lg:px-12" aria-labelledby="try-it-work">
+        <div className="mb-8">
           <p className="font-mono text-[10px] uppercase tracking-[.16em] text-accent">{isEs ? "Pruébalo" : "Try it"}</p>
           <h2 id="try-it-work" className="mt-3 max-w-3xl text-[clamp(2.2rem,4.5vw,4.2rem)] font-medium leading-[.96] tracking-[-.055em] text-foreground">
             {isEs ? "Tres sistemas que puedes abrir hoy." : "Three systems you can open today."}
@@ -71,14 +82,16 @@ export function WorkExperience() {
       </section>
 
       {/* Reel cinematográfico (full-bleed) */}
-      <WorkReel projects={FEATURED_CASES} />
+      <div id="destacados">
+        <WorkReel projects={FEATURED_CASES} />
+      </div>
 
-      <div className="mx-auto w-full max-w-[1480px] px-5 pt-16 sm:px-8 sm:pt-24 lg:px-12">
+      <div id="films" className="mx-auto w-full max-w-[1480px] scroll-mt-24 px-5 pt-16 sm:px-8 sm:pt-24 lg:px-12">
         <FilmRail />
       </div>
 
       {/* Archivo de Proyectos & Sistemas */}
-      <section className="mx-auto w-full max-w-[1480px] px-5 pt-16 sm:px-8 sm:pt-24 lg:px-12" aria-labelledby="archive-work">
+      <section id="archivo" className="mx-auto w-full max-w-[1480px] scroll-mt-24 px-5 pt-16 sm:px-8 sm:pt-24 lg:px-12" aria-labelledby="archive-work">
         <div className="mb-10">
           <p className="font-mono text-[10px] uppercase tracking-[.16em] text-accent">
             {isEs ? "Archivo Completo" : "Complete Archive"} · {String(ARCHIVE_CASES.length).padStart(2, "0")}
@@ -94,7 +107,7 @@ export function WorkExperience() {
       </section>
 
       {/* CTA de cierre: la banda marfil de la página. */}
-      <section className="banda-marfil mt-24 px-5 py-16 sm:px-8 sm:py-24 lg:px-12">
+      <section id="hablemos" className="banda-marfil mt-24 scroll-mt-24 px-5 py-16 sm:px-8 sm:py-24 lg:px-12">
         <div className="mx-auto flex w-full max-w-[1480px] flex-wrap items-end justify-between gap-8">
           <p className="max-w-4xl text-[clamp(2.2rem,4.2vw,4.4rem)] font-medium leading-[.95] tracking-[-.055em] text-foreground">
             {isEs ? "¿Qué quieres hacer posible?" : "What do you want to make possible?"}
@@ -108,6 +121,8 @@ export function WorkExperience() {
           </Link>
         </div>
       </section>
+
+      <ChapterDock chapters={CHAPTERS} language={language} />
     </main>
   );
 }

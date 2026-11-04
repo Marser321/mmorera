@@ -11,15 +11,17 @@ import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
  * Acceso directo flotante a WhatsApp — el canal humano del sitio.
  * Reemplaza al antiguo asistente: sin intermediarios, conversación real.
  */
+const DOCK_ROUTES = new Set(["/", "/estudio", "/agentes", "/sistemas", "/fabricas", "/casos-de-exito"]);
+
 export function WhatsAppFab() {
   const pathname = usePathname();
   const { language } = useLanguage();
   const reduceMotion = useReducedMotionSafe();
   const label = language === "es" ? "Escribir por WhatsApp" : "Chat on WhatsApp";
 
-  // En el home, WhatsApp aparece en los caminos de contacto; IslandBar lleva a #contacto.
-  const isHome = pathname === "/" || pathname === "/en";
-  if (isHome) return null;
+  // Donde hay barra de capítulos (home, servicios y casos), WhatsApp va dentro de la barra.
+  const route = pathname.replace(/^\/en(?=\/|$)/, "") || "/";
+  if (DOCK_ROUTES.has(route)) return null;
 
   return (
     <motion.a

@@ -2,32 +2,61 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
-import { Home, Layers, User, Briefcase, MessageCircle, Moon, Sun } from "lucide-react";
-import { useLanguage } from "@/context/LanguageContext";
+import {
+  Briefcase, Clapperboard, Film, Handshake, Home, Layers, LayoutGrid, MessageCircle, Moon, MousePointerClick, PlayCircle, Sun, User, Users,
+} from "lucide-react";
+import { useLanguage, type Language } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
 
+// Íconos por nombre: así una página renderizada en el servidor puede pasar sus capítulos.
+const DOCK_ICONS = {
+  home: Home, layers: Layers, briefcase: Briefcase, user: User, users: Users, message: MessageCircle,
+  play: PlayCircle, handshake: Handshake, pointer: MousePointerClick, clapperboard: Clapperboard, film: Film, grid: LayoutGrid,
+};
+
+/** Un capítulo de la barra: el id de su sección, su ícono y su nombre en los dos idiomas. */
+export interface DockChapter {
+  id: string;
+  icon: keyof typeof DOCK_ICONS;
+  es: string;
+  en: string;
+}
+
 // Los cinco capítulos del home, con los mismos nombres que sus rótulos (01–05).
-const NAV_ITEMS = [
-  { id: "hero", icon: Home, es: "Inicio", en: "Home" },
-  { id: "servicios", icon: Layers, es: "Servicios", en: "Services" },
-  { id: "proyectos", icon: Briefcase, es: "Casos", en: "Cases" },
-  { id: "perfil", icon: User, es: "Cómo trabajo", en: "How I work" },
-  { id: "contacto", icon: MessageCircle, es: "Hablemos", en: "Let's talk" },
+const HOME_CHAPTERS: DockChapter[] = [
+  { id: "hero", icon: "home", es: "Inicio", en: "Home" },
+  { id: "servicios", icon: "layers", es: "Servicios", en: "Services" },
+  { id: "proyectos", icon: "briefcase", es: "Casos", en: "Cases" },
+  { id: "perfil", icon: "user", es: "Cómo trabajo", en: "How I work" },
+  { id: "contacto", icon: "message", es: "Hablemos", en: "Let's talk" },
 ];
 
+/** La barra flotante del home. */
 export function IslandBar() {
   const { language } = useLanguage();
+  return <ChapterDock chapters={HOME_CHAPTERS} language={language} />;
+}
+
+/**
+ * Barra flotante con los capítulos de una página, WhatsApp y el tema. La usan
+ * el home y las ramas largas: marca dónde estás, cuánto se recorrió y deja
+ * saltar a cualquier tramo (por ejemplo, pasar un film largo sin scrollearlo).
+ * Recibe el idioma por prop para poder renderizarse en plantillas sin contexto.
+ */
+export function ChapterDock({ chapters, language }: { chapters: DockChapter[]; language: Language }) {
   const { theme, toggle: toggleTheme } = useTheme();
   const isEs = language === "es";
 
-  const [activeSection, setActiveSection] = useState("hero");
+  const [activeSection, setActiveSection] = useState(chapters[0]?.id ?? "");
   const [hoveredId, setHoveredId] = useState<string | null>(null);
-  // Cuánto del film va recorrido: una línea fina sobre la barra invita a seguir.
+  // Cuánto de la página va recorrido: una línea fina sobre la barra invita a seguir.
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 140, damping: 30, mass: 0.4 });
+  // Las plantillas arman la lista en cada render: se observa por sus ids, no por la referencia.
+  const chapterIds = chapters.map((item) => item.id).join("|");
 
   useEffect(() => {
-    const sections = NAV_ITEMS.map((item) => document.getElementById(item.id)).filter(Boolean) as HTMLElement[];
+    const sections = chapterIds.split("|").map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
     if (sections.length === 0) return;
 
     const observer = new IntersectionObserver(
@@ -42,7 +71,7 @@ export function IslandBar() {
 
     sections.forEach((sec) => observer.observe(sec));
     return () => observer.disconnect();
-  }, []);
+  }, [chapterIds]);
 
   const scrollTo = (id: string) => {
     if (typeof navigator !== "undefined" && "vibrate" in navigator) {
@@ -84,10 +113,10 @@ export function IslandBar() {
           <span aria-hidden="true" className="pointer-events-none absolute inset-x-6 -top-px h-px overflow-hidden rounded-full bg-foreground/10">
             <motion.span className="block h-full origin-left bg-signal" style={{ scaleX: progress }} />
           </span>
-          {NAV_ITEMS.map((item) => {
+          {chapters.map((item) => {
             const isActive = activeSection === item.id;
             const isHovered = hoveredId === item.id;
-            const Icon = item.icon;
+            const Icon = DOCK_ICONS[item.icon];
             const label = item[language];
 
             return (
