@@ -1,16 +1,18 @@
 import { AbsoluteFill, Sequence, useVideoConfig } from "remotion";
 import type { FilmLanguage } from "@/data/films/filmTypes";
 import { AiScene, CaptionsScene, ColorScene, ReframeScene } from "./EditScenes";
-import { CodeScene, FinaleScene, ReviewScene } from "./ClosingScenes";
+import { CodeScene, FinaleScene } from "./ClosingScenes";
 import { HookScene, TitleScene } from "./OpeningScenes";
-import { FormatsScene, RhythmScene } from "./ShowScenes";
+import { BridgeScene, StyleScene, WallScene } from "./StyleScenes";
 import { EditorChrome, Grain } from "./kit";
 
 /**
- * Trailer de la fábrica de contenido (46 s, 9:16, 30 fps, 120 BPM). Una toma
- * del film de autor pasa por cada edición que hace el sistema: reencuadre,
- * subtítulos, color, escenas con IA, ritmo, formatos e idiomas, revisión de
- * una persona y, al final, el propio código del video.
+ * Trailer de la fábrica de contenido (60 s, 30 fps, 120 BPM), en vertical y
+ * en horizontal. Primero una toma del film de autor pasa por cada edición:
+ * reencuadre, subtítulos, color y escenas con IA. Después, en la caída, los
+ * siete estilos que más se piden, cada uno con el material de una web que
+ * hizo Mario: persona, empresa, VSL, reel, historia, cuadrado y carrusel. Al
+ * final, los siete en los dos idiomas, la firma de una persona y el código.
  *
  * Los tiempos de cada escena viven aquí, en línea (los edita Remotion Studio),
  * y en timing.json, que también lee la banda sonora: trailerTiming.test.ts
@@ -39,70 +41,118 @@ export function ContentTrailer({ language }: { language: FilmLanguage }) {
       <Sequence
         name="Reencuadre"
         from={240}
-        durationInFrames={120}
+        durationInFrames={90}
         premountFor={fps}
       >
         <ReframeScene language={language} />
       </Sequence>
       <Sequence
         name="Subtítulos"
-        from={360}
-        durationInFrames={120}
+        from={330}
+        durationInFrames={90}
         premountFor={fps}
       >
         <CaptionsScene language={language} />
       </Sequence>
       <Sequence
         name="Color"
-        from={480}
-        durationInFrames={120}
+        from={420}
+        durationInFrames={90}
         premountFor={fps}
       >
         <ColorScene language={language} />
       </Sequence>
       <Sequence
         name="Escenas con IA"
-        from={600}
-        durationInFrames={120}
+        from={510}
+        durationInFrames={90}
         premountFor={fps}
       >
         <AiScene language={language} />
       </Sequence>
       <Sequence
-        name="Ritmo"
+        name="Puente"
+        from={600}
+        durationInFrames={120}
+        premountFor={fps}
+      >
+        <BridgeScene language={language} />
+      </Sequence>
+      <Sequence
+        name="Persona"
         from={720}
         durationInFrames={120}
         premountFor={fps}
       >
-        <RhythmScene language={language} />
+        <StyleScene id="persona" language={language} />
       </Sequence>
       <Sequence
-        name="Formatos"
+        name="Empresa"
         from={840}
         durationInFrames={120}
         premountFor={fps}
       >
-        <FormatsScene language={language} />
+        <StyleScene id="empresa" language={language} />
       </Sequence>
       <Sequence
-        name="Revisión"
+        name="VSL"
         from={960}
         durationInFrames={120}
         premountFor={fps}
       >
-        <ReviewScene language={language} />
+        <StyleScene id="vsl" language={language} />
+      </Sequence>
+      <Sequence
+        name="Reel"
+        from={1080}
+        durationInFrames={60}
+        premountFor={fps}
+      >
+        <StyleScene id="reel" language={language} />
+      </Sequence>
+      <Sequence
+        name="Historia"
+        from={1140}
+        durationInFrames={90}
+        premountFor={fps}
+      >
+        <StyleScene id="historia" language={language} />
+      </Sequence>
+      <Sequence
+        name="Cuadrado"
+        from={1230}
+        durationInFrames={60}
+        premountFor={fps}
+      >
+        <StyleScene id="cuadrado" language={language} />
+      </Sequence>
+      <Sequence
+        name="Carrusel"
+        from={1290}
+        durationInFrames={120}
+        premountFor={fps}
+      >
+        <StyleScene id="carrusel" language={language} />
+      </Sequence>
+      <Sequence
+        name="Muro"
+        from={1410}
+        durationInFrames={120}
+        premountFor={fps}
+      >
+        <WallScene language={language} />
       </Sequence>
       <Sequence
         name="Código"
-        from={1080}
-        durationInFrames={120}
+        from={1530}
+        durationInFrames={90}
         premountFor={fps}
       >
         <CodeScene language={language} />
       </Sequence>
       <Sequence
         name="Cierre"
-        from={1200}
+        from={1620}
         durationInFrames={180}
         premountFor={fps}
       >

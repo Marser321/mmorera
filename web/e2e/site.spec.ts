@@ -136,6 +136,65 @@ test("los cuatro chips responden al foco y enlazan a servicios", async ({ page }
   await expect(page.locator("#servicios")).toBeInViewport();
 });
 
+test("la puerta de contenido muestra el trailer según la pantalla", async ({ browser }) => {
+  test.setTimeout(90_000);
+  for (const { viewport, format } of [
+    { viewport: { width: 1440, height: 900 }, format: "landscape" },
+    { viewport: { width: 1100, height: 800 }, format: "portrait" },
+  ]) {
+    const context = await browser.newContext({ baseURL: BASE_URL, viewport });
+    const page = await context.newPage();
+    await page.goto("/");
+    const door = page.locator('[data-door="ai-software"]');
+    await door.scrollIntoViewIfNeeded();
+    await door.hover();
+    await expect(door.locator("[data-trailer-format]")).toHaveAttribute("data-trailer-format", format, { timeout: 15_000 });
+    await expect(door.locator("video")).toHaveAttribute("src", format === "landscape" ? /fabrica-trailer-es-16x9\.mp4$/ : /fabrica-trailer-es\.mp4$/);
+    await context.close();
+  }
+});
+
+test("/fabricas da el trailer horizontal a la pantalla ancha y el vertical al teléfono", async ({ browser }) => {
+  test.setTimeout(90_000);
+  for (const { viewport, file } of [
+    { viewport: { width: 1280, height: 800 }, file: /fabrica-trailer-es-16x9\.mp4$/ },
+    { viewport: { width: 390, height: 844 }, file: /fabrica-trailer-es\.mp4$/ },
+  ]) {
+    const context = await browser.newContext({ baseURL: BASE_URL, viewport });
+    const page = await context.newPage();
+    await page.goto("/fabricas");
+    const gallery = page.locator("[data-video-gallery]");
+    await gallery.getByRole("button", { name: /Ver el video/ }).first().click();
+    await expect(gallery.locator("video source")).toHaveAttribute("src", file);
+    await context.close();
+  }
+});
+
+test("el muestrario de /fabricas enseña cada estilo en su formato", async ({ browser }) => {
+  test.setTimeout(90_000);
+  for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 }]) {
+    const context = await browser.newContext({ baseURL: BASE_URL, viewport });
+    const page = await context.newPage();
+    await page.goto("/fabricas");
+    const showcase = page.locator("[data-style-showcase]");
+    await showcase.scrollIntoViewIfNeeded();
+    const styles = showcase.getByRole("group", { name: "Elige un estilo" }).getByRole("button");
+    await expect(styles).toHaveCount(7);
+    for (const [name, id, ratio] of [["Persona", "persona", 4 / 5], ["Empresa", "empresa", 16 / 9], ["VSL", "vsl", 16 / 9], ["Reel", "reel", 9 / 16], ["Historia", "historia", 9 / 16], ["Cuadrado", "cuadrado", 1], ["Carrusel", "carrusel", 4 / 5]] as const) {
+      await styles.filter({ hasText: name }).click();
+      await expect(styles.filter({ hasText: name })).toHaveAttribute("aria-pressed", "true");
+      const stage = showcase.locator(`[data-sample="${id}"]`);
+      await expect(stage.locator("video")).toHaveAttribute("src", new RegExp(`/muestras/${id}-es\\.mp4$`));
+      const box = await stage.boundingBox();
+      expect(box).not.toBeNull();
+      expect(Math.abs(box!.width / box!.height - ratio)).toBeLessThan(0.02);
+      expect(box!.x + box!.width).toBeLessThanOrEqual(viewport.width);
+    }
+    await expect(showcase.locator("figcaption")).toContainText("no es una campaña publicada");
+    await context.close();
+  }
+});
+
 test("mantiene chips, header y brief dentro de cuatro viewports", async ({ browser }) => {
   for (const viewport of [
     { width: 390, height: 844 },

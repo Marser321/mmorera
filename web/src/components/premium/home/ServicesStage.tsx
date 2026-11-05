@@ -14,6 +14,7 @@ import { CaseReel } from "@/components/shared/CaseReel";
 import { Reveal } from "@/components/scroll/Reveal";
 import { SplitReveal } from "@/components/motion/SplitReveal";
 import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
+import { useResolvedMediaQuery } from "@/hooks/useMediaQuery";
 
 /**
  * Escena 2 del home: los cuatro servicios como cuatro puertas. Cada una
@@ -122,10 +123,16 @@ function FlowGlimpse({ live, c }: { live: boolean; c: Copy }) {
   );
 }
 
-/** El trailer de la fábrica, vertical, centrado sobre su propio póster. */
-function ContentGlimpse({ language, live, reduced }: { language: Language; live: boolean; reduced: boolean }) {
-  const src = galleryMedia(CONTENT_PIECE.src, language);
-  const poster = galleryMedia(CONTENT_PIECE.poster, language);
+/**
+ * El trailer de la fábrica sobre su propio póster. Con la puerta abierta en
+ * una pantalla ancha (xl), la versión horizontal llena la puerta; cerrada, o
+ * en pantallas más angostas, la vertical.
+ */
+function ContentGlimpse({ language, live, open, reduced }: { language: Language; live: boolean; open: boolean; reduced: boolean }) {
+  const wide = useResolvedMediaQuery("(min-width: 1280px)");
+  const landscape = open && wide === true ? CONTENT_PIECE.landscape : undefined;
+  const src = galleryMedia(landscape?.src ?? CONTENT_PIECE.src, language);
+  const poster = galleryMedia(landscape?.poster ?? CONTENT_PIECE.poster, language);
   const videoRef = useRef<HTMLVideoElement>(null);
   useEffect(() => {
     const video = videoRef.current;
@@ -134,10 +141,10 @@ function ContentGlimpse({ language, live, reduced }: { language: Language; live:
     else video.pause();
   }, [live, src]);
   return (
-    <div className="absolute inset-x-0 top-0 bottom-[30%] flex items-center justify-center">
+    <div data-trailer-format={landscape ? "landscape" : "portrait"} className="absolute inset-x-0 top-0 bottom-[30%] flex items-center justify-center">
       {/* eslint-disable-next-line @next/next/no-img-element -- póster decorativo de fondo, mismo archivo que el del video */}
       <img src={poster} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full scale-125 object-cover opacity-30 blur-2xl" />
-      <div className="relative aspect-[9/16] h-[86%] overflow-hidden rounded-2xl border border-white/15 shadow-[0_30px_80px_-30px_rgba(0,0,0,.9)]">
+      <div className={`relative overflow-hidden border border-white/15 shadow-[0_30px_80px_-30px_rgba(0,0,0,.9)] ${landscape ? "aspect-video w-[94%] rounded-xl" : "aspect-[9/16] h-[86%] rounded-2xl"}`}>
         {reduced ? (
           // eslint-disable-next-line @next/next/no-img-element -- póster quieto con movimiento reducido
           <img src={poster} alt="" aria-hidden="true" className="h-full w-full object-cover" />
@@ -149,10 +156,10 @@ function ContentGlimpse({ language, live, reduced }: { language: Language; live:
   );
 }
 
-function DoorVisual({ service, language, live, reduced, c }: { service: ServiceSolution; language: Language; live: boolean; reduced: boolean; c: Copy }) {
+function DoorVisual({ service, language, live, open, reduced, c }: { service: ServiceSolution; language: Language; live: boolean; open: boolean; reduced: boolean; c: Copy }) {
   if (service.id === "booking-payments") return <ChatGlimpse language={language} live={live && !reduced} c={c} />;
   if (service.id === "crm-automation") return <FlowGlimpse live={live && !reduced} c={c} />;
-  if (service.id === "ai-software") return <ContentGlimpse language={language} live={live} reduced={reduced} />;
+  if (service.id === "ai-software") return <ContentGlimpse language={language} live={live} open={open} reduced={reduced} />;
   const media = getCaseMedia(service.proofSlug);
   return media ? <CaseReel reel={media.reel} alt="" playing={live} className="absolute inset-0 h-full w-full" sizes="(min-width: 1024px) 45vw, 100vw" /> : null;
 }
@@ -232,7 +239,7 @@ export function ServicesStage() {
                 style={{ flexGrow: isActive ? "var(--door-open)" : 1, flexBasis: 0 }}
               >
                 <div aria-hidden="true" className={`absolute inset-0 transition-opacity duration-700 motion-reduce:transition-none ${isActive ? "opacity-100" : "opacity-35"}`}>
-                  <DoorVisual service={service} language={language} live={isActive && inView} reduced={reduced} c={c} />
+                  <DoorVisual service={service} language={language} live={isActive && inView} open={isActive} reduced={reduced} c={c} />
                 </div>
                 <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(11,11,10,.92)_0%,rgba(11,11,10,.35)_16%,rgba(11,11,10,0)_30%,rgba(11,11,10,0)_42%,rgba(11,11,10,.9)_64%,rgba(11,11,10,.97)_78%,#0B0B0A_100%)]" />
 

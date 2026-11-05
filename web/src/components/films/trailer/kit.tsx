@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from "react";
-import { Easing, Img, interpolate, staticFile, useCurrentFrame } from "remotion";
+import { Easing, Img, interpolate, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+import { CONTENT_SAMPLES } from "@/data/contentSamples";
 import type { FilmLanguage } from "@/data/films/filmTypes";
 import { LOGO_MM_PATHS, LOGO_MM_VIEWBOX } from "@/lib/logoMMPaths";
 import { TRAILER_COPY } from "./copy";
@@ -15,8 +16,27 @@ export { FILM_FRAMES, FILM_SIZE };
  */
 
 export const TIMING = timing;
-export const WIDTH = 1080;
-export const HEIGHT = 1920;
+
+/**
+ * El trailer se renderiza en vertical (1080×1920) y en horizontal (1920×1080).
+ * Cada escena elige su composición con `land`; el resto del kit también.
+ */
+export function useStage() {
+  const { width, height } = useVideoConfig();
+  return { width, height, land: width > height };
+}
+
+/** Una muestra del mismo formato que el trailer va a pantalla completa, sin el editor encima. */
+export function isFullBleed(sceneId: string, land: boolean) {
+  return CONTENT_SAMPLES.find((sample) => sample.id === sceneId)?.aspect === (land ? "16:9" : "9:16");
+}
+
+/** La escena de una sola: inicio y duración en timing.json. */
+export function sceneOf(id: string) {
+  const scene = timing.scenes.find((s) => s.id === id);
+  if (!scene) throw new Error(`timing.json no tiene la escena ${id}`);
+  return scene;
+}
 
 export const C = {
   wall: "#0B0B0A",
@@ -165,9 +185,10 @@ export function Footage({
 
 /** Grano de la pared: la misma textura del sitio, quieta (no infla el peso del video). */
 export function Grain({ opacity = 0.05 }: { opacity?: number }) {
+  const { width, height } = useVideoConfig();
   const tiles: ReactNode[] = [];
-  for (let y = 0; y < 5; y += 1) {
-    for (let x = 0; x < 3; x += 1) {
+  for (let y = 0; y < Math.ceil(height / 384); y += 1) {
+    for (let x = 0; x < Math.ceil(width / 384); x += 1) {
       tiles.push(<Img key={`${x}-${y}`} src={staticFile("social/grano.png")} style={{ position: "absolute", left: x * 384, top: y * 384, width: 384, height: 384 }} />);
     }
   }
@@ -202,26 +223,57 @@ export function timelineSegments(width: number, gap: number, start = 0) {
  */
 export function EditorChrome({ language }: { language: FilmLanguage }) {
   const frame = useCurrentFrame();
+  const { width, height, land } = useStage();
   const copy = TRAILER_COPY[language];
   const appear = ramp(frame, TIMING.cues.enter, TIMING.cues.enter + 14);
   const leave = 1 - ramp(frame, TIMING.cues.finale, TIMING.cues.finale + 12, EASE_IN);
+  const side = land ? 110 : 80;
+  const scene = TIMING.scenes.find((s) => frame >= s.from && frame < s.from + s.duration);
+  const shown = scene && isFullBleed(scene.id, land) ? 0 : 1;
   return (
-    <div style={{ position: "absolute", inset: 0, opacity: appear * leave, pointerEvents: "none" }}>
-      <div style={{ position: "absolute", left: 80, right: 80, top: 82, display: "flex", justifyContent: "space-between", fontFamily: FONT.mono, fontSize: 21, letterSpacing: "0.14em", textTransform: "uppercase", color: ivory(0.58) }}>
+    <div style={{ position: "absolute", inset: 0, opacity: appear * leave * shown, pointerEvents: "none" }}>
+      <div style={{ position: "absolute", left: side, right: side, top: land ? 46 : 82, display: "flex", justifyContent: "space-between", fontFamily: FONT.mono, fontSize: land ? 19 : 21, letterSpacing: "0.14em", textTransform: "uppercase", color: ivory(0.58) }}>
         <span>
           <span style={{ color: C.ivory, fontWeight: 700 }}>MMORERA</span> / {copy.brand}
         </span>
         <span style={{ color: C.signal, fontVariantNumeric: "tabular-nums" }}>{timecode(frame)}</span>
       </div>
-      {timelineSegments(920, 6, 80).map(({ scene, width, left }) => {
+      {timelineSegments(width - side * 2, 6, side).map(({ scene, width: w, left }) => {
         const fill = Math.max(0, Math.min(1, (frame - scene.from) / scene.duration));
         const active = frame >= scene.from && frame < scene.from + scene.duration;
         return (
-          <div key={scene.id} style={{ position: "absolute", left, top: 1772, width, height: 6, borderRadius: 3, background: ivory(0.14), overflow: "hidden" }}>
+          <div key={scene.id} style={{ position: "absolute", left, top: land ? height - 46 : 1772, width: w, height: land ? 5 : 6, borderRadius: 3, background: ivory(0.14), overflow: "hidden" }}>
             <div style={{ width: `${fill * 100}%`, height: "100%", background: active ? C.signal : ivory(0.5) }} />
           </div>
         );
       })}
+    </div>
+  );
+}
+
+/** La píldora de una escena: dos datos separados por una raya. */
+export function SceneChip({ left, right, style }: { left: string; right: string; style?: CSSProperties }) {
+  return (
+    <div
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 14,
+        padding: "10px 20px",
+        borderRadius: 999,
+        border: `1.5px solid ${signal(0.45)}`,
+        fontFamily: FONT.mono,
+        fontSize: 22,
+        letterSpacing: "0.14em",
+        textTransform: "uppercase",
+        whiteSpace: "nowrap",
+        color: C.signal,
+        ...style,
+      }}
+    >
+      <span>{left}</span>
+      <span style={{ width: 1.5, height: 18, background: signal(0.5) }} />
+      <span>{right}</span>
     </div>
   );
 }
@@ -248,37 +300,21 @@ export function SceneHeader({
   exitAt?: number;
   right?: ReactNode;
 }) {
+  const { land } = useStage();
   const chipIn = ramp(frame, -4, 8);
   const out = exitAt === undefined ? 1 : 1 - ramp(frame, exitAt, exitAt + 8, EASE_IN);
   const words = line.split(" ");
   const subWords = sub?.split(" ") ?? [];
+  // En horizontal, el rótulo es la columna izquierda; la imagen va a la derecha.
+  const place: CSSProperties = land ? { left: 110, width: 600, top: 150 } : { left: 80, right: 80, top: 186 };
+  const lineSize = land ? Math.round(size * 0.9) : size;
   return (
-    <div style={{ position: "absolute", left: 80, right: 80, top: 186, opacity: out }}>
+    <div style={{ position: "absolute", ...place, opacity: out }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <div
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 14,
-            padding: "10px 20px",
-            borderRadius: 999,
-            border: `1.5px solid ${signal(0.45)}`,
-            fontFamily: FONT.mono,
-            fontSize: 22,
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            color: C.signal,
-            opacity: chipIn,
-            translate: `${(1 - chipIn) * -24}px 0`,
-          }}
-        >
-          <span>{String(index).padStart(2, "0")}</span>
-          <span style={{ width: 1.5, height: 18, background: signal(0.5) }} />
-          <span>{chip}</span>
-        </div>
+        <SceneChip left={String(index).padStart(2, "0")} right={chip} style={{ opacity: chipIn, translate: `${(1 - chipIn) * -24}px 0` }} />
         {right}
       </div>
-      <div style={{ marginTop: 30, fontFamily: FONT.body, fontWeight: 500, fontSize: size, lineHeight: 1.06, letterSpacing: "-0.028em", color: C.ivory }}>
+      <div style={{ marginTop: 30, fontFamily: FONT.body, fontWeight: 500, fontSize: lineSize, lineHeight: 1.06, letterSpacing: "-0.028em", color: C.ivory }}>
         {words.map((word, i) => {
           const t = ramp(frame, 1 + i * 2, 12 + i * 2);
           return (
@@ -289,7 +325,7 @@ export function SceneHeader({
         })}
       </div>
       {sub ? (
-        <div style={{ marginTop: 20, fontFamily: FONT.body, fontWeight: 400, fontSize: 44, lineHeight: 1.15, letterSpacing: "-0.015em", color: ivory(0.74) }}>
+        <div style={{ marginTop: 20, fontFamily: FONT.body, fontWeight: 400, fontSize: land ? 38 : 44, lineHeight: 1.15, letterSpacing: "-0.015em", color: ivory(0.74) }}>
           {subWords.map((word, i) => {
             const t = ramp(frame, subAt + i * 2, subAt + 11 + i * 2);
             return (
