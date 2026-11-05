@@ -35,7 +35,7 @@ export const CAPABILITY_SERVICE: Record<Family, { path: string; label: Localized
   Backend: { path: "/sistemas", label: t("Automatización y CRM", "Automation & CRM") },
   Web: { path: "/estudio", label: t("Webs y landings", "Websites & landing pages") },
   Commerce: { path: "/estudio", label: t("Webs y landings", "Websites & landing pages") },
-  Marketing: { path: "/fabricas", label: t("Contenido con IA", "AI content") },
+  Marketing: { path: "/campanas", label: t("Campañas con IA", "AI campaigns") },
   CRM: { path: "/sistemas", label: t("Automatización y CRM", "Automation & CRM") },
   Media: { path: "/fabricas", label: t("Contenido con IA", "AI content") },
   Infrastructure: { path: "/sistemas", label: t("Automatización y CRM", "Automation & CRM") },

@@ -172,6 +172,65 @@ export const SERVICE_PAGES = {
       cta: { label: t("Hablemos de tu contenido", "Let's talk about your content") },
     },
   },
+  /** /campanas → «Campañas con IA» (T54). El slot muestra la cinemática, el reparto del trabajo y lo nuevo. */
+  campanas: {
+    hero: {
+      eyebrow: t("Campañas con IA", "AI campaigns"),
+      title: t("Toda tu cuenta de anuncios, con una persona que decide.", "Your whole ad account, with a person making the calls."),
+      body: t(
+        "Llevo tus campañas de Meta, Google y otras plataformas con IA que lee la cuenta y arma los reportes en segundos. Lo que cambia es el tiempo: las decisiones importantes las sigue tomando una persona que conoce tu negocio.",
+        "I run your campaigns on Meta, Google and other platforms with AI that reads the account and builds the reports in seconds. What changes is the time: the important decisions are still made by a person who knows your business."
+      ),
+      cta: { label: t("Hablemos de tu cuenta", "Let's talk about your account") },
+    },
+    audience: {
+      title: AUDIENCE_TITLE,
+      for: t(
+        "Negocios y marcas que invierten en anuncios, o quieren empezar, y necesitan saber qué funciona sin esperar al reporte de fin de mes.",
+        "Businesses and brands that advertise, or want to start, and need to know what's working without waiting for the end-of-month report."
+      ),
+      notFor: t(
+        "Si buscas una herramienta que gaste sola sin que nadie mire, esto no es para ti. Y si la inversión es muy baja, la máquina tendrá pocos datos para aprender: te lo voy a decir antes de empezar.",
+        "If you're after a tool that spends on its own with nobody watching, this isn't for you. And if the budget is very low, the machine will have little data to learn from: I'll tell you before we start."
+      ),
+    },
+    deliverables: {
+      title: t("Qué incluye", "What's included"),
+      items: [
+        t("Revisión de la cuenta y de la medición antes de invertir más", "A review of the account and the tracking before spending more"),
+        t("Campañas en Meta, Google y otras plataformas, según tu caso", "Campaigns on Meta, Google and other platforms, depending on your case"),
+        t("Reportes y alertas automáticos, explicados en palabras simples", "Automatic reports and alerts, explained in plain words"),
+      ],
+    },
+    tools: t(
+      "Con Meta Ads, Google Ads y Analytics, modelos como Claude conectados por sus conectores oficiales, n8n para los flujos y tu CRM.",
+      "With Meta Ads, Google Ads and Analytics, models like Claude connected through their official connectors, n8n for the workflows and your CRM."
+    ),
+    howItWorks: {
+      title: t("Una mañana de trabajo, en una pregunta", "A morning of work, in one question"),
+      body: t(
+        "Una cinemática hecha en código, con datos de ejemplo: qué hace la máquina y en qué momento entra una persona.",
+        "A film made in code, with sample data: what the machine does and the moment a person steps in."
+      ),
+    },
+    proof: {
+      title: t("Lo que pasa después del anuncio", "What happens after the ad"),
+      slugs: ["ad-media-solution"],
+    },
+    hiring: {
+      title: t("Cómo trabajamos", "How we work"),
+      steps: [
+        { title: t("Diagnóstico", "Diagnosis"), body: t("Reviso la cuenta, la medición y qué pasa con los leads. Acordamos qué conviene cambiar primero, y qué no.", "I review the account, the tracking and what happens to the leads. We agree on what to change first, and what not to.") },
+        { title: t("Puesta en marcha", "Setup"), body: t("Ordeno las campañas, conecto reportes y alertas, y dejamos definido qué hace la máquina sola y qué pasa por una persona.", "I organize the campaigns, connect reports and alerts, and we define what the machine does alone and what goes through a person.") },
+        { title: t("Gestión", "Management"), body: t("Reviso la cuenta, decido contigo lo importante y te explico qué cambió. Las cuentas quedan a tu nombre.", "I review the account, decide the important things with you and explain what changed. The accounts stay in your name.") },
+      ],
+      price: t("El alcance y el precio se definen después del diagnóstico.", "Scope and price are set after the diagnosis."),
+    },
+    closing: {
+      title: t("¿Qué número de tu cuenta te gustaría entender esta semana?", "Which number in your account would you like to understand this week?"),
+      cta: { label: t("Hablemos de tu cuenta", "Let's talk about your account") },
+    },
+  },
   /** /agentes → «Agentes de IA» (T07, D6). El slot muestra la demo guiada (T32). */
   agentes: {
     hero: {
@@ -224,4 +283,4 @@ export const SERVICE_PAGES = {
       cta: { label: t("Hablemos de tu agente", "Let's talk about your agent") },
     },
   },
-} satisfies Record<"sistemas" | "estudio" | "fabricas" | "agentes", ServicePageContent>;
+} satisfies Record<"sistemas" | "estudio" | "fabricas" | "agentes" | "campanas", ServicePageContent>;

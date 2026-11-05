@@ -3,6 +3,7 @@
 import { Player, type PlayerRef } from "@remotion/player";
 import type React from "react";
 import { FILM_FORMATS, FILM_FPS, type FilmFormat, type FilmLanguage } from "@/data/films/filmTypes";
+import type { CampanasFilmProps } from "./compositions/CampanasFilm";
 import type { CapabilityFilmProps } from "./compositions/CapabilityFilm";
 import { CaseFilm, type CaseFilmProps } from "./compositions/CaseFilm";
 import { LogoOverture, type LogoOvertureProps } from "./compositions/LogoOverture";
@@ -15,7 +16,8 @@ export type FilmSource =
   | { kind: "case"; props: CaseFilmProps; durationInFrames: number }
   | { kind: "logo"; props: LogoOvertureProps; durationInFrames: number }
   | { kind: "flagship"; props: FlagshipProps; durationInFrames: number }
-  | { kind: "capability"; props: CapabilityFilmProps; durationInFrames: number };
+  | { kind: "capability"; props: CapabilityFilmProps; durationInFrames: number }
+  | { kind: "campanas"; props: CampanasFilmProps; durationInFrames: number };
 
 export type FlagshipProps = { slug: string; language: FilmLanguage };
 
@@ -45,6 +47,9 @@ const FLAGSHIP_LOADERS: Record<string, () => Promise<FlagshipModule>> = {
 
 /** Films por capacidad (/estudio): una sola composición, también diferida. */
 const loadCapabilityFilm = () => import("./compositions/CapabilityFilm").then((module) => ({ default: module.CapabilityFilm }));
+
+/** Cinemática de /campanas: solo la baja esa página. */
+const loadCampanasFilm = () => import("./compositions/CampanasFilm").then((module) => ({ default: module.CampanasFilm }));
 
 export interface FilmCanvasProps {
   source: FilmSource;
@@ -91,6 +96,8 @@ export function FilmCanvas({ source, format, onPlayer, initialFrame = 0 }: FilmC
     }
     case "capability":
       return <Player {...shared} lazyComponent={loadCapabilityFilm} inputProps={source.props} />;
+    case "campanas":
+      return <Player {...shared} lazyComponent={loadCampanasFilm} inputProps={source.props} />;
     default:
       return <Player {...shared} component={UseCaseFilm} inputProps={source.props} />;
   }

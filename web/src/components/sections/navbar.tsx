@@ -12,13 +12,13 @@ import { useTheme } from "@/context/ThemeContext";
 const labels = {
   es: {
     services: "Servicios", work: "Casos", successCases: "Casos de éxito", useCases: "Casos de uso", capabilities: "Capacidades", explore: "Explora",
-    systems: "Automatización y CRM", studio: "Webs y landings", agents: "Agentes de IA", content: "Contenido con IA", profile: "Sobre mí · CV",
+    systems: "Automatización y CRM", studio: "Webs y landings", agents: "Agentes de IA", content: "Contenido con IA", campaigns: "Campañas con IA", profile: "Sobre mí · CV",
     cta: "Hablemos", menu: "Abrir menú", close: "Cerrar menú", utility: "Abrir utilidades",
     toLight: "Cambiar a modo claro", toDark: "Cambiar a modo oscuro", language: "Idioma", theme: "Tema",
   },
   en: {
     services: "Services", work: "Cases", successCases: "Case studies", useCases: "Use cases", capabilities: "Capabilities", explore: "Explore",
-    systems: "Automation & CRM", studio: "Websites & landing pages", agents: "AI agents", content: "AI content", profile: "About · Resume",
+    systems: "Automation & CRM", studio: "Websites & landing pages", agents: "AI agents", content: "AI content", campaigns: "AI campaigns", profile: "About · Resume",
     cta: "Let's talk", menu: "Open menu", close: "Close menu", utility: "Open utilities",
     toLight: "Switch to light mode", toDark: "Switch to dark mode", language: "Language", theme: "Theme",
   },
@@ -114,6 +114,7 @@ export function Navbar() {
     { label: copy.agents, href: localePath(language, "/agentes") },
     { label: copy.systems, href: localePath(language, "/sistemas") },
     { label: copy.content, href: localePath(language, "/fabricas") },
+    { label: copy.campaigns, href: localePath(language, "/campanas") },
   ];
   const caseLinks: NavLink[] = [
     { label: copy.successCases, href: localePath(language, "/casos-de-exito") },

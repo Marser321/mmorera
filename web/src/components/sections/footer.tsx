@@ -13,6 +13,7 @@ const SERVICE_LINKS = [
   { path: "/agentes", label: { es: "Agentes de IA", en: "AI agents" } },
   { path: "/sistemas", label: { es: "Automatización y CRM", en: "Automation & CRM" } },
   { path: "/fabricas", label: { es: "Contenido con IA", en: "AI content" } },
+  { path: "/campanas", label: { es: "Campañas con IA", en: "AI campaigns" } },
 ];
 const EXPLORE_LINKS = [
   { path: "/casos-de-exito", label: { es: "Casos de éxito", en: "Case studies" } },

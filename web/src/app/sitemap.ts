@@ -6,7 +6,7 @@ import { RECORRIDOS_PATH } from "@/data/recorridos";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = SITE_IDENTITY.canonical;
-  const core = ["", "/casos-de-exito", "/sistemas", "/estudio", "/fabricas", "/agentes", "/sobre-mi", "/aplicar", "/privacidad", "/terminos", "/cookies"];
+  const core = ["", "/casos-de-exito", "/sistemas", "/estudio", "/fabricas", "/agentes", "/campanas", "/sobre-mi", "/aplicar", "/privacidad", "/terminos", "/cookies"];
   const cases = PROJECT_CASES.map(({ slug }) => `/casos-de-exito/${slug}`);
   const branches = [
     "/capacidades", ...Object.values(CAPABILITY_SLUGS).map((slug) => `/capacidades/${slug}`),

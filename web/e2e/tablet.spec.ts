@@ -18,6 +18,7 @@ test.describe("Safari en iPad", () => {
     { menu: "Servicios", link: "Agentes de IA", path: "/agentes" },
     { menu: "Servicios", link: "Automatización y CRM", path: "/sistemas" },
     { menu: "Servicios", link: "Contenido con IA", path: "/fabricas" },
+    { menu: "Servicios", link: "Campañas con IA", path: "/campanas" },
     { menu: "Casos", link: "Casos de éxito", path: "/casos-de-exito" },
     { menu: "Casos", link: "Casos de uso", path: "/casos-de-uso" },
   ];
