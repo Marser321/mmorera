@@ -8,7 +8,7 @@
  */
 
 export type Language = "es" | "en";
-export type PaginaSeo = "inicio" | "trabajo" | "sistemas" | "estudio" | "hablemos" | "privacidad" | "cv" | "fabricas" | "agentes" | "capacidades" | "casosDeUso" | "sobreMi" | "lab";
+export type PaginaSeo = "inicio" | "trabajo" | "sistemas" | "estudio" | "hablemos" | "privacidad" | "cv" | "fabricas" | "agentes" | "campanas" | "capacidades" | "casosDeUso" | "sobreMi" | "lab";
 
 type Texto = Record<Language, string>;
 
@@ -30,7 +30,7 @@ export interface PaginaSeoData {
   title: Texto;
   description: Texto;
   /** Qué portada usa (privacidad, cv y fabricas reusan la del inicio). */
-  portada: Exclude<PaginaSeo, "privacidad" | "cv" | "fabricas" | "agentes" | "capacidades" | "casosDeUso" | "sobreMi" | "lab">;
+  portada: Exclude<PaginaSeo, "privacidad" | "cv" | "fabricas" | "agentes" | "campanas" | "capacidades" | "casosDeUso" | "sobreMi" | "lab">;
 }
 
 export const PAGINAS_SEO: Record<PaginaSeo, PaginaSeoData> = {
@@ -89,6 +89,15 @@ export const PAGINAS_SEO: Record<PaginaSeo, PaginaSeoData> = {
     description: {
       es: "Qué información recibo cuando me escribes por el formulario, el email o WhatsApp, para qué la uso, con quién se comparte y cómo puedes pedir que la borre.",
       en: "What information I receive when you write through the form, email or WhatsApp, what I use it for, who it is shared with and how to ask me to delete it.",
+    },
+    portada: "inicio",
+  },
+  campanas: {
+    path: "/campanas",
+    title: { es: "Campañas de Meta y Google con IA", en: "Meta and Google campaigns with AI" },
+    description: {
+      es: "Campañas de Meta y Google con IA que lee la cuenta y arma reportes en segundos, y una persona que decide. Qué hace la máquina, sus límites y lo nuevo.",
+      en: "Meta and Google campaigns with AI that reads the account and builds reports in seconds, and a person who decides. What it does, its limits and what's new.",
     },
     portada: "inicio",
   },

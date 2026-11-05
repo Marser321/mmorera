@@ -11,8 +11,10 @@ import { localePath, SITE_IDENTITY } from "@/config/site";
 import type { ProjectCase, LocalizedText } from "@/types/site";
 import { PROJECT_CASES } from "@/data/projectCases";
 import { getCaseMedia } from "@/data/caseMedia";
+import { getCaseGallery } from "@/data/caseGallery";
 import { getCaseMetrics, isShowcaseWorthy, pageSpeedReportUrl, type CaseMetrics } from "@/data/caseMetrics";
 import { CaseFilmSection } from "@/components/films/CaseFilmSection";
+import { CaseGallery } from "@/components/premium/CaseGallery";
 import { buildCaseFilm } from "@/data/films/caseFilms";
 import { Reveal } from "@/components/scroll/Reveal";
 import { SplitReveal } from "@/components/motion/SplitReveal";
@@ -142,8 +144,7 @@ export function CaseStudy({ project, underTheHood }: { project: ProjectCase; und
   const nextCover = nextMedia?.reel.poster ?? next.media[0]?.src;
   // Casos parecidos: comparten capacidades con este (sin repetir el siguiente).
   const related = relatedCases(project.slug, 4).filter((item) => item.slug !== next.slug).slice(0, 3);
-  const desktopShots = media?.gallery.filter((shot) => shot.device === "desktop") ?? [];
-  const mobileShots = media?.gallery.filter((shot) => shot.device === "mobile") ?? [];
+  const gallery = getCaseGallery(project.slug);
   const whatsappText = encodeURIComponent(
     isEs
       ? `Hola Mario, vi el caso ${project.title.es} en tu web y quiero algo así para mi negocio.`
@@ -245,31 +246,8 @@ export function CaseStudy({ project, underTheHood }: { project: ProjectCase; und
           </details>
         </div>
 
-        {/* Galería desktop + mobile (capturas del sitio en vivo) */}
-        {(desktopShots.length > 0 || mobileShots.length > 0) && (
-          <section className="mx-auto mt-24 max-w-[1480px] px-5 sm:px-8 lg:px-12" aria-labelledby="case-gallery">
-            <p className={label}>{isEs ? "Galería · capturas del sitio en vivo" : "Gallery · live site captures"}</p>
-            <h2 id="case-gallery" className="mt-4 text-3xl font-medium tracking-[-0.04em] text-foreground sm:text-4xl">{isEs ? "En pantalla grande y en el bolsillo." : "On a big screen and in a pocket."}</h2>
-            <div className="mt-10 grid gap-5 lg:grid-cols-[1.6fr_1fr]">
-              <div className="grid gap-5 sm:grid-cols-2">
-                {desktopShots.map((shot, i) => (
-                  <Reveal key={shot.src} y={30} delay={i * 0.06} className={`relative overflow-hidden rounded-2xl border border-white/10 light:border-[rgb(var(--ink-rgb)/0.1)] ${i === 0 ? "sm:col-span-2" : ""}`}>
-                    <div className="relative aspect-[16/10]"><Image src={shot.src} alt={`${project.title[language]} · desktop ${i + 1}`} fill sizes="(max-width: 1024px) 100vw, 60vw" className="object-cover object-top" /></div>
-                  </Reveal>
-                ))}
-              </div>
-              <div className="flex items-start justify-center gap-5">
-                {mobileShots.map((shot, i) => (
-                  <Reveal key={shot.src} y={40} delay={0.1 + i * 0.08} className={`w-1/2 max-w-[240px] ${i === 1 ? "mt-16" : ""}`}>
-                    <div className="overflow-hidden rounded-[2rem] border-[6px] border-foreground/10 bg-card">
-                      <div className="relative aspect-[390/844]"><Image src={shot.src} alt={`${project.title[language]} · mobile ${i + 1}`} fill sizes="240px" className="object-cover object-top" /></div>
-                    </div>
-                  </Reveal>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
+        {/* Cada página real del sitio, en las tres pantallas. */}
+        {gallery && <CaseGallery gallery={gallery} name={project.title[language]} language={language} />}
       </article>
 
       {/* Cierre: CTA, la banda marfil del caso. */}

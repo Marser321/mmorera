@@ -172,6 +172,7 @@ export const TECH_STACK: Tech[] = [
         descriptor: { es: 'Comercio y monetización', en: 'Commerce and monetization' },
     },
     // Marketing
+    { name: 'Meta Ads', category: 'Marketing', Icon: SiMeta },
     { name: 'Google Ads', category: 'Marketing', Icon: SiGoogleads },
     { name: 'Google Analytics', category: 'Marketing', Icon: SiGoogleanalytics },
     // CRM
