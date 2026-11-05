@@ -61,7 +61,11 @@ function NavDropdown({ id, label, links, active }: { id: string; label: string; 
 
   return (
     <div ref={ref} className="relative" onBlur={(event) => {
-      if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setOpen(false);
+      // Safari no enfoca el enlace que se toca: el foco se pierde sin destino
+      // (relatedTarget null). Cerrar ahí quitaría el enlace antes del clic. Solo se
+      // cierra si el foco fue a otro lado; los toques afuera los cierra el pointerdown.
+      const next = event.relatedTarget as Node | null;
+      if (next && !event.currentTarget.contains(next)) setOpen(false);
     }} onKeyDown={(event) => {
       const items = [...event.currentTarget.querySelectorAll<HTMLAnchorElement>("a")];
       const index = items.indexOf(document.activeElement as HTMLAnchorElement);
