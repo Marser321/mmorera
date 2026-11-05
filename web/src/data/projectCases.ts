@@ -47,6 +47,8 @@ export const PROJECT_CASES: ProjectCase[] = [
     tryIt: [
       { href: t("https://fenixmedicalcenters.com/es/contacto", "https://fenixmedicalcenters.com/en/contacto"), label: t("Mira el formulario sin texto libre", "See the form with no free-text field"), kind: "live", note: t("Es el sitio real de la clínica: míralo, no hace falta enviarlo.", "This is the clinic's live site: look around, no need to submit it.") },
     ],
+    // Su propio sitio prohíbe los marcos (frame-ancestors 'none'): el iframe quedaría en blanco.
+    embeddable: false,
     accent: "#cb9334",
     client: t("Fenix Medical Group Inc · Duluth, Georgia (EE. UU.)", "Fenix Medical Group Inc · Duluth, Georgia (USA)"),
     kind: t("Salud y longevidad", "Health and longevity"),

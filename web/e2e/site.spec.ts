@@ -378,6 +378,19 @@ test("mantiene Cómo trabajo y Pruébalo dentro de tablet y pantalla ancha", asy
   }
 });
 
+test("una demo que no se deja embeber ofrece abrir el sitio en vez de un panel en blanco", async ({ page }) => {
+  await page.goto("/casos-de-exito");
+  const dialog = page.getByRole("dialog");
+  await expect(async () => {
+    await page.getByRole("button", { name: "Demo en vivo" }).first().click({ timeout: 2000 });
+    await expect(dialog).toBeVisible({ timeout: 1000 });
+  }).toPass({ timeout: 10_000 });
+  await expect(dialog.getByRole("heading", { name: "Fenix Medical Center" })).toBeVisible();
+  await expect(dialog.getByText("Este sitio no permite vista embebida")).toBeVisible();
+  await expect(dialog.getByRole("link", { name: "Abrir sitio en vivo" })).toHaveAttribute("href", "https://fenixmedicalcenters.com");
+  await expect(dialog.locator("iframe")).toHaveCount(0);
+});
+
 test("abre un caso profundo sin modal ni iframe", async ({ page }) => {
   await page.goto("/casos-de-exito");
   // La tarjeta del archivo (el índice de la cabecera lleva al mismo caso; lo cubre otro test).
