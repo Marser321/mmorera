@@ -3,7 +3,9 @@ import { ArrowUpRight } from "lucide-react";
 import { localePath } from "@/config/site";
 import { USE_CASES_PAGE, USE_CASE_SLUGS } from "@/data/branchPages";
 import { USE_CASE_FILMS } from "@/data/films/systemsFilms";
+import { RECORRIDOS_PAGE, RECORRIDOS_PATH } from "@/data/recorridos";
 import { BranchHeader } from "@/components/branches/BranchHeader";
+import { SideDoor } from "@/components/branches/SideDoor";
 
 /** /casos-de-uso: una puerta por film, con el problema como portada y el rótulo real/ejemplo. */
 export function CasosDeUsoDocument({ language }: { language: "es" | "en" }) {
@@ -31,6 +33,7 @@ export function CasosDeUsoDocument({ language }: { language: "es" | "en" }) {
           </li>
         ))}
       </ul>
+      <SideDoor eyebrow={RECORRIDOS_PAGE.door.eyebrow[language]} title={RECORRIDOS_PAGE.door.title[language]} href={localePath(language, RECORRIDOS_PATH)} className="mt-4" />
     </main>
   );
 }

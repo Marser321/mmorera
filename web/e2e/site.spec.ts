@@ -391,6 +391,32 @@ test("una demo que no se deja embeber ofrece abrir el sitio en vez de un panel e
   await expect(dialog.locator("iframe")).toHaveCount(0);
 });
 
+test("el tour 360 y las referencias solo cargan algo externo cuando se abren", async ({ page }) => {
+  const externos: string[] = [];
+  page.on("request", (request) => {
+    if (/kuula|superspl\.at|youtube/.test(request.url())) externos.push(request.url());
+  });
+  await page.goto("/casos-de-uso/recorridos-inmobiliarios");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("se recorre antes de la visita");
+  await expect(page.locator("main iframe")).toHaveCount(0);
+  await expect(page.getByText("no es trabajo mío").first()).toBeVisible();
+  expect(externos).toEqual([]);
+
+  await page.getByRole("button", { name: /Entrar al recorrido/ }).click();
+  const visor = page.locator("main iframe");
+  await expect(visor).toHaveAttribute("src", /kuula\.co\/share\/collection/);
+  await expect(visor).toBeFocused();
+  await expect(page.getByRole("button", { name: /Entrar al recorrido/ })).toHaveCount(0);
+});
+
+test("las puertas llevan a los recorridos en ambos idiomas", async ({ page }) => {
+  await page.goto("/casos-de-uso");
+  await page.getByRole("link", { name: /Recorridos 360 para inmobiliarias/ }).click();
+  await expect(page).toHaveURL(/\/casos-de-uso\/recorridos-inmobiliarios$/);
+  await page.goto("/en/fabricas");
+  await expect(page.getByRole("link", { name: /360 tours for real estate/ })).toHaveAttribute("href", "/en/casos-de-uso/recorridos-inmobiliarios");
+});
+
 test("abre un caso profundo sin modal ni iframe", async ({ page }) => {
   await page.goto("/casos-de-exito");
   // La tarjeta del archivo (el índice de la cabecera lleva al mismo caso; lo cubre otro test).
@@ -893,7 +919,7 @@ test("abre las ramas: capacidades, casos de uso y Lab", async ({ page }) => {
 
   await page.goto("/casos-de-uso");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Problemas reales, contados de punta a punta.");
-  await expect(page.locator('main a[href^="/casos-de-uso/"]')).toHaveCount(3);
+  await expect(page.locator('main li a[href^="/casos-de-uso/"]')).toHaveCount(3);
   await page.goto("/casos-de-uso/lead-de-las-23-45");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("El lead de las 23:45");
   await expect(page.getByRole("tab")).toHaveCount(0);

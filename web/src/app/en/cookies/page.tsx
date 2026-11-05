@@ -38,7 +38,7 @@ export default function LegalPage() {
           title: "Demos from other sites",
           content: (
             <>
-                <p>Some case studies open a demo of a client&#x27;s site inside a window. That site belongs to a third party and may use its own cookies under its own policy. It only loads if you open the demo.</p>
+                <p>Some pages open, inside the site, a client demo or a tour or video hosted on another service, such as Kuula, SuperSplat or YouTube. Those sites belong to third parties and may use their own cookies under their own policies. They only load if you open them.</p>
             </>
           ),
         },

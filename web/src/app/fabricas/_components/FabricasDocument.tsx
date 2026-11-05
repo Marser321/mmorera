@@ -1,10 +1,13 @@
+import { localePath } from "@/config/site";
 import { ServicePage } from "@/components/service/ServicePage";
+import { SideDoor } from "@/components/branches/SideDoor";
 import { BriefToPiece } from "@/components/premium/fabricas/BriefToPiece";
 import { StyleShowcase } from "@/components/premium/fabricas/StyleShowcase";
 import { VideoGallery, type VideoGalleryItem } from "@/components/premium/fabricas/VideoGallery";
 import { SERVICE_PAGES } from "@/data/servicePages";
 import { BRIEF_TO_PIECE } from "@/data/briefToPiece";
 import { VIDEO_GALLERY, galleryMedia } from "@/data/videoGallery";
+import { RECORRIDOS_PAGE, RECORRIDOS_PATH } from "@/data/recorridos";
 
 /** m:ss, como en un reproductor. */
 const clock = (seconds: number) => `${Math.floor(seconds / 60)}:${String(Math.round(seconds % 60)).padStart(2, "0")}`;
@@ -25,5 +28,6 @@ export function FabricasDocument({ language }: { language: "es" | "en" }) {
     <BriefToPiece pieces={BRIEF_TO_PIECE} language={language} label={content.howItWorks?.title?.[language]} />
     <VideoGallery videos={videos} language={language} />
     <StyleShowcase language={language} />
+    <SideDoor eyebrow={RECORRIDOS_PAGE.door.eyebrow[language]} title={RECORRIDOS_PAGE.door.title[language]} href={localePath(language, RECORRIDOS_PATH)} className="mt-8" />
   </>} />;
 }
