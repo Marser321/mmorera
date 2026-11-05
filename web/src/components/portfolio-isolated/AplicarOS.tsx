@@ -183,7 +183,10 @@ export function AplicarOS() {
                     setFieldErrors(result.fieldErrors);
                     focusFirstError(result.fieldErrors);
                 }
-                setSubmitError(isEs ? result.error : 'I could not send the context. Check the marked fields or try again.');
+                const englishError = result.rateLimited
+                    ? 'I received several submissions in a row. Wait a few minutes or message me on WhatsApp.'
+                    : 'I could not send the context. Check the marked fields or try again.';
+                setSubmitError(isEs ? result.error : englishError);
                 return;
             }
             setSubmitted(true);

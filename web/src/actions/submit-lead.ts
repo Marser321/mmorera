@@ -1,5 +1,6 @@
 'use server'
 
+import { headers } from 'next/headers'
 import { createClient } from '@insforge/sdk'
 import { Resend } from 'resend'
 import type { ContactFormData } from '@/types'
@@ -10,10 +11,16 @@ import {
     validateAndNormalizeLead,
     type LeadField,
 } from '@/lib/leadValidation'
+import { createRateLimiter } from '@/lib/rateLimit'
+
+// Cada envío válido manda un correo y guarda un lead: el límite frena las ráfagas.
+const LIMIT_WINDOW_MS = 10 * 60_000
+const perVisitor = createRateLimiter({ limit: 5, windowMs: LIMIT_WINDOW_MS })
+const perInstance = createRateLimiter({ limit: 30, windowMs: LIMIT_WINDOW_MS })
 
 export type SubmitLeadResult =
     | { success: true }
-    | { success: false; error: string; fieldErrors?: Partial<Record<LeadField, string>> }
+    | { success: false; error: string; fieldErrors?: Partial<Record<LeadField, string>>; rateLimited?: boolean }
 
 export async function submitLead(input: ContactFormData): Promise<SubmitLeadResult> {
     // El honeypot responde como un envío válido para no enseñar el filtro al bot.
@@ -23,9 +30,16 @@ export async function submitLead(input: ContactFormData): Promise<SubmitLeadResu
     if (!validation.success) {
         return {
             success: false,
-            error: 'Revisá los campos marcados y volvé a enviar.',
+            error: 'Revisa los campos marcados y vuelve a enviar.',
             fieldErrors: validation.fieldErrors,
         }
+    }
+
+    // Después de validar: corregir un campo mal escrito no cuenta como envío.
+    const requestHeaders = await headers()
+    const visitor = requestHeaders.get('x-real-ip') ?? requestHeaders.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'sin-ip'
+    if (!perVisitor.allow(visitor) || !perInstance.allow('sitio')) {
+        return { success: false, rateLimited: true, error: 'Recibí varios envíos seguidos. Espera unos minutos o escríbeme por WhatsApp.' }
     }
 
     const data = validation.data

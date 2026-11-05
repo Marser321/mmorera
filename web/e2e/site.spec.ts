@@ -820,6 +820,19 @@ test("recupera el poster si falla un MP4 local", async ({ page }) => {
   await expect(nucleus.locator("picture img").first()).toBeAttached();
 });
 
+test("publica las cabeceras de seguridad en el build de producción", async ({ request }) => {
+  test.skip(!process.env.PLAYWRIGHT_BASE_URL, "next dev no las aplica: necesita eval y sockets para la recarga en caliente");
+  const response = await request.get("/");
+  const headers = response.headers();
+  const csp = headers["content-security-policy"];
+  for (const directive of ["default-src 'self'", "object-src 'none'", "base-uri 'self'", "form-action 'self'", "frame-ancestors 'self'"]) expect(csp).toContain(directive);
+  expect(csp).not.toContain("unsafe-eval");
+  expect(headers["x-frame-options"]).toBe("SAMEORIGIN");
+  expect(headers["x-content-type-options"]).toBe("nosniff");
+  expect(headers["referrer-policy"]).toBe("strict-origin-when-cross-origin");
+  expect(headers["permissions-policy"]).toContain("camera=()");
+});
+
 test("publica canonical, hreflang, OG, JSON-LD y sitemap canónicos", async ({ page, request }) => {
   await page.goto("/");
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://mmorera.agency");
