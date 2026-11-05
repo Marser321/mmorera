@@ -93,10 +93,12 @@ export function MotionBackdrop({
   const canMountVideo = !reducedMotion && hasEntered && !videoFailed && Boolean(videoWebm || videoMp4);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- el dominio solo se puede leer en el cliente, después de hidratar
     setPreviewHost(isMotionPreviewHost(window.location.hostname));
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- cada fuente nueva arranca sin el estado de la anterior
     setVideoFailed(false);
     setVideoReady(false);
   }, [videoMp4, videoWebm]);
