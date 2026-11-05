@@ -78,7 +78,7 @@ test("mantiene el menú por servicios con teclado y oculta redes no verificadas"
     await expect(button).toHaveAttribute("aria-expanded", "true", { timeout: 1000 });
   }).toPass({ timeout: 10000 });
   const links = page.locator("#services-menu a");
-  await expect(links).toHaveCount(4);
+  await expect(links).toHaveCount(5);
   await expect(links.first()).toBeFocused();
   await page.keyboard.press("ArrowUp"); await expect(links.last()).toBeFocused();
   await page.keyboard.press("ArrowDown"); await expect(links.first()).toBeFocused();
@@ -112,7 +112,7 @@ test("ofrece un único menú móvil con rutas, idioma, tema y CTA", async ({ bro
     if (await menuButton.getAttribute("aria-expanded") !== "true") await menuButton.click();
     await expect(menuButton).toHaveAttribute("aria-expanded", "true", { timeout: 1_000 });
   }).toPass({ timeout: 10_000 });
-  await expect(page.getByRole("navigation", { name: "Navegación móvil" }).getByRole("link")).toHaveCount(8);
+  await expect(page.getByRole("navigation", { name: "Navegación móvil" }).getByRole("link")).toHaveCount(9);
   await expect(page.getByRole("navigation", { name: "Navegación móvil" }).getByRole("link", { name: "Agentes de IA" })).toHaveAttribute("href", "/agentes");
   await expect(page.locator("#mobile-menu").getByRole("link", { name: "Hablemos" })).toBeVisible();
   await expect(page.getByRole("button", { name: "English" })).toBeVisible();
@@ -391,6 +391,50 @@ test("una demo que no se deja embeber ofrece abrir el sitio en vez de un panel e
   await expect(dialog.locator("iframe")).toHaveCount(0);
 });
 
+test("la galería de un caso muestra cada página en sus tres pantallas", async ({ page }) => {
+  await page.goto("/casos-de-exito/ad-media-solution");
+  const gallery = page.locator('section[aria-labelledby="case-gallery"]');
+  await gallery.scrollIntoViewIfNeeded();
+  await expect(gallery.getByRole("group", { name: "Páginas del sitio" }).getByRole("button")).toHaveCount(5);
+  await expect(gallery.locator("figure")).toHaveCount(3);
+  const servicios = gallery.getByRole("button", { name: "Servicios" });
+  await servicios.click();
+  await expect(servicios).toHaveAttribute("aria-pressed", "true");
+  await expect(gallery.locator('img.opacity-100[src$="servicios-desktop.webp"]')).toBeVisible();
+  await expect(gallery.locator('img.opacity-100[src$="servicios-mobile.webp"]')).toBeVisible();
+  // Una vez elegida, la galería no cambia sola.
+  await page.waitForTimeout(7000);
+  await expect(servicios).toHaveAttribute("aria-pressed", "true");
+  await expect(gallery.getByRole("link", { name: /Abrir esta página: Servicios/ })).toHaveAttribute("href", /\/servicios$/);
+});
+
+test("/campanas reparte el trabajo entre la máquina y una persona, en ambos idiomas", async ({ page }) => {
+  await page.goto("/campanas");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Toda tu cuenta de anuncios, con una persona que decide.");
+  await expect(page.locator('[data-service-section="deliverables"] li')).toHaveCount(3);
+  await expect(page.locator('section[aria-labelledby="campanas-trabajos"] > ul > li')).toHaveCount(6);
+  await expect(page.locator('section[aria-labelledby="campanas-limites"] li')).toHaveCount(3);
+  await expect(page.locator('section[aria-labelledby="campanas-radar"] a[href^="https://"]').first()).toBeVisible();
+  await page.goto("/en/campanas");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Your whole ad account, with a person making the calls.");
+  await expect(page.getByRole("heading", { level: 3, name: "Why it still takes a person" })).toBeVisible();
+});
+
+test("la cinemática de /campanas rotula sus datos y se recorre por capítulos", async ({ page }) => {
+  test.setTimeout(60_000);
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.goto("/campanas");
+  const stage = page.locator('[data-film-stage="campanas"]');
+  await stage.scrollIntoViewIfNeeded();
+  await expect(stage.getByText("Datos de ejemplo").first()).toBeVisible();
+  await expect(async () => {
+    await page.getByRole("button", { name: /La persona/ }).click();
+    await expect(page.locator('p[aria-live="polite"]')).toContainText("Cada propuesta pasa por una persona", { timeout: 1000 });
+  }).toPass({ timeout: 30_000 });
+  expect(errors).toEqual([]);
+});
+
 test("el tour 360 y las referencias solo cargan algo externo cuando se abren", async ({ page }) => {
   const externos: string[] = [];
   page.on("request", (request) => {
@@ -472,9 +516,10 @@ for (const flagship of FLAGSHIP_CASES) {
     const stage = page.locator('[data-film-stage="flagship"]');
     await expect(stage).toHaveCount(1);
     await stage.scrollIntoViewIfNeeded();
-    await expect(page.getByRole("button", { name: flagship.first })).toBeVisible();
+    const film = page.locator("#film");
+    await expect(film.getByRole("button", { name: flagship.first })).toBeVisible();
 
-    await page.getByRole("button", { name: flagship.jump }).click();
+    await film.getByRole("button", { name: flagship.jump }).click();
     await page.waitForTimeout(3_000);
     expect(errors).toEqual([]);
   });

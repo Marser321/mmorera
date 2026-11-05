@@ -18,6 +18,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { chromium, type Page } from "playwright";
 import { PROJECT_CASES } from "../src/data/projectCases";
+import { coveringOverlay, dismissOverlays } from "./lib/capture";
 
 const ROOT = process.cwd();
 const REELS_DIR = path.join(ROOT, "public/portfolio/reels");
@@ -53,57 +54,6 @@ const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t 
 async function settle(page: Page) {
   // Dos frames de pintura para que el scroll y las animaciones se asienten.
   await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
-}
-
-// Popups de bienvenida/cookies tapan el sitio y bloquean el scroll del reel
-// (el reel de AD Media quedó entero detrás de "Diagnóstico gratis").
-const CLOSERS = [
-  'button[aria-label*="cerrar" i]',
-  'button[aria-label*="close" i]',
-  '[role="dialog"] button:has-text("Cerrar")',
-  '[role="dialog"] button:has-text("Close")',
-  'button:text-is("×")',
-  'button:text-is("✕")',
-  ':is(button, a):has-text("No, gracias")',
-  ':is(button, a):has-text("Quizás más tarde")',
-  ':is(button, a):has-text("Ahora no")',
-  ':is(button, a):has-text("No thanks")',
-  ':is(button, a):has-text("Maybe later")',
-  ':is(button, a):has-text("Not now")',
-].join(", ");
-
-/**
- * Capa fija que tapa más de la mitad de la ventana y se puede cliquear (un
- * modal), o null. Los fondos fijos decorativos no cuentan: no reciben clics o
- * están por debajo del contenido.
- */
-async function coveringOverlay(page: Page) {
-  return page.evaluate(() => {
-    const viewport = window.innerWidth * window.innerHeight;
-    for (const element of Array.from(document.querySelectorAll<HTMLElement>("body *"))) {
-      const style = getComputedStyle(element);
-      if (style.position !== "fixed" || style.display === "none" || style.visibility === "hidden" || Number(style.opacity) < 0.1) continue;
-      if (style.pointerEvents === "none" || !(Number(style.zIndex) >= 10)) continue;
-      const rect = element.getBoundingClientRect();
-      const w = Math.max(0, Math.min(rect.right, window.innerWidth) - Math.max(rect.left, 0));
-      const h = Math.max(0, Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0));
-      const modal = element.matches('[role="dialog"], [aria-modal="true"]') || element.querySelector('[role="dialog"], [aria-modal="true"], button, a') !== null;
-      if (modal && (w * h) / viewport > 0.5) return `${element.tagName.toLowerCase()}.${String(element.className).slice(0, 60)}`;
-    }
-    return null;
-  });
-}
-
-async function dismissOverlays(page: Page) {
-  for (let attempt = 0; attempt < 3; attempt++) {
-    await page.keyboard.press("Escape").catch(() => {});
-    const closer = page.locator(CLOSERS).filter({ visible: true });
-    if (await closer.count()) await closer.first().click({ timeout: 2000 }).catch(() => {});
-    await page.waitForTimeout(800);
-    if (!(await coveringOverlay(page))) return;
-  }
-  // Mejor no grabar que publicar un reel tapado: el caso queda con el material anterior.
-  throw new Error(`un modal sigue tapando la página (${await coveringOverlay(page)})`);
 }
 
 async function open(page: Page, url: string) {
