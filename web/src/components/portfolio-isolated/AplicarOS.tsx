@@ -56,6 +56,7 @@ export function AplicarOS() {
     useEffect(() => {
         const param = new URLSearchParams(window.location.search).get('track');
         if (isTrackId(param)) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect -- la URL solo se puede leer en el cliente, después de hidratar
             setTrackId(param);
             setContextTrack(param);
         } else if (contextTrack) {
@@ -70,6 +71,7 @@ export function AplicarOS() {
         const reference = isEs
             ? `Quiero algo como ${project.title.es}. `
             : `I want something like ${project.title.en}. `;
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- la URL solo se puede leer en el cliente, después de hidratar
         setFormData((current) => (current.challenge ? current : { ...current, challenge: reference }));
     }, [isEs]);
 
