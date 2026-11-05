@@ -16,6 +16,9 @@ export const galleryMedia = (value: string | LocalizedText, language: keyof Loca
  * es la pieza de la puerta «Contenido con IA» del home. Reemplaza a la edición
  * corta con motion (short-form-motion-v3, metraje generado por Gemini); sus
  * archivos siguen en public/portfolio/video-ia/ por si se quiere volver a usar.
+ *
+ * T49: el trailer dura 60 s, suma los siete estilos (src/data/contentSamples.ts)
+ * y tiene versión horizontal: las pantallas anchas ven la 16:9 y el teléfono, la vertical.
  */
 export const VIDEO_GALLERY: VideoGalleryEntry[] = [
   {
@@ -23,8 +26,12 @@ export const VIDEO_GALLERY: VideoGalleryEntry[] = [
     title: t("Una toma, todas las piezas", "One take, every piece"),
     src: t("/portfolio/video-ia/fabrica-trailer-es.mp4", "/portfolio/video-ia/fabrica-trailer-en.mp4"),
     poster: t("/portfolio/video-ia/fabrica-trailer-es-poster.webp", "/portfolio/video-ia/fabrica-trailer-en-poster.webp"),
-    duration: 46,
-    tools: t("Remotion y Claude: reencuadre, subtítulos, color, ritmo y música, todo en código", "Remotion and Claude: reframing, captions, color, rhythm and music, all in code"),
+    landscape: {
+      src: t("/portfolio/video-ia/fabrica-trailer-es-16x9.mp4", "/portfolio/video-ia/fabrica-trailer-en-16x9.mp4"),
+      poster: t("/portfolio/video-ia/fabrica-trailer-es-16x9-poster.webp", "/portfolio/video-ia/fabrica-trailer-en-16x9-poster.webp"),
+    },
+    duration: 60,
+    tools: t("Remotion y Claude: reencuadre, subtítulos, color, siete estilos y música, todo en código", "Remotion and Claude: reframing, captions, color, seven styles and music, all in code"),
     label: t("Pieza propia · editada en código", "Own piece · edited in code"),
   },
   {

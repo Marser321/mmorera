@@ -21,41 +21,52 @@ import {
   lerp,
   mixRect,
   ramp,
+  sceneOf,
   signal,
+  useStage,
   wall,
   type Rect,
 } from "./kit";
 
 /**
- * 03 · Reencuadre (8–12 s). La toma en 16:9; el visor 9:16 empieza al centro,
+ * La caja donde se ve cada edición: debajo del rótulo en vertical, a la
+ * derecha del rótulo en horizontal.
+ */
+function editCard(land: boolean, tall = 1180): Rect {
+  return land ? { x: 760, y: 130, width: 1060, height: 820 } : { x: 80, y: 470, width: 920, height: tall };
+}
+
+/**
+ * 03 · Reencuadre (8–11 s). La toma en 16:9; el visor 9:16 empieza al centro,
  * sobre los monitores, y se desliza hasta la persona. Después el recorte se
  * despega y se vuelve la pieza vertical.
  */
 export function ReframeScene({ language }: { language: FilmLanguage }) {
   const frame = useCurrentFrame();
+  const { land } = useStage();
   const copy = TRAILER_COPY[language].reframe;
-  const viewer: Rect = { x: 0, y: 600, width: 1080, height: 607.5 };
+  const viewer: Rect = land ? { x: 760, y: 236, width: 1060, height: 596.25 } : { x: 0, y: 600, width: 1080, height: 607.5 };
   const s0 = viewer.width / FILM_SIZE.width;
   const cropW = (FILM_SIZE.height * 9) / 16;
-  const cropX = lerp((FILM_SIZE.width - cropW) / 2, 606, ramp(frame, 26, 56, EASE_IN_OUT));
-  const cropRect: Rect = { x: cropX * s0, y: viewer.y, width: cropW * s0, height: viewer.height };
-  const card: Rect = { x: 229, y: 560, width: 622, height: 1105.8 };
-  const lift = ramp(frame, 62, 88, EASE_IN_OUT);
+  const cropX = lerp((FILM_SIZE.width - cropW) / 2, 606, ramp(frame, 14, 40, EASE_IN_OUT));
+  const cropRect: Rect = { x: viewer.x + cropX * s0, y: viewer.y, width: cropW * s0, height: viewer.height };
+  const card: Rect = land ? { x: 1048, y: 110, width: 483.75, height: 860 } : { x: 229, y: 560, width: 622, height: 1105.8 };
+  const lift = ramp(frame, 46, 68, EASE_IN_OUT);
   const rect = mixRect(cropRect, card, lift);
   const scale = rect.height / FILM_SIZE.height;
-  const push = lerp(1, 1.04, ramp(frame, 88, 120, (t) => t));
-  const viewerIn = ramp(frame, -6, 8);
-  const viewerOut = ramp(frame, 62, 76);
-  const veil = ramp(frame, 48, 60) * (1 - viewerOut);
-  const brackets = ramp(frame, 12, 22);
-  const ready = ramp(frame, 90, 100);
+  const push = lerp(1, 1.04, ramp(frame, 68, 90, (t) => t));
+  const viewerIn = ramp(frame, -6, 6);
+  const viewerOut = ramp(frame, 46, 58);
+  const veil = ramp(frame, 36, 46) * (1 - viewerOut);
+  const brackets = ramp(frame, 8, 16);
+  const ready = ramp(frame, 70, 78);
 
   return (
     <div style={{ position: "absolute", inset: 0, background: C.wall }}>
       <SceneHeader index={1} chip={copy.chip} line={copy.line} frame={frame} />
       <div style={{ ...box(viewer), overflow: "hidden", opacity: viewerIn * (1 - viewerOut) }}>
         <Footage at={SHOTS.monitors} frame={{ x: 0, y: 0, width: viewer.width, height: viewer.height }} filter={LOOK.graded} />
-        <div style={{ position: "absolute", left: cropRect.x, top: 0, width: cropRect.width, height: viewer.height, boxShadow: `0 0 0 2400px ${wall(0.72 * veil)}` }} />
+        <div style={{ position: "absolute", left: cropRect.x - viewer.x, top: 0, width: cropRect.width, height: viewer.height, boxShadow: `0 0 0 2400px ${wall(0.72 * veil)}` }} />
         <Tag style={{ left: 24, top: 22, opacity: 1 - veil }}>16:9</Tag>
       </div>
       {lift > 0 ? (
@@ -71,7 +82,7 @@ export function ReframeScene({ language }: { language: FilmLanguage }) {
           </Tag>
         </div>
       ) : null}
-      <CropBrackets rect={lift > 0 ? { x: rect.x - 10, y: rect.y - 10, width: rect.width + 20, height: rect.height + 20 } : cropRect} opacity={brackets * (1 - ramp(frame, 96, 110))} />
+      <CropBrackets rect={lift > 0 ? { x: rect.x - 10, y: rect.y - 10, width: rect.width + 20, height: rect.height + 20 } : cropRect} opacity={brackets * (1 - ramp(frame, 76, 86))} />
       <div style={{ position: "absolute", left: cropRect.x, top: viewer.y - 46, width: cropRect.width, textAlign: "center", fontFamily: FONT.mono, fontSize: 21, letterSpacing: "0.12em", color: C.signal, opacity: brackets * (1 - lift) }}>9:16</div>
     </div>
   );
@@ -86,33 +97,34 @@ function waveBars(count: number, seed: number) {
 }
 
 /**
- * 04 · Subtítulos (12–16 s). La forma de onda corre debajo; cada palabra
+ * 04 · Subtítulos (11–14 s). La forma de onda corre debajo; cada palabra
  * entra en su golpe y la que suena se marca con la señal de la marca.
  */
 export function CaptionsScene({ language }: { language: FilmLanguage }) {
   const frame = useCurrentFrame();
+  const { land } = useStage();
   const copy = TRAILER_COPY[language].captions;
-  const card: Rect = { x: 80, y: 470, width: 920, height: 1180 };
-  const times = TIMING.cues.captionWords.map((at) => at - 360);
+  const card = editCard(land);
+  const times = TIMING.cues.captionWords.map((at) => at - sceneOf("captions").from);
   const lines = copy.words;
   const lineIndex = frame >= times[3] ? 1 : 0;
   const offset = lineIndex === 0 ? 0 : 3;
   const bars = waveBars(60, 2.1);
-  const head = ramp(frame, 8, 112, (t) => t);
+  const head = ramp(frame, 6, 84, (t) => t);
   const cardIn = ramp(frame, -6, 8);
 
   return (
     <div style={{ position: "absolute", inset: 0, background: C.wall }}>
       <SceneHeader index={2} chip={copy.chip} line={copy.line} frame={frame} />
       <div style={{ ...box(card), overflow: "hidden", borderRadius: 28, opacity: cardIn, scale: `${lerp(0.96, 1, cardIn)}`, border: `1px solid ${ivory(0.12)}` }}>
-        <Footage at={SHOTS.frontal} frame={{ x: 0, y: 0, width: card.width, height: card.height }} focal={[0.68, 0.36]} zoom={lerp(1.02, 1.08, ramp(frame, 0, 120, (t) => t))} filter={`${LOOK.graded} brightness(0.9)`} />
+        <Footage at={SHOTS.frontal} frame={{ x: 0, y: 0, width: card.width, height: card.height }} focal={[0.68, 0.36]} zoom={lerp(1.02, 1.08, ramp(frame, 0, 90, (t) => t))} filter={`${LOOK.graded} brightness(0.9)`} />
         <div style={{ position: "absolute", inset: 0, background: `linear-gradient(180deg, transparent 45%, ${wall(0.78)} 82%, ${wall(0.92)} 100%)` }} />
-        <div style={{ position: "absolute", left: 0, right: 0, top: 742, display: "flex", justifyContent: "center", gap: 12 }}>
+        <div style={{ position: "absolute", left: 0, right: 0, top: land ? 470 : 742, display: "flex", justifyContent: "center", gap: 12 }}>
           {lines[lineIndex].map((word, i) => {
             const at = times[offset + i];
             const nextAt = times[offset + i + 1] ?? 999;
             const t = ramp(frame, at, at + 6);
-            const active = frame >= at && frame < nextAt && !(lineIndex === 1 && i === 2 && frame > at + 30);
+            const active = frame >= at && frame < nextAt && !(lineIndex === 1 && i === 2 && frame > at + 24);
             return (
               <span
                 key={`${lineIndex}-${word}`}
@@ -137,7 +149,7 @@ export function CaptionsScene({ language }: { language: FilmLanguage }) {
             );
           })}
         </div>
-        <div style={{ position: "absolute", left: 48, right: 48, top: 930, height: 120, display: "flex", alignItems: "center", gap: 5 }}>
+        <div style={{ position: "absolute", left: 48, right: 48, top: land ? 640 : 930, height: land ? 100 : 120, display: "flex", alignItems: "center", gap: 5 }}>
           {bars.map((height, i) => {
             const played = i / bars.length <= head;
             return <div key={i} style={{ flex: 1, height: `${height * 100}%`, borderRadius: 3, background: played ? C.signal : ivory(0.3) }} />;
@@ -151,29 +163,30 @@ export function CaptionsScene({ language }: { language: FilmLanguage }) {
 }
 
 /**
- * 05 · Color (16–20 s). Antes y después con una cortina que va y viene en
+ * 05 · Color (14–17 s). Antes y después con una cortina que va y viene en
  * el pulso; después, tres looks seguidos: cálido, frío y el de la marca.
  */
 export function ColorScene({ language }: { language: FilmLanguage }) {
   const frame = useCurrentFrame();
+  const { land } = useStage();
   const copy = TRAILER_COPY[language].color;
-  const card: Rect = { x: 80, y: 470, width: 920, height: 1180 };
+  const card = editCard(land);
   const inner: Rect = { x: 0, y: 0, width: card.width, height: card.height };
-  const looks = TIMING.cues.colorLooks.map((at) => at - 480);
+  const looks = TIMING.cues.colorLooks.map((at) => at - sceneOf("color").from);
   const split =
-    frame < 30
-      ? lerp(1, 0.3, ramp(frame, 6, 30, EASE_IN_OUT))
-      : frame < 48
-        ? lerp(0.3, 0.64, ramp(frame, 30, 46, EASE_IN_OUT))
-        : lerp(0.64, 0, ramp(frame, 48, 62, EASE_IN_OUT));
-  const labels = ramp(frame, 8, 16) * (1 - ramp(frame, 56, 62));
+    frame < 22
+      ? lerp(1, 0.3, ramp(frame, 4, 22, EASE_IN_OUT))
+      : frame < 34
+        ? lerp(0.3, 0.64, ramp(frame, 22, 32, EASE_IN_OUT))
+        : lerp(0.64, 0, ramp(frame, 34, 44, EASE_IN_OUT));
+  const labels = ramp(frame, 6, 12) * (1 - ramp(frame, 40, 44));
   const warm = ramp(frame, looks[0], looks[0] + 5);
   const cool = ramp(frame, looks[1], looks[1] + 5);
   const brand = ramp(frame, looks[2], looks[2] + 5);
   const activeLook = frame >= looks[2] ? 2 : frame >= looks[1] ? 1 : frame >= looks[0] ? 0 : -1;
   const pills = ramp(frame, looks[0] - 8, looks[0]);
   const cardIn = ramp(frame, -6, 8);
-  const zoom = lerp(1.02, 1.07, ramp(frame, 0, 120, (t) => t));
+  const zoom = lerp(1.02, 1.07, ramp(frame, 0, 90, (t) => t));
   const shot = { at: SHOTS.shoulder, focal: [0.36, 0.45] as const };
 
   return (
@@ -224,26 +237,27 @@ export function ColorScene({ language }: { language: FilmLanguage }) {
 const AI_PLATE = "portfolio/fabrica/cambiar-menu-archivo-editable/03-arte-diseno.webp";
 
 /**
- * 06 · Escenas con IA (20–24 s). La placa generada aparece como sale de un
+ * 06 · Escenas con IA (17–20 s). La placa generada aparece como sale de un
  * modelo de imagen: ruido que se resuelve de arriba abajo. Lleva su rótulo,
- * como en las láminas de la marca, y la cámara entra para el golpe.
+ * como en las láminas de la marca, y la cámara entra para el puente.
  */
 export function AiScene({ language }: { language: FilmLanguage }) {
   const frame = useCurrentFrame();
+  const { land } = useStage();
   const copy = TRAILER_COPY[language].ai;
-  const card: Rect = { x: 80, y: 470, width: 920, height: 1150 };
-  const progress = ramp(frame, 8, 58, EASE_IN_OUT);
-  const readyAt = TIMING.cues.aiReady - 600;
+  const card = editCard(land, 1150);
+  const progress = ramp(frame, 6, 42, EASE_IN_OUT);
+  const readyAt = TIMING.cues.aiReady - sceneOf("ai").from;
   const tag = ramp(frame, readyAt, readyAt + 10);
-  const push = lerp(1, 1.05, ramp(frame, 58, 108, (t) => t)) * lerp(1, 1.3, ramp(frame, 106, 120, EASE_IN));
+  const push = lerp(1, 1.05, ramp(frame, 42, 80, (t) => t)) * lerp(1, 1.3, ramp(frame, 78, 90, EASE_IN));
   const cardIn = ramp(frame, -6, 8);
   const noiseShift = Math.floor(frame / 2);
   const scanY = progress * card.height;
-  const exit = ramp(frame, 108, 120, EASE_IN);
+  const exit = ramp(frame, 80, 90, EASE_IN);
 
   return (
     <div style={{ position: "absolute", inset: 0, background: C.wall }}>
-      <SceneHeader index={4} chip={copy.chip} line={copy.line} frame={frame} exitAt={106} />
+      <SceneHeader index={4} chip={copy.chip} line={copy.line} frame={frame} exitAt={78} />
       <div style={{ ...box(card), overflow: "hidden", borderRadius: lerp(28, 0, exit), opacity: cardIn, border: `1px solid ${ivory(0.12)}` }}>
         <div style={{ position: "absolute", inset: 0, scale: `${push}` }}>
           <Img src={staticFile(AI_PLATE)} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "blur(28px) brightness(1.25) contrast(0.7)" }} />
@@ -260,7 +274,7 @@ export function AiScene({ language }: { language: FilmLanguage }) {
           {copy.tag[0]} · {copy.tag[1]}
         </Tag>
       </div>
-      <div style={{ position: "absolute", inset: 0, background: C.ivory, opacity: ramp(frame, 112, 120, EASE_IN) * 0.6 }} />
+      <div style={{ position: "absolute", inset: 0, background: C.ivory, opacity: ramp(frame, 84, 90, EASE_IN) * 0.6 }} />
     </div>
   );
 }

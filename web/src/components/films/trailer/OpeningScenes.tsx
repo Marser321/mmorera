@@ -1,7 +1,7 @@
 import { useCurrentFrame } from "remotion";
 import type { FilmLanguage } from "@/data/films/filmTypes";
 import { TRAILER_COPY } from "./copy";
-import { C, EASE_IN, EASE_IN_OUT, FONT, Flash, Footage, LOOK, SHOTS, TIMING, Tag, Vignette, box, ivory, lerp, mixRect, ramp, shake, signal, slam, wall, type Rect } from "./kit";
+import { C, EASE_IN, EASE_IN_OUT, FONT, Flash, Footage, LOOK, SHOTS, TIMING, Tag, Vignette, box, ivory, lerp, mixRect, ramp, shake, signal, slam, useStage, wall, type Rect } from "./kit";
 
 /** Punto focal de la toma frontal: la persona está a la derecha del cuadro. */
 export const FRONTAL_FOCAL = [0.68, 0.4] as const;
@@ -18,18 +18,22 @@ function gradeFilter(t: number, dim = 1) {
  */
 export function HookScene({ language }: { language: FilmLanguage }) {
   const frame = useCurrentFrame();
+  const { width, height, land } = useStage();
   const copy = TRAILER_COPY[language];
   const { enter, typingFrom, typingFramesPerChar } = TIMING.cues;
 
   const appear = ramp(frame, 0, 14);
   const toCard = ramp(frame, enter, enter + 24, EASE_IN_OUT);
   const toFull = ramp(frame, 98, 120, EASE_IN);
-  const raw: Rect = { x: 80, y: 600, width: 920, height: 517.5 };
+  const full: Rect = { x: 0, y: 0, width, height };
+  // Vertical: la toma se vuelve una pieza 9:16 y después llena la pantalla.
+  // Horizontal: la toma ya es 16:9; al Enter toma color y se abre a pantalla completa.
+  const raw: Rect = land ? { x: 360, y: 150, width: 1200, height: 675 } : { x: 80, y: 600, width: 920, height: 517.5 };
   const card: Rect = { x: 205, y: 330, width: 670, height: 1191 };
-  const full: Rect = { x: 0, y: 0, width: 1080, height: 1920 };
-  const rect = toFull > 0 ? mixRect(card, full, toFull) : mixRect(raw, card, toCard);
+  const rect = land ? mixRect(raw, full, toCard) : toFull > 0 ? mixRect(card, full, toFull) : mixRect(raw, card, toCard);
   const grade = ramp(frame, enter + 14, enter + 20);
-  const radius = lerp(lerp(18, 26, toCard), 0, toFull);
+  const radius = land ? lerp(18, 0, toCard) : lerp(lerp(18, 26, toCard), 0, toFull);
+  const dim = lerp(1, 0.5, toFull);
 
   const typed = Math.max(0, Math.min(copy.prompt.length, Math.floor((frame - typingFrom) / typingFramesPerChar)));
   const typingDone = typed >= copy.prompt.length;
@@ -38,11 +42,12 @@ export function HookScene({ language }: { language: FilmLanguage }) {
   const promptOut = ramp(frame, enter + 2, enter + 16, EASE_IN);
   const labelsOut = 1 - ramp(frame, enter, enter + 8);
   const hit = shake(frame, enter, 8, 10);
+  const prompt = land ? { left: 360, top: 868, width: 1200, height: 112, font: 44 } : { left: 80, top: 1200, width: 920, height: 124, font: 48 };
 
   return (
     <div style={{ position: "absolute", inset: 0, background: C.wall, translate: `${hit.x}px ${hit.y}px` }}>
-      <div style={{ ...box(rect), overflow: "hidden", borderRadius: radius, opacity: appear, scale: `${lerp(0.97, 1, appear)}`, border: toFull > 0.9 ? "none" : `1px solid ${ivory(0.14)}`, boxShadow: `0 40px 120px ${wall(0.6)}` }}>
-        <Footage at={SHOTS.frontal} frame={{ x: 0, y: 0, width: rect.width, height: rect.height }} focal={FRONTAL_FOCAL} zoom={lerp(1, 1.04, ramp(frame, 0, enter))} filter={gradeFilter(grade, lerp(1, 0.5, toFull))} />
+      <div style={{ ...box(rect), overflow: "hidden", borderRadius: radius, opacity: appear, scale: `${lerp(0.97, 1, appear)}`, border: (land ? toCard : toFull) > 0.9 ? "none" : `1px solid ${ivory(0.14)}`, boxShadow: `0 40px 120px ${wall(0.6)}` }}>
+        <Footage at={SHOTS.frontal} frame={{ x: 0, y: 0, width: rect.width, height: rect.height }} focal={FRONTAL_FOCAL} zoom={lerp(1, 1.04, ramp(frame, 0, enter))} filter={gradeFilter(grade, dim)} />
         <div style={{ position: "absolute", inset: 0, opacity: labelsOut }}>
           <Tag style={{ left: 22, top: 22 }}>{copy.rawTag}</Tag>
           <Tag style={{ right: 22, top: 22 }}>{copy.rawMeta}</Tag>
@@ -55,11 +60,11 @@ export function HookScene({ language }: { language: FilmLanguage }) {
       <div
         style={{
           position: "absolute",
-          left: 80,
-          top: 1200,
-          width: 920,
-          height: 124,
-          borderRadius: 62,
+          left: prompt.left,
+          top: prompt.top,
+          width: prompt.width,
+          height: prompt.height,
+          borderRadius: prompt.height / 2,
           background: C.relief,
           border: `1.5px solid ${send > 0 ? signal(0.35 + send * 0.5) : ivory(0.16)}`,
           display: "flex",
@@ -70,16 +75,16 @@ export function HookScene({ language }: { language: FilmLanguage }) {
           translate: `0 ${promptOut * 80}px`,
         }}
       >
-        <span style={{ fontFamily: FONT.mono, fontSize: 40, color: C.signal }}>&gt;</span>
-        <span style={{ flex: 1, fontFamily: FONT.body, fontSize: 48, fontWeight: 500, letterSpacing: "-0.02em", color: C.ivory, whiteSpace: "nowrap" }}>
+        <span style={{ fontFamily: FONT.mono, fontSize: prompt.font - 8, color: C.signal }}>&gt;</span>
+        <span style={{ flex: 1, fontFamily: FONT.body, fontSize: prompt.font, fontWeight: 500, letterSpacing: "-0.02em", color: C.ivory, whiteSpace: "nowrap" }}>
           {copy.prompt.slice(0, typed)}
-          <span style={{ display: "inline-block", width: 4, height: 52, marginLeft: 4, translate: "0 9px", background: C.signal, opacity: caretOn ? 1 : 0 }} />
+          <span style={{ display: "inline-block", width: 4, height: prompt.font + 4, marginLeft: 4, translate: "0 9px", background: C.signal, opacity: caretOn ? 1 : 0 }} />
         </span>
         <span
           style={{
-            width: 80,
-            height: 80,
-            borderRadius: 40,
+            width: prompt.height - 44,
+            height: prompt.height - 44,
+            borderRadius: (prompt.height - 44) / 2,
             display: "grid",
             placeItems: "center",
             background: send > 0 ? C.signal : ivory(0.1),
@@ -104,6 +109,7 @@ export function HookScene({ language }: { language: FilmLanguage }) {
  */
 export function TitleScene({ language }: { language: FilmLanguage }) {
   const frame = useCurrentFrame();
+  const { width, height, land } = useStage();
   const copy = TRAILER_COPY[language];
   const slams = TIMING.cues.titleSlams.map((at) => at - 120);
   const subAt = TIMING.cues.titleSub - 120;
@@ -114,9 +120,17 @@ export function TitleScene({ language }: { language: FilmLanguage }) {
 
   return (
     <div style={{ position: "absolute", inset: 0, background: C.wall }}>
-      <Footage at={SHOTS.frontal} frame={{ x: 0, y: 0, width: 1080, height: 1920 }} focal={FRONTAL_FOCAL} zoom={lerp(1, 1.1, ramp(frame, 0, 120, (t) => t))} filter={`${LOOK.graded} brightness(0.46)`} />
-      <div style={{ position: "absolute", inset: 0, background: `linear-gradient(180deg, ${wall(0.55)} 0%, ${wall(0.15)} 38%, ${wall(0.25)} 62%, ${wall(0.85)} 100%)` }} />
-      <div style={{ position: "absolute", left: 80, right: 60, top: 640, translate: `${hit.x}px ${hit.y}px`, opacity: 1 - out, filter: `blur(${out * 8}px)`, scale: `${lerp(1, 0.96, out)}` }}>
+      <Footage at={SHOTS.frontal} frame={{ x: 0, y: 0, width, height }} focal={FRONTAL_FOCAL} zoom={lerp(1, 1.1, ramp(frame, 0, 120, (t) => t))} filter={`${LOOK.graded} brightness(${land ? 0.6 : 0.46})`} />
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: land
+            ? `linear-gradient(90deg, ${wall(0.82)} 0%, ${wall(0.45)} 42%, transparent 68%), linear-gradient(180deg, transparent 70%, ${wall(0.6)} 100%)`
+            : `linear-gradient(180deg, ${wall(0.55)} 0%, ${wall(0.15)} 38%, ${wall(0.25)} 62%, ${wall(0.85)} 100%)`,
+        }}
+      />
+      <div style={{ position: "absolute", ...(land ? { left: 120, top: 280 } : { left: 80, right: 60, top: 640 }), translate: `${hit.x}px ${hit.y}px`, opacity: 1 - out, filter: `blur(${out * 8}px)`, scale: `${lerp(1, 0.96, out)}` }}>
         {copy.title.map((line, i) => {
           const s = slam(frame, slams[i]);
           return (

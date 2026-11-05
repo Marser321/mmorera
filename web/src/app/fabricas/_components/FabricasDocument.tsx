@@ -1,5 +1,6 @@
 import { ServicePage } from "@/components/service/ServicePage";
 import { BriefToPiece } from "@/components/premium/fabricas/BriefToPiece";
+import { StyleShowcase } from "@/components/premium/fabricas/StyleShowcase";
 import { VideoGallery, type VideoGalleryItem } from "@/components/premium/fabricas/VideoGallery";
 import { SERVICE_PAGES } from "@/data/servicePages";
 import { BRIEF_TO_PIECE } from "@/data/briefToPiece";
@@ -15,6 +16,7 @@ export function FabricasDocument({ language }: { language: "es" | "en" }) {
     title: item.title,
     poster: { src: galleryMedia(item.poster, language), alt: item.title },
     src: galleryMedia(item.src, language),
+    landscape: item.landscape ? { src: galleryMedia(item.landscape.src, language), poster: galleryMedia(item.landscape.poster, language) } : undefined,
     duration: clock(item.duration),
     tools: [item.tools[language]],
     note: item.label[language],
@@ -22,5 +24,6 @@ export function FabricasDocument({ language }: { language: "es" | "en" }) {
   return <ServicePage content={content} language={language} howItWorks={<>
     <BriefToPiece pieces={BRIEF_TO_PIECE} language={language} label={content.howItWorks?.title?.[language]} />
     <VideoGallery videos={videos} language={language} />
+    <StyleShowcase language={language} />
   </>} />;
 }

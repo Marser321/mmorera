@@ -27,6 +27,8 @@ export interface VideoGalleryEntry {
   /** Un archivo, o uno por idioma cuando la pieza lleva texto en pantalla. */
   src: string | LocalizedText;
   poster: string | LocalizedText;
+  /** Versión horizontal (16:9) para pantallas anchas; `src` es la vertical. */
+  landscape?: { src: string | LocalizedText; poster: string | LocalizedText };
   /** Duración en segundos. */
   duration: number;
   tools: LocalizedText;

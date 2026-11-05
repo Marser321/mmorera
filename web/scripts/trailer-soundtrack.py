@@ -10,12 +10,12 @@ Uso: python scripts/trailer-soundtrack.py <salida.wav> [--chars <letras del pedi
 Forma (120 BPM, compás = 2 s, en La menor: Am · F · C · G):
   0-4 s    entrada: colchón suave, el tecleo del pedido y el Enter
   4-8 s    título: tres golpes graves
-  8-20 s   el pulso: bombo, platillos y bajo; palmas desde los 12 s
-  20-24 s  subida: redoble y barrido de ruido hasta la caída
-  24-32 s  la caída: todo junto, con arpegio
-  32-36 s  respiro: la revisión, tres campanas y el sello
-  36-40 s  el código: arpegio digital y subida
-  40-46 s  cierre: golpe, campanas y el acorde que se apaga
+  8-20 s   el pulso de las ediciones: bombo, platillos y bajo; palmas desde los 12 s
+  20-24 s  el puente: redoble y barrido de ruido hasta la caída
+  24-47 s  la caída, los siete estilos: todo junto, con arpegio y un acento en cada corte
+  47-51 s  el muro: respiro a medio tiempo, campanas, el cambio de idioma y el sello
+  51-54 s  el código: arpegio digital y subida
+  54-60 s  cierre: golpe, campanas y el acorde que se apaga
 """
 
 import json
@@ -235,8 +235,11 @@ CHORDS = [
 AM = CHORDS[0]
 
 
+FINALE_BAR = int(round(TIMING["cues"]["finale"] / TIMING["bar"]))
+
+
 def chord_at(bar: int):
-    return AM if bar >= 20 else CHORDS[bar % 4]
+    return AM if bar >= FINALE_BAR else CHORDS[bar % 4]
 
 
 def pad_layer(bus: Bus, start_bar: int, end_bar: int, ceiling_for_bar) -> None:
@@ -244,7 +247,7 @@ def pad_layer(bus: Bus, start_bar: int, end_bar: int, ceiling_for_bar) -> None:
         chord = chord_at(bar)
         at = bar * BAR
         length = BAR + 0.5 if bar < end_bar - 1 else BAR
-        if bar == 20:
+        if bar == FINALE_BAR:
             length = TOTAL - at
         t = tvec(length)
         ceiling = ceiling_for_bar(bar)
@@ -258,9 +261,9 @@ def pad_layer(bus: Bus, start_bar: int, end_bar: int, ceiling_for_bar) -> None:
                     left += wave_
                 if side in (1, 2):
                     right += wave_
-        attack = 0.35 if bar not in (20,) else 0.05
+        attack = 0.35 if bar != FINALE_BAR else 0.05
         e = env(t, attack, 0.5, length)
-        if bar == 20:
+        if bar == FINALE_BAR:
             e = e * np.clip(1 - (t - 3.2) / 2.8, 0, 1)
         bus.put(at, shape(left * e, low=160, high=ceiling * 0.6) * 0.13, right=shape(right * e, low=160, high=ceiling * 0.6) * 0.13)
 
@@ -269,22 +272,27 @@ def build(prompt_chars: int) -> np.ndarray:
     drums, bass, pad, keys, fx, verb_send = Bus(), Bus(), Bus(), Bus(), Bus(), Bus()
     cues = TIMING["cues"]
     kick_hits: list[float] = []
+    drop = sec(cues["drop"])
+    wall = sec(cues["wall"])
+    code = sec(cues["code"])
+    finale = sec(cues["finale"])
 
-    # Colchón: oscuro al principio, se abre hacia la caída; se cierra en la revisión.
+    # Colchón: oscuro al principio, se abre hacia la caída; respira en el muro.
     def pad_ceiling(bar: int) -> float:
-        if bar < 2:
+        at = bar * BAR
+        if at < 4:
             return 1600
-        if bar < 10:
+        if at < 20:
             return 3200
-        if bar < 12:
-            return 3200 + (bar - 9) * 1400
-        if bar < 16:
-            return 7000
-        if bar < 18:
-            return 2000
+        if at < drop:
+            return 3200 + (at - 18) * 700
+        if at < wall - 1:
+            return 7000 if int((at - drop) // 8) % 2 == 0 else 5600
+        if at < code:
+            return 2200
         return 4800
 
-    pad_layer(pad, 0, 21, pad_ceiling)
+    pad_layer(pad, 0, FINALE_BAR + 1, pad_ceiling)
 
     # 0–4 s: el tecleo del pedido y el Enter.
     for i in range(prompt_chars):
@@ -305,10 +313,11 @@ def build(prompt_chars: int) -> np.ndarray:
         kick_hits.append(at)
     bass.put(sec(cues["titleSlams"][0]), bass_note(midi(33), 3.6, 0.15) * np.exp(-tvec(3.6) * 0.7), 0.55)
 
-    # 8–24 s: el pulso, con palmas desde los 12 s y la subida desde los 20 s.
-    drop = sec(cues["drop"])
-    for b in range(16, 47):  # pulsos de 8 s a 23.5 s
+    # 8–24 s: el pulso de las ediciones, con palmas desde los 12 s y el puente desde los 20 s.
+    for b in range(int(8 / BEAT), int(drop / BEAT)):
         at = b * BEAT
+        if at >= drop - 1.0:  # medio compás sin bombo antes de la caída
+            continue
         drums.put(at, kick(), 0.82)
         kick_hits.append(at)
         drums.put(at + BEAT / 2, hat(), 0.5, pan=0.25)
@@ -318,32 +327,34 @@ def build(prompt_chars: int) -> np.ndarray:
         if at >= 16:
             drums.put(at + BEAT / 4, hat(0.04), 0.22, pan=-0.3)
             drums.put(at + 3 * BEAT / 4, hat(0.04), 0.22, pan=0.35)
-    for e in range(32):  # bajo en corcheas, 8–24 s
+    for e in range(int((drop - 8) / (BEAT / 2))):  # bajo en corcheas
         at = 8 + e * BEAT / 2
         if at >= drop - 0.25:
             break
         bar = int(at // BAR)
         root = chord_at(bar)["root"] - 12
         bass.put(at, bass_note(midi(root + (12 if (e % 4 == 3) else 0)), BEAT / 2 - 0.02), 0.5)
-    # Redoble y barrido hacia la caída.
-    for i in range(16):
-        at = 20 + i * (BEAT / 2)
+    bridge = sec(cues["bridgeLines"][0])
+    for i in range(16):  # redoble del puente
+        at = bridge + i * (BEAT / 2)
         drums.put(at, clap(0.18), 0.12 + 0.02 * i, pan=0.0)
     for i in range(8):
-        at = 22 + i * (BEAT / 4)
+        at = drop - 2 + i * (BEAT / 4)
         drums.put(at, clap(0.12), 0.3 + 0.03 * i)
     for s16 in range(int((drop - 8) / (BEAT / 4))):
         at = 8 + s16 * BEAT / 4
         accent = 1.0 if s16 % 4 == 2 else 0.55
         drums.put(at, shaker(), 0.22 * accent, pan=0.45 if s16 % 2 else -0.45)
-    fx.put(20.0, riser(4.0), 0.42)
+    for at in [sec(f) for f in cues["bridgeLines"]]:
+        fx.put(at, impact(1.2, 0.5), 0.22)
+    fx.put(bridge, riser(drop - bridge), 0.42)
     fx.put(drop - 0.5, whoosh(0.5), 0.35)
 
-    # 24–32 s: la caída.
+    # 24–47 s: la caída y los siete estilos.
     fx.put(drop, impact(2.8, 1.1), 0.6)
     verb_send.put(drop, impact(2.8, 1.0), 0.35)
     fx.put(drop, hat(open_hat=True), 0.4)
-    for b in range(48, 64):  # pulsos de 24 s a 31.5 s
+    for b in range(int(drop / BEAT), int(wall / BEAT)):
         at = b * BEAT
         drums.put(at, kick(0.5, 1.1), 0.9)
         kick_hits.append(at)
@@ -353,57 +364,78 @@ def build(prompt_chars: int) -> np.ndarray:
         for k in range(4):
             drums.put(at + k * BEAT / 4, hat(0.05), 0.2 + (0.14 if k == 2 else 0), pan=0.3 if k % 2 else -0.3)
         drums.put(at + BEAT / 2, hat(open_hat=True), 0.12, pan=0.15)
-    for e in range(16):  # bajo en corcheas con saltos de octava
+        if at >= drop + 16:
+            drums.put(at + 3 * BEAT / 4, shaker(), 0.25, pan=-0.4)
+    for e in range(int((wall - drop) / BEAT)):  # bajo en corcheas con saltos de octava
         for half in (0, 1):
             at = drop + e * BEAT + half * BEAT / 2
             bar = int(at // BAR)
             root = chord_at(bar)["root"] - 12
             bass.put(at, bass_note(midi(root + (12 if half else 0)), BEAT / 2 - 0.02, 0.35), 0.55)
-    for s in range(64):  # arpegio en semicorcheas
+    for s in range(int((wall - drop) / (BEAT / 4))):  # arpegio en semicorcheas
         at = drop + s * BEAT / 4
         bar = int(at // BAR)
         tones = chord_at(bar)["voices"]
-        note = tones[[0, 2, 1, 3, 2, 1, 3, 0][s % 8]] + 12
+        second_half = int((at - drop) // 8) % 2 == 1
+        order = [0, 2, 1, 3, 2, 1, 3, 0] if not second_half else [3, 1, 2, 0, 3, 2, 1, 2]
+        note = tones[order[s % 8]] + (24 if second_half and s % 8 == 0 else 12)
         sound = pluck(midi(note))
         keys.put(at, sound, 0.16, pan=-0.35 if s % 2 else 0.35)
         keys.put(at + 0.375, sound, 0.06, pan=0.35 if s % 2 else -0.35)  # eco de corchea con puntillo
         verb_send.put(at, sound, 0.05)
-
-    # 32–36 s: el respiro (la revisión). Bajo largo, campanas y el sello.
-    bass.put(32.0, bass_note(midi(chord_at(16)["root"] - 12), 2.0, 0.1) * np.exp(-tvec(2.0) * 0.6), 0.45)
-    bass.put(34.0, bass_note(midi(chord_at(17)["root"] - 12), 2.0, 0.1) * np.exp(-tvec(2.0) * 0.6), 0.45)
-    for i, frame in enumerate(cues["reviewChecks"]):
+    for frame in cues["styleCuts"][1:]:  # un acento en cada corte de estilo
         at = sec(frame)
-        ding = bell(midi([76, 79, 83][i]), 1.4)
-        keys.put(at, ding, 0.2, pan=[-0.25, 0.0, 0.25][i])
-        verb_send.put(at, ding, 0.35)
-    stamp = sec(cues["reviewStamp"])
-    drums.put(stamp, kick(0.6, 1.2), 0.75)
-    fx.put(stamp, impact(1.2, 0.6), 0.25)
-    kick_hits.append(stamp)
+        fx.put(at - 0.3, whoosh(0.3), 0.22, pan=RNG.uniform(-0.5, 0.5))
+        fx.put(at, impact(1.0, 0.55), 0.2)
+        chord = chord_at(int(at // BAR))
+        stab = sum(pluck(midi(note + 12), 0.5, 4200) for note in chord["voices"][1:]) * 0.5
+        keys.put(at, stab, 0.12)
+        verb_send.put(at, stab, 0.12)
 
-    # 36–40 s: el código. Pulso a medio tiempo, arpegio digital y subida.
-    for b in range(72, 80):
+    # 47–51 s: el muro. Medio tiempo, campanas, el cambio de idioma y el sello.
+    fx.put(wall, impact(1.8, 0.7), 0.3)
+    for b in range(int(wall / BEAT), int(code / BEAT)):
+        at = b * BEAT
+        if (b - int(wall / BEAT)) % 2 == 0:
+            drums.put(at, kick(0.5), 0.7)
+            kick_hits.append(at)
+        drums.put(at + BEAT / 2, hat(), 0.3, pan=0.2)
+    bass.put(wall, bass_note(midi(chord_at(int(wall // BAR))["root"] - 12), 2.0, 0.1) * np.exp(-tvec(2.0) * 0.6), 0.45)
+    for i, note in enumerate([76, 79, 83]):
+        ding = bell(midi(note), 1.4)
+        keys.put(wall + i * BEAT, ding, 0.18, pan=[-0.25, 0.0, 0.25][i])
+        verb_send.put(wall + i * BEAT, ding, 0.3)
+    flip = sec(cues["wallFlip"])
+    for k in range(6):  # el cambio de idioma: un parpadeo digital
+        keys.put(flip + k * 0.035, pluck(midi(88 - k * 2), 0.06, 7000), 0.07, pan=0.5 - k * 0.2)
+    stamp = sec(cues["wallStamp"])
+    drums.put(stamp, kick(0.6, 1.2), 0.8)
+    fx.put(stamp, impact(1.4, 0.7), 0.3)
+    verb_send.put(stamp, impact(1.4, 0.7), 0.2)
+    kick_hits.append(stamp)
+    bass.put(stamp, bass_note(midi(chord_at(int(stamp // BAR))["root"] - 12), 1.5, 0.1) * np.exp(-tvec(1.5) * 0.8), 0.45)
+
+    # 51–54 s: el código. Pulso a medio tiempo, arpegio digital y subida.
+    for b in range(int(code / BEAT), int(finale / BEAT)):
         at = b * BEAT
         if b % 2 == 0:
             drums.put(at, kick(0.5), 0.8)
             kick_hits.append(at)
         drums.put(at + BEAT / 2, hat(), 0.4, pan=0.2)
-    for s in range(32):
-        at = 36 + s * BEAT / 4
+    for s in range(int((finale - code) / (BEAT / 4))):
+        at = code + s * BEAT / 4
         bar = int(at // BAR)
         tones = chord_at(bar)["voices"]
         note = tones[s % 4] + (12 if s % 8 >= 4 else 0)
         keys.put(at, pluck(midi(note), 0.12, 5000), 0.11, pan=-0.4 if s % 2 else 0.4)
-    for e in range(16):
-        at = 36 + e * BEAT / 2
+    for e in range(int((finale - code) / (BEAT / 2))):
+        at = code + e * BEAT / 2
         bar = int(at // BAR)
         bass.put(at, bass_note(midi(chord_at(bar)["root"] - 12), BEAT / 2 - 0.03, 0.3), 0.45)
-    finale = sec(cues["finale"])
-    fx.put(38.0, riser(2.0), 0.36)
+    fx.put(finale - 2.0, riser(2.0), 0.36)
     fx.put(finale - 0.45, whoosh(0.45), 0.3)
 
-    # 40–46 s: el cierre.
+    # 54–60 s: el cierre.
     fx.put(finale, impact(4.0, 1.15), 0.62)
     verb_send.put(finale, impact(4.0, 1.0), 0.45)
     drums.put(finale, kick(0.8, 1.3), 0.85)
@@ -414,10 +446,11 @@ def build(prompt_chars: int) -> np.ndarray:
         verb_send.put(finale + i * BEAT / 2, sound, 0.4)
     bass.put(finale, bass_note(midi(33), 5.5, 0.08) * np.exp(-tvec(5.5) * 0.55), 0.55)
 
-    # Barridos suaves en los cortes de escena (no en la caída ni en el cierre).
+    # Barridos suaves en los cortes de escena (no en la caída, los estilos ni el cierre).
+    accented = {0.0, drop, finale, sec(cues["titleSlams"][0]), *[sec(f) for f in cues["styleCuts"]]}
     for scene in TIMING["scenes"]:
         at = sec(scene["from"])
-        if at in (0.0, drop, finale, sec(cues["titleSlams"][0])):
+        if at in accented:
             continue
         fx.put(at - 0.32, whoosh(0.32), 0.18, pan=RNG.uniform(-0.5, 0.5))
 
