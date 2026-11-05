@@ -279,7 +279,7 @@ export function HomeExperience() {
         {/* Invitación a recorrer: un punto que baja por una línea fina */}
         <a
           href="#servicios"
-          className="fade-up-in absolute bottom-10 right-12 hidden flex-col items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-foreground/55 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:flex"
+          className="fade-up-in absolute bottom-10 right-12 z-20 hidden flex-col items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-foreground/55 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:flex"
           style={{ animationDelay: "1.2s" }}
         >
           <span className="[writing-mode:vertical-rl]">{c.scrollCue}</span>

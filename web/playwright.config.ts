@@ -20,8 +20,15 @@ export default defineConfig({
   projects: [
     {
       name: "chromium",
-      testIgnore: "**/._*",
+      testIgnore: ["**/._*", "**/tablet.spec.ts"],
       use: { ...devices["Desktop Chrome"] },
+    },
+    {
+      // Safari en iPad: motor WebKit, sin mouse y con ancho de escritorio. Las
+      // fallas de toque de T51 solo aparecían con esta combinación.
+      name: "ipad",
+      testMatch: "**/tablet.spec.ts",
+      use: { ...devices["Desktop Safari"], viewport: { width: 1180, height: 820 }, hasTouch: true },
     },
   ],
   webServer: externalBaseUrl

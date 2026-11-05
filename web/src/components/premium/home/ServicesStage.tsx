@@ -235,7 +235,7 @@ export function ServicesStage() {
                 data-active={isActive || undefined}
                 onPointerEnter={(event) => { if (event.pointerType === "mouse") focusDoor(index); }}
                 onFocus={() => focusDoor(index)}
-                className={`group relative min-w-0 overflow-hidden rounded-[1.6rem] border bg-[#0B0B0A] transition-[flex-grow,border-color] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${isActive ? "border-white/25" : "border-white/10"}`}
+                className={`group relative flex min-w-0 flex-col justify-end overflow-hidden rounded-[1.6rem] border bg-[#0B0B0A] transition-[flex-grow,border-color] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${isActive ? "border-white/25" : "border-white/10"}`}
                 style={{ flexGrow: isActive ? "var(--door-open)" : 1, flexBasis: 0 }}
               >
                 <div aria-hidden="true" className={`absolute inset-0 transition-opacity duration-700 motion-reduce:transition-none ${isActive ? "opacity-100" : "opacity-35"}`}>
@@ -259,8 +259,11 @@ export function ServicesStage() {
                   {service.shortTitle[language]}
                 </p>
 
-                {/* Abierta: nombre, promesa y la puerta a su página */}
-                <div className={`absolute inset-x-6 bottom-6 transition-opacity duration-500 ${isActive ? "opacity-100 delay-200" : "opacity-0"}`}>
+                {/* Abierta: nombre, promesa y la puerta a su página. Este bloque no lleva
+                    posición para que el enlace cubra toda la puerta, abierta o cerrada:
+                    en una pantalla táctil no hay hover, así que tocarla lleva al servicio.
+                    Es un ítem flex: el z-10 lo sube sobre el degradado sin cambiar eso. */}
+                <div className={`z-10 mx-6 mb-6 transition-opacity duration-500 ${isActive ? "opacity-100 delay-200" : "opacity-0"}`}>
                   <span aria-hidden="true" className="block h-px w-10" style={{ backgroundColor: service.accent }} />
                   <h3 className="mt-4 text-[clamp(1.75rem,2.6vw,2.6rem)] font-medium leading-[1] tracking-[-0.045em] text-[#ECE7DD]">
                     <Link

@@ -124,8 +124,10 @@ export function ChapterDock({ chapters, language }: { chapters: DockChapter[]; l
                 key={item.id}
                 type="button"
                 onClick={() => scrollTo(item.id)}
-                onMouseEnter={() => setHoveredId(item.id)}
-                onMouseLeave={() => setHoveredId(null)}
+                // Solo con mouse: iOS simula mouseenter al tocar y, si la página cambia
+                // en ese momento, lo toma como hover y se traga el primer toque.
+                onPointerEnter={(event) => { if (event.pointerType === "mouse") setHoveredId(item.id); }}
+                onPointerLeave={() => setHoveredId(null)}
                 whileTap={{ scale: 0.92 }}
                 aria-label={label}
                 aria-current={isActive ? "true" : undefined}
