@@ -38,7 +38,7 @@ export default function LegalPage() {
           title: "Demos de otros sitios",
           content: (
             <>
-                <p>Algunos casos abren, dentro de una ventana, una demo del sitio de un cliente. Ese sitio es de un tercero y puede usar sus propias cookies según su política. Solo se carga si tú abres la demo.</p>
+                <p>Algunas páginas abren, dentro del sitio, una demo de un cliente o un recorrido o video alojado en otro servicio, como Kuula, SuperSplat o YouTube. Esos sitios son de terceros y pueden usar sus propias cookies según su política. Solo se cargan si tú los abres.</p>
             </>
           ),
         },
