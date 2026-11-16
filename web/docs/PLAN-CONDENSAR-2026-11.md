@@ -20,7 +20,8 @@ Regla de siempre: se reestructura y no se recorta. Las cinemáticas, las partíc
 5. **Inglés primero en títulos y metadatos**, con «AI automation» como término principal. «Orquestación» queda para el relato.
 6. **Carga:** los arreglos de la sección 1.3, en tareas chicas y medidas una por una.
 7. **Atribución a AD Media (regla fija, pedida por Mario el 16/11):** los casos que vendió AD Media Solution, aunque los haya construido Mario solo, llevan una línea chica y tenue, nunca como titular, logo ni elemento destacado. AD Media no se usa para vender (tarea C10).
-8. **VPS:** en la sección 4 está lo que hace falta. Es una fase aparte que va después de condensar, y no se despliega nada sin tu OK.
+8. **Equipo de modelos frontera (pedido del 16/11):** mostrar con trabajo real, sin logos, qué hizo cada modelo en cada caso y cómo se auditan entre sí. Es la sección 8 y la tarea C14.
+9. **VPS:** en la sección 4 está lo que hace falta. Es una fase aparte que va después de condensar, y no se despliega nada sin tu OK.
 
 ---
 
@@ -222,6 +223,7 @@ Cada tarea es una rama desde `origin/main` y un PR. No se publica nada sin el OK
 | C8 | Menú nuevo y sitemap | `IslandBar`, `sitemap.ts` | Cinco entradas y el contacto |
 | C9 | Metadatos en inglés con «AI automation» | `lib/seo` | Títulos y descripciones revisados |
 | C10 | Atribución discreta a AD Media: campo `soldVia`, línea al pie de cada caso marcado y test. Además, sacar AD Media de las pruebas de venta: hoy figura en «Sistemas que ya construí» (/sistemas), en «Casos que lo demuestran» (/capacidades/automatizacion), en «Casos parecidos» y como caso propio `ad-media-solution` | `data/projectCases.ts`, `CaseStudy.tsx`, `data/capabilityCases.ts`, `data/servicePages` | Cada caso marcado lleva su línea al pie y AD Media no aparece en ningún titular, tarjeta ni metadato. Conviene hacerla junto con C2 o antes |
+| C14 | **Equipo de modelos en cada caso y en la página técnica** (sección 8): bloque «El equipo detrás de cada entrega» en `/como-lo-construyo` y campo `crew` en `ProjectCase` con una línea corta en la ficha. Solo se publica lo que tenga registro | `data/projectCases.ts`, `CaseStudy.tsx`, página técnica | Cada caso con registro muestra quién construyó, quién auditó y quién hizo las escenas; los casos sin registro no muestran la línea |
 | P0 | Portada de Cana Vacations en WebP o AVIF y el grano más liviano | `public/portfolio/brands/cana-vacations`, `public/social/grano.png` | `/casos-de-exito` baja de 2,8 MB a unos 1,4 MB |
 | P1 | Películas de autor con `preload="none"` y póster | `AuthorTrailer`, `AuthorManifestoScene` | No se baja video hasta que alguien le da play |
 | P2 | Identificar el chunk de 280 KB y montar Remotion Player y three.js al entrar en pantalla | `FilmCanvas`, `OrchestrationCore`, `TechParticleField` | TBT por debajo de 150 ms en frío en `/en` y `/capacidades` |
@@ -316,3 +318,61 @@ Cómo hacerlo:
 - Formatos: 16:9 y 9:16, en ES y EN, más un corte de 6 s para la entrada al pasar por el caso (C11).
 - Antes de renderizar hay que mirar el espacio en disco.
 - **El recorrido intermedio** (la sección «Tu ruta», con el globo y la tarjeta de embarque) se puede pulir aparte. En el tráiler va poco o nada.
+
+---
+
+## 8. El equipo de modelos frontera (pedido de Mario, 16/11)
+
+### 8.1 Lo que pidió
+
+Mario no trabaja con una sola herramienta.
+- **Modelos:** coordina un equipo de modelos frontera (Claude Code, Codex y Gemini) con roles distintos que se auditan entre sí. Unos rinden más en frontend, otros en backend y otros en seguridad.
+- **Imágenes y cinemáticas:** usa los modelos de Flow.
+- **Editores:** cambia según el proyecto entre Antigravity, VS Code y Cursor.
+- **Acceso:** paga el nivel más alto de estos modelos y quiere que se entienda que su trabajo vale más por eso.
+
+Hoy mucha gente le atribuye todo a una herramienta («lo hizo Claude Code»), y la web no lo aclara. Lo quiere mostrar **con trabajo real, no con logos**: qué herramienta hizo qué en cada caso, por qué las combina y cómo se revisan antes de entregar.
+
+### 8.2 Evidencia que ya existe (de acá sale el contenido, sin inventar)
+
+- **La web misma:** el tablero de la tríada (`web/docs/triada/TABLERO.md`), con decisiones, dueños y estados por tarjeta. También están las entregas por tarea (`web/docs/triada/entregas/`), los arranques de Codex (`web/docs/triada/codex/`) y los prompts por modelo (`PROMPT-codex.md`, `PROMPT-gemini.md`). Ahí se ve quién construyó, quién auditó y quién integró cada pieza. Solo Claude integra a `main`.
+- **Los films de los casos:** Gemini arma los kits verificados (`docs/films/kits/`, `GEMINI_FILMS.md`, `check-case-kit`) y Claude los anima en Remotion (`docs/films/CLAUDE_ANIMATION_PLAYBOOK.md`).
+- **Las escenas generadas:** las cinemáticas de Vespera (ventanilla, avión y ciudades) y las placas de la fábrica de contenido salen de Flow y de generadores de imagen.
+- **El trabajo para clientes:** la QA con informes de Codex y la revisión de Claude sobre lo que entregó otro modelo. Se puede contar sin nombrar al cliente.
+
+### 8.3 Propuesta
+
+**a) En la página técnica (`/como-lo-construyo`), un bloque corto.** Título «The team behind every build» (ES: «El equipo detrás de cada entrega»). Lleva tres piezas:
+- Una tabla de roles en texto, sin logos. Los roles exactos los confirma Mario (pregunta 12):
+
+  | Modelo o herramienta | Rol | Lo audita |
+  | --- | --- | --- |
+  | Claude Code | Arquitectura, integración, animación en código y revisión final | Codex o Gemini, según la tarea |
+  | Codex | Implementación por tareas, pruebas y QA | Claude |
+  | Gemini | Investigación, kits verificados y crítica externa | Claude |
+  | Flow (Google) | Escenas, cinemáticas e imágenes | Mario, cuadro por cuadro |
+  | Antigravity, VS Code o Cursor | El editor que pide cada proyecto | — |
+
+- Un diagrama del circuito: brief → un modelo construye → otro audita → Mario aprueba → entrega.
+- **Un ejemplo real:** una tarjeta del tablero contada en tres líneas (quién la hizo, qué encontró la auditoría y qué se cambió). Encaja con lo que pide el mercado: «un fallo honesto y qué se cambió» (Ronda 16/11).
+
+**b) En cada caso, una línea, sin logos y discreta.** Va debajo de la ficha de antes y después, por ejemplo «Built by Claude Code · audited by Codex · scenes by Flow». Sale de un campo nuevo en `ProjectCase`:
+
+```ts
+crew?: { tool: "Claude Code" | "Codex" | "Gemini" | "Flow" | string; role: LocalizedText; evidence: string }[];
+// evidence: ruta al registro (tarjeta del tablero, entrega o kit). Sin evidencia no se publica la línea (test).
+```
+
+**c) El argumento, en una frase de la home o de /sobre-mi, sin cifras de cuánto paga.** EN: «A team of frontier models, each in its lane, checking each other's work, and one person accountable for what ships.» ES: «Un equipo de modelos frontera, cada uno en lo suyo, que se revisan entre sí, y una persona que responde por lo que se entrega.» Se apoya en la «capa humana» del posicionamiento.
+
+Cuidados:
+- No ocupar más que una línea por caso, para no sumar ruido (sección 1).
+- En formularios y textos, para agentes nombrar solo el Vercel AI SDK. No decir LangChain, LangGraph, CrewAI ni Mastra.
+- No mostrar logos de marcas ajenas como si fueran clientes o socios.
+
+### 8.4 Preguntas nuevas
+
+12. **Roles:** ¿qué modelo usás hoy para frontend, cuál para backend y cuál para seguridad? ¿Y cuál audita a cuál? La tabla de 8.3 es un borrador.
+13. **Casos con línea:** ¿qué casos tienen registro de quién hizo qué? Hoy hay evidencia de la propia web (la tríada), de los films de los casos y de Vespera. Para los casos viejos, ¿lo reconstruimos con vos o los dejamos sin línea?
+14. **El costo:** ¿querés decir explícitamente que pagás el nivel más alto de acceso, o alcanza con «modelos frontera», que lo da a entender sin hablar de plata?
+
