@@ -70,6 +70,8 @@ function PanelActions({ project, compact = false }: { project: ProjectCase; comp
           ? `${isEs ? "Ver el caso y su film" : "View the case and its film"} · ${flagshipRuntime(project.slug)}`
           : isEs ? "Ver el caso" : "View the case"}
       </Link>
+      {/* Sin sitio ni demo publicados (te_Cargo), no hay demo en vivo que abrir. */}
+      {(project.liveUrl || project.demoUrl) && (
       <DialogTrigger asChild>
         <button
           type="button"
@@ -79,6 +81,7 @@ function PanelActions({ project, compact = false }: { project: ProjectCase; comp
           <ArrowUpRight className="h-3.5 w-3.5" />
         </button>
       </DialogTrigger>
+      )}
       {project.liveUrl && (
         <a
           href={project.liveUrl}

@@ -406,5 +406,41 @@
       }
     ],
     "capturedAt": "2026-11-16"
+  },
+  "oficio": {
+    "reel": {
+      "mp4": "/portfolio/reels/oficio.mp4",
+      "webm": "/portfolio/reels/oficio.webm",
+      "poster": "/portfolio/reels/oficio-poster.jpg"
+    },
+    "gallery": [
+      {
+        "src": "/portfolio/shots/oficio-desktop-1.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/oficio-mobile-1.jpg",
+        "device": "mobile"
+      }
+    ],
+    "capturedAt": "2026-11-16"
+  },
+  "te-cargo": {
+    "reel": {
+      "mp4": "/portfolio/reels/te-cargo.mp4",
+      "webm": "/portfolio/reels/te-cargo.webm",
+      "poster": "/portfolio/reels/te-cargo-poster.jpg"
+    },
+    "gallery": [
+      {
+        "src": "/portfolio/shots/te-cargo-desktop-1.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/te-cargo-mobile-1.jpg",
+        "device": "mobile"
+      }
+    ],
+    "capturedAt": "2026-11-16"
   }
 }

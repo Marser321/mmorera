@@ -26,7 +26,8 @@ describe("galería de los casos", () => {
       for (const view of getCaseGallery(slug)?.views ?? []) {
         assert.ok(view.tablet || view.mobile, `${slug}/${view.id} solo tiene computadora`);
         assert.ok(view.label.es && view.label.en, `${slug}/${view.id} no tiene sus dos idiomas`);
-        assert.match(view.url, /^https:\/\//);
+        if (view.url) assert.match(view.url, /^https:\/\//);
+        else assert.ok(view.path, `${slug}/${view.id} no tiene dirección ni ruta`);
       }
     }
   });

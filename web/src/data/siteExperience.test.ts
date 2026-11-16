@@ -26,12 +26,13 @@ describe("premium site experience", () => {
     assert.deepEqual(Object.values(TRACK_MODE_QUERY), ["crear", "construir", "escalar"]);
   });
 
-  test("curates six featured demos ahead of the archive, Fenix first", () => {
-    assert.equal(FEATURED_CASES.length, 6);
+  // Ocho destacados desde el 16/11: Mario sumó sus productos Oficio y te_Cargo como casos destacados.
+  test("curates eight featured demos ahead of the archive, Fenix first", () => {
+    assert.equal(FEATURED_CASES.length, 8);
     assert.equal(ARCHIVE_CASES.length, 9);
-    assert.equal(PROJECT_CASES.length, 15);
+    assert.equal(PROJECT_CASES.length, 17);
     assert.equal(PROJECT_CASES[0].slug, "fenix-medical-center");
-    assert.deepEqual(PROJECT_CASES.slice(0, 6).map(({ status }) => status), Array(6).fill("featured"));
+    assert.deepEqual(PROJECT_CASES.slice(0, 8).map(({ status }) => status), Array(8).fill("featured"));
     assert.ok(!FEATURED_CASES.some(({ slug }) => slug === "ad-media-solution"));
   });
 
@@ -40,8 +41,11 @@ describe("premium site experience", () => {
     assert.ok(PROJECT_CASES.every((project) => project.evidence.length > 0 && project.media.length > 0));
   });
 
+  // te_Cargo no está publicada: se muestra con su film y capturas, y dice que falta (ficha `pending`).
+  const UNPUBLISHED = new Set(["te-cargo"]);
+
   test("keeps every featured demo openable in the live viewer", () => {
-    assert.ok(FEATURED_CASES.every((project) => Boolean(project.liveUrl)));
+    assert.ok(FEATURED_CASES.every((project) => Boolean(project.liveUrl) || (UNPUBLISHED.has(project.slug) && project.proof?.pending)));
     assert.ok(FEATURED_CASES.every((project) => Boolean(project.accent)));
     assert.ok(
       PROJECT_CASES.filter((project) => project.embeddable === false).every((project) => project.media.length > 0),

@@ -20,7 +20,7 @@ import { chromium, type Browser, type BrowserContextOptions, type Page } from "p
 import sharp from "sharp";
 import { PROJECT_CASES } from "../src/data/projectCases";
 import { GALLERY_DEVICES, type CaseGalleryManifest, type GalleryDevice, type GalleryShot } from "../src/data/caseGallery";
-import { GALLERY_TARGETS, type GalleryView } from "./gallery-targets";
+import { GALLERY_LOGIN, GALLERY_TARGETS, type GalleryView } from "./gallery-targets";
 import { coveringOverlay, dismissOverlays, HIDE_FLOATING, readOnly } from "./lib/capture";
 
 const ROOT = process.cwd();
@@ -35,7 +35,7 @@ const CONTEXTS: Record<GalleryDevice, BrowserContextOptions & { outWidth: number
   mobile: { viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true, outWidth: 600 },
 };
 
-const BROKEN_PAGE = /this page couldn.?t load|application error|page not found|página no encontrada|something went wrong|404/i;
+const BROKEN_PAGE = /this page couldn.?t load|application error|page not found|página no encontrada|something went wrong|404|ERR_CONNECTION_REFUSED|no se puede acceder a este sitio/i;
 /** Desvío de brillo por debajo del cual la captura es un panel vacío. */
 const MIN_CONTRAST = 7;
 /** Bits distintos (de 256) por debajo de los cuales dos capturas son la misma. */
@@ -96,8 +96,11 @@ async function captureView(page: Page, baseUrl: string, view: GalleryView, devic
 async function captureCase(browser: Browser, slug: string, manifest: CaseGalleryManifest) {
   const project = PROJECT_CASES.find((item) => item.slug === slug);
   const views = GALLERY_TARGETS[slug];
-  if (!project?.liveUrl || !views) throw new Error("no tiene sitio en vivo u objetivos");
-  const baseUrl = project.liveUrl;
+  const login = GALLERY_LOGIN[slug];
+  const baseUrl = login?.captureUrl ?? project?.liveUrl;
+  if (!project || !baseUrl || !views) throw new Error("no tiene sitio en vivo u objetivos");
+  // Con demo que pide entrar, cada vista enlaza a la entrada de la demo; sin sitio publicado, no enlaza.
+  const publicUrl = (view: GalleryView) => (login?.captureUrl ? project.liveUrl : new URL(view.path, baseUrl).href);
   const dir = path.join(OUT_DIR, slug);
   mkdirSync(dir, { recursive: true });
 
@@ -105,10 +108,14 @@ async function captureCase(browser: Browser, slug: string, manifest: CaseGallery
   for (const device of GALLERY_DEVICES) {
     const { outWidth, ...options } = CONTEXTS[device];
     const context = await browser.newContext({ ...options, reducedMotion: "no-preference", locale: "es-419" });
-    await readOnly(context);
+    await readOnly(context, login?.allow);
     // tsx agrega __name() a las funciones con nombre; dentro del navegador no existe.
     await context.addInitScript("window.__name = (fn) => fn;");
     const page = await context.newPage();
+    if (login?.run) {
+      await page.goto(baseUrl, { waitUntil: "networkidle", timeout: 45_000 });
+      await login.run(page);
+    }
     for (const view of views) {
       try {
         const raw = await captureView(page, baseUrl, view, device);
@@ -129,7 +136,8 @@ async function captureCase(browser: Browser, slug: string, manifest: CaseGallery
   const complete = views.flatMap((view) => {
     const entry = shots.get(view.id);
     if (!entry?.desktop || !(entry.tablet || entry.mobile)) return [];
-    return [{ id: view.id, label: view.label, url: new URL(view.path, baseUrl).href, desktop: entry.desktop, tablet: entry.tablet, mobile: entry.mobile }];
+    const url = publicUrl(view);
+    return [{ id: view.id, label: view.label, ...(url ? { url } : { path: view.path }), desktop: entry.desktop, tablet: entry.tablet, mobile: entry.mobile }];
   });
   manifest[slug] = { capturedAt: new Date().toISOString().slice(0, 10), views: complete };
   console.log(`✓ ${slug}: ${complete.length}/${views.length} vistas, ${complete.filter((view) => view.tablet && view.mobile).length} con las tres pantallas`);

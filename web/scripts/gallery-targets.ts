@@ -7,6 +7,8 @@
  *
  * Las rutas salen de scripts/discover-case-routes.ts.
  */
+import type { Page } from "playwright";
+
 export interface GalleryView {
   id: string;
   path: string;
@@ -16,7 +18,50 @@ export interface GalleryView {
 
 const view = (id: string, path: string, es: string, en: string, section?: string): GalleryView => ({ id, path, label: { es, en }, section });
 
+/**
+ * Casos cuya demo pide entrar antes de mostrar el panel. `allow` es la única
+ * petición que escribe y se deja pasar: abre una sesión de demo con datos
+ * sintéticos y no crea negocios ni clientes.
+ */
+export interface GalleryLogin {
+  /** Dónde corre la demo hoy, si todavía no responde en el `liveUrl` del caso. */
+  captureUrl?: string;
+  allow?: RegExp;
+  run?: (page: Page) => Promise<void>;
+}
+
+export const GALLERY_LOGIN: Record<string, GalleryLogin> = {
+  // Sin publicar: se captura del build local (npm run dev en Desktop/tecargo). Sin cuentas ni datos reales.
+  "te-cargo": { captureUrl: "http://localhost:5173/" },
+  oficio: {
+    captureUrl: "https://srv1803764.hstgr.cloud/",
+    allow: /\/api\/auth\/demo$/,
+    run: async (page) => {
+      await page.getByRole("button", { name: "Entrar", exact: true }).first().click();
+      await page.getByRole("button", { name: /^Dueño/ }).first().click();
+      await page.getByText("Operación").first().waitFor({ timeout: 15_000 });
+      // La invitación al recorrido queda cerrada para toda la sesión (sessionStorage).
+      await page.getByRole("button", { name: "Cerrar la invitación" }).click({ timeout: 8_000 }).catch(() => {});
+    },
+  },
+};
+
 export const GALLERY_TARGETS: Record<string, GalleryView[]> = {
+  "te-cargo": [
+    view("inicio", "/", "Inicio", "Home"),
+    view("dos-maneras", "/propuesta", "Dos maneras de cargar", "Two ways to charge", "Dos maneras de cargar"),
+    view("por-dentro", "/interfaces", "Las pantallas por dentro", "The screens inside"),
+    view("propuesta", "/propuesta", "Propuesta para un piloto", "Pilot proposal"),
+  ],
+  // Panel de la demo de lavadero, como dueño. Datos sintéticos. Sin la portada: con sesión abierta muestra el panel.
+  oficio: [
+    view("operacion", "/?view=operation", "Operación del día", "Today's operation"),
+    view("conversaciones", "/?view=conversations", "Conversaciones", "Conversations"),
+    view("automatizaciones", "/?view=automations", "Automatizaciones", "Automations"),
+    view("caja", "/?view=cash", "Caja y cobros", "Cash and payments"),
+    view("equipo", "/?view=staff", "Equipo y comisiones", "Team and commissions"),
+    view("web", "https://srv1803764.hstgr.cloud:8443/atlantico", "La web de reservas del negocio", "The business's booking site"),
+  ],
   "ad-media-solution": [
     view("inicio", "/", "Inicio", "Home"),
     view("servicios", "/servicios", "Servicios", "Services"),
