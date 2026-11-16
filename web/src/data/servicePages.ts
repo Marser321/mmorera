@@ -71,13 +71,10 @@ export const SERVICE_PAGES = {
       ),
     },
     deliverables: deliverablesOf("crm-automation"),
-    tools: t(
-      "Con n8n, Make o GoHighLevel según tu proceso, o una herramienta a medida si el flujo es liviano.",
-      "With n8n, Make or GoHighLevel depending on your process, or a custom tool when the flow is light."
-    ),
+    // Las herramientas y la arquitectura bajan a «Cómo lo construyo» (#como-lo-construyo, C3/C4).
     proof: {
-      title: t("Sistemas que ya construí", "Systems I've already built"),
-      slugs: ["new-brothers-barberia", "lb-elite-wash-detail", "rangel-oviedo-group"],
+      title: t("Pruebas, no promesas", "Proof, not promises"),
+      slugs: ["lb-elite-wash-detail", "new-brothers-barberia", "fenix-medical-center"],
     },
     hiring: HIRING,
     closing: {

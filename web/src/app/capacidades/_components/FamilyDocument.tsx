@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { localePath } from "@/config/site";
+import { ENGINE_LINK, engineHref } from "@/data/engineRoom";
 import { CAPABILITIES_PAGE, CAPABILITY_SERVICE, CAPABILITY_SLUGS } from "@/data/branchPages";
 import { SKILL_ORBIT, techsForFamily } from "@/data/skillOrbit";
 import type { Family } from "@/data/techStack";
@@ -37,6 +38,9 @@ export function FamilyDocument({ family, language }: { family: Family; language:
               <li key={tech.name} className="rounded-full border border-foreground/15 px-3 py-1.5 text-sm text-foreground/80">{tech.label?.[language] ?? tech.name}</li>
             ))}
           </ul>
+          <Link href={engineHref(language)} className="mt-5 inline-flex min-h-11 items-center gap-2 text-sm font-medium text-signal hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+            {ENGINE_LINK[language]}<ArrowUpRight aria-hidden="true" className="h-4 w-4" />
+          </Link>
         </section>
         <section aria-labelledby="familia-servicio">
           <h2 id="familia-servicio" className={heading}>{f.service[language]}</h2>

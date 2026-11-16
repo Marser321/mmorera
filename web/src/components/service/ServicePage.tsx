@@ -2,6 +2,7 @@ import type { ReactNode, Ref } from "react";
 import Link from "next/link";
 import { ArrowUpRight, Check } from "lucide-react";
 import { localePath } from "@/config/site";
+import { ENGINE_LINK, engineHref } from "@/data/engineRoom";
 import { getProjectCase } from "@/data/projectCases";
 import { getCaseMedia } from "@/data/caseMedia";
 import { TryItButtons } from "@/components/shared/TryItButtons";
@@ -18,6 +19,7 @@ const CHAPTERS = {
   proof: { id: "casos", icon: "briefcase", es: "Casos", en: "Cases" },
   hiring: { id: "contratar", icon: "handshake", es: "Contratar", en: "Hiring" },
   closing: { id: "hablemos", icon: "message", es: "Hablemos", en: "Let's talk" },
+  engine: { id: "como-lo-construyo", icon: "layers", es: "Cómo lo construyo", en: "How I build" },
 } satisfies Record<string, DockChapter>;
 
 export interface ServicePageProps {
@@ -25,6 +27,8 @@ export interface ServicePageProps {
   language: "es" | "en";
   howItWorks?: ReactNode;
   heroRef?: Ref<HTMLElement>;
+  /** La parte técnica, después del cierre y con su ancla (solo /sistemas). */
+  engine?: ReactNode;
 }
 
 /**
@@ -33,7 +37,7 @@ export interface ServicePageProps {
  * la prueba con su imagen, cómo se contrata y el cierre. La barra flotante
  * lleva sus capítulos para saltar de una escena a otra.
  */
-export function ServicePage({ content, language, howItWorks, heroRef }: ServicePageProps) {
+export function ServicePage({ content, language, howItWorks, heroRef, engine }: ServicePageProps) {
   const { hero, audience, deliverables, tools, proof, hiring, closing } = content;
   const cases = proof?.slugs.flatMap(slug => { const project = getProjectCase(slug); return project ? [project] : []; }) ?? [];
   const cta = (action: ServicePageCta) => <Link href={localePath(language, action.href ?? "/aplicar")} className="inline-flex min-h-12 items-center gap-3 rounded-full bg-foreground px-6 py-3 text-sm font-semibold text-background hover:opacity-85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{action.label[language]}<ArrowUpRight aria-hidden="true" className="h-4 w-4" /></Link>;
@@ -48,6 +52,7 @@ export function ServicePage({ content, language, howItWorks, heroRef }: ServiceP
     cases.length > 0 && CHAPTERS.proof,
     hasHiring && CHAPTERS.hiring,
     hasClosing && CHAPTERS.closing,
+    Boolean(engine) && CHAPTERS.engine,
   ];
   const chapters = candidates.filter((chapter): chapter is DockChapter => Boolean(chapter));
 
@@ -76,6 +81,7 @@ export function ServicePage({ content, language, howItWorks, heroRef }: ServiceP
         {tools && <div>
           <p aria-hidden="true" className="font-mono text-[10px] uppercase tracking-[.16em] text-foreground/60">{language === "es" ? "Herramientas" : "Tools"}</p>
           <p data-service-section="tools" className="mt-4 text-sm leading-relaxed text-foreground/75">{tools[language]}</p>
+          <Link href={engineHref(language)} className="mt-3 inline-flex min-h-11 items-center gap-2 text-sm font-medium text-signal hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{ENGINE_LINK[language]}<ArrowUpRight aria-hidden="true" className="h-4 w-4" /></Link>
         </div>}
       </div>
     </section>}
@@ -102,7 +108,11 @@ export function ServicePage({ content, language, howItWorks, heroRef }: ServiceP
             </Link>}
             <div className="flex flex-1 flex-col p-5 sm:p-6">
               <h3 className="text-2xl font-medium leading-tight text-foreground"><Link href={href} className="hover:text-signal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{project.title[language]}</Link></h3>
-              <p className="my-4 max-w-prose text-sm leading-relaxed text-foreground/75">{project.summary[language]}</p>
+              {project.proof?.metric.verified ? <p data-service-proof-metric className="mt-4 flex items-baseline gap-3">
+                <span className="text-4xl font-medium leading-none tracking-[-.04em] text-signal">{project.proof.metric.value}</span>
+                <span className="text-sm leading-snug text-foreground/75">{project.proof.metric.label[language]}</span>
+              </p> : null}
+              <p className="my-4 max-w-prose text-sm leading-relaxed text-foreground/75">{project.proof?.now[language] ?? project.summary[language]}</p>
               <div className="mt-auto"><TryItButtons links={project.tryIt} language={language} idPrefix={`service-${project.slug}`} /></div>
             </div>
           </article>;
@@ -125,6 +135,8 @@ export function ServicePage({ content, language, howItWorks, heroRef }: ServiceP
         {closing.cta && cta(closing.cta)}
       </div>
     </section>}
+
+    {engine}
 
     {chapters.length > 1 && <ChapterDock chapters={chapters} language={language} />}
   </main>;
