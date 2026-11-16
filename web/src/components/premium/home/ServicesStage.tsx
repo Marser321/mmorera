@@ -41,6 +41,7 @@ const copy = {
     flowLabel: "Producto propio · te_Cargo",
     contentLabel: "Escenas generadas con IA · Vespera",
     realCase: "Caso real",
+    seeCase: "ver el caso",
   },
   en: {
     eyebrow: "02 — Services",
@@ -53,6 +54,7 @@ const copy = {
     flowLabel: "Own product · te_Cargo",
     contentLabel: "AI-generated scenes · Vespera",
     realCase: "Real case",
+    seeCase: "view the case",
   },
 } as const;
 
@@ -139,6 +141,7 @@ export function ServicesStage() {
         <ul className="mt-8 hidden h-[min(60svh,600px)] min-h-[480px] gap-3 lg:flex [--door-open:1.9] xl:[--door-open:2.5]">
           {SERVICE_SOLUTIONS.map((service, index) => {
             const isActive = index === active;
+            const caseSlug = getDoorFilm(service.id, language)?.caseSlug;
             return (
               <li
                 key={service.id}
@@ -154,12 +157,26 @@ export function ServicesStage() {
                 </div>
                 <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(11,11,10,.92)_0%,rgba(11,11,10,.35)_16%,rgba(11,11,10,0)_30%,rgba(11,11,10,0)_42%,rgba(11,11,10,.9)_64%,rgba(11,11,10,.97)_78%,#0B0B0A_100%)]" />
 
-                {/* Arriba: número y qué se está viendo */}
-                <div className="pointer-events-none absolute inset-x-5 top-5 flex items-center justify-between gap-3">
+                {/* Arriba: número y qué se está viendo. Si el film sale de un caso con página, el rótulo lleva a ese caso. */}
+                <div className="pointer-events-none absolute inset-x-5 top-5 z-20 flex items-center justify-between gap-3">
                   <span className="font-mono text-xs text-[#ECE7DD]/70">{String(index + 1).padStart(2, "0")}</span>
-                  <span className={`truncate font-mono text-[10px] uppercase tracking-[0.14em] text-[#ECE7DD]/70 transition-opacity duration-500 ${isActive ? "opacity-100" : "opacity-0"}`}>
-                    {visualLabel(service, c, language)}
-                  </span>
+                  {caseSlug ? (
+                    <Link
+                      href={localePath(language, `/casos-de-exito/${caseSlug}`)}
+                      data-door-case={caseSlug}
+                      tabIndex={isActive ? undefined : -1}
+                      aria-hidden={isActive ? undefined : true}
+                      className={`-my-3 inline-flex min-w-0 items-center gap-1.5 rounded py-3 font-mono text-[10px] uppercase tracking-[0.14em] text-[#ECE7DD]/70 transition-[opacity,color] duration-500 hover:text-[#ECE7DD] focus-visible:text-[#ECE7DD] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ECE7DD]/70 ${isActive ? "pointer-events-auto opacity-100" : "opacity-0"}`}
+                    >
+                      <span className="truncate">{visualLabel(service, c, language)}</span>
+                      <span className="sr-only">: {c.seeCase}</span>
+                      <ArrowUpRight aria-hidden="true" className="h-3 w-3 shrink-0" />
+                    </Link>
+                  ) : (
+                    <span className={`truncate font-mono text-[10px] uppercase tracking-[0.14em] text-[#ECE7DD]/70 transition-opacity duration-500 ${isActive ? "opacity-100" : "opacity-0"}`}>
+                      {visualLabel(service, c, language)}
+                    </span>
+                  )}
                 </div>
 
                 {/* En reposo: el nombre de canto, de abajo hacia arriba */}

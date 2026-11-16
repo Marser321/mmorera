@@ -158,6 +158,25 @@ test("cada puerta de servicio abre con su film a sangre", async ({ page }) => {
   }
 });
 
+test("el rótulo de una puerta lleva al caso que se ve en su film", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+  const door = page.locator('[data-door="ai-software"]');
+  await door.scrollIntoViewIfNeeded();
+  await door.hover();
+  const label = door.locator('[data-door-case="vespera"]');
+  await expect(label).toBeVisible();
+  await expect(label).toHaveAttribute("href", "/casos-de-exito/vespera");
+  // Cerrada, la puerta no deja el enlace al alcance del teclado.
+  await page.locator('[data-door="web-ecommerce"]').hover();
+  await expect(label).toHaveAttribute("tabindex", "-1");
+  // La de agentes muestra la demo guiada del sitio: su rótulo no enlaza.
+  await expect(page.locator('[data-door="booking-payments"] [data-door-case]')).toHaveCount(0);
+  await door.hover();
+  await label.click();
+  await expect(page).toHaveURL(/\/casos-de-exito\/vespera$/);
+});
+
 test("/fabricas da el trailer horizontal a la pantalla ancha y el vertical al teléfono", async ({ browser }) => {
   test.setTimeout(90_000);
   for (const { viewport, file } of [
