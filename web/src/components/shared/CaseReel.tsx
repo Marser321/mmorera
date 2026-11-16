@@ -17,6 +17,7 @@ export function CaseReel({
   alt,
   className,
   playing = true,
+  restartOnPlay = false,
   priority = false,
   sizes = "(max-width: 1024px) 100vw, 50vw",
 }: {
@@ -25,6 +26,11 @@ export function CaseReel({
   className?: string;
   /** Permite que el padre pause el reel (p. ej. una escena inactiva). */
   playing?: boolean;
+  /**
+   * Para films que cuentan algo en orden: vuelve al primer cuadro cada vez que
+   * arranca y, en pausa, muestra el póster en vez del cuadro donde quedó.
+   */
+  restartOnPlay?: boolean;
   priority?: boolean;
   sizes?: string;
 }) {
@@ -52,11 +58,14 @@ export function CaseReel({
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    if (inView && playing) void video.play().catch(() => {});
-    else video.pause();
-  }, [inView, playing, mounted]);
+    if (inView && playing) {
+      if (restartOnPlay) video.currentTime = 0;
+      void video.play().catch(() => {});
+    } else video.pause();
+  }, [inView, playing, mounted, restartOnPlay]);
 
   const showVideo = mounted && !prefersReduced;
+  const videoVisible = ready && (!restartOnPlay || (inView && playing));
 
   return (
     <div ref={containerRef} className={cn("relative overflow-hidden bg-card", className)}>
@@ -73,7 +82,7 @@ export function CaseReel({
           onCanPlay={() => setReady(true)}
           className={cn(
             "absolute inset-0 h-full w-full object-cover object-top transition-opacity duration-700",
-            ready ? "opacity-100" : "opacity-0",
+            videoVisible ? "opacity-100" : "opacity-0",
           )}
         >
           <source src={reel.webm} type='video/webm; codecs="av01.0.05M.08"' />
