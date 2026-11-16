@@ -288,7 +288,7 @@ Disco: Remotion deja unos 400 MB en TEMP por corrida y C: tiene unos 7,5 GB libr
 
 Mario lo pidió primero. Decidió que la web de Milagros quede intacta (la sigue trabajando) y que la copia sea un proyecto distinto, de portfolio y sin la línea de AD Media.
 
-- **Dónde está:** `C:\Users\morer\viajes-demo`, un repo local nuevo y sin historial de la clienta, en los commits `7724cdb` y `48394b0`. No tiene remoto y no se publicó.
+- **Dónde está:** `C:\Users\morer\viajes-demo`, un repo local nuevo y sin historial de la clienta (no tiene remoto en GitHub). **Publicado el 16/11 con el OK de Mario** en https://vespera-demo-psi.vercel.app, en el proyecto `vespera-demo` de Vercel. No se indexa y no usa ningún dominio propio.
 - **Qué es:** Vespera, una agencia de viajes ficticia de «Europa para dos».
   - La portada es la cinemática del vuelo de la V11: la ventanilla, el avión que pasa y el aterrizaje en cada ciudad, con su tarjeta de destino y su sello.
   - Sigue «Tu ruta», con el globo y la tarjeta de embarque «Tú + 1» desde Nueva York.
@@ -299,7 +299,6 @@ Mario lo pidió primero. Decidió que la web de Milagros quede intacta (la sigue
 - **Falta:**
   1. Pulido «más guau», el pedido de Mario.
   2. Revisión en el teléfono.
-  3. Publicación como demo propia, con su OK.
   4. Grabar el reel y las capturas para sumarlo al sitio como caso (C11 y C13).
 
 ### 7.5 Tráiler de Vespera (pedido de Mario, 16/11, hay que hacerlo)
