@@ -9,6 +9,7 @@
  *   npx tsx scripts/capture-case-reels.ts            # casos destacados
  *   npx tsx scripts/capture-case-reels.ts --all      # todos los casos con liveUrl
  *   npx tsx scripts/capture-case-reels.ts lb-elite-wash-detail   # uno puntual
+ *   npx tsx scripts/capture-case-reels.ts --reel-only mr-studio-tattoo   # solo el reel, sin tocar las capturas
  *
  * Requiere ffmpeg en el PATH y el Chromium de Playwright instalado.
  */
@@ -42,6 +43,7 @@ type Manifest = Record<
 
 const args = process.argv.slice(2);
 const all = args.includes("--all");
+const reelOnly = args.includes("--reel-only");
 const only = args.filter((arg) => !arg.startsWith("--"));
 const targets = PROJECT_CASES.filter((project) => {
   if (!project.liveUrl) return false;
@@ -49,7 +51,6 @@ const targets = PROJECT_CASES.filter((project) => {
   return all || project.status === "featured";
 });
 
-const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
 async function settle(page: Page) {
   // Dos frames de pintura para que el scroll y las animaciones se asienten.
@@ -81,8 +82,12 @@ async function captureReel(page: Page, slug: string) {
   };
 
   for (let i = 0; i < HOLD_FRAMES; i++) await shoot();
+  // Velocidad constante en píxeles enteros. Con una curva de aceleración, el
+  // redondeo a píxeles hacía que el paso alternara (0, 3, 0, 3…) y el reel
+  // se veía a los tirones al arrancar y al frenar (Mario, 16/11).
+  const step = Math.max(1, Math.round(distance / SCROLL_FRAMES));
   for (let i = 1; i <= SCROLL_FRAMES; i++) {
-    const y = Math.round(easeInOut(i / SCROLL_FRAMES) * distance);
+    const y = Math.min(i * step, maxScroll);
     await page.evaluate((top) => window.scrollTo({ top, behavior: "instant" as ScrollBehavior }), y);
     await shoot();
   }
@@ -140,6 +145,14 @@ async function main() {
         const page = await desktop.newPage();
         await open(page, url);
         await captureReel(page, project.slug);
+        if (reelOnly && manifest[project.slug]) {
+          await desktop.close();
+          manifest[project.slug].capturedAt = new Date().toISOString().slice(0, 10);
+          writeFileSync(MANIFEST, `${JSON.stringify(manifest, null, 2)}
+`);
+          console.log("  ✓ reel (capturas sin cambios)");
+          continue;
+        }
         await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior }));
         const desktopShots = await captureGallery(page, project.slug, "desktop", [0, 1.1, 2.2]);
         await desktop.close();
