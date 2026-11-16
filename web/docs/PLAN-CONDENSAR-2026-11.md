@@ -301,3 +301,19 @@ Mario lo pidió primero. Decidió que la web de Milagros quede intacta (la sigue
   2. Revisión en el teléfono.
   3. Publicación como demo propia, con su OK.
   4. Grabar el reel y las capturas para sumarlo al sitio como caso (C11 y C13).
+
+### 7.5 Tráiler de Vespera (pedido de Mario, 16/11, hay que hacerlo)
+
+Mario aprobó la demo («muy completa, para la demo está genial») y pidió dejar anotado el video. Es el tráiler animado de este proyecto, como el de los demás casos de la web. Lleva las mejores escenas:
+
+1. **La cinemática de entrada:** la ventanilla y las nubes.
+2. **El avión viajando:** el avión de perfil cruzando el cielo.
+3. **Los destinos entrando:** la llegada a Venecia, París y Granada, que según Mario es «muy atractiva».
+4. **Las transiciones con el avión:** el avión cenital entre ciudades, los sellos y la tarjeta de cada destino.
+5. **El cierre:** la postal con el avión que rompe el marco, más el pasaje (B12 · 19:40 · 2A · 2B).
+
+Cómo hacerlo:
+- Se graba la demo en vivo con Playwright, scroll guiado y a 60 fps, o se arma en Remotion con los clips de `public/media/flow/v1` (ventanilla, avión y seis ciudades, ya generados) y las capas de las postales.
+- Formatos: 16:9 y 9:16, en ES y EN, más un corte de 6 s para la entrada al pasar por el caso (C11).
+- Antes de renderizar hay que mirar el espacio en disco.
+- **El recorrido intermedio** (la sección «Tu ruta», con el globo y la tarjeta de embarque) se puede pulir aparte. En el tráiler va poco o nada.
