@@ -401,19 +401,7 @@
         "device": "desktop"
       },
       {
-        "src": "/portfolio/shots/fenix-medical-center-desktop-2.jpg",
-        "device": "desktop"
-      },
-      {
-        "src": "/portfolio/shots/fenix-medical-center-desktop-3.jpg",
-        "device": "desktop"
-      },
-      {
         "src": "/portfolio/shots/fenix-medical-center-mobile-1.jpg",
-        "device": "mobile"
-      },
-      {
-        "src": "/portfolio/shots/fenix-medical-center-mobile-2.jpg",
         "device": "mobile"
       }
     ],
