@@ -47,6 +47,15 @@ export const GALLERY_LOGIN: Record<string, GalleryLogin> = {
 };
 
 export const GALLERY_TARGETS: Record<string, GalleryView[]> = {
+  // Demo propia con marca ficticia. El vuelo de la portada va en el tráiler del caso; acá, las secciones de abajo.
+  vespera: [
+    view("inicio", "/", "La ventanilla", "The window"),
+    view("tu-ruta", "/#tu-ruta", "Tu ruta, sobre el globo", "Your route, on the globe", "#tu-ruta"),
+    view("destinos", "/#destinos", "Postales en profundidad", "Postcards with depth", "#destinos"),
+    view("tu-plan", "/#tu-plan", "Lo que recibes", "What you get", "Cómo moverte entre ciudades"),
+    view("mas-destinos", "/#mas-destinos", "Más destinos", "More destinations", "#mas-destinos"),
+    view("pasaje", "/", "El pasaje, al pie", "The boarding pass, at the foot", "Tu pasaporte"),
+  ],
   "te-cargo": [
     view("inicio", "/", "Inicio", "Home"),
     view("dos-maneras", "/propuesta", "Dos maneras de cargar", "Two ways to charge", "Dos maneras de cargar"),

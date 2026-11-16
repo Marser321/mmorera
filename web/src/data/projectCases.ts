@@ -187,6 +187,68 @@ export const PROJECT_CASES: ProjectCase[] = [
     status: "featured",
   },
   {
+    // Demo propia de portfolio, con marca ficticia. Fuente: README.md de `viajes-demo` y la demo
+    // publicada (16/11). Todas las escenas son generadas con IA: no hay personas reales.
+    // No lleva la línea de AD Media: es un proyecto propio.
+    slug: "vespera",
+    title: t("Vespera", "Vespera"),
+    summary: t(
+      "Una agencia de viajes ficticia, «Europa para dos»: la portada es un vuelo que se recorre con el scroll, con la ventanilla, el avión entre nubes y la llegada a cada ciudad.",
+      "A fictional travel agency, “Europe for two”: the home page is a flight you scroll through, with the window, the plane among clouds and the arrival in each city.",
+    ),
+    tracks: ["create", "build"],
+    role: t("Demo propia de portfolio: dirección de arte, escenas generadas con IA y desarrollo.", "My own portfolio demo: art direction, AI-generated scenes and development."),
+    challenge: t(
+      "Que la web de una agencia de viajes a medida se viva como el viaje desde la primera pantalla, y no como un catálogo de paquetes.",
+      "Make a tailor-made travel agency's website feel like the trip from the first screen, not like a catalogue of packages.",
+    ),
+    constraints: [
+      t("Marca, nombre y pasajes ficticios: no representa a ninguna agencia real.", "A fictional brand, name and tickets: it doesn't represent any real agency."),
+      t("Todas las escenas y las imágenes son generadas con IA; no hay personas reales.", "Every scene and image is AI-generated; there are no real people."),
+      t("El vuelo se guía con el scroll y también se puede recorrer con el movimiento reducido.", "The flight is driven by scroll and can also be viewed with reduced motion."),
+    ],
+    decisions: [
+      t("La portada es el vuelo: la ventanilla, el avión de perfil y la llegada a cada ciudad entre nubes.", "The home page is the flight: the window, the plane in profile and the arrival in each city through the clouds."),
+      t("El avión visto desde arriba es la transición: descubre la ciudad que sigue por detrás de sus alas.", "The plane seen from above is the transition: it reveals the next city behind its wings."),
+      t("Cada destino deja su tarjeta y un sello de pasaporte, y el pie de la página es el pasaje.", "Each destination leaves its card and a passport stamp, and the page footer is the boarding pass."),
+      t("«Tu ruta»: un globo donde el recorrido se arma por ciudades, con la tarjeta de embarque para dos.", "“Your route”: a globe where the trip is built city by city, with a boarding pass for two."),
+      t("Postales en profundidad: cada ciudad en capas, con el avión que rompe el marco.", "Postcards with depth: each city in layers, with the plane breaking out of the frame."),
+    ],
+    result: t(
+      "Una demo publicada, en español y en inglés, que muestra cómo queda una landing de viajes contada como cine.",
+      "A published demo, in Spanish and English, that shows what a travel landing page looks like when it's told as cinema.",
+    ),
+    evidence: [t("Demo publicada con marca ficticia y escenas generadas con IA.", "Published demo with a fictional brand and AI-generated scenes.")],
+    stack: ["Next.js", "React", "TypeScript", "GSAP", "MapLibre", t("Video e imágenes con IA", "AI video and images")],
+    media: [{ src: "/portfolio/trailers/vespera-poster.jpg", alt: t("El avión de Vespera de perfil sobre un mar de nubes", "The Vespera plane in profile above a sea of clouds") }],
+    liveUrl: "https://vespera-demo-psi.vercel.app/",
+    tryIt: [
+      { href: t("https://vespera-demo-psi.vercel.app/", "https://vespera-demo-psi.vercel.app/en"), label: t("Recorre el vuelo de Vespera", "Take the Vespera flight"), kind: "demo", note: t("Marca ficticia. Baja con el scroll: el avión cruza entre ciudad y ciudad.", "Fictional brand. Scroll down: the plane crosses between one city and the next.") },
+    ],
+    embeddable: false,
+    accent: "#F08A72",
+    year: "2026",
+    kind: t("Demo propia · Agencia de viajes", "Own demo · Travel agency"),
+    proof: {
+      problem: t("Que una agencia de viajes a medida se sienta como el viaje desde la primera pantalla.", "Make a tailor-made travel agency feel like the trip from the first screen."),
+      now: t("Un vuelo guiado por el scroll, un armador de ruta sobre el globo y postales en profundidad.", "A scroll-driven flight, a route builder on a globe and postcards with depth."),
+      metric: { value: "6", label: t("destinos con su llegada entre nubes y su sello de pasaporte", "destinations with their arrival through the clouds and their passport stamp"), verified: true },
+      humanStep: t("El armador de ruta entrega una primera idea; las rutas, las fechas y la disponibilidad las confirma una persona.", "The route builder gives a first idea; a person confirms routes, dates and availability."),
+      pending: t("Es una demo con marca ficticia: no vende viajes ni toma reservas.", "It's a demo with a fictional brand: it doesn't sell trips or take bookings."),
+    },
+    trailer: {
+      mp4: "/portfolio/trailers/vespera.mp4",
+      webm: "/portfolio/trailers/vespera.webm",
+      poster: "/portfolio/trailers/vespera-poster.jpg",
+      seconds: 27,
+      caption: t(
+        "El vuelo de la portada, de corrido: la ventanilla, el avión y la llegada a Venecia, París y Granada. Escenas generadas con IA.",
+        "The home page flight, start to finish: the window, the plane and the arrival in Venice, Paris and Granada. AI-generated scenes.",
+      ),
+    },
+    status: "featured",
+  },
+  {
     // Producto propio. Fuente: oportunidades/crm-propio-relevamiento.md (recorrido del 15/11
     // sobre la demo pública con datos sintéticos) y el repo Marser321/lava.
     slug: "oficio",

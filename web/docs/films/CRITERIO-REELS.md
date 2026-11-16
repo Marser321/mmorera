@@ -31,3 +31,14 @@ con un poco más de criterio». Esto es lo que quedó.
 
 Inclinación máxima de 3° con un resorte amortiguado. Con 9° el video rotado
 titilaba al mover el mouse.
+
+## El tráiler de un caso (Vespera)
+
+Mario pidió que la demo de agencia de viajes tenga protagonismo, sobre todo por sus detalles cinemáticos: la ventanilla, el avión que viaja, los destinos que entran y las transiciones con el avión.
+
+- **El caso abre con su tráiler**, a todo el ancho y antes de la ficha (`trailer` en `projectCases.ts`, `CaseTrailer.tsx`). Se reproduce solo mientras se ve, sin sonido, y se puede pausar.
+- **Se hace en Remotion** con los clips de la demo (`src/components/films/vespera/`, `scripts/render-vespera.ts`), a sus 24 cuadros por segundo y sin acelerar nada.
+- **El avión cenital es la transición:** cruza a velocidad pareja y la ciudad que sigue aparece por detrás de sus alas.
+- **Sin frases:** nombres en su idioma, códigos y números. Un solo render sirve para los dos idiomas.
+- **El reel de la tarjeta** es un corte de seis segundos de las mismas escenas.
+- Los planos de origen están en `film-sources/vespera/README.md`.

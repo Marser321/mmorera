@@ -69,11 +69,23 @@ export interface ProjectCase {
   tryIt?: TryItLink[];
   /** Ficha de prueba: lo primero que se lee en la página del caso. */
   proof?: CaseProof;
+  /** Tráiler ya renderizado del caso: abre la página, antes de la ficha. */
+  trailer?: CaseTrailer;
   /**
    * Quién vendió el proyecto. Con "ad-media" la página muestra al pie una sola
    * línea tenue; nunca va en títulos, fichas, tarjetas ni metadatos.
    */
   soldVia?: "ad-media";
+}
+
+/** Un tráiler en video (scripts/render-vespera.ts): AV1 primero, H.264 de respaldo y su póster. */
+export interface CaseTrailer {
+  mp4: string;
+  webm: string;
+  poster: string;
+  seconds: number;
+  /** Qué se ve, en una línea, para quien no lo reproduce. */
+  caption: LocalizedText;
 }
 
 /**
