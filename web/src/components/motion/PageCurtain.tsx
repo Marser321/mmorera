@@ -180,7 +180,7 @@ export function PageCurtain() {
           transition={{ duration: 0.75, ease: EASE_IN_OUT }}
         >
           {/* Grano de pared: la cortina tapa la capa global, lleva el suyo. */}
-          <div className="absolute inset-0 bg-[url('/social/grano.webp')] bg-[length:384px_384px] opacity-[.055]" />
+          <div className="absolute inset-0 bg-[image:var(--grano-pared)] bg-[length:320px_320px] opacity-60 mix-blend-overlay" />
 
           {/* La palabra del destino, centrada detrás del sello (si no entra, se recorta parejo). */}
           {palabra && (
