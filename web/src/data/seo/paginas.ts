@@ -58,7 +58,7 @@ export const PAGINAS_SEO: Record<PaginaSeo, PaginaSeoData> = {
   },
   sistemas: {
     path: "/sistemas",
-    title: { es: "Automatización y CRM para negocios", en: "Automation & CRM for businesses" },
+    title: { es: "Automatización con IA y CRM: cómo lo hago", en: "AI Automation & CRM Systems: how I build them" },
     description: {
       es: "Conecto formularios, agenda, WhatsApp y CRM para que cada consulta entre ordenada, le llegue a quien corresponde y el seguimiento salga solo.",
       en: "I connect forms, calendar, WhatsApp and CRM so every enquiry comes in organized, reaches the right person and the follow-up goes out on its own.",

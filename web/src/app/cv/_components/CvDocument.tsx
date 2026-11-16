@@ -3,6 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 import { localePath, SITE_IDENTITY } from "@/config/site";
 import { FEATURED_CASES } from "@/data/projectCases";
 import { SKILL_ORBIT, techsForFamily } from "@/data/skillOrbit";
+import { ENGINE_LINK, engineHref } from "@/data/engineRoom";
 import { CvContactActions } from "./CvContactActions";
 
 const LINKEDIN = "https://www.linkedin.com/in/mario-sergio-morera-escobar-9a16521a4";
@@ -82,6 +83,7 @@ export function CvDocument({ language, embedded = false }: { language: "es" | "e
             <dd className="mt-2 text-sm leading-7 text-foreground/75">{techsForFamily(family.id).map(tech => tech.name).join(" · ")}</dd>
           </div>)}
         </dl>
+        <Link href={engineHref(language)} className="mt-6 inline-flex min-h-11 items-center gap-2 text-sm font-medium text-foreground/85 hover:text-signal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{ENGINE_LINK[language]}<ArrowUpRight aria-hidden="true" className="h-4 w-4 shrink-0" /></Link>
       </section>
 
       <section aria-labelledby="cv-cases" className="border-t border-foreground/15 py-10">
