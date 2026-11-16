@@ -19,7 +19,8 @@ Regla de siempre: se reestructura y no se recorta. Las cinemáticas, las partíc
 4. **Cada caso arranca con una ficha:** antes, después, un número, «qué falló y cómo se resolvió» y dónde aprueba una persona. El film va después y lo técnico, al final, plegado.
 5. **Inglés primero en títulos y metadatos**, con «AI automation» como término principal. «Orquestación» queda para el relato.
 6. **Carga:** los arreglos de la sección 1.3, en tareas chicas y medidas una por una.
-7. **VPS:** en la sección 4 está lo que hace falta. Es una fase aparte que va después de condensar, y no se despliega nada sin tu OK.
+7. **Atribución a AD Media (regla fija, pedida por Mario el 16/11):** los casos que vendió AD Media Solution, aunque los haya construido Mario solo, llevan una línea chica y tenue, nunca como titular, logo ni elemento destacado. AD Media no se usa para vender (tarea C10).
+8. **VPS:** en la sección 4 está lo que hace falta. Es una fase aparte que va después de condensar, y no se despliega nada sin tu OK.
 
 ---
 
@@ -139,7 +140,7 @@ Sale de la home: la tira Crear/Construir/Escalar (pasa a /sobre-mi, junto al mé
 - «Where it runs»: Vercel hoy y el VPS después, más los encabezados de seguridad que ya están en `next.config.ts`.
 - Un enlace a `/lab` para quien quiera tocar las demos.
 
-**`/sistemas` ordenada:** hero, para quién es, qué incluye, mapa operativo (ScrollFilm), sala de casos de uso, **dos o tres fichas de prueba** (L&B, New Brothers y AD Media) y cómo trabajamos. La línea de herramientas y los detalles de arquitectura pasan a la página técnica. Se saca el bloque «Sistemas que ya construí», que repite los casos de uso.
+**`/sistemas` ordenada:** hero, para quién es, qué incluye, mapa operativo (ScrollFilm), sala de casos de uso, **dos o tres fichas de prueba** (L&B, New Brothers y Fenix; AD Media no se usa como prueba de venta) y cómo trabajamos. La línea de herramientas y los detalles de arquitectura pasan a la página técnica. Se saca el bloque «Sistemas que ya construí», que repite los casos de uso.
 
 **`/ia` · `/en/ai-automation`** (rama nueva y corta). Título: «AI automation for small teams». Tiene tres puertas: agentes (atienden, responden y agendan), fábrica de contenido («From 10 hours to 2 per content cycle, in your brand voice, with your approval») y campañas (con una persona que decide). Lleva el film de la capacidad «IA aplicada» y una línea hacia la página técnica.
 
@@ -158,7 +159,11 @@ proof: {
   failed: LocalizedText;    // «qué falló y cómo se resolvió», en una línea
   humanApproval?: LocalizedText;
 }
+// Aparte de proof, en ProjectCase:
+soldVia?: "ad-media";       // casos que vendió AD Media Solution (lista de Mario, pregunta 8)
 ```
+
+**Atribución discreta (regla fija):** si `soldVia` vale `"ad-media"`, la página del caso muestra al pie una sola línea tenue en texto chico, como «Proyecto realizado para clientes de AD Media Solution» o «Built for clients of AD Media Solution». Va en el color de texto secundario de la marca y sin enlace, logo ni insignia. No aparece en la ficha de arriba, en los títulos, en los metadatos, en las tarjetas de la home ni en las ramas por rubro. Un test cuida que la línea salga en cada caso marcado y que «AD Media» no figure en ningún `title`, `summary` ni `metadata`.
 
 Orden de la página: la ficha, «Pruébalo tú», el film, la galería en tres pantallas y, al final y plegado, «Under the hood» (stack y arquitectura, con enlace a la página técnica). Si `metric.verified` es falso, no se publica el número.
 
@@ -216,6 +221,7 @@ Cada tarea es una rama desde `origin/main` y un PR. No se publica nada sin el OK
 | C7 | Rama `/ia` y el nuevo argumento de /fabricas | `app/ia`, `data/servicePages` | «10 h → 2 h» con aprobación humana |
 | C8 | Menú nuevo y sitemap | `IslandBar`, `sitemap.ts` | Cinco entradas y el contacto |
 | C9 | Metadatos en inglés con «AI automation» | `lib/seo` | Títulos y descripciones revisados |
+| C10 | Atribución discreta a AD Media: campo `soldVia`, línea al pie de cada caso marcado y test. Además, sacar AD Media de las pruebas de venta: hoy figura en «Sistemas que ya construí» (/sistemas), en «Casos que lo demuestran» (/capacidades/automatizacion), en «Casos parecidos» y como caso propio `ad-media-solution` | `data/projectCases.ts`, `CaseStudy.tsx`, `data/capabilityCases.ts`, `data/servicePages` | Cada caso marcado lleva su línea al pie y AD Media no aparece en ningún titular, tarjeta ni metadato. Conviene hacerla junto con C2 o antes |
 | P0 | Portada de Cana Vacations en WebP o AVIF y el grano más liviano | `public/portfolio/brands/cana-vacations`, `public/social/grano.png` | `/casos-de-exito` baja de 2,8 MB a unos 1,4 MB |
 | P1 | Películas de autor con `preload="none"` y póster | `AuthorTrailer`, `AuthorManifestoScene` | No se baja video hasta que alguien le da play |
 | P2 | Identificar el chunk de 280 KB y montar Remotion Player y three.js al entrar en pantalla | `FilmCanvas`, `OrchestrationCore`, `TechParticleField` | TBT por debajo de 150 ms en frío en `/en` y `/capacidades` |
@@ -235,3 +241,4 @@ P0, P1 y P2 son chicas y se pueden adelantar: no cambian nada de lo que se ve. C
 5. **VPS:** ¿qué proveedor y qué tamaño tiene? ¿Usa Docker? ¿Querés Cloudflare delante y un almacenamiento aparte para los videos?
 6. **Home:** ¿te parece bien dejar tres casos en la home (lavadero, barbería y carga) y pasar Fénix, Rangel Oviedo y Mr. Studio al archivo?
 7. **T56:** ¿publicamos los tráilers de servicio antes de condensar, para que la home nueva ya los use?
+8. **AD Media:** ¿cuál es la lista exacta de casos que pasaron por AD Media Solution? Hoy se sabe de L&B, Truckers Choice y Fenix, «y muchos más». ¿Qué pasa con el caso propio `ad-media-solution`, que hoy presenta a AD Media como cliente («socio de ingeniería de marca blanca»)? ¿Se archiva, se oculta o queda sin nombrar la agencia? ¿Y qué texto preferís para la línea, en español y en inglés?
