@@ -343,16 +343,19 @@ Hoy mucha gente le atribuye todo a una herramienta («lo hizo Claude Code»), y 
 ### 8.3 Propuesta
 
 **a) En la página técnica (`/como-lo-construyo`), un bloque corto.** Título «The team behind every build» (ES: «El equipo detrás de cada entrega»). Lleva tres piezas:
-- Una tabla de roles en texto, sin logos. Los roles exactos los confirma Mario (pregunta 12):
+- Una tabla de roles en texto, sin logos. **Roles confirmados por Mario el 16/11:**
 
-  | Modelo o herramienta | Rol | Lo audita |
+  | Parte del trabajo | Quién la hace | Por qué |
   | --- | --- | --- |
-  | Claude Code | Arquitectura, integración, animación en código y revisión final | Codex o Gemini, según la tarea |
-  | Codex | Implementación por tareas, pruebas y QA | Claude |
-  | Gemini | Investigación, kits verificados y crítica externa | Claude |
-  | Flow (Google) | Escenas, cinemáticas e imágenes | Mario, cuadro por cuadro |
-  | Antigravity, VS Code o Cursor | El editor que pide cada proyecto | — |
+  | Frontend (lo que se ve) | Codex, «Sol» y «Astra» (nombres a confirmar, pregunta 15) | Son los que mejor arman interfaces |
+  | Backend (lo que no se ve) | Claude Code | Arquitectura, datos e integraciones de fondo |
+  | Seguridad | «Astra» | «De los mejores en ciberseguridad» |
+  | Generalista, investigación y contenido | Gemini y NotebookLM (Google) | Bases de conocimiento enteras, cuadernos de guiones, investigación de producto y mercado, y estrategia según el presupuesto del cliente |
+  | Integraciones simples y tareas del día a día | Gemini | Transcripción, documentos, presentaciones y gestión audiovisual: cumplen de sobra y son los más económicos |
+  | Escenas, cinemáticas e imágenes | Flow (Google) | Generación de video e imagen |
+  | Editor | Antigravity, VS Code o Cursor | El que pida cada proyecto |
 
+- **La regla de la auditoría cruzada:** ningún modelo revisa su propio trabajo; lo audita otro de nivel frontera. Según Mario, un modelo que se revisa solo encuentra cerca del 20 % de sus errores y uno distinto llega hasta el 80 %. Antes de publicar el número hay que tener fuente o medirlo (pregunta 16). Mientras tanto se publica sin cifras o como «en mi experiencia».
 - Un diagrama del circuito: brief → un modelo construye → otro audita → Mario aprueba → entrega.
 - **Un ejemplo real:** una tarjeta del tablero contada en tres líneas (quién la hizo, qué encontró la auditoría y qué se cambió). Encaja con lo que pide el mercado: «un fallo honesto y qué se cambió» (Ronda 16/11).
 
@@ -365,6 +368,16 @@ crew?: { tool: "Claude Code" | "Codex" | "Gemini" | "Flow" | string; role: Local
 
 **c) El argumento, en una frase de la home o de /sobre-mi, sin cifras de cuánto paga.** EN: «A team of frontier models, each in its lane, checking each other's work, and one person accountable for what ships.» ES: «Un equipo de modelos frontera, cada uno en lo suyo, que se revisan entre sí, y una persona que responde por lo que se entrega.» Se apoya en la «capa humana» del posicionamiento.
 
+**d) La versión simple, sin tecnicismos (lo que Mario pidió).** Va donde lo lee cualquiera: home, /sobre-mi y la cabecera de cada servicio. Los nombres de modelos y el circuito quedan para la página técnica.
+
+> **ES:** Cada parte de tu proyecto la hace el mejor especialista. Como en un estudio, donde hay alguien que diseña, alguien que programa y alguien que revisa, yo trabajo con varias inteligencias artificiales de primer nivel. Cada una hace lo que mejor sabe hacer: una arma lo que ves, otra construye lo que no se ve, otra cuida la seguridad y otra investiga, escribe y ordena. Ninguna se corrige sola: otra revisa su trabajo antes de que llegue a vos, y así se encuentran muchos más errores. Para las tareas simples uso las más económicas, así tu presupuesto rinde más. Y yo respondo por el resultado.
+>
+> **EN:** Every part of your project goes to the best specialist. Like a studio with someone who designs, someone who builds and someone who reviews, I work with several top-tier AIs, each doing what it does best: one builds what you see, another builds what you don't, another guards security, and another researches, writes and organizes. None of them checks its own work: another one reviews it before it reaches you, and that catches far more mistakes. Simple tasks go to the most efficient ones, so your budget goes further. And I answer for the result.
+
+Versión de una línea, para la ficha de cada caso o la home: «Varias IA de primer nivel, cada una en lo suyo, revisándose entre sí. Y una persona que responde.» (EN: «Several top-tier AIs, each in its lane, checking each other. And one person accountable.»)
+
+**e) Para los sitios de clientes:** Mario quiere ir construyendo los sitios de clientes de esta manera. Puede ser una línea en la propuesta de cada servicio, «Cómo trabajamos: especialistas que se auditan», y en la sección de investigación y estrategia de la fábrica de contenido, donde entra lo de Google (investigación de producto y mercado y estrategia según el presupuesto).
+
 Cuidados:
 - No ocupar más que una línea por caso, para no sumar ruido (sección 1).
 - En formularios y textos, para agentes nombrar solo el Vercel AI SDK. No decir LangChain, LangGraph, CrewAI ni Mastra.
@@ -372,7 +385,9 @@ Cuidados:
 
 ### 8.4 Preguntas nuevas
 
-12. **Roles:** ¿qué modelo usás hoy para frontend, cuál para backend y cuál para seguridad? ¿Y cuál audita a cuál? La tabla de 8.3 es un borrador.
+12. ~~**Roles**~~ **Respondida el 16/11:** frontend con Codex, «Sol» y «Astra»; backend con Claude Code; seguridad con «Astra»; Gemini y NotebookLM como generalistas para investigación, contenido e integraciones simples; Flow para las escenas. Queda en la tabla de 8.3.
 13. **Casos con línea:** ¿qué casos tienen registro de quién hizo qué? Hoy hay evidencia de la propia web (la tríada), de los films de los casos y de Vespera. Para los casos viejos, ¿lo reconstruimos con vos o los dejamos sin línea?
 14. **El costo:** ¿querés decir explícitamente que pagás el nivel más alto de acceso, o alcanza con «modelos frontera», que lo da a entender sin hablar de plata?
-
+15. **Nombres:** «Sol» y «Astra» llegaron por dictado. ¿Son esos los nombres exactos de los modelos (o de los planes) y de qué proveedor es cada uno? Hacen falta para escribirlos bien en la página técnica.
+16. **El 20 % y el 80 %:** ¿de dónde sale el número? Si hay un estudio, lo citamos. Si es tu experiencia, va como «en mi experiencia». Y si querés, lo medimos con un caso propio: un modelo audita su código, otro audita el mismo código, y contamos lo que encuentra cada uno.
+17. **¿Dónde va lo técnico?** Dijiste «la página técnica, que es esa del sistema». ¿Querés que lo técnico viva en /sistemas, o en una página aparte (`/como-lo-construyo`) con /sistemas solo como servicio, como propone el plan?
