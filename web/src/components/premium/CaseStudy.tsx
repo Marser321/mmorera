@@ -16,6 +16,7 @@ import { getCaseMetrics, isShowcaseWorthy, pageSpeedReportUrl, type CaseMetrics 
 import { CaseFilmSection } from "@/components/films/CaseFilmSection";
 import { CaseGallery } from "@/components/premium/CaseGallery";
 import { CaseProofCard } from "@/components/premium/CaseProofCard";
+import { CaseTrailer } from "@/components/premium/CaseTrailer";
 import { buildCaseFilm } from "@/data/films/caseFilms";
 import { Reveal } from "@/components/scroll/Reveal";
 import { SplitReveal } from "@/components/motion/SplitReveal";
@@ -186,6 +187,9 @@ export function CaseStudy({ project, underTheHood }: { project: ProjectCase; und
             </div>
           </div>
         </header>
+
+        {/* Si el caso tiene tráiler, abre la página: el cine primero y después la ficha. */}
+        {project.trailer && <CaseTrailer trailer={project.trailer} name={project.title[language]} language={language} />}
 
         {project.proof && <CaseProofCard proof={project.proof} language={language} />}
 

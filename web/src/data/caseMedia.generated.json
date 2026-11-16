@@ -442,5 +442,23 @@
       }
     ],
     "capturedAt": "2026-11-16"
+  },
+  "vespera": {
+    "reel": {
+      "mp4": "/portfolio/reels/vespera.mp4",
+      "webm": "/portfolio/reels/vespera.webm",
+      "poster": "/portfolio/reels/vespera-poster.jpg"
+    },
+    "gallery": [
+      {
+        "src": "/portfolio/shots/vespera-desktop-1.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/vespera-mobile-1.jpg",
+        "device": "mobile"
+      }
+    ],
+    "capturedAt": "2026-11-16"
   }
 }

@@ -26,13 +26,13 @@ describe("premium site experience", () => {
     assert.deepEqual(Object.values(TRACK_MODE_QUERY), ["crear", "construir", "escalar"]);
   });
 
-  // Ocho destacados desde el 16/11: Mario sumó sus productos Oficio y te_Cargo como casos destacados.
-  test("curates eight featured demos ahead of the archive, Fenix first", () => {
-    assert.equal(FEATURED_CASES.length, 8);
+  // Nueve destacados desde el 16/11: Mario sumó sus productos Oficio y te_Cargo, y la demo de viajes Vespera.
+  test("curates nine featured demos ahead of the archive, Fenix first", () => {
+    assert.equal(FEATURED_CASES.length, 9);
     assert.equal(ARCHIVE_CASES.length, 9);
-    assert.equal(PROJECT_CASES.length, 17);
+    assert.equal(PROJECT_CASES.length, 18);
     assert.equal(PROJECT_CASES[0].slug, "fenix-medical-center");
-    assert.deepEqual(PROJECT_CASES.slice(0, 8).map(({ status }) => status), Array(8).fill("featured"));
+    assert.deepEqual(PROJECT_CASES.slice(0, 9).map(({ status }) => status), Array(9).fill("featured"));
     assert.ok(!FEATURED_CASES.some(({ slug }) => slug === "ad-media-solution"));
   });
 
