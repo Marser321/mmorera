@@ -164,7 +164,6 @@ const barberCrm: UseCaseFilmScript = {
 const afterHoursLead: UseCaseFilmScript = {
   id: "after-hours-lead",
   kind: "example",
-  seenIn: [{ slug: "ad-media-solution", chapter: "speed-to-lead" }],
   category: { es: "IA", en: "AI" },
   title: { es: "El lead de las 23:45", en: "The 11:45 PM lead" },
   problem: {
@@ -202,7 +201,6 @@ const coldLeadRevival: UseCaseFilmScript = {
   id: "cold-lead-revival",
   kind: "example",
   seenIn: [
-    { slug: "ad-media-solution", chapter: "speed-to-lead" },
     { slug: "new-brothers-barberia", chapter: "product" },
   ],
   category: { es: "CRM", en: "CRM" },

@@ -15,6 +15,7 @@ import { getCaseGallery } from "@/data/caseGallery";
 import { getCaseMetrics, isShowcaseWorthy, pageSpeedReportUrl, type CaseMetrics } from "@/data/caseMetrics";
 import { CaseFilmSection } from "@/components/films/CaseFilmSection";
 import { CaseGallery } from "@/components/premium/CaseGallery";
+import { CaseProofCard } from "@/components/premium/CaseProofCard";
 import { buildCaseFilm } from "@/data/films/caseFilms";
 import { Reveal } from "@/components/scroll/Reveal";
 import { SplitReveal } from "@/components/motion/SplitReveal";
@@ -25,6 +26,11 @@ import { SKILL_ORBIT } from "@/data/skillOrbit";
 import { flagshipRuntime, flagshipStill, hasFlagshipFilm } from "@/data/films/flagships/slugs";
 
 const label = "font-mono text-[10px] uppercase tracking-[.16em] text-foreground/55 light:text-muted-foreground";
+
+/** La línea al pie de los casos que vendió AD Media Solution. */
+export function soldViaLine(language: "es" | "en") {
+  return language === "es" ? "Proyecto realizado para clientes de AD Media Solution." : "Built for clients of AD Media Solution.";
+}
 
 function hostname(url: string) {
   try {
@@ -160,7 +166,8 @@ export function CaseStudy({ project, underTheHood }: { project: ProjectCase; und
             <Link href={localePath(language, "/casos-de-exito")} className="inline-flex items-center gap-2 rounded-md text-sm text-foreground/60 light:text-muted-foreground hover:text-foreground light:hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white light:ring-ring"><ArrowLeft className="h-4 w-4" />{isEs ? "Volver al archivo" : "Back to archive"}</Link>
             <div className="mt-12 grid gap-8 lg:grid-cols-[1.25fr_.75fr] lg:items-end">
               <div>
-                <div className="flex flex-wrap gap-3 font-mono text-[10px] uppercase tracking-[.16em] text-accent">{project.kind && <span>{project.kind[language]}</span>}{project.year && <span>{project.year}</span>}{project.stack.slice(0, 3).map((item: string | LocalizedText) => typeof item === "string" ? item : item[language]).map((item) => <span key={item}>{item}</span>)}</div>
+                {/* Arriba solo el rubro y el año: el stack va al final, en «Cómo está hecho». */}
+                <div className="flex flex-wrap gap-3 font-mono text-[10px] uppercase tracking-[.16em] text-accent">{project.kind && <span>{project.kind[language]}</span>}{project.year && <span>{project.year}</span>}</div>
                 <SplitReveal as="h1" mode="load" text={project.title[language]} className="mt-5 text-[clamp(3.2rem,8.5vw,9rem)] font-medium leading-[.87] tracking-[-.075em] text-foreground" />
               </div>
               <div className="lg:pb-3">
@@ -180,6 +187,8 @@ export function CaseStudy({ project, underTheHood }: { project: ProjectCase; und
           </div>
         </header>
 
+        {project.proof && <CaseProofCard proof={project.proof} language={language} />}
+
         {Boolean(project.tryIt?.length) && (
           <section aria-labelledby="case-try-it" className="mx-auto mt-12 max-w-[1480px] px-5 sm:px-8 lg:px-12">
             <h2 id="case-try-it" className="text-2xl font-medium tracking-[-.03em] text-foreground sm:text-3xl">{isEs ? "Pruébalo tú" : "Try it"}</h2>
@@ -189,9 +198,6 @@ export function CaseStudy({ project, underTheHood }: { project: ProjectCase; und
 
         {/* Film "Cómo lo resolví": el tráiler del caso con el sitio real */}
         {!project.cinematicPending && <CaseFilmSection script={film} language={language} />}
-
-        {/* Bajo el capó: la arquitectura real del sistema, interactiva */}
-        {underTheHood}
 
         {metrics && project.liveUrl && isShowcaseWorthy(metrics) && <MetricsBand metrics={metrics} liveUrl={project.liveUrl} isEs={isEs} />}
 
@@ -224,8 +230,20 @@ export function CaseStudy({ project, underTheHood }: { project: ProjectCase; und
           </section>
         )}
 
-        {/* Ficha del caso: datos y el relato completo en texto */}
-        <div className="mx-auto mt-20 grid max-w-[1480px] gap-10 px-5 sm:px-8 lg:grid-cols-[.55fr_1.45fr] lg:px-12">
+        {/* Cada página real del sitio, en las tres pantallas. */}
+        {gallery && <CaseGallery gallery={gallery} name={project.title[language]} language={language} />}
+
+        {/* Cómo está hecho: lo técnico, al final y para quien lo busca. */}
+        <div className="mx-auto mt-28 max-w-[1480px] border-t border-white/12 px-5 pt-10 light:border-[rgb(var(--ink-rgb)/0.12)] sm:px-8 lg:px-12">
+          <p className={label}>{isEs ? "Para quien quiera el detalle" : "For those who want the detail"}</p>
+          <h2 className="mt-3 text-3xl font-medium tracking-[-0.04em] text-foreground sm:text-4xl">{isEs ? "Cómo está hecho" : "How it's built"}</h2>
+        </div>
+
+        {/* Bajo el capó: la arquitectura real del sistema, plegada */}
+        {underTheHood}
+
+        {/* Ficha técnica: datos y el relato completo en texto */}
+        <div className="mx-auto mt-12 grid max-w-[1480px] gap-10 px-5 sm:px-8 lg:grid-cols-[.55fr_1.45fr] lg:px-12">
           <aside className="grid gap-8 sm:grid-cols-2 lg:grid-cols-1 lg:self-start">
             {project.client && <div><p className={label}>{isEs ? "Cliente" : "Client"}</p><p className="mt-3 text-sm leading-6 text-foreground/65 light:text-muted-foreground">{project.client[language]}</p></div>}
             <div><p className={label}>{isEs ? "Rol" : "Role"}</p><p className="mt-3 text-sm leading-6 text-foreground/65 light:text-muted-foreground">{project.role[language]}</p></div>
@@ -246,8 +264,12 @@ export function CaseStudy({ project, underTheHood }: { project: ProjectCase; und
           </details>
         </div>
 
-        {/* Cada página real del sitio, en las tres pantallas. */}
-        {gallery && <CaseGallery gallery={gallery} name={project.title[language]} language={language} />}
+        {/* Atribución discreta: una línea tenue al pie, sin enlace ni logo. */}
+        {project.soldVia === "ad-media" && (
+          <p data-sold-via className="mx-auto mt-12 max-w-[1480px] px-5 text-xs leading-5 text-foreground/40 light:text-muted-foreground sm:px-8 lg:px-12">
+            {soldViaLine(language)}
+          </p>
+        )}
       </article>
 
       {/* Cierre: CTA, la banda marfil del caso. */}

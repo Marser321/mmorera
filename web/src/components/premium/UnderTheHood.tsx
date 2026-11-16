@@ -73,7 +73,7 @@ export async function UnderTheHood({ slug, language, brandSlug }: UnderTheHoodPr
   } as CSSProperties;
 
   return (
-    <section className="mx-auto mt-20 max-w-[1480px] px-5 sm:px-8 lg:px-12" aria-labelledby="case-architecture">
+    <section className="mx-auto mt-8 max-w-[1480px] px-5 sm:px-8 lg:px-12" aria-labelledby="case-architecture">
       <ArchitectureDisclosure language={language}>
       <div className="grid gap-5 lg:grid-cols-[1fr_minmax(0,28rem)] lg:items-end">
         <div>

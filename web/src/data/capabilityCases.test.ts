@@ -23,8 +23,11 @@ test("cada familia de capacidades apunta a casos y capítulos que existen", () =
   }
 });
 
+// AD Media no se usa como prueba de venta (C10, pedido de Mario el 16/11): su film queda, sin capacidades.
+const NOT_A_SALES_PROOF = new Set(["ad-media-solution"]);
+
 test("cada caso con film demuestra al menos una capacidad", () => {
-  for (const slug of Object.keys(FLAGSHIP_FILMS)) assert.ok(capabilitiesOf(slug).length > 0, `${slug} no aparece en ninguna familia`);
+  for (const slug of Object.keys(FLAGSHIP_FILMS).filter((item) => !NOT_A_SALES_PROOF.has(item))) assert.ok(capabilitiesOf(slug).length > 0, `${slug} no aparece en ninguna familia`);
 });
 
 test("los casos parecidos son otros casos, sin repetir, primero los que más comparten", () => {

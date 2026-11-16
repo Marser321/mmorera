@@ -110,7 +110,7 @@ export const SERVICE_SOLUTIONS: ServiceSolution[] = [
       "Brands and marketing teams that need consistency without losing quality."
     ),
     accent: "#E59500",
-    proofSlug: "ad-media-solution",
+    proofSlug: "fenix-medical-center",
   },
 ];
 
