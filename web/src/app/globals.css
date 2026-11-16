@@ -491,25 +491,26 @@ html.light {
  * ══════════════════════════════════════════════════════
  */
 
-/* Grano de pared: el mismo de las piezas de redes (contenido/diseno/kit.css).
-   Ruido fractal gris en overlay: se lee como piedra, no como estática, y casi
-   no toca el texto claro. Pedido de Mario del 16/11 («demasiado ruido»). */
+/* Grano de pared: el mismo de las piezas de redes (contenido/diseno/kit.css),
+   ruido fractal en overlay. Va DENTRO del fondo global (GlobalBackground), por
+   encima de las partículas y por debajo del contenido: el frente queda nítido y
+   la pared, plana y calma. Encima de todo, textos e imágenes se veían hechos de
+   partículas (Mario, 16/11). */
 :root {
   --grano-pared: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='5' intercept='-2.05'/%3E%3CfeFuncG type='linear' slope='5' intercept='-2.05'/%3E%3CfeFuncB type='linear' slope='5' intercept='-2.05'/%3E%3CfeFuncA type='linear' slope='0' intercept='1'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
 }
 
 .grano-pared {
-  position: fixed;
+  position: absolute;
   inset: 0;
-  z-index: 40;
   pointer-events: none;
   background: var(--grano-pared) 0 0 / 320px 320px;
   mix-blend-mode: overlay;
-  opacity: 0.6;
+  opacity: 0.35;
 }
 
 html.light .grano-pared {
-  opacity: 0.45;
+  opacity: 0.25;
 }
 
 /* Monograma en blanco roto con textura de piedra, fundiéndose hacia la pared.
@@ -616,5 +617,5 @@ html.light .banda-marfil {
   pointer-events: none;
   background: var(--grano-pared) 0 0 / 320px 320px;
   mix-blend-mode: overlay;
-  opacity: 0.6;
+  opacity: 0.35;
 }

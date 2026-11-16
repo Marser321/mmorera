@@ -70,6 +70,8 @@ export function GlobalBackground() {
         className="absolute inset-0"
         style={{ background: `linear-gradient(to bottom, ${mist(2)}, ${mist(56)})` }}
       />
+      {/* Grano de pared: va en el fondo, debajo del contenido. Textos e imágenes quedan nítidos (Mario, 16/11). */}
+      <div className="grano-pared" />
     </div>
   );
 }
