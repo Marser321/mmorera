@@ -6,6 +6,7 @@ import { DOOR_COPY } from "@/components/films/puertas/copy";
 import { DOORS, DOOR_IDS, DOOR_SIZE, SAFE, WEBS_UI, XFADE, doorFrames, secondShotStart } from "@/components/films/puertas/timing";
 import { DOOR_FILM_SERVICES, getDoorFilm } from "./doorFilms";
 import { SERVICE_SOLUTIONS } from "./solutionsData";
+import { getProjectCase } from "./projectCases";
 
 const publicFile = (src: string) => path.join(process.cwd(), "public", src);
 
@@ -18,6 +19,20 @@ describe("films de las puertas de servicio", () => {
         assert.ok(film, `${id} no tiene film`);
         for (const src of [film.mp4, film.webm, film.poster]) assert.ok(existsSync(publicFile(src)), `falta ${src}: correr scripts/render-doors.ts`);
       }
+    }
+  });
+
+  it("el rótulo de cada puerta lleva al caso que se ve en su film", () => {
+    const caseOf = (id: string) => getDoorFilm(id, "es")?.caseSlug;
+    assert.equal(caseOf("web-ecommerce"), "lb-elite-wash-detail");
+    assert.equal(caseOf("crm-automation"), "te-cargo");
+    assert.equal(caseOf("ai-software"), "vespera");
+    // La de agentes muestra la demo guiada del sitio: no hay caso al que llevar.
+    assert.equal(caseOf("booking-payments"), undefined);
+    for (const id of DOOR_FILM_SERVICES) {
+      const slug = caseOf(id);
+      if (slug) assert.ok(getProjectCase(slug), `${id} lleva a un caso inexistente: ${slug}`);
+      assert.equal(getDoorFilm(id, "en")?.caseSlug, slug);
     }
   });
 
