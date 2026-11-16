@@ -14,7 +14,7 @@ Regla de siempre: se reestructura y no se recorta. Las cinemáticas, las partíc
 ## 0. En corto (para aprobar)
 
 1. **La home queda en cinco bloques:** obertura de partículas, cinco puertas de servicio (hoy faltan Campañas), tres fichas de prueba (lavadero, barbería y carga), la película de autor y el contacto. Lo demás pasa a ramas.
-2. **Una sola página técnica nueva**, `/como-lo-construyo` (en inglés, `/en/how-i-build`), titulada «How I build AI automation». Junta el stack, las arquitecturas de cada caso, MCP, RAG y evaluaciones, el manejo de errores y la aprobación humana, y el alojamiento. Salen de la home, de /sistemas y de la parte de arriba de cada caso.
+2. **Lo técnico vive en `/sistemas`** (decisión de Mario del 16/11; no hay ruta nueva). Arriba queda el servicio, simple. Abajo, separado y con ancla `#como-lo-construyo`, va «How I build AI automation»: el stack, el equipo de modelos, las arquitecturas de cada caso, MCP, RAG y evaluaciones, el manejo de errores y la aprobación humana, y el alojamiento. Sale de la home, de /sobre-mi y de la parte de arriba de cada caso.
 3. **Tres ramas por rubro**, cortas y con su cinemática: barberías, lavaderos móviles y transporte. Siguen el molde de `/casos-de-uso/recorridos-inmobiliarios` y usan las ediciones por rubro del tráiler de Automatización y CRM (T56).
 4. **Cada caso arranca con una ficha:** antes, después, un número, «qué falló y cómo se resolvió» y dónde aprueba una persona. El film va después y lo técnico, al final, plegado.
 5. **Inglés primero en títulos y metadatos**, con «AI automation» como término principal. «Orquestación» queda para el relato.
@@ -116,7 +116,7 @@ Duda: el pedido dice «app de carga». Lo único que hay en el repo es **Trucker
 | Servicios | Services | Las cinco puertas: webs, agentes, automatización y CRM, contenido y campañas |
 | Casos | Work | `/casos-de-exito` y las ramas por rubro |
 | IA | AI automation | Nueva rama corta `/ia` (`/en/ai-automation`) |
-| Cómo lo construyo | How I build | La página técnica nueva |
+| Cómo lo construyo | How I build | `/sistemas#como-lo-construyo`, la parte técnica de /sistemas |
 | Sobre mí · CV | About · CV | Sin cambios |
 | Hablemos | Let's talk | `/aplicar` y WhatsApp |
 
@@ -133,15 +133,19 @@ Capacidades, casos de uso y Lab se quedan, pero se llega a ellos desde Servicios
 
 Sale de la home: la tira Crear/Construir/Escalar (pasa a /sobre-mi, junto al método), los enlaces sueltos a casos de uso y Lab (pasan a Casos) y «Cómo trabajo» completo (queda una línea y el enlace a la película).
 
-**`/como-lo-construyo` · `/en/how-i-build`** (nueva y única página técnica). Título: **«How I build AI automation»**.
+**`/sistemas` como única página técnica** (decisión de Mario del 16/11). La página tiene dos partes:
+
+1. **Arriba, el servicio y en simple:** hero, para quién es, qué incluye, mapa operativo (ScrollFilm), sala de casos de uso, **dos o tres fichas de prueba** (L&B, New Brothers y Fenix; AD Media no se usa como prueba de venta) y cómo trabajamos. Lleva la versión simple del equipo de modelos (8.3 d). Se saca el bloque «Sistemas que ya construí», que repite los casos de uso.
+2. **Abajo, con un corte claro, la parte técnica:** «Para quien quiera ver el motor», con ancla `#como-lo-construyo` y el título **«How I build AI automation»**. Contiene:
 - El stack por familia, en una tabla que reemplaza las tres listas actuales.
 - «Architectures»: un índice de los `ArchitectureExplorer` que existen hoy, uno por caso.
 - «Agents in production»: MCP, RAG con datos del cliente, evaluación de salidas y herramientas.
 - «When things fail»: reintentos, logs, alertas, aprobación humana antes de publicar o enviar, y las cuentas a nombre del cliente.
 - «Where it runs»: Vercel hoy y el VPS después, más los encabezados de seguridad que ya están en `next.config.ts`.
 - Un enlace a `/lab` para quien quiera tocar las demos.
+- «The team behind every build»: el equipo de modelos con la auditoría cruzada (sección 8).
 
-**`/sistemas` ordenada:** hero, para quién es, qué incluye, mapa operativo (ScrollFilm), sala de casos de uso, **dos o tres fichas de prueba** (L&B, New Brothers y Fenix; AD Media no se usa como prueba de venta) y cómo trabajamos. La línea de herramientas y los detalles de arquitectura pasan a la página técnica. Se saca el bloque «Sistemas que ya construí», que repite los casos de uso.
+En inglés el título y los metadatos de /sistemas pasan a «AI Automation & CRM Systems: how I build them». El menú «Cómo lo construyo» lleva al ancla.
 
 **`/ia` · `/en/ai-automation`** (rama nueva y corta). Título: «AI automation for small teams». Tiene tres puertas: agentes (atienden, responden y agendan), fábrica de contenido («From 10 hours to 2 per content cycle, in your brand voice, with your approval») y campañas (con una persona que decide). Lleva el film de la capacidad «IA aplicada» y una línea hacia la página técnica.
 
@@ -166,7 +170,7 @@ soldVia?: "ad-media";       // Fenix, Truckers Choice y L&B (confirmado por Mari
 
 **Atribución discreta (regla fija):** si `soldVia` vale `"ad-media"`, la página del caso muestra al pie una sola línea tenue en texto chico, como «Proyecto realizado para clientes de AD Media Solution» o «Built for clients of AD Media Solution». Va en el color de texto secundario de la marca y sin enlace, logo ni insignia. No aparece en la ficha de arriba, en los títulos, en los metadatos, en las tarjetas de la home ni en las ramas por rubro. Un test cuida que la línea salga en cada caso marcado y que «AD Media» no figure en ningún `title`, `summary` ni `metadata`.
 
-Orden de la página: la ficha, «Pruébalo tú», el film, la galería en tres pantallas y, al final y plegado, «Under the hood» (stack y arquitectura, con enlace a la página técnica). Si `metric.verified` es falso, no se publica el número.
+Orden de la página: la ficha, «Pruébalo tú», el film, la galería en tres pantallas y, al final y plegado, «Under the hood» (stack, equipo y arquitectura, con enlace a `/sistemas#como-lo-construyo`). Si `metric.verified` es falso, no se publica el número.
 
 Borradores de ficha. **Mario tiene que confirmar los números y los fallos** (pregunta 2):
 
@@ -215,15 +219,15 @@ Cada tarea es una rama desde `origin/main` y un PR. No se publica nada sin el OK
 | --- | --- | --- | --- |
 | C1 | Mario revisa y publica T56 (tráilers y ediciones por rubro) | rama T56 | MP4 y pósters en `public/` |
 | C2 | Bloque `proof` en `ProjectCase` con test (sin número si `verified` es falso) y las fichas de L&B, New Brothers y Truckers | `data/projectCases.ts`, `CaseStudy.tsx` | La ficha sale arriba y el stack, plegado abajo |
-| C3 | Página técnica `/como-lo-construyo` y `/en/how-i-build`, con la tabla de stack, el índice de arquitecturas y la sección de agentes y fallos | `app/como-lo-construyo`, `data/` | Las tres listas de herramientas apuntan acá |
-| C4 | Ordenar `/sistemas` | `data/servicePages`, `ServicePage` | Sin herramientas ni arquitectura y con fichas de prueba |
+| C3 | Parte técnica de `/sistemas` (`#como-lo-construyo`), con la tabla de stack, el índice de arquitecturas y la sección de agentes y fallos | `app/sistemas`, `components/service/ServicePage`, `data/servicePages` | Las tres listas de herramientas apuntan al ancla |
+| C4 | Ordenar la parte de servicio de `/sistemas` (va junto con C3) | `data/servicePages`, `ServicePage` | Sin herramientas ni arquitectura y con fichas de prueba |
 | C5 | Home en cinco bloques, con Campañas y las tres fichas | `HomeExperience.tsx` | Mismo diseño y menos secciones; Lighthouse no empeora |
 | C6 | Tres ramas por rubro | `app/casos-de-uso/*` | Cada una con su tráiler, ficha y caso de uso |
 | C7 | Rama `/ia` y el nuevo argumento de /fabricas | `app/ia`, `data/servicePages` | «10 h → 2 h» con aprobación humana |
 | C8 | Menú nuevo y sitemap | `IslandBar`, `sitemap.ts` | Cinco entradas y el contacto |
 | C9 | Metadatos en inglés con «AI automation» | `lib/seo` | Títulos y descripciones revisados |
 | C10 | Atribución discreta a AD Media: campo `soldVia`, línea al pie de cada caso marcado y test. Además, sacar AD Media de las pruebas de venta: hoy figura en «Sistemas que ya construí» (/sistemas), en «Casos que lo demuestran» (/capacidades/automatizacion), en «Casos parecidos» y como caso propio `ad-media-solution` | `data/projectCases.ts`, `CaseStudy.tsx`, `data/capabilityCases.ts`, `data/servicePages` | Cada caso marcado lleva su línea al pie y AD Media no aparece en ningún titular, tarjeta ni metadato. Conviene hacerla junto con C2 o antes |
-| C14 | **Equipo de modelos en cada caso y en la página técnica** (sección 8): bloque «El equipo detrás de cada entrega» en `/como-lo-construyo` y campo `crew` en `ProjectCase` con una línea corta en la ficha. Solo se publica lo que tenga registro | `data/projectCases.ts`, `CaseStudy.tsx`, página técnica | Cada caso con registro muestra quién construyó, quién auditó y quién hizo las escenas; los casos sin registro no muestran la línea |
+| C14 | **Equipo de modelos en cada caso y en la página técnica** (sección 8): bloque «El equipo detrás de cada entrega» en `/sistemas#como-lo-construyo` y campo `crew` en `ProjectCase` con una línea corta en la ficha. Solo se publica lo que tenga registro | `data/projectCases.ts`, `CaseStudy.tsx`, página técnica | Cada caso con registro muestra quién construyó, quién auditó y quién hizo las escenas; los casos sin registro no muestran la línea |
 | P0 | Portada de Cana Vacations en WebP o AVIF y el grano más liviano | `public/portfolio/brands/cana-vacations`, `public/social/grano.png` | `/casos-de-exito` baja de 2,8 MB a unos 1,4 MB |
 | P1 | Películas de autor con `preload="none"` y póster | `AuthorTrailer`, `AuthorManifestoScene` | No se baja video hasta que alguien le da play |
 | P2 | Identificar el chunk de 280 KB y montar Remotion Player y three.js al entrar en pantalla | `FilmCanvas`, `OrchestrationCore`, `TechParticleField` | TBT por debajo de 150 ms en frío en `/en` y `/capacidades` |
@@ -238,7 +242,7 @@ P0, P1 y P2 son chicas y se pueden adelantar: no cambian nada de lo que se ve. C
 
 1. **«App de carga»:** ¿es Truckers Choice o es otra app (de cargas o despacho) que todavía no está en el repo?
 2. **Números y fallos:** ¿qué número real tiene cada caso (horas ahorradas, reservas por semana, tiempo de respuesta) y qué falló en New Brothers y en Truckers? Sin número confirmado, la ficha sale sin número.
-3. **Página técnica:** ¿te sirve el nombre «Cómo lo construyo / How I build» y que tenga su propia entrada en el menú, o la querés solo en el pie?
+3. ~~**Página técnica**~~ **Respondida el 16/11:** lo técnico va en /sistemas. Queda abierto si «Cómo lo construyo» lleva su entrada en el menú o solo en el pie.
 4. **Idioma por defecto:** ¿la raíz `/` pasa a inglés por la búsqueda en EE. UU., o sigue en español?
 5. **VPS:** ¿qué proveedor y qué tamaño tiene? ¿Usa Docker? ¿Querés Cloudflare delante y un almacenamiento aparte para los videos?
 6. **Home:** ¿te parece bien dejar tres casos en la home (lavadero, barbería y carga) y pasar Fénix, Rangel Oviedo y Mr. Studio al archivo?
@@ -342,7 +346,7 @@ Hoy mucha gente le atribuye todo a una herramienta («lo hizo Claude Code»), y 
 
 ### 8.3 Propuesta
 
-**a) En la página técnica (`/como-lo-construyo`), un bloque corto.** Título «The team behind every build» (ES: «El equipo detrás de cada entrega»). Lleva tres piezas:
+**a) En la parte técnica de `/sistemas` (`#como-lo-construyo`), un bloque corto.** Título «The team behind every build» (ES: «El equipo detrás de cada entrega»). Lleva tres piezas:
 - Una tabla de roles en texto, sin logos. **Roles confirmados por Mario el 16/11:**
 
   | Parte del trabajo | Quién la hace | Por qué |
@@ -390,4 +394,4 @@ Cuidados:
 14. **El costo:** ¿querés decir explícitamente que pagás el nivel más alto de acceso, o alcanza con «modelos frontera», que lo da a entender sin hablar de plata?
 15. **Nombres:** «Sol» y «Astra» llegaron por dictado. ¿Son esos los nombres exactos de los modelos (o de los planes) y de qué proveedor es cada uno? Hacen falta para escribirlos bien en la página técnica.
 16. **El 20 % y el 80 %:** ¿de dónde sale el número? Si hay un estudio, lo citamos. Si es tu experiencia, va como «en mi experiencia». Y si querés, lo medimos con un caso propio: un modelo audita su código, otro audita el mismo código, y contamos lo que encuentra cada uno.
-17. **¿Dónde va lo técnico?** Dijiste «la página técnica, que es esa del sistema». ¿Querés que lo técnico viva en /sistemas, o en una página aparte (`/como-lo-construyo`) con /sistemas solo como servicio, como propone el plan?
+17. ~~**¿Dónde va lo técnico?**~~ **Respondida el 16/11:** en /sistemas. No se crea `/como-lo-construyo`.
