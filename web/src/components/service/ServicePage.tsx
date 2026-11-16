@@ -7,6 +7,8 @@ import { getProjectCase } from "@/data/projectCases";
 import { getCaseMedia } from "@/data/caseMedia";
 import { TryItButtons } from "@/components/shared/TryItButtons";
 import { ChapterDock, type DockChapter } from "@/components/layout/IslandBar";
+import { PausableReel } from "@/components/shared/PausableReel";
+import type { ServiceHeroFilm } from "@/data/serviceHeroFilms";
 import type { ServicePageContent, ServicePageCta } from "@/types/servicePage";
 
 const container = "mx-auto w-full max-w-[1480px] px-5 sm:px-8 lg:px-12";
@@ -27,17 +29,19 @@ export interface ServicePageProps {
   language: "es" | "en";
   howItWorks?: ReactNode;
   heroRef?: Ref<HTMLElement>;
+  /** El film de la portada: a la derecha en pantallas anchas y debajo del texto en el teléfono. */
+  heroFilm?: ServiceHeroFilm;
   /** La parte técnica, después del cierre y con su ancla (solo /sistemas). */
   engine?: ReactNode;
 }
 
 /**
- * Plantilla de las páginas de servicio, en escenas: qué resuelve, para quién y
- * qué incluye en una sola mirada; después cómo funciona (el film o la demo),
+ * Plantilla de las páginas de servicio, en escenas: qué resuelve (con su film
+ * al lado), para quién y qué incluye en una sola mirada; después cómo funciona (el film o la demo),
  * la prueba con su imagen, cómo se contrata y el cierre. La barra flotante
  * lleva sus capítulos para saltar de una escena a otra.
  */
-export function ServicePage({ content, language, howItWorks, heroRef, engine }: ServicePageProps) {
+export function ServicePage({ content, language, howItWorks, heroRef, heroFilm, engine }: ServicePageProps) {
   const { hero, audience, deliverables, tools, proof, hiring, closing } = content;
   const cases = proof?.slugs.flatMap(slug => { const project = getProjectCase(slug); return project ? [project] : []; }) ?? [];
   const cta = (action: ServicePageCta) => <Link href={localePath(language, action.href ?? "/aplicar")} className="inline-flex min-h-12 items-center gap-3 rounded-full bg-foreground px-6 py-3 text-sm font-semibold text-background hover:opacity-85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{action.label[language]}<ArrowUpRight aria-hidden="true" className="h-4 w-4" /></Link>;
@@ -57,11 +61,23 @@ export function ServicePage({ content, language, howItWorks, heroRef, engine }: 
   const chapters = candidates.filter((chapter): chapter is DockChapter => Boolean(chapter));
 
   return <main id="contenido-principal" className="bg-background pb-28 pt-32 sm:pt-40">
-    <header ref={heroRef} data-service-section="hero" className={`${container} pb-12 sm:pb-16`}>
-      {hero.eyebrow && <p className="text-xs font-medium uppercase tracking-[.16em] text-signal">{hero.eyebrow[language]}</p>}
-      <h1 className="mt-4 max-w-5xl text-[clamp(2.4rem,5.5vw,5rem)] font-medium leading-[1.02] tracking-[-.04em] text-foreground">{hero.title[language]}</h1>
-      {hero.body && <p className="mt-6 max-w-3xl text-base leading-relaxed text-foreground/75 sm:text-xl">{hero.body[language]}</p>}
-      {hero.cta && <div className="mt-7">{cta(hero.cta)}</div>}
+    <header ref={heroRef} data-service-section="hero" className={`${container} pb-12 sm:pb-16 ${heroFilm ? "lg:grid lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:items-center lg:gap-14" : ""}`}>
+      <div>
+        {hero.eyebrow && <p className="text-xs font-medium uppercase tracking-[.16em] text-signal">{hero.eyebrow[language]}</p>}
+        {/* Con el film al lado, el título cede tamaño para no partirse en cinco líneas. */}
+        <h1 className={`mt-4 max-w-5xl font-medium leading-[1.02] tracking-[-.04em] text-foreground ${heroFilm ? "text-[clamp(2.4rem,4.2vw,4rem)]" : "text-[clamp(2.4rem,5.5vw,5rem)]"}`}>{hero.title[language]}</h1>
+        {hero.body && <p className={`mt-6 max-w-3xl text-base leading-relaxed text-foreground/75 ${heroFilm ? "sm:text-lg" : "sm:text-xl"}`}>{hero.body[language]}</p>}
+        {hero.cta && <div className="mt-7">{cta(hero.cta)}</div>}
+      </div>
+      {heroFilm && <figure data-service-hero-film className="mt-10 lg:mt-0">
+        <PausableReel reel={heroFilm.reel} language={language} priority sizes="(min-width: 1024px) 46vw, 100vw" className="w-full rounded-[1.6rem] border border-foreground/15 bg-[#0B0B0A]" style={{ aspectRatio: heroFilm.ratio }} />
+        <figcaption className="mt-3 flex items-center gap-3 font-mono text-[10px] uppercase tracking-[.16em] text-foreground/65">
+          <span aria-hidden="true" className="h-px w-8 shrink-0" style={{ backgroundColor: heroFilm.tone }} />
+          {heroFilm.caseSlug
+            ? <Link href={localePath(language, `/casos-de-exito/${heroFilm.caseSlug}`)} className="inline-flex min-h-11 items-center gap-1.5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{heroFilm.caption[language]}<ArrowUpRight aria-hidden="true" className="h-3 w-3 shrink-0" /></Link>
+            : <span className="inline-flex min-h-11 items-center">{heroFilm.caption[language]}</span>}
+        </figcaption>
+      </figure>}
     </header>
 
     {/* Una sola mirada: para quién es, qué incluye y con qué herramientas. */}

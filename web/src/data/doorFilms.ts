@@ -1,5 +1,6 @@
 import type { CaseReelSources } from "@/data/caseMedia";
 import { DOORS, type DoorId } from "@/components/films/puertas/timing";
+import type { LocalizedText } from "@/types/site";
 
 /**
  * Films de las puertas de servicio del home (escena 02). Los genera
@@ -25,11 +26,21 @@ const DOOR_CASE: Partial<Record<DoorId, string>> = {
   contenido: "vespera",
 };
 
+/** Qué se ve en cada film, dicho tal cual: es el rótulo de la puerta y el pie del film en su página. */
+const DOOR_SOURCE: Record<DoorId, LocalizedText> = {
+  webs: { es: "Caso real · L&B Elite Wash & Detail", en: "Real case · L&B Elite Wash & Detail" },
+  agentes: { es: "Demo guiada · datos de muestra", en: "Guided demo · sample data" },
+  sistemas: { es: "Producto propio · te_Cargo", en: "Own product · te_Cargo" },
+  contenido: { es: "Escenas generadas con IA · Vespera", en: "AI-generated scenes · Vespera" },
+};
+
 export interface DoorFilm extends CaseReelSources {
   /** El color de la puerta: su línea, su avance y su punto en la lista del teléfono. */
   tone: string;
   /** El caso que se ve en el film, si tiene página. */
   caseSlug?: string;
+  /** Qué se ve en el film. */
+  source: LocalizedText;
 }
 
 export function getDoorFilm(serviceId: string, language: "es" | "en"): DoorFilm | undefined {
@@ -37,5 +48,5 @@ export function getDoorFilm(serviceId: string, language: "es" | "en"): DoorFilm 
   if (!door) return undefined;
   // Las que llevan texto tienen una versión por idioma; el póster es cine puro y sirve para las dos.
   const name = DOORS[door].bilingual ? `${door}-${language}` : door;
-  return { mp4: `/portfolio/puertas/${name}.mp4`, webm: `/portfolio/puertas/${name}.webm`, poster: `/portfolio/puertas/${door}-poster.jpg`, tone: DOORS[door].tone, caseSlug: DOOR_CASE[door] };
+  return { mp4: `/portfolio/puertas/${name}.mp4`, webm: `/portfolio/puertas/${name}.webm`, poster: `/portfolio/puertas/${door}-poster.jpg`, tone: DOORS[door].tone, caseSlug: DOOR_CASE[door], source: DOOR_SOURCE[door] };
 }

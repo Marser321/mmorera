@@ -11,6 +11,7 @@ import { getCaseMedia } from "@/data/caseMedia";
 import { getCaseMetrics } from "@/data/caseMetrics";
 import { buildCaseFilm } from "@/data/films/caseFilms";
 import type { ServicePageContent } from "@/types/servicePage";
+import { getServiceHeroFilm } from "@/data/serviceHeroFilms";
 
 const CaseFilmSection = dynamic(() => import("@/components/films/CaseFilmSection").then(m => m.CaseFilmSection));
 const WEB_FILM_SLUGS = ["mr-studio-tattoo", "truckers-choice", "lb-elite-wash-detail"];
@@ -71,5 +72,5 @@ export function StudioExperience({ content }: { content: ServicePageContent }) {
     observer.observe(heroRef.current);
     return () => observer.disconnect();
   }, [setHeroVisible]);
-  return <ServicePage content={content} language={language} heroRef={heroRef} howItWorks={<><WebCaseFilms label={content.howItWorks?.title?.[language]} /><ExploreDoors language={language} doors={["capacidades", "lab"]} as="h3" className="mt-12" /></>} />;
+  return <ServicePage content={content} language={language} heroRef={heroRef} heroFilm={getServiceHeroFilm("estudio", language)} howItWorks={<><WebCaseFilms label={content.howItWorks?.title?.[language]} /><ExploreDoors language={language} doors={["capacidades", "lab"]} as="h3" className="mt-12" /></>} />;
 }

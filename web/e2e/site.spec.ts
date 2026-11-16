@@ -158,6 +158,36 @@ test("cada puerta de servicio abre con su film a sangre", async ({ page }) => {
   }
 });
 
+test("cada página de servicio abre con su film y se puede pausar", async ({ page }) => {
+  test.setTimeout(90_000);
+  await page.setViewportSize({ width: 1440, height: 900 });
+  for (const [path, film] of [
+    ["/estudio", /\/portfolio\/puertas\/webs\.(webm|mp4)$/],
+    ["/agentes", /\/portfolio\/puertas\/agentes-es\.(webm|mp4)$/],
+    ["/sistemas", /\/portfolio\/puertas\/sistemas-es\.(webm|mp4)$/],
+    ["/fabricas", /\/portfolio\/trailers\/vespera\.(webm|mp4)$/],
+  ] as const) {
+    await page.goto(path);
+    const hero = page.locator("[data-service-hero-film]");
+    const video = hero.locator("video");
+    await expect.poll(() => video.evaluate((element: HTMLVideoElement) => element.currentSrc), { timeout: 15_000 }).toMatch(film);
+    await expect.poll(() => video.evaluate((element: HTMLVideoElement) => !element.paused), { timeout: 15_000 }).toBe(true);
+    // El film queda al lado del título, no debajo.
+    const [title, box] = [await page.locator("h1").boundingBox(), await hero.boundingBox()];
+    expect(box!.x).toBeGreaterThan(title!.x + title!.width - 4);
+    await hero.getByRole("button", { name: "Pausar el video" }).click();
+    await expect.poll(() => video.evaluate((element: HTMLVideoElement) => element.paused)).toBe(true);
+  }
+  // En /fabricas, los cuatro films de las puertas se reproducen de a uno.
+  const tiles = page.locator("[data-service-film]");
+  await expect(tiles).toHaveCount(4);
+  await tiles.nth(2).scrollIntoViewIfNeeded();
+  await tiles.nth(2).locator("button").hover();
+  await expect.poll(() => tiles.nth(2).locator("video").evaluate((element: HTMLVideoElement) => !element.paused), { timeout: 15_000 }).toBe(true);
+  await tiles.nth(0).locator("button").hover();
+  await expect.poll(() => tiles.nth(2).locator("video").evaluate((element: HTMLVideoElement) => element.paused)).toBe(true);
+});
+
 test("el rótulo de una puerta lleva al caso que se ve en su film", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");
@@ -301,8 +331,8 @@ test("sistemas narra casos de uso con films interactivos", async ({ page }) => {
     await expect(leadTab).toHaveAttribute("aria-selected", "true", { timeout: 1_000 });
   }).toPass({ timeout: 15_000 });
   await expect(page.getByText("Flujo de ejemplo con datos de muestra")).toBeVisible();
-  // Un ejemplo enlaza al caso real que resuelve algo parecido, en el capítulo de su film.
-  await expect(page.getByRole("link", { name: "Visto en AD Media Solution" })).toHaveAttribute("href", /\/casos-de-exito\/ad-media-solution#film-speed-to-lead$/);
+  // AD Media ya no se usa como prueba (C10, PR #31): el ejemplo no enlaza a ese caso.
+  await expect(page.locator('a[href*="/casos-de-exito/ad-media-solution"]')).toHaveCount(0);
   await page.getByRole("button", { name: /01 · Edge Worker Ingesta/ }).click();
   const inspector = page.getByRole("dialog", { name: /Etapa 1/ });
   await expect(inspector).toBeVisible();
