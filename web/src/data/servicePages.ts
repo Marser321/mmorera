@@ -74,7 +74,7 @@ export const SERVICE_PAGES = {
     // Las herramientas y la arquitectura bajan a «Cómo lo construyo» (#como-lo-construyo, C3/C4).
     proof: {
       title: t("Pruebas, no promesas", "Proof, not promises"),
-      slugs: ["lb-elite-wash-detail", "new-brothers-barberia", "fenix-medical-center"],
+      slugs: ["lb-elite-wash-detail", "new-brothers-barberia", "fenix-medical-center", "oficio", "te-cargo"],
     },
     hiring: HIRING,
     closing: {
@@ -121,7 +121,7 @@ export const SERVICE_PAGES = {
     },
     proof: {
       title: t("Webs que ya construí", "Websites I've already built"),
-      slugs: ["lb-elite-wash-detail", "mr-studio-tattoo", "truckers-choice", "fenix-medical-center"],
+      slugs: ["lb-elite-wash-detail", "mr-studio-tattoo", "truckers-choice", "fenix-medical-center", "rangel-oviedo-group", "vespera"],
     },
     hiring: HIRING,
     closing: {
@@ -263,8 +263,8 @@ export const SERVICE_PAGES = {
       ),
     },
     proof: {
-      title: t("Un asistente con base de conocimiento, en un CRM demo", "An assistant with a knowledge base, in a demo CRM"),
-      slugs: ["new-brothers-barberia"],
+      title: t("Un asistente con IA, dentro de un CRM", "An AI assistant, inside a CRM"),
+      slugs: ["new-brothers-barberia", "oficio"],
     },
     hiring: {
       title: t("Cómo trabajamos", "How we work"),

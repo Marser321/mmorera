@@ -8,6 +8,7 @@ import { useActiveTech } from "@/context/ActiveTechContext";
 import { ServicePage } from "@/components/service/ServicePage";
 import { EngineRoom } from "@/components/service/EngineRoom";
 import type { ServicePageContent } from "@/types/servicePage";
+import { getServiceHeroFilm } from "@/data/serviceHeroFilms";
 
 const ScrollFilm = dynamic(() => import("@/components/films/ScrollFilm").then(m => m.ScrollFilm));
 const UseCaseFilmRoom = dynamic(() => import("@/components/films/UseCaseFilmRoom").then(m => m.UseCaseFilmRoom));
@@ -26,5 +27,5 @@ export function SystemsExperience({ content }: { content: ServicePageContent }) 
     observer.observe(heroRef.current);
     return () => observer.disconnect();
   }, [setHeroVisible]);
-  return <ServicePage content={content} language={language} heroRef={heroRef} howItWorks={<><ScrollFilm /><UseCaseFilmRoom allHref={localePath(language, "/casos-de-uso")} /></>} engine={<EngineRoom language={language} />} />;
+  return <ServicePage content={content} language={language} heroRef={heroRef} heroFilm={getServiceHeroFilm("sistemas", language)} howItWorks={<><ScrollFilm /><UseCaseFilmRoom allHref={localePath(language, "/casos-de-uso")} /></>} engine={<EngineRoom language={language} />} />;
 }

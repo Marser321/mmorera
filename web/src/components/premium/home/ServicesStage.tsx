@@ -37,10 +37,6 @@ const copy = {
     open: "Ver cómo funciona",
     capabilities: "Detrás de estos cuatro servicios hay nueve capacidades.",
     capabilitiesCta: "Explóralas",
-    agentLabel: "Demo guiada · datos de muestra",
-    flowLabel: "Producto propio · te_Cargo",
-    contentLabel: "Escenas generadas con IA · Vespera",
-    realCase: "Caso real",
     seeCase: "ver el caso",
   },
   en: {
@@ -50,22 +46,13 @@ const copy = {
     open: "See how it works",
     capabilities: "Behind these four services there are nine capabilities.",
     capabilitiesCta: "Explore them",
-    agentLabel: "Guided demo · sample data",
-    flowLabel: "Own product · te_Cargo",
-    contentLabel: "AI-generated scenes · Vespera",
-    realCase: "Real case",
     seeCase: "view the case",
   },
 } as const;
 
-type Copy = (typeof copy)[Language];
-
-function visualLabel(service: ServiceSolution, c: Copy, language: Language): string {
-  if (service.id === "booking-payments") return c.agentLabel;
-  if (service.id === "crm-automation") return c.flowLabel;
-  if (service.id === "ai-software") return c.contentLabel;
-  const project = getProjectCase(service.proofSlug);
-  return project ? `${c.realCase} · ${project.title[language]}` : c.realCase;
+/** Qué se ve en el film de la puerta; sin film, el nombre del caso que prueba el servicio. */
+function visualLabel(service: ServiceSolution, language: Language): string {
+  return getDoorFilm(service.id, language)?.source[language] ?? getProjectCase(service.proofSlug)?.title[language] ?? "";
 }
 
 /** El color de la puerta: el de su film; si no tiene, el del servicio. */
@@ -168,13 +155,13 @@ export function ServicesStage() {
                       aria-hidden={isActive ? undefined : true}
                       className={`-my-3 inline-flex min-w-0 items-center gap-1.5 rounded py-3 font-mono text-[10px] uppercase tracking-[0.14em] text-[#ECE7DD]/70 transition-[opacity,color] duration-500 hover:text-[#ECE7DD] focus-visible:text-[#ECE7DD] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ECE7DD]/70 ${isActive ? "pointer-events-auto opacity-100" : "opacity-0"}`}
                     >
-                      <span className="truncate">{visualLabel(service, c, language)}</span>
+                      <span className="truncate">{visualLabel(service, language)}</span>
                       <span className="sr-only">: {c.seeCase}</span>
                       <ArrowUpRight aria-hidden="true" className="h-3 w-3 shrink-0" />
                     </Link>
                   ) : (
                     <span className={`truncate font-mono text-[10px] uppercase tracking-[0.14em] text-[#ECE7DD]/70 transition-opacity duration-500 ${isActive ? "opacity-100" : "opacity-0"}`}>
-                      {visualLabel(service, c, language)}
+                      {visualLabel(service, language)}
                     </span>
                   )}
                 </div>

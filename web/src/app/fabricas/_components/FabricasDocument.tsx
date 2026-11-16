@@ -4,7 +4,9 @@ import { SideDoor } from "@/components/branches/SideDoor";
 import { BriefToPiece } from "@/components/premium/fabricas/BriefToPiece";
 import { StyleShowcase } from "@/components/premium/fabricas/StyleShowcase";
 import { VideoGallery, type VideoGalleryItem } from "@/components/premium/fabricas/VideoGallery";
+import { ServiceFilms } from "@/components/premium/fabricas/ServiceFilms";
 import { SERVICE_PAGES } from "@/data/servicePages";
+import { getServiceHeroFilm } from "@/data/serviceHeroFilms";
 import { BRIEF_TO_PIECE } from "@/data/briefToPiece";
 import { VIDEO_GALLERY, galleryMedia } from "@/data/videoGallery";
 import { RECORRIDOS_PAGE, RECORRIDOS_PATH } from "@/data/recorridos";
@@ -24,9 +26,10 @@ export function FabricasDocument({ language }: { language: "es" | "en" }) {
     tools: [item.tools[language]],
     note: item.label[language],
   }));
-  return <ServicePage content={content} language={language} howItWorks={<>
+  return <ServicePage content={content} language={language} heroFilm={getServiceHeroFilm("fabricas", language)} howItWorks={<>
     <BriefToPiece pieces={BRIEF_TO_PIECE} language={language} label={content.howItWorks?.title?.[language]} />
     <VideoGallery videos={videos} language={language} />
+    <ServiceFilms language={language} />
     <StyleShowcase language={language} />
     <SideDoor eyebrow={RECORRIDOS_PAGE.door.eyebrow[language]} title={RECORRIDOS_PAGE.door.title[language]} href={localePath(language, RECORRIDOS_PATH)} className="mt-8" />
   </>} />;
