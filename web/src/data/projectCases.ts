@@ -52,6 +52,14 @@ export const PROJECT_CASES: ProjectCase[] = [
     accent: "#cb9334",
     client: t("Fenix Medical Group Inc · Duluth, Georgia (EE. UU.)", "Fenix Medical Group Inc · Duluth, Georgia (USA)"),
     kind: t("Salud y longevidad", "Health and longevity"),
+    // Ficha: todo sale del dossier y de las líneas de capacidades (capabilityCases.ts).
+    proof: {
+      problem: t("Comunicar terapias médicas sin prometer de más y convertir visitas en citas sin exponer datos de salud.", "Communicate medical therapies without overpromising, and turn visits into appointments without exposing health data."),
+      now: t("Reserva en 3 pasos contra la agenda real del CRM, con un formulario de 7 campos sin texto libre.", "A 3-step booking against the CRM's real calendar, with a 7-field form and no free text."),
+      metric: { value: "40", label: t("páginas en dos idiomas", "pages in two languages"), verified: true },
+      humanStep: t("Una persona revisa cada cambio antes de producción; las pruebas las corren agentes.", "A person reviews every change before production; agents run the tests."),
+    },
+    soldVia: "ad-media",
     status: "featured",
   },
   {
@@ -97,6 +105,15 @@ export const PROJECT_CASES: ProjectCase[] = [
       { href: t("https://l-b-five.vercel.app/#quoter", "https://l-b-five.vercel.app/#quoter"), label: t("Cotiza por vehículo", "Get a quote by vehicle"), kind: "live", note: t("Sitio real: puedes cotizar sin reservar.", "Live site: you can get a quote without booking.") },
     ],
     accent: "#1E6FE6",
+    // Ficha: docs/films/dossiers/lb-wash.md (§ 1, 2 y 3).
+    proof: {
+      problem: t("Coordinar 4 camionetas en domicilios a la vez y cobrar sin choques de agenda.", "Coordinate 4 vans across home visits at the same time and bill without double bookings."),
+      now: t("Cotiza solo entre 88 servicios y 142 precios, y guarda el turno 15 minutos hasta que llega el pago.", "It quotes on its own across 88 services and 142 prices, and holds the slot for 15 minutes until payment arrives."),
+      metric: { value: "4", label: t("domicilios atendidos a la vez, sin choques de agenda", "home visits served at once, with no double bookings"), verified: true },
+      fixed: t("Una base de datos propia junto al CRM guardaba cada reserva en dos lugares. Se sacó la base y el CRM quedó como único registro.", "A separate database next to the CRM kept every booking in two places. The database was removed and the CRM became the single record."),
+      humanStep: t("La cuadrilla marca cada servicio como entregado desde su app, en la casa del cliente.", "The crew marks each service as delivered from its app, at the client's home."),
+    },
+    soldVia: "ad-media",
     status: "featured",
   },
   {
@@ -119,6 +136,13 @@ export const PROJECT_CASES: ProjectCase[] = [
       { href: t("https://nb-barber.vercel.app/admin-login", "https://nb-barber.vercel.app/admin-login"), label: t("Entra al CRM", "Open the CRM"), kind: "demo", note: t("Con el botón de acceso demo; incluye el asistente con base de conocimiento.", "Use the demo access button; it includes the assistant with its knowledge base.") },
     ],
     accent: "#D4AF37",
+    // Ficha: docs/films/dossiers/otros-casos.md (New Brothers). No tiene cobro en línea.
+    proof: {
+      problem: t("Reunir reservas, clientes, caja y liquidaciones de una barbería en un solo sistema, sin un CRM externo.", "Bring a barbershop's bookings, clients, cash and payouts into one system, without an external CRM."),
+      now: t("Reserva en 6 pasos y un panel propio con agenda, clientes, caja, stock y liquidaciones.", "A 6-step booking and its own panel with schedule, clients, cash, stock and payouts."),
+      metric: { value: "14", label: t("secciones en un solo panel, de la agenda a las liquidaciones", "sections in one panel, from the schedule to the payouts"), verified: true },
+      humanStep: t("El cobro lo hace una persona en el mostrador: efectivo, tarjeta, transferencia o Mercado Pago.", "A person takes payment at the counter: cash, card, transfer or Mercado Pago."),
+    },
     status: "featured",
   },
   {
@@ -152,6 +176,14 @@ export const PROJECT_CASES: ProjectCase[] = [
     ],
     demoUrl: "https://truckers-choice-web-site.vercel.app/en",
     accent: "#FFB020",
+    // Ficha: docs/films/dossiers/truckers-choice.md (§ 3 y 5).
+    proof: {
+      problem: t("Reunir seguros, autoridad DOT, placas y permisos en un solo recorrido, en inglés y en español.", "Bring insurance, DOT authority, plates and permits into one journey, in English and Spanish."),
+      now: t("30 trámites ordenados en 6 líneas, con una cotización en 3 pasos en los dos idiomas.", "30 filings organized into 6 lines, with a 3-step quote in both languages."),
+      metric: { value: "30", label: t("trámites en 6 líneas, en dos idiomas", "filings in 6 lines, in two languages"), verified: true },
+      pending: t("El formulario de cotización está en vista previa: falta conectarlo para que las solicitudes lleguen.", "The quote form is in preview mode: it still has to be connected so requests arrive."),
+    },
+    soldVia: "ad-media",
     status: "featured",
   },
   {

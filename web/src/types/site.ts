@@ -67,6 +67,32 @@ export interface ProjectCase {
   kind?: LocalizedText;
   /** Rutas para probar el sistema (verificadas por Gemini en T28). */
   tryIt?: TryItLink[];
+  /** Ficha de prueba: lo primero que se lee en la página del caso. */
+  proof?: CaseProof;
+  /**
+   * Quién vendió el proyecto. Con "ad-media" la página muestra al pie una sola
+   * línea tenue; nunca va en títulos, fichas, tarjetas ni metadatos.
+   */
+  soldVia?: "ad-media";
+}
+
+/**
+ * Ficha de prueba de un caso. Todo sale de un dossier o del sitio en vivo:
+ * nada de resultados de negocio sin confirmar.
+ */
+export interface CaseProof {
+  /** El problema que había que resolver. */
+  problem: LocalizedText;
+  /** Lo que el sistema hace hoy. */
+  now: LocalizedText;
+  /** Un número del sistema. Si `verified` es falso, no se muestra. */
+  metric: { value: string; label: LocalizedText; verified: boolean };
+  /** Qué falló y cómo se resolvió, en una línea. */
+  fixed?: LocalizedText;
+  /** Qué falta, dicho tal cual. */
+  pending?: LocalizedText;
+  /** Dónde decide una persona. */
+  humanStep?: LocalizedText;
 }
 
 export interface SiteIdentity {

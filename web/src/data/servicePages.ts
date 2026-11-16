@@ -77,7 +77,7 @@ export const SERVICE_PAGES = {
     ),
     proof: {
       title: t("Sistemas que ya construí", "Systems I've already built"),
-      slugs: ["rangel-oviedo-group", "lb-elite-wash-detail", "ad-media-solution"],
+      slugs: ["new-brothers-barberia", "lb-elite-wash-detail", "rangel-oviedo-group"],
     },
     hiring: HIRING,
     closing: {
@@ -215,7 +215,7 @@ export const SERVICE_PAGES = {
     },
     proof: {
       title: t("Lo que pasa después del anuncio", "What happens after the ad"),
-      slugs: ["ad-media-solution"],
+      slugs: ["fenix-medical-center"],
     },
     hiring: {
       title: t("Cómo trabajamos", "How we work"),

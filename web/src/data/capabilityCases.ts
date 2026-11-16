@@ -25,7 +25,6 @@ export const CAPABILITY_CASES: Record<Family, CapabilityCase[]> = {
     { slug: "fenix-medical-center", chapter: "engineering", still: "og", line: { es: "Fénix: QA hecho por agentes, con revisión humana antes de producción.", en: "Fénix: QA run by agents, with human review before production." } },
   ],
   Automation: [
-    { slug: "ad-media-solution", chapter: "speed-to-lead", still: "hero", line: { es: "AD Media: del formulario al CRM, SMS y WhatsApp sin tareas manuales (datos de ejemplo).", en: "AD Media: from form to CRM, SMS and WhatsApp with no manual tasks (sample data)." } },
     { slug: "lb-elite-wash-detail", chapter: "cuadrilla", still: "hero", line: { es: "L&B: un toque de la cuadrilla en campo actualiza la cita en el calendario.", en: "L&B: one tap from the crew in the field updates the booking in the calendar." } },
     { slug: "fenix-medical-center", chapter: "site", still: "og", line: { es: "Fénix: reserva en 3 pasos contra la agenda real del CRM.", en: "Fénix: a 3-step booking against the CRM's real calendar." } },
   ],
@@ -46,13 +45,11 @@ export const CAPABILITY_CASES: Record<Family, CapabilityCase[]> = {
     { slug: "punta-360", chapter: "workflow", still: "hero", line: { es: "Punta 360: planes de suscripción para agentes y agencias.", en: "Punta 360: subscription plans for agents and agencies." } },
   ],
   Marketing: [
-    { slug: "ad-media-solution", chapter: "funnel", still: "og", line: { es: "AD Media: funnels de captación con un pipeline de 5 etapas.", en: "AD Media: acquisition funnels with a 5-stage pipeline." } },
     { slug: "fenix-medical-center", chapter: "positioning", still: "og", line: { es: "Fénix: 109 afirmaciones con redacción permitida y prohibida para comunicar sin prometer de más.", en: "Fénix: 109 claims with allowed and forbidden wording, so nothing overpromises." } },
     { slug: "punta-360", chapter: "comparison", still: "og", line: { es: "Punta 360: el comparador de foto de celular frente a producción editorial.", en: "Punta 360: a phone-photo versus editorial-production comparator." } },
   ],
   CRM: [
     { slug: "new-brothers-barberia", chapter: "product", still: "hero", line: { es: "New Brothers: agenda, clientes, caja y liquidaciones en un solo panel.", en: "New Brothers: schedule, clients, cash and payouts in one panel." } },
-    { slug: "ad-media-solution", chapter: "speed-to-lead", still: "hero", line: { es: "AD Media: Speed-to-Lead y un pipeline de 5 etapas (datos de ejemplo).", en: "AD Media: Speed-to-Lead and a 5-stage pipeline (sample data)." } },
     { slug: "lb-elite-wash-detail", chapter: "cuadrilla", still: "hero", line: { es: "L&B: la app de la cuadrilla escribe en la cita del CRM.", en: "L&B: the crew app writes straight to the CRM booking." } },
   ],
   Media: [
