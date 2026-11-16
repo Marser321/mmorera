@@ -72,8 +72,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <Navbar />
           <div className="relative z-10 flex min-h-screen flex-col">{children}</div>
           <Footer />
-          {/* Grano de pared: textura fija y tenue sobre todo el sitio (debajo de la barra). */}
-          <div aria-hidden="true" className="grano-pared" />
           <WhatsAppFab />
           <CursorLabel />
           <PageCurtain />
