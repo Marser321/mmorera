@@ -66,7 +66,9 @@ export function CaseGallery({ gallery, name, language }: { gallery: CaseGalleryD
   const [hovered, setHovered] = useState(false);
   const [chosen, setChosen] = useState(false);
   const view = views[active];
-  const url = new URL(view.url);
+  const url = view.url ? new URL(view.url) : null;
+  // Sin sitio publicado, la barra muestra solo la ruta.
+  const address = url ? `${url.host}${url.pathname === "/" ? "" : url.pathname}` : view.path ?? "";
   const hasTablet = views.some((item) => item.tablet);
   const hasMobile = views.some((item) => item.mobile);
 
@@ -127,7 +129,7 @@ export function CaseGallery({ gallery, name, language }: { gallery: CaseGalleryD
                 <span className="h-2 w-2 rounded-full bg-foreground/20" />
                 <span className="h-2 w-2 rounded-full bg-foreground/20" />
               </span>
-              <span className="min-w-0 truncate rounded-full bg-foreground/5 px-3 py-1 font-mono text-[10px] text-foreground/65">{url.host}{url.pathname === "/" ? "" : url.pathname}</span>
+              <span className="min-w-0 truncate rounded-full bg-foreground/5 px-3 py-1 font-mono text-[10px] text-foreground/65">{address}</span>
             </div>
             <div className="relative aspect-[1440/900] bg-card">
               <Screens views={views} device="desktop" active={active} loaded={loaded} name={name} deviceName={t.devices.desktop} language={language} />
@@ -161,10 +163,12 @@ export function CaseGallery({ gallery, name, language }: { gallery: CaseGalleryD
         </div>
       </div>
 
-      <a href={view.url} target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex min-h-11 items-center gap-2 text-sm text-foreground/75 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-        {t.open}: {view.label[language]}
-        <ArrowUpRight aria-hidden="true" className="h-4 w-4" />
-      </a>
+      {view.url && (
+        <a href={view.url} target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex min-h-11 items-center gap-2 text-sm text-foreground/75 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+          {t.open}: {view.label[language]}
+          <ArrowUpRight aria-hidden="true" className="h-4 w-4" />
+        </a>
+      )}
     </section>
   );
 }

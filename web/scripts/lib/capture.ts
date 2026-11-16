@@ -32,10 +32,12 @@ export const HIDE_FIXED = `for (const element of document.querySelectorAll("body
  * (POST, PUT…) ni llamada a CRM, pagos o funciones sale del navegador, así un
  * recorrido con datos de ejemplo no crea contactos ni cobra nada.
  */
-export async function readOnly(context: BrowserContext) {
+/** `allow`: la única petición que escribe y se deja pasar (entrar a una demo con datos sintéticos). */
+export async function readOnly(context: BrowserContext, allow?: RegExp) {
   await context.route("**/*", (route) => {
     const request = route.request();
-    if (request.method() !== "GET" || /leadconnector|msgsndr|gohighlevel|functions\/v1|stripe|zapier|make\.com|formspree|resend|supabase/i.test(request.url())) return route.abort();
+    if (allow?.test(request.url())) return route.continue();
+    if (request.method() !== "GET" ||/leadconnector|msgsndr|gohighlevel|functions\/v1|stripe|zapier|make\.com|formspree|resend|supabase/i.test(request.url())) return route.abort();
     return route.continue();
   });
 }

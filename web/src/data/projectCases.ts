@@ -187,6 +187,100 @@ export const PROJECT_CASES: ProjectCase[] = [
     status: "featured",
   },
   {
+    // Producto propio. Fuente: oportunidades/crm-propio-relevamiento.md (recorrido del 15/11
+    // sobre la demo pública con datos sintéticos) y el repo Marser321/lava.
+    slug: "oficio",
+    title: t("Oficio", "Oficio"),
+    summary: t(
+      "Mi CRM para negocios de oficio: agenda, atención, caja, equipo y automatizaciones por WhatsApp, con la web de reservas de cada negocio. Se arma por módulos y por rubro.",
+      "My CRM for service businesses: schedule, customer messages, cash, team and WhatsApp automations, plus each business's booking site. It's built from modules, per industry.",
+    ),
+    tracks: ["build", "scale"],
+    role: t("Producto propio: diseño, desarrollo y operación en mi servidor.", "My own product: design, development and running it on my server."),
+    challenge: t(
+      "Que un lavadero, una barbería o un gimnasio manejen el día entero desde un solo lugar, sin papelitos ni planillas sueltas.",
+      "Let a car wash, a barbershop or a gym run the whole day from one place, with no paper notes or loose spreadsheets.",
+    ),
+    constraints: [
+      t("El mismo núcleo tiene que servir a rubros distintos.", "The same core has to serve different industries."),
+      t("Lo usan en el mostrador y en el piso, desde el teléfono.", "It's used at the counter and on the floor, from a phone."),
+      t("Cada negocio con su marca, sus sucursales y su dominio.", "Each business with its own brand, branches and domain."),
+    ],
+    decisions: [
+      t("Un núcleo con módulos que se prenden y se apagan por negocio.", "One core with modules that each business turns on or off."),
+      t("Una sola bandeja para WhatsApp, la web y el asistente con IA.", "One inbox for WhatsApp, the website and the AI assistant."),
+      t("Siete automatizaciones por rubro: confirmación, recordatorios a 24 h y a 2 h, pedido de opinión y clientes inactivos a 60 días, entre otras.", "Seven automations per industry: confirmation, reminders 24 h and 2 h before, review requests and customers inactive for 60 days, among others."),
+      t("Marca blanca: logo, color, web pública y dominio propio para cada negocio.", "White label: logo, color, public website and custom domain for each business."),
+    ],
+    result: t(
+      "Una demo pública con cuatro rubros (lavadero, barbería, estética y gimnasio) y seis roles, con datos sintéticos.",
+      "A public demo with four industries (car wash, barbershop, beauty and gym) and six roles, with synthetic data.",
+    ),
+    evidence: [t("Demo pública con datos sintéticos.", "Public demo with synthetic data.")],
+    stack: ["TypeScript", "Fastify", "PostgreSQL", "Docker", "WhatsApp", t("IA", "AI")],
+    media: [{ src: "/portfolio/brands/oficio/cover.webp", alt: t("Portada de Oficio: un taller de lavado de noche", "Oficio cover: a car-wash bay at night") }],
+    liveUrl: "https://oficio.mmorera.agency/",
+    tryIt: [
+      { href: t("https://oficio.mmorera.agency/", "https://oficio.mmorera.agency/"), label: t("Entra a la demo de un lavadero", "Open the car-wash demo"), kind: "demo", note: t("Datos sintéticos: elige Lavadero y el rol Dueño. No hace falta cuenta.", "Synthetic data: choose Car wash and the Owner role. No account needed.") },
+    ],
+    embeddable: false,
+    accent: "#1F5246",
+    year: "2026",
+    kind: t("Producto propio · CRM", "Own product · CRM"),
+    proof: {
+      problem: t("Que un negocio de oficio maneje agenda, atención y caja en un solo lugar, sin papelitos.", "Let a service business run its schedule, customer messages and cash in one place, with no paper notes."),
+      now: t("Agenda, caja, inventario, equipo con comisiones y reportes en un panel, más la web de reservas de cada negocio.", "Schedule, cash, inventory, team commissions and reports in one panel, plus each business's booking site."),
+      metric: { value: "4", label: t("rubros con su propia demo: lavadero, barbería, estética y gimnasio", "industries with their own demo: car wash, barbershop, beauty and gym"), verified: true },
+      humanStep: t("La caja se abre y se cierra a mano en cada sucursal, con el efectivo esperado a la vista.", "Cash is opened and closed by hand at each branch, with the expected amount on screen."),
+    },
+    status: "featured",
+  },
+  {
+    // Producto propio, sin publicar. Fuente: README.md y PRODUCT.md del repo Marser321/tecargo
+    // (Desktop/tecargo). Reel: corte de 4–10 s del film de lanzamiento, sin voseo en pantalla.
+    slug: "te-cargo",
+    title: t("te_Cargo", "te_Cargo"),
+    summary: t(
+      "Una red para reservar cargadores de autos eléctricos de particulares, hoteles y comercios: mapa, reservas, cobro con preautorización y una línea de turismo con carga en destino.",
+      "A network to book electric-car chargers from private hosts, hotels and shops: map, bookings, pre-authorized payments and a tourism line with destination charging.",
+    ),
+    tracks: ["create", "build"],
+    role: t("Producto propio: producto, diseño y desarrollo full-stack.", "My own product: product, design and full-stack development."),
+    challenge: t(
+      "Que un conductor reserve el cargador de un particular o de un comercio con la misma confianza que uno público, y que el anfitrión cobre sin sorpresas.",
+      "Let a driver book a private host's or a shop's charger with the same confidence as a public one, and let the host get paid with no surprises.",
+    ),
+    constraints: [
+      t("Tres perfiles en una misma cuenta: conductor, anfitrión o los dos.", "Three profiles in one account: driver, host or both."),
+      t("Cobro por kWh solo con el medidor verificado; si no, por hora.", "Per-kWh pricing only with a verified meter; otherwise, by the hour."),
+      t("Métricas sin guardar la IP ni quién generó cada evento.", "Metrics without storing the IP or who triggered each event."),
+    ],
+    decisions: [
+      t("Preautorización con un margen configurable y tope de una hora de sobreestadía: el anfitrión nunca cobra más de lo retenido.", "Pre-authorization with a configurable margin and a one-hour overstay cap: the host never charges more than what was held."),
+      t("Tres ofertas que no se miden igual: cargador, comercio y campaña.", "Three offers measured differently: charger, business and campaign."),
+      t("Todo lo que crea una cuenta de demostración queda marcado y se puede ocultar del sitio público.", "Everything a demo account creates is flagged and can be hidden from the public site."),
+      t("Una propuesta aparte para inversores e instituciones, con tres destinos turísticos y un comparador económico.", "A separate proposal for investors and institutions, with three tourist destinations and an economic comparison tool."),
+    ],
+    result: t(
+      "La plataforma funciona en desarrollo, con anfitriones de prueba en todo el mapa, y la propuesta se usa para acordar un piloto. Todavía no está publicada.",
+      "The platform runs in development, with test hosts across the map, and the proposal is used to agree on a pilot. It isn't published yet.",
+    ),
+    evidence: [t("Build local y film de lanzamiento.", "Local build and launch film.")],
+    stack: ["React Router", "React", "TypeScript", "SQLite", "Mercado Pago", "Docker"],
+    media: [{ src: "/portfolio/reels/te-cargo-poster.jpg", alt: t("Tarjeta de un cargador en te_Cargo, con precio, conector y horario", "A te_Cargo charger card with price, connector and hours") }],
+    accent: "#1F6B45",
+    year: "2026",
+    kind: t("Producto propio · Movilidad eléctrica", "Own product · Electric mobility"),
+    proof: {
+      problem: t("Reservar el cargador de un particular o de un comercio con la misma confianza que uno público.", "Book a private host's or a shop's charger with the same confidence as a public one."),
+      now: t("Mapa, reservas, sesiones de carga con evidencias y disputas, para conductores y anfitriones.", "Map, bookings, charging sessions with evidence and disputes, for drivers and hosts."),
+      metric: { value: "3", label: t("perfiles en una misma cuenta: conductor, anfitrión o los dos", "profiles in one account: driver, host or both"), verified: true },
+      humanStep: t("Administración verifica el medidor de cada cargador antes de permitir el cobro por kWh.", "An admin verifies each charger's meter before per-kWh pricing is allowed."),
+      pending: t("Todavía no está publicada: se presenta a inversores e instituciones para acordar un piloto.", "It isn't published yet: it's being presented to investors and institutions to agree on a pilot."),
+    },
+    status: "featured",
+  },
+  {
     slug: "rangel-oviedo-group",
     title: t("Rangel Oviedo Group", "Rangel Oviedo Group"),
     summary: t(

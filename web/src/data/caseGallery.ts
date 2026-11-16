@@ -18,8 +18,10 @@ export interface GalleryShot {
 export interface GalleryView {
   id: string;
   label: { es: string; en: string };
-  /** La página real en el sitio del caso. */
-  url: string;
+  /** La página real en el sitio del caso. Falta si el producto no está publicado. */
+  url?: string;
+  /** La ruta que se ve en la barra cuando no hay `url`. */
+  path?: string;
   desktop: GalleryShot;
   /** Falta si esa pantalla falló en el sitio en vivo: se muestra lo que hay. */
   tablet?: GalleryShot;
