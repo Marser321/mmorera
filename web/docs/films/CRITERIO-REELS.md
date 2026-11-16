@@ -32,6 +32,18 @@ con un poco más de criterio». Esto es lo que quedó.
 Inclinación máxima de 3° con un resorte amortiguado. Con 9° el video rotado
 titilaba al mover el mouse.
 
+## Las puertas de servicio del home (escena 02)
+
+Mario pidió que las cuatro puertas se vean parejas, con el estilo de la primera (el lavado de L&B a sangre), y después que cada una tenga su color: «armonizar es transmitir».
+
+- **Los cuatro films se hacen en Remotion** (`src/components/films/puertas/`, `scripts/render-doors.ts`), con el mismo criterio de arriba: unos tres segundos de cine puro y después la interfaz.
+- **Un color por puerta, de un proyecto que destaque por ese color:** azul (L&B), dorado (la barbería de Oficio), verde (te_Cargo) y coral (Vespera). No repetir material de un mismo proyecto en dos puertas: tres puertas doradas contra una azul se leían desparejas.
+- **La interfaz va en la columna central** (500 px de un film de 1200): en pantallas de 1024 px la puerta abierta muestra menos de la mitad del ancho.
+- **4:3 y sujeto arriba:** la puerta abierta mide entre 0,6 y 1,1 de ancho por alto y su mitad de abajo lleva el título.
+- **Puerta cerrada = póster de cine puro.** Si quedara congelada en el cuadro donde se pausó, se verían textos cortados.
+- **El color de la puerta** (`tone` en `timing.ts`) pinta también la línea sobre el título, la barra de avance y el punto de la lista del teléfono.
+- Los planos de origen y sus cuadros exactos están en `film-sources/puertas/README.md`.
+
 ## El tráiler de un caso (Vespera)
 
 Mario pidió que la demo de agencia de viajes tenga protagonismo, sobre todo por sus detalles cinemáticos: la ventanilla, el avión que viaja, los destinos que entran y las transiciones con el avión.

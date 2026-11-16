@@ -256,27 +256,6 @@ html.light {
   animation: door-progress linear forwards;
 }
 
-@keyframes door-flow-pulse {
-  0% {
-    opacity: 0;
-    transform: translate(-50%, 0);
-  }
-
-  15%,
-  80% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
-    transform: translate(-50%, 8.75rem);
-  }
-}
-
-.door-flow-pulse {
-  animation: door-flow-pulse 2.6s cubic-bezier(0.65, 0, 0.35, 1) infinite;
-}
-
 /* Señal de «sigue bajando» del héroe: un punto que recorre una línea fina. */
 @keyframes scroll-cue {
   0% {

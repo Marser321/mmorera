@@ -136,21 +136,25 @@ test("los cuatro chips responden al foco y enlazan a servicios", async ({ page }
   await expect(page.locator("#servicios")).toBeInViewport();
 });
 
-test("la puerta de contenido muestra el trailer según la pantalla", async ({ browser }) => {
+test("cada puerta de servicio abre con su film a sangre", async ({ page }) => {
   test.setTimeout(90_000);
-  for (const { viewport, format } of [
-    { viewport: { width: 1440, height: 900 }, format: "landscape" },
-    { viewport: { width: 1100, height: 800 }, format: "portrait" },
-  ]) {
-    const context = await browser.newContext({ baseURL: BASE_URL, viewport });
-    const page = await context.newPage();
-    await page.goto("/");
-    const door = page.locator('[data-door="ai-software"]');
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+  for (const [id, film] of [
+    ["web-ecommerce", /\/portfolio\/puertas\/webs\.(webm|mp4)$/],
+    ["booking-payments", /\/portfolio\/puertas\/agentes-es\.(webm|mp4)$/],
+    ["crm-automation", /\/portfolio\/puertas\/sistemas-es\.(webm|mp4)$/],
+    ["ai-software", /\/portfolio\/puertas\/contenido\.(webm|mp4)$/],
+  ] as const) {
+    const door = page.locator(`[data-door="${id}"]`);
     await door.scrollIntoViewIfNeeded();
     await door.hover();
-    await expect(door.locator("[data-trailer-format]")).toHaveAttribute("data-trailer-format", format, { timeout: 15_000 });
-    await expect(door.locator("video")).toHaveAttribute("src", format === "landscape" ? /fabrica-trailer-es-16x9\.mp4$/ : /fabrica-trailer-es\.mp4$/);
-    await context.close();
+    const video = door.locator("video");
+    await expect.poll(() => video.evaluate((element: HTMLVideoElement) => element.currentSrc), { timeout: 15_000 }).toMatch(film);
+    // A sangre: el video ocupa toda la puerta.
+    const [doorBox, videoBox] = [await door.boundingBox(), await video.boundingBox()];
+    expect(Math.round(videoBox!.width)).toBeGreaterThanOrEqual(Math.round(doorBox!.width) - 2);
+    await expect.poll(() => video.evaluate((element: HTMLVideoElement) => !element.paused), { timeout: 15_000 }).toBe(true);
   }
 });
 
