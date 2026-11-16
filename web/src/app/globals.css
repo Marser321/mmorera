@@ -491,20 +491,25 @@ html.light {
  * ══════════════════════════════════════════════════════
  */
 
-/* Grano de pared: una textura fija y tenue sobre todo el sitio. Sin
-   mix-blend (no fuerza a recomponer lo que hay debajo al hacer scroll). */
+/* Grano de pared: el mismo de las piezas de redes (contenido/diseno/kit.css).
+   Ruido fractal gris en overlay: se lee como piedra, no como estática, y casi
+   no toca el texto claro. Pedido de Mario del 16/11 («demasiado ruido»). */
+:root {
+  --grano-pared: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='5' intercept='-2.05'/%3E%3CfeFuncG type='linear' slope='5' intercept='-2.05'/%3E%3CfeFuncB type='linear' slope='5' intercept='-2.05'/%3E%3CfeFuncA type='linear' slope='0' intercept='1'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+}
+
 .grano-pared {
   position: fixed;
   inset: 0;
   z-index: 40;
   pointer-events: none;
-  background-image: url("/social/grano.webp");
-  background-size: 384px 384px;
-  opacity: 0.055;
+  background: var(--grano-pared) 0 0 / 320px 320px;
+  mix-blend-mode: overlay;
+  opacity: 0.6;
 }
 
 html.light .grano-pared {
-  opacity: 0.04;
+  opacity: 0.45;
 }
 
 /* Monograma en blanco roto con textura de piedra, fundiéndose hacia la pared.
@@ -602,14 +607,14 @@ html.light .banda-marfil {
   --ink-rgb: 236 231 221;
 }
 
-/* Grano de papel propio de la banda. */
+/* Grano de papel propio de la banda: el mismo del kit, en overlay. */
 .banda-marfil::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background-image: url("/social/grano.webp");
-  background-size: 384px 384px;
-  opacity: 0.08;
+  background: var(--grano-pared) 0 0 / 320px 320px;
+  mix-blend-mode: overlay;
+  opacity: 0.6;
 }
