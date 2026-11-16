@@ -8,24 +8,26 @@ import { localePath } from "@/config/site";
 import { SERVICE_SOLUTIONS, type ServiceSolution } from "@/data/solutionsData";
 import { getProjectCase } from "@/data/projectCases";
 import { getCaseMedia } from "@/data/caseMedia";
-import { AGENT_DEMO_SCRIPT } from "@/data/agentDemoScript";
-import { VIDEO_GALLERY, galleryMedia } from "@/data/videoGallery";
+import { getDoorFilm } from "@/data/doorFilms";
 import { CaseReel } from "@/components/shared/CaseReel";
 import { Reveal } from "@/components/scroll/Reveal";
 import { SplitReveal } from "@/components/motion/SplitReveal";
 import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
-import { useResolvedMediaQuery } from "@/hooks/useMediaQuery";
 
 /**
  * Escena 2 del home: los cuatro servicios como cuatro puertas. Cada una
- * muestra su prueba en movimiento, no un párrafo: el reel real de una web,
- * la demo guiada del agente, el recorrido de una consulta y una pieza de
- * video. En escritorio la puerta enfocada se abre y las demás quedan en
- * reposo con su nombre de canto; mientras nadie interactúa, el foco avanza
- * solo. En el teléfono, una lista corta: los reels llegan en la escena de casos.
+ * lleva un film a sangre hecho en Remotion (components/films/puertas), con el
+ * mismo criterio (primero el cine, después la interfaz) y un color propio:
+ * el azul del lavado de L&B con su web, el dorado de la barbería con la
+ * conversación del agente, el verde de te_Cargo con una reserva que se cobra
+ * sola y el coral de Vespera con el reencuadre de una escena generada. En
+ * escritorio la puerta enfocada se abre y las demás quedan en reposo con su
+ * nombre de canto; mientras nadie interactúa, el foco avanza solo. En el
+ * teléfono, una lista corta: los reels llegan en la escena de casos.
  */
 
-const AUTO_ADVANCE_MS = 7000;
+/** Lo que dura el film más largo: cada puerta alcanza a contar lo suyo. */
+const AUTO_ADVANCE_MS = 8000;
 
 const copy = {
   es: {
@@ -36,10 +38,9 @@ const copy = {
     capabilities: "Detrás de estos cuatro servicios hay nueve capacidades.",
     capabilitiesCta: "Explóralas",
     agentLabel: "Demo guiada · datos de muestra",
-    flowLabel: "Ejemplo · sin datos de clientes",
+    flowLabel: "Producto propio · te_Cargo",
+    contentLabel: "Escenas generadas con IA · Vespera",
     realCase: "Caso real",
-    flow: ["Llega una consulta", "Entra a tu CRM", "Avisa a quien corresponde", "Sale el seguimiento"],
-    handoff: "Pasa a una persona",
   },
   en: {
     eyebrow: "02 — Services",
@@ -49,119 +50,29 @@ const copy = {
     capabilities: "Behind these four services there are nine capabilities.",
     capabilitiesCta: "Explore them",
     agentLabel: "Guided demo · sample data",
-    flowLabel: "Example · no client data",
+    flowLabel: "Own product · te_Cargo",
+    contentLabel: "AI-generated scenes · Vespera",
     realCase: "Real case",
-    flow: ["An enquiry comes in", "It lands in your CRM", "The right person is notified", "Follow-up goes out"],
-    handoff: "Handed to a person",
   },
 } as const;
 
 type Copy = (typeof copy)[Language];
 
-const CONTENT_PIECE = VIDEO_GALLERY.find((piece) => piece.slug === "fabrica-trailer") ?? VIDEO_GALLERY[0];
-
 function visualLabel(service: ServiceSolution, c: Copy, language: Language): string {
   if (service.id === "booking-payments") return c.agentLabel;
   if (service.id === "crm-automation") return c.flowLabel;
-  if (service.id === "ai-software") return CONTENT_PIECE.label[language];
+  if (service.id === "ai-software") return c.contentLabel;
   const project = getProjectCase(service.proofSlug);
   return project ? `${c.realCase} · ${project.title[language]}` : c.realCase;
 }
 
-/** Conversación corta de la demo guiada: pregunta, respuesta y el traspaso a una persona. */
-function ChatGlimpse({ language, live, c }: { language: Language; live: boolean; c: Copy }) {
-  const question = AGENT_DEMO_SCRIPT.options[0];
-  const messages = [
-    { from: "agent", text: AGENT_DEMO_SCRIPT.greeting[language] },
-    { from: "user", text: question.question[language] },
-    { from: "agent", text: question.answer[0][language] },
-    { from: "note", text: c.handoff },
-  ] as const;
-  return (
-    <div className="absolute inset-x-0 top-0 bottom-[38%] flex items-center justify-center px-5">
-      <div className="w-full max-w-[19rem] space-y-2.5" key={live ? "live" : "rest"}>
-        {messages.map((message, index) => (
-          <p
-            key={message.text}
-            className={`w-fit max-w-[88%] text-[13px] leading-snug ${live ? "fade-up-in" : ""} ${
-              message.from === "user"
-                ? "ml-auto rounded-2xl rounded-br-md bg-[#ECE7DD] px-3.5 py-2 text-[#0B0B0A]"
-                : message.from === "agent"
-                  ? "rounded-2xl rounded-bl-md border border-white/12 bg-white/[.07] px-3.5 py-2 text-[#ECE7DD]/90"
-                  : "mx-auto flex items-center gap-2 rounded-full border border-[#71F3A2]/35 px-3 py-1 text-[12px] text-[#71F3A2]"
-            }`}
-            style={live ? { animationDelay: `${0.25 + index * 0.85}s` } : undefined}
-          >
-            {message.from === "note" ? <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[#71F3A2]" /> : null}
-            {message.text}
-          </p>
-        ))}
-      </div>
-    </div>
-  );
-}
+/** El color de la puerta: el de su film; si no tiene, el del servicio. */
+const doorTone = (service: ServiceSolution, language: Language) => getDoorFilm(service.id, language)?.tone ?? service.accent;
 
-/** El recorrido de una consulta: cuatro estaciones y un pulso que las cruza. */
-function FlowGlimpse({ live, c }: { live: boolean; c: Copy }) {
-  return (
-    <div className="absolute inset-x-0 top-0 bottom-[38%] flex items-center justify-center px-6">
-      <ol className="relative w-full max-w-[17rem] space-y-3.5">
-        <span aria-hidden="true" className="absolute bottom-4 left-[0.95rem] top-4 w-px bg-white/15" />
-        {live ? <span aria-hidden="true" className="door-flow-pulse absolute left-[0.95rem] top-4 h-10 w-px -translate-x-1/2 bg-[linear-gradient(to_bottom,transparent,#B68CFF,transparent)]" /> : null}
-        {c.flow.map((step, index) => (
-          <li key={step} className="relative flex items-center gap-3">
-            <span className="relative z-10 grid h-8 w-8 shrink-0 place-items-center rounded-full border border-[#B68CFF]/45 bg-[#0B0B0A] font-mono text-[10px] text-[#B68CFF]">
-              {String(index + 1).padStart(2, "0")}
-            </span>
-            <span className={`rounded-xl border border-white/12 bg-white/[.06] px-3 py-2 text-[13px] text-[#ECE7DD]/88 ${live ? "fade-up-in" : ""}`} style={live ? { animationDelay: `${0.2 + index * 0.45}s` } : undefined}>
-              {step}
-            </span>
-          </li>
-        ))}
-      </ol>
-    </div>
-  );
-}
-
-/**
- * El trailer de la fábrica sobre su propio póster. Con la puerta abierta en
- * una pantalla ancha (xl), la versión horizontal llena la puerta; cerrada, o
- * en pantallas más angostas, la vertical.
- */
-function ContentGlimpse({ language, live, open, reduced }: { language: Language; live: boolean; open: boolean; reduced: boolean }) {
-  const wide = useResolvedMediaQuery("(min-width: 1280px)");
-  const landscape = open && wide === true ? CONTENT_PIECE.landscape : undefined;
-  const src = galleryMedia(landscape?.src ?? CONTENT_PIECE.src, language);
-  const poster = galleryMedia(landscape?.poster ?? CONTENT_PIECE.poster, language);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    if (live) void video.play().catch(() => {});
-    else video.pause();
-  }, [live, src]);
-  return (
-    <div data-trailer-format={landscape ? "landscape" : "portrait"} className="absolute inset-x-0 top-0 bottom-[30%] flex items-center justify-center">
-      {/* eslint-disable-next-line @next/next/no-img-element -- póster decorativo de fondo, mismo archivo que el del video */}
-      <img src={poster} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full scale-125 object-cover opacity-30 blur-2xl" />
-      <div className={`relative overflow-hidden border border-white/15 shadow-[0_30px_80px_-30px_rgba(0,0,0,.9)] ${landscape ? "aspect-video w-[94%] rounded-xl" : "aspect-[9/16] h-[86%] rounded-2xl"}`}>
-        {reduced ? (
-          // eslint-disable-next-line @next/next/no-img-element -- póster quieto con movimiento reducido
-          <img src={poster} alt="" aria-hidden="true" className="h-full w-full object-cover" />
-        ) : (
-          <video key={src} ref={videoRef} src={src} poster={poster} muted loop playsInline preload="none" aria-hidden="true" className="h-full w-full object-cover" />
-        )}
-      </div>
-    </div>
-  );
-}
-
-function DoorVisual({ service, language, live, open, reduced, c }: { service: ServiceSolution; language: Language; live: boolean; open: boolean; reduced: boolean; c: Copy }) {
-  if (service.id === "booking-payments") return <ChatGlimpse language={language} live={live && !reduced} c={c} />;
-  if (service.id === "crm-automation") return <FlowGlimpse live={live && !reduced} c={c} />;
-  if (service.id === "ai-software") return <ContentGlimpse language={language} live={live} open={open} reduced={reduced} />;
-  const media = getCaseMedia(service.proofSlug);
-  return media ? <CaseReel reel={media.reel} alt="" playing={live} className="absolute inset-0 h-full w-full" sizes="(min-width: 1024px) 45vw, 100vw" /> : null;
+/** El film de la puerta, a sangre: el de la propia puerta o el reel del caso que la prueba. */
+function DoorVisual({ service, language, live }: { service: ServiceSolution; language: Language; live: boolean }) {
+  const reel = getDoorFilm(service.id, language) ?? getCaseMedia(service.proofSlug)?.reel;
+  return reel ? <CaseReel key={reel.webm} reel={reel} alt="" playing={live} restartOnPlay className="absolute inset-0 h-full w-full" sizes="(min-width: 1024px) 45vw, 100vw" /> : null;
 }
 
 export function ServicesStage() {
@@ -238,8 +149,8 @@ export function ServicesStage() {
                 className={`group relative flex min-w-0 flex-col justify-end overflow-hidden rounded-[1.6rem] border bg-[#0B0B0A] transition-[flex-grow,border-color] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${isActive ? "border-white/25" : "border-white/10"}`}
                 style={{ flexGrow: isActive ? "var(--door-open)" : 1, flexBasis: 0 }}
               >
-                <div aria-hidden="true" className={`absolute inset-0 transition-opacity duration-700 motion-reduce:transition-none ${isActive ? "opacity-100" : "opacity-35"}`}>
-                  <DoorVisual service={service} language={language} live={isActive && inView} open={isActive} reduced={reduced} c={c} />
+                <div aria-hidden="true" className={`absolute inset-0 transition-opacity duration-700 motion-reduce:transition-none ${isActive ? "opacity-100" : "opacity-60"}`}>
+                  <DoorVisual service={service} language={language} live={isActive && inView} />
                 </div>
                 <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(11,11,10,.92)_0%,rgba(11,11,10,.35)_16%,rgba(11,11,10,0)_30%,rgba(11,11,10,0)_42%,rgba(11,11,10,.9)_64%,rgba(11,11,10,.97)_78%,#0B0B0A_100%)]" />
 
@@ -264,7 +175,7 @@ export function ServicesStage() {
                     en una pantalla táctil no hay hover, así que tocarla lleva al servicio.
                     Es un ítem flex: el z-10 lo sube sobre el degradado sin cambiar eso. */}
                 <div className={`z-10 mx-6 mb-6 transition-opacity duration-500 ${isActive ? "opacity-100 delay-200" : "opacity-0"}`}>
-                  <span aria-hidden="true" className="block h-px w-10" style={{ backgroundColor: service.accent }} />
+                  <span aria-hidden="true" className="block h-px w-10" style={{ backgroundColor: doorTone(service, language) }} />
                   <h3 className="mt-4 text-[clamp(1.75rem,2.6vw,2.6rem)] font-medium leading-[1] tracking-[-0.045em] text-[#ECE7DD]">
                     <Link
                       href={localePath(language, service.path)}
@@ -286,7 +197,7 @@ export function ServicesStage() {
                     key={`progress-${cycle}`}
                     aria-hidden="true"
                     className="door-progress absolute inset-x-0 bottom-0 h-[2px] origin-left"
-                    style={{ backgroundColor: service.accent, animationDuration: `${AUTO_ADVANCE_MS}ms` }}
+                    style={{ backgroundColor: doorTone(service, language), animationDuration: `${AUTO_ADVANCE_MS}ms` }}
                   />
                 ) : null}
               </li>
@@ -305,7 +216,7 @@ export function ServicesStage() {
                 <span className="pt-1.5 font-mono text-xs text-foreground/60">{String(index + 1).padStart(2, "0")}</span>
                 <span>
                   <span className="flex items-center gap-2.5 text-[1.6rem] font-medium leading-tight tracking-[-0.04em] text-foreground">
-                    <span aria-hidden="true" className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: service.accent }} />
+                    <span aria-hidden="true" className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: doorTone(service, language) }} />
                     {service.shortTitle[language]}
                   </span>
                   <span className="mt-1.5 block text-sm leading-relaxed text-foreground/70">{service.headline[language]}</span>
