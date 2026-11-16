@@ -165,6 +165,7 @@ test("cada página de servicio abre con su film y se puede pausar", async ({ pag
     ["/estudio", /\/portfolio\/puertas\/webs\.(webm|mp4)$/],
     ["/agentes", /\/portfolio\/puertas\/agentes-es\.(webm|mp4)$/],
     ["/sistemas", /\/portfolio\/puertas\/sistemas-es\.(webm|mp4)$/],
+    ["/campanas", /\/portfolio\/puertas\/campanas-es\.(webm|mp4)$/],
     ["/fabricas", /\/portfolio\/trailers\/vespera\.(webm|mp4)$/],
   ] as const) {
     await page.goto(path);
@@ -178,9 +179,9 @@ test("cada página de servicio abre con su film y se puede pausar", async ({ pag
     await hero.getByRole("button", { name: "Pausar el video" }).click();
     await expect.poll(() => video.evaluate((element: HTMLVideoElement) => element.paused)).toBe(true);
   }
-  // En /fabricas, los cuatro films de las puertas se reproducen de a uno.
+  // En /fabricas, los films de los cinco servicios se reproducen de a uno.
   const tiles = page.locator("[data-service-film]");
-  await expect(tiles).toHaveCount(4);
+  await expect(tiles).toHaveCount(5);
   await tiles.nth(2).scrollIntoViewIfNeeded();
   await tiles.nth(2).locator("button").hover();
   await expect.poll(() => tiles.nth(2).locator("video").evaluate((element: HTMLVideoElement) => !element.paused), { timeout: 15_000 }).toBe(true);

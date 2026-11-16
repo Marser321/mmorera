@@ -10,6 +10,10 @@
  *   03 sistemas  · verde   · te_Cargo (producto propio)
  *   04 contenido · coral   · Vespera (escenas generadas con IA)
  *
+ * Hay un quinto film con el mismo criterio, el de «Campañas con IA». No es una
+ * puerta del home: abre la portada de /campanas.
+ *      campanas  · violeta · Truckers Choice (cine) y una cuenta de ejemplo
+ *
  * Cada film son dos planos. El plano 0 trae XFADE cuadros de entrada que se
  * funden sobre el final del plano 1: así el video se repite sin salto.
  *
@@ -30,7 +34,7 @@ export const XFADE = 8;
  */
 export const SAFE = { x: 350, width: 500, top: 150, bottom: 470 } as const;
 
-export const DOOR_IDS = ["webs", "agentes", "sistemas", "contenido"] as const;
+export const DOOR_IDS = ["webs", "agentes", "sistemas", "contenido", "campanas"] as const;
 export type DoorId = (typeof DOOR_IDS)[number];
 
 export interface DoorShot {
@@ -112,6 +116,19 @@ export const DOORS: Record<DoorId, DoorSpec> = {
     poster: 66,
     tone: "#FF8F7A",
     tint: { color: "#FF5E62", strength: 0.34 },
+  },
+  // Truckers Choice: el camión al amanecer y la autopista de noche vista desde arriba. Una pregunta a la cuenta y una persona que decide.
+  campanas: {
+    shots: [
+      { frames: 68, focal: [0.64, 0.6], target: [0.5, 0.46], zoom: 1.08 },
+      { frames: 133, focal: [0.5, 0.5], target: [0.5, 0.42], zoom: 1.06 },
+    ],
+    overlayFrom: 68,
+    overlayOut: 175,
+    bilingual: true,
+    poster: 34,
+    tone: "#A98BFF",
+    tint: { color: "#5B2BD6", strength: 0.42 },
   },
 };
 

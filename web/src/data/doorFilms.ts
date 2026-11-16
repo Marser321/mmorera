@@ -24,6 +24,7 @@ const DOOR_CASE: Partial<Record<DoorId, string>> = {
   webs: "lb-elite-wash-detail",
   sistemas: "te-cargo",
   contenido: "vespera",
+  campanas: "truckers-choice",
 };
 
 /** Qué se ve en cada film, dicho tal cual: es el rótulo de la puerta y el pie del film en su página. */
@@ -32,6 +33,7 @@ const DOOR_SOURCE: Record<DoorId, LocalizedText> = {
   agentes: { es: "Demo guiada · datos de muestra", en: "Guided demo · sample data" },
   sistemas: { es: "Producto propio · te_Cargo", en: "Own product · te_Cargo" },
   contenido: { es: "Escenas generadas con IA · Vespera", en: "AI-generated scenes · Vespera" },
+  campanas: { es: "Escenas de Truckers Choice · cuenta de ejemplo", en: "Truckers Choice footage · sample account" },
 };
 
 export interface DoorFilm extends CaseReelSources {
@@ -43,10 +45,15 @@ export interface DoorFilm extends CaseReelSources {
   source: LocalizedText;
 }
 
-export function getDoorFilm(serviceId: string, language: "es" | "en"): DoorFilm | undefined {
-  const door = DOOR_OF_SERVICE[serviceId];
-  if (!door) return undefined;
+/** El film de una puerta por su nombre. El de campañas no tiene puerta en el home: solo se pide así. */
+export function getFilmOfDoor(door: DoorId, language: "es" | "en"): DoorFilm {
   // Las que llevan texto tienen una versión por idioma; el póster es cine puro y sirve para las dos.
   const name = DOORS[door].bilingual ? `${door}-${language}` : door;
   return { mp4: `/portfolio/puertas/${name}.mp4`, webm: `/portfolio/puertas/${name}.webm`, poster: `/portfolio/puertas/${door}-poster.jpg`, tone: DOORS[door].tone, caseSlug: DOOR_CASE[door], source: DOOR_SOURCE[door] };
+}
+
+/** El film de la puerta de un servicio del home. */
+export function getDoorFilm(serviceId: string, language: "es" | "en"): DoorFilm | undefined {
+  const door = DOOR_OF_SERVICE[serviceId];
+  return door ? getFilmOfDoor(door, language) : undefined;
 }

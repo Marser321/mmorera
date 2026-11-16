@@ -10,6 +10,7 @@ Los usa `npx tsx scripts/render-doors.ts`. Son recortes exactos de cinemáticas 
 | 01 Webs | | `webs-ui-hero.jpg`, `webs-ui-cotizador.jpg` | Capturas del sitio de L&B a 2×, reducidas a 1600×1000 | Portada y `#quoter` |
 | 02 Agentes | Dorado | `agentes-0`, `agentes-1` | Cinemática de barbería de Oficio (`lava`: `apps/admin/public/brand/barber/film/film-16x9.mp4`) | 122–189 y 272–411 |
 | 03 Sistemas | Verde | `sistemas-0`, `sistemas-1` | Escenas de te_Cargo (`tecargo/presentation/incoming/bodega-wide.mp4` y `bodega-detail.mp4`) | 4–71 y 2–141 |
+| Campañas (portada de `/campanas`, sin puerta en el home) | Violeta | `campanas-0`, `campanas-1` | Escenas de Truckers Choice (`public/portfolio/brands/truckers-choice/story-sunrise.mp4` y `story-network.mp4`), sin sus cuadros repetidos | 30–97 de 143 y 12–144 de 145 |
 | 04 Contenido | Coral | `contenido-0`, `contenido-1` | Escenas de Vespera, generadas con IA (`viajes-demo/public/media/flow/v1/airplane-16x9.mp4` y `arr-venice-16x9.mp4`) | 38–105 y 2–141 |
 
 Notas:

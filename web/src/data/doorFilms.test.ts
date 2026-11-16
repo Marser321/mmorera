@@ -2,9 +2,9 @@ import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import path from "node:path";
-import { DOOR_COPY } from "@/components/films/puertas/copy";
+import { DOOR_COPY, campaignCopy } from "@/components/films/puertas/copy";
 import { DOORS, DOOR_IDS, DOOR_SIZE, SAFE, WEBS_UI, XFADE, doorFrames, secondShotStart } from "@/components/films/puertas/timing";
-import { DOOR_FILM_SERVICES, getDoorFilm } from "./doorFilms";
+import { DOOR_FILM_SERVICES, getDoorFilm, getFilmOfDoor } from "./doorFilms";
 import { SERVICE_SOLUTIONS } from "./solutionsData";
 import { getProjectCase } from "./projectCases";
 
@@ -33,6 +33,23 @@ describe("films de las puertas de servicio", () => {
       const slug = caseOf(id);
       if (slug) assert.ok(getProjectCase(slug), `${id} lleva a un caso inexistente: ${slug}`);
       assert.equal(getDoorFilm(id, "en")?.caseSlug, slug);
+    }
+  });
+
+  it("el film de campañas no es una puerta del home y muestra una cuenta de ejemplo", () => {
+    assert.ok(!SERVICE_SOLUTIONS.some((service) => getDoorFilm(service.id, "es")?.webm.includes("campanas")), "campañas no tiene puerta en el home");
+    for (const language of ["es", "en"] as const) {
+      const film = getFilmOfDoor("campanas", language);
+      for (const src of [film.mp4, film.webm, film.poster]) assert.ok(existsSync(publicFile(src)), `falta ${src}: correr scripts/render-doors.ts --only campanas`);
+      assert.equal(film.caseSlug, "truckers-choice");
+      // El cine es de un caso real, pero la cuenta que se lee es de ejemplo: el pie y el film lo dicen.
+      assert.match(film.source[language], /ejemplo|sample/);
+      const copy = campaignCopy(language);
+      assert.ok(copy.badge && copy.prompt && copy.decides);
+      assert.equal(copy.rows.length, 3);
+      // La máquina propone y una persona decide: no todo se aprueba.
+      assert.ok(copy.rows.some((row) => row.approved) && copy.rows.some((row) => !row.approved));
+      for (const row of copy.rows) assert.ok(row.title && row.verdict);
     }
   });
 

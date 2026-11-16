@@ -1,5 +1,5 @@
 import type { CaseReelSources } from "@/data/caseMedia";
-import { getDoorFilm } from "@/data/doorFilms";
+import { getDoorFilm, getFilmOfDoor } from "@/data/doorFilms";
 import { getProjectCase } from "@/data/projectCases";
 import type { LocalizedText } from "@/types/site";
 
@@ -10,7 +10,8 @@ import type { LocalizedText } from "@/types/site";
  *
  * La página de contenido abre con el tráiler de Vespera, que es la pieza más
  * vistosa hecha con escenas generadas; el film de su puerta va más abajo, con
- * los otros tres. /campanas todavía no tiene film.
+ * los demás. /campanas no tiene puerta en el home, pero sí su film: el
+ * camión de Truckers Choice y una cuenta de anuncios de ejemplo.
  */
 export interface ServiceHeroFilm {
   reel: CaseReelSources;
@@ -24,11 +25,11 @@ export interface ServiceHeroFilm {
   caseSlug?: string;
 }
 
-export const SERVICE_HERO_PAGES = ["estudio", "agentes", "sistemas", "fabricas"] as const;
+export const SERVICE_HERO_PAGES = ["estudio", "agentes", "sistemas", "fabricas", "campanas"] as const;
 export type ServiceHeroPage = (typeof SERVICE_HERO_PAGES)[number];
 
 /** La puerta del home que lleva a cada página. */
-const DOOR_SERVICE: Record<Exclude<ServiceHeroPage, "fabricas">, string> = {
+const DOOR_SERVICE: Record<Exclude<ServiceHeroPage, "fabricas" | "campanas">, string> = {
   estudio: "web-ecommerce",
   agentes: "booking-payments",
   sistemas: "crm-automation",
@@ -52,7 +53,7 @@ export function getServiceHeroFilm(page: ServiceHeroPage, language: "es" | "en")
       caseSlug: "vespera",
     };
   }
-  const film = getDoorFilm(DOOR_SERVICE[page], language);
+  const film = page === "campanas" ? getFilmOfDoor("campanas", language) : getDoorFilm(DOOR_SERVICE[page], language);
   if (!film) return undefined;
   return { reel: film, ratio: "4 / 3", tone: film.tone, caption: film.source, caseSlug: film.caseSlug };
 }
