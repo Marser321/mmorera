@@ -47,6 +47,14 @@ export const GALLERY_TARGETS: Record<string, GalleryView[]> = {
     view("tienda", "/store", "Tienda", "Store"),
     view("cotizar", "/booking", "Cotización", "Quote"),
   ],
+  // Sin tratamientos estéticos ni páginas de equipo: ahí salen caras de pacientes y médicos.
+  "fenix-medical-center": [
+    view("inicio", "/en", "Inicio", "Home"),
+    view("metodo", "/en/el-metodo", "El método", "The method"),
+    view("tecnologia", "/en/tecnologia", "Tecnología", "Technology"),
+    view("edad-biologica", "/en/edad-biologica", "Edad biológica", "Biological age"),
+    view("contacto", "/en/contacto", "Reserva sin texto libre", "Booking with no free text"),
+  ],
   evowrap: [
     view("inicio", "/", "Inicio", "Home"),
     view("servicios", "/services", "Servicios", "Services"),

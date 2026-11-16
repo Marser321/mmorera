@@ -253,7 +253,7 @@ export const PROJECT_CASES: ProjectCase[] = [
     )],
     stack: ["React", "TypeScript", "Vite", "Tailwind CSS"],
     media: [
-      { src: "/portfolio/brands/cana-vacations/atlas-litoral-cana-cover.png", alt: t("Portada estática de Cana Vacations con capturas de escritorio y móvil", "Cana Vacations static cover with desktop and mobile captures") },
+      { src: "/portfolio/brands/cana-vacations/atlas-litoral-cana-cover.webp", alt: t("Portada estática de Cana Vacations con capturas de escritorio y móvil", "Cana Vacations static cover with desktop and mobile captures") },
       { src: "/portfolio/brands/cana-vacations/shots/desktop.png", alt: t("Página de inicio de la implementación local de Cana Vacations en escritorio", "Cana Vacations local implementation homepage on desktop") },
       { src: "/portfolio/brands/cana-vacations/shots/mobile.png", alt: t("Página de inicio de la implementación local de Cana Vacations en móvil", "Cana Vacations local implementation homepage on mobile") },
     ],
