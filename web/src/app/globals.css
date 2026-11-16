@@ -498,7 +498,7 @@ html.light {
   inset: 0;
   z-index: 40;
   pointer-events: none;
-  background-image: url("/social/grano.png");
+  background-image: url("/social/grano.webp");
   background-size: 384px 384px;
   opacity: 0.055;
 }
@@ -609,7 +609,7 @@ html.light .banda-marfil {
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background-image: url("/social/grano.png");
+  background-image: url("/social/grano.webp");
   background-size: 384px 384px;
   opacity: 0.08;
 }

@@ -388,5 +388,23 @@
       }
     ],
     "capturedAt": "2026-10-06"
+  },
+  "fenix-medical-center": {
+    "reel": {
+      "mp4": "/portfolio/reels/fenix-medical-center.mp4",
+      "webm": "/portfolio/reels/fenix-medical-center.webm",
+      "poster": "/portfolio/reels/fenix-medical-center-poster.jpg"
+    },
+    "gallery": [
+      {
+        "src": "/portfolio/shots/fenix-medical-center-desktop-1.jpg",
+        "device": "desktop"
+      },
+      {
+        "src": "/portfolio/shots/fenix-medical-center-mobile-1.jpg",
+        "device": "mobile"
+      }
+    ],
+    "capturedAt": "2026-11-16"
   }
 }

@@ -147,7 +147,7 @@ export function AuthorTrailer() {
               muted
               loop
               playsInline
-              preload="auto"
+              preload="metadata"
               poster={source.posterWebp}
               aria-hidden="true"
               onCanPlay={() => setReady(true)}
