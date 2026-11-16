@@ -283,3 +283,21 @@ Disco: Remotion deja unos 400 MB en TEMP por corrida y C: tiene unos 7,5 GB libr
     - ¿Reemplaza al caso Cana Vacations o va aparte?
     - Como se vendió por AD Media y se hizo para una clienta, ¿la mostramos como «concepto propio», sin nombrar a Milagros ni a AD Media?
 11. **Prioridad:** ¿arrancamos por el reel de Fenix y el prototipo de motion, o primero la web de viajes?
+
+### 7.4 Avance de C13 (16/11): Vespera, demo de viajes
+
+Mario lo pidió primero. Decidió que la web de Milagros quede intacta (la sigue trabajando) y que la copia sea un proyecto distinto, de portfolio y sin la línea de AD Media.
+
+- **Dónde está:** `C:\Users\morer\viajes-demo`, un repo local nuevo y sin historial de la clienta, en los commits `7724cdb` y `48394b0`. No tiene remoto y no se publicó.
+- **Qué es:** Vespera, una agencia de viajes ficticia de «Europa para dos».
+  - La portada es la cinemática del vuelo de la V11: la ventanilla, el avión que pasa y el aterrizaje en cada ciudad, con su tarjeta de destino y su sello.
+  - Sigue «Tu ruta», con el globo y la tarjeta de embarque «Tú + 1» desde Nueva York.
+  - Después vienen las postales en profundidad con cielo de atardecer, «Lo que recibes» y el pie como pasaje: puerta B12, embarque a las 19:40 y asientos 2A y 2B.
+  - La paleta es noche índigo con champán y coral, y el sello está dibujado en SVG.
+- **Qué se sacó:** el logo, la firma, la fundadora, los clips y las fotos de Milagros (donde sale ella u otras personas), las preguntas frecuentes, el WhatsApp, la analítica, las páginas legales, el estudio de revisión y las pruebas de QA del proyecto original. Los botones llevan a mmorera.agency, el sitio no se indexa y el pie avisa que es una demo con marca ficticia.
+- **Verificado:** compila sin errores, pasan 86 de 100 pruebas (ninguna falla y el resto queda omitido) y el build de producción sale bien. Se recorrió en el navegador a 1440 px. El teléfono todavía no se revisó.
+- **Falta:**
+  1. Pulido «más guau», el pedido de Mario.
+  2. Revisión en el teléfono.
+  3. Publicación como demo propia, con su OK.
+  4. Grabar el reel y las capturas para sumarlo al sitio como caso (C11 y C13).
