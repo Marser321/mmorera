@@ -34,7 +34,9 @@ export function ProjectIndex({ projects }: { projects: ProjectCase[] }) {
   const x = useSpring(pointerX, { stiffness: 260, damping: 30, mass: 0.6 });
   const y = useSpring(pointerY, { stiffness: 260, damping: 30, mass: 0.6 });
   const velocityX = useVelocity(pointerX);
-  const rotate = useSpring(useTransform(velocityX, [-2400, 2400], [-9, 9], { clamp: true }), { stiffness: 180, damping: 22 });
+  // Inclinación leve y amortiguada: con ±9° y un resorte vivo, la ventana oscilaba de a
+  // décimas de grado al mover el mouse y el video rotado titilaba (Mario, 16/11).
+  const rotate = useSpring(useTransform(velocityX, [-2400, 2400], [-3, 3], { clamp: true }), { stiffness: 90, damping: 26 });
 
   const showPreview = finePointer && active !== null;
   const stripIndex = active ?? lastActive;
