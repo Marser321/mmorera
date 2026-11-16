@@ -160,7 +160,7 @@ proof: {
   humanApproval?: LocalizedText;
 }
 // Aparte de proof, en ProjectCase:
-soldVia?: "ad-media";       // casos que vendió AD Media Solution (lista de Mario, pregunta 8)
+soldVia?: "ad-media";       // Fenix, Truckers Choice y L&B (confirmado por Mario el 16/11)
 ```
 
 **Atribución discreta (regla fija):** si `soldVia` vale `"ad-media"`, la página del caso muestra al pie una sola línea tenue en texto chico, como «Proyecto realizado para clientes de AD Media Solution» o «Built for clients of AD Media Solution». Va en el color de texto secundario de la marca y sin enlace, logo ni insignia. No aparece en la ficha de arriba, en los títulos, en los metadatos, en las tarjetas de la home ni en las ramas por rubro. Un test cuida que la línea salga en cada caso marcado y que «AD Media» no figure en ningún `title`, `summary` ni `metadata`.
@@ -241,4 +241,45 @@ P0, P1 y P2 son chicas y se pueden adelantar: no cambian nada de lo que se ve. C
 5. **VPS:** ¿qué proveedor y qué tamaño tiene? ¿Usa Docker? ¿Querés Cloudflare delante y un almacenamiento aparte para los videos?
 6. **Home:** ¿te parece bien dejar tres casos en la home (lavadero, barbería y carga) y pasar Fénix, Rangel Oviedo y Mr. Studio al archivo?
 7. **T56:** ¿publicamos los tráilers de servicio antes de condensar, para que la home nueva ya los use?
-8. **AD Media:** ¿cuál es la lista exacta de casos que pasaron por AD Media Solution? Hoy se sabe de L&B, Truckers Choice y Fenix, «y muchos más». ¿Qué pasa con el caso propio `ad-media-solution`, que hoy presenta a AD Media como cliente («socio de ingeniería de marca blanca»)? ¿Se archiva, se oculta o queda sin nombrar la agencia? ¿Y qué texto preferís para la línea, en español y en inglés?
+8. **AD Media:** ~~¿cuál es la lista exacta?~~ **Respondida el 16/11:** pasaron por AD Media **Fenix Medical Center, Truckers Choice y L&B Elite Wash & Detail**. **New Brothers es de Mario** y no lleva línea. Sigue abierto: ¿qué pasa con el caso propio `ad-media-solution`, que hoy presenta a AD Media como cliente («socio de ingeniería de marca blanca»)? ¿Se archiva, se oculta o queda sin nombrar la agencia? ¿Y qué texto preferís para la línea, en español y en inglés?
+
+---
+
+## 7. Segunda ronda de Mario (16/11): CRM en motion, entradas con cinemática y la web de viajes
+
+Lo que pidió:
+- Mostrar en el sitio **la parte del CRM**, de forma visual e impactante. Para eso se reeditan las cinemáticas que ya existen y se les suma **motion graphics de muy alto nivel** encima, para que representen los servicios.
+- **Al pasar por un caso, que se vea su cinemática.** Hoy, al pasar por Fenix en la home, no aparece nada, y es de las más atractivas.
+- Sumar **una versión propia de la web de viajes que hizo para Milagros Ortiz** (vendida por AD Media). La versión tiene que tener otro nombre y otros pasajes, recuperar el efecto del avión que pasa (a Milagros no le gustó y lo sacó) y conservar lo de abajo: las imágenes, las postales y los efectos de profundidad.
+
+### 7.1 Lo que encontré
+
+- **Por qué Fenix no muestra nada al pasar:** la tira flotante de `ProjectIndex` reproduce `media.reel`, que sale de `src/data/caseMedia.generated.json` (lo arma `scripts/capture-case-reels.ts`). **Fenix es el único caso destacado sin reel** en ese manifiesto y en `public/portfolio/reels/`: nunca se le grabó. Su film sí existe (`web/renders/fenix-medical-center/*.mp4`, cuatro versiones). También falta la tira de los otros cinco destacados: hoy muestran **la grabación del sitio en vivo con scroll, no la cinemática**.
+- **La web de viajes** está en `Desktop/Milagros Ortiz/web`, un repo sin remoto, con 112 commits.
+  - El avión se sacó en la V12 (`096331b`, «más Europa, sin avión y con más naranja»). La **última versión con avión es la V11 (`d68cb5a`)**.
+  - Los efectos están en `src/components/cinematic/` (`PlaneCurtain`, `PlaneSilhouette`, `OpeningSequence`, `RouteChip`, `TransitionLayer`), `src/components/flight/` (`FlightStage`, `FlightRail`), `src/components/depth/DepthScene.tsx`, las postales de `editorial/EditorialDestinos.tsx` y el armador de viaje de `trip/`.
+  - Las imágenes de destinos y las nubes se **generaron** (con gpt-image-2 y Flow, y sus prompts quedaron en `LOCKS.md`), así que se pueden reusar.
+  - **No se pueden reusar** el logo y los `brand-v*` de Milagros, la sección de fundadora, la galería de clips de Milagros (sale ella), su WhatsApp ni su analítica.
+- En el sitio ya hay un caso de viajes de archivo, **Cana Vacations**, sin film (`cinematicPending`) y con una portada PNG de 1,47 MB. La versión nueva podría ocupar ese lugar (pregunta 10).
+
+### 7.2 Tareas nuevas
+
+| # | Tarea | Toca | Listo cuando |
+| --- | --- | --- | --- |
+| C11 | **Entrada con cinemática al pasar por un caso.** Primer paso, rápido: grabar el reel de Fenix con `capture-case-reels.ts`. Paso de fondo: que la tira de los casos destacados reproduzca un **corte de 6 s del film insignia** en lugar del scroll del sitio, en WebM y MP4 de menos de 1 MB cada uno, con póster y `preload="none"`. El corte sale de C12 | `ProjectIndex.tsx`, `caseMedia`, `public/portfolio/reels/` | Al pasar por Fenix (y por cada destacado) arranca su cinemática |
+| C12 | **CRM en motion graphics.** Reeditar en Remotion los films que ya existen (New Brothers, L&B, Fenix y Truckers) con una capa de motion encima: tipografía cinética con la marca «pared», recortes de la interfaz real del CRM con llamadas, contadores del número de cada ficha, transiciones entre escenas y la señal `#71F3A2`. Primero **un prototipo de 15–20 s sobre Fenix** para que Mario lo apruebe, y después el resto. De ahí salen tres piezas: los cortes de 6 s (C11), la cabecera de `/sistemas` y de cada rama por rubro, y una pieza de 30–45 s «AI automation & CRM» | `src/components/films/`, `src/remotion/`, `renders/` | Mario aprueba el prototipo y las piezas quedan renderizadas en ES y EN, 16:9 y 9:16 |
+| C13 | **Web de viajes propia** (rama aparte, fuera de `web/`). Repo nuevo desde la V11 de Milagros. Lleva marca y nombre inventados, otros pasajes (otra aerolínea ficticia, otras rutas y otros chips de ruta) y otra paleta, para que no se parezca. Recupera el avión que pasa, la profundidad y las postales. Se le saca todo lo de Milagros (logo, fundadora, clips, WhatsApp y analítica). Se publica como demo propia (por ejemplo `viajes.mmorera.agency` o una URL de Vercel) y en el sitio entra como caso «concepto», con reel, galería y una rama `/casos-de-uso/agencias-de-viaje` | repo nuevo, `projectCases.ts`, `caseMedia` | La demo está en línea sin rastros de Milagros, y el caso tiene su cinemática de entrada |
+
+Orden sugerido: **C11 primer paso** (el reel de Fenix, una tarea chica que se ve enseguida), después **el prototipo de C12** y en paralelo **C13**, que es un repo aparte y no pisa archivos de `web/`. El resto de C12 va cuando Mario apruebe el prototipo.
+
+Disco: Remotion deja unos 400 MB en TEMP por corrida y C: tiene unos 7,5 GB libres. Antes de cada tanda de render hay que limpiar TEMP.
+
+### 7.3 Preguntas nuevas
+
+9. **«La parte del CRM»:** ¿son los CRM de los casos (New Brothers, L&B y Fenix) reeditados con motion, o también la demo del CRM Oficio?
+10. **Web de viajes:**
+    - ¿Qué nombre y qué rubro le damos? Por ejemplo, una agencia de viajes ficticia que no sea de Europa.
+    - ¿Partimos de la V11 (`d68cb5a`, la última con avión)?
+    - ¿Reemplaza al caso Cana Vacations o va aparte?
+    - Como se vendió por AD Media y se hizo para una clienta, ¿la mostramos como «concepto propio», sin nombrar a Milagros ni a AD Media?
+11. **Prioridad:** ¿arrancamos por el reel de Fenix y el prototipo de motion, o primero la web de viajes?
