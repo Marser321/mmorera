@@ -33,12 +33,13 @@ const WEB = path.join(ROOT, "public", "portfolio", "puertas");
 
 type Language = "es" | "en";
 
-/** El agua del lavado cuesta mucho de comprimir: esa puerta va con más compresión. */
+/** El agua del lavado y las luces de la autopista cuestan mucho de comprimir: van con más compresión. */
 const WEB_CRF: Record<DoorId, { h264: number; av1: number }> = {
   webs: { h264: 28, av1: 42 },
   agentes: { h264: 24, av1: 34 },
   sistemas: { h264: 24, av1: 34 },
   contenido: { h264: 24, av1: 34 },
+  campanas: { h264: 27, av1: 38 },
 };
 
 function option(name: string) {

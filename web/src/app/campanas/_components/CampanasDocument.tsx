@@ -3,6 +3,7 @@ import { ServicePage } from "@/components/service/ServicePage";
 import { CampanasFilmRoom } from "@/components/films/CampanasFilmRoom";
 import { CAMPANAS_JOBS, CAMPANAS_PAGE, CAMPANAS_RADAR } from "@/data/campanas";
 import { SERVICE_PAGES } from "@/data/servicePages";
+import { getServiceHeroFilm } from "@/data/serviceHeroFilms";
 
 const container = "mx-auto w-full max-w-[1480px] px-5 sm:px-8 lg:px-12";
 const heading = "text-[clamp(1.8rem,3vw,3rem)] font-medium leading-tight tracking-[-.03em] text-foreground";
@@ -99,6 +100,7 @@ export function CampanasDocument({ language }: { language: "es" | "en" }) {
     <ServicePage
       content={SERVICE_PAGES.campanas}
       language={language}
+      heroFilm={getServiceHeroFilm("campanas", language)}
       howItWorks={
         <>
           <CampanasFilmRoom language={language} />

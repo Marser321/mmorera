@@ -2,7 +2,7 @@ import type { CSSProperties, ReactNode } from "react";
 import { AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame } from "remotion";
 import type { FilmLanguage } from "@/data/films/filmTypes";
 import { C, EASE_IN_OUT, EASE_OUT, FONT, ivory, ramp, signal, wall } from "@/components/films/trailer/kit";
-import { CONTENT_FORMATS, DOOR_COPY, WEBS_ADDRESS } from "./copy";
+import { CONTENT_FORMATS, DOOR_COPY, WEBS_ADDRESS, campaignCopy } from "./copy";
 import { DOORS, DOOR_SIZE, DOOR_SOURCE, SAFE, WEBS_UI, XFADE, doorFrames, secondShotStart, type DoorId, type DoorShot } from "./timing";
 
 /**
@@ -289,6 +289,60 @@ function ContenidoOverlay() {
   );
 }
 
+// ── Campañas con IA (portada de /campanas) ────────────────────────────────
+
+const FINDING = 52;
+/** La pregunta ocupa dos líneas en los dos idiomas: la caja no cambia de alto mientras se escribe. */
+const PROMPT = { size: 27, leading: 1.22, pad: 14 } as const;
+const FINDING_GAP = 10;
+
+/** Una pregunta a la cuenta de anuncios: la máquina encuentra tres cosas y una persona decide cada una. */
+function CampanasOverlay({ language }: { language: FilmLanguage }) {
+  const frame = useCurrentFrame();
+  const { overlayFrom: from, overlayOut: out, tone } = DOORS.campanas;
+  const copy = campaignCopy(language);
+  const prompt = useEnter(from + 2, out);
+  const decides = useEnter(from + 76, out);
+  const gone = 1 - ramp(frame, out - 8, out, EASE_IN_OUT);
+  // La pregunta se escribe sola, letra por letra.
+  const typed = Math.round(interpolate(frame, [from + 4, from + 20], [0, copy.prompt.length], CLAMP));
+  return (
+    <>
+      <Dim from={from} out={out} strength={0.62} />
+      <div style={{ ...column, gap: 14 }}>
+        <div style={{ ...prompt, display: "flex", alignItems: "flex-start", gap: 14, padding: `${PROMPT.pad}px 20px`, minHeight: PROMPT.size * PROMPT.leading * 2 + PROMPT.pad * 2, boxSizing: "border-box", borderRadius: 18, background: wall(0.86), border: `2px solid ${tone}`, color: ivory(0.96), fontFamily: FONT.body, fontSize: PROMPT.size, lineHeight: PROMPT.leading, fontWeight: 500, letterSpacing: "-0.01em", boxShadow: `0 0 34px color-mix(in srgb, ${tone} 34%, transparent)` }}>
+          <span style={{ width: 12, height: 12, flexShrink: 0, marginTop: (PROMPT.size * PROMPT.leading - 12) / 2, borderRadius: 12, background: tone, boxShadow: `0 0 16px ${tone}` }} />
+          <span>{copy.prompt.slice(0, typed)}</span>
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: FINDING_GAP, opacity: gone }}>
+          {copy.rows.map((row, index) => {
+            const at = from + 22 + index * 10;
+            const shown = ramp(frame, at, at + 8, EASE_OUT);
+            const decided = ramp(frame, from + 52 + index * 8, from + 58 + index * 8, EASE_OUT);
+            const mark = row.approved ? C.signal : ivory(0.9);
+            return (
+              <div key={row.id} style={{ ...glass, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, height: FINDING, padding: "0 16px 0 18px", borderRadius: 14, opacity: shown, translate: `0px ${(1 - shown) * 16}px`, fontFamily: FONT.body, fontSize: 25, fontWeight: 500, letterSpacing: "-0.01em", whiteSpace: "nowrap" }}>
+                <span>{row.title}</span>
+                <span style={{ display: "flex", alignItems: "center", gap: 8, padding: "5px 12px", borderRadius: 30, border: `1.5px solid ${row.approved ? signal(0.6) : ivory(0.4)}`, color: mark, fontSize: 18, opacity: decided, scale: String(1.12 - 0.12 * decided) }}>
+                  <span style={{ width: 8, height: 8, borderRadius: 8, background: mark }} />
+                  {row.verdict}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+        <div style={{ ...decides, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, fontFamily: FONT.mono, fontSize: 17, letterSpacing: "0.1em", textTransform: "uppercase" }}>
+          <span style={{ display: "flex", alignItems: "center", gap: 10, color: tone, fontWeight: 700 }}>
+            <span style={{ width: 22, height: 2, background: tone }} />
+            {copy.decides}
+          </span>
+          <span style={{ color: ivory(0.6) }}>{copy.badge}</span>
+        </div>
+      </div>
+    </>
+  );
+}
+
 // ── El film de cada puerta ────────────────────────────────────────────────
 
 export function DoorFilm({ door, language }: { door: DoorId; language: FilmLanguage }) {
@@ -297,6 +351,7 @@ export function DoorFilm({ door, language }: { door: DoorId; language: FilmLangu
     agentes: <AgentesOverlay language={language} />,
     sistemas: <SistemasOverlay language={language} />,
     contenido: <ContenidoOverlay />,
+    campanas: <CampanasOverlay language={language} />,
   };
   return (
     <AbsoluteFill style={{ background: C.wall, overflow: "hidden" }}>

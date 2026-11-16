@@ -43,6 +43,8 @@ Mario pidió que las cuatro puertas se vean parejas, con el estilo de la primera
 - **Puerta cerrada = póster de cine puro.** Si quedara congelada en el cuadro donde se pausó, se verían textos cortados.
 - **El color de la puerta** (`tone` en `timing.ts`) pinta también la línea sobre el título, la barra de avance y el punto de la lista del teléfono.
 - Los planos de origen y sus cuadros exactos están en `film-sources/puertas/README.md`.
+- **Las páginas de servicio abren con el film de su puerta** (`heroFilm` en `ServicePage`, `src/data/serviceHeroFilms.ts`). `/fabricas` abre con el tráiler de Vespera.
+- **Campañas tiene su film aunque no tenga puerta**: violeta, con el camión de Truckers Choice al amanecer y la autopista de noche. Encima va una cuenta de anuncios de ejemplo (el guion de la cinemática de `/campanas`): la máquina encuentra tres cosas y una persona decide cada una. El pie dice que la cuenta es de ejemplo.
 
 ## El tráiler de un caso (Vespera)
 
