@@ -26,7 +26,7 @@ export const SERVICE_SOLUTIONS: ServiceSolution[] = [
     title: t("Webs y landings", "Websites & landings"),
     shortTitle: t("Webs y landings", "Websites & landing pages"),
     path: "/estudio",
-    headline: t("Sitios rápidos y claros, pensados para que la persona entienda y te escriba.", "Fast, clear sites built so people understand you and get in touch."),
+    headline: t("Una web que explica lo que haces y hace que te escriban.", "A website that explains what you do and gets people to reach out."),
     description: t(
       "Desarrollo a medida con Next.js, TypeScript y Tailwind: diseño propio, versión bilingüe y SEO técnico cuidado. Lo diseño y lo programo yo.",
       "Custom development with Next.js, TypeScript and Tailwind: original design, bilingual versions and careful technical SEO. I design it and I build it."
@@ -49,7 +49,7 @@ export const SERVICE_SOLUTIONS: ServiceSolution[] = [
     title: t("Agentes de IA instalados para tu negocio", "AI agents installed for your business"),
     shortTitle: t("Agentes de IA", "AI agents"),
     path: "/agentes",
-    headline: t("Un agente que atiende, responde y agenda por ti, con una persona cuando hace falta.", "An agent that answers, replies and books for you, with a person when it matters."),
+    headline: t("Tu negocio responde al instante, de día y de noche. Cuando hace falta, pasa a una persona.", "Your business answers instantly, day and night. When it matters, it hands off to a person."),
     description: t(
       "Instalo y configuro agentes con Claude, GPT u OpenClaw conectados a WhatsApp, a tu web o a tu agenda. Las cuentas quedan a tu nombre, con documentación y traspaso a tu equipo cuando el agente no puede resolver.",
       "I install and configure agents built on Claude, GPT or OpenClaw, connected to WhatsApp, your website or your calendar. Accounts stay in your name, with documentation and a handoff to your team when the agent can't resolve something."
@@ -72,7 +72,7 @@ export const SERVICE_SOLUTIONS: ServiceSolution[] = [
     title: t("Automatización y CRM", "Automation & CRM"),
     shortTitle: t("Automatización y CRM", "Automation & CRM"),
     path: "/sistemas",
-    headline: t("Formularios, agenda y CRM conectados, para que ninguna consulta quede sin seguimiento.", "Forms, calendar and CRM connected, so no enquiry goes without follow-up."),
+    headline: t("Cada consulta llega a quien corresponde y el seguimiento sale solo.", "Every enquiry reaches the right person and the follow-up goes out on its own."),
     description: t(
       "Flujos con n8n, Make o GoHighLevel según tu proceso: cada consulta entra al CRM, se avisa a quien corresponde y el seguimiento sale solo. Para flujos livianos, también construyo herramientas a medida.",
       "Workflows with n8n, Make or GoHighLevel shaped around your process: every enquiry lands in the CRM, the right person is notified and follow-up goes out on its own. For lighter flows, I also build custom tools."
@@ -95,7 +95,7 @@ export const SERVICE_SOLUTIONS: ServiceSolution[] = [
     title: t("Fábricas de contenido con IA", "AI content factories"),
     shortTitle: t("Contenido con IA", "AI content"),
     path: "/fabricas",
-    headline: t("Sistemas que producen piezas y videos para tu marca, con tu criterio en cada entrega.", "Systems that produce posts and videos for your brand, with your judgment in every delivery."),
+    headline: t("Contenido constante con tu voz. Tú apruebas cada pieza.", "Steady content in your voice. You approve every piece."),
     description: t(
       "Conecto modelos de lenguaje, generación de imagen y video y edición por código en un flujo que convierte un brief en posts, carruseles y reels. Una persona revisa cada pieza antes de publicarla.",
       "I connect language models, image and video generation and code-based editing into a flow that turns a brief into posts, carousels and reels. A person reviews every piece before it's published."
