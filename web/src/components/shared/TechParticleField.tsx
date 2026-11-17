@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useReducer,
   useRef,
@@ -19,7 +20,9 @@ import { resolveParticleScene, themedAccent } from "@/data/particleScenes";
 import { TECH_STACK, type Tech } from "@/data/techStack";
 import { SERVICE_GLYPH_TECHS } from "@/data/serviceGlyphs";
 import { BRAND_GLYPH_TECHS } from "@/data/brandGlyphs";
+import { STAGE_GLYPH_TECHS } from "@/data/stageGlyphs";
 import { particleScatter } from "@/lib/particleScatter";
+import { particleStage, STAGE_MORPH_SECONDS } from "@/lib/particleStage";
 import {
   PARTICLE_IDENTIFIABLE_PROGRESS,
   createParticleSequenceState,
@@ -34,7 +37,7 @@ import type { ParticleSceneDefinition } from "@/types/site";
 const LOGO_COUNT = { desktop: 16000, tablet: 8200, mobile: 2600 } as const;
 // Un glifo pedido por foco (hover en un servicio) tiene que responder rápido.
 const FOCUS_TIMING = { assembleMs: 650, holdMs: 4200, dissolveMs: 420 } as const;
-const DRAWABLE_TECHS: Tech[] = [...TECH_STACK, ...SERVICE_GLYPH_TECHS, ...BRAND_GLYPH_TECHS];
+const DRAWABLE_TECHS: Tech[] = [...TECH_STACK, ...SERVICE_GLYPH_TECHS, ...BRAND_GLYPH_TECHS, ...STAGE_GLYPH_TECHS];
 type IntroStep = { tech: Tech; holdMs: number; dissolveMs: number };
 
 // La obertura se ve una vez por sesión: al volver al home, el desfile sigue
@@ -158,6 +161,7 @@ float snoise(vec2 v){
 
 const LOGO_VERTEX = /* glsl */ `
 attribute vec2 aLogo;
+attribute vec2 aLogoFrom;
 attribute float aSeed;
 attribute float aSize;
 uniform float uTime;
@@ -171,13 +175,21 @@ uniform float uPixelRatio;
 uniform vec2 uCenter;
 uniform float uScale;
 uniform float uScatter;
+uniform float uBoost;
+uniform float uMorph;
 varying float vAlpha;
 ${SIMPLEX_NOISE}
 void main(){
   float phase=aSeed*6.2831853;
   vec2 cloud=uCenter+vec2(position.x/uAspect,position.y)*0.72;
   cloud+=vec2(sin(uTime*0.12+phase),cos(uTime*0.1+phase*1.4))*0.035;
-  vec2 target=uCenter+vec2(aLogo.x/uAspect,aLogo.y)*uScale;
+  // uMorph: en el escenario del hero una forma pasa directo a la otra. Cada
+  // partícula sale un poco antes o después que su vecina y hace una curva corta.
+  float morph=smoothstep(0.0,1.0,clamp(uMorph*1.4-aSeed*0.4,0.0,1.0));
+  vec2 shape=mix(aLogoFrom,aLogo,morph);
+  float midway=sin(morph*3.14159265);
+  shape+=vec2(sin(phase*3.0+uTime*0.9),cos(phase*2.0-uTime*0.7))*0.035*midway;
+  vec2 target=uCenter+vec2(shape.x/uAspect,shape.y)*uScale;
   vec2 grain=vec2(
     snoise(vec2(target.x*3.0+uTime*0.18,phase)),
     snoise(vec2(target.y*3.0-uTime*0.16,phase+2.4))
@@ -200,7 +212,7 @@ void main(){
   pos+=outward*scatter*(0.22+aSeed*0.9)+vec2(0.0,scatter*(0.12+aSeed*0.28));
 
   float depthFade=mix(0.35,1.0,position.z);
-  vAlpha=(mix(0.055,0.62,formed)+influence*0.24)*uOpacity*depthFade*(1.0-scatter*0.9);
+  vAlpha=(mix(0.055,0.62,formed)+influence*0.24)*uOpacity*depthFade*(1.0-scatter*0.9)*uBoost;
   gl_PointSize=aSize*(0.7+formed*0.85+influence)*uPixelRatio*(1.0+scatter*0.7);
   gl_Position=vec4(pos,0.0,1.0);
 }
@@ -311,16 +323,26 @@ function LogoFormation({
   physics: (typeof PARTICLE_PHYSICS)["dark"];
 }) {
   const materialRef = useRef<THREE.ShaderMaterial>(null);
+  // La forma de la que se viene: al cambiar de forma, la nueva recuerda la anterior.
+  const [shapes, setShapes] = useState({ from: data, to: data });
+  if (shapes.to !== data) setShapes({ from: shapes.to, to: data });
   const geometry = useMemo(() => {
     const next = new THREE.BufferGeometry();
-    next.setAttribute("position", new THREE.BufferAttribute(data.cloud, 3));
-    next.setAttribute("aLogo", new THREE.BufferAttribute(data.logo, 2));
-    next.setAttribute("aSeed", new THREE.BufferAttribute(data.seed, 1));
-    next.setAttribute("aSize", new THREE.BufferAttribute(data.size, 1));
+    const sameCount = shapes.from.logo.length === shapes.to.logo.length;
+    next.setAttribute("position", new THREE.BufferAttribute(shapes.to.cloud, 3));
+    next.setAttribute("aLogo", new THREE.BufferAttribute(shapes.to.logo, 2));
+    next.setAttribute("aLogoFrom", new THREE.BufferAttribute(sameCount ? shapes.from.logo : shapes.to.logo, 2));
+    next.setAttribute("aSeed", new THREE.BufferAttribute(shapes.to.seed, 1));
+    next.setAttribute("aSize", new THREE.BufferAttribute(shapes.to.size, 1));
     next.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 10);
     return next;
-  }, [data]);
+  }, [shapes]);
   useEffect(() => () => geometry.dispose(), [geometry]);
+  // Con el escenario del hero, la forma nueva arranca desde la anterior; si no, aparece ya en su lugar.
+  useLayoutEffect(() => {
+    const material = materialRef.current;
+    if (material) material.uniforms.uMorph.value = particleStage.get().morph && shapes.from !== shapes.to ? 0 : 1;
+  }, [geometry, shapes]);
   const anchor = useMemo(
     () => anchorForViewport(environment.isMobile, environment.isTablet),
     [environment.isMobile, environment.isTablet],
@@ -337,9 +359,13 @@ function LogoFormation({
     uCenter: { value: new THREE.Vector2(...anchor.center) },
     uScale: { value: anchor.scale },
     uScatter: { value: 0 },
+    uBoost: { value: 1 },
+    uMorph: { value: 1 },
     uBase: { value: new THREE.Color(physics.base) },
     // eslint-disable-next-line react-hooks/exhaustive-deps -- uBase se sincroniza en useFrame
   }), [anchor.center, anchor.scale]);
+
+  const tint = useMemo(() => new THREE.Color(), []);
 
   useFrame((state, delta) => {
     const material = materialRef.current;
@@ -347,6 +373,19 @@ function LogoFormation({
     if (!material || !currentPointer) return;
     const values = material.uniforms;
     const targetFormation = phase === "dissolve" ? 0 : 1;
+    // Escenario del hero: con la ventana de cine abierta, las partículas dejan
+    // su lugar de siempre, la rodean y toman el color del servicio que se ve.
+    const stage = particleStage.get();
+    values.uMorph.value = Math.min(1, values.uMorph.value + delta / STAGE_MORPH_SECONDS);
+    // Mientras se transforma viaja despacio hacia su lugar; ya formado el marco, sigue a la ventana de cerca.
+    const follow = Math.min(1, delta * (values.uMorph.value < 1 ? 3.6 : stage.active ? 14 : 5));
+    const center = values.uCenter.value as THREE.Vector2;
+    center.x += ((stage.active ? stage.cx : anchor.center[0]) - center.x) * follow;
+    center.y += ((stage.active ? stage.cy : anchor.center[1]) - center.y) * follow;
+    values.uScale.value += ((stage.active ? stage.scale : anchor.scale) - values.uScale.value) * follow;
+    values.uBoost.value += ((stage.active ? 1.5 : 1) - values.uBoost.value) * Math.min(1, delta * 4);
+    tint.set(stage.active && stage.tint ? stage.tint : physics.base);
+    (values.uBase.value as THREE.Color).lerp(tint, Math.min(1, delta * 3.2));
     values.uTime.value += delta;
     values.uAspect.value = state.size.height > 0 ? state.size.width / state.size.height : 1.6;
     values.uPixelRatio.value = state.gl.getPixelRatio();
@@ -356,7 +395,6 @@ function LogoFormation({
     values.uFormation.value += (targetFormation - values.uFormation.value) * Math.min(1, delta * (targetFormation ? 4.2 : 5.2));
     values.uOpacity.value += (opacity - values.uOpacity.value) * Math.min(1, delta * 5);
     values.uScatter.value += (particleScatter.get() - values.uScatter.value) * Math.min(1, delta * 7);
-    values.uBase.value.set(physics.base);
   });
 
   return (
@@ -709,8 +747,11 @@ function ParticleCanvas({
 
         if (controllerRef.current.current) {
           applySequenceEvent({ type: "queue", target: firstTarget });
-          applySequenceEvent({ type: "begin-dissolve" });
-          if (!(await waitForActiveDuration(scene.timing.dissolveMs, isActive, signal))) return;
+          // Escenario del hero: una forma pasa directo a la otra, sin soltarse.
+          if (!particleStage.get().morph) {
+            applySequenceEvent({ type: "begin-dissolve" });
+            if (!(await waitForActiveDuration(scene.timing.dissolveMs, isActive, signal))) return;
+          }
           applySequenceEvent({ type: "promote" });
         } else {
           applySequenceEvent({ type: "mount", target: firstTarget });
@@ -727,6 +768,19 @@ function ParticleCanvas({
           applySequenceEvent({ type: "hold" });
           setActiveTechName(existing.name);
         }
+      }
+
+      // Escenario del hero: las formas que vienen se muestrean ahora, de a una, para
+      // que cada cambio arranque en el momento y no espere a que se prepare la forma.
+      const upcoming = particleStage.get().warm;
+      if (upcoming.length > 0) {
+        void (async () => {
+          for (const name of upcoming) {
+            if (signal.aborted) return;
+            const tech = DRAWABLE_TECHS.find((item) => item.name === name);
+            if (tech) await buildLogoGeometry(tech, geometryCount).catch(() => undefined);
+          }
+        })();
       }
 
       if (needsAssembly && !(await assembleCurrent())) return;

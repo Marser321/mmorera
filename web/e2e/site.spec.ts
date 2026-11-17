@@ -39,10 +39,12 @@ test("navega por la cabecera y conserva un único canvas", async ({ page }) => {
   const field = page.locator('[data-particle-canvas="global"]');
   await expect(field.locator("canvas")).toHaveCount(1, { timeout: 15_000 });
   await field.locator("canvas").evaluate((canvas) => { canvas.dataset.e2ePersistent = "true"; });
+  // Enfocar un servicio abre la ventana de su par y las partículas arman el marco, sin esperar a la obertura.
   const chip = page.locator('#hero li a[href="#servicios"]').nth(2);
   await expect(async () => {
     await chip.focus();
-    await expect(field).toHaveAttribute("data-particle-confirmed", "service:crm-automation", { timeout: 1_500 });
+    await expect(page.locator("[data-hero-stage]")).toHaveAttribute("data-stage-pair", "ghl", { timeout: 1_500 });
+    await expect(field).toHaveAttribute("data-particle-confirmed", "stage:frame", { timeout: 2_500 });
   }).toPass({ timeout: 15_000 });
   await expect(field).toHaveAttribute("data-particle-target-count", /^[12]$/);
   await expect(page.locator("a button")).toHaveCount(0);
@@ -123,12 +125,16 @@ test("los cuatro chips responden al foco y enlazan a servicios", async ({ page }
   await page.goto("/");
   const chips = page.locator('#hero li a[href="#servicios"]');
   await expect(chips).toHaveCount(4);
-  const names = ["web-ecommerce", "booking-payments", "crm-automation", "ai-software"];
-  for (let index = 0; index < names.length; index++) {
+  // Cada servicio abre la ventana de su par: web, agentes, CRM y contenido.
+  const pairs = ["nextjs", "ia", "ghl", "gemini"];
+  const stage = page.locator("[data-hero-stage]");
+  for (let index = 0; index < pairs.length; index++) {
     await expect(async () => {
       await chips.nth(index).focus();
       await expect(chips.nth(index)).toHaveAttribute("aria-describedby", "hero-service-promise");
-      await expect(page.locator('[data-particle-canvas="global"]')).toHaveAttribute("data-particle-confirmed", `service:${names[index]}`, { timeout: 1_500 });
+      await expect(stage).toHaveAttribute("data-stage-pair", pairs[index], { timeout: 1_500 });
+      await expect(stage).toHaveAttribute("data-stage-shown", pairs[index], { timeout: 1_500 });
+      await expect(stage).toHaveAttribute("data-stage-visible", "true", { timeout: 1_500 });
     }).toPass({ timeout: 15_000 });
   }
   await chips.last().press("Enter");
@@ -1098,4 +1104,82 @@ test("el CV vive en «Sobre mí», con la película de autor arriba", async ({ p
   await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
   await page.goto("/en/cv");
   await expect(page).toHaveURL(/\/en\/sobre-mi#cv$/);
+});
+
+test("el escenario del hero pasa del logo de la tecnología a su ventana y enciende el servicio", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator("#hero")).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
+  const stage = page.locator("[data-hero-stage]");
+  // La ventana está desde el principio, sin verse. Después de la obertura el
+  // recorrido arranca por el primer par: primero el logo, todavía sin ventana.
+  await expect(stage).toHaveAttribute("data-stage-pair", "nextjs");
+  await expect(stage).toHaveAttribute("data-stage-visible", "false");
+  await expect(page.locator('[data-particle-canvas="global"]')).toHaveAttribute("data-particle-current", "Next.js", { timeout: 18_000 });
+  await expect(stage).toHaveAttribute("data-stage-visible", "false");
+  // Después el logo se transforma en el marco y aparece la ventana, con un solo video.
+  await expect(stage).toHaveAttribute("data-stage-visible", "true", { timeout: 6_000 });
+  await expect(page.locator('[data-particle-canvas="global"]')).toHaveAttribute("data-particle-current", "stage:frame", { timeout: 4_000 });
+  await expect(stage).toHaveAttribute("data-stage-shown", "nextjs");
+  await expect(stage).toContainText("Next.js");
+  await expect(stage.getByRole("link", { name: /Rangel Oviedo Group/ })).toHaveAttribute("href", "/casos-de-exito/rangel-oviedo-group");
+  await expect(page.locator("#hero video")).toHaveCount(1);
+  await expect(page.locator("#hero-service-promise")).toContainText("Una web que explica lo que haces");
+  // Pasar por un servicio salta a su par, directo a la ventana.
+  await page.locator('#hero a[href="#servicios"]').nth(2).hover();
+  await expect(stage).toHaveAttribute("data-stage-pair", "ghl");
+  await expect(stage).toHaveAttribute("data-stage-visible", "true");
+  await expect(stage).toHaveAttribute("data-stage-shown", "ghl");
+  await expect(stage.getByRole("link", { name: /Fenix Medical Center/ })).toBeVisible();
+  // El recorrido se puede pausar.
+  await page.mouse.move(700, 300);
+  await stage.getByRole("button", { name: "Pausar el recorrido" }).click();
+  await expect(stage.getByRole("button", { name: "Reanudar el recorrido" })).toBeVisible();
+  // En inglés la ventana habla en inglés y lleva al caso en inglés.
+  await page.goto("/en");
+  const english = page.locator("[data-hero-stage]");
+  await expect(async () => {
+    await page.locator('#hero li a[href="#servicios"]').first().focus();
+    await expect(english).toHaveAttribute("data-stage-visible", "true", { timeout: 1_500 });
+  }).toPass({ timeout: 15_000 });
+  await expect(english).toContainText("a website that sells");
+  await expect(english.getByRole("link", { name: /Real case · Rangel Oviedo Group/ })).toHaveAttribute("href", "/en/casos-de-exito/rangel-oviedo-group");
+  // La página de prueba ya no existe.
+  expect((await page.request.get("/lab/hero-orquesta")).status()).toBe(404);
+});
+
+test.describe("escenario del hero con movimiento reducido", () => {
+  test.use({ contextOptions: { reducedMotion: "reduce" } });
+  test("en pantalla ancha no hay ventana ni videos: queda la marca quieta y los servicios responden", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.locator("#hero")).toBeVisible();
+    await expect(page.locator("[data-hero-stage]")).toHaveCount(0);
+    await page.waitForTimeout(1_500);
+    await expect(page.locator("#hero video")).toHaveCount(0);
+    await expect(page.locator("#hero").getByRole("button", { name: "Pausar el recorrido" })).toHaveCount(0);
+    const chip = page.locator('#hero li a[href="#servicios"]').nth(2);
+    await expect(async () => {
+      await chip.focus();
+      await expect(chip).toHaveAttribute("aria-describedby", "hero-service-promise", { timeout: 1_000 });
+    }).toPass({ timeout: 10_000 });
+    await expect(page.locator("#hero-service-promise")).toBeVisible();
+    await expect(page.locator("[data-hero-stage]")).toHaveCount(0);
+  });
+});
+
+test.describe("escenario del hero en teléfono", () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+  test("la ventana guarda su lugar desde el principio y lo de abajo no salta cuando aparece", async ({ page }) => {
+    await page.goto("/");
+    const stage = page.locator("[data-hero-stage]");
+    await expect(stage).toHaveAttribute("data-stage-visible", "false");
+    await page.evaluate(() => document.fonts.ready);
+    const heroBottom = () => page.locator("#hero").evaluate((element) => Math.round(element.getBoundingClientRect().bottom + window.scrollY));
+    const before = await heroBottom();
+    // En teléfono no hay paso de logo aparte: la ventana aparece apenas arranca el recorrido.
+    await expect(stage).toHaveAttribute("data-stage-visible", "true", { timeout: 18_000 });
+    expect(await heroBottom()).toBe(before);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
+    await expect(stage.getByRole("link", { name: /Rangel Oviedo Group/ })).toBeVisible();
+  });
 });

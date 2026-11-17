@@ -10,6 +10,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useActiveTech } from "@/context/ActiveTechContext";
 import { SERVICE_SOLUTIONS } from "@/data/solutionsData";
 import { SERVICE_GLYPHS } from "@/data/serviceGlyphs";
+import { BRAND_GLYPHS } from "@/data/brandGlyphs";
 import { particleScatter } from "@/lib/particleScatter";
 import { EASE_OUT } from "@/lib/motion";
 import { DecodeText } from "@/components/motion/DecodeText";
@@ -20,6 +21,10 @@ import { FEATURED_CASES } from "@/data/projectCases";
 import { IslandBar } from "@/components/layout/IslandBar";
 import { MotionBackdrop } from "@/components/shared/MotionBackdrop";
 import { MonogramaFundido } from "@/components/marca/MonogramaFundido";
+import { HeroStage } from "@/components/premium/home/HeroStage";
+import { HERO_STAGE_MS, HERO_STAGE_PAIRS } from "@/data/heroStage";
+import { particleStage, STAGE_FRAME_NAME } from "@/lib/particleStage";
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 
 // Secciones bajo el pliegue en chunks propios (con SSR: el HTML no cambia).
 // Cada una es su propio límite de Suspense, así React hidrata por partes en
@@ -31,6 +36,15 @@ const AplicarOS = dynamic(() => import("@/components/portfolio-isolated/AplicarO
 import { MOTION_ASSETS } from "@/data/motionAssets";
 
 const CV_DESTINATION = "/sobre-mi#cv";
+/**
+ * El recorrido del escenario arranca cuando la obertura de partículas ya formó
+ * la doble M y se la vio un momento (`afterMonogram`). Si la obertura ya se vio
+ * en esta visita, arranca enseguida (`later`). `atLatest` es el tope, por si
+ * las partículas no llegan a avisar (sin WebGL, por ejemplo).
+ */
+const STAGE_STARTS_AFTER_MS = { afterMonogram: 1700, later: 0, atLatest: 12000 } as const;
+/** Lo que van a dibujar las partículas en el recorrido: el marco de la ventana y el logo de cada tecnología. */
+const STAGE_SHAPES: readonly string[] = [STAGE_FRAME_NAME, ...HERO_STAGE_PAIRS.map((pair) => pair.tech)];
 
 /*
  * El home es un film corto en cinco escenas (3/11): 01 héroe con la obertura
@@ -99,6 +113,12 @@ const copy = {
   },
 };
 
+/**
+ * El hero tiene un escenario: las partículas dibujan el logo de una tecnología,
+ * como siempre, y después se transforman en el marco de una ventana chica que
+ * muestra algo hecho con ella (data/heroStage.ts), mientras se enciende su
+ * servicio en la lista.
+ */
 export function HomeExperience() {
   const { language } = useLanguage();
   const heroRef = useRef<HTMLElement>(null);
@@ -148,21 +168,107 @@ export function HomeExperience() {
     }
   }
 
-  const { setFocusTechName } = useActiveTech();
+  const { setFocusTechName, activeTechName } = useActiveTech();
   const [focusedService, setFocusedService] = useState<string | null>(null);
-  const focusedSolution = SERVICE_SOLUTIONS.find((service) => service.id === focusedService);
 
-  // El servicio enfocado se dibuja con las partículas del fondo.
+  // Escenario del hero: la tecnología que dibujan las partículas y en qué se convierte.
+  const reducedMotion = useReducedMotionSafe();
+  const [stageStarted, setStageStarted] = useState(false);
+  const [stage, setStage] = useState<{ index: number; phase: "logo" | "film" }>({ index: 0, phase: "logo" });
+  const [stagePlaying, setStagePlaying] = useState(true);
+  const [heroInView, setHeroInView] = useState(true);
+  const [wideScreen, setWideScreen] = useState(false);
+  const stagePair = HERO_STAGE_PAIRS[stage.index] ?? HERO_STAGE_PAIRS[0];
+  /** En pantalla angosta no hay paso de logo aparte: las partículas lo dibujan detrás del texto mientras se ve la ventana. */
+  const stageStep = wideScreen ? stage.phase : "film";
+  /** El servicio que se enciende en la lista: el que el visitante enfoca o, si no, el del par que se ve. */
+  const stageServiceId = focusedService ?? (stageStarted ? stagePair.serviceId : null);
+  const stageRunning = stageStarted && stagePlaying && !reducedMotion && focusedService === null && heroInView;
+  /** El servicio que se nombra bajo la lista: el mismo que está encendido. */
+  const shownSolution = SERVICE_SOLUTIONS.find((service) => service.id === stageServiceId);
+  /**
+   * Sin movimiento y en pantalla ancha no hay ventana: a la derecha queda la
+   * marca quieta que deja el campo de partículas (la doble M o el glifo del
+   * servicio enfocado), y la ventana le quedaría encima.
+   */
+  const stageWindow = !(reducedMotion && wideScreen);
+
+  /** Enfocar un servicio salta a su par, directo a la ventana, aunque la obertura no haya terminado; el recorrido sigue desde ahí. */
+  const focusService = (id: string) => {
+    setFocusedService(id);
+    const index = HERO_STAGE_PAIRS.findIndex((pair) => pair.serviceId === id);
+    if (index < 0) return;
+    setStage({ index, phase: "film" });
+    setStageStarted(true);
+  };
+
+  // El recorrido espera a la obertura: arranca un momento después de que las partículas avisan que la doble M ya se reconoce.
+  const monogramFormed = activeTechName === BRAND_GLYPHS.monogram.name;
+  const stageWaitsSince = useRef<{ at: number; seen: boolean } | null>(null);
   useEffect(() => {
-    setFocusTechName(focusedService ? SERVICE_GLYPHS[focusedService]?.name ?? null : null);
-  }, [focusedService, setFocusTechName]);
-  useEffect(() => () => setFocusTechName(null), [setFocusTechName]);
+    if (stageStarted) return;
+    if (!stageWaitsSince.current) {
+      let seen = false;
+      try {
+        seen = window.sessionStorage.getItem("mm-obertura") === "1";
+      } catch {
+        // Sin almacenamiento se espera la obertura completa.
+      }
+      stageWaitsSince.current = { at: performance.now(), seen };
+    }
+    const { at, seen } = stageWaitsSince.current;
+    const untilLatest = Math.max(0, at + STAGE_STARTS_AFTER_MS.atLatest - performance.now());
+    const wait = seen || reducedMotion
+      ? STAGE_STARTS_AFTER_MS.later
+      : monogramFormed ? Math.min(STAGE_STARTS_AFTER_MS.afterMonogram, untilLatest) : untilLatest;
+    const timer = window.setTimeout(() => setStageStarted(true), wait);
+    return () => window.clearTimeout(timer);
+  }, [monogramFormed, reducedMotion, stageStarted]);
+
+  useEffect(() => {
+    const media = window.matchMedia("(min-width: 1024px)");
+    const sync = () => setWideScreen(media.matches);
+    sync();
+    media.addEventListener("change", sync);
+    return () => media.removeEventListener("change", sync);
+  }, []);
+
+  // Cada par tiene dos pasos: el logo en partículas y después la ventana con su film.
+  // En pantalla angosta es uno solo, lo que dura el film.
+  useEffect(() => {
+    if (!stageRunning) return;
+    const timer = window.setTimeout(() => {
+      setStage((current) => (wideScreen && current.phase === "logo"
+        ? { index: current.index, phase: "film" }
+        : { index: (current.index + 1) % HERO_STAGE_PAIRS.length, phase: "logo" }));
+    }, HERO_STAGE_MS[stageStep]);
+    return () => window.clearTimeout(timer);
+  }, [stage, stageRunning, stageStep, wideScreen]);
+
+  // Las partículas dibujan el logo de la tecnología y, en pantalla ancha, después el marco de la ventana.
+  useEffect(() => {
+    const touring = stageStarted && !reducedMotion;
+    // En pantalla ancha una forma se transforma directo en la siguiente: logo, marco, logo.
+    // En pantalla angosta la ventana va debajo del texto, así que las partículas se quedan
+    // con el logo de la tecnología que se está viendo.
+    // Las formas del recorrido se preparan desde el principio, durante la obertura.
+    particleStage.set({ morph: touring && wideScreen, warm: reducedMotion ? [] : STAGE_SHAPES });
+    // Sin movimiento no hay recorrido: queda la marca quieta, o el glifo del servicio enfocado.
+    if (reducedMotion) setFocusTechName(focusedService ? SERVICE_GLYPHS[focusedService]?.name ?? null : null);
+    else if (!touring) setFocusTechName(null);
+    else setFocusTechName(wideScreen && stageStep === "film" ? STAGE_FRAME_NAME : stagePair.tech);
+  }, [focusedService, reducedMotion, setFocusTechName, stagePair.tech, stageStarted, stageStep, wideScreen]);
+  useEffect(() => () => {
+    setFocusTechName(null);
+    particleStage.set({ morph: false, warm: [] });
+  }, [setFocusTechName]);
 
   // Al salir del hero, el logo de partículas se abre y se disuelve (scrub).
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   useMotionValueEvent(scrollYProgress, "change", (value) => {
     particleScatter.set(value * 1.6);
     if (value > 0.35) setFocusedService(null);
+    setHeroInView((previous) => (previous === value < 0.5 ? previous : value < 0.5));
   });
   useEffect(() => () => particleScatter.set(0), []);
 
@@ -173,10 +279,10 @@ export function HomeExperience() {
         id="hero"
         ref={heroRef}
         data-home-section="hero"
-        className="relative min-h-[92svh] flex items-center px-5 pt-28 pb-16 sm:px-8 sm:pt-36 sm:pb-24 lg:px-12 overflow-hidden"
+        className="relative flex min-h-[92svh] flex-col justify-center overflow-hidden px-5 pb-16 pt-28 sm:px-8 sm:pb-24 sm:pt-36 lg:flex-row lg:items-center lg:px-12"
       >
         <div className="relative z-10 mx-auto w-full max-w-[1480px]">
-          <div className="max-w-4xl">
+          <div className="max-w-4xl lg:max-w-[47%]">
             {/* Entradas del hero en CSS (.fade-up-in): visibles desde el primer
                 paint, sin esperar la hidratación. */}
             {/* Eyebrow */}
@@ -205,22 +311,27 @@ export function HomeExperience() {
               {c.intro}
             </p>
 
-            {/* Servicios: al enfocarlos, las partículas dibujan su glifo */}
+            {/* Servicios: se encienden al compás del escenario; al enfocar uno, el escenario salta a su par */}
             <div className="fade-up-in mt-7" style={{ animationDelay: "0.45s" }}>
               <ul className="flex flex-wrap gap-2" onPointerLeave={() => setFocusedService(null)}>
                 {SERVICE_SOLUTIONS.map((service) => {
-                  const active = focusedService === service.id;
-                  const accent = service.accent;
+                  const active = stageServiceId === service.id;
+                  // Cada servicio lleva el color de su par en el escenario.
+                  const accent = HERO_STAGE_PAIRS.find((pair) => pair.serviceId === service.id)?.tone ?? service.accent;
                   return (
                     <li key={service.id}>
                       <a
                         href="#servicios"
-                        onPointerEnter={(event) => { if (event.pointerType === "mouse") setFocusedService(service.id); }}
-                        onFocus={() => setFocusedService(service.id)}
+                        onPointerEnter={(event) => { if (event.pointerType === "mouse") focusService(service.id); }}
+                        onFocus={() => focusService(service.id)}
                         onBlur={() => setFocusedService(null)}
                         aria-describedby={active ? "hero-service-promise" : undefined}
-                        className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-xs font-medium backdrop-blur-md transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${active ? "border-foreground/40 bg-foreground/10 text-foreground" : "border-white/10 bg-card/50 text-foreground/75 light:border-[rgb(var(--ink-rgb)/0.1)]"}`}
+                        className={`relative inline-flex items-center gap-2 overflow-hidden rounded-full border px-3.5 py-1.5 text-xs font-medium backdrop-blur-md transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${active ? "border-foreground/40 bg-foreground/10 text-foreground" : "border-white/10 bg-card/50 text-foreground/75 light:border-[rgb(var(--ink-rgb)/0.1)]"}`}
                       >
+                        {/* Mientras se ve el film, la línea marca cuánto falta para la tecnología siguiente. */}
+                        {active && stageRunning && stageStep === "film" && (
+                          <span key={stage.index} aria-hidden="true" className="door-progress absolute inset-x-0 bottom-0 h-[2px] origin-left" style={{ backgroundColor: accent, animationDuration: `${HERO_STAGE_MS.film}ms` }} />
+                        )}
                         <span
                           className="h-1.5 w-1.5 rounded-full transition-transform duration-300"
                           style={{ backgroundColor: accent, transform: active ? "scale(1.6)" : undefined }}
@@ -234,15 +345,15 @@ export function HomeExperience() {
               <div className="mt-3 h-6 overflow-hidden">
                 <AnimatePresence mode="wait" initial={false}>
                   <motion.p
-                    key={focusedSolution?.id ?? "hint"}
-                    id={focusedSolution ? "hero-service-promise" : undefined}
+                    key={shownSolution?.id ?? "hint"}
+                    id={shownSolution ? "hero-service-promise" : undefined}
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -12 }}
                     transition={{ duration: 0.28, ease: EASE_OUT }}
-                    className={focusedSolution ? "text-sm text-foreground/80" : "font-mono text-[10px] uppercase tracking-[0.16em] text-foreground/55 hidden [@media(hover:hover)]:block"}
+                    className={shownSolution ? "text-sm text-foreground/80" : "font-mono text-[10px] uppercase tracking-[0.16em] text-foreground/55 hidden [@media(hover:hover)]:block"}
                   >
-                    {focusedSolution ? focusedSolution.headline[language] : `↳ ${c.servicesHint}`}
+                    {shownSolution ? shownSolution.headline[language] : `↳ ${c.servicesHint}`}
                   </motion.p>
                 </AnimatePresence>
               </div>
@@ -275,6 +386,14 @@ export function HomeExperience() {
             <Link href={CV_DESTINATION.startsWith("#") ? CV_DESTINATION : localePath(language, CV_DESTINATION)} className="mt-4 inline-flex min-h-11 items-center text-sm text-foreground/65 underline decoration-foreground/25 underline-offset-4 hover:text-signal hover:decoration-signal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{c.cvLink}</Link>
           </div>
         </div>
+
+        {/* El escenario: la ventana va donde las partículas dibujan el logo, y aparece cuando el logo se transforma. */}
+        {/* Está montada desde el principio: en pantalla angosta guarda su lugar y lo de abajo no salta cuando aparece. */}
+        {stageWindow && (
+          <div className="relative z-10 mx-auto mt-10 w-full max-w-xl lg:absolute lg:left-[78vw] lg:top-[51svh] lg:mt-0 lg:w-[min(34vw,540px)] lg:max-w-none lg:-translate-x-1/2 lg:-translate-y-[54%]">
+            <HeroStage pair={stagePair} visible={stageStarted && stageStep === "film"} framed={wideScreen} playing={stagePlaying} onTogglePlaying={() => setStagePlaying((value) => !value)} language={language} />
+          </div>
+        )}
 
         {/* Invitación a recorrer: un punto que baja por una línea fina */}
         <a

@@ -256,6 +256,21 @@ html.light {
   animation: door-progress linear forwards;
 }
 
+/* Escenario del hero: al cambiar lo que muestra la ventana, lo nuevo entra desde el negro. */
+@keyframes stage-swap {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.stage-swap {
+  animation: stage-swap 0.5s ease-out both;
+}
+
 /* Señal de «sigue bajando» del héroe: un punto que recorre una línea fina. */
 @keyframes scroll-cue {
   0% {
