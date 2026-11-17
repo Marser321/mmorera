@@ -145,6 +145,62 @@ Se pide con la prueba de aspecto aprobada adjunta, en el mismo chat. Si en una s
 
 > Character reference sheet. Use the attached photo as the exact design reference and do not redesign anything. Show the same five small desk robots, each one twice: a front view and a three-quarter view, standing in a neutral pose with eyelids half open, arms relaxed, holding its own object. Two rows of five: front views on the top row, three-quarter views on the bottom row, in the same left-to-right order as the reference (blue, gold, green, coral, violet). Keep identical: the two large round lens eyes on the front of the face with metal eyelids; the blue robot's small ball antenna, blueprint roll and steel ruler; the gold robot's large headset with boom microphone and thin antenna; the green robot's cable reel backpack with handle, side vent and USB plug; the coral robot's camera head with its two eyes inside the lens hood and the red tally light on top; the violet robot's small ball antenna and large magnifying glass. Same enamel paint, screws and panel seams, same proportions, about 8 cm tall. Plain dark charcoal studio background, soft even light with a warm key from the upper right, photorealistic macro product photography. No text, no labels, no logos, no extra robots or props.
 
+**5. Los siete cuadros de partida (17/11)**
+
+Se piden con la hoja de personajes como referencia, en el mismo chat. Todos llevan tres candados escritos en la indicación:
+
+- **Diseño:** la lista de rasgos fijos de cada robot (ver «Continuidad»).
+- **Escenario:** escritorio de nogal oscuro, pared negra mate, una lámpara negra arriba a la derecha y una pila de tres libros cerca del borde derecho. Nada más sobre el escritorio.
+- **Encuadre:** 16:9, cámara a la altura del escritorio. El 40 % izquierdo queda vacío, solo pared y escritorio, porque ahí va el título. Los robots y la acción van en el 60 % derecho, en la mitad de abajo. En la práctica el generador deja libre un tercio.
+
+| Archivo | Escena | Qué se ve |
+| --- | --- | --- |
+| `h1-pedido` | 1 | Cada uno en lo suyo; la nota viene cayendo y solo Plano la vio. |
+| `h2-discuten` | 2 | Voz y Plano tiran de la nota; Cable duda, Toma filma, Lupa mira con el ojo enorme. |
+| `h3-buscan` | 3 | Plano sobre los libros, Cable enredado pidiendo ayuda, Voz solo con la nota. |
+| `h4-mano` | 4 | La mano toca el escritorio junto a la nota y los cinco la miran. |
+| `h5-relevo` | 5 | Plano le pasa la nota a Voz, ya sin pelea. |
+| `h6-caida` | 5 | Toma de espaldas en el piso, mirando a cámara; Cable le tiende la mano. |
+| `h7-resultado` | 5 | Los cinco junto al teléfono encendido con los cinco colores. |
+
+Los cuadros quedan en `film-sources/hero/` en JPEG. Los originales en PNG están en la carpeta de revisión.
+
+## La maqueta a tamaño real (17/11)
+
+Antes de animar, los cuadros se montan con el reloj del film para ver el hero a tamaño real:
+
+- `src/components/films/hero/montaje.ts` define los planos de los dos cortes: ancho (1920×1080, el cuadro completo) y alto (1080×1350, para teléfono). Cada plano es un clip animado, si ya existe, o un cuadro quieto con un movimiento lento de cámara.
+- `npx tsx scripts/render-hero-montaje.ts` renderiza los dos cortes y deja video, póster y el cuadro de movimiento reducido en `public/portfolio/hero/`.
+- La página de prueba es `/lab/hero-equipo`. No está en el sitemap ni se indexa, y la home no cambia. Usa `HeroEquipo` y `HeroFilm`, que son los componentes que después irían a la home.
+
+Los clips van en `film-sources/hero/clips/` y se anotan en `CLIPS`, dentro de `montaje.ts`: el plano cambia su cuadro por su clip y el reloj queda igual.
+
+## Lo que salió la noche del 17/11
+
+Mario delegó la escena para la noche. Quedó así:
+
+**Cuadros.** La hoja de personajes y los once cuadros (siete anchos y cuatro verticales) están en la carpeta de revisión y, en JPEG, en `film-sources/hero/`. Todos respetan el diseño aprobado.
+
+- Se generan en el chat de GPT con «Editar» sobre el cuadro del tira y afloja, nombrándolo en la indicación. Los verticales, con un mensaje común que nombra la hoja y ese cuadro.
+- Si se retoca un cuadro que no es el último, GPT mezcla cosas de los otros: apareció un segundo robot azul en `h1` y una nota de más en `h3`. Se limpiaron en local, con un parche sobre el fondo liso.
+- **Regla de puesta en escena para Toma:** siempre atrás y de tres cuartos hacia el espectador, con los dos ojos dentro del parasol. Cuando filma de perfil, el generador le pone una cámara gris con un solo ojo.
+- El cuadro del relevo (`h5`) todavía se lee como tirón: las posturas son parecidas a las de la pelea.
+
+**Movimiento.** Se probaron los dos modelos gratuitos de Flow (50 créditos por día) con el cuadro inicial:
+
+| Plano | Modelo | Resultado |
+| --- | --- | --- |
+| Discusión | Veo 3.1 Lite, 8 s | Mueve bien el tira y afloja, pero agrega luces de fondo a la pared negra y deforma la cabeza de Toma cuando gira. No se usa. |
+| Discusión | Omni 1.2 Flash, 4 s | Mantiene la pared y a Toma, pero inventa un sexto robot. No se usa. |
+| La mano | Veo 3.1 Lite, 8 s | El dedo se levanta y golpea; a los dos segundos inventa un sexto robot. Se usan los primeros 45 cuadros, de ida y vuelta: son los dos golpes. |
+| La caída | Veo 3.1 Lite, 8 s | Limpio: Toma mira a cámara, parpadea y Cable le toma la mano. Se usa. |
+
+Conclusiones: con dos robots en cuadro los modelos gratuitos alcanzan; con cinco se equivocan. Kling 4 (la prueba del 17/11 en ElevenLabs) fue el único que sostuvo a los cinco. Conviene pedir un solo gesto, que Toma mueva los ojos y no la cabeza, y decir que la pared queda lisa y que nadie entra ni sale del cuadro.
+
+**Montaje.** `montaje.ts` arma los dos cortes con el reloj del guion: clip donde existe y cuadro quieto con un acercamiento lento donde no. Hoy están animados «la mano» y «la caída».
+
+**En la página.** En pantalla ancha el film va abajo a la derecha, ocupa el 82 % del ancho y se funde con la pared hacia la izquierda y hacia arriba; el texto queda sobre la pared. En teléfono el film abre la pantalla, cuadrado, y el título y los botones van debajo.
+
 ## Indicaciones para el movimiento (Flow o ElevenLabs)
 
 - Un clip por gesto, de 4 a 6 segundos, a partir de su cuadro clave.
