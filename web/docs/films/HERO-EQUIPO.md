@@ -212,3 +212,39 @@ Conclusiones: con dos robots en cuadro los modelos gratuitos alcanzan; con cinco
 - Que no aparezcan objetos nuevos ni cambien los robots de forma o de color entre cuadros.
 - La mano entra desde arriba, golpea el escritorio dos veces con un dedo y señala la fila.
 - Nada de texto, globos ni interfaz dentro del video: lo que haga falta se agrega en Remotion.
+
+## Indicaciones de movimiento por plano (17/11)
+
+Listas para usar con el cuadro de cada plano como cuadro inicial. Ya llevan lo aprendido en las pruebas: cámara fija, pared lisa, un gesto por plano, Toma mueve los ojos y no la cabeza, y nadie entra ni sale del cuadro.
+
+**Cierre común**, al final de cada una:
+
+> Small, slightly clumsy mechanical movements with real weight. The lamp light stays steady. The background stays a plain matte black wall, completely dark and empty: no lights, no bokeh, no particles. Nothing and nobody enters or leaves the frame. Every robot keeps exactly its shape, its head, its colors and its accessories from the first frame to the last. No new objects, no morphing, no text. No music and no speech, only faint mechanical servo sounds.
+
+**Pedido (`h1`), 3 s**
+
+> Locked-off macro shot: the camera is fixed on a tripod and never moves, no zoom, no cuts. Five small desk robots on a dark wooden desk at night under a warm desk lamp, exactly as in the start frame, each busy with its own thing. The yellow sticky note drifts down through the air, swaying gently like a falling leaf, and lands flat on the desk in front of the robots. The blue robot follows it down with its eyes and lowers its blueprint. A moment later the gold robot turns its head to look at the blue robot and then at the note. The other three robots keep doing what they were doing. Exactly five robots and one single sticky note.
+
+**Discusión (`h2`), 5 s**
+
+> Locked-off macro shot: the camera is fixed on a tripod and never moves, no zoom, no cuts. Five small desk robots on a dark wooden desk at night under a warm desk lamp, exactly as in the start frame. The blue robot and the gold robot each grip one end of the same yellow sticky note. They pull it taut in a short tug of war, leaning back, then pause and exchange a stubborn sideways glance with half-closed metal eyelids, give one more small tug and settle with the note stretched tight between them. The coral robot with the camera head keeps its head still; only its two eyes move: they glance straight at the viewer for a moment, one eyelid lowers in a slow knowing wink, then the eyes look back at the fight. The green robot and the violet robot stay almost still, only blinking. Exactly five robots and one single sticky note that keeps its size and shape.
+
+**Cada uno por su lado (`h3`), 4 s**
+
+> Locked-off macro shot: the camera is fixed on a tripod and never moves, no zoom, no cuts. Five small desk robots on a dark wooden desk at night under a warm desk lamp, exactly as in the start frame, each working alone. The green robot, sitting tangled in its own black cable, tugs at the loops and only gets more tangled, then lifts both hands and looks at the gold robot, asking for help. The gold robot looks from its yellow sticky note to the green robot, hesitates, and looks back at the note. The other three robots keep still, only blinking. Exactly five robots and one single sticky note.
+
+**La mano (`h4`), 4 s.** Hecho con Veo 3.1 Lite; se usan los primeros 45 cuadros.
+
+> Locked-off macro shot: the camera is fixed on a tripod and never moves, no zoom, no cuts. A real adult human hand and five small desk robots on a dark wooden desk at night under a warm desk lamp, exactly as in the start frame. The index finger lifts a little and taps the desk twice, firmly, right beside the yellow sticky note, then rests on the desk again and stays still. At each tap the five robots flinch slightly and blink, and they keep staring up at the hand with their eyelids wide open. The robots do not walk and do not change places. The hand stays a real human hand with five fingers. Exactly five robots and exactly one hand.
+
+**Relevo (`h5`), 2 s**
+
+> Locked-off macro shot: the camera is fixed on a tripod and never moves, no zoom, no cuts. Three small desk robots on a dark wooden desk at night under a warm desk lamp, exactly as in the start frame. The blue robot lets go of the yellow sticky note with a small nod. The gold robot takes it, looks at it, nods back, then turns and holds it out to the green robot waiting behind it, who takes it with both hands. Friendly, relaxed eyelids. Exactly three robots and one single sticky note.
+
+**La caída (`h6`), 2 s.** Hecho con Veo 3.1 Lite; salió limpio.
+
+> Locked-off macro shot: the camera is fixed on a tripod and never moves, no zoom, no cuts. Two small desk robots on a dark wooden desk at night under a warm desk lamp, exactly as in the start frame. The coral robot with the camera head lies fallen on the desk. Its two eyes inside the lens hood look straight at the viewer for a moment, with embarrassed half-closed eyelids, and blink slowly; then they look up at the green robot. The green robot leans a little closer and takes the coral robot's raised hand. It pulls gently, and the coral robot rises a little toward a sitting position, then they hold still. The red light on the coral robot's head blinks slowly. Exactly two robots.
+
+**Resultado (`h7`), 2,5 s**
+
+> Locked-off macro shot: the camera is fixed on a tripod and never moves, no zoom, no cuts. Five small desk robots and a small smartphone on a dark wooden desk at night under a warm desk lamp, exactly as in the start frame. The five color bars on the phone screen pulse softly, brighter and dimmer, and their colored reflection shimmers on the desk. The violet robot leans a little closer with its magnifying glass. The gold robot gives one slow, satisfied nod. The other robots stay almost still, only blinking. The phone screen shows only the five color bars, no text and no icons. Exactly five robots.
