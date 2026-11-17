@@ -12,7 +12,7 @@ Es lo que Mario vende: no una herramienta suelta, sino alguien que orquesta vari
 
 ## El reparto
 
-Un personaje por servicio, con el color de su puerta. Ninguno habla: se entienden con globos de íconos, así el film sirve en español y en inglés.
+Un robot de escritorio por servicio, con el color de su puerta. Ninguno habla: se entienden con gestos, así el film sirve en español y en inglés.
 
 | Personaje | Color | Servicio | Su punto fuerte | Lo que lleva | Su manía |
 | --- | --- | --- | --- | --- | --- |
@@ -35,45 +35,58 @@ Un personaje por servicio, con el color de su puerta. Ninguno habla: se entiende
 | 5 | 16–20 | **Lo resuelven juntos.** El papel pasa de mano en mano y cada uno le suma su color. Al final se levanta convertido en una ventanita encendida. | Festejan y Toma se cae de espaldas. |
 | 6 | 20–22 | **Y llega otro pedido.** Vuelven a su lugar. El papel siguiente ya viene cayendo. | El bucle. |
 
-## Cómo se ve
+## Cómo se ve: fotorrealista (corrección de Mario, 16/11)
 
-- **Escenario:** una mesa de taller contra la pared mate del sitio (`#0B0B0A`), con una lámpara cálida, una pila de libros y nada más. Panorámico, como un diorama.
-- **Estilo sugerido:** plastilina o muñecos hechos a mano, con huellas de dedos y luz de lámpara. Se ve cálido, combina con la pared y disimula los defectos del video generado. **Falta que Mario lo confirme.**
-- **El título va abajo a la izquierda**, donde el cuadro queda calmo: los personajes ocupan el centro y la derecha.
-- **Teléfono:** un corte vertical propio, con tres personajes por plano.
-- **Sin sonido al entrar.** La banda (golpes, murmullos sin palabras, música) es un extra para un botón «con sonido».
+Mario vio el boceto y lo corrigió: «los bocetos son demasiado simples, yo buscaba algo más realista, fotorrealista, y que con expresiones y juegos transmitamos el humor, para que sea coherente con el resto de la página». La plastilina queda descartada.
+
+- **Escala real, lente macro.** Los cinco son robots de escritorio de unos 8 cm, filmados como si fueran objetos de verdad sobre un escritorio de noche. El resto del sitio es cine fotorrealista (el lavado de L&B, la barbería, te_Cargo, Vespera, el camión): el hero tiene que verse igual.
+- **El humor sale de las caras y del juego, no del dibujo.** Cada robot tiene dos ojos de lente con párpados mecánicos: con los párpados, la inclinación de la cabeza y la postura alcanza para el susto, la duda, el fastidio y el orgullo. Los chistes son de escala: tiran de una nota adhesiva más grande que ellos, Cable se enreda en un cable USB de verdad, Lupa se mira con su propia lupa y el ojo le queda enorme, Toma filma todo con su luz roja prendida.
+- **El escenario:** un escritorio de madera oscura contra la pared negra mate del sitio, con una pila de libros, el borde de un teclado, una taza y una lámpara cálida. Mucho negro arriba a la izquierda, donde va el título.
+- **El pedido** es una nota adhesiva que cae. **El resultado** es un teléfono chico que se enciende con los cinco colores.
+- **El orquestador** es una mano de verdad. Se puede generar o filmar la de Mario.
+- **Los colores** son los de las puertas, como esmalte sobre metal, no saturados de juguete.
+- **Teléfono:** un corte vertical propio, con dos o tres robots por plano.
+- **Sin sonido al entrar.** La banda (golpes, zumbidos de motorcitos, murmullos sin palabras, música) es un extra para un botón «con sonido».
+
+El boceto en código sigue sirviendo, pero solo como guía de ritmo y de posiciones: no muestra el aspecto final.
 
 ## Orden de trabajo
 
 1. Guion y reparto (este documento).
-2. Boceto animado en código, con muñecos provisorios: sirve para aprobar la historia, el ritmo y el encuadre antes de gastar créditos.
-3. Hoja de personajes e imágenes base en GPT (indicaciones abajo).
-4. Video en Flow, plano por plano, a partir de esas imágenes.
-5. Edición final en Remotion, con la versión horizontal y la vertical.
-6. Reemplazo del hero en la home, con póster, pausa y versión para movimiento reducido.
+2. Boceto en código, con muñecos provisorios: guía de ritmo y de encuadre.
+3. **Prueba de aspecto** en GPT: los cinco robots juntos y el escritorio vacío. Si Mario la aprueba, se sigue.
+4. Un cuadro clave por escena, con la prueba de aspecto como referencia.
+5. Video en Flow, plano por plano, a partir de esos cuadros.
+6. Edición final en Remotion, con la versión horizontal y la vertical.
+7. Reemplazo del hero en la home, con póster, pausa y versión para movimiento reducido.
 
 ## Indicaciones para las imágenes base (GPT)
 
-Se generan en este orden. Todas sin texto dentro de la imagen.
+Van en inglés porque así responde mejor el generador. Todas sin texto dentro de la imagen y sin nombrar personajes ni marcas que ya existen.
 
-**1. Hoja de personajes**
+**1. Prueba de aspecto: los cinco robots**
 
-> Hoja de personajes de animación en plastilina (stop motion), cinco personajes pequeños de cuerpo redondeado y ojos grandes, sin boca definida, con huellas de dedos visibles en la superficie. De izquierda a derecha: uno azul eléctrico con un plano de papel enrollado bajo el brazo; uno dorado con auriculares y micrófono; uno verde lima envuelto en una madeja de cable con enchufe; uno coral con una cámara de cine diminuta; uno violeta con una lupa. Cada uno de frente y de perfil. Fondo negro mate liso, luz cálida de lámpara desde arriba a la izquierda, sombras suaves. Fotografía de estudio, lente macro, poca profundidad de campo. Sin texto ni logotipos.
+> Photorealistic macro photograph of five small original desk robots standing in a row on a dark walnut desk at night, each about 8 cm tall. Each robot has a compact rounded body of matte enamel-painted metal with fine scratches, visible tiny screws and panel seams, two large round glass camera-lens eyes with mechanical metal eyelids, and two thin articulated arms. Left to right: an electric blue robot holding a tiny rolled blueprint and a small steel ruler; a brushed brass-gold robot wearing a tiny headset with a boom microphone; a lime green robot carrying a spool of thin cable on its back and holding a USB plug; a coral-red robot whose head is a miniature cinema camera with a small red tally light on; a violet robot holding a magnifying glass almost as big as itself. Each one shows a different expression using only its eyelids, head tilt and posture: curious, impatient, flustered, proud, skeptical. Matte black wall behind them, warm desk-lamp light from the upper right, soft cool rim light, shallow depth of field, dust visible in the light, real-world scale cues. Cinematic, 21:9. No text, no logos, no people.
 
-**2. El escenario vacío**
+**2. El escritorio vacío**
 
-> Diorama panorámico de una mesa de taller de madera oscura contra una pared negra mate con textura fina. A la izquierda, una pila de libros viejos de plastilina; arriba a la derecha, una lámpara de escritorio encendida que da luz cálida. La mesa está vacía en el centro. Estética de stop motion en plastilina, fotografía macro, formato muy apaisado 21:9, mucho aire negro arriba. Sin personajes, sin texto.
+> Photorealistic wide macro photograph of a designer's desk at night against a matte black wall. Dark walnut desktop, a stack of three worn hardcover books on the left, the edge of a mechanical keyboard, a ceramic coffee cup, a coiled USB cable, a desk lamp at the top right casting a warm pool of light, a faint cool glow from a monitor out of frame. The center of the desk is empty. Shallow depth of field, cinematic, 21:9, a lot of dark empty wall in the upper left. No characters, no text, no logos.
 
 **3. Un cuadro clave por escena**
 
-Con la hoja de personajes y el escenario como referencia, pedir el primer cuadro de cada escena (las seis de la tabla). Ejemplo para la escena 2:
+Con las dos imágenes anteriores como referencia, pedir el primer cuadro de cada escena. Los tres que más definen el tono:
 
-> Los cinco personajes de la hoja de referencia sobre la mesa del diorama de referencia, alrededor de un papel doblado. El dorado y el azul se inclinan uno contra el otro discutiendo, el verde se mete entre los dos con su cable, el coral los filma con su camarita y el violeta mira el papel con la lupa. Misma luz cálida, mismo fondo negro mate, mismo estilo de plastilina. Formato 21:9. Sin texto.
+> Scene 2, the argument. The same five robots from the reference image on the same desk, crowded around a yellow sticky note lying on the desk. The gold robot and the blue robot each pull one corner of the note toward themselves, eyelids half closed in stubbornness. The green robot squeezes between them holding up its USB plug. The coral camera-headed robot films the fight from one side, red light on. The violet robot inspects the note through its magnifying glass, and its eye looks huge through the lens. Same warm lamp light, same matte black wall, photorealistic macro, 21:9. No text on the note, no logos, no people.
+
+> Scene 4, the hand. The same five robots frozen mid-action, all looking straight up with eyelids wide open. A real adult human hand in a dark sleeve comes down from the top of the frame and taps the desk with its index finger next to the sticky note. Photorealistic, same desk and light, shallow depth of field, 21:9. No text, no logos, no face.
+
+> Scene 5, together. The same five robots standing in a neat row, passing the sticky note from one to the next. At the end of the row a small phone stands upright on the desk with its screen glowing, showing five plain vertical color bars in blue, green, gold, coral and violet. The robots look at it with eyelids wide and proud postures; the coral one has tipped over backwards. Photorealistic macro, same desk and light, 21:9. No text, no logos, no people.
 
 ## Indicaciones para el movimiento (Flow)
 
 - Un clip por escena, de 4 a 6 segundos, a partir de su cuadro clave.
 - Cámara quieta o con un acercamiento muy lento: el montaje y los cortes se hacen después, en código.
-- Pedir movimiento de stop motion: saltitos, cabeceos, cuerpos que se aplastan y se estiran.
-- La mano del orquestador entra desde arriba, golpea la mesa dos veces con un dedo y señala.
-- Nada de texto, globos ni interfaz dentro del video: eso se agrega en Remotion.
+- Pedir movimiento mecánico y un poco torpe: cabeceos, párpados que se abren y se cierran, bracitos que tiran, pasitos cortos. Nada de caricatura.
+- Que no aparezcan objetos nuevos ni cambien los robots de forma o de color entre cuadros.
+- La mano entra desde arriba, golpea el escritorio dos veces con un dedo y señala la fila.
+- Nada de texto, globos ni interfaz dentro del video: lo que haga falta se agrega en Remotion.
