@@ -19,6 +19,8 @@ const SOURCES: Array<{ dir: string; match: RegExp }> = [
   { dir: "panels", match: /\.jpg$/ },
   { dir: "shots", match: /-(desktop-1|mobile-1)\.jpg$/ },
   { dir: "reels", match: /-poster\.jpg$/ },
+  // Los films de servicio: su póster difuminado es el fondo de «Cómo trabajamos» en cada página.
+  { dir: "puertas", match: /-poster\.jpg$/ },
   { dir: "brands/fenix-medical-center/scenes", match: /\.(jpg|webp|png)$/ },
 ];
 

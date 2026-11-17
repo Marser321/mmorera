@@ -536,6 +536,19 @@ html.light .grano-pared {
    tokens: todo lo que los usa (texto, bordes, botones, señal) se invierte solo.
    En el tema claro, la banda pasa a pared. Adentro, los textos secundarios van
    con `text-muted-foreground` (no `foreground/55`: sobre marfil no llega a AA). */
+/*
+ * El color de un servicio (el de su puerta en el home) dentro de su página:
+ * rótulo, marcas de la lista, números y cifra de la prueba. Sin `--tono`
+ * queda la señal. En tema claro vuelve a la señal, que ahí sí contrasta.
+ */
+.tono-texto { color: var(--tono, var(--color-signal)); }
+.tono-fondo { background-color: var(--tono, var(--color-signal)); }
+html.light .tono-texto { color: var(--color-signal); }
+html.light .tono-fondo { background-color: var(--color-signal); }
+/* Dentro de la escena de cine, que es siempre oscura, el color del servicio se conserva también en tema claro. */
+html.light .escena-cine .tono-texto { color: var(--tono, #71F3A2); }
+html.light .escena-cine .tono-fondo { background-color: var(--tono, #71F3A2); }
+
 .banda-marfil {
   --color-background: #ECE7DD;
   --color-foreground: #0B0B0A;
