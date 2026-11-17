@@ -167,7 +167,7 @@ export function AuthorTrailer() {
               {(["create", "build", "scale"] as const).map((key) => (
                 <p
                   key={key}
-                  className={`absolute left-0 top-0 text-[clamp(3.4rem,10vw,9.5rem)] font-medium uppercase leading-none tracking-[-0.08em] transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${verb === key ? "translate-x-0 opacity-100" : "-translate-x-6 opacity-0"}`}
+                  className={`absolute left-0 top-0 text-[clamp(3.4rem,10vw,9.5rem)] font-medium uppercase leading-none tracking-[-0.08em] transition-[opacity,transform] duration-700 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] ${verb === key ? "translate-x-0 opacity-100" : "-translate-x-6 opacity-0"}`}
                   style={{ color: VERB_COLORS[key] }}
                 >
                   {c.verbs[key]}

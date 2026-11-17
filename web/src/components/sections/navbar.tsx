@@ -207,7 +207,7 @@ export function Navbar() {
     <header
       data-tucked={hidden || undefined}
       onFocusCapture={() => setTucked(false)}
-      className={`fixed inset-x-0 top-0 z-[100] px-3 pt-[max(0.75rem,env(safe-area-inset-top))] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none sm:px-6 ${hidden ? "-translate-y-[130%]" : ""}`}
+      className={`fixed inset-x-0 top-0 z-[100] px-3 pt-[max(0.75rem,env(safe-area-inset-top))] transition-transform duration-500 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none sm:px-6 ${hidden ? "-translate-y-[130%]" : ""}`}
     >
       <div className="relative mx-auto flex h-16 max-w-[1480px] items-center justify-between rounded-xl border border-white/10 bg-background/72 px-4 shadow-[0_16px_46px_rgba(0,0,0,.24)] backdrop-blur-xl light:border-[rgb(var(--ink-rgb)/0.1)] light:shadow-[0_1px_2px_rgb(20_23_26_/_0.06),0_12px_32px_rgb(20_23_26_/_0.1)] sm:px-5">
         <Link href={localePath(language, "/")} className="group rounded-lg p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" aria-label="Mario Morera — Home">
