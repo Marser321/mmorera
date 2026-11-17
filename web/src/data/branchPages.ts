@@ -147,6 +147,15 @@ export const LAB_PAGE = {
   },
   try: t("Probar la demo", "Try the demo"),
   back: t("Volver al Lab", "Back to the Lab"),
+  /** Demos completas: casos con un enlace de tipo demo, que se abren fuera del sitio. */
+  full: {
+    title: t("Demos completas", "Full demos"),
+    body: t(
+      "Productos y demos enteros, fuera de este sitio. Cada botón dice qué datos usa y qué puedes tocar sin romper nada.",
+      "Whole products and demos, outside this site. Each button says what data it uses and what you can touch without breaking anything."
+    ),
+    slugs: ["new-brothers-barberia", "oficio", "vespera"],
+  },
 };
 
 /** Slug de cada demo del Lab. */

@@ -296,8 +296,10 @@ test("el home conserva el índice de casos y el archivo permite abrirlos", async
   await expect(page).toHaveURL(/\/casos-de-exito$/);
   await expect(page.getByRole("heading", { level: 1, name: "Trabajo que se puede abrir." })).toBeVisible();
   const index = page.getByRole("navigation", { name: "Ir directo a un caso" });
-  await expect(index.getByRole("link")).toHaveCount(15);
-  await expect(page.getByRole("link", { name: /Ver el caso/ })).toHaveCount(15);
+  // 18 casos desde el 16/11: se sumaron Oficio, te_Cargo y Vespera.
+  await expect(index.getByRole("link")).toHaveCount(18);
+  // 18 casos desde el 16/11: se sumaron Oficio, te_Cargo y Vespera.
+  await expect(page.getByRole("link", { name: /Ver el caso/ })).toHaveCount(18);
 });
 
 test("el rótulo contextual coincide con la formación visible", async ({ page }) => {
@@ -627,7 +629,8 @@ test.describe("con movimiento reducido", () => {
 test("el archivo de casos lleva a cada caso en un clic", async ({ page }) => {
   await page.goto("/casos-de-exito");
   const index = page.getByRole("navigation", { name: "Ir directo a un caso" });
-  await expect(index.getByRole("link")).toHaveCount(15);
+  // 18 casos desde el 16/11: se sumaron Oficio, te_Cargo y Vespera.
+  await expect(index.getByRole("link")).toHaveCount(18);
   await index.getByRole("link", { name: /AD Media Solution/ }).click();
   await expect(page).toHaveURL(/\/casos-de-exito\/ad-media-solution$/, { timeout: 30_000 });
   await expect(page.locator('[data-film-stage="flagship"]')).toHaveCount(1);
@@ -636,7 +639,8 @@ test("el archivo de casos lleva a cada caso en un clic", async ({ page }) => {
 test("cada tarjeta del trabajo lleva un botón visible a su caso", async ({ page }) => {
   await page.goto("/casos-de-exito");
   // Seis del reel y nueve del archivo: cada uno con su botón "Ver el caso (y su film)".
-  await expect(page.getByRole("link", { name: /Ver el caso/ })).toHaveCount(15);
+  // 18 casos desde el 16/11: se sumaron Oficio, te_Cargo y Vespera.
+  await expect(page.getByRole("link", { name: /Ver el caso/ })).toHaveCount(18);
   const archive = page.getByRole("region", { name: "Experiencias, productos y sistemas." });
   const card = archive.getByRole("link", { name: /La Nueva Brasil/ });
   await expect(card).toContainText("Ver el caso y su film");
@@ -782,8 +786,10 @@ test("presenta el perfil y los proyectos con movimiento reducido en escritorio",
   const context = await browser.newContext({ baseURL: BASE_URL, viewport: { width: 1440, height: 900 }, reducedMotion: "reduce" });
   const page = await context.newPage(); await page.goto("/#perfil");
   await expect(page.locator("#perfil ol > li")).toHaveCount(3);
-  await expect(page.locator("#proyectos li")).toHaveCount(6);
-  expect(await page.locator("#proyectos").evaluate(e => e.getBoundingClientRect().height)).toBeLessThanOrEqual(1700);
+  // Nueve destacados desde el 16/11: se sumaron Oficio, te_Cargo y Vespera.
+  await expect(page.locator("#proyectos li")).toHaveCount(9);
+  // El tope era 1700 con seis casos; con nueve, cada fila sigue por debajo de los 200 px.
+  expect(await page.locator("#proyectos").evaluate(e => e.getBoundingClientRect().height)).toBeLessThanOrEqual(2000);
   await expect(page.locator("#brief")).toBeHidden();
   await expect(page.locator("canvas")).toHaveCount(0);
   await context.close();
@@ -1019,15 +1025,30 @@ test("abre las ramas: capacidades, casos de uso y Lab", async ({ page }) => {
   await page.goto("/casos-de-uso");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Problemas reales, contados de punta a punta.");
   await expect(page.locator('main li a[href^="/casos-de-uso/"]')).toHaveCount(3);
+  // Cada tarjeta abre con un cuadro de su film: el gráfico del problema.
+  const previews = page.locator("[data-use-case-preview] img");
+  await expect(previews).toHaveCount(3);
+  expect(await previews.evaluateAll((images) => images.every((image) => (image as HTMLImageElement).complete && (image as HTMLImageElement).naturalWidth > 0))).toBe(true);
   await page.goto("/casos-de-uso/lead-de-las-23-45");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("El lead de las 23:45");
   await expect(page.getByRole("tab")).toHaveCount(0);
   await expect(page.locator('section[aria-labelledby="caso-texto"] li')).toHaveCount(4);
-  await expect(page.getByRole("link", { name: "Visto en AD Media Solution" })).toHaveAttribute("href", /\/casos-de-exito\/ad-media-solution#film-speed-to-lead$/);
+  // AD Media ya no se usa como prueba (C10, PR #31): el ejemplo no enlaza a ese caso.
+  await expect(page.locator('a[href*="/casos-de-exito/ad-media-solution"]')).toHaveCount(0);
   await expect(page.locator('section[aria-labelledby="caso-servicio"] a')).toHaveAttribute("href", "/agentes");
 
   await page.goto("/lab");
   await expect(page.locator('main a[href^="/lab/"]')).toHaveCount(2);
+  await expect(page.locator("[data-lab-preview] img")).toHaveCount(2);
+  // Debajo, las demos completas: cada una con su reel y un botón de demo que se abre fuera del sitio.
+  const fullDemos = page.locator("[data-lab-full] li:has(h3)");
+  await expect(fullDemos).toHaveCount(3);
+  await expect(fullDemos.locator("h3")).toHaveText(["New Brothers Barbería", "Oficio", "Vespera"]);
+  for (const demo of await fullDemos.all()) await expect(demo.locator('a[target="_blank"]').first()).toBeVisible();
+  const reel = fullDemos.nth(2).getByRole("button", { name: /Reproducir el reel de Vespera/ });
+  await reel.scrollIntoViewIfNeeded();
+  await reel.hover();
+  await expect.poll(() => fullDemos.nth(2).locator("video").evaluate((video: HTMLVideoElement) => !video.paused), { timeout: 15_000 }).toBe(true);
   await page.goto("/lab/bandeja");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Bandeja con agente");
   await expect(page.getByText("Datos de ejemplo", { exact: true })).toBeVisible();
@@ -1037,7 +1058,8 @@ test("abre las ramas: capacidades, casos de uso y Lab", async ({ page }) => {
 
 test("las ramas largas se recorren por capítulos desde la barra flotante", async ({ page }) => {
   for (const { path, chapters, jump } of [
-    { path: "/sistemas", chapters: ["Para quién", "Cómo funciona", "Casos", "Contratar", "Hablemos"], jump: { name: "Contratar", id: "contratar" } },
+    // /sistemas suma «Cómo lo construyo» desde el PR #33: ahí vive lo técnico.
+    { path: "/sistemas", chapters: ["Para quién", "Cómo funciona", "Casos", "Contratar", "Hablemos", "Cómo lo construyo"], jump: { name: "Contratar", id: "contratar" } },
     { path: "/casos-de-exito", chapters: ["Pruébalo", "Destacados", "Films", "Archivo", "Hablemos"], jump: { name: "Archivo", id: "archivo" } },
   ]) {
     await page.goto(path);

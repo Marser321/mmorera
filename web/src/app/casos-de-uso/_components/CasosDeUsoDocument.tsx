@@ -1,13 +1,18 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { localePath } from "@/config/site";
 import { USE_CASES_PAGE, USE_CASE_SLUGS } from "@/data/branchPages";
+import { branchPreview } from "@/data/branchPreviews";
 import { USE_CASE_FILMS } from "@/data/films/systemsFilms";
 import { RECORRIDOS_PAGE, RECORRIDOS_PATH } from "@/data/recorridos";
 import { BranchHeader } from "@/components/branches/BranchHeader";
 import { SideDoor } from "@/components/branches/SideDoor";
 
-/** /casos-de-uso: una puerta por film, con el problema como portada y el rótulo real/ejemplo. */
+/**
+ * /casos-de-uso: una puerta por film, con el problema como portada (un cuadro
+ * de su film, en la escena del problema) y el rótulo real/ejemplo.
+ */
 export function CasosDeUsoDocument({ language }: { language: "es" | "en" }) {
   const p = USE_CASES_PAGE;
   return (
@@ -16,17 +21,23 @@ export function CasosDeUsoDocument({ language }: { language: "es" | "en" }) {
       <ul className="mx-auto grid w-full max-w-[1480px] gap-4 px-5 sm:px-8 lg:grid-cols-3 lg:px-12">
         {USE_CASE_FILMS.map((film) => (
           <li key={film.id}>
-            <Link href={localePath(language, `/casos-de-uso/${USE_CASE_SLUGS[film.id]}`)} className="group flex h-full flex-col rounded-2xl lg:min-h-[20rem] border border-foreground/15 bg-card p-6 transition-colors hover:border-signal/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:p-8">
-              <span className="flex items-center justify-between gap-3 font-mono text-[10px] uppercase tracking-[.16em]">
-                <span className="text-foreground/60">{film.category[language]}</span>
-                <span className={film.kind === "real" ? "text-signal" : "text-accent"}>{film.kind === "real" ? p.labels.real[language] : p.labels.example[language]}</span>
+            <Link href={localePath(language, `/casos-de-uso/${USE_CASE_SLUGS[film.id]}`)} className="group flex h-full flex-col overflow-hidden rounded-2xl border border-foreground/15 bg-card transition-colors hover:border-signal/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+              {/* El gráfico del problema, tal como se ve en el film. */}
+              <span data-use-case-preview className="relative block aspect-[4/3] overflow-hidden border-b border-foreground/10 bg-[#0B0B0A]">
+                <Image src={branchPreview("use-case", film.id, language)} alt="" fill priority sizes="(min-width: 1024px) 33vw, 100vw" className="object-cover transition-transform duration-700 group-hover:scale-[1.03] motion-reduce:transition-none" />
               </span>
-              <span className="mt-10 block flex-1 text-2xl font-medium leading-tight tracking-[-.03em] text-foreground sm:text-3xl">{film.problem.headline[language]}</span>
-              <span className="mt-8 flex items-center justify-between gap-3 border-t border-foreground/10 pt-4 text-sm text-foreground/80">
-                <span>{film.title[language]}</span>
-                <span className="inline-flex shrink-0 items-center gap-1 font-semibold text-foreground group-hover:text-signal">
-                  {p.labels.watch[language]}
-                  <ArrowUpRight aria-hidden="true" className="h-4 w-4" />
+              <span className="flex flex-1 flex-col p-6 sm:p-8">
+                <span className="flex items-center justify-between gap-3 font-mono text-[10px] uppercase tracking-[.16em]">
+                  <span className="text-foreground/60">{film.category[language]}</span>
+                  <span className={film.kind === "real" ? "text-signal" : "text-accent"}>{film.kind === "real" ? p.labels.real[language] : p.labels.example[language]}</span>
+                </span>
+                <span className="mt-5 block flex-1 text-2xl font-medium leading-tight tracking-[-.03em] text-foreground sm:text-3xl">{film.problem.headline[language]}</span>
+                <span className="mt-8 flex items-center justify-between gap-3 border-t border-foreground/10 pt-4 text-sm text-foreground/80">
+                  <span>{film.title[language]}</span>
+                  <span className="inline-flex shrink-0 items-center gap-1 font-semibold text-foreground group-hover:text-signal">
+                    {p.labels.watch[language]}
+                    <ArrowUpRight aria-hidden="true" className="h-4 w-4" />
+                  </span>
                 </span>
               </span>
             </Link>
