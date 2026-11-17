@@ -1,4 +1,4 @@
-import type { ReactNode, Ref } from "react";
+import type { CSSProperties, ReactNode, Ref } from "react";
 import Link from "next/link";
 import { ArrowUpRight, Check } from "lucide-react";
 import { localePath } from "@/config/site";
@@ -60,10 +60,13 @@ export function ServicePage({ content, language, howItWorks, heroRef, heroFilm, 
   ];
   const chapters = candidates.filter((chapter): chapter is DockChapter => Boolean(chapter));
 
-  return <main id="contenido-principal" className="bg-background pb-28 pt-32 sm:pt-40">
+  // El color del servicio, el de su puerta: tiñe el rótulo, las marcas, los números y la cifra de la prueba.
+  const tone = heroFilm ? ({ "--tono": heroFilm.tone } as CSSProperties) : undefined;
+
+  return <main id="contenido-principal" style={tone} data-service-tone={heroFilm?.tone} className="bg-background pb-28 pt-32 sm:pt-40">
     <header ref={heroRef} data-service-section="hero" className={`${container} pb-12 sm:pb-16 ${heroFilm ? "lg:grid lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:items-center lg:gap-14" : ""}`}>
       <div>
-        {hero.eyebrow && <p className="text-xs font-medium uppercase tracking-[.16em] text-signal">{hero.eyebrow[language]}</p>}
+        {hero.eyebrow && <p className="tono-texto text-xs font-medium uppercase tracking-[.16em]">{hero.eyebrow[language]}</p>}
         {/* Con el film al lado, el título cede tamaño para no partirse en cinco líneas. */}
         <h1 className={`mt-4 max-w-5xl font-medium leading-[1.02] tracking-[-.04em] text-foreground ${heroFilm ? "text-[clamp(2.4rem,4.2vw,4rem)]" : "text-[clamp(2.4rem,5.5vw,5rem)]"}`}>{hero.title[language]}</h1>
         {hero.body && <p className={`mt-6 max-w-3xl text-base leading-relaxed text-foreground/75 ${heroFilm ? "sm:text-lg" : "sm:text-xl"}`}>{hero.body[language]}</p>}
@@ -80,24 +83,26 @@ export function ServicePage({ content, language, howItWorks, heroRef, heroFilm, 
       </figure>}
     </header>
 
-    {/* Una sola mirada: para quién es, qué incluye y con qué herramientas. */}
+    {/* Una sola mirada: para quién es, a la izquierda y en grande; qué incluye y con qué herramientas, en un panel. */}
     {hasIntro && <section id={CHAPTERS.intro.id} data-service-section={audience ? "audience" : undefined} className={`${container} scroll-mt-24 border-t border-foreground/15 py-12 sm:py-16`}>
-      <div className="grid gap-10 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)_minmax(0,0.75fr)] lg:gap-14">
+      <div className="grid gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-start lg:gap-14">
         {audience && <div>
-          {audience.title && <h2 className={heading}>{audience.title[language]}</h2>}
-          <p className="mt-4 text-lg leading-relaxed text-foreground">{audience.for[language]}</p>
-          {audience.notFor && <p className="mt-4 text-sm leading-relaxed text-foreground/70">{audience.notFor[language]}</p>}
+          {audience.title && <h2 className="font-mono text-[10px] font-normal uppercase tracking-[.16em] text-foreground/60">{audience.title[language]}</h2>}
+          <p className="mt-4 text-[clamp(1.5rem,2.4vw,2.2rem)] font-medium leading-[1.18] tracking-[-.025em] text-foreground">{audience.for[language]}</p>
+          {audience.notFor && <p className="mt-6 max-w-xl border-l-2 border-foreground/20 pl-4 text-sm leading-relaxed text-foreground/70">{audience.notFor[language]}</p>}
         </div>}
-        {hasDeliverables && deliverables && <div data-service-section="deliverables">
-          {deliverables.title && <h2 className="text-xl font-medium leading-tight text-foreground">{deliverables.title[language]}</h2>}
-          <ul className="mt-4 space-y-3">{deliverables.items.map(item => <li key={item[language]} className="flex gap-3 border-t border-foreground/15 pt-3 text-base leading-relaxed text-foreground">
-            <Check aria-hidden="true" className="mt-1 h-4 w-4 shrink-0 text-signal" />{item[language]}
-          </li>)}</ul>
-        </div>}
-        {tools && <div>
-          <p aria-hidden="true" className="font-mono text-[10px] uppercase tracking-[.16em] text-foreground/60">{language === "es" ? "Herramientas" : "Tools"}</p>
-          <p data-service-section="tools" className="mt-4 text-sm leading-relaxed text-foreground/75">{tools[language]}</p>
-          <Link href={engineHref(language)} className="mt-3 inline-flex min-h-11 items-center gap-2 text-sm font-medium text-signal hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{ENGINE_LINK[language]}<ArrowUpRight aria-hidden="true" className="h-4 w-4" /></Link>
+        {(hasDeliverables || tools) && <div className="rounded-2xl border border-foreground/15 bg-card/60 p-6 sm:p-8">
+          {hasDeliverables && deliverables && <div data-service-section="deliverables">
+            {deliverables.title && <h2 className="font-mono text-[10px] font-normal uppercase tracking-[.16em] text-foreground/60">{deliverables.title[language]}</h2>}
+            <ul className="mt-4 space-y-4">{deliverables.items.map(item => <li key={item[language]} className="flex gap-4 text-lg leading-snug text-foreground">
+              <span aria-hidden="true" className="tono-fondo mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[#0B0B0A]"><Check className="h-3.5 w-3.5" strokeWidth={3} /></span>{item[language]}
+            </li>)}</ul>
+          </div>}
+          {tools && <div className={hasDeliverables ? "mt-7 border-t border-foreground/15 pt-6" : undefined}>
+            <p aria-hidden="true" className="font-mono text-[10px] uppercase tracking-[.16em] text-foreground/60">{language === "es" ? "Herramientas" : "Tools"}</p>
+            <p data-service-section="tools" className="mt-3 text-sm leading-relaxed text-foreground/75">{tools[language]}</p>
+            <Link href={engineHref(language)} className="tono-texto mt-2 inline-flex min-h-11 items-center gap-2 text-sm font-medium hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{ENGINE_LINK[language]}<ArrowUpRight aria-hidden="true" className="h-4 w-4" /></Link>
+          </div>}
         </div>}
       </div>
     </section>}
@@ -125,7 +130,7 @@ export function ServicePage({ content, language, howItWorks, heroRef, heroFilm, 
             <div className="flex flex-1 flex-col p-5 sm:p-6">
               <h3 className="text-2xl font-medium leading-tight text-foreground"><Link href={href} className="hover:text-signal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{project.title[language]}</Link></h3>
               {project.proof?.metric.verified ? <p data-service-proof-metric className="mt-4 flex items-baseline gap-3">
-                <span className="text-4xl font-medium leading-none tracking-[-.04em] text-signal">{project.proof.metric.value}</span>
+                <span className="tono-texto text-4xl font-medium leading-none tracking-[-.04em]">{project.proof.metric.value}</span>
                 <span className="text-sm leading-snug text-foreground/75">{project.proof.metric.label[language]}</span>
               </p> : null}
               <p className="my-4 max-w-prose text-sm leading-relaxed text-foreground/75">{project.proof?.now[language] ?? project.summary[language]}</p>
@@ -136,14 +141,29 @@ export function ServicePage({ content, language, howItWorks, heroRef, heroFilm, 
       </div>
     </section>}
 
-    {hasHiring && hiring && <section id={CHAPTERS.hiring.id} data-service-section="hiring" className={`${container} scroll-mt-24 border-t border-foreground/15 py-12 sm:py-20`}>
-      {hiring.title && <h2 className={heading}>{hiring.title[language]}</h2>}
-      {Boolean(hiring.steps?.length) && <ol className="mt-8 grid gap-8 md:grid-cols-3">{hiring.steps?.map((step, index) => <li key={step.title[language]}>
-        <span aria-hidden="true" className="font-mono text-xs text-signal">{String(index + 1).padStart(2, "0")}</span>
-        <h3 className="mt-3 text-xl font-medium text-foreground">{step.title[language]}</h3><p className="mt-3 text-sm leading-relaxed text-foreground/75">{step.body[language]}</p>
-      </li>)}</ol>}
-      {hiring.price && <p className="mt-8 text-sm leading-relaxed text-foreground/75">{hiring.price[language]}</p>}
-    </section>}
+    {/* Cómo se contrata. Con film, es una escena de cine: el póster del servicio de fondo, ya difuminado, y los pasos encima. */}
+    {hasHiring && hiring && (heroFilm
+      ? <section id={CHAPTERS.hiring.id} data-service-section="hiring" data-service-scene className="escena-cine relative isolate scroll-mt-24 overflow-hidden bg-[#0B0B0A] py-16 text-[#ECE7DD] sm:py-24">
+        {/* eslint-disable-next-line @next/next/no-img-element -- fondo liviano y ya difuminado; la plantilla también se renderiza en el servidor */}
+        <img src={heroFilm.backdrop} alt="" aria-hidden="true" loading="lazy" decoding="async" className="absolute inset-0 -z-20 h-full w-full object-cover opacity-85" />
+        <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,#0B0B0A_0%,rgba(11,11,10,.34)_24%,rgba(11,11,10,.34)_76%,#0B0B0A_100%)]" />
+        <div className={container}>
+          {hiring.title && <h2 className="text-[clamp(1.8rem,3vw,3rem)] font-medium leading-tight tracking-[-.03em]">{hiring.title[language]}</h2>}
+          {Boolean(hiring.steps?.length) && <ol className="mt-10 grid gap-4 md:grid-cols-3">{hiring.steps?.map((step, index) => <li key={step.title[language]} className="rounded-2xl border border-[#ECE7DD]/15 bg-[#0B0B0A]/70 p-6 sm:p-8">
+            <span aria-hidden="true" className="tono-texto block text-[clamp(2.6rem,4vw,3.6rem)] font-medium leading-none tracking-[-.05em]">{String(index + 1).padStart(2, "0")}</span>
+            <h3 className="mt-6 text-xl font-medium">{step.title[language]}</h3><p className="mt-3 text-sm leading-relaxed text-[#ECE7DD]/78">{step.body[language]}</p>
+          </li>)}</ol>}
+          {hiring.price && <p className="mt-8 text-sm leading-relaxed text-[#ECE7DD]/78">{hiring.price[language]}</p>}
+        </div>
+      </section>
+      : <section id={CHAPTERS.hiring.id} data-service-section="hiring" className={`${container} scroll-mt-24 border-t border-foreground/15 py-12 sm:py-20`}>
+        {hiring.title && <h2 className={heading}>{hiring.title[language]}</h2>}
+        {Boolean(hiring.steps?.length) && <ol className="mt-8 grid gap-8 md:grid-cols-3">{hiring.steps?.map((step, index) => <li key={step.title[language]}>
+          <span aria-hidden="true" className="font-mono text-xs text-signal">{String(index + 1).padStart(2, "0")}</span>
+          <h3 className="mt-3 text-xl font-medium text-foreground">{step.title[language]}</h3><p className="mt-3 text-sm leading-relaxed text-foreground/75">{step.body[language]}</p>
+        </li>)}</ol>}
+        {hiring.price && <p className="mt-8 text-sm leading-relaxed text-foreground/75">{hiring.price[language]}</p>}
+      </section>)}
 
     {hasClosing && closing && <section id={CHAPTERS.closing.id} data-service-section="closing" className="banda-marfil scroll-mt-24 py-12 sm:py-20">
       <div className={`${container} flex flex-wrap items-center justify-between gap-8`}>

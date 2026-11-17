@@ -56,3 +56,12 @@ Mario pidió que la demo de agencia de viajes tenga protagonismo, sobre todo por
 - **Sin frases:** nombres en su idioma, códigos y números. Un solo render sirve para los dos idiomas.
 - **El reel de la tarjeta** es un corte de seis segundos de las mismas escenas.
 - Los planos de origen están en `film-sources/vespera/README.md`.
+
+## El color y el cine de cada servicio, en toda su página
+
+Mario pidió llevar a todo el sitio el efecto, el contraste y el equilibrio de la página principal, y que deje de sentirse tanto espacio vacío.
+
+- **El color del servicio tiñe su página** (`--tono` en `ServicePage`, clases `tono-texto` y `tono-fondo`): el rótulo, las marcas de «Qué incluye», los números de «Cómo trabajamos» y la cifra de cada caso. En tema claro vuelve a la señal, que ahí sí contrasta.
+- **«Para quién es» va en grande** y «Qué incluye» con las herramientas, en un panel: dos bloques con peso en lugar de tres columnas finas.
+- **«Cómo trabajamos» es una escena de cine**: el póster del film del servicio de fondo, ya difuminado (`scripts/build-film-backdrops.ts`), y los pasos encima como tarjetas. Es siempre oscura, como las puertas del home, así que en tema claro hace de contraste.
+- El cierre sigue siendo la banda marfil: una por página.

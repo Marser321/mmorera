@@ -1,5 +1,6 @@
 import type { CaseReelSources } from "@/data/caseMedia";
 import { getDoorFilm, getFilmOfDoor } from "@/data/doorFilms";
+import { blurredBackdrop } from "@/data/films/caseFilms";
 import { getProjectCase } from "@/data/projectCases";
 import type { LocalizedText } from "@/types/site";
 
@@ -23,6 +24,8 @@ export interface ServiceHeroFilm {
   caption: LocalizedText;
   /** El caso que se ve, si tiene página: el pie lleva a él. */
   caseSlug?: string;
+  /** El póster del film del servicio, ya difuminado: el fondo de «Cómo trabajamos». */
+  backdrop: string;
 }
 
 export const SERVICE_HERO_PAGES = ["estudio", "agentes", "sistemas", "fabricas", "campanas"] as const;
@@ -40,12 +43,13 @@ const clock = (seconds: number) => `${Math.floor(seconds / 60)}:${String(Math.ro
 export function getServiceHeroFilm(page: ServiceHeroPage, language: "es" | "en"): ServiceHeroFilm | undefined {
   if (page === "fabricas") {
     const trailer = getProjectCase("vespera")?.trailer;
-    const tone = getDoorFilm("ai-software", language)?.tone;
-    if (!trailer || !tone) return undefined;
+    const door = getDoorFilm("ai-software", language);
+    if (!trailer || !door) return undefined;
     return {
       reel: trailer,
       ratio: "16 / 9",
-      tone,
+      tone: door.tone,
+      backdrop: blurredBackdrop(door.poster),
       caption: {
         es: `Tráiler de Vespera · ${clock(trailer.seconds)} · escenas generadas con IA`,
         en: `Vespera trailer · ${clock(trailer.seconds)} · AI-generated scenes`,
@@ -55,5 +59,5 @@ export function getServiceHeroFilm(page: ServiceHeroPage, language: "es" | "en")
   }
   const film = page === "campanas" ? getFilmOfDoor("campanas", language) : getDoorFilm(DOOR_SERVICE[page], language);
   if (!film) return undefined;
-  return { reel: film, ratio: "4 / 3", tone: film.tone, caption: film.source, caseSlug: film.caseSlug };
+  return { reel: film, ratio: "4 / 3", tone: film.tone, caption: film.source, caseSlug: film.caseSlug, backdrop: blurredBackdrop(film.poster) };
 }
