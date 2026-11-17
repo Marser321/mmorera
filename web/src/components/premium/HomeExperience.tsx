@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-motion";
@@ -20,8 +20,8 @@ import { FEATURED_CASES } from "@/data/projectCases";
 import { IslandBar } from "@/components/layout/IslandBar";
 import { MotionBackdrop } from "@/components/shared/MotionBackdrop";
 import { MonogramaFundido } from "@/components/marca/MonogramaFundido";
-import { HeroStage, type StageItem } from "@/components/premium/home/HeroStage";
-import { getDoorFilm } from "@/data/doorFilms";
+import { HeroStage } from "@/components/premium/home/HeroStage";
+import { HERO_STAGE_MS, HERO_STAGE_PAIRS } from "@/data/heroStage";
 import { STAGE_FRAME_NAME } from "@/lib/particleStage";
 import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 
@@ -35,10 +35,8 @@ const AplicarOS = dynamic(() => import("@/components/portfolio-isolated/AplicarO
 import { MOTION_ASSETS } from "@/data/motionAssets";
 
 const CV_DESTINATION = "/sobre-mi#cv";
-/** Cuánto se queda cada servicio en la ventana de cine del hero. */
-const STAGE_ADVANCE_MS = 6500;
-/** La ventana se abre cuando la obertura de partículas ya formó la doble M. */
-const STAGE_OPENS_AFTER_MS = { firstVisit: 5200, later: 500 } as const;
+/** El recorrido del escenario arranca cuando la obertura de partículas ya formó la doble M. */
+const STAGE_STARTS_AFTER_MS = { firstVisit: 5200, later: 500 } as const;
 
 /*
  * El home es un film corto en cinco escenas (3/11): 01 héroe con la obertura
@@ -108,9 +106,10 @@ const copy = {
 };
 
 /**
- * `hero`: "particulas" es el hero publicado. "orquesta" suma el escenario: una
- * ventana de cine con un servicio por vez, que las partículas enmarcan y tiñen
- * con su color. Hoy lo usa solo la página de prueba /lab/hero-orquesta.
+ * `hero`: "particulas" es el hero publicado. "orquesta" suma el escenario: las
+ * partículas dibujan el logo de una tecnología, como siempre, y después se
+ * transforman en el marco de una ventana chica que muestra algo hecho con ella
+ * (data/heroStage.ts). Hoy lo usa solo la página de prueba /lab/hero-orquesta.
  */
 export function HomeExperience({ hero = "particulas" }: { hero?: "particulas" | "orquesta" } = {}) {
   const { language } = useLanguage();
@@ -165,34 +164,27 @@ export function HomeExperience({ hero = "particulas" }: { hero?: "particulas" | 
   const [focusedService, setFocusedService] = useState<string | null>(null);
   const focusedSolution = SERVICE_SOLUTIONS.find((service) => service.id === focusedService);
 
-  // Escenario del hero: qué servicio se ve, cuándo cambia y cuándo se abre.
+  // Escenario del hero: la tecnología que dibujan las partículas y en qué se convierte.
   const withStage = hero === "orquesta";
   const reducedMotion = useReducedMotionSafe();
-  const stageItems = useMemo<StageItem[]>(
-    () => (withStage
-      ? SERVICE_SOLUTIONS.flatMap((service) => {
-          const film = getDoorFilm(service.id, language);
-          return film ? [{ id: service.id, label: service.shortTitle[language], film }] : [];
-        })
-      : []),
-    [language, withStage],
-  );
-  const [stageOpen, setStageOpen] = useState(false);
-  const [stageIndex, setStageIndex] = useState(0);
+  const [stageStarted, setStageStarted] = useState(false);
+  const [stage, setStage] = useState<{ index: number; phase: "logo" | "film" }>({ index: 0, phase: "logo" });
   const [stagePlaying, setStagePlaying] = useState(true);
   const [heroInView, setHeroInView] = useState(true);
   const [wideScreen, setWideScreen] = useState(false);
-  const stageId = withStage ? focusedService ?? stageItems[stageIndex]?.id ?? null : null;
-  const stageRunning = withStage && stageOpen && stagePlaying && !reducedMotion && focusedService === null && heroInView;
+  const stagePair = HERO_STAGE_PAIRS[stage.index] ?? HERO_STAGE_PAIRS[0];
+  /** El servicio que se enciende en la lista: el que el visitante enfoca o, si no, el del par que se ve. */
+  const stageServiceId = withStage ? focusedService ?? (stageStarted ? stagePair.serviceId : null) : null;
+  const stageRunning = withStage && stageStarted && stagePlaying && !reducedMotion && focusedService === null && heroInView;
   /** El servicio que se nombra bajo la lista: con el escenario, el que se ve; sin él, el enfocado. */
-  const shownSolution = withStage ? SERVICE_SOLUTIONS.find((service) => service.id === stageId) : focusedSolution;
+  const shownSolution = withStage ? SERVICE_SOLUTIONS.find((service) => service.id === stageServiceId) : focusedSolution;
 
-  /** Enfocar un servicio también lo pone en la ventana, y el recorrido sigue desde ahí. */
+  /** Enfocar un servicio salta a su par, directo a la ventana; el recorrido sigue desde ahí. */
   const focusService = (id: string | null) => {
     setFocusedService(id);
     if (!withStage || !id) return;
-    const index = stageItems.findIndex((item) => item.id === id);
-    if (index >= 0) setStageIndex(index);
+    const index = HERO_STAGE_PAIRS.findIndex((pair) => pair.serviceId === id);
+    if (index >= 0) setStage({ index, phase: "film" });
   };
 
   useEffect(() => {
@@ -203,7 +195,7 @@ export function HomeExperience({ hero = "particulas" }: { hero?: "particulas" | 
     } catch {
       // Sin almacenamiento se espera la obertura completa.
     }
-    const timer = window.setTimeout(() => setStageOpen(true), seen || reducedMotion ? STAGE_OPENS_AFTER_MS.later : STAGE_OPENS_AFTER_MS.firstVisit);
+    const timer = window.setTimeout(() => setStageStarted(true), seen || reducedMotion ? STAGE_STARTS_AFTER_MS.later : STAGE_STARTS_AFTER_MS.firstVisit);
     return () => window.clearTimeout(timer);
   }, [reducedMotion, withStage]);
 
@@ -216,21 +208,27 @@ export function HomeExperience({ hero = "particulas" }: { hero?: "particulas" | 
     return () => media.removeEventListener("change", sync);
   }, [withStage]);
 
+  // Cada par tiene dos pasos: el logo en partículas y después la ventana con su film.
   useEffect(() => {
-    if (!stageRunning || stageItems.length < 2) return;
-    const timer = window.setTimeout(() => setStageIndex((index) => (index + 1) % stageItems.length), STAGE_ADVANCE_MS);
+    if (!stageRunning) return;
+    const timer = window.setTimeout(() => {
+      setStage((current) => (current.phase === "logo"
+        ? { index: current.index, phase: "film" }
+        : { index: (current.index + 1) % HERO_STAGE_PAIRS.length, phase: "logo" }));
+    }, HERO_STAGE_MS[stage.phase]);
     return () => window.clearTimeout(timer);
-  }, [stageIndex, stageItems.length, stageRunning]);
+  }, [stage, stageRunning]);
 
   // Sin escenario, el servicio enfocado se dibuja con las partículas del fondo.
-  // Con escenario, las partículas arman el marco de la ventana (solo en pantalla ancha).
+  // Con escenario (y pantalla ancha), dibujan el logo de la tecnología y después el marco de la ventana.
   useEffect(() => {
     if (withStage) {
-      setFocusTechName(stageOpen && wideScreen && !reducedMotion ? STAGE_FRAME_NAME : null);
+      if (!stageStarted || !wideScreen || reducedMotion) setFocusTechName(null);
+      else setFocusTechName(stage.phase === "logo" ? stagePair.tech : STAGE_FRAME_NAME);
       return;
     }
     setFocusTechName(focusedService ? SERVICE_GLYPHS[focusedService]?.name ?? null : null);
-  }, [focusedService, reducedMotion, setFocusTechName, stageOpen, wideScreen, withStage]);
+  }, [focusedService, reducedMotion, setFocusTechName, stage.phase, stagePair.tech, stageStarted, wideScreen, withStage]);
   useEffect(() => () => setFocusTechName(null), [setFocusTechName]);
 
   // Al salir del hero, el logo de partículas se abre y se disuelve (scrub).
@@ -286,9 +284,9 @@ export function HomeExperience({ hero = "particulas" }: { hero?: "particulas" | 
             <div className="fade-up-in mt-7" style={{ animationDelay: "0.45s" }}>
               <ul className="flex flex-wrap gap-2" onPointerLeave={() => setFocusedService(null)}>
                 {SERVICE_SOLUTIONS.map((service) => {
-                  const active = (withStage ? stageId : focusedService) === service.id;
-                  // Con el escenario, cada servicio lleva el color de su film.
-                  const accent = stageItems.find((item) => item.id === service.id)?.film.tone ?? service.accent;
+                  const active = (withStage ? stageServiceId : focusedService) === service.id;
+                  // Con el escenario, cada servicio lleva el color de su par.
+                  const accent = (withStage ? HERO_STAGE_PAIRS.find((pair) => pair.serviceId === service.id)?.tone : undefined) ?? service.accent;
                   return (
                     <li key={service.id}>
                       <a
@@ -299,9 +297,9 @@ export function HomeExperience({ hero = "particulas" }: { hero?: "particulas" | 
                         aria-describedby={active ? "hero-service-promise" : undefined}
                         className={`relative inline-flex items-center gap-2 overflow-hidden rounded-full border px-3.5 py-1.5 text-xs font-medium backdrop-blur-md transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${active ? "border-foreground/40 bg-foreground/10 text-foreground" : "border-white/10 bg-card/50 text-foreground/75 light:border-[rgb(var(--ink-rgb)/0.1)]"}`}
                       >
-                        {/* La línea marca cuánto falta para pasar al servicio siguiente. */}
-                        {active && stageRunning && (
-                          <span key={stageIndex} aria-hidden="true" className="door-progress absolute inset-x-0 bottom-0 h-[2px] origin-left" style={{ backgroundColor: accent, animationDuration: `${STAGE_ADVANCE_MS}ms` }} />
+                        {/* Mientras se ve el film, la línea marca cuánto falta para la tecnología siguiente. */}
+                        {active && stageRunning && stage.phase === "film" && (
+                          <span key={stage.index} aria-hidden="true" className="door-progress absolute inset-x-0 bottom-0 h-[2px] origin-left" style={{ backgroundColor: accent, animationDuration: `${HERO_STAGE_MS.film}ms` }} />
                         )}
                         <span
                           className="h-1.5 w-1.5 rounded-full transition-transform duration-300"
@@ -358,10 +356,10 @@ export function HomeExperience({ hero = "particulas" }: { hero?: "particulas" | 
           </div>
         </div>
 
-        {/* El escenario: la ventana de cine que las partículas enmarcan. */}
-        {withStage && stageId && (
-          <div className="relative z-10 mx-auto mt-10 w-full max-w-xl lg:absolute lg:right-[max(3rem,calc((100vw-1480px)/2+3rem))] lg:top-1/2 lg:mt-0 lg:w-[min(42vw,700px)] lg:max-w-none lg:-translate-y-[46%]">
-            <HeroStage items={stageItems} activeId={stageId} open={stageOpen} playing={stagePlaying} onTogglePlaying={() => setStagePlaying((value) => !value)} language={language} />
+        {/* El escenario: la ventana va donde las partículas dibujan el logo, y aparece cuando el logo se transforma. */}
+        {withStage && stageStarted && (
+          <div className="relative z-10 mx-auto mt-10 w-full max-w-xl lg:absolute lg:left-[78vw] lg:top-[51svh] lg:mt-0 lg:w-[min(34vw,540px)] lg:max-w-none lg:-translate-x-1/2 lg:-translate-y-[54%]">
+            <HeroStage pair={stagePair} visible={!wideScreen || stage.phase === "film"} framed={wideScreen} playing={stagePlaying} onTogglePlaying={() => setStagePlaying((value) => !value)} language={language} />
           </div>
         )}
 

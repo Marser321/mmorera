@@ -4,11 +4,11 @@ import type { Tech } from "./techStack";
 
 /**
  * Glifo del escenario del hero: el marco que las partículas arman alrededor de
- * la ventana de cine. Es un rectángulo de esquinas redondas, en 4:3 como la
+ * la ventana de cine. Es un rectángulo de esquinas redondas, en 16:10 como la
  * ventana: una sola banda, porque todo lo que caiga por dentro queda tapado
  * por la ventana. Vive fuera de TECH_STACK para no aparecer en órbitas ni listas.
  */
-export const STAGE_FRAME = { width: 400, height: 300, stroke: 9, radius: 30 } as const;
+export const STAGE_FRAME = { width: 400, height: 250, stroke: 8, radius: 26 } as const;
 
 function FrameGlyph({ color = "currentColor", size = "1em", className }: IconBaseProps) {
   const { width, height, stroke, radius } = STAGE_FRAME;
