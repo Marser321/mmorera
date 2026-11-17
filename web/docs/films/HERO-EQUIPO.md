@@ -6,7 +6,7 @@ Este documento es el guion. El boceto animado está en `src/components/films/her
 
 ## La idea en una línea
 
-Llega un pedido a una mesa de taller. Cinco personajes chiquitos discuten, cada uno busca por su lado, y no sale nada hasta que una mano los ordena. Recién ahí lo resuelven juntos.
+Llega un pedido a un escritorio. Cinco robots chiquitos discuten, cada uno busca por su lado, y no sale nada hasta que una mano los ordena. Recién ahí lo resuelven juntos.
 
 Es lo que Mario vende: no una herramienta suelta, sino alguien que orquesta varias y decide.
 
@@ -28,12 +28,12 @@ Un robot de escritorio por servicio, con el color de su puerta. Ninguno habla: s
 
 | # | Segundos | Qué pasa | El chiste |
 | --- | --- | --- | --- |
-| 1 | 0–3 | **Llega el pedido.** Un papel cae sobre la mesa. | Los cinco saltan del susto al mismo tiempo. |
-| 2 | 3–8 | **Discuten.** Voz contesta primero, Plano despliega su dibujo, los dos globos chocan. Cable se mete en el medio, Toma filma la pelea, Lupa mide el papel y niega con la cabeza. | Tiran del papel cada uno para su lado. |
-| 3 | 8–12 | **Cada uno busca por su lado.** Plano se sube a una pila de libros, Lupa se va bajo la lámpara, Cable da vueltas enredado, Toma encuadra, Voz se queda solo con el papel. | Todos trabajan mucho y nadie avanza. |
-| 4 | 12–16 | **La mano que ordena.** Entra la mano, golpea la mesa dos veces, todos miran para arriba. Señala de izquierda a derecha y cada uno salta a su lugar. | El silencio repentino. |
-| 5 | 16–20 | **Lo resuelven juntos.** El papel pasa de mano en mano y cada uno le suma su color. Al final se levanta convertido en una ventanita encendida. | Festejan y Toma se cae de espaldas. |
-| 6 | 20–22 | **Y llega otro pedido.** Vuelven a su lugar. El papel siguiente ya viene cayendo. | El bucle. |
+| 1 | 0–3 | **Llega el pedido.** Una nota adhesiva cae sobre el escritorio. | Los cinco saltan del susto al mismo tiempo. |
+| 2 | 3–8 | **Discuten.** Voz contesta primero, Plano despliega su dibujo, los dos globos chocan. Cable se mete en el medio, Toma filma la pelea, Lupa mira la nota con la lupa y el ojo le queda enorme. | Tiran de la nota cada uno para su lado. |
+| 3 | 8–12 | **Cada uno busca por su lado.** Plano se sube a una pila de libros, Lupa se va bajo la lámpara, Cable da vueltas enredado en un cable USB, Toma encuadra, Voz se queda solo con la nota. | Todos trabajan mucho y nadie avanza. |
+| 4 | 12–16 | **La mano que ordena.** Entra la mano, golpea el escritorio dos veces, todos miran para arriba con los párpados bien abiertos. Señala de izquierda a derecha y cada uno salta a su lugar. | El silencio repentino. |
+| 5 | 16–20 | **Lo resuelven juntos.** La nota pasa de mano en mano y cada uno le suma lo suyo. Al final se enciende un teléfono chico con los cinco colores. | Festejan y Toma se cae de espaldas. |
+| 6 | 20–22 | **Y llega otro pedido.** Vuelven a su lugar. La nota siguiente ya viene cayendo. | El bucle. |
 
 ## Cómo se ve: fotorrealista (corrección de Mario, 16/11)
 
