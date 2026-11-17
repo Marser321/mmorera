@@ -136,7 +136,7 @@ export function ServicesStage() {
                 data-active={isActive || undefined}
                 onPointerEnter={(event) => { if (event.pointerType === "mouse") focusDoor(index); }}
                 onFocus={() => focusDoor(index)}
-                className={`group relative flex min-w-0 flex-col justify-end overflow-hidden rounded-[1.6rem] border bg-[#0B0B0A] transition-[flex-grow,border-color] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${isActive ? "border-white/25" : "border-white/10"}`}
+                className={`group relative flex min-w-0 flex-col justify-end overflow-hidden rounded-[1.6rem] border bg-[#0B0B0A] transition-[flex-grow,border-color] duration-700 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${isActive ? "border-white/25" : "border-white/10"}`}
                 style={{ flexGrow: isActive ? "var(--door-open)" : 1, flexBasis: 0 }}
               >
                 <div aria-hidden="true" className={`absolute inset-0 transition-opacity duration-700 motion-reduce:transition-none ${isActive ? "opacity-100" : "opacity-60"}`}>

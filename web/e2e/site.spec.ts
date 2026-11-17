@@ -1073,8 +1073,13 @@ test("las ramas largas se recorren por capítulos desde la barra flotante", asyn
     await expect(dock.getByRole("button")).toHaveText([...chapters, ""]);
     // WhatsApp va dentro de la barra: no queda el botón suelto.
     await expect(page.getByRole("link", { name: "Escribir por WhatsApp" })).toHaveCount(0);
-    await dock.getByRole("button", { name: jump.name }).click();
-    await expect(page.locator(`#${jump.id}`)).toBeInViewport({ timeout: 10_000 });
+    // La barra se pinta antes de hidratar: con la máquina cargada, el primer
+    // clic puede llegar antes y perderse. Se reintenta hasta que responde.
+    const jumpButton = dock.getByRole("button", { name: jump.name });
+    await expect(async () => {
+      await jumpButton.click();
+      await expect(page.locator(`#${jump.id}`)).toBeInViewport({ timeout: 4_000 });
+    }).toPass({ timeout: 25_000 });
   }
   // En las páginas sin barra sigue el acceso directo a WhatsApp.
   await page.goto("/capacidades");

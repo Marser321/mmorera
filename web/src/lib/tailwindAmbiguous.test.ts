@@ -12,17 +12,6 @@ import path from "node:path";
  */
 const AMBIGUOUS = /(?<![\w-])(duration|delay|ease)-\[[0-9.a-z(][^\]]*\]/g;
 
-/**
- * Tres transiciones publicadas que usan `ease-[…]`: hoy se mueven con la curva
- * por defecto. Cambiarlas altera cómo se mueven el encabezado, las puertas de
- * Servicios y los verbos de la película de autor, así que se deciden aparte.
- */
-const PENDING = new Set([
-  "components/premium/home/AuthorTrailer.tsx",
-  "components/premium/home/ServicesStage.tsx",
-  "components/sections/navbar.tsx",
-]);
-
 function sourceFiles(directory: string): string[] {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
     const full = path.join(directory, entry.name);
@@ -43,10 +32,8 @@ describe("clases de Tailwind que no se generan", () => {
     assert.deepEqual(timing.map((use) => `${use.file}: ${use.text}`), [], "usar [transition-duration:…] o [transition-delay:…]");
   });
 
-  it("las curvas a medida escritas como clase son solo las tres pendientes", () => {
-    const easing = found.filter((use) => use.name === "ease" && !PENDING.has(use.file));
+  it("no hay curvas a medida escritas como clase", () => {
+    const easing = found.filter((use) => use.name === "ease");
     assert.deepEqual(easing.map((use) => `${use.file}: ${use.text}`), [], "usar [transition-timing-function:…]");
-    const stillThere = new Set(found.filter((use) => use.name === "ease").map((use) => use.file));
-    assert.deepEqual([...PENDING].filter((file) => !stillThere.has(file)), [], "ya se arregló: sacarlo de la lista de pendientes");
   });
 });
