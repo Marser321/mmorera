@@ -70,6 +70,15 @@ Además: una sola nota adhesiva, sin texto. El resultado es un teléfono chico, 
 
 Antes de generar más cuadros hace falta una **hoja de personajes**: cada robot de frente y de tres cuartos, sacada de la prueba aprobada. Con esa hoja como referencia se rehacen los cuadros clave.
 
+## Prueba de movimiento (17/11)
+
+Un solo plano, la discusión, hecho en ElevenLabs con Kling 4: 5 segundos a 1080p a partir de `cuadro-2-discuten.png`. Costó 7.120 créditos. Quedó en `docs/revision-hero/plano-2-discuten.mp4`, con una hoja de cuadros al lado.
+
+- **Lo que salió bien.** En los cuadros revisados los cinco robots se mantienen iguales, hay una sola nota, no aparece nada nuevo, y la cámara y la luz quedan quietas. Plano y Voz tiran con los ojos apretados, aflojan, se miran de reojo y vuelven a tirar. Se entiende sin sonido.
+- **El guiño de Toma funciona, y distinto de lo previsto.** Gira la cabeza y apunta el lente al espectador, con el ojo asomando al costado. Se lee como «ahora te filmo a vos». Al final vuelve a la pelea.
+- **Lo que no.** El ojo agrandado de Lupa desaparece de la lupa por momentos. El clip trae una pista de sonido, que se descarta. El diseño es el del cuadro 2 y no el aprobado, así que el plano vale como prueba y no como toma final.
+- **Conclusión.** El movimiento no es el problema. Antes de animar más hay que lograr que los cuadros de partida respeten el diseño aprobado.
+
 ## Entrada, salida y teléfono (17/11)
 
 Propuesta de Codex en `docs/revision-hero/CONTINUIDAD-ENTRADA-MOVIL.md`, incorporada así:
@@ -129,6 +138,12 @@ Con las dos imágenes anteriores como referencia, pedir el primer cuadro de cada
 > Scene 4, the hand. The same five robots frozen mid-action, all looking straight up with eyelids wide open. A real adult human hand in a dark sleeve comes down from the top of the frame and taps the desk with its index finger next to the sticky note. Photorealistic, same desk and light, shallow depth of field, 21:9. No text, no logos, no face.
 
 > Scene 5, together. The same five robots standing in a neat row, passing the sticky note from one to the next. At the end of the row a small phone stands upright on the desk with its screen glowing, showing five plain vertical color bars in blue, green, gold, coral and violet. The robots look at it with eyelids wide and proud postures; the coral one has tipped over backwards. Photorealistic macro, same desk and light, 21:9. No text, no logos, no people.
+
+**4. Hoja de personajes**
+
+Se pide con la prueba de aspecto aprobada adjunta, en el mismo chat. Si en una sola hoja se pierden detalles, se pide una hoja por robot.
+
+> Character reference sheet. Use the attached photo as the exact design reference and do not redesign anything. Show the same five small desk robots, each one twice: a front view and a three-quarter view, standing in a neutral pose with eyelids half open, arms relaxed, holding its own object. Two rows of five: front views on the top row, three-quarter views on the bottom row, in the same left-to-right order as the reference (blue, gold, green, coral, violet). Keep identical: the two large round lens eyes on the front of the face with metal eyelids; the blue robot's small ball antenna, blueprint roll and steel ruler; the gold robot's large headset with boom microphone and thin antenna; the green robot's cable reel backpack with handle, side vent and USB plug; the coral robot's camera head with its two eyes inside the lens hood and the red tally light on top; the violet robot's small ball antenna and large magnifying glass. Same enamel paint, screws and panel seams, same proportions, about 8 cm tall. Plain dark charcoal studio background, soft even light with a warm key from the upper right, photorealistic macro product photography. No text, no labels, no logos, no extra robots or props.
 
 ## Indicaciones para el movimiento (Flow o ElevenLabs)
 
