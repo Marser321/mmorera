@@ -99,7 +99,7 @@ const ALTO: MontageShot[] = [
   { id: "guino", file: "h2-discuten.jpg", clip: CLIPS.discuten && { ...CLIPS.discuten, from: CLIPS.discuten.from + 48 }, frames: 48, from: still(1, 1, 0.6), to: still(1.05, 1, 0.6) },
   { id: "buscan", file: "h3-buscan.jpg", clip: CLIPS.buscan, frames: 96, from: still(1, 0.51, 0.75), to: still(1, 0.57, 0.75) },
   { id: "mano", file: "h4-mano.jpg", clip: CLIPS.mano, frames: 96, from: still(1, 0.69, 0.6), to: still(1.04, 0.69, 0.6) },
-  { id: "relevo", file: "h5-relevo.jpg", clip: CLIPS.relevo, frames: 40, from: still(1, 0.82, 0.7), to: still(1.03, 0.82, 0.7) },
+  { id: "relevo", file: "h5-relevo.jpg", clip: CLIPS.relevo, frames: 40, from: still(1, 0.75, 0.7), to: still(1.03, 0.75, 0.7) },
   { id: "caida", file: "v2-caida.jpg", frames: 44, from: still(1, 0.5, 0.7), to: still(1.04, 0.5, 0.7) },
   { id: "resultado", file: "v3-resultado.jpg", frames: 60, from: still(1, 0.5, 0.7), to: still(1.05, 0.5, 0.7) },
 ];

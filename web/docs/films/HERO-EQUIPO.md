@@ -184,7 +184,7 @@ Mario delegó la escena para la noche. Quedó así:
 - Se generan en el chat de GPT con «Editar» sobre el cuadro del tira y afloja, nombrándolo en la indicación. Los verticales, con un mensaje común que nombra la hoja y ese cuadro.
 - Si se retoca un cuadro que no es el último, GPT mezcla cosas de los otros: apareció un segundo robot azul en `h1` y una nota de más en `h3`. Se limpiaron en local, con un parche sobre el fondo liso.
 - **Regla de puesta en escena para Toma:** siempre atrás y de tres cuartos hacia el espectador, con los dos ojos dentro del parasol. Cuando filma de perfil, el generador le pone una cámara gris con un solo ojo.
-- El cuadro del relevo (`h5`) todavía se lee como tirón: las posturas son parecidas a las de la pelea.
+- El cuadro del relevo (`h5`) se rehízo una vez: en el primero las posturas se leían como tirón. Sirve pedir «nadie se inclina hacia atrás, la nota cuelga floja».
 
 **Movimiento.** Se probaron los dos modelos gratuitos de Flow (50 créditos por día) con el cuadro inicial:
 
