@@ -51,15 +51,22 @@ export const MONTAGE_SIZE: Record<MontageId, { width: number; height: number }> 
 export const LOOP_FADE = 12;
 
 /**
- * Clips animados que ya existen (Flow, Veo 3.1 Lite, 17/11). Mientras un plano
- * no tiene clip, va su cuadro quieto.
- * - mano: el dedo se levanta y golpea en los primeros 45 cuadros; después el
- *   generador inventa un sexto robot. De ida y vuelta son los dos golpes.
- * - caida: Toma mira a cámara, parpadea y Cable le toma la mano.
+ * Clips animados que ya existen (17/11). Mientras un plano no tiene clip, va
+ * su cuadro quieto.
+ * - pedido, discuten y resultado: Kling 4 a 1080p. Los tres salieron limpios,
+ *   con los cinco robots estables.
+ * - mano: Veo 3.1 Lite a 720p. El dedo se levanta y golpea en los primeros 45
+ *   cuadros; después el generador inventa un sexto robot. De ida y vuelta son
+ *   los dos golpes.
+ * - caida: Veo 3.1 Lite a 720p. Toma mira a cámara, parpadea y Cable le toma
+ *   la mano.
  */
 const CLIPS: Partial<Record<"pedido" | "discuten" | "buscan" | "mano" | "relevo" | "caida" | "resultado", ShotClip>> = {
+  pedido: { file: "pedido.mp4", from: 6 },
+  discuten: { file: "discuten.mp4", from: 0 },
   mano: { file: "mano.mp4", from: 0, pingPong: 45 },
   caida: { file: "caida.mp4", from: 20 },
+  resultado: { file: "resultado.mp4", from: 8 },
 };
 
 /** Qué cuadro del clip se ve en un momento del plano. */
@@ -89,19 +96,20 @@ const ANCHO: MontageShot[] = [
 ];
 
 /**
- * Teléfono: dos robots por plano. Los cinco aparecen por cortes; juntos y
- * diminutos no se leen. Los planos «v» son cuadros verticales propios; el
- * resto son recortes del cuadro ancho (y de su clip, cuando existe).
+ * Teléfono: dos o tres robots por plano. Los cinco aparecen por cortes; juntos
+ * y diminutos no se leen. Casi todos los planos son recortes del cuadro ancho
+ * y de su clip, así el teléfono también ve el movimiento. La caída usa su
+ * cuadro vertical propio: el recorte del clip, que es de 720p, quedaba blando.
  */
 const ALTO: MontageShot[] = [
-  { id: "pedido", file: "v0-pedido.jpg", frames: 72, from: still(1, 0.5, 0.57), to: still(1.04, 0.5, 0.57) },
-  { id: "discuten", file: "v1-nota.jpg", frames: 72, from: still(1, 0.5, 0.7), to: still(1.05, 0.5, 0.7) },
-  { id: "guino", file: "h2-discuten.jpg", clip: CLIPS.discuten && { ...CLIPS.discuten, from: CLIPS.discuten.from + 48 }, frames: 48, from: still(1, 1, 0.6), to: still(1.05, 1, 0.6) },
+  { id: "pedido", file: "h1-pedido.jpg", clip: CLIPS.pedido, frames: 72, from: still(1, 0.4, 0.7), to: still(1.03, 0.4, 0.7) },
+  { id: "discuten", file: "h2-discuten.jpg", clip: CLIPS.discuten, frames: 72, from: still(1, 0.54, 0.7), to: still(1.04, 0.54, 0.7) },
+  { id: "guino", file: "h2-discuten.jpg", clip: CLIPS.discuten && { ...CLIPS.discuten, from: CLIPS.discuten.from + 72 }, frames: 48, from: still(1, 1, 0.6), to: still(1.04, 1, 0.6) },
   { id: "buscan", file: "h3-buscan.jpg", clip: CLIPS.buscan, frames: 96, from: still(1, 0.51, 0.75), to: still(1, 0.57, 0.75) },
   { id: "mano", file: "h4-mano.jpg", clip: CLIPS.mano, frames: 96, from: still(1, 0.69, 0.6), to: still(1.04, 0.69, 0.6) },
   { id: "relevo", file: "h5-relevo.jpg", clip: CLIPS.relevo, frames: 40, from: still(1, 0.75, 0.7), to: still(1.03, 0.75, 0.7) },
   { id: "caida", file: "v2-caida.jpg", frames: 44, from: still(1, 0.5, 0.7), to: still(1.04, 0.5, 0.7) },
-  { id: "resultado", file: "v3-resultado.jpg", frames: 60, from: still(1, 0.5, 0.7), to: still(1.05, 0.5, 0.7) },
+  { id: "resultado", file: "h7-resultado.jpg", clip: CLIPS.resultado, frames: 60, from: still(1, 0.87, 0.7), to: still(1.04, 0.87, 0.7) },
 ];
 
 export const MONTAGE: Record<MontageId, MontageShot[]> = { ancho: ANCHO, alto: ALTO };

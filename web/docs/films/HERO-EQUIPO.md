@@ -195,10 +195,13 @@ Mario delegó la escena para la noche. Quedó así:
 | Discusión | Omni 1.2 Flash, 4 s | Mantiene la pared y a Toma, pero inventa un sexto robot. No se usa. |
 | La mano | Veo 3.1 Lite, 8 s | El dedo se levanta y golpea; a los dos segundos inventa un sexto robot. Se usan los primeros 45 cuadros, de ida y vuelta: son los dos golpes. |
 | La caída | Veo 3.1 Lite, 8 s | Limpio: Toma mira a cámara, parpadea y Cable le toma la mano. Se usa. |
+| Pedido | Kling 4, 5 s | Limpio: la nota cae, pasa por delante y se posa; Plano la sigue con la vista. Se usa. |
+| Discusión | Kling 4, 5 s | Limpio: tiran, se miran de reojo y Toma guiña con los ojos, sin girar la cabeza. Se usa. |
+| Resultado | Kling 4, 4 s | Limpio: los cinco robots estables frente al teléfono. Se usa. |
 
-Conclusiones: con dos robots en cuadro los modelos gratuitos alcanzan; con cinco se equivocan. Kling 4 (la prueba del 17/11 en ElevenLabs) fue el único que sostuvo a los cinco. Conviene pedir un solo gesto, que Toma mueva los ojos y no la cabeza, y decir que la pared queda lisa y que nadie entra ni sale del cuadro.
+Conclusiones: con dos robots en cuadro los modelos gratuitos alcanzan; con cinco se equivocan. Kling 4, en ElevenLabs, sostuvo a los cinco en los tres planos que se le pidieron, a la primera. Cuesta 1.424 créditos por segundo a 1080p. Conviene pedir un solo gesto, que Toma mueva los ojos y no la cabeza, y decir que la pared queda lisa y que nadie entra ni sale del cuadro.
 
-**Montaje.** `montaje.ts` arma los dos cortes con el reloj del guion: clip donde existe y cuadro quieto con un acercamiento lento donde no. Hoy están animados «la mano» y «la caída».
+**Montaje.** `montaje.ts` arma los dos cortes con el reloj del guion: clip donde existe y cuadro quieto con un acercamiento lento donde no. Están animados cinco de los siete planos: pedido, discusión, la mano, la caída y resultado. Siguen quietos «cada uno por su lado» y «el relevo». El corte de teléfono usa recortes de los mismos clips.
 
 **En la página.** En pantalla ancha el film va abajo a la derecha, ocupa el 82 % del ancho y se funde con la pared hacia la izquierda y hacia arriba; el texto queda sobre la pared. En teléfono el film abre la pantalla, cuadrado, y el título y los botones van debajo. La escena es oscura en los dos temas: la clase `escena-pared` devuelve los colores de la pared, así el texto se lee igual en el tema claro. Las partículas siguen en el resto del sitio; en el hero las tapa el film.
 
