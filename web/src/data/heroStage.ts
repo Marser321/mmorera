@@ -75,5 +75,12 @@ export const HERO_STAGE_PAIRS: HeroStagePair[] = [
   },
 ];
 
-/** Cuánto dura cada paso: el logo en partículas y después la ventana con su film. */
-export const HERO_STAGE_MS = { logo: 3600, film: 6200 } as const;
+/**
+ * Cuánto dura cada paso: el logo en partículas y después la ventana con su film.
+ * `reveal` es lo que espera la ventana a que el logo se rompa y arme su marco;
+ * recién ahí aparece y arranca el film, que así no llega a dar la vuelta.
+ */
+export const HERO_STAGE_MS = { logo: 3600, film: 6200, reveal: 650 } as const;
+
+/** Largo de los clips del escenario. */
+export const HERO_STAGE_CLIP_MS = 6000;

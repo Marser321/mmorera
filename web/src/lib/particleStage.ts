@@ -19,28 +19,26 @@ export interface ParticleStageState {
   scale: number;
   /** Color del servicio que se ve, o null para el color de siempre. */
   tint: string | null;
-  /** Momento del último cambio de servicio (performance.now): las partículas se sueltan y se rearman. */
-  pulseAt: number;
+  /** Con el recorrido del escenario andando, una forma pasa directo a la siguiente en vez de soltarse. */
+  morph: boolean;
+  /** Formas que van a venir: se preparan antes, para que el cambio no espere a que se muestreen. */
+  warm: readonly string[];
 }
 
-const state: ParticleStageState = { active: false, cx: 0, cy: 0, scale: 1, tint: null, pulseAt: -1e9 };
+const state: ParticleStageState = { active: false, cx: 0, cy: 0, scale: 1, tint: null, morph: false, warm: [] };
 
 export const particleStage = {
   get: (): Readonly<ParticleStageState> => state,
   set: (patch: Partial<ParticleStageState>) => {
     Object.assign(state, patch);
   },
-  /** Las partículas se sueltan un instante y vuelven a armar el marco. */
-  pulse: () => {
-    state.pulseAt = performance.now();
-  },
   reset: () => {
     Object.assign(state, { active: false, tint: null });
   },
 };
 
-/** Cuánto dura el soltarse y rearmarse, en segundos. */
-export const STAGE_PULSE_SECONDS = 0.95;
+/** Cuánto tarda una forma en transformarse en la siguiente, en segundos. */
+export const STAGE_MORPH_SECONDS = 1.05;
 
 /** El marco es un poco más grande que la ventana, para que las partículas la abracen por fuera. */
 export const STAGE_OUTSET_PX = 16;
