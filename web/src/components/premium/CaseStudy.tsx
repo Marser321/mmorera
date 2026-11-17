@@ -345,7 +345,7 @@ export function CaseStudy({ project, underTheHood }: { project: ProjectCase; und
         className="group relative mt-24 block overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
       >
         {nextCover && (
-          <Image src={nextCover} alt="" fill sizes="100vw" className="object-cover object-top opacity-30 transition-[transform,opacity] duration-[1.2s] ease-out group-hover:scale-105 group-hover:opacity-45" />
+          <Image src={nextCover} alt="" fill sizes="100vw" className="object-cover object-top opacity-30 transition-[transform,opacity] [transition-duration:1.2s] ease-out group-hover:scale-105 group-hover:opacity-45" />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/30" aria-hidden="true" />
         <div className="relative mx-auto flex min-h-[60vh] max-w-[1480px] flex-col justify-end px-5 pb-16 pt-24 sm:px-8 lg:px-12">
