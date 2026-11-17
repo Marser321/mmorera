@@ -171,7 +171,8 @@ Antes de animar, los cuadros se montan con el reloj del film para ver el hero a 
 
 - `src/components/films/hero/montaje.ts` define los planos de los dos cortes: ancho (1920×1080, el cuadro completo) y alto (1080×1350, para teléfono). Cada plano es un clip animado, si ya existe, o un cuadro quieto con un movimiento lento de cámara.
 - `npx tsx scripts/render-hero-montaje.ts` renderiza los dos cortes y deja video, póster y el cuadro de movimiento reducido en `public/portfolio/hero/`.
-- La página de prueba es `/lab/hero-equipo`. No está en el sitemap ni se indexa, y la home no cambia. Usa `HeroEquipo` y `HeroFilm`, que son los componentes que después irían a la home.
+- La página de prueba es `/lab/hero-equipo`. No está en el sitemap ni se indexa. Muestra la home de verdad con el hero del film: `HomeExperience` acepta `hero="equipo"` y arma el mismo texto dentro de `HeroEquipo`. La home publicada usa el valor por defecto y no cambia.
+- Para publicar el hero alcanza con cambiar ese valor por defecto y borrar la página de prueba.
 
 Los clips van en `film-sources/hero/clips/` y se anotan en `CLIPS`, dentro de `montaje.ts`: el plano cambia su cuadro por su clip y el reloj queda igual.
 
@@ -199,7 +200,7 @@ Conclusiones: con dos robots en cuadro los modelos gratuitos alcanzan; con cinco
 
 **Montaje.** `montaje.ts` arma los dos cortes con el reloj del guion: clip donde existe y cuadro quieto con un acercamiento lento donde no. Hoy están animados «la mano» y «la caída».
 
-**En la página.** En pantalla ancha el film va abajo a la derecha, ocupa el 82 % del ancho y se funde con la pared hacia la izquierda y hacia arriba; el texto queda sobre la pared. En teléfono el film abre la pantalla, cuadrado, y el título y los botones van debajo.
+**En la página.** En pantalla ancha el film va abajo a la derecha, ocupa el 82 % del ancho y se funde con la pared hacia la izquierda y hacia arriba; el texto queda sobre la pared. En teléfono el film abre la pantalla, cuadrado, y el título y los botones van debajo. La escena es oscura en los dos temas: la clase `escena-pared` devuelve los colores de la pared, así el texto se lee igual en el tema claro. Las partículas siguen en el resto del sitio; en el hero las tapa el film.
 
 ## Indicaciones para el movimiento (Flow o ElevenLabs)
 

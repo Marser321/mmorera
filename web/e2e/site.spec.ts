@@ -1099,3 +1099,34 @@ test("el CV vive en «Sobre mí», con la película de autor arriba", async ({ p
   await page.goto("/en/cv");
   await expect(page).toHaveURL(/\/en\/sobre-mi#cv$/);
 });
+
+test("la maqueta del hero «El equipo» muestra la home con el film, un solo video y su pausa", async ({ page }) => {
+  await page.goto("/lab/hero-equipo");
+  const hero = page.locator('#hero[data-hero="equipo"]');
+  await expect(hero).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
+  // El póster está en el HTML y el navegador monta un solo video, el del corte que le toca.
+  await expect(hero.locator("picture img")).toBeVisible();
+  await expect(hero.locator("video")).toHaveCount(1);
+  const pause = hero.getByRole("button", { name: "Pausar el film" });
+  await pause.click();
+  await expect(hero.getByRole("button", { name: "Reproducir el film" })).toBeVisible();
+  await expect.poll(() => hero.locator("video").evaluate((video: HTMLVideoElement) => video.paused)).toBe(true);
+  // Debajo sigue la home de verdad: las puertas de Servicios.
+  await expect(page.locator("#servicios")).toBeAttached();
+  // La home publicada sigue con su hero de siempre.
+  await page.goto("/");
+  await expect(page.locator("#hero")).not.toHaveAttribute("data-hero", "equipo");
+});
+
+test.describe("hero «El equipo» con movimiento reducido", () => {
+  test.use({ contextOptions: { reducedMotion: "reduce" } });
+  test("no monta el video y deja el póster", async ({ page }) => {
+    await page.goto("/lab/hero-equipo");
+    const hero = page.locator('#hero[data-hero="equipo"]');
+    await expect(hero.locator("picture img")).toBeVisible();
+    await expect(hero.locator("video")).toHaveCount(0);
+    await expect(hero.getByRole("button", { name: "Pausar el film" })).toHaveCount(0);
+  });
+});

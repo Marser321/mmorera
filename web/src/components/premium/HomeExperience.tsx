@@ -20,6 +20,7 @@ import { FEATURED_CASES } from "@/data/projectCases";
 import { IslandBar } from "@/components/layout/IslandBar";
 import { MotionBackdrop } from "@/components/shared/MotionBackdrop";
 import { MonogramaFundido } from "@/components/marca/MonogramaFundido";
+import { HeroEquipo } from "@/components/premium/home/HeroEquipo";
 
 // Secciones bajo el pliegue en chunks propios (con SSR: el HTML no cambia).
 // Cada una es su propio límite de Suspense, así React hidrata por partes en
@@ -99,7 +100,12 @@ const copy = {
   },
 };
 
-export function HomeExperience() {
+/**
+ * `hero`: "particulas" es el hero publicado. "equipo" es el hero con el film
+ * «El equipo» (docs/films/HERO-EQUIPO.md); hoy lo usa solo la página de prueba
+ * /lab/hero-equipo. El texto es el mismo en los dos.
+ */
+export function HomeExperience({ hero = "particulas" }: { hero?: "particulas" | "equipo" } = {}) {
   const { language } = useLanguage();
   const heroRef = useRef<HTMLElement>(null);
   const c = copy[language];
@@ -166,128 +172,141 @@ export function HomeExperience() {
   });
   useEffect(() => () => particleScatter.set(0), []);
 
-  return (
-    <main id="contenido-principal" className="relative pb-24">
-      {/* ─── 1. HERO COMERCIAL Y DIRECTO ─── */}
-      <section
-        id="hero"
-        ref={heroRef}
-        data-home-section="hero"
-        className="relative min-h-[92svh] flex items-center px-5 pt-28 pb-16 sm:px-8 sm:pt-36 sm:pb-24 lg:px-12 overflow-hidden"
+  const withFilm = hero === "equipo";
+  // El texto del hero es el mismo con las partículas y con el film.
+  const heroText = (
+    <>
+      {/* Entradas del hero en CSS (.fade-up-in): visibles desde el primer
+          paint, sin esperar la hidratación. */}
+      {/* Eyebrow */}
+      <div
+        className="fade-up-in inline-flex items-center gap-2 rounded-full border border-white/10 bg-card/60 px-3.5 py-1.5 backdrop-blur-md light:border-[rgb(var(--ink-rgb)/0.1)] light:bg-card/80 mb-6"
       >
-        <div className="relative z-10 mx-auto w-full max-w-[1480px]">
-          <div className="max-w-4xl">
-            {/* Entradas del hero en CSS (.fade-up-in): visibles desde el primer
-                paint, sin esperar la hidratación. */}
-            {/* Eyebrow */}
-            <div
-              className="fade-up-in inline-flex items-center gap-2 rounded-full border border-white/10 bg-card/60 px-3.5 py-1.5 backdrop-blur-md light:border-[rgb(var(--ink-rgb)/0.1)] light:bg-card/80 mb-6"
-            >
-              <span className="h-2 w-2 rounded-full bg-signal shadow-[0_0_8px_#71F3A2]" />
-              <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-foreground/75 sm:text-[11px]">
-                <DecodeText text={c.eyebrow} decodeOnMount duration={700} />
-              </span>
-            </div>
+        <span className="h-2 w-2 rounded-full bg-signal shadow-[0_0_8px_#71F3A2]" />
+        <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-foreground/75 sm:text-[11px]">
+          <DecodeText text={c.eyebrow} decodeOnMount duration={700} />
+        </span>
+      </div>
 
-            {/* Una frase: qué hace. El resto lo cuentan las escenas. */}
-            <SplitReveal
-              as="h1"
-              mode="load"
-              delay={0.1}
-              text={c.title}
-              className="max-w-[13ch] text-[clamp(2.75rem,6.2vw,6.25rem)] font-medium leading-[0.94] tracking-[-0.06em] text-foreground"
-            />
+      {/* Una frase: qué hace. El resto lo cuentan las escenas. */}
+      <SplitReveal
+        as="h1"
+        mode="load"
+        delay={0.1}
+        text={c.title}
+        className={`max-w-[13ch] text-[clamp(2.75rem,6.2vw,6.25rem)] font-medium leading-[0.94] tracking-[-0.06em] text-foreground ${withFilm ? "lg:text-[clamp(3rem,5.2vw,5.25rem)]" : ""}`}
+      />
 
-            <p
-              className="fade-up-in mt-6 max-w-xl text-base leading-relaxed text-foreground/70 sm:text-lg"
-              style={{ animationDelay: "0.3s" }}
-            >
-              {c.intro}
-            </p>
+      <p
+        className="fade-up-in mt-6 max-w-xl text-base leading-relaxed text-foreground/70 sm:text-lg"
+        style={{ animationDelay: "0.3s" }}
+      >
+        {c.intro}
+      </p>
 
-            {/* Servicios: al enfocarlos, las partículas dibujan su glifo */}
-            <div className="fade-up-in mt-7" style={{ animationDelay: "0.45s" }}>
-              <ul className="flex flex-wrap gap-2" onPointerLeave={() => setFocusedService(null)}>
-                {SERVICE_SOLUTIONS.map((service) => {
-                  const active = focusedService === service.id;
-                  const accent = service.accent;
-                  return (
-                    <li key={service.id}>
-                      <a
-                        href="#servicios"
-                        onPointerEnter={(event) => { if (event.pointerType === "mouse") setFocusedService(service.id); }}
-                        onFocus={() => setFocusedService(service.id)}
-                        onBlur={() => setFocusedService(null)}
-                        aria-describedby={active ? "hero-service-promise" : undefined}
-                        className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-xs font-medium backdrop-blur-md transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${active ? "border-foreground/40 bg-foreground/10 text-foreground" : "border-white/10 bg-card/50 text-foreground/75 light:border-[rgb(var(--ink-rgb)/0.1)]"}`}
-                      >
-                        <span
-                          className="h-1.5 w-1.5 rounded-full transition-transform duration-300"
-                          style={{ backgroundColor: accent, transform: active ? "scale(1.6)" : undefined }}
-                        />
-                        {service.shortTitle[language]}
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-              <div className="mt-3 h-6 overflow-hidden">
-                <AnimatePresence mode="wait" initial={false}>
-                  <motion.p
-                    key={focusedSolution?.id ?? "hint"}
-                    id={focusedSolution ? "hero-service-promise" : undefined}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -12 }}
-                    transition={{ duration: 0.28, ease: EASE_OUT }}
-                    className={focusedSolution ? "text-sm text-foreground/80" : "font-mono text-[10px] uppercase tracking-[0.16em] text-foreground/55 hidden [@media(hover:hover)]:block"}
+      {/* Con el film, en teléfono los botones van antes que los servicios: así entran en la primera pantalla. */}
+      <div className={withFilm ? "flex flex-col" : "contents"}>
+        {/* Servicios: al enfocarlos, las partículas dibujan su glifo */}
+        <div className={`fade-up-in mt-7 ${withFilm ? "order-2 sm:order-1" : ""}`} style={{ animationDelay: "0.45s" }}>
+          <ul className="flex flex-wrap gap-2" onPointerLeave={() => setFocusedService(null)}>
+            {SERVICE_SOLUTIONS.map((service) => {
+              const active = focusedService === service.id;
+              const accent = service.accent;
+              return (
+                <li key={service.id}>
+                  <a
+                    href="#servicios"
+                    onPointerEnter={(event) => { if (event.pointerType === "mouse") setFocusedService(service.id); }}
+                    onFocus={() => setFocusedService(service.id)}
+                    onBlur={() => setFocusedService(null)}
+                    aria-describedby={active ? "hero-service-promise" : undefined}
+                    className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-xs font-medium backdrop-blur-md transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${active ? "border-foreground/40 bg-foreground/10 text-foreground" : "border-white/10 bg-card/50 text-foreground/75 light:border-[rgb(var(--ink-rgb)/0.1)]"}`}
                   >
-                    {focusedSolution ? focusedSolution.headline[language] : `↳ ${c.servicesHint}`}
-                  </motion.p>
-                </AnimatePresence>
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="fade-up-in mt-6 flex flex-wrap items-center gap-3.5" style={{ animationDelay: "0.6s" }}>
-              <Magnetic>
-                <a
-                  href="#proyectos"
-                  className="pressable inline-flex items-center gap-2.5 rounded-full bg-foreground px-6 py-3.5 text-sm font-semibold text-background transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                >
-                  {c.startProject}
-                  <ArrowUpRight className="h-4 w-4" />
-                </a>
-              </Magnetic>
-
-              <Magnetic>
-                <a
-                  href="https://wa.me/59892323675?text=Hola%20Mario,%20estoy%20viendo%20tu%20sitio%20y%20quiero%20hacerte%20una%20consulta"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="pressable inline-flex items-center gap-2.5 rounded-full border border-signal/40 bg-signal/15 px-6 py-3.5 text-sm font-semibold text-signal backdrop-blur-md transition-all hover:bg-signal/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal"
-                >
-                  <MessageCircle className="h-4 w-4" />
-                  {c.talkWhatsapp}
-                </a>
-              </Magnetic>
-            </div>
-            <Link href={CV_DESTINATION.startsWith("#") ? CV_DESTINATION : localePath(language, CV_DESTINATION)} className="mt-4 inline-flex min-h-11 items-center text-sm text-foreground/65 underline decoration-foreground/25 underline-offset-4 hover:text-signal hover:decoration-signal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{c.cvLink}</Link>
+                    <span
+                      className="h-1.5 w-1.5 rounded-full transition-transform duration-300"
+                      style={{ backgroundColor: accent, transform: active ? "scale(1.6)" : undefined }}
+                    />
+                    {service.shortTitle[language]}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+          <div className="mt-3 h-6 overflow-hidden">
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.p
+                key={focusedSolution?.id ?? "hint"}
+                id={focusedSolution ? "hero-service-promise" : undefined}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.28, ease: EASE_OUT }}
+                className={focusedSolution ? "text-sm text-foreground/80" : "font-mono text-[10px] uppercase tracking-[0.16em] text-foreground/55 hidden [@media(hover:hover)]:block"}
+              >
+                {focusedSolution ? focusedSolution.headline[language] : `↳ ${c.servicesHint}`}
+              </motion.p>
+            </AnimatePresence>
           </div>
         </div>
 
-        {/* Invitación a recorrer: un punto que baja por una línea fina */}
-        <a
-          href="#servicios"
-          className="fade-up-in absolute bottom-10 right-12 z-20 hidden flex-col items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-foreground/55 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:flex"
-          style={{ animationDelay: "1.2s" }}
+        {/* Action Buttons */}
+        <div className={`fade-up-in mt-6 flex flex-wrap items-center gap-3.5 ${withFilm ? "order-1 sm:order-2" : ""}`} style={{ animationDelay: "0.6s" }}>
+          <Magnetic>
+            <a
+              href="#proyectos"
+              className="pressable inline-flex items-center gap-2.5 rounded-full bg-foreground px-6 py-3.5 text-sm font-semibold text-background transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              {c.startProject}
+              <ArrowUpRight className="h-4 w-4" />
+            </a>
+          </Magnetic>
+
+          <Magnetic>
+            <a
+              href="https://wa.me/59892323675?text=Hola%20Mario,%20estoy%20viendo%20tu%20sitio%20y%20quiero%20hacerte%20una%20consulta"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="pressable inline-flex items-center gap-2.5 rounded-full border border-signal/40 bg-signal/15 px-6 py-3.5 text-sm font-semibold text-signal backdrop-blur-md transition-all hover:bg-signal/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal"
+            >
+              <MessageCircle className="h-4 w-4" />
+              {c.talkWhatsapp}
+            </a>
+          </Magnetic>
+        </div>
+      </div>
+      <Link href={CV_DESTINATION.startsWith("#") ? CV_DESTINATION : localePath(language, CV_DESTINATION)} className="mt-4 inline-flex min-h-11 items-center text-sm text-foreground/65 underline decoration-foreground/25 underline-offset-4 hover:text-signal hover:decoration-signal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{c.cvLink}</Link>
+    </>
+  );
+
+  return (
+    <main id="contenido-principal" className="relative pb-24">
+      {/* ─── 1. HERO COMERCIAL Y DIRECTO ─── */}
+      {withFilm ? (
+        <HeroEquipo language={language} sectionRef={heroRef}>{heroText}</HeroEquipo>
+      ) : (
+        <section
+          id="hero"
+          ref={heroRef}
+          data-home-section="hero"
+          className="relative min-h-[92svh] flex items-center px-5 pt-28 pb-16 sm:px-8 sm:pt-36 sm:pb-24 lg:px-12 overflow-hidden"
         >
-          <span className="[writing-mode:vertical-rl]">{c.scrollCue}</span>
-          <span aria-hidden="true" className="relative block h-12 w-px overflow-hidden bg-foreground/15">
-            <span className="scroll-cue-dot absolute left-1/2 top-0 h-3 w-[3px] -translate-x-1/2 rounded-full bg-signal" />
-          </span>
-        </a>
-      </section>
+          <div className="relative z-10 mx-auto w-full max-w-[1480px]">
+            <div className="max-w-4xl">{heroText}</div>
+          </div>
+
+          {/* Invitación a recorrer: un punto que baja por una línea fina */}
+          <a
+            href="#servicios"
+            className="fade-up-in absolute bottom-10 right-12 z-20 hidden flex-col items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-foreground/55 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:flex"
+            style={{ animationDelay: "1.2s" }}
+          >
+            <span className="[writing-mode:vertical-rl]">{c.scrollCue}</span>
+            <span aria-hidden="true" className="relative block h-12 w-px overflow-hidden bg-foreground/15">
+              <span className="scroll-cue-dot absolute left-1/2 top-0 h-3 w-[3px] -translate-x-1/2 rounded-full bg-signal" />
+            </span>
+          </a>
+        </section>
+      )}
 
       {/* ─── 2. SERVICIOS: cuatro puertas con su prueba en movimiento ─── */}
       <ServicesStage />

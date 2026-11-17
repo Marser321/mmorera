@@ -549,6 +549,33 @@ html.light .tono-fondo { background-color: var(--color-signal); }
 html.light .escena-cine .tono-texto { color: var(--tono, #71F3A2); }
 html.light .escena-cine .tono-fondo { background-color: var(--tono, #71F3A2); }
 
+/*
+ * Escena de pared: una sección que queda oscura también en el tema claro,
+ * como el film del hero. Devuelve los colores de la pared dentro de ella, así
+ * los textos, las tarjetas y los bordes que usan tokens se leen sobre el negro.
+ */
+.escena-pared {
+  --color-background: #0B0B0A;
+  --color-foreground: #ECE7DD;
+  --color-relieve: #121211;
+  --color-card: #181816;
+  --color-card-foreground: #ECE7DD;
+  --color-primary: #ECE7DD;
+  --color-primary-foreground: #0B0B0A;
+  --color-secondary: #232321;
+  --color-secondary-foreground: #DAD5CB;
+  --color-muted: #1E1E1C;
+  --color-muted-foreground: #A29E95;
+  --color-accent: #55D8FF;
+  --color-signal: #71F3A2;
+  --color-track-create: #B68CFF;
+  --color-border: #2B2B28;
+  --color-ring: #55D8FF;
+  --color-input: #232321;
+  --ink-rgb: 236 231 221;
+  color: var(--color-foreground);
+}
+
 .banda-marfil {
   --color-background: #ECE7DD;
   --color-foreground: #0B0B0A;
