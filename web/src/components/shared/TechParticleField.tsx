@@ -19,7 +19,9 @@ import { resolveParticleScene, themedAccent } from "@/data/particleScenes";
 import { TECH_STACK, type Tech } from "@/data/techStack";
 import { SERVICE_GLYPH_TECHS } from "@/data/serviceGlyphs";
 import { BRAND_GLYPH_TECHS } from "@/data/brandGlyphs";
+import { STAGE_GLYPH_TECHS } from "@/data/stageGlyphs";
 import { particleScatter } from "@/lib/particleScatter";
+import { particleStage, STAGE_PULSE_SECONDS } from "@/lib/particleStage";
 import {
   PARTICLE_IDENTIFIABLE_PROGRESS,
   createParticleSequenceState,
@@ -34,7 +36,7 @@ import type { ParticleSceneDefinition } from "@/types/site";
 const LOGO_COUNT = { desktop: 16000, tablet: 8200, mobile: 2600 } as const;
 // Un glifo pedido por foco (hover en un servicio) tiene que responder rápido.
 const FOCUS_TIMING = { assembleMs: 650, holdMs: 4200, dissolveMs: 420 } as const;
-const DRAWABLE_TECHS: Tech[] = [...TECH_STACK, ...SERVICE_GLYPH_TECHS, ...BRAND_GLYPH_TECHS];
+const DRAWABLE_TECHS: Tech[] = [...TECH_STACK, ...SERVICE_GLYPH_TECHS, ...BRAND_GLYPH_TECHS, ...STAGE_GLYPH_TECHS];
 type IntroStep = { tech: Tech; holdMs: number; dissolveMs: number };
 
 // La obertura se ve una vez por sesión: al volver al home, el desfile sigue
@@ -171,6 +173,8 @@ uniform float uPixelRatio;
 uniform vec2 uCenter;
 uniform float uScale;
 uniform float uScatter;
+uniform float uBoost;
+uniform float uPulse;
 varying float vAlpha;
 ${SIMPLEX_NOISE}
 void main(){
@@ -182,7 +186,8 @@ void main(){
     snoise(vec2(target.x*3.0+uTime*0.18,phase)),
     snoise(vec2(target.y*3.0-uTime*0.16,phase+2.4))
   )*0.008;
-  float formed=smoothstep(0.0,1.0,uFormation);
+  // uPulse: al cambiar de servicio en el escenario del hero, las partículas se sueltan y se rearman.
+  float formed=smoothstep(0.0,1.0,uFormation)*(1.0-uPulse*(0.55+aSeed*0.4));
   vec2 pos=mix(cloud,target+grain,formed);
 
   vec2 delta=pos-uMouse;
@@ -200,7 +205,7 @@ void main(){
   pos+=outward*scatter*(0.22+aSeed*0.9)+vec2(0.0,scatter*(0.12+aSeed*0.28));
 
   float depthFade=mix(0.35,1.0,position.z);
-  vAlpha=(mix(0.055,0.62,formed)+influence*0.24)*uOpacity*depthFade*(1.0-scatter*0.9);
+  vAlpha=(mix(0.055,0.62,formed)+influence*0.24)*uOpacity*depthFade*(1.0-scatter*0.9)*uBoost;
   gl_PointSize=aSize*(0.7+formed*0.85+influence)*uPixelRatio*(1.0+scatter*0.7);
   gl_Position=vec4(pos,0.0,1.0);
 }
@@ -337,9 +342,13 @@ function LogoFormation({
     uCenter: { value: new THREE.Vector2(...anchor.center) },
     uScale: { value: anchor.scale },
     uScatter: { value: 0 },
+    uBoost: { value: 1 },
+    uPulse: { value: 0 },
     uBase: { value: new THREE.Color(physics.base) },
     // eslint-disable-next-line react-hooks/exhaustive-deps -- uBase se sincroniza en useFrame
   }), [anchor.center, anchor.scale]);
+
+  const tint = useMemo(() => new THREE.Color(), []);
 
   useFrame((state, delta) => {
     const material = materialRef.current;
@@ -347,6 +356,19 @@ function LogoFormation({
     if (!material || !currentPointer) return;
     const values = material.uniforms;
     const targetFormation = phase === "dissolve" ? 0 : 1;
+    // Escenario del hero: con la ventana de cine abierta, las partículas dejan
+    // su lugar de siempre, la rodean y toman el color del servicio que se ve.
+    const stage = particleStage.get();
+    const follow = Math.min(1, delta * (stage.active ? 14 : 5));
+    const center = values.uCenter.value as THREE.Vector2;
+    center.x += ((stage.active ? stage.cx : anchor.center[0]) - center.x) * follow;
+    center.y += ((stage.active ? stage.cy : anchor.center[1]) - center.y) * follow;
+    values.uScale.value += ((stage.active ? stage.scale : anchor.scale) - values.uScale.value) * follow;
+    values.uBoost.value += ((stage.active ? 1.5 : 1) - values.uBoost.value) * Math.min(1, delta * 4);
+    const sincePulse = (performance.now() - stage.pulseAt) / 1000;
+    values.uPulse.value = stage.active && sincePulse < STAGE_PULSE_SECONDS ? Math.sin((sincePulse / STAGE_PULSE_SECONDS) * Math.PI) : 0;
+    tint.set(stage.active && stage.tint ? stage.tint : physics.base);
+    (values.uBase.value as THREE.Color).lerp(tint, Math.min(1, delta * 3.2));
     values.uTime.value += delta;
     values.uAspect.value = state.size.height > 0 ? state.size.width / state.size.height : 1.6;
     values.uPixelRatio.value = state.gl.getPixelRatio();
@@ -356,7 +378,6 @@ function LogoFormation({
     values.uFormation.value += (targetFormation - values.uFormation.value) * Math.min(1, delta * (targetFormation ? 4.2 : 5.2));
     values.uOpacity.value += (opacity - values.uOpacity.value) * Math.min(1, delta * 5);
     values.uScatter.value += (particleScatter.get() - values.uScatter.value) * Math.min(1, delta * 7);
-    values.uBase.value.set(physics.base);
   });
 
   return (

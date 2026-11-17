@@ -40,6 +40,8 @@ export function resolveParticleSceneName(pathname: string, activeFamilies: Famil
   }
 
   // Ramas (1/11): cada una con la escena de su tema.
+  // La página de prueba del hero es la home: lleva su misma escena.
+  if (normalized.startsWith("/lab/hero-")) return "home";
   if (normalized.startsWith("/capacidades") || normalized.startsWith("/lab")) return "studio";
   if (normalized.startsWith("/fabricas")) return "create";
   if (normalized.startsWith("/agentes") || normalized.startsWith("/campanas")) return "operations";

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-motion";
@@ -20,6 +20,10 @@ import { FEATURED_CASES } from "@/data/projectCases";
 import { IslandBar } from "@/components/layout/IslandBar";
 import { MotionBackdrop } from "@/components/shared/MotionBackdrop";
 import { MonogramaFundido } from "@/components/marca/MonogramaFundido";
+import { HeroStage, type StageItem } from "@/components/premium/home/HeroStage";
+import { getDoorFilm } from "@/data/doorFilms";
+import { STAGE_FRAME_NAME } from "@/lib/particleStage";
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 
 // Secciones bajo el pliegue en chunks propios (con SSR: el HTML no cambia).
 // Cada una es su propio límite de Suspense, así React hidrata por partes en
@@ -31,6 +35,10 @@ const AplicarOS = dynamic(() => import("@/components/portfolio-isolated/AplicarO
 import { MOTION_ASSETS } from "@/data/motionAssets";
 
 const CV_DESTINATION = "/sobre-mi#cv";
+/** Cuánto se queda cada servicio en la ventana de cine del hero. */
+const STAGE_ADVANCE_MS = 6500;
+/** La ventana se abre cuando la obertura de partículas ya formó la doble M. */
+const STAGE_OPENS_AFTER_MS = { firstVisit: 5200, later: 500 } as const;
 
 /*
  * El home es un film corto en cinco escenas (3/11): 01 héroe con la obertura
@@ -99,7 +107,12 @@ const copy = {
   },
 };
 
-export function HomeExperience() {
+/**
+ * `hero`: "particulas" es el hero publicado. "orquesta" suma el escenario: una
+ * ventana de cine con un servicio por vez, que las partículas enmarcan y tiñen
+ * con su color. Hoy lo usa solo la página de prueba /lab/hero-orquesta.
+ */
+export function HomeExperience({ hero = "particulas" }: { hero?: "particulas" | "orquesta" } = {}) {
   const { language } = useLanguage();
   const heroRef = useRef<HTMLElement>(null);
   const c = copy[language];
@@ -152,10 +165,72 @@ export function HomeExperience() {
   const [focusedService, setFocusedService] = useState<string | null>(null);
   const focusedSolution = SERVICE_SOLUTIONS.find((service) => service.id === focusedService);
 
-  // El servicio enfocado se dibuja con las partículas del fondo.
+  // Escenario del hero: qué servicio se ve, cuándo cambia y cuándo se abre.
+  const withStage = hero === "orquesta";
+  const reducedMotion = useReducedMotionSafe();
+  const stageItems = useMemo<StageItem[]>(
+    () => (withStage
+      ? SERVICE_SOLUTIONS.flatMap((service) => {
+          const film = getDoorFilm(service.id, language);
+          return film ? [{ id: service.id, label: service.shortTitle[language], film }] : [];
+        })
+      : []),
+    [language, withStage],
+  );
+  const [stageOpen, setStageOpen] = useState(false);
+  const [stageIndex, setStageIndex] = useState(0);
+  const [stagePlaying, setStagePlaying] = useState(true);
+  const [heroInView, setHeroInView] = useState(true);
+  const [wideScreen, setWideScreen] = useState(false);
+  const stageId = withStage ? focusedService ?? stageItems[stageIndex]?.id ?? null : null;
+  const stageRunning = withStage && stageOpen && stagePlaying && !reducedMotion && focusedService === null && heroInView;
+  /** El servicio que se nombra bajo la lista: con el escenario, el que se ve; sin él, el enfocado. */
+  const shownSolution = withStage ? SERVICE_SOLUTIONS.find((service) => service.id === stageId) : focusedSolution;
+
+  /** Enfocar un servicio también lo pone en la ventana, y el recorrido sigue desde ahí. */
+  const focusService = (id: string | null) => {
+    setFocusedService(id);
+    if (!withStage || !id) return;
+    const index = stageItems.findIndex((item) => item.id === id);
+    if (index >= 0) setStageIndex(index);
+  };
+
   useEffect(() => {
+    if (!withStage) return;
+    let seen = false;
+    try {
+      seen = window.sessionStorage.getItem("mm-obertura") === "1";
+    } catch {
+      // Sin almacenamiento se espera la obertura completa.
+    }
+    const timer = window.setTimeout(() => setStageOpen(true), seen || reducedMotion ? STAGE_OPENS_AFTER_MS.later : STAGE_OPENS_AFTER_MS.firstVisit);
+    return () => window.clearTimeout(timer);
+  }, [reducedMotion, withStage]);
+
+  useEffect(() => {
+    if (!withStage) return;
+    const media = window.matchMedia("(min-width: 1024px)");
+    const sync = () => setWideScreen(media.matches);
+    sync();
+    media.addEventListener("change", sync);
+    return () => media.removeEventListener("change", sync);
+  }, [withStage]);
+
+  useEffect(() => {
+    if (!stageRunning || stageItems.length < 2) return;
+    const timer = window.setTimeout(() => setStageIndex((index) => (index + 1) % stageItems.length), STAGE_ADVANCE_MS);
+    return () => window.clearTimeout(timer);
+  }, [stageIndex, stageItems.length, stageRunning]);
+
+  // Sin escenario, el servicio enfocado se dibuja con las partículas del fondo.
+  // Con escenario, las partículas arman el marco de la ventana (solo en pantalla ancha).
+  useEffect(() => {
+    if (withStage) {
+      setFocusTechName(stageOpen && wideScreen && !reducedMotion ? STAGE_FRAME_NAME : null);
+      return;
+    }
     setFocusTechName(focusedService ? SERVICE_GLYPHS[focusedService]?.name ?? null : null);
-  }, [focusedService, setFocusTechName]);
+  }, [focusedService, reducedMotion, setFocusTechName, stageOpen, wideScreen, withStage]);
   useEffect(() => () => setFocusTechName(null), [setFocusTechName]);
 
   // Al salir del hero, el logo de partículas se abre y se disuelve (scrub).
@@ -163,6 +238,7 @@ export function HomeExperience() {
   useMotionValueEvent(scrollYProgress, "change", (value) => {
     particleScatter.set(value * 1.6);
     if (value > 0.35) setFocusedService(null);
+    setHeroInView((previous) => (previous === value < 0.5 ? previous : value < 0.5));
   });
   useEffect(() => () => particleScatter.set(0), []);
 
@@ -173,10 +249,11 @@ export function HomeExperience() {
         id="hero"
         ref={heroRef}
         data-home-section="hero"
-        className="relative min-h-[92svh] flex items-center px-5 pt-28 pb-16 sm:px-8 sm:pt-36 sm:pb-24 lg:px-12 overflow-hidden"
+        data-hero={withStage ? "orquesta" : undefined}
+        className={`relative min-h-[92svh] flex px-5 pt-28 pb-16 sm:px-8 sm:pt-36 sm:pb-24 lg:px-12 overflow-hidden ${withStage ? "flex-col justify-center lg:flex-row lg:items-center" : "items-center"}`}
       >
         <div className="relative z-10 mx-auto w-full max-w-[1480px]">
-          <div className="max-w-4xl">
+          <div className={withStage ? "max-w-4xl lg:max-w-[47%]" : "max-w-4xl"}>
             {/* Entradas del hero en CSS (.fade-up-in): visibles desde el primer
                 paint, sin esperar la hidratación. */}
             {/* Eyebrow */}
@@ -209,18 +286,23 @@ export function HomeExperience() {
             <div className="fade-up-in mt-7" style={{ animationDelay: "0.45s" }}>
               <ul className="flex flex-wrap gap-2" onPointerLeave={() => setFocusedService(null)}>
                 {SERVICE_SOLUTIONS.map((service) => {
-                  const active = focusedService === service.id;
-                  const accent = service.accent;
+                  const active = (withStage ? stageId : focusedService) === service.id;
+                  // Con el escenario, cada servicio lleva el color de su film.
+                  const accent = stageItems.find((item) => item.id === service.id)?.film.tone ?? service.accent;
                   return (
                     <li key={service.id}>
                       <a
                         href="#servicios"
-                        onPointerEnter={(event) => { if (event.pointerType === "mouse") setFocusedService(service.id); }}
-                        onFocus={() => setFocusedService(service.id)}
+                        onPointerEnter={(event) => { if (event.pointerType === "mouse") focusService(service.id); }}
+                        onFocus={() => focusService(service.id)}
                         onBlur={() => setFocusedService(null)}
                         aria-describedby={active ? "hero-service-promise" : undefined}
-                        className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-xs font-medium backdrop-blur-md transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${active ? "border-foreground/40 bg-foreground/10 text-foreground" : "border-white/10 bg-card/50 text-foreground/75 light:border-[rgb(var(--ink-rgb)/0.1)]"}`}
+                        className={`relative inline-flex items-center gap-2 overflow-hidden rounded-full border px-3.5 py-1.5 text-xs font-medium backdrop-blur-md transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${active ? "border-foreground/40 bg-foreground/10 text-foreground" : "border-white/10 bg-card/50 text-foreground/75 light:border-[rgb(var(--ink-rgb)/0.1)]"}`}
                       >
+                        {/* La línea marca cuánto falta para pasar al servicio siguiente. */}
+                        {active && stageRunning && (
+                          <span key={stageIndex} aria-hidden="true" className="door-progress absolute inset-x-0 bottom-0 h-[2px] origin-left" style={{ backgroundColor: accent, animationDuration: `${STAGE_ADVANCE_MS}ms` }} />
+                        )}
                         <span
                           className="h-1.5 w-1.5 rounded-full transition-transform duration-300"
                           style={{ backgroundColor: accent, transform: active ? "scale(1.6)" : undefined }}
@@ -234,15 +316,15 @@ export function HomeExperience() {
               <div className="mt-3 h-6 overflow-hidden">
                 <AnimatePresence mode="wait" initial={false}>
                   <motion.p
-                    key={focusedSolution?.id ?? "hint"}
-                    id={focusedSolution ? "hero-service-promise" : undefined}
+                    key={shownSolution?.id ?? "hint"}
+                    id={shownSolution ? "hero-service-promise" : undefined}
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -12 }}
                     transition={{ duration: 0.28, ease: EASE_OUT }}
-                    className={focusedSolution ? "text-sm text-foreground/80" : "font-mono text-[10px] uppercase tracking-[0.16em] text-foreground/55 hidden [@media(hover:hover)]:block"}
+                    className={shownSolution ? "text-sm text-foreground/80" : "font-mono text-[10px] uppercase tracking-[0.16em] text-foreground/55 hidden [@media(hover:hover)]:block"}
                   >
-                    {focusedSolution ? focusedSolution.headline[language] : `↳ ${c.servicesHint}`}
+                    {shownSolution ? shownSolution.headline[language] : `↳ ${c.servicesHint}`}
                   </motion.p>
                 </AnimatePresence>
               </div>
@@ -275,6 +357,13 @@ export function HomeExperience() {
             <Link href={CV_DESTINATION.startsWith("#") ? CV_DESTINATION : localePath(language, CV_DESTINATION)} className="mt-4 inline-flex min-h-11 items-center text-sm text-foreground/65 underline decoration-foreground/25 underline-offset-4 hover:text-signal hover:decoration-signal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{c.cvLink}</Link>
           </div>
         </div>
+
+        {/* El escenario: la ventana de cine que las partículas enmarcan. */}
+        {withStage && stageId && (
+          <div className="relative z-10 mx-auto mt-10 w-full max-w-xl lg:absolute lg:right-[max(3rem,calc((100vw-1480px)/2+3rem))] lg:top-1/2 lg:mt-0 lg:w-[min(42vw,700px)] lg:max-w-none lg:-translate-y-[46%]">
+            <HeroStage items={stageItems} activeId={stageId} open={stageOpen} playing={stagePlaying} onTogglePlaying={() => setStagePlaying((value) => !value)} language={language} />
+          </div>
+        )}
 
         {/* Invitación a recorrer: un punto que baja por una línea fina */}
         <a
