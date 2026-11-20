@@ -11,6 +11,7 @@ import {
     validateAndNormalizeLead,
     type LeadField,
 } from '@/lib/leadValidation'
+import { limpiarOrigen } from '@/lib/origen'
 import { createRateLimiter } from '@/lib/rateLimit'
 
 // Cada envío válido manda un correo y guarda un lead: el límite frena las ráfagas.
@@ -43,6 +44,7 @@ export async function submitLead(input: ContactFormData): Promise<SubmitLeadResu
     }
 
     const data = validation.data
+    const origen = limpiarOrigen(input.origen)
     const finalMessage = composeLeadMessage(data)
     const serviceNames = data.servicios_interes.join(', ') || 'No especificados'
     const projectStage = BRIEF_VALUE_LABELS.projectStage[data.projectStage]
@@ -66,6 +68,7 @@ export async function submitLead(input: ContactFormData): Promise<SubmitLeadResu
                     `<p><strong>Equipo:</strong> ${escapeHtml(teamContext)}</p>`,
                     `<p><strong>Inicio:</strong> ${escapeHtml(timeline)}</p>`,
                     `<p><strong>Servicios:</strong> ${escapeHtml(serviceNames)}</p>`,
+                    ...(origen ? [`<p><strong>Viene de:</strong> ${escapeHtml(origen)}</p>`] : []),
                     '<p><strong>Proyecto:</strong></p>',
                     `<p>${escapeHtml(data.mensaje).replace(/\n/g, '<br />')}</p>`,
                 ].join(''),
@@ -85,6 +88,7 @@ export async function submitLead(input: ContactFormData): Promise<SubmitLeadResu
                 `Equipo: ${teamContext}`,
                 `Inicio: ${timeline}`,
                 `Servicios: ${serviceNames}`,
+                ...(origen ? [`Viene de: ${origen}`] : []),
                 '',
                 'Proyecto:',
                 data.mensaje,
@@ -111,7 +115,7 @@ export async function submitLead(input: ContactFormData): Promise<SubmitLeadResu
                     interested_services: data.servicios_interes,
                     selected_plan: data.plan_seleccionado || null,
                     message: finalMessage,
-                    source: 'website',
+                    source: origen ? `website:${origen}` : 'website',
                 }])
                 if (dbError) console.error('Error guardando lead en BD:', dbError)
             } catch (error) {

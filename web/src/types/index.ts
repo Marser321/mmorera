@@ -10,4 +10,6 @@ export interface ContactFormData {
     teamContext: string;
     timeline: string;
     website?: string;
+    /** Socio o campaña que trajo la visita (`?de=` de las demos). */
+    origen?: string;
 }

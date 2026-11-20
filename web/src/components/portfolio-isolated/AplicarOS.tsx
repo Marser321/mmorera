@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react
 import { motion } from 'framer-motion';
 import { ArrowLeft, ArrowRight, CheckCircle2, Layers3, Sparkles, User } from 'lucide-react';
 import { submitLead } from '@/actions/submit-lead';
+import { origenDeLaVisita } from '@/lib/origen';
 import type { ContactFormData } from '@/types';
 import type { LeadField } from '@/lib/leadValidation';
 import { useDevMode } from './DevModeContext';
@@ -174,6 +175,7 @@ export function AplicarOS() {
             teamContext: formData.teamContext,
             timeline: formData.timeline,
             website: formData.website,
+            origen: origenDeLaVisita() ?? undefined,
         };
 
         try {
