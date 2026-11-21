@@ -27,7 +27,8 @@ export function AdelantoFilm({ mp4, poster, rotulo, conSonido = false }: { mp4: 
   useEffect(() => {
     const v = ref.current;
     if (!v) return;
-    if (aLaVista && !pausado && (!reducido || suena)) void v.play().catch(() => {});
+    // Con sonido lo pidió la persona: corre aunque el navegador crea que no está a la vista.
+    if (suena ? !pausado : aLaVista && !pausado && !reducido) void v.play().catch(() => {});
     else v.pause();
   }, [aLaVista, pausado, reducido, suena]);
 
