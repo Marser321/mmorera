@@ -13,14 +13,16 @@ const container = "mx-auto w-full max-w-[1480px] px-5 sm:px-8 lg:px-12";
 
 type PuertaDemo = { href: string; etiqueta: string; puerta: string; previa?: boolean; poster: string; clip: string };
 
-/** Una puerta por demo: los dos rubros de la edición premium y la plataforma de crédito. */
+/**
+ * Una puerta por rubro de la edición premium. La plataforma de crédito no tiene puerta aquí:
+ * su página (/demos/credito) sólo se comparte por correo a ese rubro.
+ */
 const PUERTAS: PuertaDemo[] = [
   ...RUBRO_IDS.map((id): PuertaDemo => ({
     href: `/demos/${id}`, etiqueta: RUBROS[id].etiqueta, puerta: RUBROS[id].puerta, previa: RUBROS[id].estado === "previa",
     poster: id === "gimnasios" ? "/demos/gimnasios/panel.webp" : "/demos/gimnasios/entrenador.webp",
     clip: id === "gimnasios" ? "/demos/gimnasios/adelanto.mp4" : "/demos/gimnasios/entrenador.mp4",
   })),
-  { href: "/demos/credito", etiqueta: "Crédito en español", puerta: "La persona aprende paso a paso; el negocio capta, ordena y cumple. Con su film.", poster: "/demos/credito/film.webp", clip: "/demos/credito/clip.mp4" },
 ];
 
 function Puerta({ puerta: medio, numero }: { puerta: PuertaDemo; numero: number }) {
@@ -104,7 +106,7 @@ export function DemosPortada() {
         </p>
       </header>
 
-      <section aria-label="Demos" className={`${container} grid gap-12 border-t border-foreground/15 pt-12 md:grid-cols-2 md:gap-8 lg:grid-cols-3 sm:pt-16`}>
+      <section aria-label="Demos" className={`${container} grid gap-12 border-t border-foreground/15 pt-12 md:grid-cols-2 md:gap-8 sm:pt-16`}>
         {PUERTAS.map((p, i) => (
           <Puerta key={p.href} puerta={p} numero={i + 1} />
         ))}
