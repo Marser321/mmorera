@@ -47,7 +47,8 @@ export interface RubroDemo {
   /** Rótulo de la puerta en /demos. */
   puerta: string;
   marca: MarcaDemo;
-  adelanto: { mp4: string; poster: string };
+  /** El film de la página (o un adelanto mudo mientras no lo hay). */
+  adelanto: { mp4: string; poster: string; rotulo: string; conSonido?: boolean };
   escenas: EscenaDemo[];
   /** Lo que se le promete a quien revende o acompaña al negocio. */
   paraSocios: { titulo: string; puntos: string[] };
@@ -66,7 +67,7 @@ export const RUBROS: Record<RubroId, RubroDemo> = {
       "Un panel para el equipo, la app del socio, la del entrenador y la web del negocio. Todo conectado, con datos de ejemplo. Lo pruebas aquí mismo, sin instalar nada.",
     puerta: "Edición premium: panel, app del socio, app del entrenador y web.",
     marca: { n: "Atelier", m: "A", a: "nogal", r: "gimnasio" },
-    adelanto: { mp4: `${MEDIOS}/adelanto.mp4`, poster: `${MEDIOS}/adelanto.webp` },
+    adelanto: { mp4: `${MEDIOS}/film.mp4`, poster: `${MEDIOS}/film.webp`, rotulo: "Film · Una sola casa · 88 s", conSonido: true },
     escenas: [
       {
         id: "panel",
@@ -120,7 +121,7 @@ export const RUBROS: Record<RubroId, RubroDemo> = {
       "La misma casa con el idioma de una consulta: clientes, sesiones y profesionales. Agenda, fichas, cobros y la app del cliente, con datos de ejemplo.",
     puerta: "Versión previa: el vocabulario ya es de consulta; los datos de ejemplo todavía son de un gimnasio.",
     marca: { n: "Clínica Aura", m: "CA", a: "salvia", r: "consulta" },
-    adelanto: { mp4: `${MEDIOS}/adelanto.mp4`, poster: `${MEDIOS}/adelanto.webp` },
+    adelanto: { mp4: `${MEDIOS}/adelanto.mp4`, poster: `${MEDIOS}/adelanto.webp`, rotulo: "Adelanto · las cuatro escenas en 12 segundos" },
     escenas: [
       {
         id: "panel",

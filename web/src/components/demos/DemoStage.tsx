@@ -164,7 +164,7 @@ export function DemoStage({
           <div className="absolute inset-0">
             {/* eslint-disable-next-line @next/next/no-img-element -- póster del marco antes de cargar la demo */}
             <img
-              src={escena?.poster ?? rubro.adelanto.poster}
+              src={escena?.poster ?? rubro.escenas[0]?.poster ?? rubro.adelanto.poster}
               alt=""
               className={cn("absolute inset-0 h-full w-full opacity-45", escena?.vertical ? "object-contain py-6" : "object-cover object-top")}
             />
