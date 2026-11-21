@@ -3,7 +3,8 @@ import { DemoCreditoExperience } from "@/components/demos/DemoCreditoExperience"
 
 const description = "Una plataforma de crédito en español con dos caras: la persona aprende paso a paso y el negocio capta, ordena y cumple.";
 
-// Fuera de los buscadores mientras las demos se presentan a mano, como el resto de /demos.
+// Página sin enlaces desde el sitio: sólo se llega por el correo que se manda a ese rubro.
+// Fuera de los buscadores, como el resto de /demos.
 export const metadata: Metadata = {
   title: "Demo de la plataforma de crédito",
   description,
