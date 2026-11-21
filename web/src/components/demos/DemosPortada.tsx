@@ -5,23 +5,28 @@ import Link from "next/link";
 import { ArrowUpRight, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SITE_IDENTITY } from "@/config/site";
-import { RUBROS, RUBRO_IDS, type RubroDemo } from "@/data/demos";
+import { RUBROS, RUBRO_IDS } from "@/data/demos";
 import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 import { useVisitaDemo } from "./useVisitaDemo";
 
 const container = "mx-auto w-full max-w-[1480px] px-5 sm:px-8 lg:px-12";
 
-/** Póster por puerta: gimnasios abre con el panel; consulta, con la app del cliente. */
-const PORTADA: Record<RubroDemo["id"], { poster: string; clip: string; vertical?: boolean }> = {
-  gimnasios: { poster: "/demos/gimnasios/panel.webp", clip: "/demos/gimnasios/adelanto.mp4" },
-  consulta: { poster: "/demos/gimnasios/entrenador.webp", clip: "/demos/gimnasios/entrenador.mp4" },
-};
+type PuertaDemo = { href: string; etiqueta: string; puerta: string; previa?: boolean; poster: string; clip: string };
 
-function Puerta({ rubro, numero }: { rubro: RubroDemo; numero: number }) {
+/** Una puerta por demo: los dos rubros de la edición premium y la plataforma de crédito. */
+const PUERTAS: PuertaDemo[] = [
+  ...RUBRO_IDS.map((id): PuertaDemo => ({
+    href: `/demos/${id}`, etiqueta: RUBROS[id].etiqueta, puerta: RUBROS[id].puerta, previa: RUBROS[id].estado === "previa",
+    poster: id === "gimnasios" ? "/demos/gimnasios/panel.webp" : "/demos/gimnasios/entrenador.webp",
+    clip: id === "gimnasios" ? "/demos/gimnasios/adelanto.mp4" : "/demos/gimnasios/entrenador.mp4",
+  })),
+  { href: "/demos/credito", etiqueta: "Crédito en español", puerta: "La persona aprende paso a paso; el negocio capta, ordena y cumple. Con su film.", poster: "/demos/credito/film.webp", clip: "/demos/credito/clip.mp4" },
+];
+
+function Puerta({ puerta: medio, numero }: { puerta: PuertaDemo; numero: number }) {
   const video = useRef<HTMLVideoElement>(null);
   const [encima, setEncima] = useState(false);
   const reducido = useReducedMotionSafe() === true;
-  const medio = PORTADA[rubro.id];
 
   const entrar = () => {
     if (reducido) return;
@@ -39,7 +44,7 @@ function Puerta({ rubro, numero }: { rubro: RubroDemo; numero: number }) {
 
   return (
     <Link
-      href={`/demos/${rubro.id}`}
+      href={medio.href}
       onPointerEnter={(e) => e.pointerType === "mouse" && entrar()}
       onPointerLeave={salir}
       className="group flex min-w-0 flex-col focus-visible:outline-none"
@@ -62,7 +67,7 @@ function Puerta({ rubro, numero }: { rubro: RubroDemo; numero: number }) {
           aria-hidden="true"
           className={cn("absolute inset-0 h-full w-full object-cover object-top transition-opacity duration-500", encima ? "opacity-100" : "opacity-0")}
         />
-        {rubro.estado === "previa" && (
+        {medio.previa && (
           <span className="absolute left-4 top-4 rounded-full bg-[#0B0B0A]/75 px-3 py-1 font-mono text-[10px] uppercase tracking-[.16em] text-[#ECE7DD]">
             Versión previa
           </span>
@@ -70,10 +75,10 @@ function Puerta({ rubro, numero }: { rubro: RubroDemo; numero: number }) {
       </span>
       <span className="mt-5 flex items-baseline gap-3">
         <span className="font-mono text-[11px] tracking-[.16em] text-foreground/55">{String(numero).padStart(2, "0")}</span>
-        <span className="text-[clamp(1.5rem,2.4vw,2.2rem)] font-medium leading-tight tracking-[-.03em] text-foreground">{rubro.etiqueta}</span>
+        <span className="text-[clamp(1.5rem,2.4vw,2.2rem)] font-medium leading-tight tracking-[-.03em] text-foreground">{medio.etiqueta}</span>
         <ArrowUpRight aria-hidden="true" className="ml-auto h-5 w-5 shrink-0 text-foreground/60 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-foreground" />
       </span>
-      <span className="mt-2 max-w-xl text-sm leading-relaxed text-foreground/70">{rubro.puerta}</span>
+      <span className="mt-2 max-w-xl text-sm leading-relaxed text-foreground/70">{medio.puerta}</span>
     </Link>
   );
 }
@@ -95,13 +100,13 @@ export function DemosPortada() {
           Las apps, para tocarlas.
         </h1>
         <p className="mt-6 max-w-2xl text-base leading-relaxed text-foreground/75 sm:text-xl">
-          Sistemas a medida para negocios que atienden personas todos los días. Elige un rubro y pruébalo aquí mismo, con datos de ejemplo.
+          Sistemas a medida para negocios que atienden personas todos los días. Elige una y mírala por dentro, con datos de ejemplo.
         </p>
       </header>
 
-      <section aria-label="Rubros" className={`${container} grid gap-12 border-t border-foreground/15 pt-12 md:grid-cols-2 md:gap-8 sm:pt-16`}>
-        {RUBRO_IDS.map((id, i) => (
-          <Puerta key={id} rubro={RUBROS[id]} numero={i + 1} />
+      <section aria-label="Demos" className={`${container} grid gap-12 border-t border-foreground/15 pt-12 md:grid-cols-2 md:gap-8 lg:grid-cols-3 sm:pt-16`}>
+        {PUERTAS.map((p, i) => (
+          <Puerta key={p.href} puerta={p} numero={i + 1} />
         ))}
       </section>
 

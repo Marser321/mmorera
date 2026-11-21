@@ -86,7 +86,7 @@ export function DemoRubroExperience({ rubro }: { rubro: RubroDemo }) {
           </div>
         </div>
         <div className="mt-12 lg:mt-0">
-          <AdelantoFilm mp4={rubro.adelanto.mp4} poster={rubro.adelanto.poster} rotulo="Adelanto · las cuatro escenas en 12 segundos" />
+          <AdelantoFilm mp4={rubro.adelanto.mp4} poster={rubro.adelanto.poster} rotulo={rubro.adelanto.rotulo} conSonido={rubro.adelanto.conSonido} />
         </div>
       </header>
 
