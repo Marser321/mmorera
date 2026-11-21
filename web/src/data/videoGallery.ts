@@ -17,6 +17,8 @@ export const galleryMedia = (value: string | LocalizedText, language: keyof Loca
  * (proyecto mmorera-films, src/fabrica). Se suman los films de producto de te_Cargo
  * y el de gimnasios, y sale «Encuadre vertical», que bajaba el nivel. Los films
  * con narración hablan en español; la página en inglés lo avisa en el rótulo.
+ * Versión 3 del reel: tres marcas inventadas (Filo, Lustre y Rumbo) con cinemáticas
+ * propias que no se habían usado, y sin material de clientes.
  */
 export const VIDEO_GALLERY: VideoGalleryEntry[] = [
   {
@@ -25,8 +27,8 @@ export const VIDEO_GALLERY: VideoGalleryEntry[] = [
     src: "/portfolio/video-ia/fabrica-una-toma.mp4",
     poster: "/portfolio/video-ia/fabrica-una-toma-poster.webp",
     landscape: { src: "/portfolio/video-ia/fabrica-una-toma-16x9.mp4", poster: "/portfolio/video-ia/fabrica-una-toma-16x9-poster.webp" },
-    duration: 80,
-    tools: t("Remotion y Claude: el editor animado en código, con narrador, música y efectos", "Remotion and Claude: the editor animated in code, with narration, music and sound design"),
+    duration: 114.5,
+    tools: t("Remotion y Claude: el editor animado en código, tres marcas de ejemplo y el enjambre de IA que calibra cada pieza, con narrador y música", "Remotion and Claude: the editor animated in code, three sample brands and the AI swarm that calibrates every piece, with narration and music"),
     label: t("Concepto de producto · pieza propia", "Product concept · own piece · narrated in Spanish"),
   },
   {
