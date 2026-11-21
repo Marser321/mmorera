@@ -9,7 +9,7 @@ import { C, EASE_IN, EASE_IN_OUT, EASE_OUT, FONT, Flash, SceneChip, SceneHeader,
 
 // ── El puente: de una toma a las webs ─────────────────────────────────────
 
-const SITES = ["ad-media-solution", "america-tramites", "autohub-360", "doge-sm", "evowrap", "hub-profesional-ai", "lb-elite-wash-detail", "lnb-saas", "mr-studio-tattoo", "new-brothers-barberia", "punta-360", "rangel-oviedo-group", "truckers-choice"];
+const SITES = ["ad-media-solution", "america-tramites", "autohub-360", "doge-sm", "evowrap", "hub-profesional-ai", "lb-elite-wash-detail", "lnb-saas", "new-brothers-barberia", "punta-360", "rangel-oviedo-group", "truckers-choice"];
 /** Capturas con personas: quedan fuera del mosaico. */
 const WITH_PEOPLE = ["new-brothers-barberia-desktop-3", "truckers-choice-desktop-3"];
 /** Capturas del sitio para el mosaico (doge-sm no cargó en el teléfono). */
