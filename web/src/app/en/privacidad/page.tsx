@@ -11,6 +11,7 @@ export default function LegalPage() {
       label={"Privacy policy"}
       title={"Your data is used to reply to you. Nothing else."}
       intro={"What information I receive when you write to me, what I use it for and how you can ask me to delete it."}
+      updated={"Last updated: November 22, 2026"}
       sections={[
         {
           id: "who-is-responsible",
@@ -67,6 +68,17 @@ export default function LegalPage() {
           content: (
             <>
                 <p>You can ask me to <strong>access</strong>, <strong>correct</strong> or <strong>delete</strong> your data, or <strong>object</strong> to its use, by writing to <a href="mailto:mario@mmorera.agency">mario@mmorera.agency</a>. I reply within the time limits set by Uruguay&#x27;s Personal Data Protection Law No. 18,331. If you believe your rights weren&#x27;t respected, you can file a complaint with the Personal Data Regulatory and Control Unit (URCDP).</p>
+            </>
+          ),
+        },
+        {
+          id: "gmail-and-google",
+          title: "Gmail and Google data",
+          content: (
+            <>
+                <p>I use an internal tool, <strong>Smorera Ventas n8n</strong>, that connects <strong>only my own Gmail account</strong> to my automation server (n8n). It does not request access to anyone else&apos;s Google account.</p>
+                <ul><li><strong>What it is for:</strong> sending from my Gmail the emails I approve one by one (replies, job applications and proposals) and detecting when someone replies, so I don&apos;t lose track.</li><li><strong>Where the data stays:</strong> on my server, only what that follow-up needs. It is not sold, not shared with third parties, not used for advertising and not used to train artificial intelligence models.</li><li><strong>How to revoke it:</strong> access can be removed at any time at <a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>.</li></ul>
+                <p>Use and transfer of information received from Google APIs adhere to the <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>, including the Limited Use requirements.</p>
             </>
           ),
         },
