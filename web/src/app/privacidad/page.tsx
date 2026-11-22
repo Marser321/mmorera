@@ -11,6 +11,7 @@ export default function LegalPage() {
       label={"Política de privacidad"}
       title={"Tus datos sirven para responderte. Nada más."}
       intro={"Qué información recibo cuando me escribes, para qué la uso y cómo puedes pedir que la borre."}
+      updated={"Última actualización: 22 de noviembre de 2026"}
       sections={[
         {
           id: "quien-es-responsable",
@@ -67,6 +68,17 @@ export default function LegalPage() {
           content: (
             <>
                 <p>Puedes pedirme <strong>acceder</strong> a tus datos, <strong>corregirlos</strong>, <strong>borrarlos</strong> u <strong>oponerte</strong> a su uso, escribiendo a <a href="mailto:mario@mmorera.agency">mario@mmorera.agency</a>. Respondo dentro de los plazos que fija la Ley N.º 18.331 de Protección de Datos Personales de Uruguay. Si consideras que no se respetaron tus derechos, puedes presentar un reclamo ante la Unidad Reguladora y de Control de Datos Personales (URCDP).</p>
+            </>
+          ),
+        },
+        {
+          id: "gmail-y-google",
+          title: "Gmail y datos de Google",
+          content: (
+            <>
+                <p>Uso una herramienta interna, <strong>Smorera Ventas n8n</strong>, que conecta <strong>únicamente mi propia cuenta de Gmail</strong> con mi servidor de automatización (n8n). No pide acceso a cuentas de Google de otras personas.</p>
+                <ul><li><strong>Para qué la uso:</strong> enviar desde mi Gmail los emails que yo apruebo uno por uno (respuestas, postulaciones y propuestas) y detectar cuándo alguien me responde, para no perder el hilo.</li><li><strong>Dónde quedan los datos:</strong> en mi servidor, solo lo necesario para ese seguimiento. No se venden, no se comparten con terceros, no se usan para publicidad y no se usan para entrenar modelos de inteligencia artificial.</li><li><strong>Cómo se revoca:</strong> el acceso se puede quitar en cualquier momento desde <a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>.</li></ul>
+                <p>El uso y la transferencia de información recibida de las APIs de Google cumplen la <a href="https://developers.google.com/terms/api-services-user-data-policy">Política de Datos del Usuario de los Servicios de las APIs de Google</a>, incluidos los requisitos de Uso Limitado.</p>
             </>
           ),
         },

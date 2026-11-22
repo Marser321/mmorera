@@ -12,11 +12,13 @@ type LegalDocumentProps = {
   title: string;
   intro: string;
   sections: LegalSection[];
+  /** Fecha visible de última actualización; si falta, se usa la fecha general de los documentos legales. */
+  updated?: string;
 };
 
 // Server-rendered reading surface: native anchors work without JavaScript,
 // and no new animation is introduced for reduced-motion visitors.
-export function LegalDocument({ language, label, title, intro, sections }: LegalDocumentProps) {
+export function LegalDocument({ language, label, title, intro, sections, updated }: LegalDocumentProps) {
   return (
     <main id="contenido-principal" lang={language} className="min-h-screen bg-background px-5 pb-28 pt-36 sm:px-8 lg:px-12 lg:pt-44">
       <article className="mx-auto max-w-3xl">
@@ -24,7 +26,7 @@ export function LegalDocument({ language, label, title, intro, sections }: Legal
           <h1 className="text-balance text-[clamp(2.75rem,6.5vw,5rem)] font-medium leading-[1.04] tracking-[-0.04em] text-foreground">{title}</h1>
           <p className="mt-6 max-w-prose text-lg leading-8 text-foreground/75">{intro}</p>
           <p className="mt-5 text-sm leading-6 text-foreground/75">
-            {language === "es" ? "Última actualización: 1 de noviembre de 2026" : "Last updated: November 1, 2026"}
+            {updated ?? (language === "es" ? "Última actualización: 1 de noviembre de 2026" : "Last updated: November 1, 2026")}
           </p>
         </header>
         <nav aria-label={label} className="mt-10 border-y border-foreground/15 py-5">
