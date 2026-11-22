@@ -34,7 +34,7 @@ export default defineConfig({
   webServer: externalBaseUrl
     ? undefined
     : {
-        command: "env RESEND_API_KEY= TELEGRAM_BOT_TOKEN= TELEGRAM_CHAT_ID= NEXT_PUBLIC_INSFORGE_URL= NEXT_PUBLIC_INSFORGE_ANON_KEY= npm run dev -- --webpack -p 3100",
+        command: "env RESEND_API_KEY= TELEGRAM_BOT_TOKEN= TELEGRAM_CHAT_ID= VISITAS_WEBHOOK_TOKEN= NEXT_PUBLIC_INSFORGE_URL= NEXT_PUBLIC_INSFORGE_ANON_KEY= npm run dev -- --webpack -p 3100",
         url: baseURL,
         reuseExistingServer: true,
         timeout: 120_000,

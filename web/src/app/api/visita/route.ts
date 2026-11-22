@@ -1,6 +1,7 @@
 import { createClient } from "@insforge/sdk";
 import { validarVisita } from "@/lib/origen";
 import { createRateLimiter } from "@/lib/rateLimit";
+import { reenviarVisitaAN8n } from "@/lib/visitasN8n";
 
 /**
  * Registro de visitas a /demos. Sin cookies y sin IP guardada: página, evento,
@@ -11,6 +12,9 @@ import { createRateLimiter } from "@/lib/rateLimit";
  *   docs/demos/REGISTRO-DE-VISITAS.md); si no, el error se ignora.
  * - Las visitas que traen origen avisan por Telegram, con el bot de los leads,
  *   al llegar y al pedir contacto: son las que importan para cada alianza.
+ * - Las visitas que traen origen también van a n8n si está
+ *   `VISITAS_WEBHOOK_TOKEN`: quedan en la base `ventas` del VPS, cruzadas con
+ *   los envíos por slug. Si n8n falla, se ignora.
  */
 const porVisitante = createRateLimiter({ limit: 30, windowMs: 10 * 60_000 });
 const porInstancia = createRateLimiter({ limit: 600, windowMs: 10 * 60_000 });
@@ -45,6 +49,9 @@ export async function POST(request: Request) {
       })().catch(() => {}),
     );
   }
+
+  const aN8n = reenviarVisitaAN8n(visita, process.env.VISITAS_WEBHOOK_TOKEN);
+  if (aN8n) tareas.push(aN8n);
 
   const bot = process.env.TELEGRAM_BOT_TOKEN;
   const chat = process.env.TELEGRAM_CHAT_ID;
