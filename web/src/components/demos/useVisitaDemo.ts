@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useSyncExternalStore } from "react";
-import { origenDeLaVisita, type EventoDemo } from "@/lib/origen";
+import { CLAVE_ORIGEN, limpiarOrigen, origenDeLaVisita, type EventoDemo } from "@/lib/origen";
 
 const sinCambios = () => () => {};
 
@@ -10,9 +10,12 @@ const sinCambios = () => () => {};
  * demo, elegir una escena, ir a hablar). Va a /api/visita con sendBeacon: no
  * frena la página, no usa cookies y no guarda la IP.
  */
-export function useVisitaDemo(pagina: string) {
+export function useVisitaDemo(pagina: string, origenFijo?: string | null) {
+  // En /demo/<negocio> el origen viene en la ruta, sin `?de=` en el enlace.
+  const fijo = limpiarOrigen(origenFijo);
   // El origen no cambia mientras la página está abierta: en el servidor es null.
-  const de = useSyncExternalStore(sinCambios, origenDeLaVisita, () => null);
+  const deLeido = useSyncExternalStore(sinCambios, origenDeLaVisita, () => null);
+  const de = fijo ?? deLeido;
   const enviados = useRef(new Set<string>());
 
   const registrar = useCallback(
@@ -20,7 +23,7 @@ export function useVisitaDemo(pagina: string) {
       const clave = `${evento}:${detalle ?? ""}`;
       if (enviados.current.has(clave)) return;
       enviados.current.add(clave);
-      const cuerpo = JSON.stringify({ pagina, evento, de: origenDeLaVisita(), detalle: detalle ?? null });
+      const cuerpo = JSON.stringify({ pagina, evento, de: fijo ?? origenDeLaVisita(), detalle: detalle ?? null });
       try {
         const blob = new Blob([cuerpo], { type: "application/json" });
         if (navigator.sendBeacon?.("/api/visita", blob)) return;
@@ -29,12 +32,20 @@ export function useVisitaDemo(pagina: string) {
       }
       void fetch("/api/visita", { method: "POST", body: cuerpo, headers: { "Content-Type": "application/json" }, keepalive: true }).catch(() => {});
     },
-    [pagina],
+    [pagina, fijo],
   );
 
   useEffect(() => {
+    // Que el origen acompañe a la visita al brief y a otras páginas de la pestaña.
+    if (fijo) {
+      try {
+        window.sessionStorage.setItem(CLAVE_ORIGEN, fijo);
+      } catch {
+        // Sin sessionStorage: la visita igual se registra.
+      }
+    }
     registrar("vista");
-  }, [registrar]);
+  }, [registrar, fijo]);
 
   return { de, registrar };
 }
