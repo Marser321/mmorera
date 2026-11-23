@@ -54,3 +54,12 @@ Para ver las visitas por socio:
 ```sql
 select origen, evento, count(*) from demo_visitas group by 1, 2 order by 1, 2;
 ```
+
+## Enlaces personales sin `?de=` (desde el 23/11/2026)
+
+Los `?de=` en la dirección se ven raros en un primer contacto. Para mandar a un negocio, se usa la ruta limpia:
+
+- Gimnasios y estudios: `https://mmorera.agency/demo/<negocio>`, por ejemplo `/demo/city-fitness`. Abre la demo de gimnasios con «Preparada para City Fitness», y la vista previa del enlace dice «Demo para City Fitness».
+- Oficio: `https://mmorera.agency/oficio/<negocio>`, por ejemplo `/oficio/la-barberia`. Muestra el caso de Oficio y la vista previa dice «Oficio para La Barbería».
+
+El `<negocio>` es el mismo slug de siempre (minúsculas, números y guiones, hasta 32). La visita se registra con ese origen, igual que con `?de=`: en Oficio con `pagina = /demos/oficio`. Las dos rutas quedan fuera de los buscadores. `/demo` y `/oficio` solos redirigen a la demo de gimnasios y al caso de Oficio. Los `?de=` viejos siguen funcionando.

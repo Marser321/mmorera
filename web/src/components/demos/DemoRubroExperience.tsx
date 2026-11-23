@@ -14,8 +14,9 @@ const container = "mx-auto w-full max-w-[1480px] px-5 sm:px-8 lg:px-12";
 const TONOS: Record<RubroDemo["id"], string> = { gimnasios: "#D4A373", consulta: "#9CC5A1" };
 
 /** El mensaje de WhatsApp ya dice qué demo vio y quién lo mandó. */
-export function enlaceWhatsApp(rubro: RubroDemo, de: string | null) {
-  const texto = `Hola Mario, vi la demo de ${rubro.etiqueta.toLowerCase()} en tu web${de ? ` (vengo de parte de ${de})` : ""}. ¿Lo hablamos?`;
+export function enlaceWhatsApp(rubro: RubroDemo, de: string | null, negocio?: string) {
+  const quien = negocio ? ` (soy de ${negocio})` : de ? ` (vengo de parte de ${de})` : "";
+  const texto = `Hola Mario, vi la demo de ${rubro.etiqueta.toLowerCase()} en tu web${quien}. ¿Lo hablamos?`;
   return `${SITE_IDENTITY.contact.whatsapp}?text=${encodeURIComponent(texto)}`;
 }
 
@@ -24,8 +25,8 @@ export function enlaceWhatsApp(rubro: RubroDemo, de: string | null) {
  * del film), las escenas (adelanto al pasar el mouse), la demo embebida y el
  * cierre con Mario. Elegir una escena la abre en el marco y baja hasta él.
  */
-export function DemoRubroExperience({ rubro }: { rubro: RubroDemo }) {
-  const { de, registrar } = useVisitaDemo(`/demos/${rubro.id}`);
+export function DemoRubroExperience({ rubro, negocio }: { rubro: RubroDemo; negocio?: { slug: string; nombre: string } }) {
+  const { de, registrar } = useVisitaDemo(`/demos/${rubro.id}`, negocio?.slug);
   const [escena, setEscena] = useState<EscenaDemo | null>(null);
   const [cargado, setCargado] = useState(false);
   const escenario = useRef<HTMLElement>(null);
@@ -47,7 +48,7 @@ export function DemoRubroExperience({ rubro }: { rubro: RubroDemo }) {
     [cargar, registrar],
   );
 
-  const whatsapp = enlaceWhatsApp(rubro, de);
+  const whatsapp = enlaceWhatsApp(rubro, de, negocio?.nombre);
   const brief = `/aplicar${de ? `?de=${de}` : ""}`;
   const tono = { "--tono": TONOS[rubro.id] } as CSSProperties;
 
@@ -56,7 +57,7 @@ export function DemoRubroExperience({ rubro }: { rubro: RubroDemo }) {
       <header className={`${container} pb-14 sm:pb-20 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:items-center lg:gap-14`}>
         <div>
           <p className="tono-texto text-xs font-medium uppercase tracking-[.16em]">
-            Demo · {rubro.etiqueta}
+            Demo · {negocio ? `Preparada para ${negocio.nombre}` : rubro.etiqueta}
             {rubro.estado === "previa" && <span className="ml-3 rounded-full border border-current px-2 py-0.5 text-[10px]">Versión previa</span>}
           </p>
           <h1 className="mt-4 max-w-3xl text-[clamp(2.4rem,4.6vw,4.4rem)] font-medium leading-[1.02] tracking-[-.04em] text-foreground">{rubro.titulo}</h1>
