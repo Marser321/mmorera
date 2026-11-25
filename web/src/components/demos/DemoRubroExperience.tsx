@@ -51,6 +51,17 @@ export function DemoRubroExperience({ rubro, negocio }: { rubro: RubroDemo; nego
   const whatsapp = enlaceWhatsApp(rubro, de, negocio?.nombre);
   const brief = `/aplicar${de ? `?de=${de}` : ""}`;
   const tono = { "--tono": TONOS[rubro.id] } as CSSProperties;
+  // Al negocio que recibió su enlace se le habla a él; la versión general es para socios.
+  const cierre = negocio
+    ? {
+        titulo: `Lo que recibe ${negocio.nombre}`,
+        puntos: [
+          "Tu sistema, con tu nombre, tu color y tus servicios.",
+          "Lo construyo yo y acompaño a tu equipo mientras lo adopta.",
+          "Prendes solo lo que usas y se suma lo que haga falta.",
+        ],
+      }
+    : rubro.paraSocios;
 
   return (
     <main id="contenido-principal" style={tono} className="bg-background pb-0 pt-32 sm:pt-40">
@@ -116,10 +127,12 @@ export function DemoRubroExperience({ rubro, negocio }: { rubro: RubroDemo; nego
         <div className={`${container} grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-end`}>
           <div>
             <h2 id="hablemos-titulo" className="max-w-3xl text-[clamp(2rem,3.6vw,3.6rem)] font-medium leading-[1.05] tracking-[-.035em]">
-              ¿Lo vemos con tus clientes en mente?
+              {negocio ? `¿Lo vemos con ${negocio.nombre} en mente?` : "¿Lo vemos con tus clientes en mente?"}
             </h2>
             <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-              Te muestro cómo quedaría con la marca de un negocio que acompañas, y armamos juntos cómo ofrecerlo.
+              {negocio
+                ? "Te muestro cómo quedaría con tu marca, tus servicios y tu manera de trabajar, y vemos juntos qué conviene prender primero."
+                : "Te muestro cómo quedaría con la marca de un negocio que acompañas, y armamos juntos cómo ofrecerlo."}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <a
@@ -143,9 +156,9 @@ export function DemoRubroExperience({ rubro, negocio }: { rubro: RubroDemo; nego
             </div>
           </div>
           <div className="rounded-2xl border border-foreground/15 bg-card p-6 sm:p-8">
-            <h3 className="font-mono text-[10px] font-normal uppercase tracking-[.16em] text-muted-foreground">{rubro.paraSocios.titulo}</h3>
+            <h3 className="font-mono text-[10px] font-normal uppercase tracking-[.16em] text-muted-foreground">{cierre.titulo}</h3>
             <ul className="mt-5 space-y-4">
-              {rubro.paraSocios.puntos.map((p) => (
+              {cierre.puntos.map((p) => (
                 <li key={p} className="flex gap-4 text-base leading-snug">
                   <span aria-hidden="true" className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-foreground text-background">
                     <Check className="h-3.5 w-3.5" strokeWidth={3} />

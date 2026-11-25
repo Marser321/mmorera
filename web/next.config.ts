@@ -52,9 +52,10 @@ const createConfig = (phase: string): NextConfig => ({
     return [
       // El CV vive dentro de «Sobre mí», debajo de la película de autor (1/11).
       { source: "/cv", destination: "/sobre-mi#cv", permanent: false },
-      // Enlaces cortos de las demos: /demo/<negocio> y /oficio/<negocio> son los personales.
+      // Enlaces cortos de las demos: /demo/<negocio>, /clinica/<negocio> y /oficio/<negocio> son los personales.
       { source: "/demo", destination: "/demos/gimnasios", permanent: false },
       { source: "/oficio", destination: "/casos-de-exito/oficio", permanent: false },
+      { source: "/clinica", destination: "/demos/consulta", permanent: false },
       { source: "/en/cv", destination: "/en/sobre-mi#cv", permanent: false },
       {
         source: "/casos-de-exito/booking-barberia",
