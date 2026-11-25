@@ -197,6 +197,8 @@ function EsbozoSistema() {
 
 export function PropuestaDocument({ propuesta: p }: { propuesta: Propuesta }) {
   const t = COPY[p.idioma];
+  // Títulos propios que trae la propuesta (agencias, oportunidades); si no vienen, los de siempre.
+  const et = p.etiquetas ?? {};
   const fecha = fechaPropuesta(p.creado, p.idioma);
   const lugar = [p.ciudad, p.pais].filter(Boolean).join(", ");
   const { nombre: demoNombre, piezas } = partirTituloDemo(p.demo.titulo);
@@ -221,11 +223,11 @@ export function PropuestaDocument({ propuesta: p }: { propuesta: Propuesta }) {
 
   // Las secciones presentes, numeradas en orden: el índice de la portada y los rótulos usan los mismos números.
   const indice = [
-    { id: "diagnostico", nombre: t.secciones[0], hay: p.diagnostico.length > 0 },
-    { id: "demo", nombre: t.secciones[1], hay: true },
-    { id: "como-quedaria", nombre: t.secciones[2], hay: p.comoQuedaria.length > 0 },
-    { id: "por-que-propio", nombre: t.secciones[3], hay: p.porQuePropio.length > 0 },
-    { id: "siguiente-paso", nombre: t.secciones[4], hay: true },
+    { id: "diagnostico", nombre: et.diagnostico?.indice ?? t.secciones[0], hay: p.diagnostico.length > 0 },
+    { id: "demo", nombre: et.demo?.indice ?? t.secciones[1], hay: true },
+    { id: "como-quedaria", nombre: et.como_quedaria?.indice ?? t.secciones[2], hay: p.comoQuedaria.length > 0 },
+    { id: "por-que-propio", nombre: et.por_que_propio?.indice ?? t.secciones[3], hay: p.porQuePropio.length > 0 },
+    { id: "siguiente-paso", nombre: et.siguiente_paso?.indice ?? t.secciones[4], hay: true },
   ].filter((s) => s.hay);
   const numero = (id: string) => indice.findIndex((s) => s.id === id) + 1;
 
@@ -307,7 +309,7 @@ export function PropuestaDocument({ propuesta: p }: { propuesta: Propuesta }) {
 
       {/* ── 01 Diagnóstico ───────────────────────────────────── */}
       {p.diagnostico.length > 0 && (
-        <Seccion id="diagnostico" numero={numero("diagnostico")} nombre={t.secciones[0]} titulo={t.diagnostico(p.negocio)} bajada={t.diagnosticoBajada}>
+        <Seccion id="diagnostico" numero={numero("diagnostico")} nombre={et.diagnostico?.indice ?? t.secciones[0]} titulo={et.diagnostico?.titulo ?? t.diagnostico(p.negocio)} bajada={et.diagnostico?.bajada ?? t.diagnosticoBajada}>
           <ol className="divide-y divide-foreground/12 border-t border-foreground/12">
             {p.diagnostico.map((h, i) => (
               <li key={`${i}-${h.titulo}`} className="grid gap-x-8 gap-y-3 py-8 sm:grid-cols-[5.5rem_minmax(0,1fr)] sm:py-10">
@@ -333,7 +335,7 @@ export function PropuestaDocument({ propuesta: p }: { propuesta: Propuesta }) {
       )}
 
       {/* ── 02 La demo ───────────────────────────────────────── */}
-      <Seccion id="demo" numero={numero("demo")} nombre={t.secciones[1]} titulo={t.demo} bajada={t.demoBajada}>
+      <Seccion id="demo" numero={numero("demo")} nombre={et.demo?.indice ?? t.secciones[1]} titulo={et.demo?.titulo ?? t.demo} bajada={et.demo?.bajada ?? t.demoBajada}>
         <div className="overflow-hidden rounded-2xl border border-foreground/14 bg-card shadow-[0_30px_80px_-40px_rgb(0_0_0/0.7)] light:shadow-[0_30px_80px_-40px_rgb(20_23_26/0.25)]">
           <div className="flex items-center gap-2 border-b border-foreground/10 px-4 py-3 sm:px-5">
             <span aria-hidden="true" className="flex gap-1.5">
@@ -380,7 +382,7 @@ export function PropuestaDocument({ propuesta: p }: { propuesta: Propuesta }) {
                 )}
                 <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
                   <a href={p.demo.url} target="_blank" rel="noopener noreferrer" data-visita="demo" className={`${botonLleno} sm:min-h-14 sm:px-8 sm:text-base`}>
-                    {t.abrirDemo}
+                    {et.demo?.boton ?? t.abrirDemo}
                     <ArrowUpRight aria-hidden="true" className="h-[1.1em] w-[1.1em]" />
                   </a>
                   <p className={`${rotulo} text-foreground/50`}>{t.demoNota}</p>
@@ -394,7 +396,7 @@ export function PropuestaDocument({ propuesta: p }: { propuesta: Propuesta }) {
 
       {/* ── 03 Cómo quedaría ─────────────────────────────────── */}
       {p.comoQuedaria.length > 0 && (
-        <Seccion id="como-quedaria" numero={numero("como-quedaria")} nombre={t.secciones[2]} titulo={t.como(p.negocio)} bajada={t.comoBajada}>
+        <Seccion id="como-quedaria" numero={numero("como-quedaria")} nombre={et.como_quedaria?.indice ?? t.secciones[2]} titulo={et.como_quedaria?.titulo ?? t.como(p.negocio)} bajada={et.como_quedaria?.bajada ?? t.comoBajada}>
           <ol className="relative">
             {p.comoQuedaria.map((paso, i) => (
               <li key={`${i}-${paso}`} className="relative grid grid-cols-[2.5rem_minmax(0,1fr)] gap-x-5 pb-10 last:pb-0 sm:grid-cols-[3rem_minmax(0,1fr)] sm:gap-x-7">
@@ -413,7 +415,7 @@ export function PropuestaDocument({ propuesta: p }: { propuesta: Propuesta }) {
 
       {/* ── 04 Por qué propio ────────────────────────────────── */}
       {p.porQuePropio.length > 0 && (
-        <Seccion id="por-que-propio" numero={numero("por-que-propio")} nombre={t.secciones[3]} titulo={t.porQue} bajada={t.porQueBajada}>
+        <Seccion id="por-que-propio" numero={numero("por-que-propio")} nombre={et.por_que_propio?.indice ?? t.secciones[3]} titulo={et.por_que_propio?.titulo ?? t.porQue} bajada={et.por_que_propio?.bajada ?? t.porQueBajada}>
           <ul className="grid gap-px overflow-hidden rounded-2xl border border-foreground/12 bg-foreground/12 sm:grid-cols-2">
             {p.porQuePropio.map((punto, i) => (
               <li key={`${i}-${punto}`} className={`flex flex-col gap-5 bg-background p-6 sm:p-8 ${imparSm}`}>
@@ -434,11 +436,11 @@ export function PropuestaDocument({ propuesta: p }: { propuesta: Propuesta }) {
           <p className={`${rotulo} flex items-center gap-3 self-start text-muted-foreground`}>
             <span className="tabular-nums text-signal">{String(numero("siguiente-paso")).padStart(2, "0")}</span>
             <span aria-hidden="true" className="h-px w-6 bg-foreground/30" />
-            {t.secciones[4]}
+            {et.siguiente_paso?.indice ?? t.secciones[4]}
           </p>
           <div className="min-w-0">
             <h2 id="siguiente-paso-titulo" className="text-[clamp(2.4rem,5.6vw,4.75rem)] font-medium leading-[0.98] tracking-[-.05em]">
-              {t.siguiente}
+              {et.siguiente_paso?.titulo ?? t.siguiente}
             </h2>
             <p className="mt-7 max-w-[56ch] whitespace-pre-line text-pretty text-lg leading-relaxed text-foreground/80 sm:text-xl sm:leading-[1.6]">
               {p.siguientePaso.texto}

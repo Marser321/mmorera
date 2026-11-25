@@ -16,6 +16,16 @@ export interface Hallazgo {
   captura: string | null;
 }
 
+/** Títulos propios por sección (opcional): para una agencia o una oportunidad, «Diagnóstico» o «La demo» no siempre encajan. */
+export interface EtiquetaSeccion {
+  indice: string | null;
+  titulo: string | null;
+  bajada: string | null;
+  boton: string | null;
+}
+export type ClaveSeccion = "diagnostico" | "demo" | "como_quedaria" | "por_que_propio" | "siguiente_paso";
+export const CLAVES_SECCION: ClaveSeccion[] = ["diagnostico", "demo", "como_quedaria", "por_que_propio", "siguiente_paso"];
+
 export interface Propuesta {
   slug: string;
   idioma: IdiomaPropuesta;
@@ -31,6 +41,7 @@ export interface Propuesta {
   comoQuedaria: string[];
   porQuePropio: string[];
   siguientePaso: { texto: string; whatsapp: string | null; email: string | null };
+  etiquetas: Partial<Record<ClaveSeccion, EtiquetaSeccion>>;
   /** Datos de desarrollo: la página lo dice arriba. */
   ejemplo: boolean;
 }
@@ -99,6 +110,7 @@ function textos(p: Propuesta): string[] {
     ...p.comoQuedaria,
     ...p.porQuePropio,
     p.siguientePaso.texto,
+    ...Object.values(p.etiquetas ?? {}).flatMap((e) => [e?.indice ?? "", e?.titulo ?? "", e?.bajada ?? "", e?.boton ?? ""]),
   ];
 }
 
@@ -131,6 +143,16 @@ export function normalizarPropuesta(crudo: unknown, { ejemplo = false } = {}): P
     .filter((h): h is Hallazgo => h !== null)
     .slice(0, 3);
 
+  const etiquetas: Partial<Record<ClaveSeccion, EtiquetaSeccion>> = {};
+  const crudas = d.etiquetas && typeof d.etiquetas === "object" && !Array.isArray(d.etiquetas) ? (d.etiquetas as Record<string, unknown>) : {};
+  for (const clave of CLAVES_SECCION) {
+    const e = crudas[clave];
+    if (!e || typeof e !== "object" || Array.isArray(e)) continue;
+    const r = e as Record<string, unknown>;
+    const etiqueta = { indice: texto(r.indice, 30), titulo: texto(r.titulo, 90), bajada: texto(r.bajada, 200), boton: texto(r.boton, 30) };
+    if (etiqueta.indice || etiqueta.titulo || etiqueta.bajada || etiqueta.boton) etiquetas[clave] = etiqueta;
+  }
+
   const propuesta: Propuesta = {
     slug,
     idioma: d.idioma === "en" ? "en" : "es",
@@ -146,6 +168,7 @@ export function normalizarPropuesta(crudo: unknown, { ejemplo = false } = {}): P
     comoQuedaria: lista(d.como_quedaria, 6),
     porQuePropio: lista(d.por_que_propio, 6, 400),
     siguientePaso: { texto: pasoTexto, whatsapp: whatsappSeguro(paso.whatsapp), email: emailSeguro(paso.email) },
+    etiquetas,
     ejemplo,
   };
 

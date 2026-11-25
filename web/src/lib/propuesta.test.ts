@@ -142,3 +142,26 @@ test("el ejemplo nunca se sirve en producción, sí en vistas previas", () => {
   assert.equal(ejemploDisponible({ NODE_ENV: "production", VERCEL_ENV: "preview" } as NodeJS.ProcessEnv), true);
   assert.equal(ejemploDisponible({ NODE_ENV: "production", VERCEL_ENV: "production" } as NodeJS.ProcessEnv), false);
 });
+
+test("etiquetas propias: toma los títulos que vienen y descarta lo que no encaja", () => {
+  const d = base() as Record<string, unknown>;
+  d.etiquetas = { demo: { titulo: "Mi trabajo", boton: "Ver portfolio" }, como_quedaria: { indice: "Cómo trabajaríamos" }, inventada: { titulo: "x" } };
+  const p = normalizarPropuesta(d);
+  assert.ok(p);
+  assert.equal(p.etiquetas.demo?.titulo, "Mi trabajo");
+  assert.equal(p.etiquetas.demo?.boton, "Ver portfolio");
+  assert.equal(p.etiquetas.como_quedaria?.indice, "Cómo trabajaríamos");
+  assert.ok(!("inventada" in p.etiquetas));
+});
+
+test("sin etiquetas, quedan vacías", () => {
+  const p = normalizarPropuesta(base());
+  assert.ok(p);
+  assert.deepEqual(p.etiquetas, {});
+});
+
+test("una cifra con moneda en una etiqueta también bloquea la propuesta", () => {
+  const d = base() as Record<string, unknown>;
+  d.etiquetas = { siguiente_paso: { titulo: "Desde USD 500" } };
+  assert.equal(normalizarPropuesta(d), null);
+});
