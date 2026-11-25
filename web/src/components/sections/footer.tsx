@@ -23,14 +23,15 @@ const EXPLORE_LINKS = [
   { path: "/sobre-mi", label: { es: "Sobre mí · CV", en: "About · Resume" } },
 ];
 
-// El Home y /aplicar ya terminan en el formulario: ahí no se repite el cierre.
+// El Home y /aplicar ya terminan en el formulario, y cada propuesta (/p/<slug>)
+// en su siguiente paso: ahí no se repite el cierre.
 const CTA_HIDDEN = new Set(["/", "/en", "/aplicar", "/en/aplicar"]);
 
 export function Footer() {
   const { language } = useLanguage();
   const isEs = language === "es";
   const pathname = usePathname();
-  const showCta = !CTA_HIDDEN.has(pathname);
+  const showCta = !CTA_HIDDEN.has(pathname) && !pathname.startsWith("/p/");
   return (
     <footer className="relative z-20 overflow-hidden border-t border-white/10 bg-background/92 px-5 py-12 backdrop-blur-xl light:border-[rgb(var(--ink-rgb)/0.1)] sm:px-8 lg:px-12">
       {/* Marca de agua: el monograma grande, recortado abajo a la derecha. */}

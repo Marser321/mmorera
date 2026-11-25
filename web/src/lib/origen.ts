@@ -40,11 +40,20 @@ export interface VisitaDemo {
   detalle: string | null;
 }
 
+/** Páginas que registran visitas: /demos y cada rubro, y cada propuesta /p/<slug>. */
+const PAGINA_DEMOS = /^\/demos(\/[a-z0-9-]{1,32})?$/;
+const PAGINA_PROPUESTA = /^\/p\/[a-z0-9][a-z0-9-]{0,59}$/;
+
+/** Una propuesta ya dice de qué negocio es: su visita vale aunque no traiga `?de=`. */
+export function esPaginaDePropuesta(pagina: string): boolean {
+  return PAGINA_PROPUESTA.test(pagina);
+}
+
 /** Valida lo que llega a /api/visita. Todo lo que no encaja se descarta. */
 export function validarVisita(cuerpo: unknown): VisitaDemo | null {
   if (!cuerpo || typeof cuerpo !== "object") return null;
   const { pagina, evento, de, detalle } = cuerpo as Record<string, unknown>;
-  if (typeof pagina !== "string" || !/^\/demos(\/[a-z0-9-]{1,32})?$/.test(pagina)) return null;
+  if (typeof pagina !== "string" || !(PAGINA_DEMOS.test(pagina) || PAGINA_PROPUESTA.test(pagina))) return null;
   if (typeof evento !== "string" || !(EVENTOS_DEMO as readonly string[]).includes(evento)) return null;
   return {
     pagina,

@@ -63,3 +63,16 @@ Los `?de=` en la dirección se ven raros en un primer contacto. Para mandar a un
 - Oficio: `https://mmorera.agency/oficio/<negocio>`, por ejemplo `/oficio/la-barberia`. Muestra el caso de Oficio y la vista previa dice «Oficio para La Barbería».
 
 El `<negocio>` es el mismo slug de siempre (minúsculas, números y guiones, hasta 32). La visita se registra con ese origen, igual que con `?de=`: en Oficio con `pagina = /demos/oficio`. Las dos rutas quedan fuera de los buscadores. `/demo` y `/oficio` solos redirigen a la demo de gimnasios y al caso de Oficio. Los `?de=` viejos siguen funcionando.
+
+## Propuestas a medida: /p/<slug> (desde el 25/11/2026)
+
+Cada propuesta (ver `docs/propuestas/README.md`) registra su visita por el mismo camino, con `pagina: "/p/<slug>"`:
+
+| Evento | Cuándo | Detalle |
+|---|---|---|
+| `vista` | Al abrir la propuesta | — |
+| `demo` | Al tocar «Abrir la demo» | — |
+| `escena` | Al llegar al siguiente paso (leyó hasta el final) | `final` |
+| `contacto` | Al tocar WhatsApp o email | `whatsapp` o `email` |
+
+A diferencia de /demos, **se reenvían a n8n aunque no traigan `?de=`**: el slug de la página ya dice de qué negocio es. Para que n8n las guarde, el nodo «Validar» de «Visitas · Demo» tiene que aceptar `pagina` `/p/<slug>` sin `de` y cruzarlas con la tabla `propuestas` (hoy solo acepta `/demos` con `de`).
