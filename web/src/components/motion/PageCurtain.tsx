@@ -17,6 +17,7 @@ const PALABRAS: Array<{ ruta: string; es: string; en: string; exacta?: boolean }
   { ruta: "/estudio", es: "Estudio", en: "Studio" },
   { ruta: "/aplicar", es: "Hablemos", en: "Let’s talk" },
   { ruta: "/privacidad", es: "Privacidad", en: "Privacy" },
+  { ruta: "/p/", es: "Propuesta", en: "Proposal" },
 ];
 
 function palabraDe(pathname: string): string | null {

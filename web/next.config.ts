@@ -26,6 +26,10 @@ const CONTENT_SECURITY_POLICY = [
   "frame-ancestors 'self'",
 ].join("; ");
 
+// Las propuestas (/p/<slug>) pueden traer la imagen de la demo o una captura
+// del hallazgo desde otro dominio: ahí, y solo ahí, se aceptan imágenes https.
+const CONTENT_SECURITY_POLICY_PROPUESTAS = CONTENT_SECURITY_POLICY.replace("img-src 'self' data: blob:", "img-src 'self' data: blob: https:");
+
 const SECURITY_HEADERS = [
   { key: "Content-Security-Policy", value: CONTENT_SECURITY_POLICY },
   { key: "X-Frame-Options", value: "SAMEORIGIN" },
@@ -46,7 +50,12 @@ const createConfig = (phase: string): NextConfig => ({
   },
   // Solo en producción: `next dev` necesita eval y sockets para la recarga en caliente.
   async headers() {
-    return phase === PHASE_DEVELOPMENT_SERVER ? [] : [{ source: "/:path*", headers: SECURITY_HEADERS }];
+    if (phase === PHASE_DEVELOPMENT_SERVER) return [];
+    return [
+      { source: "/:path*", headers: SECURITY_HEADERS },
+      // Va después: para la misma clave, Next se queda con la última que coincide.
+      { source: "/p/:slug", headers: [{ key: "Content-Security-Policy", value: CONTENT_SECURITY_POLICY_PROPUESTAS }] },
+    ];
   },
   async redirects() {
     return [

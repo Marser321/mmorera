@@ -53,3 +53,11 @@ test("si n8n falla o rechaza el token, no rompe la visita", async () => {
   }) as typeof fetch;
   await assert.doesNotReject(reenviarVisitaAN8n(conOrigen, "token-de-prueba") as Promise<void>);
 });
+
+test("la visita a una propuesta va a n8n aunque no traiga origen", async () => {
+  const propuesta: VisitaDemo = { pagina: "/p/lavadero-sur-1a2b", evento: "vista", de: null, detalle: null };
+  await reenviarVisitaAN8n(propuesta, "token-de-prueba");
+  assert.equal(llamadas.length, 1);
+  assert.deepEqual(JSON.parse(String(llamadas[0].init?.body)), propuesta);
+  assert.equal(reenviarVisitaAN8n(propuesta, undefined), null);
+});
