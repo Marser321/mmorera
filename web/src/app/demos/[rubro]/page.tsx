@@ -16,6 +16,7 @@ export async function generateMetadata({ params }: { params: Promise<{ rubro: st
   if (!esRubro(rubro)) return {};
   const data = RUBROS[rubro];
   const title = `Demo para ${data.etiqueta.toLowerCase()}`;
+  const og = rubro === "consulta" ? "/demos/clinicas/og.jpg" : "/demos/gimnasios/og.jpg";
   return {
     title,
     description: data.bajada,
@@ -26,9 +27,9 @@ export async function generateMetadata({ params }: { params: Promise<{ rubro: st
       url: `/demos/${rubro}`,
       title: `${title} — Mario Morera`,
       description: data.bajada,
-      images: [{ url: "/demos/gimnasios/og.jpg", width: 1200, height: 630, alt: data.titulo }],
+      images: [{ url: og, width: 1200, height: 630, alt: data.titulo }],
     },
-    twitter: { card: "summary_large_image", title, description: data.bajada, images: ["/demos/gimnasios/og.jpg"] },
+    twitter: { card: "summary_large_image", title, description: data.bajada, images: [og] },
   };
 }
 

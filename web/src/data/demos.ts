@@ -8,6 +8,7 @@
  * Cada rubro pasa el suyo, así la vista de un rubro no hereda la del otro.
  */
 const PREMIUM = "https://premium.smorera.tech";
+const OFICIO = "https://oficio.mmorera.agency";
 
 export type RubroId = "gimnasios" | "consulta";
 export type EscenaId = "panel" | "socio" | "entrenador" | "web";
@@ -31,6 +32,8 @@ export interface EscenaDemo {
   destino:
     | { tipo: "simulador"; recorrido: string; dispositivo: "telefono" | "tableta" | "portatil"; auto?: boolean }
     | { tipo: "sitio"; ruta: string }
+    /** Oficio, abierto en la tarjeta del rubro (`dental` o `clinic`). */
+    | { tipo: "oficio"; rubro: "dental" | "clinic" }
     | { tipo: "pronto"; nota: string };
   poster: string;
   clip?: string;
@@ -41,6 +44,8 @@ export interface EscenaDemo {
 export interface RubroDemo {
   id: RubroId;
   estado: "lista" | "previa";
+  /** Qué app corre en el marco: la edición premium (por defecto) u Oficio. */
+  app?: "premium" | "oficio";
   etiqueta: string;
   titulo: string;
   bajada: string;
@@ -56,6 +61,7 @@ export interface RubroDemo {
 }
 
 const MEDIOS = "/demos/gimnasios";
+const CLINICAS = "/demos/clinicas";
 
 export const RUBROS: Record<RubroId, RubroDemo> = {
   gimnasios: {
@@ -114,58 +120,58 @@ export const RUBROS: Record<RubroId, RubroDemo> = {
   },
   consulta: {
     id: "consulta",
-    estado: "previa",
-    etiqueta: "Consultas y clínicas",
-    titulo: "Tu consulta, ordenada de punta a punta.",
+    estado: "lista",
+    app: "oficio",
+    etiqueta: "Clínicas y consultorios dentales",
+    titulo: "Tu clínica, ordenada de la recepción al sillón.",
     bajada:
-      "La misma casa con el idioma de una consulta: clientes, sesiones y profesionales. Agenda, fichas, cobros y la app del cliente, con datos de ejemplo.",
-    puerta: "Versión previa: el vocabulario ya es de consulta; los datos de ejemplo todavía son de un gimnasio.",
-    marca: { n: "Clínica Aura", m: "CA", a: "salvia", r: "consulta" },
-    adelanto: { mp4: `${MEDIOS}/adelanto.mp4`, poster: `${MEDIOS}/adelanto.webp`, rotulo: "Adelanto · las cuatro escenas en 12 segundos" },
+      "Agenda, pacientes, planes de tratamiento con presupuesto, caja y equipo, con las palabras de una clínica. Lo pruebas aquí mismo con una clínica dental de ejemplo, sin instalar nada.",
+    puerta: "Clínica dental y medicina estética: agenda, pacientes, planes, presupuestos y caja.",
+    marca: { n: "Dental Norte", m: "DN", a: "salvia", r: "consulta" },
+    adelanto: { mp4: `${CLINICAS}/adelanto.mp4`, poster: `${CLINICAS}/adelanto.webp`, rotulo: "Adelanto · la clínica en movimiento" },
     escenas: [
       {
         id: "panel",
-        titulo: "El panel de la consulta",
-        linea: "Agenda, fichas y cobros del equipo en una sola pantalla.",
-        destino: { tipo: "simulador", recorrido: "inicio", dispositivo: "portatil", auto: true },
-        poster: `${MEDIOS}/panel.webp`,
-        clip: `${MEDIOS}/panel.mp4`,
+        titulo: "El día de la clínica",
+        linea: "Ingresos, pacientes y sillones ocupados, en una sola mirada.",
+        destino: { tipo: "oficio", rubro: "dental" },
+        poster: `${CLINICAS}/panel.webp`,
+        clip: `${CLINICAS}/panel.mp4`,
       },
       {
         id: "socio",
-        titulo: "La app del cliente",
-        linea: "Reserva su sesión, recibe el aviso y llega con su pase.",
-        destino: { tipo: "simulador", recorrido: "reserva", dispositivo: "telefono", auto: true },
-        poster: `${MEDIOS}/socio.webp`,
-        clip: `${MEDIOS}/socio.mp4`,
-        vertical: true,
+        titulo: "La agenda de recepción",
+        linea: "Turnos, llegadas y quién atiende a cada paciente.",
+        destino: { tipo: "oficio", rubro: "dental" },
+        poster: `${CLINICAS}/agenda.webp`,
+        clip: `${CLINICAS}/agenda.mp4`,
       },
       {
         id: "entrenador",
-        titulo: "La app del profesional",
-        linea: "Sus citas del día y la ficha de cada cliente antes de entrar.",
-        destino: { tipo: "simulador", recorrido: "llegada", dispositivo: "tableta" },
-        poster: `${MEDIOS}/entrenador.webp`,
-        clip: `${MEDIOS}/entrenador.mp4`,
+        titulo: "Planes y presupuestos",
+        linea: "El tratamiento pieza por pieza, en 3D, con su presupuesto y lo que falta cobrar.",
+        destino: { tipo: "oficio", rubro: "dental" },
+        poster: `${CLINICAS}/plan3d.webp`,
+        clip: `${CLINICAS}/plan3d.mp4`,
       },
       {
         id: "web",
-        titulo: "La web de la consulta",
-        linea: "Se arma con las imágenes y los tratamientos de cada clínica.",
-        destino: { tipo: "pronto", nota: "La web de cada consulta se diseña con sus propias imágenes. Te muestro la de gimnasios como referencia." },
-        poster: `${MEDIOS}/web.webp`,
-        clip: `${MEDIOS}/web.mp4`,
+        titulo: "Medicina estética",
+        linea: "La misma base con el idioma de una clínica estética.",
+        destino: { tipo: "oficio", rubro: "clinic" },
+        poster: `${CLINICAS}/estetica.webp`,
+        clip: `${CLINICAS}/estetica.mp4`,
       },
     ],
     paraSocios: {
       titulo: "Para quien acompaña a clínicas",
       puntos: [
-        "Un sistema a medida por clínica: agenda, fichas, cobros y la app del cliente.",
+        "Un sistema a medida por clínica, con su nombre, su color y su manera de trabajar.",
         "Lo construyo yo y acompaño al equipo mientras lo adopta.",
         "Tú sumas una pieza que la clínica usa todos los días.",
       ],
     },
-    aviso: "Versión previa: el idioma ya es de consulta y los datos de ejemplo se están cambiando.",
+    aviso: "Demostración con datos de ejemplo. No guarda historias clínicas ni datos de salud reales.",
   },
 };
 
@@ -173,12 +179,17 @@ export const RUBRO_IDS = Object.keys(RUBROS) as RubroId[];
 
 /** La dirección que carga el marco para una escena. Nunca se muestra en el texto. */
 export function srcDeEscena(rubro: RubroDemo, escena: EscenaDemo | null): string | null {
+  if (rubro.app === "oficio") {
+    const destino = escena?.destino;
+    return `${OFICIO}/?rubro=${destino?.tipo === "oficio" ? destino.rubro : "dental"}`;
+  }
   const params = new URLSearchParams({ demo: JSON.stringify(rubro.marca), desde: "mmorera" });
   // Recorrido libre: el simulador elige el dispositivo según el ancho (teléfono en el celular).
   if (!escena) return `${PREMIUM}/demo?${params}&recorrido=llegada`;
   const destino = escena.destino;
   if (destino.tipo === "pronto") return null;
   if (destino.tipo === "sitio") return `${PREMIUM}${destino.ruta}?${params}`;
+  if (destino.tipo === "oficio") return `${OFICIO}/?rubro=${destino.rubro}`;
   params.set("recorrido", destino.recorrido);
   params.set("dispositivo", destino.dispositivo);
   if (destino.auto) params.set("auto", "1");
