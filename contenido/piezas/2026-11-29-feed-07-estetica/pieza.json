@@ -1,0 +1,70 @@
+{
+  "id": "2026-11-29-feed-07-estetica",
+  "fecha": "2026-11-29",
+  "rama": "casos",
+  "serie": "Feed de 9",
+  "titulo": "Feed de 9 · 07 · Estética: dónde actúa cada tratamiento",
+  "estado": "borrador",
+  "fuente": {
+    "tipo": "sitio",
+    "nota": "Demo de medicina estética del sitio (/demos), con una clínica de ejemplo. Borrador del feed de 9 (contenido/series/feed-9.json). La fecha es provisoria: se ajusta al calendario."
+  },
+  "ejemplo": true,
+  "salidas": [
+    {
+      "id": "carrusel",
+      "plantilla": "carrusel",
+      "formato": "feed",
+      "para": [
+        "instagram",
+        "linkedin"
+      ],
+      "diapositivas": [
+        {
+          "tipo": "portada",
+          "kicker": "07",
+          "titulo": "Estética",
+          "mosaico": {
+            "celda": 7
+          }
+        },
+        {
+          "tipo": "texto",
+          "kicker": "La consulta",
+          "titulo": "¿Dónde *actúa* el tratamiento?",
+          "cuerpo": "Es la pregunta de siempre. En la app, el paciente lo ve sobre un rostro y un cuerpo en 3D, zona por zona."
+        },
+        {
+          "tipo": "lista",
+          "kicker": "Lo que incluye",
+          "titulo": "Con el idioma de la estética",
+          "items": [
+            "Agenda y turnos por profesional.",
+            "El plan de cada paciente, con su avance.",
+            "Presupuestos y caja.",
+            "Una web con el mismo cuidado que la app."
+          ]
+        },
+        {
+          "tipo": "comparacion",
+          "kicker": "Explicar un plan",
+          "titulo": "Dos maneras",
+          "antes": {
+            "rotulo": "Con palabras",
+            "texto": "Cada uno imagina algo distinto."
+          },
+          "despues": {
+            "rotulo": "Con el cuerpo en 3D",
+            "texto": "Se ve la zona y se entiende (clínica de ejemplo)."
+          }
+        },
+        {
+          "tipo": "cierre",
+          "titulo": "¿Cómo le mostrás el plan a tu paciente?",
+          "cta": "Mirá la demo de medicina estética.",
+          "enlace": "mmorera.agency/demos"
+        }
+      ]
+    }
+  ]
+}

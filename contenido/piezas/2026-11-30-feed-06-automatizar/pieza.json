@@ -1,0 +1,76 @@
+{
+  "id": "2026-11-30-feed-06-automatizar",
+  "fecha": "2026-11-30",
+  "rama": "sistemas",
+  "serie": "Feed de 9",
+  "titulo": "Feed de 9 · 06 · Automatizar: lo que se repite sin pensar",
+  "estado": "borrador",
+  "fuente": {
+    "tipo": "sitio",
+    "nota": "Flujos de ejemplo de /sistemas. Borrador del feed de 9 (contenido/series/feed-9.json). La fecha es provisoria: se ajusta al calendario."
+  },
+  "ejemplo": true,
+  "postura": true,
+  "salidas": [
+    {
+      "id": "carrusel",
+      "plantilla": "carrusel",
+      "formato": "feed",
+      "para": [
+        "instagram",
+        "linkedin"
+      ],
+      "diapositivas": [
+        {
+          "tipo": "portada",
+          "kicker": "06",
+          "titulo": "Automatizar",
+          "mosaico": {
+            "celda": 6
+          }
+        },
+        {
+          "tipo": "texto",
+          "kicker": "La señal",
+          "titulo": "Si lo hacés igual *cada día*, es un sistema",
+          "cuerpo": "Copiar un dato, mandar el mismo mensaje, armar el mismo reporte. Lo que se repite sin pensar se puede dejar andando."
+        },
+        {
+          "tipo": "lista",
+          "kicker": "Por dónde empezar",
+          "titulo": "Tres tareas que se van primero",
+          "items": [
+            "Pasar cada consulta al CRM.",
+            "Avisar al equipo cuando entra algo.",
+            "Recordar el turno un día antes."
+          ]
+        },
+        {
+          "tipo": "comparacion",
+          "kicker": "Antes y después",
+          "titulo": "La misma tarea",
+          "antes": {
+            "rotulo": "A mano",
+            "texto": "Depende de que alguien se acuerde."
+          },
+          "despues": {
+            "rotulo": "Automatizada",
+            "texto": "Pasa sola y queda registrada (flujo de ejemplo)."
+          }
+        },
+        {
+          "tipo": "cita",
+          "kicker": "Mi criterio",
+          "cita": "Automatizar no es sacar gente. Es sacarle a la gente lo que *no pide criterio*.",
+          "autor": "Mario Morera"
+        },
+        {
+          "tipo": "cierre",
+          "titulo": "¿Qué tarea repetís todos los días?",
+          "cta": "Contame cuál y te digo por dónde empezaría.",
+          "enlace": "mmorera.agency/sistemas"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "id": "2026-11-28-feed-08-gimnasios",
+  "fecha": "2026-11-28",
+  "rama": "casos",
+  "serie": "Feed de 9",
+  "titulo": "Feed de 9 · 08 · Gimnasios: una rutina que se entiende",
+  "estado": "borrador",
+  "fuente": {
+    "tipo": "sitio",
+    "nota": "Demo de gimnasios del sitio (/demos): panel, app del socio, app del entrenador y web, con datos de ejemplo. Borrador del feed de 9 (contenido/series/feed-9.json). La fecha es provisoria: se ajusta al calendario."
+  },
+  "ejemplo": true,
+  "salidas": [
+    {
+      "id": "carrusel",
+      "plantilla": "carrusel",
+      "formato": "feed",
+      "para": [
+        "instagram",
+        "linkedin"
+      ],
+      "diapositivas": [
+        {
+          "tipo": "portada",
+          "kicker": "08",
+          "titulo": "Gimnasios",
+          "mosaico": {
+            "celda": 8
+          }
+        },
+        {
+          "tipo": "texto",
+          "kicker": "La casa",
+          "titulo": "Un gimnasio, *cuatro* pantallas",
+          "cuerpo": "El panel del equipo, la app del socio, la del entrenador y la web. Todo conectado."
+        },
+        {
+          "tipo": "lista",
+          "kicker": "Cada uno ve lo suyo",
+          "titulo": "La misma casa, tres miradas",
+          "items": [
+            "El equipo: quién llega, quién paga y qué falta.",
+            "El socio: reserva, pase de entrada y progreso.",
+            "El entrenador: sesiones, fichas y la rutina del día."
+          ]
+        },
+        {
+          "tipo": "texto",
+          "kicker": "La rutina",
+          "titulo": "Cada ejercicio, en *3D*",
+          "cuerpo": "La rutina se ve sobre un cuerpo en 3D, con los músculos que trabaja cada ejercicio. Se puede aislar un músculo para entenderlo."
+        },
+        {
+          "tipo": "comparacion",
+          "kicker": "La rutina del socio",
+          "titulo": "Dos maneras de darla",
+          "antes": {
+            "rotulo": "En una planilla",
+            "texto": "Una lista de nombres y números."
+          },
+          "despues": {
+            "rotulo": "En su app",
+            "texto": "Ve cómo se hace y qué trabaja (datos de ejemplo)."
+          }
+        },
+        {
+          "tipo": "cierre",
+          "titulo": "¿Tu socio entiende su rutina?",
+          "cta": "Probá la demo, sin instalar nada.",
+          "enlace": "mmorera.agency/demos"
+        }
+      ]
+    }
+  ]
+}

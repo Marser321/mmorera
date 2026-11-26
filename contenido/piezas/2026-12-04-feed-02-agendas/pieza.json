@@ -1,0 +1,76 @@
+{
+  "id": "2026-12-04-feed-02-agendas",
+  "fecha": "2026-12-04",
+  "rama": "sistemas",
+  "serie": "Feed de 9",
+  "titulo": "Feed de 9 · 02 · Agendas: cuántos mensajes cuesta un turno",
+  "estado": "borrador",
+  "fuente": {
+    "tipo": "sitio",
+    "nota": "Reserva contra la agenda del equipo, como en los casos de /sistemas. Borrador del feed de 9 (contenido/series/feed-9.json). La fecha es provisoria: se ajusta al calendario."
+  },
+  "ejemplo": true,
+  "salidas": [
+    {
+      "id": "carrusel",
+      "plantilla": "carrusel",
+      "formato": "feed",
+      "para": [
+        "instagram",
+        "linkedin"
+      ],
+      "diapositivas": [
+        {
+          "tipo": "portada",
+          "kicker": "02",
+          "titulo": "Agendas",
+          "mosaico": {
+            "celda": 2
+          }
+        },
+        {
+          "tipo": "texto",
+          "kicker": "El problema",
+          "titulo": "El turno se pide por *mensaje*",
+          "cuerpo": "Preguntan si hay lugar, alguien revisa la agenda, contesta tarde y el horario ya se ocupó. Tres mensajes para un turno."
+        },
+        {
+          "tipo": "lista",
+          "kicker": "Con agenda en la web",
+          "titulo": "Reservar sin escribirle a nadie",
+          "items": [
+            "La web muestra los horarios libres de verdad.",
+            "La persona elige y el turno queda agendado.",
+            "Le llega la confirmación y un recordatorio.",
+            "El equipo ve el día armado."
+          ]
+        },
+        {
+          "tipo": "texto",
+          "kicker": "Un detalle",
+          "titulo": "Una sola agenda",
+          "cuerpo": "La reserva de la web escribe en el mismo calendario que usa el equipo. No hay dos agendas que alguien tenga que emparejar."
+        },
+        {
+          "tipo": "comparacion",
+          "kicker": "Antes y después",
+          "titulo": "La misma reserva",
+          "antes": {
+            "rotulo": "Por mensaje",
+            "texto": "Depende de quién conteste y cuándo."
+          },
+          "despues": {
+            "rotulo": "En la web",
+            "texto": "Queda agendada en el momento (datos de ejemplo)."
+          }
+        },
+        {
+          "tipo": "cierre",
+          "titulo": "¿Cuántos mensajes cuesta un turno?",
+          "cta": "Guardalo para revisarlo con tu equipo.",
+          "enlace": "mmorera.agency/sistemas"
+        }
+      ]
+    }
+  ]
+}

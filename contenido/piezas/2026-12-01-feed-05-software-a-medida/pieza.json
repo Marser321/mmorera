@@ -1,0 +1,63 @@
+{
+  "id": "2026-12-01-feed-05-software-a-medida",
+  "fecha": "2026-12-01",
+  "rama": "criterio",
+  "serie": "Feed de 9",
+  "titulo": "Feed de 9 · 05 · Software a medida: primero el sistema, después la pantalla",
+  "estado": "borrador",
+  "fuente": {
+    "tipo": "experiencia",
+    "nota": "El centro del feed: qué hace Mario, en una idea. Borrador del feed de 9 (contenido/series/feed-9.json). La fecha es provisoria: se ajusta al calendario."
+  },
+  "postura": true,
+  "salidas": [
+    {
+      "id": "carrusel",
+      "plantilla": "carrusel",
+      "formato": "feed",
+      "para": [
+        "instagram",
+        "linkedin"
+      ],
+      "diapositivas": [
+        {
+          "tipo": "portada",
+          "kicker": "05",
+          "titulo": "Software a medida",
+          "mosaico": {
+            "celda": 5
+          }
+        },
+        {
+          "tipo": "texto",
+          "kicker": "Qué hago",
+          "titulo": "Sistemas a la medida del *negocio*",
+          "cuerpo": "Diseño y programo el sistema entero: la web, el panel, la agenda, las automatizaciones y la IA que hace falta. Con el nombre y la manera de trabajar de cada negocio."
+        },
+        {
+          "tipo": "lista",
+          "kicker": "Cómo trabajo",
+          "titulo": "Primero el sistema, después la pantalla",
+          "items": [
+            "Entiendo cómo trabaja el equipo hoy.",
+            "Defino qué pasa en cada paso.",
+            "Construyo y pruebo con datos de ejemplo.",
+            "Acompaño al equipo mientras lo adopta."
+          ]
+        },
+        {
+          "tipo": "cita",
+          "kicker": "Mi criterio",
+          "cita": "El software a medida no es más grande. Es *más tuyo*.",
+          "autor": "Mario Morera"
+        },
+        {
+          "tipo": "cierre",
+          "titulo": "¿Qué parte de tu negocio pide un sistema?",
+          "cta": "Escribime y lo pensamos juntos.",
+          "enlace": "mmorera.agency"
+        }
+      ]
+    }
+  ]
+}
