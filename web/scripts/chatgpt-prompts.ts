@@ -1,21 +1,32 @@
 #!/usr/bin/env node
 /**
- * Escribe piezas/<id>/chatgpt.md: los pedidos para que ChatGPT diseñe las
- * diapositivas de las salidas estáticas (carrusel, desafío, imagen) con el
- * sistema de diseño de contenido/marca/chatgpt-diseno.md. Cada pedido lleva
- * el texto exacto, el fondo que le toca en la alternancia, su recurso gráfico,
- * el pie de la serie y el nombre del archivo a guardar.
+ * Escribe piezas/<id>/chatgpt.md con los pedidos a ChatGPT para las dos
+ * versiones de la pieza (Mario elige una en Telegram):
+ *
+ * - ARTE (versión A): imágenes SIN NINGUNA LETRA, una por slot de
+ *   `pieza.imagenes`, con la franja vacía donde el código pone el texto.
+ *   Se guardan en imagenes/<slot>.png (`contenido.ts arte` las recorta).
+ * - ENTERA (versión B): ChatGPT diseña cada diapositiva completa, con el
+ *   texto exacto. Se guardan en imagenes/gpt-<salida>-NN.png
+ *   (`contenido.ts importar` las recorta y firma el cierre con el monograma).
+ *
+ * Los sistemas de diseño salen de contenido/marca/imagenes-chatgpt.md (ARTE)
+ * y contenido/marca/chatgpt-diseno.md (ENTERA). Cada pedido es autocontenido
+ * (sistema + lo propio de la imagen): sirve igual para Codex (~/bin/imagen,
+ * por defecto) que para ChatGPT en el navegador. También escribe
+ * piezas/<id>/pedidos.json, con un prompt completo por archivo.
  *
  * Uso, desde web/:
  *   npx tsx scripts/chatgpt-prompts.ts 2026-10-25-mas-barato-otro-rol
  *   npx tsx scripts/chatgpt-prompts.ts --pendientes      (las que todavía no tienen sus imágenes)
  */
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
-import { archivosChatGPT, usaChatGPT } from "../src/data/social/render";
-import { diapositivasDe, ecoDe, invert, tonoDeDiapositiva } from "../src/data/social/timing";
-import type { Diapositiva, Formato, Pieza, Salida, Tono } from "../src/data/social/types";
-import { carpetaDe, CONTENIDO, leerPieza, listarPiezas } from "./lib/piezas";
+import { FRANJA_TEXTO } from "../src/data/social/layout";
+import { archivosChatGPT, formatoDe, usaChatGPT } from "../src/data/social/render";
+import { diapositivasDe, tonoDeDiapositiva } from "../src/data/social/timing";
+import { fondoDe, SOCIAL_FORMATS, type Diapositiva, type Formato, type Pieza, type Salida, type Tono } from "../src/data/social/types";
+import { carpetaDe, CONTENIDO, imagenDe, leerPieza, listarPiezas } from "./lib/piezas";
 
 const FORMATO: Record<Formato, string> = {
   feed: "4:5 vertical (1080×1350)",
@@ -24,65 +35,116 @@ const FORMATO: Record<Formato, string> = {
 };
 
 const FONDO: Record<Tono, string> = {
-  oscuro: "FONDO NEGRO (#070809) con texto marfil (#F3F0E8)",
-  claro: "FONDO MARFIL (#F3F0E8) con texto negro (#070809)",
+  oscuro: "FONDO PARED (#0B0B0A, negro mate con grano) con texto marfil (#ECE7DD)",
+  claro: "FONDO MARFIL (#ECE7DD, papel con grano) con texto pared (#0B0B0A)",
 };
 
 const plain = (text: string) => text.replace(/\*/g, "");
 const q = (text: string) => `"${plain(text)}"`;
 const two = (n: number) => String(n).padStart(2, "0");
+const pct = (n: number) => `${Math.round(n * 100)} %`;
 
 /** Frases marcadas con *asteriscos* → instrucción de énfasis. */
 function enfasis(texts: Array<string | undefined>) {
   const marks = texts.flatMap((text) => [...(text ?? "").matchAll(/\*([^*]+)\*/g)].map((match) => `"${match[1]}"`));
-  return marks.length ? `ÉNFASIS (barra invertida detrás, letras del color del fondo): ${marks.join(", ")}.` : "";
+  return marks.length ? `ÉNFASIS (barra sólida del color opuesto detrás, letras del color del fondo): ${marks.join(", ")}.` : "";
 }
 
-function sistema() {
-  const doc = readFileSync(path.join(CONTENIDO, "marca", "chatgpt-diseno.md"), "utf8");
-  const start = doc.indexOf("<!-- SISTEMA -->");
-  const end = doc.indexOf("<!-- /SISTEMA -->");
-  return doc.slice(start + "<!-- SISTEMA -->".length, end).trim();
+/** Bloque entre <!-- marca --> y <!-- /marca --> de un documento de contenido/marca. */
+function bloque(archivo: string, marca: string) {
+  const doc = readFileSync(path.join(CONTENIDO, "marca", archivo), "utf8");
+  const start = doc.indexOf(`<!-- ${marca} -->`);
+  const end = doc.indexOf(`<!-- /${marca} -->`);
+  if (start < 0 || end < 0) throw new Error(`Falta el bloque <!-- ${marca} --> en contenido/marca/${archivo}`);
+  return doc.slice(start + `<!-- ${marca} -->`.length, end).trim();
 }
+
+/** Referencias aprobadas por Mario (se adjuntan al abrir cada conversación). */
+function referencias() {
+  const dir = path.join(CONTENIDO, "marca", "referencias");
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir).filter((file) => /\.(png|jpe?g|webp)$/i.test(file)).sort();
+}
+
+/* ─── ARTE (versión A) ─── */
+
+type Uso = { salida: string; n: number; tipo: Diapositiva["tipo"] };
+
+/** Dónde se usa cada slot: de fondo (con texto encima) o en la placa de una diapositiva de imagen. */
+function usosDeSlots(pieza: Pieza) {
+  const usos = new Map<string, Uso[]>();
+  for (const salida of pieza.salidas) {
+    diapositivasDe(salida).forEach((slide, index) => {
+      const slot = fondoDe(slide) ?? (slide.tipo === "imagen" ? slide.imagen : undefined);
+      if (slot) usos.set(slot, [...(usos.get(slot) ?? []), { salida: salida.id, n: index + 1, tipo: slide.tipo }]);
+    });
+  }
+  return usos;
+}
+
+/** La franja que el arte deja vacía: la más alta que pida cualquiera de sus usos de fondo. */
+function franjaDe(usos: Uso[]) {
+  const fondos = usos.filter((uso) => uso.tipo in FRANJA_TEXTO).map((uso) => FRANJA_TEXTO[uso.tipo as keyof typeof FRANJA_TEXTO]);
+  return fondos.length ? Math.max(...fondos) : 0;
+}
+
+function pedidoArte(pieza: Pieza, slot: NonNullable<Pieza["imagenes"]>[number], usos: Uso[]) {
+  const franja = franjaDe(usos);
+  const { width, height } = SOCIAL_FORMATS[slot.formato];
+  const donde = usos.map((uso) => `${uso.salida} ${two(uso.n)} (${uso.tipo})`).join(", ") || "sin uso todavía";
+  const lines = [
+    `ARTE · slot "${slot.slot}" · formato ${FORMATO[slot.formato]} · se usa en: ${donde}`,
+    `Escena: ${slot.prompt}`,
+    franja
+      ? `ZONA VACÍA: el ${pct(franja)} de abajo de la imagen es pared oscura, lisa y en calma: sin objetos, sin brillos fuertes, sin detalles. Ahí va el texto. El sujeto vive en el ${pct(1 - franja)} de arriba, mejor hacia la derecha.`
+      : "Composición: un solo sujeto, centrado o en un tercio, con aire alrededor (va en una placa, sin texto encima).",
+    "NINGUNA LETRA: ni texto, ni números, ni carteles, ni pantallas con contenido, ni logos, aunque sean ilegibles.",
+    `Entregá la imagen en ${width}×${height} o en esa proporción.`,
+  ];
+  return lines.join("\n");
+}
+
+/* ─── ENTERA (versión B) ─── */
 
 /** Composición, textos exactos y recurso gráfico de cada tipo de diapositiva. */
 function cuerpo(slide: Diapositiva, n: number, pieza: Pieza, formato: Formato): string[] {
-  const kicker = "kicker" in slide && slide.kicker ? [`Rótulo arriba a la izquierda (monoespaciada, mayúsculas): ${q(slide.kicker)}`] : [];
+  const kicker = "kicker" in slide && slide.kicker ? [`Rótulo arriba a la izquierda (monoespaciada, mayúsculas, chica, con una raya corta debajo): ${q(slide.kicker)}`] : [];
+  const arco = "Recurso gráfico: un arco grueso de anillo (como el aro de un monograma), con textura de piedra marfil, que entra por la esquina de arriba a la derecha, al 30 % de opacidad, y se funde hacia el centro. Nunca pasa por encima del texto.";
   switch (slide.tipo) {
     case "portada":
       return [
         "TIPO: portada (gancho).",
         ...kicker,
-        `Título enorme, apoyado en el tercio inferior: ${q(slide.titulo)}`,
-        ...(slide.bajada ? [`Bajada chica debajo del título: ${q(slide.bajada)}`] : []),
-        `Recurso gráfico: la palabra "${ecoDe(slide.titulo).toUpperCase()}" gigante en contorno fino, al 12 % de opacidad, arriba, recortada contra el borde.`,
-        `Abajo al centro: "DESLIZÁ" en monoespaciada con una flecha fina hacia la derecha.`,
+        `Título enorme, en la tipografía ancha y geométrica, apoyado abajo (tercio inferior): ${q(slide.titulo)}`,
+        ...(slide.bajada ? [`Bajada en la grotesca, tamaño mediano, debajo del título: ${q(slide.bajada)}`] : []),
+        arco,
+        `Abajo al centro: "DESLIZÁ" en monoespaciada chica con una flecha fina hacia la derecha.`,
         enfasis([slide.titulo]),
       ];
     case "texto": {
       // Si el rótulo ya numera ("01 · Contexto"), el número gigante usa ese.
       const numero = slide.kicker?.match(/^(\d{1,2})(?!\d)/)?.[1] ?? two(n);
-      return ["TIPO: texto.", ...kicker, `Título grande: ${q(slide.titulo)}`, `Cuerpo (tamaño mediano, 2 a 5 líneas): ${q(slide.cuerpo)}`, `Recurso gráfico: el número "${numero}" gigante en contorno fino, al 12 % de opacidad, abajo a la derecha, recortado contra el borde.`, enfasis([slide.titulo, slide.cuerpo])];
+      return ["TIPO: texto.", ...kicker, `Título grande (tipografía ancha): ${q(slide.titulo)}`, `Cuerpo en la grotesca, tamaño mediano, 2 a 5 líneas: ${q(slide.cuerpo)}`, `Recurso gráfico: el número "${numero}" gigante en contorno fino, al 10 % de opacidad, abajo a la derecha, recortado contra el borde.`, enfasis([slide.titulo, slide.cuerpo])];
     }
     case "lista":
       return [
         "TIPO: lista numerada.",
         ...kicker,
-        `Título grande: ${q(slide.titulo)}`,
-        "Ítems, cada uno con su índice grande en monoespaciada a la izquierda y una línea fina entre ítems:",
+        `Título grande (tipografía ancha): ${q(slide.titulo)}`,
+        "Ítems en la grotesca, cada uno con su índice en monoespaciada a la izquierda y una línea finísima entre ítems:",
         ...slide.items.map((item, index) => `  ${two(index + 1)} — ${q(item)}`),
-        `Recurso gráfico: el número "${two(n)}" gigante en contorno fino, al 12 % de opacidad, abajo a la derecha.`,
+        `Recurso gráfico: el número "${two(n)}" gigante en contorno fino, al 10 % de opacidad, abajo a la derecha.`,
         enfasis([slide.titulo, ...slide.items]),
       ];
     case "cita":
-      return ["TIPO: cita.", ...kicker, `Comillas gigantes en contorno fino arriba a la izquierda.`, `La frase, enorme: ${q(slide.cita)}`, ...(slide.autor ? [`Autor, en monoespaciada chica debajo: ${q(slide.autor)}`] : []), enfasis([slide.cita])];
+      return ["TIPO: cita (la frase clave de la serie).", ...kicker, `La frase, enorme (tipografía ancha), apoyada abajo: ${q(slide.cita)}`, ...(slide.autor ? [`Autor, en monoespaciada chica debajo: ${q(slide.autor)}`] : []), arco, enfasis([slide.cita])];
     case "comparacion":
       return [
         "TIPO: comparación (pantalla dividida).",
         ...kicker,
-        ...(slide.titulo ? [`Título: ${q(slide.titulo)}`] : []),
-        `Bloque de arriba, en un recuadro de línea fina: rótulo ${q(slide.antes.rotulo)} y texto ${q(slide.antes.texto)}`,
-        `Bloque de abajo, sólido e invertido (color opuesto al fondo): rótulo ${q(slide.despues.rotulo)} y texto ${q(slide.despues.texto)}`,
+        ...(slide.titulo ? [`Título (tipografía ancha): ${q(slide.titulo)}`] : []),
+        `Bloque de arriba, en un recuadro de línea finísima y esquinas apenas redondeadas: rótulo ${q(slide.antes.rotulo)} y texto ${q(slide.antes.texto)}`,
+        `Bloque de abajo, sólido del color opuesto al fondo, con textura de piedra: rótulo ${q(slide.despues.rotulo)} y texto ${q(slide.despues.texto)}`,
         enfasis([slide.titulo, slide.antes.texto, slide.despues.texto]),
       ];
     case "imagen": {
@@ -90,22 +152,30 @@ function cuerpo(slide: Diapositiva, n: number, pieza: Pieza, formato: Formato): 
       return [
         "TIPO: imagen.",
         ...kicker,
-        `Foto en blanco y negro de alto contraste, en una placa grande que ocupa la mitad de arriba: ${slot?.prompt ?? "una escena sobria del tema"}`,
-        ...(slide.titulo ? [`Título debajo de la foto: ${q(slide.titulo)}`] : []),
-        ...(slide.pie ? [`Pie chico debajo: ${q(slide.pie)}`] : []),
+        `Foto en blanco y negro cálido (negros mate, blancos marfil), en una placa grande con esquinas apenas redondeadas que ocupa la mitad de arriba: ${slot?.prompt ?? "una escena sobria del tema"}`,
+        ...(slide.titulo ? [`Título debajo de la foto (tipografía ancha): ${q(slide.titulo)}`] : []),
+        ...(slide.pie ? [`Pie en la grotesca, chico, debajo: ${q(slide.pie)}`] : []),
         enfasis([slide.titulo, slide.pie]),
       ];
     }
     case "cierre":
-      return ["TIPO: cierre.", `Pregunta o llamado, grande: ${q(slide.titulo)}`, `Debajo, mediano: ${q(slide.cta)}`, ...(slide.enlace ? [`Enlace en monoespaciada (minúsculas): ${q(slide.enlace)}`] : []), `"Mario Morera" en monoespaciada chica arriba a la izquierda y una flecha fina hacia la derecha junto al enlace.`, enfasis([slide.titulo, slide.cta])];
+      return [
+        "TIPO: cierre.",
+        "ARRIBA A LA IZQUIERDA, VACÍO: dejá libre un cuadrado de pared lisa de 20 % del ancho, pegado a los márgenes de arriba y de la izquierda. Ahí se pone después la firma (el monograma de Mario). No dibujes ningún logo ni monograma.",
+        `Pregunta o llamado, grande (tipografía ancha), apoyado abajo: ${q(slide.titulo)}`,
+        `Debajo, en la grotesca, mediano: ${q(slide.cta)}`,
+        ...(slide.enlace ? [`Enlace en monoespaciada (minúsculas): ${q(slide.enlace)}`] : []),
+        "Recurso gráfico: un arco de anillo con textura de piedra que asoma desde abajo, muy tenue (15 %).",
+        enfasis([slide.titulo, slide.cta]),
+      ];
     case "tarjeta":
-      return ["TIPO: tarjeta de opinión.", ...kicker, `La frase, enorme, alineada a la izquierda: ${q(slide.texto)}`, `Abajo, en monoespaciada chica: "Mario Morera · mmorera.agency"`, enfasis([slide.texto])];
+      return ["TIPO: tarjeta de opinión.", ...kicker, `La frase, enorme (tipografía ancha), alineada a la izquierda y apoyada abajo: ${q(slide.texto)}`, arco, enfasis([slide.texto])];
     case "encuesta":
       return [
         "TIPO: encuesta.",
         `Rótulo arriba a la izquierda: "ENCUESTA"`,
-        `Pregunta, enorme: ${q(slide.pregunta)}`,
-        "Opciones, cada una en un recuadro de línea fina con su letra en monoespaciada:",
+        `Pregunta, enorme (tipografía ancha): ${q(slide.pregunta)}`,
+        "Opciones en la grotesca, cada una en un recuadro de línea finísima con su letra en monoespaciada:",
         ...slide.opciones.map((option, index) => `  ${"ABCD"[index]} — ${q(option)}`),
         ...(formato === "reel" ? ["Dejá libre el tercio inferior (ahí va el sticker de encuesta de Instagram)."] : []),
       ];
@@ -113,8 +183,8 @@ function cuerpo(slide: Diapositiva, n: number, pieza: Pieza, formato: Formato): 
       return [
         "TIPO: sorteo.",
         `Rótulo arriba a la izquierda: "SORTEO"`,
-        `Premio, enorme: ${q(slide.premio)}`,
-        "Pasos numerados:",
+        `Premio, enorme (tipografía ancha): ${q(slide.premio)}`,
+        "Pasos numerados, en la grotesca:",
         ...slide.pasos.map((paso, index) => `  ${two(index + 1)} — ${q(paso)}`),
         `Fecha de cierre, en monoespaciada: ${q(slide.cierre)}`,
         `Bases, en monoespaciada chica (minúsculas): ${q(slide.bases)}`,
@@ -122,71 +192,129 @@ function cuerpo(slide: Diapositiva, n: number, pieza: Pieza, formato: Formato): 
   }
 }
 
-function pedidos(pieza: Pieza, salida: Salida) {
+function pedidosEntera(pieza: Pieza, salida: Salida) {
   const slides = diapositivasDe(salida);
-  const formato: Formato = salida.plantilla === "carrusel" || salida.plantilla === "desafio" || salida.plantilla === "imagen" ? salida.formato : "feed";
+  const formato = formatoDe(salida);
   const tono = ("tono" in salida && salida.tono) || "oscuro";
   const files = archivosChatGPT(salida);
   return slides.map((slide, index) => {
     const n = index + 1;
-    const fondo = slides.length > 1 ? tonoDeDiapositiva(slide, index, tono) : slide.tipo === "cierre" ? invert(tono) : tono;
+    const fondo = slides.length > 1 ? tonoDeDiapositiva(slide, index, tono) : tono;
     const pie =
       slides.length > 1
-        ? `PIE: contador "${two(n)} / ${two(slides.length)}" abajo a la izquierda · "mmorera.agency" abajo a la derecha · línea fina de borde a borde cerca del pie, con un punto sólido al ${Math.round(((n - 0.5) / slides.length) * 100)} % del ancho.`
+        ? `PIE: contador "${two(n)} / ${two(slides.length)}" abajo a la izquierda · "mmorera.agency" abajo a la derecha (monoespaciada chica) · una línea finísima de borde a borde cerca del pie, con un punto sólido al ${Math.round(((n - 0.5) / slides.length) * 100)} % del ancho.`
         : `PIE: "mmorera.agency" abajo a la derecha, en monoespaciada chica.`;
     const lines = [
       `DIAPOSITIVA ${n} DE ${slides.length} · formato ${FORMATO[formato]} · ${FONDO[fondo]}`,
       ...cuerpo(slide, n, pieza, formato).filter(Boolean),
       pie,
-      `Texto exacto: copiá letra por letra lo que está entre comillas.`,
+      `Texto exacto: copiá letra por letra lo que está entre comillas. No agregues ningún otro texto.`,
     ];
     return { n, file: files[index], text: lines.join("\n") };
   });
 }
 
+/** Pedido autocontenido: el sistema del bloque y, abajo, lo propio de esta imagen. Sirve para ChatGPT y para Codex (~/bin/imagen). */
+const autocontenido = (sistema: string, pedido: string) => `${sistema}\n\n=== ESTA IMAGEN ===\n${pedido}`;
+
+type PedidoJson = { archivo: string; formato: Formato; ancho: number; alto: number; prompt: string };
+
 function escribir(id: string) {
   const pieza = leerPieza(id);
   const salidas = pieza.salidas.filter(usaChatGPT);
-  if (!salidas.length) return false;
+  const slots = pieza.imagenes ?? [];
+  if (!salidas.length && !slots.length) return false;
+  const usos = usosDeSlots(pieza);
+  const refs = referencias();
+  const carpeta = carpetaDe(id);
+  const refsLinea = refs.length
+    ? `Si la herramienta acepta imágenes (ChatGPT), adjuntá las referencias de \`${path.join(CONTENIDO, "marca", "referencias")}\` (${refs.map((file) => `\`${file}\``).join(", ")}) y decí: "Estas son piezas aprobadas de la marca: copiá su clima, su materia y su tipografía, no su texto."`
+    : "Todavía no hay referencias aprobadas en `contenido/marca/referencias/`: alcanza con el pedido.";
+  const sistemaArte = slots.length ? bloque("imagenes-chatgpt.md", "ARTE") : "";
+  const sistemaEntera = salidas.length ? bloque("chatgpt-diseno.md", "SISTEMA") : "";
+  // Lo mismo, para máquinas: guionista y Codex leen pedidos.json (un prompt completo por archivo).
+  const json: { pieza: string; arte: Array<PedidoJson & { slot: string }>; entera: Array<PedidoJson & { salida: string; n: number; cierre: boolean }> } = { pieza: id, arte: [], entera: [] };
+
   const out: string[] = [
-    `# ChatGPT · ${pieza.titulo}`,
+    `# Pedidos de imagen · ${pieza.titulo}`,
     "",
-    `Pieza \`${id}\`. Archivo generado con \`npx tsx scripts/chatgpt-prompts.ts ${id}\`: no lo edites a mano.`,
+    `Pieza \`${id}\`. Archivo generado con \`npx tsx scripts/chatgpt-prompts.ts ${id}\`: no lo edites a mano. Lo mismo, para máquinas, en \`pedidos.json\`.`,
+    `Carpeta de la pieza: \`${carpeta}\``,
     "",
-    "## Cómo usarlo (agente del navegador)",
+    "Dos bloques, en este orden: primero **ARTE** (versión A: imágenes sin letras; el texto lo pone el código) y después **ENTERA** (versión B: la diapositiva completa con su texto). Mario elige una de las dos.",
     "",
-    "1. Por cada salida de abajo, abrí una **conversación nueva** en ChatGPT.",
-    "2. Pegá el **sistema de diseño**, una vez por conversación.",
-    "3. Pegá los pedidos **de a uno y en orden**. Después de cada imagen, pasá el control de calidad.",
-    '4. Si una diapositiva falla, pedí: "Regenerá la diapositiva N corrigiendo: …" con el problema concreto. Hacé hasta 5 intentos por diapositiva.',
-    "5. Descargá las imágenes aprobadas **en orden** (01, 02, …).",
-    "6. Al terminar cada salida, importalas a la pieza (recorta a la medida exacta y las nombra):",
-    "   ```bash",
-    `   npx tsx scripts/contenido.ts importar ${id} <salida>`,
-    "   ```",
+    "## Cómo usarlo",
     "",
-    "## Sistema de diseño (pegar primero)",
+    "**Cada pedido es autocontenido:** trae el sistema de la marca y lo propio de esa imagen. Se pega entero, de a uno, sin depender de una conversación previa.",
     "",
-    "```text",
-    sistema(),
-    "```",
+    "- **Con Codex** (por defecto): `~/bin/imagen \"<pedido entero>\" <carpeta de la pieza>/<archivo>`.",
+    `- **Con ChatGPT en el navegador** (en pausa, D-016): conversación nueva por bloque. ${refsLinea}`,
+    "- Si una imagen falla el control de calidad, se pide de nuevo con el pedido entero más «Corrección: <problema concreto>». Hasta 5 intentos.",
+    "- Después, desde `web/`, los comandos de cada bloque las dejan a la medida exacta.",
+    "",
+    "## ARTE · versión A",
+    "",
   ];
-  for (const salida of salidas) {
-    const list = pedidos(pieza, salida);
-    out.push("", `## Salida \`${salida.id}\` · ${list.length} diapositiva(s) · para ${salida.para.join(", ")}`, "");
-    for (const item of list) out.push(`### ${item.n}. → \`imagenes/${item.file}\``, "", "```text", item.text, "```", "");
+
+  if (!slots.length) out.push("Esta pieza no pide arte: la versión A sale solo con código. Seguí con ENTERA.", "");
+  else {
+    for (const slot of slots) {
+      const listo = imagenDe(id, slot.slot) ? " · ✔ ya está" : "";
+      const prompt = autocontenido(sistemaArte, pedidoArte(pieza, slot, usos.get(slot.slot) ?? []));
+      const { width, height } = SOCIAL_FORMATS[slot.formato];
+      json.arte.push({ slot: slot.slot, archivo: `imagenes/${slot.slot}.png`, formato: slot.formato, ancho: width, alto: height, prompt });
+      out.push(`### Slot \`${slot.slot}\` → \`imagenes/${slot.slot}.png\`${listo}`, "", "```text", prompt, "```", "", "Para dejarla a la medida (si no la guardaste ya con ese nombre y medida):", "", "```bash", `npx tsx scripts/contenido.ts arte ${id} ${slot.slot} <archivo>`, "```", "");
+    }
+    out.push(
+      "### Control de calidad (cada arte)",
+      "",
+      "- [ ] **Ninguna letra**: ni texto, ni números, ni carteles, ni pantallas con contenido, aunque sean ilegibles.",
+      "- [ ] La franja de abajo que pide el pedido está vacía y en calma (pared lisa): ahí va el texto.",
+      "- [ ] Solo pared, marfil y grises cálidos: ningún color.",
+      "- [ ] Sin logos, sin caras, sin manos deformes, sin objetos imposibles.",
+      "- [ ] Parece de la misma pared que las referencias: mate, con grano, luz rasante.",
+      "",
+    );
+  }
+
+  out.push("## ENTERA · versión B", "");
+  if (!salidas.length) out.push("Esta pieza no tiene salidas estáticas (son reels): la versión B no aplica.", "");
+  else {
+    for (const salida of salidas) {
+      const list = pedidosEntera(pieza, salida);
+      const formato = formatoDe(salida);
+      const { width, height } = SOCIAL_FORMATS[formato];
+      const slides = diapositivasDe(salida);
+      out.push(`### Salida \`${salida.id}\` · ${list.length} diapositiva(s) · para ${salida.para.join(", ")}`, "");
+      for (const item of list) {
+        const prompt = autocontenido(sistemaEntera, item.text);
+        json.entera.push({ salida: salida.id, n: item.n, archivo: `imagenes/${item.file}`, formato, ancho: width, alto: height, prompt, cierre: slides[item.n - 1]?.tipo === "cierre" });
+        out.push(`#### ${item.n}. → \`imagenes/${item.file}\``, "", "```text", prompt, "```", "");
+      }
+      out.push(
+        "Al terminar la salida:",
+        "",
+        "```bash",
+        `npx tsx scripts/contenido.ts importar ${id} ${salida.id}   # si vienen de Descargas: recorta, numera y firma el cierre`,
+        `npx tsx scripts/contenido.ts firmar ${id} ${salida.id}     # si ya están en imagenes/ (Codex): recorta y firma el cierre`,
+        "```",
+        "",
+      );
+    }
     out.push(
       "### Control de calidad (cada diapositiva)",
       "",
       "- [ ] El texto es exactamente el pedido: tildes, ¿ ¡, puntuación. Ni una palabra de más o de menos.",
-      "- [ ] El fondo es el pedido (negro o marfil) y no hay ningún color.",
-      "- [ ] El título se lee fácil en el teléfono; nada pegado al borde ni cortado.",
-      "- [ ] Contador, mmorera.agency y la línea con su punto están en su lugar (si es un carrusel).",
+      "- [ ] El fondo es el pedido (pared o marfil), con grano, y no hay ningún color.",
+      "- [ ] Títulos en la tipografía ancha; el título se lee fácil en el teléfono; nada pegado al borde ni cortado.",
+      "- [ ] Contador, mmorera.agency y la línea con su punto en su lugar (si es un carrusel).",
+      "- [ ] En el cierre, el rincón de arriba a la izquierda está vacío y no hay ningún logo dibujado.",
       "- [ ] Sin logos, sin interfaces inventadas, sin caras, sin manos deformes y sin texto ilegible.",
-      "- [ ] Parece de la misma serie que la diapositiva anterior.",
+      "- [ ] Parece de la misma serie que la diapositiva anterior y que las referencias.",
     );
   }
-  writeFileSync(path.join(carpetaDe(id), "chatgpt.md"), `${out.join("\n")}\n`);
+  writeFileSync(path.join(carpeta, "chatgpt.md"), `${out.join("\n")}\n`);
+  writeFileSync(path.join(carpeta, "pedidos.json"), `${JSON.stringify(json, null, 2)}\n`);
   return true;
 }
 
@@ -194,11 +322,14 @@ const pendientes = process.argv.includes("--pendientes");
 const ids = pendientes
   ? listarPiezas().filter((id) => {
       const pieza = leerPieza(id);
-      return pieza.estado !== "idea" && pieza.estado !== "publicado" && pieza.salidas.some((salida) => archivosChatGPT(salida).some((file) => !existsSync(path.join(carpetaDe(id), "imagenes", file))));
+      if (pieza.estado === "idea" || pieza.estado === "publicado") return false;
+      const faltaArte = (pieza.imagenes ?? []).some((slot) => !imagenDe(id, slot.slot));
+      const faltaEntera = pieza.salidas.some((salida) => archivosChatGPT(salida).some((file) => !existsSync(path.join(carpetaDe(id), "imagenes", file))));
+      return faltaArte || faltaEntera;
     })
   : process.argv.slice(2).filter((arg) => !arg.startsWith("--"));
 if (!ids.length) {
-  console.log(pendientes ? "No hay piezas con diapositivas de ChatGPT pendientes." : "Uso: npx tsx scripts/chatgpt-prompts.ts <id…> | --pendientes");
+  console.log(pendientes ? "No hay piezas con imágenes de ChatGPT pendientes." : "Uso: npx tsx scripts/chatgpt-prompts.ts <id…> | --pendientes");
   process.exit(0);
 }
-for (const id of ids) console.log(escribir(id) ? `✔ ${path.join(carpetaDe(id), "chatgpt.md")}` : `· ${id}: no tiene salidas estáticas para ChatGPT`);
+for (const id of ids) console.log(escribir(id) ? `✔ ${path.join(carpetaDe(id), "chatgpt.md")}` : `· ${id}: no tiene arte ni salidas estáticas para ChatGPT`);

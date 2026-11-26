@@ -5,10 +5,10 @@ import { tokens } from "@/components/social/SocialKit";
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { CONTENIDO, entornoDe, listarPiezas, revisarPieza } from "../../../scripts/lib/piezas";
-import { reelBeatLayout, reelCasoLayout, reelFirmaLayout, slideLayout } from "./layout";
-import { archivosEsperados } from "./render";
+import { FRANJA_TEXTO, reelBeatLayout, reelCasoLayout, reelFirmaLayout, slideLayout } from "./layout";
+import { archivosDeVersion, archivosEsperados } from "./render";
 import { desafioDiapositivas, reelTextoBeats, videoSeconds } from "./timing";
-import type { Diapositiva, Formato, Pieza } from "./types";
+import { SOCIAL_FORMATS, type Diapositiva, type Formato, type Pieza } from "./types";
 import { validarPieza, type Entorno } from "./validate";
 
 const FORMATOS: Formato[] = ["reel", "feed", "cuadrado"];
@@ -126,4 +126,50 @@ test("piezas de redes: las plantillas de contenido/plantillas son ejemplos váli
     const errores = validarPieza(pieza, { ...ENTORNO_OK, carpeta: pieza.id }).filter((p) => p.nivel === "error" && p.donde !== "salida" && !p.donde.startsWith("imagenes."));
     assert.deepEqual(errores, [], `${file}: ${errores.map((p) => `${p.donde}: ${p.mensaje}`).join(" · ")}`);
   }
+});
+
+test("piezas de redes: arte de fondo (versión A)", async (t) => {
+  const conFondo = (slide: Diapositiva, formato: "feed" | "cuadrado" = "cuadrado"): Pieza => ({
+    ...PIEZA_OK,
+    imagenes: [{ slot: "llave", formato, prompt: "Una llave colgada de un clavo, arriba a la derecha." }],
+    salidas: [{ id: "tarjeta", plantilla: "imagen", formato, para: ["linkedin"], diapositiva: slide }],
+  });
+  const errores = (pieza: Pieza, entorno: Entorno = ENTORNO_OK) => validarPieza(pieza, entorno).filter((p) => p.nivel === "error");
+  await t.test("un fondo declarado y del mismo formato valida", () => {
+    assert.deepEqual(errores(conFondo({ tipo: "tarjeta", texto: "Un agente sin tests es un *pasante* con acceso a producción.", fondo: "llave" })), []);
+  });
+  await t.test("rechaza un fondo sin declarar, de otro formato o en un tipo que no lo admite", () => {
+    assert.ok(errores(conFondo({ tipo: "tarjeta", texto: "Hola.", fondo: "otra" })).some((p) => p.mensaje.includes("no está declarado")));
+    const otroFormato = conFondo({ tipo: "tarjeta", texto: "Hola.", fondo: "llave" });
+    otroFormato.imagenes = [{ slot: "llave", formato: "feed", prompt: "Una llave." }];
+    assert.ok(errores(otroFormato).some((p) => p.mensaje.includes("mismo formato")));
+    const enTexto = conFondo({ tipo: "texto", titulo: "T", cuerpo: "C", fondo: "llave" } as unknown as Diapositiva);
+    assert.ok(errores(enTexto).some((p) => p.mensaje.includes("solo va en")));
+  });
+  await t.test("si falta el arte de una pieza lista, avisa (la versión A sale solo con código)", () => {
+    const lista = { ...conFondo({ tipo: "tarjeta", texto: "Hola.", fondo: "llave" }), estado: "listo" as const };
+    const problemas = validarPieza(lista, { ...ENTORNO_OK, salida: ["tarjeta.png"] });
+    assert.deepEqual(problemas.filter((p) => p.nivel === "error"), []);
+    assert.ok(problemas.some((p) => p.nivel === "aviso" && p.donde === "imagenes.llave"));
+  });
+  await t.test("con fondo, el texto queda en su franja de abajo", () => {
+    const casos: Array<[Formato, Diapositiva]> = [
+      ["cuadrado", { tipo: "tarjeta", kicker: "Criterio", texto: "Dejá de pedir *una web*. Pedí un sistema que conteste a las 23:45.", fondo: "a" }],
+      ["feed", { tipo: "portada", kicker: "Así funciona", titulo: "Qué pasa con un lead que llega a las *23:45*", bajada: "El mismo formulario, con y sin sistema.", fondo: "a" }],
+      ["feed", { tipo: "cita", cita: "Un agente sin tests es un pasante con acceso a producción.", autor: "Mario Morera", fondo: "a" }],
+      ["feed", { tipo: "cierre", titulo: "¿Tu formulario contesta de noche?", cta: "Guardalo para revisarlo con tu equipo.", enlace: "mmorera.agency/sistemas", fondo: "a" }],
+    ];
+    for (const [formato, slide] of casos) {
+      const layout = slideLayout(formato, slide, { n: 1, total: 5 });
+      assert.deepEqual(layoutProblems(layout.blocks, layout.safe), [], `${formato} ${slide.tipo}`);
+      const franja = FRANJA_TEXTO[slide.tipo as keyof typeof FRANJA_TEXTO];
+      assert.ok(layout.zona && layout.zona.y >= SOCIAL_FORMATS[formato].height * (1 - franja) - 0.5, `${formato} ${slide.tipo}: el texto sube a ${layout.zona?.y}`);
+    }
+  });
+  await t.test("versiones: A sale del render, B de ChatGPT (los videos siempre del código)", () => {
+    const carrusel: Pieza["salidas"][number] = { id: "carrusel", plantilla: "carrusel", formato: "feed", video: true, para: ["instagram"], diapositivas: [{ tipo: "portada", titulo: "Uno" }, { tipo: "texto", titulo: "Dos", cuerpo: "Tres" }, { tipo: "cierre", titulo: "Cuatro", cta: "Cinco" }] };
+    assert.deepEqual(archivosDeVersion(carrusel, "a"), ["salida/carrusel-01.png", "salida/carrusel-02.png", "salida/carrusel-03.png", "salida/carrusel.mp4"]);
+    assert.deepEqual(archivosDeVersion(carrusel, "b"), ["imagenes/gpt-carrusel-01.png", "imagenes/gpt-carrusel-02.png", "imagenes/gpt-carrusel-03.png", "salida/carrusel.mp4"]);
+    assert.deepEqual(archivosDeVersion(PIEZA_OK.salidas[1], "b"), ["salida/reel.mp4"], "el reel no lleva su portada en el paquete");
+  });
 });

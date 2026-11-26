@@ -5,7 +5,7 @@ import { PROJECT_CASES } from "@/data/projectCases";
 import { plain, reelBeatLayout, reelCasoLayout, reelFirmaLayout, slideLayout, type ImageSizes } from "./layout";
 import { archivosChatGPT, archivosEsperados } from "./render";
 import { diapositivasDe, reelCasoBeats, reelTextoBeats, videoSeconds } from "./timing";
-import { DURACION_MAXIMA, ESTADOS, PLATAFORMAS, RAMAS, SOCIAL_FORMATS, type Diapositiva, type Estado, type Pieza, type Plataforma, type Salida } from "./types";
+import { CON_FONDO, DURACION_MAXIMA, ESTADOS, PLATAFORMAS, RAMAS, SOCIAL_FORMATS, type Diapositiva, type Estado, type Pieza, type Plataforma, type Salida } from "./types";
 
 /**
  * Validador de una pieza de redes (node: lo usan check-pieza, contenido.ts y
@@ -46,7 +46,7 @@ const PROHIBIDO = [new RegExp("Uru" + "guay", "i"), /FENIX OS/i];
 /** Palabras muy comunes en inglés: si aparecen varias, la pieza no está en español. */
 const INGLES = /\b(the|and|with|your|you|for|this|that|from|what|how)\b/gi;
 
-function textosDeDiapositiva(slide: Diapositiva): string[] {
+export function textosDeDiapositiva(slide: Diapositiva): string[] {
   switch (slide.tipo) {
     case "portada":
       return [slide.kicker, slide.titulo, slide.bajada].filter(Boolean) as string[];
@@ -103,8 +103,9 @@ export function validarPieza(raw: unknown, entorno: Entorno): Problema[] {
   // 2. Fuente.
   if (pieza.fuente?.tipo === "caso" && !PROJECT_CASES.some((item) => item.slug === pieza.fuente?.slug)) error("fuente", `el caso "${pieza.fuente?.slug}" no existe en el sitio`);
 
-  // 3. Imágenes declaradas y su medida.
+  // 3. Imágenes declaradas y su medida. Un arte que solo va de fondo puede faltar: la versión A sale solo con código.
   const slots = new Map((pieza.imagenes ?? []).map((slot) => [slot.slot, slot]));
+  const enPlaca = new Set(pieza.salidas.flatMap((salida) => diapositivasDe(salida).flatMap((slide) => (slide.tipo === "imagen" ? [slide.imagen] : []))));
   const sizes: ImageSizes = {};
   for (const slot of pieza.imagenes ?? []) {
     if (!isText(slot.prompt)) error(`imagenes.${slot.slot}`, "falta el prompt");
@@ -114,7 +115,8 @@ export function validarPieza(raw: unknown, entorno: Entorno): Problema[] {
       sizes[slot.slot] = have;
       const ratio = have.w / have.h / (want.width / want.height);
       if (Math.abs(ratio - 1) > 0.03) error(`imagenes.${slot.slot}`, `mide ${have.w}×${have.h}; el formato ${slot.formato} pide ${want.width}×${want.height} (misma proporción)`);
-    } else if (estadoIndex >= LISTO) error(`imagenes.${slot.slot}`, "falta la imagen (imagenes/<slot>.png)");
+    } else if (estadoIndex >= LISTO && enPlaca.has(slot.slot)) error(`imagenes.${slot.slot}`, "falta la imagen (imagenes/<slot>.png)");
+    else if (estadoIndex >= LISTO) aviso(`imagenes.${slot.slot}`, "sin arte de fondo: la versión A sale solo con código");
     else aviso(`imagenes.${slot.slot}`, "imagen pendiente: la genera el agente con ChatGPT");
   }
 
@@ -156,6 +158,15 @@ export function validarPieza(raw: unknown, entorno: Entorno): Problema[] {
     const formato = salida.plantilla === "carrusel" || salida.plantilla === "desafio" || salida.plantilla === "imagen" ? salida.formato : "reel";
     slides.forEach((slide, index) => {
       if (slide.tipo === "imagen" && !slots.has(slide.imagen)) error(`${donde}.${index + 1}`, `la imagen "${slide.imagen}" no está declarada en "imagenes"`);
+      // Arte de fondo (versión A): un slot declarado, con la proporción de la salida.
+      const fondo = (slide as { fondo?: unknown }).fondo;
+      if (fondo !== undefined) {
+        const aqui = `${donde}.${index + 1}`;
+        if (!CON_FONDO.includes(slide.tipo)) error(aqui, `"fondo" solo va en ${CON_FONDO.join(", ")} (esta es ${slide.tipo})`);
+        else if (!isText(fondo)) error(aqui, `"fondo" tiene que ser el nombre de un slot de "imagenes"`);
+        else if (!slots.has(fondo as string)) error(aqui, `el fondo "${fondo}" no está declarado en "imagenes"`);
+        else if (slots.get(fondo as string)!.formato !== formato) error(aqui, `el fondo "${fondo}" es ${slots.get(fondo as string)!.formato} y la salida es ${formato}: tienen que ser del mismo formato`);
+      }
       if (slide.tipo === "encuesta") {
         if (slide.opciones.length < 2 || slide.opciones.length > 4) error(`${donde}.${index + 1}`, "una encuesta lleva de 2 a 4 opciones");
         for (const option of slide.opciones) if (option.length > 25) error(`${donde}.${index + 1}`, `"${option}" pasa los 25 caracteres (límite de las encuestas nativas)`);

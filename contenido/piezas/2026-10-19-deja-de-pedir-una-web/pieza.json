@@ -18,7 +18,8 @@
       "diapositiva": {
         "tipo": "tarjeta",
         "kicker": "Criterio",
-        "texto": "Dejá de pedir *una web*. Pedí un sistema que conteste a las 23:45."
+        "texto": "Dejá de pedir *una web*. Pedí un sistema que conteste a las 23:45.",
+        "fondo": "telefono"
       }
     },
     {
@@ -54,6 +55,13 @@
       "estado": "listo",
       "quien": "Claude",
       "nota": "Render revisado"
+    }
+  ],
+  "imagenes": [
+    {
+      "slot": "telefono",
+      "formato": "cuadrado",
+      "prompt": "Un teléfono apagado apoyado sobre una mesa de piedra oscura, en el tercio de arriba a la derecha, con un reflejo tenue de luz sobre el vidrio."
     }
   ]
 }

@@ -10,7 +10,7 @@ export type Rama = "casos" | "criterio" | "sistemas" | "oficio" | "comunidad";
 export type Estado = "idea" | "borrador" | "listo" | "aprobado" | "publicado";
 export type Plataforma = "linkedin" | "instagram" | "tiktok" | "shorts" | "x";
 export type Formato = "reel" | "feed" | "cuadrado";
-/** Blanco y negro: fondo negro con texto marfil, o al revés. */
+/** Pared y marfil: fondo pared (#0B0B0A) con texto marfil (#ECE7DD), o al revés. */
 export type Tono = "oscuro" | "claro";
 
 export const RAMAS: Rama[] = ["casos", "criterio", "sistemas", "oficio", "comunidad"];
@@ -45,19 +45,31 @@ export const DURACION_MAXIMA: Record<Plataforma, number> = {
   x: 140,
 };
 
+/**
+ * `fondo` (portada, tarjeta, cita y cierre) nombra un slot de `Pieza.imagenes`:
+ * arte sin letras de ChatGPT (versión A) que va de fondo a sangre, con velo y
+ * grano compartido para que el texto quede integrado. El arte se guarda en
+ * imagenes/<slot>.png y deja libre la zona donde va el texto.
+ */
 export type Diapositiva =
-  | { tipo: "portada"; kicker?: string; titulo: string; bajada?: string }
+  | { tipo: "portada"; kicker?: string; titulo: string; bajada?: string; fondo?: string }
   | { tipo: "texto"; kicker?: string; titulo: string; cuerpo: string }
   | { tipo: "lista"; kicker?: string; titulo: string; items: string[] }
-  | { tipo: "cita"; kicker?: string; cita: string; autor?: string }
+  | { tipo: "cita"; kicker?: string; cita: string; autor?: string; fondo?: string }
   | { tipo: "comparacion"; kicker?: string; titulo?: string; antes: { rotulo: string; texto: string }; despues: { rotulo: string; texto: string } }
   | { tipo: "imagen"; kicker?: string; imagen: string; titulo?: string; pie?: string }
-  | { tipo: "cierre"; titulo: string; cta: string; enlace?: string }
-  | { tipo: "tarjeta"; kicker?: string; texto: string }
+  | { tipo: "cierre"; titulo: string; cta: string; enlace?: string; fondo?: string }
+  | { tipo: "tarjeta"; kicker?: string; texto: string; fondo?: string }
   | { tipo: "encuesta"; pregunta: string; opciones: string[] }
   | { tipo: "sorteo"; premio: string; pasos: string[]; cierre: string; bases: string };
 
 export type TipoDiapositiva = Diapositiva["tipo"];
+
+/** Tipos de diapositiva que aceptan un arte de fondo. */
+export const CON_FONDO: TipoDiapositiva[] = ["portada", "tarjeta", "cita", "cierre"];
+
+/** Slot del arte de fondo de una diapositiva, si lo tiene. */
+export const fondoDe = (slide: Diapositiva): string | undefined => ("fondo" in slide && slide.fondo ? slide.fondo : undefined);
 
 /** Un pulso del reel de texto: una idea por pantalla. `*palabra*` se resalta. */
 export type Pulso = { texto: string; kicker?: string };
