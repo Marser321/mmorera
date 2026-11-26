@@ -1,0 +1,76 @@
+{
+  "id": "2026-12-02-feed-04-clinicas",
+  "fecha": "2026-12-02",
+  "rama": "casos",
+  "serie": "Feed de 9",
+  "titulo": "Feed de 9 · 04 · Clínicas: un presupuesto que el paciente entiende",
+  "estado": "borrador",
+  "fuente": {
+    "tipo": "sitio",
+    "nota": "Demo de clínicas del sitio (/demos), con una clínica dental de ejemplo. Borrador del feed de 9 (contenido/series/feed-9.json). La fecha es provisoria: se ajusta al calendario."
+  },
+  "ejemplo": true,
+  "salidas": [
+    {
+      "id": "carrusel",
+      "plantilla": "carrusel",
+      "formato": "feed",
+      "para": [
+        "instagram",
+        "linkedin"
+      ],
+      "diapositivas": [
+        {
+          "tipo": "portada",
+          "kicker": "04",
+          "titulo": "Clínicas",
+          "mosaico": {
+            "celda": 4
+          }
+        },
+        {
+          "tipo": "texto",
+          "kicker": "El día",
+          "titulo": "De la recepción al *sillón*",
+          "cuerpo": "Agenda, pacientes, planes de tratamiento, presupuestos y caja en un mismo lugar, con las palabras de una clínica."
+        },
+        {
+          "tipo": "lista",
+          "kicker": "Lo que ordena",
+          "titulo": "Un plan que se entiende",
+          "items": [
+            "El tratamiento, pieza por pieza, en 3D.",
+            "El presupuesto, con lo que falta cobrar.",
+            "Una página para que el paciente lo vea.",
+            "La agenda, con quién atiende a cada uno."
+          ]
+        },
+        {
+          "tipo": "comparacion",
+          "kicker": "El presupuesto",
+          "titulo": "Dos maneras de explicarlo",
+          "antes": {
+            "rotulo": "En papel",
+            "texto": "Se explica una vez y se pierde."
+          },
+          "despues": {
+            "rotulo": "En el sistema",
+            "texto": "El paciente lo vuelve a ver cuando quiere (clínica de ejemplo)."
+          }
+        },
+        {
+          "tipo": "texto",
+          "kicker": "Lo que no guarda",
+          "titulo": "Una demo sin datos de salud",
+          "cuerpo": "La demostración usa una clínica de ejemplo. No guarda historias clínicas ni datos reales de pacientes."
+        },
+        {
+          "tipo": "cierre",
+          "titulo": "¿Tu paciente entiende su presupuesto?",
+          "cta": "Probá la demo con una clínica de ejemplo.",
+          "enlace": "mmorera.agency/demos"
+        }
+      ]
+    }
+  ]
+}

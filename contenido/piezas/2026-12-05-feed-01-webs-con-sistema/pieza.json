@@ -1,0 +1,76 @@
+{
+  "id": "2026-12-05-feed-01-webs-con-sistema",
+  "fecha": "2026-12-05",
+  "rama": "criterio",
+  "serie": "Feed de 9",
+  "titulo": "Feed de 9 · 01 · Webs con sistema: qué pasa después del formulario",
+  "estado": "borrador",
+  "fuente": {
+    "tipo": "experiencia",
+    "nota": "Postura de Mario sobre pedir una web sin pensar el sistema. Borrador del feed de 9 (contenido/series/feed-9.json). La fecha es provisoria: se ajusta al calendario."
+  },
+  "postura": true,
+  "salidas": [
+    {
+      "id": "carrusel",
+      "plantilla": "carrusel",
+      "formato": "feed",
+      "para": [
+        "instagram",
+        "linkedin"
+      ],
+      "diapositivas": [
+        {
+          "tipo": "portada",
+          "kicker": "01",
+          "titulo": "Webs con sistema",
+          "mosaico": {
+            "celda": 1
+          }
+        },
+        {
+          "tipo": "texto",
+          "kicker": "La idea",
+          "titulo": "Una web se mira. Un sistema *trabaja*.",
+          "cuerpo": "La web es la parte que se ve. Lo que mueve el negocio está detrás: la agenda, el CRM, la respuesta y la tarea del día siguiente."
+        },
+        {
+          "tipo": "lista",
+          "kicker": "Lo que viene con la web",
+          "titulo": "Detrás de cada pantalla",
+          "items": [
+            "Un formulario que crea el contacto en el CRM.",
+            "Una agenda que muestra horarios de verdad.",
+            "Un aviso al equipo cuando entra algo.",
+            "Un panel para ver qué pasó."
+          ]
+        },
+        {
+          "tipo": "comparacion",
+          "kicker": "Dos pedidos",
+          "titulo": "Qué se pide",
+          "antes": {
+            "rotulo": "Una web",
+            "texto": "Linda, rápida y con formulario."
+          },
+          "despues": {
+            "rotulo": "Una web con sistema",
+            "texto": "Lo mismo, y además sabe qué hacer con cada consulta."
+          }
+        },
+        {
+          "tipo": "cita",
+          "kicker": "Mi criterio",
+          "cita": "Antes de diseñar la primera pantalla, definí qué pasa *después* del formulario.",
+          "autor": "Mario Morera"
+        },
+        {
+          "tipo": "cierre",
+          "titulo": "¿Qué pasa después de tu formulario?",
+          "cta": "Contame en los comentarios.",
+          "enlace": "mmorera.agency/sistemas"
+        }
+      ]
+    }
+  ]
+}
