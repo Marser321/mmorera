@@ -1,9 +1,10 @@
 # Referencias de la marca
 
-Las piezas que Mario aprobó como «así se ve la marca» (juego de referencia «Pared y piedra», aprobado el 26/11, central #25). Con ChatGPT se **adjuntan en cada conversación** (arte y diapositivas enteras) para que copie el clima, la materia y la tipografía, no el texto. `chatgpt-prompts.ts` lista lo que haya acá.
+Las piezas que Mario aprobó como «así se ve la marca» (juego de referencia «Pared y piedra», aprobado el 26/11, central #25). Son los archivos del proyecto de ChatGPT «mmorera · piezas» (`../chatgpt-proyecto.md`). Si se usa ChatGPT fuera de ese proyecto, se **adjuntan en cada conversación** (arte y diapositivas enteras) para que copie el clima, la materia y la tipografía, no el texto. `chatgpt-prompts.ts` lista lo que haya acá.
 
 | Archivo | Qué muestra |
 |---|---|
+| `00-tipografias.jpg` | Muestra de las tres tipografías y los dos colores (no es una pieza) |
 | `01-tarjeta-con-arte-llave.jpg` | Versión A: arte sin letras arriba, texto en la franja de abajo |
 | `02-tarjeta-con-arte-telefono.jpg` | Versión A: el énfasis en barra marfil sobre arte |
 | `03-portada-con-arte.jpg` | Portada de carrusel con arte, «DESLIZÁ» y el hilo |

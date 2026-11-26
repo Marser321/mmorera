@@ -15,7 +15,7 @@ Antes de empezar, leé `../marca/identidad.md`, `../marca/imagenes-chatgpt.md` y
 
 Decisión de Mario del 26/11: el arte y las diapositivas salen de **ChatGPT en el navegador**, que rinde más y no gasta el cupo de Codex. Para no romper los términos de OpenAI, **lo maneja Mario, no un agente**:
 
-1. **Primer mensaje de cada conversación:** el sistema de la marca, `sistema_arte` o `sistema_entera` de `piezas/<id>/pedidos.json`. Si hay referencias en `contenido/marca/referencias/`, Mario las adjunta.
+1. **Chat nuevo dentro del proyecto «mmorera · piezas»** de ChatGPT (`../marca/chatgpt-proyecto.md`): ya trae las instrucciones de la marca y las referencias, así que no hace falta pegar el sistema. Fuera del proyecto, el primer mensaje es `sistema_arte` o `sistema_entera` de `piezas/<id>/pedidos.json`, con las referencias adjuntas.
 2. **Uno por imagen, en orden:** el `pedido` corto. Todos entran en un mensaje de Telegram.
 3. **Mario devuelve la imagen a la Mac**, que la guarda con:
    - `contenido.ts arte <id> <slot> <archivo>` (versión A);
