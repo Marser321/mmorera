@@ -1,0 +1,75 @@
+{
+  "id": "2026-11-27-feed-09-ia-aplicada",
+  "fecha": "2026-11-27",
+  "rama": "criterio",
+  "serie": "Feed de 9",
+  "titulo": "Feed de 9 · 09 · IA aplicada: la IA propone, vos aprobás",
+  "estado": "borrador",
+  "fuente": {
+    "tipo": "experiencia",
+    "nota": "Postura de Mario sobre la IA dentro de un sistema, con control humano. Borrador del feed de 9 (contenido/series/feed-9.json). La fecha es provisoria: se ajusta al calendario."
+  },
+  "postura": true,
+  "salidas": [
+    {
+      "id": "carrusel",
+      "plantilla": "carrusel",
+      "formato": "feed",
+      "para": [
+        "instagram",
+        "linkedin"
+      ],
+      "diapositivas": [
+        {
+          "tipo": "portada",
+          "kicker": "09",
+          "titulo": "IA aplicada",
+          "mosaico": {
+            "celda": 9
+          }
+        },
+        {
+          "tipo": "texto",
+          "kicker": "La idea",
+          "titulo": "La IA propone. *Vos* aprobás.",
+          "cuerpo": "Dentro de un sistema, la IA escribe un borrador: una rutina, una respuesta, un resumen. Una persona lo revisa antes de que salga."
+        },
+        {
+          "tipo": "lista",
+          "kicker": "Dónde sirve",
+          "titulo": "Tareas con principio y fin",
+          "items": [
+            "Un borrador de rutina para que el entrenador ajuste.",
+            "Una respuesta lista para que el equipo apruebe.",
+            "Un resumen de lo que pasó en el día."
+          ]
+        },
+        {
+          "tipo": "comparacion",
+          "kicker": "Dos maneras",
+          "titulo": "La misma IA",
+          "antes": {
+            "rotulo": "Suelta",
+            "texto": "Contesta sola y nadie mira."
+          },
+          "despues": {
+            "rotulo": "Con control",
+            "texto": "Deja el borrador y alguien decide."
+          }
+        },
+        {
+          "tipo": "cita",
+          "kicker": "Mi criterio",
+          "cita": "No elijas la IA más inteligente. Elegí *dónde* la dejás decidir.",
+          "autor": "Mario Morera"
+        },
+        {
+          "tipo": "cierre",
+          "titulo": "¿Qué le dejarías decidir a una IA?",
+          "cta": "Contame en los comentarios.",
+          "enlace": "mmorera.agency/sistemas"
+        }
+      ]
+    }
+  ]
+}

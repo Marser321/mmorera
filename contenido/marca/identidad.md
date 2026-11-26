@@ -1,6 +1,6 @@
 # Identidad visual · «Pared y piedra»
 
-**Una sola identidad: la del sitio.** Las piezas de redes usan lo mismo que mmorera.agency: pared negra mate con grano, marfil gastado, la textura de piedra del monograma y títulos en Unbounded. Sin color de acento. Minimalismo con materia: la fuerza sale de la escala, de la tipografía y de la textura, nunca de un color.
+**Una sola identidad: la del sitio.** Las piezas de redes usan lo mismo que mmorera.agency: pared negra mate con grano, marfil gastado, la textura de piedra del monograma y títulos en Unbounded. El color entra solo como una luz fina. Minimalismo con materia: la fuerza sale de la escala, de la tipografía y de la textura, nunca de un fondo de color.
 
 Decisión de Mario del 2026-11-26 (central #25). Reemplaza la identidad «blanco y negro con energía» de octubre (`#070809`, solo Familjen).
 
@@ -16,10 +16,35 @@ La referencia de cómo tiene que sentirse es `web/public/og/inicio-es.jpg`. Las 
 | Rótulos | marfil al 58 % | pared al 62 % |
 | Líneas | marfil al 16 % | pared al 18 % |
 
-- **Sin color de acento** (decisión de Mario, 2026-10-08, confirmada el 2026-11-26).
+- **El color es una luz, no un fondo** (decisión de Mario del 2026-11-26, por la tarde; reemplaza «sin color de acento» del 2026-10-08). Ver «La luz» abajo.
 - **Casi todo va sobre la pared.** Solo la frase clave de un carrusel (la cita) va sobre marfil, como la banda marfil de cada página del sitio. El cierre vuelve a la pared, donde firma el monograma.
 - **Énfasis:** la palabra queda sobre una barra marfil, con las letras en pared (`*palabra*` en los datos).
 - **Fotos y arte:** pasan a grises y el blanco se lleva a marfil; lo negro queda pared.
+
+## La luz (el único color)
+
+Los tres colores del sitio, y nada más: **violeta `#B68CFF`**, **azul `#55D8FF`** y **verde `#71F3A2`** (crear, construir y escalar en `globals.css`).
+
+- **Un solo color por pieza** (y por carrusel), y solo como luz fina:
+  - un punto encendido delante del rótulo;
+  - un filo finísimo, con halo suave, en el borde del arco de piedra;
+  - el punto del hilo del pie.
+- **Nunca:** letras, títulos o barras de énfasis de color; fondos, bloques o degradés; dos colores en la misma pieza; color sobre la diapositiva marfil (la cita); color en el arte de fondo.
+- **Sin luz pedida, cero color:** la pieza va en pared y marfil.
+- En los datos: `"luz": "violeta" | "azul" | "verde"` en `pieza.json`. Un carrusel que abre con una portada de mosaico toma la luz de su celda.
+- Lámina de referencia: `referencias/11-color-como-luz.jpg`.
+
+Así el feed se ve parejo desde afuera: ninguna pieza «salta» llena de color; el color conecta las piezas como una luz que pasa de una a otra.
+
+## El feed de 9 (mosaico)
+
+Las primeras nueve portadas arman el **monograma de piedra** en la grilla del perfil (`referencias/12-feed-de-9.jpg`). Un filo de luz recorre el anillo y cambia de violeta a azul y a verde; cada portada toma el color de su tramo.
+
+- Cada portada es mínima: número, una a tres palabras y su pedazo de logo. La del centro no lleva texto.
+- Cada una abre un **carrusel propio** que profundiza su tema, sin mostrar marcas de clientes.
+- **Salen siempre del código** (`"mosaico": { "celda": N }` en la portada): tienen que calzar al píxel. ChatGPT diseña solo las diapositivas de adentro.
+- Los temas están en `contenido/series/feed-9.json`. Vista previa: `npx tsx scripts/mosaico.ts feed-9`.
+- **Se publican de la 9 a la 1.** Instagram corre la grilla un lugar por publicación: el logo se ve entero cuando el total de posts es múltiplo de 3. Por eso cada portada también funciona sola.
 
 ## Materia
 

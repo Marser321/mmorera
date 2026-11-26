@@ -50,9 +50,13 @@ export const DURACION_MAXIMA: Record<Plataforma, number> = {
  * arte sin letras de ChatGPT (versión A) que va de fondo a sangre, con velo y
  * grano compartido para que el texto quede integrado. El arte se guarda en
  * imagenes/<slot>.png y deja libre la zona donde va el texto.
+ *
+ * `mosaico` (solo portada, formato feed): la portada es una de las nueve del
+ * feed que arman el monograma (data/social/mosaico.ts). Lleva solo rótulo y
+ * título corto, sale siempre del código y le da su luz al resto del carrusel.
  */
 export type Diapositiva =
-  | { tipo: "portada"; kicker?: string; titulo: string; bajada?: string; fondo?: string }
+  | { tipo: "portada"; kicker?: string; titulo: string; bajada?: string; fondo?: string; mosaico?: { celda: number } }
   | { tipo: "texto"; kicker?: string; titulo: string; cuerpo: string }
   | { tipo: "lista"; kicker?: string; titulo: string; items: string[] }
   | { tipo: "cita"; kicker?: string; cita: string; autor?: string; fondo?: string }
@@ -107,6 +111,14 @@ export type Plantilla = Salida["plantilla"];
 
 export type ImagenSlot = { slot: string; formato: Formato; prompt: string };
 
+/**
+ * Luz de una pieza: el único color que puede llevar, y solo como luz fina (el
+ * punto del rótulo, el filo del arco, el punto del hilo). Son los tres colores
+ * del sitio. Sin `luz`, la pieza va en pared y marfil, sin color.
+ */
+export const LUCES = { violeta: "#B68CFF", azul: "#55D8FF", verde: "#71F3A2" } as const;
+export type Luz = keyof typeof LUCES;
+
 export type Pieza = {
   id: string;
   fecha: string;
@@ -121,6 +133,8 @@ export type Pieza = {
   /** Es una opinión: Mario ajusta su postura antes de aprobar. */
   postura?: boolean;
   imagenes?: ImagenSlot[];
+  /** Color de luz de la pieza (ver LUCES). Un carrusel que abre con una portada de mosaico toma el de su celda. */
+  luz?: Luz;
   salidas: Salida[];
   publicaciones?: Array<{ plataforma: Plataforma; url: string; fecha: string }>;
   historial?: Array<{ fecha: string; estado: Estado; quien: string; nota?: string }>;
