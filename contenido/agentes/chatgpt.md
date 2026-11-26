@@ -11,6 +11,19 @@ Mario ve las dos versiones y elige. Si solo llegás a la A, ya hay pieza para pu
 
 Antes de empezar, leé `../marca/identidad.md`, `../marca/imagenes-chatgpt.md` y `../marca/chatgpt-diseno.md`.
 
+## Modo asistido (el que se usa hoy)
+
+Decisión de Mario del 26/11: el arte y las diapositivas salen de **ChatGPT en el navegador**, que rinde más y no gasta el cupo de Codex. Para no romper los términos de OpenAI, **lo maneja Mario, no un agente**:
+
+1. **Primer mensaje de cada conversación:** el sistema de la marca, `sistema_arte` o `sistema_entera` de `piezas/<id>/pedidos.json`. Si hay referencias en `contenido/marca/referencias/`, Mario las adjunta.
+2. **Uno por imagen, en orden:** el `pedido` corto. Todos entran en un mensaje de Telegram.
+3. **Mario devuelve la imagen a la Mac**, que la guarda con:
+   - `contenido.ts arte <id> <slot> <archivo>` (versión A);
+   - `contenido.ts importar` o `firmar` (versión B).
+4. **Codex** (`~/bin/imagen`) queda de respaldo, con el `prompt` autocontenido.
+
+El agente de abajo (automático) queda apagado.
+
 ## Preparar los pedidos
 
 Desde `/Users/mariomorera/proyectos/mmorera/web`:

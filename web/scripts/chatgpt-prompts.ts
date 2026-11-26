@@ -217,7 +217,8 @@ function pedidosEntera(pieza: Pieza, salida: Salida) {
 /** Pedido autocontenido: el sistema del bloque y, abajo, lo propio de esta imagen. Sirve para ChatGPT y para Codex (~/bin/imagen). */
 const autocontenido = (sistema: string, pedido: string) => `${sistema}\n\n=== ESTA IMAGEN ===\n${pedido}`;
 
-type PedidoJson = { archivo: string; formato: Formato; ancho: number; alto: number; prompt: string };
+/** `prompt`: autocontenido (Codex). `pedido`: solo lo propio de la imagen, para pegar después del sistema en una conversación (modo asistido, Telegram). */
+type PedidoJson = { archivo: string; formato: Formato; ancho: number; alto: number; prompt: string; pedido: string };
 
 function escribir(id: string) {
   const pieza = leerPieza(id);
@@ -233,7 +234,7 @@ function escribir(id: string) {
   const sistemaArte = slots.length ? bloque("imagenes-chatgpt.md", "ARTE") : "";
   const sistemaEntera = salidas.length ? bloque("chatgpt-diseno.md", "SISTEMA") : "";
   // Lo mismo, para máquinas: guionista y Codex leen pedidos.json (un prompt completo por archivo).
-  const json: { pieza: string; arte: Array<PedidoJson & { slot: string }>; entera: Array<PedidoJson & { salida: string; n: number; cierre: boolean }> } = { pieza: id, arte: [], entera: [] };
+  const json: { pieza: string; sistema_arte: string; sistema_entera: string; arte: Array<PedidoJson & { slot: string }>; entera: Array<PedidoJson & { salida: string; n: number; cierre: boolean }> } = { pieza: id, sistema_arte: sistemaArte, sistema_entera: sistemaEntera, arte: [], entera: [] };
 
   const out: string[] = [
     `# Pedidos de imagen · ${pieza.titulo}`,
@@ -260,9 +261,10 @@ function escribir(id: string) {
   else {
     for (const slot of slots) {
       const listo = imagenDe(id, slot.slot) ? " · ✔ ya está" : "";
-      const prompt = autocontenido(sistemaArte, pedidoArte(pieza, slot, usos.get(slot.slot) ?? []));
+      const pedido = pedidoArte(pieza, slot, usos.get(slot.slot) ?? []);
+      const prompt = autocontenido(sistemaArte, pedido);
       const { width, height } = SOCIAL_FORMATS[slot.formato];
-      json.arte.push({ slot: slot.slot, archivo: `imagenes/${slot.slot}.png`, formato: slot.formato, ancho: width, alto: height, prompt });
+      json.arte.push({ slot: slot.slot, archivo: `imagenes/${slot.slot}.png`, formato: slot.formato, ancho: width, alto: height, prompt, pedido });
       out.push(`### Slot \`${slot.slot}\` → \`imagenes/${slot.slot}.png\`${listo}`, "", "```text", prompt, "```", "", "Para dejarla a la medida (si no la guardaste ya con ese nombre y medida):", "", "```bash", `npx tsx scripts/contenido.ts arte ${id} ${slot.slot} <archivo>`, "```", "");
     }
     out.push(
@@ -288,7 +290,7 @@ function escribir(id: string) {
       out.push(`### Salida \`${salida.id}\` · ${list.length} diapositiva(s) · para ${salida.para.join(", ")}`, "");
       for (const item of list) {
         const prompt = autocontenido(sistemaEntera, item.text);
-        json.entera.push({ salida: salida.id, n: item.n, archivo: `imagenes/${item.file}`, formato, ancho: width, alto: height, prompt, cierre: slides[item.n - 1]?.tipo === "cierre" });
+        json.entera.push({ salida: salida.id, n: item.n, archivo: `imagenes/${item.file}`, formato, ancho: width, alto: height, prompt, pedido: item.text, cierre: slides[item.n - 1]?.tipo === "cierre" });
         out.push(`#### ${item.n}. → \`imagenes/${item.file}\``, "", "```text", prompt, "```", "");
       }
       out.push(
