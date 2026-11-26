@@ -85,6 +85,12 @@ Las plantillas están en `web/src/components/social/` y sus datos en `web/src/da
 | `desafio` | 4:5 | El "desafío del mes" de LinkedIn: contexto → problema → decisión → resultado → aprendizaje. |
 | `imagen` | cualquiera | Una sola diapositiva: tarjeta de opinión, encuesta, sorteo, etc. |
 
+**Luz y feed de 9.** Una pieza puede llevar `"luz": "violeta" | "azul" | "verde"`: su único color, solo como luz fina (`marca/identidad.md`). Una portada con `"mosaico": { "celda": N }` (4:5, la primera del carrusel) es una de las nueve que arman el monograma en la grilla del perfil; sale siempre del código y le da su luz al carrusel. Los temas del mosaico están en `series/feed-9.json`:
+
+```bash
+npx tsx scripts/mosaico.ts feed-9     # las 9 portadas y la vista de la grilla, en series/feed-9/salida/
+```
+
 **Las piezas estáticas** (carrusel, desafío, imagen) salen en dos versiones:
 
 - **A:** el código (`web/src/components/social/`) con arte de fondo. En `pieza.json`, el arte se declara en `imagenes` (`slot`, `formato`, `prompt`) y una portada, tarjeta, cita o cierre lo usa con `"fondo": "<slot>"`. Sin arte, la versión A sale solo con código. El arte lo pinta Codex (`~/bin/imagen`, por defecto) o ChatGPT, con `marca/imagenes-chatgpt.md`. **El texto va siempre abajo:** el arte deja libre la franja de abajo (portada 50 %, tarjeta y cita 55 %, cierre 60 %) y pone el sujeto arriba.

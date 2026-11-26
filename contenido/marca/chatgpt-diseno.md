@@ -17,7 +17,7 @@ Vas a diseñar diapositivas para las redes de Mario Morera, que diseña y progra
 
 REGLAS FIJAS (valen para todas las diapositivas de esta conversación):
 
-1. COLOR: pared (#0B0B0A, negro mate) y marfil (#ECE7DD, blanco roto cálido), con grises cálidos entre los dos. Cero color de acento. Si hay fotos, son en blanco y negro cálido.
+1. COLOR: pared (#0B0B0A, negro mate) y marfil (#ECE7DD, blanco roto cálido), con grises cálidos entre los dos. Si hay fotos, son en blanco y negro cálido. El color es una luz, no un fondo: si el pedido dice «LUZ: #…», ese es el ÚNICO color de la imagen y va solo como luz fina (un punto encendido delante del rótulo, el punto de la línea del pie y un filo finísimo con halo suave en el borde del arco). Nunca letras, barras, fondos ni bloques de color; nunca dos colores. Si el pedido dice «LUZ: ninguna», cero color.
 
 2. MATERIA: el fondo nunca es plano: grano de película fino sobre todo (también sobre las letras) y, apenas, textura de piedra o de hormigón. Las letras marfil se ven un poco gastadas, como impresas en la pared.
 
@@ -59,7 +59,7 @@ REGLAS FIJAS (valen para todas las diapositivas de esta conversación):
    - gráficos de barras o porcentajes;
    - emojis;
    - íconos 3D genéricos;
-   - degradés de colores y brillos neón;
+   - degradés de colores, y fondos o letras neón;
    - caras reconocibles;
    - manos o dedos deformes;
    - texto ilegible;

@@ -5,7 +5,8 @@ import { PROJECT_CASES } from "@/data/projectCases";
 import { plain, reelBeatLayout, reelCasoLayout, reelFirmaLayout, slideLayout, type ImageSizes } from "./layout";
 import { archivosChatGPT, archivosEsperados } from "./render";
 import { diapositivasDe, reelCasoBeats, reelTextoBeats, videoSeconds } from "./timing";
-import { CON_FONDO, DURACION_MAXIMA, ESTADOS, PLATAFORMAS, RAMAS, SOCIAL_FORMATS, type Diapositiva, type Estado, type Pieza, type Plataforma, type Salida } from "./types";
+import { esCelda } from "./mosaico";
+import { CON_FONDO, DURACION_MAXIMA, ESTADOS, LUCES, PLATAFORMAS, RAMAS, SOCIAL_FORMATS, type Diapositiva, type Estado, type Pieza, type Plataforma, type Salida } from "./types";
 
 /**
  * Validador de una pieza de redes (node: lo usan check-pieza, contenido.ts y
@@ -94,6 +95,7 @@ export function validarPieza(raw: unknown, entorno: Entorno): Problema[] {
   if (!RAMAS.includes(pieza.rama)) error("rama", `"${pieza.rama}" no es una rama (${RAMAS.join(", ")})`);
   if (!ESTADOS.includes(pieza.estado)) error("estado", `"${pieza.estado}" no es un estado (${ESTADOS.join(", ")})`);
   if (!isText(pieza.titulo)) error("titulo", "falta el título interno");
+  if (pieza.luz !== undefined && !(pieza.luz in LUCES)) error("luz", `"${pieza.luz}" no es una luz (${Object.keys(LUCES).join(", ")})`);
   if (!Array.isArray(pieza.salidas) || pieza.salidas.length === 0) {
     error("salidas", "la pieza no tiene salidas");
     return problemas;
@@ -158,6 +160,16 @@ export function validarPieza(raw: unknown, entorno: Entorno): Problema[] {
     const formato = salida.plantilla === "carrusel" || salida.plantilla === "desafio" || salida.plantilla === "imagen" ? salida.formato : "reel";
     slides.forEach((slide, index) => {
       if (slide.tipo === "imagen" && !slots.has(slide.imagen)) error(`${donde}.${index + 1}`, `la imagen "${slide.imagen}" no está declarada en "imagenes"`);
+      // Portada de mosaico: solo la primera diapositiva, en 4:5, con una celda del 1 al 9 y título corto.
+      const mosaico = (slide as { mosaico?: { celda?: unknown } }).mosaico;
+      if (mosaico !== undefined) {
+        const aqui = `${donde}.${index + 1}`;
+        if (slide.tipo !== "portada" || index !== 0) error(aqui, `"mosaico" solo va en la portada que abre la salida`);
+        else if (formato !== "feed") error(aqui, `una portada de mosaico es 4:5 (formato "feed"); esta salida es ${formato}`);
+        else if (!esCelda(mosaico.celda)) error(aqui, `"mosaico.celda" va del 1 al 9 (1 arriba a la izquierda, 9 abajo a la derecha)`);
+        else if (plain(slide.titulo).split(/\s+/).length > 4) aviso(aqui, "el título de una portada de mosaico es de 1 a 3 palabras: convive con el monograma");
+        if ((slide as { fondo?: unknown }).fondo !== undefined) error(aqui, `una portada de mosaico no lleva "fondo": su fondo es el monograma`);
+      }
       // Arte de fondo (versión A): un slot declarado, con la proporción de la salida.
       const fondo = (slide as { fondo?: unknown }).fondo;
       if (fondo !== undefined) {

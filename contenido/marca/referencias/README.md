@@ -15,6 +15,8 @@ Las piezas que Mario aprobó como «así se ve la marca» (juego de referencia �
 | `08-cita-marfil.jpg` | La frase clave invertida, sobre marfil |
 | `09-cierre-con-monograma.jpg` | Cierre: el monograma fundido como firma |
 | `10-encuesta.jpg` | Encuesta con las opciones en recuadros |
+| `11-color-como-luz.jpg` | Lámina de la regla de color: una luz fina, uno de tres colores (no es una pieza) |
+| `12-feed-de-9.jpg` | El feed de 9: las portadas arman el monograma y la luz recorre el anillo |
 
 - JPG de 1080 px de ancho, calidad 85: livianas para el repo y para subir.
 - Si una referencia deja de representar la marca, se borra de acá.

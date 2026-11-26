@@ -1,0 +1,30 @@
+{
+  "id": "2026-12-01-feed-03-chatbots",
+  "fecha": "2026-12-01",
+  "rama": "sistemas",
+  "serie": "Feed de 9",
+  "titulo": "Feed de 9 · 03 · Chatbots: quién contesta cuando cerrás",
+  "estado": "borrador",
+  "fuente": {
+    "tipo": "sitio",
+    "nota": "Caso de uso de ejemplo de /sistemas (consulta fuera de horario). Muestra del feed de 9 (contenido/series/feed-9.json): la fecha se ajusta al calendario."
+  },
+  "ejemplo": true,
+  "postura": true,
+  "salidas": [
+    {
+      "id": "carrusel",
+      "plantilla": "carrusel",
+      "formato": "feed",
+      "para": ["instagram", "linkedin"],
+      "diapositivas": [
+        { "tipo": "portada", "kicker": "03", "titulo": "Chatbots", "mosaico": { "celda": 3 } },
+        { "tipo": "texto", "kicker": "El problema", "titulo": "Nadie contesta a las *23:45*", "cuerpo": "La consulta llega cuando el negocio está cerrado. Al otro día, esa persona ya le escribió a otro." },
+        { "tipo": "lista", "kicker": "Lo que hace", "titulo": "Deja el siguiente paso listo", "items": ["Contesta en el momento, con las respuestas del negocio.", "Ofrece un horario y lo deja en la agenda.", "Guarda el contacto en el CRM, con lo que pidió."] },
+        { "tipo": "comparacion", "kicker": "Antes y después", "titulo": "La misma consulta", "antes": { "rotulo": "Sin chatbot", "texto": "Espera hasta mañana y se enfría." }, "despues": { "rotulo": "Con chatbot", "texto": "Recibe respuesta y un turno propuesto (datos de ejemplo)." } },
+        { "tipo": "cita", "kicker": "Mi criterio", "cita": "Un chatbot no reemplaza a tu equipo. Le deja el trabajo *empezado*.", "autor": "Mario Morera" },
+        { "tipo": "cierre", "titulo": "¿Quién contesta cuando cerrás?", "cta": "Guardalo y revisalo con tu equipo.", "enlace": "mmorera.agency/sistemas" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "feed-9",
+  "titulo": "Feed de 9: el monograma armado por nueve portadas",
+  "nota": "Cada portada abre un carrusel propio. Se publican de la 9 a la 1. La 5 es el centro del logo y no lleva texto.",
+  "celdas": [
+    { "celda": 1, "kicker": "01", "titulo": "Webs con sistema", "tema": "Webs que son más que webs: vienen con su sistema a medida." },
+    { "celda": 2, "kicker": "02", "titulo": "Agendas", "tema": "Turnos y calendarios integrados al sitio." },
+    { "celda": 3, "kicker": "03", "titulo": "Chatbots", "tema": "Respuestas fuera de horario, con el siguiente paso." },
+    { "celda": 4, "kicker": "04", "titulo": "Clínicas", "tema": "Presupuestos, planes y seguimiento del paciente." },
+    { "celda": 5, "kicker": "05", "titulo": "Software a medida", "tema": "El centro: qué hace Mario, en una idea." },
+    { "celda": 6, "kicker": "06", "titulo": "Automatizar", "tema": "Tareas que dejan de hacerse a mano." },
+    { "celda": 7, "kicker": "07", "titulo": "Estética", "tema": "Reservas, recordatorios y fichas para centros de estética." },
+    { "celda": 8, "kicker": "08", "titulo": "Gimnasios", "tema": "Rutinas personalizadas, socios y entrenadores." },
+    { "celda": 9, "kicker": "09", "titulo": "IA aplicada", "tema": "IA con criterio y con control, dentro del sistema." }
+  ]
+}

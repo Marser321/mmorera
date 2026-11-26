@@ -1,5 +1,6 @@
 import { diapositivasDe, reelCasoBeats, reelTextoBeats, SLIDE_STILL_FRAMES } from "./timing";
-import { fondoDe, type Diapositiva, type Formato, type Pieza, type Salida, type Tono } from "./types";
+import { luzDeCelda } from "./mosaico";
+import { fondoDe, LUCES, type Diapositiva, type Formato, type Pieza, type Salida, type Tono } from "./types";
 
 /**
  * Qué archivo sale de cada salida de una pieza y con qué composición de
@@ -10,8 +11,9 @@ import { fondoDe, type Diapositiva, type Formato, type Pieza, type Salida, type 
 export type ImagenProp = { src: string; w: number; h: number };
 export type ImagenesProp = Record<string, ImagenProp>;
 
-export type SlideProps = { formato: Formato; slide: Diapositiva; pagina?: { n: number; total: number }; tono: Tono; imagenes: ImagenesProp };
-export type CarruselVideoProps = { formato: Formato; diapositivas: Diapositiva[]; tono: Tono; imagenes: ImagenesProp };
+/** `luz`: el único color de la pieza (hex), solo como luz fina. Sin `luz`, pared y marfil. */
+export type SlideProps = { formato: Formato; slide: Diapositiva; pagina?: { n: number; total: number }; tono: Tono; imagenes: ImagenesProp; luz?: string };
+export type CarruselVideoProps = { formato: Formato; diapositivas: Diapositiva[]; tono: Tono; imagenes: ImagenesProp; luz?: string };
 export type ReelTextoProps = { salida: Extract<Salida, { plantilla: "reel-texto" }> };
 export type ReelCasoProps = { salida: Extract<Salida, { plantilla: "reel-caso" }>; nombre: string; placas: { og: string; hero: string } };
 
@@ -38,7 +40,17 @@ export type Fuentes = {
 
 const two = (n: number) => String(n).padStart(2, "0");
 
-function trabajosDeSalida(salida: Salida, fuentes: Fuentes): Trabajo[] {
+/** ¿La diapositiva es una portada de mosaico? (sale siempre del código) */
+export const esMosaico = (slide: Diapositiva | undefined) => Boolean(slide && slide.tipo === "portada" && slide.mosaico);
+
+/** La luz de una salida: la de su celda si abre con una portada de mosaico; si no, la de la pieza. */
+export function luzDeSalida(pieza: Pick<Pieza, "luz">, salida: Salida): string | undefined {
+  const first = diapositivasDe(salida)[0];
+  if (first?.tipo === "portada" && first.mosaico) return luzDeCelda(first.mosaico.celda);
+  return pieza.luz ? LUCES[pieza.luz] : undefined;
+}
+
+function trabajosDeSalida(salida: Salida, fuentes: Fuentes, luz?: string): Trabajo[] {
   switch (salida.plantilla) {
     case "carrusel":
     case "desafio": {
@@ -47,13 +59,13 @@ function trabajosDeSalida(salida: Salida, fuentes: Fuentes): Trabajo[] {
       const stills: Trabajo[] = slides.map((slide, index) => ({
         archivo: `${salida.id}-${two(index + 1)}.png`,
         composicion: slideComposition(salida.formato),
-        props: { formato: salida.formato, slide, pagina: { n: index + 1, total: slides.length }, tono, imagenes: fuentes.imagenes },
+        props: { formato: salida.formato, slide, pagina: { n: index + 1, total: slides.length }, tono, imagenes: fuentes.imagenes, luz },
         tipo: "still",
         frame: SLIDE_STILL_FRAMES,
       }));
       const video: Trabajo[] =
         salida.plantilla === "carrusel" && salida.video
-          ? [{ archivo: `${salida.id}.mp4`, composicion: carruselComposition(salida.formato), props: { formato: salida.formato, diapositivas: slides, tono, imagenes: fuentes.imagenes }, tipo: "video" }]
+          ? [{ archivo: `${salida.id}.mp4`, composicion: carruselComposition(salida.formato), props: { formato: salida.formato, diapositivas: slides, tono, imagenes: fuentes.imagenes, luz }, tipo: "video" }]
           : [];
       return [...stills, ...video];
     }
@@ -62,7 +74,7 @@ function trabajosDeSalida(salida: Salida, fuentes: Fuentes): Trabajo[] {
         {
           archivo: `${salida.id}.png`,
           composicion: slideComposition(salida.formato),
-          props: { formato: salida.formato, slide: salida.diapositiva, tono: salida.tono ?? "oscuro", imagenes: fuentes.imagenes },
+          props: { formato: salida.formato, slide: salida.diapositiva, tono: salida.tono ?? "oscuro", imagenes: fuentes.imagenes, luz },
           tipo: "still",
           frame: SLIDE_STILL_FRAMES,
         },
@@ -88,7 +100,7 @@ function trabajosDeSalida(salida: Salida, fuentes: Fuentes): Trabajo[] {
 }
 
 export function trabajosDe(pieza: Pieza, fuentes: Fuentes): Trabajo[] {
-  return pieza.salidas.flatMap((salida) => trabajosDeSalida(salida, fuentes));
+  return pieza.salidas.flatMap((salida) => trabajosDeSalida(salida, fuentes, luzDeSalida(pieza, salida)));
 }
 
 /** ¿Esta salida la diseña ChatGPT (con el código de respaldo)? */
@@ -96,11 +108,21 @@ export function usaChatGPT(salida: Salida) {
   return (salida.plantilla === "carrusel" || salida.plantilla === "desafio" || salida.plantilla === "imagen") && salida.generador !== "codigo";
 }
 
+/**
+ * Diapositivas de una salida que diseña ChatGPT (versión B), con su posición
+ * y su archivo. Las portadas de mosaico no entran: tienen que calzar al píxel
+ * con las otras ocho y salen siempre del código. La numeración no se corre.
+ */
+export function diapositivasChatGPT(salida: Salida): Array<{ index: number; slide: Diapositiva; file: string }> {
+  if (!usaChatGPT(salida)) return [];
+  return diapositivasDe(salida)
+    .map((slide, index) => ({ index, slide, file: `gpt-${salida.id}-${two(index + 1)}.png` }))
+    .filter((item) => !esMosaico(item.slide));
+}
+
 /** Imágenes que entrega ChatGPT para una salida: imagenes/gpt-<salida>-01.png, -02.png… */
 export function archivosChatGPT(salida: Salida): string[] {
-  if (!usaChatGPT(salida)) return [];
-  const total = diapositivasDe(salida).length;
-  return Array.from({ length: total }, (_, index) => `gpt-${salida.id}-${two(index + 1)}.png`);
+  return diapositivasChatGPT(salida).map((item) => item.file);
 }
 
 /** Formato de lo que sale de una salida (los reels son 9:16). */
@@ -129,7 +151,10 @@ export function archivosDeVersion(salida: Salida, version: Version): string[] {
     .filter((trabajo) => !trabajo.archivo.endsWith("-portada.png"))
     .map((trabajo) => `salida/${trabajo.archivo}`);
   if (version === "a" || !usaChatGPT(salida)) return codigo;
-  return [...archivosChatGPT(salida).map((file) => `imagenes/${file}`), ...codigo.filter((file) => file.endsWith(".mp4"))];
+  // En orden de publicación: cada diapositiva de ChatGPT en su lugar; la portada de mosaico, del código.
+  const slides = diapositivasDe(salida);
+  const stills = slides.map((slide, index) => (esMosaico(slide) ? `salida/${salida.id}${slides.length > 1 || salida.plantilla !== "imagen" ? `-${two(index + 1)}` : ""}.png` : `imagenes/gpt-${salida.id}-${two(index + 1)}.png`));
+  return [...stills, ...codigo.filter((file) => file.endsWith(".mp4"))];
 }
 
 /** Archivos que deja el render de una pieza (para exigirlos cuando está "lista"). */

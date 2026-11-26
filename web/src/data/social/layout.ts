@@ -1,5 +1,6 @@
 import type { Box } from "@/lib/filmLayout";
 import { countLines, GLYPH, textHeight, type LayoutBlock, type TextBlock } from "@/components/films/scenes/brand/layout/dataText";
+import { cajaDeCelda } from "./mosaico";
 import { fondoDe, socialSafeArea, SOCIAL_FORMATS, type Diapositiva, type Formato } from "./types";
 
 /**
@@ -213,8 +214,36 @@ function shift(elements: SlideElement[], dy: number) {
 
 export type ImageSizes = Record<string, { w: number; h: number }>;
 
+/** Título de una portada de mosaico: corto, y más chico que una portada común (convive con el monograma). */
+const MOSAICO_TITULO = [84, 76, 68, 60, 54, 48, 44, 40, 36] as const;
+
+/**
+ * Portada de mosaico: solo rótulo y título, en la caja libre de su celda
+ * (fuera del monograma). Sin contador, marca ni bajada: en la grilla del
+ * perfil tiene que leerse como una pieza del logo.
+ */
+function mosaicoLayout(slide: Extract<Diapositiva, { tipo: "portada" }>, celda: number): SlideLayout {
+  const safe = socialSafeArea("feed");
+  const caja = cajaDeCelda(celda);
+  if (!caja) return result(safe, []);
+  const s = SPEC.feed;
+  const kickerH = slide.kicker ? textHeight(s.kicker, 1, LH.mono) : 0;
+  const header = slide.kicker ? kickerH + 18 + 2 + 26 : 0;
+  const area = { ...caja.box, y: caja.box.y + header, h: caja.box.h - header };
+  const fit = pickStep(MOSAICO_TITULO.length, (step) => stack([{ id: "titulo", rol: "titulo", value: slide.titulo, size: at(MOSAICO_TITULO, step), fuente: "display", maxLines: 3, gapAfter: 0, reveal: "words", order: 1 }], area));
+  const elements: SlideElement[] = [];
+  if (slide.kicker) {
+    elements.push({ kind: "text", rol: "kicker", block: text("kicker", { x: caja.box.x, y: caja.box.y, w: caja.box.w, h: kickerH }, slide.kicker, s.kicker, 1, "mono"), order: 0, reveal: "fade" });
+    elements.push({ kind: "rule", box: { x: caja.box.x, y: caja.box.y + kickerH + 18, w: 56, h: 2 }, order: 0 });
+  }
+  elements.push(...fit.placed);
+  if (caja.ancla === "abajo") shift(elements, Math.max(0, caja.box.h - header - fit.h));
+  return result(safe, elements);
+}
+
 /** Diapositiva → elementos. `imagenes` da la proporción de cada imagen (por defecto 4:5). */
 export function slideLayout(formato: Formato, slide: Diapositiva, pagina?: Pagina, imagenes: ImageSizes = {}): SlideLayout {
+  if (slide.tipo === "portada" && slide.mosaico && formato === "feed") return mosaicoLayout(slide, slide.mosaico.celda);
   const s = SPEC[formato];
   const kicker = "kicker" in slide ? slide.kicker : slide.tipo === "encuesta" ? "Encuesta" : slide.tipo === "sorteo" ? "Sorteo" : undefined;
   const marca = slide.tipo !== "cierre";

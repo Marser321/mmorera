@@ -3,6 +3,7 @@ import { AbsoluteFill, Img, interpolate, random, staticFile, useCurrentFrame, us
 import type { Box } from "@/lib/filmLayout";
 import { LOGO_VIEWBOX } from "@/data/brand/logoPaths";
 import type { SlideElement, SocialText } from "@/data/social/layout";
+import { MOSAICO, origenDeCelda, VUELTA } from "@/data/social/mosaico";
 import type { ImagenesProp, ImagenProp } from "@/data/social/render";
 import type { Tono } from "@/data/social/types";
 import { CLAMP, EASE_IN_OUT, EASE_OUT, progress } from "../films/scenes/theme";
@@ -183,7 +184,7 @@ export function PiedraEncima({ opacity = 0.2 }: { opacity?: number }) {
  * gigante, de piedra, que entra desde un borde y se funde. Mismo grosor
  * relativo que el anillo del logo (126 / 877 del radio).
  */
-export function Arco({ cx, cy, r, tono, opacity = 0.16, fundido = "to top", grosor = 126 / 877 }: { cx: number; cy: number; r: number; tono: Tono; opacity?: number; fundido?: string; grosor?: number }) {
+export function Arco({ cx, cy, r, tono, opacity = 0.16, fundido = "to top", grosor = 126 / 877, luz }: { cx: number; cy: number; r: number; tono: Tono; opacity?: number; fundido?: string; grosor?: number; luz?: string }) {
   const frame = useCurrentFrame();
   const c = SOCIAL_COLORS[tono];
   const show = progress(frame, 0, 40, EASE_OUT);
@@ -191,8 +192,27 @@ export function Arco({ cx, cy, r, tono, opacity = 0.16, fundido = "to top", gros
   const ring = `radial-gradient(circle closest-side, transparent calc(${inner}% - 1px), #000 ${inner}%, #000 calc(100% - 1px), transparent 100%)`;
   // El fundido es del cuadro entero (no del aro): el arco se apaga hacia el texto.
   const fade = `linear-gradient(${fundido}, #000 0%, rgba(0,0,0,0.55) 45%, transparent 90%)`;
+  // La luz de la pieza: un filo fino en el borde de afuera del arco, con su halo.
+  const filo = (ancho: number) => `radial-gradient(circle closest-side, transparent calc(100% - ${ancho + 1}px), #000 calc(100% - ${ancho}px), #000 calc(100% - 1px), transparent 100%)`;
+  const aro: CSSProperties = { position: "absolute", left: cx - r, top: cy - r, width: r * 2, height: r * 2, background: luz, transform: `rotate(${(1 - show) * -8}deg)` };
   return (
-    <AbsoluteFill style={{ WebkitMaskImage: fade, maskImage: fade, opacity: opacity * show, pointerEvents: "none" }}>
+    <>
+      {luz ? (
+        <AbsoluteFill style={{ WebkitMaskImage: fade, maskImage: fade, opacity: show, pointerEvents: "none" }}>
+          <AbsoluteFill style={{ filter: "blur(16px)", opacity: 0.5 }}>
+            <div style={{ ...aro, WebkitMaskImage: filo(18), maskImage: filo(18) }} />
+          </AbsoluteFill>
+          <div style={{ ...aro, WebkitMaskImage: filo(6), maskImage: filo(6), opacity: 0.9 }} />
+        </AbsoluteFill>
+      ) : null}
+      <ArcoPiedra cx={cx} cy={cy} r={r} color={c.fg} ring={ring} fade={fade} opacity={opacity * show} giro={(1 - show) * -8} />
+    </>
+  );
+}
+
+function ArcoPiedra({ cx, cy, r, color, ring, fade, opacity, giro }: { cx: number; cy: number; r: number; color: string; ring: string; fade: string; opacity: number; giro: number }) {
+  return (
+    <AbsoluteFill style={{ WebkitMaskImage: fade, maskImage: fade, opacity, pointerEvents: "none" }}>
       <div
         style={{
           position: "absolute",
@@ -200,15 +220,43 @@ export function Arco({ cx, cy, r, tono, opacity = 0.16, fundido = "to top", gros
           top: cy - r,
           width: r * 2,
           height: r * 2,
-          backgroundColor: c.fg,
+          backgroundColor: color,
           backgroundImage: `url(${PIEDRA()})`,
           backgroundSize: "520px 520px",
           backgroundBlendMode: "multiply",
           WebkitMaskImage: ring,
           maskImage: ring,
-          transform: `rotate(${(1 - show) * -8}deg)`,
+          transform: `rotate(${giro}deg)`,
         }}
       />
+    </AbsoluteFill>
+  );
+}
+
+/**
+ * Portada de mosaico: la parte del monograma de piedra que le toca a esta
+ * celda del feed, con el filo de luz que recorre el anillo (violeta → azul →
+ * verde). Las nueve portadas dibujan el mismo mosaico, cada una corrida a su
+ * celda: por eso calzan al píxel en la grilla del perfil.
+ */
+export function MosaicoLogo({ celda }: { celda: number }) {
+  const frame = useCurrentFrame();
+  const show = progress(frame, 0, 30, EASE_OUT);
+  const origen = origenDeCelda(celda);
+  const { logo, anillo, desde } = MOSAICO;
+  const cx = anillo.cx - logo.x;
+  const cy = anillo.cy - logo.y;
+  const filo = (ancho: number) => `radial-gradient(circle at ${cx}px ${cy}px, transparent ${anillo.r - ancho - 1}px, #000 ${anillo.r - ancho}px, #000 ${anillo.r}px, transparent ${anillo.r + 1}px)`;
+  const caja: CSSProperties = { position: "absolute", left: logo.x - origen.x, top: logo.y - origen.y, width: logo.w, height: logo.h };
+  const forma = (extra: string): CSSProperties => ({ WebkitMaskImage: `url(${MONOGRAMA()}), ${extra}`, WebkitMaskSize: "100% 100%, 100% 100%", WebkitMaskRepeat: "no-repeat", WebkitMaskComposite: "source-in", maskImage: `url(${MONOGRAMA()}), ${extra}`, maskSize: "100% 100%, 100% 100%", maskRepeat: "no-repeat", maskComposite: "intersect" });
+  const vuelta = `conic-gradient(from ${desde}deg at ${cx}px ${cy}px, ${VUELTA.map((color, index) => `${color} ${((index / (VUELTA.length - 1)) * 100).toFixed(2)}%`).join(", ")})`;
+  return (
+    <AbsoluteFill style={{ opacity: show, pointerEvents: "none" }}>
+      <div style={{ ...caja, backgroundColor: SOCIAL_COLORS.oscuro.fg, backgroundImage: `url(${PIEDRA()})`, backgroundSize: "840px 840px", backgroundBlendMode: "multiply", WebkitMaskImage: `url(${MONOGRAMA()})`, WebkitMaskSize: "100% 100%", WebkitMaskRepeat: "no-repeat", maskImage: `url(${MONOGRAMA()})`, maskSize: "100% 100%", maskRepeat: "no-repeat", opacity: 0.86 }} />
+      <AbsoluteFill style={{ filter: "blur(38px)", opacity: 0.55 }}>
+        <div style={{ ...caja, background: vuelta, ...forma(filo(44)) }} />
+      </AbsoluteFill>
+      <div style={{ ...caja, background: vuelta, ...forma(filo(18)) }} />
     </AbsoluteFill>
   );
 }
@@ -348,7 +396,7 @@ export function FadeText({ block, from, color, exitAt, shadow }: { block: Social
 }
 
 /** Dibuja los elementos de un layout con su entrada escalonada (orden × 6 frames). */
-export function ElementsLayer({ elements, tono, start = 4, step = 6, imagenes = {}, exitAt, contador, sobreArte = false }: { elements: SlideElement[]; tono: Tono; start?: number; step?: number; imagenes?: ImagenesProp; exitAt?: number; contador?: string; sobreArte?: boolean }) {
+export function ElementsLayer({ elements, tono, start = 4, step = 6, imagenes = {}, exitAt, contador, sobreArte = false, luz }: { elements: SlideElement[]; tono: Tono; start?: number; step?: number; imagenes?: ImagenesProp; exitAt?: number; contador?: string; sobreArte?: boolean; luz?: string }) {
   const frame = useCurrentFrame();
   const c = SOCIAL_COLORS[tono];
   return (
@@ -400,6 +448,18 @@ export function ElementsLayer({ elements, tono, start = 4, step = 6, imagenes = 
             // Los rótulos chicos (mono) van sin sombra: en ellos se ve como un recuadro.
             const shadow = sobreArte && block.fuente !== "mono" ? "0 2px 28px rgba(11,11,10,0.55), 0 1px 2px rgba(11,11,10,0.4)" : undefined;
             if (element.reveal === "words") return <MaskWords key={index} block={block} from={from} color={color} tono={tono} exitAt={exitAt} shadow={shadow} />;
+            // La luz de la pieza: un punto encendido delante del rótulo.
+            if (element.rol === "kicker" && luz) {
+              const d = Math.round(block.size * 0.5);
+              const show = progress(frame, from, from + 18, EASE_OUT);
+              const corrido = { ...block, box: { ...block.box, x: block.box.x + d + 16, w: block.box.w - d - 16 } };
+              return (
+                <Fragment key={index}>
+                  <div style={{ position: "absolute", left: block.box.x, top: block.box.y + (block.box.h - d) / 2, width: d, height: d, borderRadius: d, background: luz, boxShadow: `0 0 ${d * 1.6}px ${luz}`, opacity: show }} />
+                  <FadeText block={corrido} from={from} color={color} exitAt={exitAt} shadow={shadow} />
+                </Fragment>
+              );
+            }
             return <FadeText key={index} block={block} from={from} color={color} exitAt={exitAt} shadow={shadow} />;
           }
         }
