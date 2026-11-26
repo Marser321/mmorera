@@ -1,10 +1,10 @@
-# Arte con ChatGPT (versión A)
+# Arte con ChatGPT o Codex (versión A)
 
-En la versión A, ChatGPT pinta **solo el fondo**: una imagen sin ninguna letra. El texto lo pone el código encima, en Unbounded y Familjen, con el mismo grano y la misma piedra sobre imagen y letras. Así el texto queda integrado: parece impreso en la pared, no pegado encima.
+En la versión A, la IA de imágenes (Codex con `~/bin/imagen`, por defecto; o ChatGPT en el navegador, hoy en pausa por D-016) pinta **solo el fondo**: una imagen sin ninguna letra. El texto lo pone el código encima, en Unbounded y Familjen, con el mismo grano y la misma piedra sobre imagen y letras. Así el texto queda integrado: parece impreso en la pared, no pegado encima.
 
 Para que funcione, cada arte **deja vacía la franja donde va el texto** (pared lisa y oscura). El render apoya el texto ahí y le pone un velo suave; si el sujeto invade esa franja, el texto lo tapa.
 
-Los pedidos de cada pieza se generan solos, en el bloque **ARTE** de `piezas/<id>/chatgpt.md`:
+Los pedidos de cada pieza se generan solos, en el bloque **ARTE** de `piezas/<id>/chatgpt.md` (y en `pedidos.json`, para máquinas). **Cada pedido es autocontenido:** trae el sistema de abajo y lo propio de la imagen, así que se pasa entero, sin conversación previa:
 
 ```bash
 npx tsx scripts/chatgpt-prompts.ts <id>
@@ -12,10 +12,8 @@ npx tsx scripts/chatgpt-prompts.ts <id>
 
 ## Antes de pedir
 
-1. **Conversación nueva** en ChatGPT para el arte de la pieza.
-2. **Adjuntá las referencias** de `contenido/marca/referencias/` (las piezas que Mario aprobó) y decile: «Estas son piezas aprobadas de la marca: copiá su clima, su materia y su tipografía, no su texto».
-3. Pegá el sistema de abajo, una vez.
-4. Pegá los pedidos de a uno.
+- **Codex:** `~/bin/imagen "<pedido entero>" <carpeta de la pieza>/imagenes/<slot>.png`. Si sale con otra medida: `contenido.ts arte <id> <slot> <archivo>`.
+- **ChatGPT:** conversación nueva para el arte de la pieza; adjuntá las referencias de `contenido/marca/referencias/` (las piezas que Mario aprobó) con la frase «Estas son piezas aprobadas de la marca: copiá su clima, su materia y su tipografía, no su texto», y pegá los pedidos enteros, de a uno.
 
 <!-- ARTE -->
 SISTEMA DE ARTE · MARIO MORERA · «PARED Y PIEDRA»
@@ -30,7 +28,7 @@ REGLAS FIJAS (valen para todas las imágenes de esta conversación):
 
 3. UN SOLO SUJETO, simple y concreto (un objeto, un rincón, una herramienta), en la parte de la imagen que diga el pedido. Nada más compite con él.
 
-4. ZONA VACÍA: el pedido dice qué parte de abajo queda libre. Ahí no hay objetos, ni brillos, ni detalles: pared lisa y oscura, en calma. Es donde va el texto.
+4. ZONA VACÍA: el pedido dice qué parte DE ABAJO queda libre (el texto siempre va abajo; el sujeto, arriba). Ahí no hay objetos, ni brillos, ni detalles: pared lisa y oscura, en calma. Es donde va el texto.
 
 5. NINGUNA LETRA: ni texto, ni números, ni carteles, ni etiquetas, ni pantallas con contenido, ni logos, aunque sean ilegibles o estén desenfocados.
 

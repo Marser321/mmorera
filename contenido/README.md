@@ -87,7 +87,7 @@ Las plantillas están en `web/src/components/social/` y sus datos en `web/src/da
 
 **Las piezas estáticas** (carrusel, desafío, imagen) salen en dos versiones:
 
-- **A:** el código (`web/src/components/social/`) con arte de fondo. En `pieza.json`, el arte se declara en `imagenes` (`slot`, `formato`, `prompt`) y una portada, tarjeta, cita o cierre lo usa con `"fondo": "<slot>"`. Sin arte, la versión A sale solo con código. El arte lo pinta ChatGPT (`marca/imagenes-chatgpt.md`) o, de respaldo, `~/bin/imagen`.
+- **A:** el código (`web/src/components/social/`) con arte de fondo. En `pieza.json`, el arte se declara en `imagenes` (`slot`, `formato`, `prompt`) y una portada, tarjeta, cita o cierre lo usa con `"fondo": "<slot>"`. Sin arte, la versión A sale solo con código. El arte lo pinta Codex (`~/bin/imagen`, por defecto) o ChatGPT, con `marca/imagenes-chatgpt.md`. **El texto va siempre abajo:** el arte deja libre la franja de abajo (portada 50 %, tarjeta y cita 55 %, cierre 60 %) y pone el sujeto arriba.
 - **B:** ChatGPT diseña cada diapositiva entera, con `marca/chatgpt-diseno.md`.
 
 ```bash
@@ -95,7 +95,10 @@ npx tsx scripts/chatgpt-prompts.ts <id>                 # escribe los pedidos (A
 npx tsx scripts/contenido.ts chatgpt                    # qué diapositivas de la versión B faltan
 npx tsx scripts/contenido.ts arte <id> <slot> [archivo] # versión A: recorta el arte y lo guarda como imagenes/<slot>.png
 npx tsx scripts/contenido.ts importar <id> <salida>     # versión B: trae las descargas, recorta, nombra y firma el cierre
+npx tsx scripts/contenido.ts firmar <id> [salida]       # versión B hecha con Codex (ya en imagenes/): medida y firma del cierre
 ```
+
+Cada pedido de `chatgpt.md` es autocontenido (sistema de la marca + lo propio de la imagen): sirve igual para Codex (`~/bin/imagen`, por defecto) que para ChatGPT en el navegador (en pausa, D-016). `pedidos.json` trae lo mismo para máquinas: `{pieza, arte: [{slot, archivo, formato, ancho, alto, prompt}], entera: [{salida, n, archivo, formato, ancho, alto, prompt, cierre}]}`.
 
 Las fuentes del render están en archivos locales (`web/src/remotion/fuentes/`): no hace falta red para renderizar.
 

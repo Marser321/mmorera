@@ -55,8 +55,8 @@ Uno por pantalla, nunca todos:
 
 Cada pieza estática sale en dos versiones y Mario elige una en Telegram:
 
-- **A · arte + código:** ChatGPT pinta un fondo sin letras (`imagenes/<slot>.png`) y el código pone el texto encima, integrado con velo, grano y piedra compartidos. Si no hay arte, la versión A sale igual, solo con código.
-- **B · ChatGPT entera:** ChatGPT diseña la diapositiva completa con el texto exacto (`imagenes/gpt-<salida>-NN.png`), con `chatgpt-diseno.md`.
+- **A · arte + código:** la IA de imágenes (Codex por defecto; ChatGPT en pausa, D-016) pinta un fondo sin letras (`imagenes/<slot>.png`) y el código pone el texto encima, integrado con velo, grano y piedra compartidos. Si no hay arte, la versión A sale igual, solo con código.
+- **B · entera:** la IA diseña la diapositiva completa con el texto exacto (`imagenes/gpt-<salida>-NN.png`), con `chatgpt-diseno.md`.
 
 Los reels salen siempre del código.
 

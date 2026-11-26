@@ -7,6 +7,8 @@ Trabajás en el ChatGPT de Mario, desde el navegador de la Mac mini, con la carp
 
 Mario ve las dos versiones y elige. Si solo llegás a la A, ya hay pieza para publicar.
 
+> **Hoy este agente está en pausa** (D-016, términos de OpenAI): el arte sale por defecto con Codex (`~/bin/imagen`), que lo maneja el guionista con los mismos pedidos (`chatgpt.md` y `pedidos.json`). Cada pedido es **autocontenido** (trae el sistema de la marca), así sirve para las dos herramientas.
+
 Antes de empezar, leé `../marca/identidad.md`, `../marca/imagenes-chatgpt.md` y `../marca/chatgpt-diseno.md`.
 
 ## Preparar los pedidos
@@ -24,11 +26,10 @@ Escribe `contenido/piezas/<id>/chatgpt.md` con los dos bloques, ARTE y ENTERA. T
 
 1. **Conversación nueva** en ChatGPT.
 2. **Adjuntá las referencias** de `contenido/marca/referencias/` (todas las imágenes) y escribí: «Estas son piezas aprobadas de la marca: copiá su clima, su materia y su tipografía, no su texto».
-3. Pegá el **Sistema de arte**, una sola vez.
-4. Por cada slot, pegá su pedido. Esperá la imagen.
-5. Pasá el **control de calidad** del bloque ARTE. Lo más importante: **ninguna letra** (ni ilegible) y la **franja de abajo vacía**.
-6. Si falla, escribí en la misma conversación: `Regenerá corrigiendo: <problema concreto>`. Hasta 5 intentos por imagen.
-7. Descargá la aprobada y pasala a la pieza:
+3. Por cada slot, pegá su pedido **entero** (ya trae el sistema de arte). Esperá la imagen.
+4. Pasá el **control de calidad** del bloque ARTE. Lo más importante: **ninguna letra** (ni ilegible) y la **franja de abajo vacía**.
+5. Si falla, escribí en la misma conversación: `Regenerá corrigiendo: <problema concreto>`. Hasta 5 intentos por imagen.
+6. Descargá la aprobada y pasala a la pieza:
    ```bash
    npx tsx scripts/contenido.ts arte <id> <slot> <archivo descargado>
    ```
@@ -42,12 +43,11 @@ Si la pieza no pide arte, el bloque lo dice: pasá a ENTERA.
 
 1. **Conversación nueva**: una por salida, así el estilo queda parejo dentro de la serie.
 2. **Adjuntá las referencias** de `contenido/marca/referencias/`, con la misma frase.
-3. Pegá el **Sistema de diseño**, una sola vez.
-4. Pegá el pedido de la **diapositiva 1**. Esperá la imagen.
-5. Pasá el **control de calidad** del bloque ENTERA. El texto tiene que ser **exactamente** el pedido: revisalo letra por letra (tildes, ¿ ¡, comas y puntos). En el cierre, el rincón de arriba a la izquierda vacío y **ningún logo dibujado**.
-6. Si falla: `Regenerá la diapositiva N corrigiendo: <problema concreto, por ejemplo "dice 'barbero' y tiene que decir 'barbería'">`. Hasta 5 intentos por diapositiva.
-7. Descargá la aprobada y seguí con la 2, la 3… **en orden**.
-8. Al terminar la salida, importá las descargas:
+3. Pegá el pedido **entero** de la **diapositiva 1** (ya trae el sistema de diseño). Esperá la imagen.
+4. Pasá el **control de calidad** del bloque ENTERA. El texto tiene que ser **exactamente** el pedido: revisalo letra por letra (tildes, ¿ ¡, comas y puntos). En el cierre, el rincón de arriba a la izquierda vacío y **ningún logo dibujado**.
+5. Si falla: `Regenerá la diapositiva N corrigiendo: <problema concreto, por ejemplo "dice 'barbero' y tiene que decir 'barbería'">`. Hasta 5 intentos por diapositiva.
+6. Descargá la aprobada y seguí con la 2, la 3… **en orden**.
+7. Al terminar la salida, importá las descargas:
    ```bash
    npx tsx scripts/contenido.ts importar <id> <salida>
    ```

@@ -11,8 +11,10 @@
  *   (`contenido.ts importar` las recorta y firma el cierre con el monograma).
  *
  * Los sistemas de diseño salen de contenido/marca/imagenes-chatgpt.md (ARTE)
- * y contenido/marca/chatgpt-diseno.md (ENTERA). Al abrir cada conversación
- * se adjuntan las referencias de contenido/marca/referencias/.
+ * y contenido/marca/chatgpt-diseno.md (ENTERA). Cada pedido es autocontenido
+ * (sistema + lo propio de la imagen): sirve igual para Codex (~/bin/imagen,
+ * por defecto) que para ChatGPT en el navegador. También escribe
+ * piezas/<id>/pedidos.json, con un prompt completo por archivo.
  *
  * Uso, desde web/:
  *   npx tsx scripts/chatgpt-prompts.ts 2026-10-25-mas-barato-otro-rol
@@ -212,6 +214,11 @@ function pedidosEntera(pieza: Pieza, salida: Salida) {
   });
 }
 
+/** Pedido autocontenido: el sistema del bloque y, abajo, lo propio de esta imagen. Sirve para ChatGPT y para Codex (~/bin/imagen). */
+const autocontenido = (sistema: string, pedido: string) => `${sistema}\n\n=== ESTA IMAGEN ===\n${pedido}`;
+
+type PedidoJson = { archivo: string; formato: Formato; ancho: number; alto: number; prompt: string };
+
 function escribir(id: string) {
   const pieza = leerPieza(id);
   const salidas = pieza.salidas.filter(usaChatGPT);
@@ -221,25 +228,29 @@ function escribir(id: string) {
   const refs = referencias();
   const carpeta = carpetaDe(id);
   const refsLinea = refs.length
-    ? `Adjuntá estas referencias (están en \`${path.join(CONTENIDO, "marca", "referencias")}\`): ${refs.map((file) => `\`${file}\``).join(", ")}. Decile a ChatGPT: "Estas son piezas aprobadas de la marca: copiá su clima, su materia y su tipografía, no su texto."`
-    : "Todavía no hay referencias aprobadas en `contenido/marca/referencias/`: seguí solo con el sistema.";
+    ? `Si la herramienta acepta imágenes (ChatGPT), adjuntá las referencias de \`${path.join(CONTENIDO, "marca", "referencias")}\` (${refs.map((file) => `\`${file}\``).join(", ")}) y decí: "Estas son piezas aprobadas de la marca: copiá su clima, su materia y su tipografía, no su texto."`
+    : "Todavía no hay referencias aprobadas en `contenido/marca/referencias/`: alcanza con el pedido.";
+  const sistemaArte = slots.length ? bloque("imagenes-chatgpt.md", "ARTE") : "";
+  const sistemaEntera = salidas.length ? bloque("chatgpt-diseno.md", "SISTEMA") : "";
+  // Lo mismo, para máquinas: guionista y Codex leen pedidos.json (un prompt completo por archivo).
+  const json: { pieza: string; arte: Array<PedidoJson & { slot: string }>; entera: Array<PedidoJson & { salida: string; n: number; cierre: boolean }> } = { pieza: id, arte: [], entera: [] };
 
   const out: string[] = [
-    `# ChatGPT · ${pieza.titulo}`,
+    `# Pedidos de imagen · ${pieza.titulo}`,
     "",
-    `Pieza \`${id}\`. Archivo generado con \`npx tsx scripts/chatgpt-prompts.ts ${id}\`: no lo edites a mano.`,
+    `Pieza \`${id}\`. Archivo generado con \`npx tsx scripts/chatgpt-prompts.ts ${id}\`: no lo edites a mano. Lo mismo, para máquinas, en \`pedidos.json\`.`,
     `Carpeta de la pieza: \`${carpeta}\``,
     "",
-    "Dos bloques, en este orden: primero **ARTE** (versión A: imágenes sin letras; el texto lo pone el código) y después **ENTERA** (versión B: ChatGPT diseña la diapositiva completa). Mario elige una de las dos.",
+    "Dos bloques, en este orden: primero **ARTE** (versión A: imágenes sin letras; el texto lo pone el código) y después **ENTERA** (versión B: la diapositiva completa con su texto). Mario elige una de las dos.",
     "",
-    "## Cómo usarlo (agente del navegador)",
+    "## Cómo usarlo",
     "",
-    "1. Cada bloque (y en ENTERA, cada salida) va en una **conversación nueva** de ChatGPT.",
-    `2. Al abrir la conversación: ${refsLinea}`,
-    "3. Pegá el **sistema** del bloque, una vez por conversación.",
-    "4. Pegá los pedidos **de a uno y en orden**. Después de cada imagen, pasá el control de calidad.",
-    '5. Si una imagen falla, pedí: "Regenerá corrigiendo: …" con el problema concreto. Hasta 5 intentos por imagen.',
-    "6. Descargá las aprobadas y pasalas a la pieza con los comandos de cada bloque (desde `web/`).",
+    "**Cada pedido es autocontenido:** trae el sistema de la marca y lo propio de esa imagen. Se pega entero, de a uno, sin depender de una conversación previa.",
+    "",
+    "- **Con Codex** (por defecto): `~/bin/imagen \"<pedido entero>\" <carpeta de la pieza>/<archivo>`.",
+    `- **Con ChatGPT en el navegador** (en pausa, D-016): conversación nueva por bloque. ${refsLinea}`,
+    "- Si una imagen falla el control de calidad, se pide de nuevo con el pedido entero más «Corrección: <problema concreto>». Hasta 5 intentos.",
+    "- Después, desde `web/`, los comandos de cada bloque las dejan a la medida exacta.",
     "",
     "## ARTE · versión A",
     "",
@@ -247,16 +258,18 @@ function escribir(id: string) {
 
   if (!slots.length) out.push("Esta pieza no pide arte: la versión A sale solo con código. Seguí con ENTERA.", "");
   else {
-    out.push("### Sistema de arte (pegar primero)", "", "```text", bloque("imagenes-chatgpt.md", "ARTE"), "```", "");
     for (const slot of slots) {
       const listo = imagenDe(id, slot.slot) ? " · ✔ ya está" : "";
-      out.push(`### Slot \`${slot.slot}\` → \`imagenes/${slot.slot}.png\`${listo}`, "", "```text", pedidoArte(pieza, slot, usos.get(slot.slot) ?? []), "```", "", "Al descargarla:", "", "```bash", `npx tsx scripts/contenido.ts arte ${id} ${slot.slot} <archivo descargado>`, "```", "");
+      const prompt = autocontenido(sistemaArte, pedidoArte(pieza, slot, usos.get(slot.slot) ?? []));
+      const { width, height } = SOCIAL_FORMATS[slot.formato];
+      json.arte.push({ slot: slot.slot, archivo: `imagenes/${slot.slot}.png`, formato: slot.formato, ancho: width, alto: height, prompt });
+      out.push(`### Slot \`${slot.slot}\` → \`imagenes/${slot.slot}.png\`${listo}`, "", "```text", prompt, "```", "", "Para dejarla a la medida (si no la guardaste ya con ese nombre y medida):", "", "```bash", `npx tsx scripts/contenido.ts arte ${id} ${slot.slot} <archivo>`, "```", "");
     }
     out.push(
       "### Control de calidad (cada arte)",
       "",
       "- [ ] **Ninguna letra**: ni texto, ni números, ni carteles, ni pantallas con contenido, aunque sean ilegibles.",
-      "- [ ] La franja pedida está vacía y en calma (pared lisa): ahí va el texto.",
+      "- [ ] La franja de abajo que pide el pedido está vacía y en calma (pared lisa): ahí va el texto.",
       "- [ ] Solo pared, marfil y grises cálidos: ningún color.",
       "- [ ] Sin logos, sin caras, sin manos deformes, sin objetos imposibles.",
       "- [ ] Parece de la misma pared que las referencias: mate, con grano, luz rasante.",
@@ -265,14 +278,28 @@ function escribir(id: string) {
   }
 
   out.push("## ENTERA · versión B", "");
-  if (!salidas.length) out.push("Esta pieza no tiene salidas estáticas para ChatGPT (son reels): la versión B no aplica.", "");
+  if (!salidas.length) out.push("Esta pieza no tiene salidas estáticas (son reels): la versión B no aplica.", "");
   else {
-    out.push("### Sistema de diseño (pegar primero, en cada conversación)", "", "```text", bloque("chatgpt-diseno.md", "SISTEMA"), "```");
     for (const salida of salidas) {
       const list = pedidosEntera(pieza, salida);
-      out.push("", `### Salida \`${salida.id}\` · ${list.length} diapositiva(s) · para ${salida.para.join(", ")}`, "");
-      for (const item of list) out.push(`#### ${item.n}. → \`imagenes/${item.file}\``, "", "```text", item.text, "```", "");
-      out.push("Al terminar la salida, importá las descargas (las recorta, las numera y firma el cierre con el monograma):", "", "```bash", `npx tsx scripts/contenido.ts importar ${id} ${salida.id}`, "```", "");
+      const formato = formatoDe(salida);
+      const { width, height } = SOCIAL_FORMATS[formato];
+      const slides = diapositivasDe(salida);
+      out.push(`### Salida \`${salida.id}\` · ${list.length} diapositiva(s) · para ${salida.para.join(", ")}`, "");
+      for (const item of list) {
+        const prompt = autocontenido(sistemaEntera, item.text);
+        json.entera.push({ salida: salida.id, n: item.n, archivo: `imagenes/${item.file}`, formato, ancho: width, alto: height, prompt, cierre: slides[item.n - 1]?.tipo === "cierre" });
+        out.push(`#### ${item.n}. → \`imagenes/${item.file}\``, "", "```text", prompt, "```", "");
+      }
+      out.push(
+        "Al terminar la salida:",
+        "",
+        "```bash",
+        `npx tsx scripts/contenido.ts importar ${id} ${salida.id}   # si vienen de Descargas: recorta, numera y firma el cierre`,
+        `npx tsx scripts/contenido.ts firmar ${id} ${salida.id}     # si ya están en imagenes/ (Codex): recorta y firma el cierre`,
+        "```",
+        "",
+      );
     }
     out.push(
       "### Control de calidad (cada diapositiva)",
@@ -287,6 +314,7 @@ function escribir(id: string) {
     );
   }
   writeFileSync(path.join(carpeta, "chatgpt.md"), `${out.join("\n")}\n`);
+  writeFileSync(path.join(carpeta, "pedidos.json"), `${JSON.stringify(json, null, 2)}\n`);
   return true;
 }
 

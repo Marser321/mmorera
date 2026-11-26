@@ -17,6 +17,9 @@
  *       versión B: toma las N imágenes más nuevas de la carpeta (por defecto, Descargas),
  *       en el orden en que se descargaron, las recorta a la medida del formato, las guarda
  *       como imagenes/gpt-<salida>-01.png, -02.png… y firma el cierre con el monograma
+ *   npx tsx scripts/contenido.ts firmar <id> [salida]
+ *       versión B hecha con Codex (ya en imagenes/gpt-…): la deja a la medida y firma el
+ *       cierre con el monograma (una sola vez por archivo)
  *   npx tsx scripts/contenido.ts arte <id> <slot> [archivo]
  *       versión A: recorta un arte sin letras (por defecto, la imagen más nueva de
  *       Descargas) al formato del slot y lo guarda como imagenes/<slot>.png
@@ -359,6 +362,44 @@ switch (command) {
     })();
     break;
   }
+  case "firmar": {
+    // Versión B hecha con Codex: las gpt-*.png ya están en imagenes/. Las deja a la medida y firma el cierre, una sola vez.
+    const [id, salidaId] = args;
+    const pieza = leerPieza(id ?? "");
+    const salidas = pieza.salidas.filter((salida) => archivosChatGPT(salida).length && (!salidaId || salida.id === salidaId));
+    if (!salidas.length) throw new Error(`${id} no tiene ${salidaId ? `la salida "${salidaId}" con` : ""} diapositivas de la versión B`);
+    const dir = path.join(carpetaDe(id), "imagenes");
+    const registro = path.join(dir, ".firmadas.json");
+    const firmadas: Record<string, number> = existsSync(registro) ? JSON.parse(readFileSync(registro, "utf8")) : {};
+    void (async () => {
+      for (const salida of salidas) {
+        const formato = formatoDe(salida);
+        const { width, height } = SOCIAL_FORMATS[formato];
+        const slides = diapositivasDe(salida);
+        const tono = ("tono" in salida && salida.tono) || "oscuro";
+        for (const [index, file] of archivosChatGPT(salida).entries()) {
+          const full = path.join(dir, file);
+          if (!existsSync(full)) {
+            console.log(`  · falta imagenes/${file}`);
+            continue;
+          }
+          const meta = await sharp(full).metadata();
+          if (meta.width !== width || meta.height !== height) writeFileSync(full, await sharp(full).resize(width, height, { fit: "cover", position: "centre" }).png().toBuffer());
+          const slide = slides[index];
+          if (slide?.tipo === "cierre" && firmadas[file] !== statSync(full).mtimeMs) {
+            await firmarCierre(full, formato, slides.length > 1 ? tonoDeDiapositiva(slide, index, tono) : tono);
+            firmadas[file] = statSync(full).mtimeMs;
+            console.log(`  imagenes/${file}: firmada con el monograma`);
+          }
+        }
+      }
+      writeFileSync(registro, `${JSON.stringify(firmadas, null, 2)}\n`);
+      const errores = revisarPieza(id).problemas.filter((p) => p.nivel === "error" && p.donde.startsWith("salidas."));
+      for (const p of errores) console.log(`  error  ${p.donde}: ${p.mensaje}`);
+      console.log(errores.length ? "✖ revisá los errores de arriba" : `✔ ${id}: versión B a la medida y firmada`);
+    })();
+    break;
+  }
   case "arte": {
     const [id, slotName, archivo] = args;
     const pieza = leerPieza(id ?? "");
@@ -409,5 +450,5 @@ switch (command) {
     break;
   }
   default:
-    console.log("Comandos: estado · listo <id> · borrador <id> · aprobar <id…> · hoy [fecha] · publicado <id> <plataforma> <url> · revision · chatgpt · importar <id> <salida> [carpeta] · arte <id> <slot> [archivo] · paquete <id> --version a|b --dest <carpeta>");
+    console.log("Comandos: estado · listo <id> · borrador <id> · aprobar <id…> · hoy [fecha] · publicado <id> <plataforma> <url> · revision · chatgpt · importar <id> <salida> [carpeta] · firmar <id> [salida] · arte <id> <slot> [archivo] · paquete <id> --version a|b --dest <carpeta>");
 }

@@ -13,19 +13,32 @@ G:\Mi unidad\Redes\
   3 · Archivo viejo\  contenido viejo para revisar (no se publica)
 ```
 
-Cada carpeta de `1 · Por publicar` se llama `AAAA-MM-DD-…` (la fecha en que sale) y trae:
+Cada carpeta de `1 · Por publicar` se llama `AAAA-MM-DD-<slug>` (la fecha en que sale) y trae:
 
 - los archivos numerados en orden: `01-carrusel-01.png`, `02-carrusel-02.png`… o `01-tarjeta.png`, `02-reel.mp4`;
 - `publicar.md`: por cada red, qué archivos subir y en qué orden, el **texto** a pegar, el **primer comentario** y el **texto alternativo** de cada imagen;
-- `paquete.json`: lo mismo, para máquinas (no hace falta abrirlo).
+- `destino.json`: **en qué cuentas** se publica y hasta cuándo:
+  ```json
+  {"pieza": "<id>", "fecha": "AAAA-MM-DD", "version": "a", "prueba": false,
+   "cuentas": [{"clave": "linkedin-personal", "red": "linkedin", "nombre": "Mario Morera", "titular": "personal"}],
+   "publicar_antes": "AAAA-MM-DD 20:00", "nota": "…"}
+  ```
+- `paquete.json`: lo mismo que `publicar.md`, para máquinas (no hace falta abrirlo).
+
+**Las carpetas que empiezan con `_` no se publican nunca:** `_prueba-…` (pruebas, traen `PRUEBA-NO-PUBLICAR.txt`) y `_vencida-…` (no salió a tiempo y Mario la publica a mano; publicarla sería un doble post).
 
 ## Antes de empezar
 
 1. Fijate la fecha de hoy.
-2. Abrí `G:\Mi unidad\Redes\1 · Por publicar\`. Trabajás **solo** las carpetas cuyo nombre empieza con la fecha de hoy y cuyo `publicar.md` dice esa misma «Fecha de publicación». Las de otras fechas no se tocan.
-3. Si no hay ninguna de hoy, terminaste: no publicás nada.
+2. Abrí `G:\Mi unidad\Redes\1 · Por publicar\`. Trabajás **solo** las carpetas que:
+   - empiezan con la fecha de hoy (nunca las que empiezan con `_`);
+   - tienen `destino.json` con `"fecha"` de hoy y `"prueba": false`;
+   - todavía están a tiempo: la hora es anterior a `publicar_antes`.
+3. Si no hay ninguna, terminaste: no publicás nada.
 
-## Por cada carpeta de hoy y cada red de su `publicar.md`
+## Por cada carpeta de hoy y cada cuenta de su `destino.json`
+
+Publicás **solo en las cuentas de `destino.json`** (con la sesión de esa cuenta: personal o de la agencia, según `titular` y `nombre`). Para cada cuenta, usás la sección de su `red` en `publicar.md`. Si `publicar.md` trae una red que no está en `destino.json`, esa red no se publica.
 
 1. **Subí los archivos que dice esa red, en ese orden.**
    - Varias imágenes = un carrusel: **una sola publicación** con todas, en orden.
@@ -40,30 +53,30 @@ Cada carpeta de `1 · Por publicar` se llama `AAAA-MM-DD-…` (la fecha en que s
 
 ## Al terminar la carpeta: `publicado.json` y mover
 
-Escribí `publicado.json` dentro de la carpeta, con las URL de cada red:
+Escribí `publicado.json` dentro de la carpeta, con una entrada por cuenta publicada:
 
 ```json
 {
-  "id": "2026-11-27-un-agente-sin-tests",
-  "fecha": "2026-11-27",
-  "publicado": "2026-11-27T10:12:00-03:00",
-  "redes": {
-    "linkedin": { "url": "https://www.linkedin.com/feed/update/…", "comentario": true },
-    "instagram": { "url": "https://www.instagram.com/p/…", "comentario": false },
-    "facebook": { "url": "https://www.facebook.com/…", "comentario": false }
-  },
-  "pendientes": {}
+  "pieza": "2026-11-27-un-agente-sin-tests",
+  "publicaciones": [
+    { "cuenta": "linkedin-personal", "red": "linkedin", "url": "https://www.linkedin.com/feed/update/…", "fecha": "2026-11-27T10:12", "primer_comentario": true },
+    { "cuenta": "instagram-personal", "red": "instagram", "url": "https://www.instagram.com/p/…", "fecha": "2026-11-27T10:20", "primer_comentario": false }
+  ],
+  "pendientes": [
+    { "cuenta": "facebook-personal", "motivo": "pidió un código de verificación" }
+  ]
 }
 ```
 
-- `id` y `fecha`: los de `publicar.md` (Pieza y Fecha de publicación).
-- `comentario`: `true` si dejaste el primer comentario.
-- `pendientes`: las redes que no salieron, con el motivo en una frase (`"facebook": "pidió un código de verificación"`).
+- `pieza`: la de `destino.json`.
+- `cuenta`: la `clave` de `destino.json`; `red`, la suya.
+- `primer_comentario`: `true` si lo dejaste.
+- `pendientes`: las cuentas que no salieron, con el motivo en una frase.
 
 Después **mové la carpeta entera** a `G:\Mi unidad\Redes\2 · Publicado\AAAA-MM\` (el mes de hoy; creala si no existe). La Mac la ve ahí, registra los enlaces y le avisa a Mario.
 
-- Si salió en **al menos una red**: `publicado.json` (con `pendientes` si faltó alguna) y movés la carpeta. Nunca reintentes al día siguiente.
-- Si **no salió en ninguna**: no la muevas. Escribí `bloqueado.md` en la carpeta con qué pasó y en qué red. Esa noche la Mac le manda a Mario el camino manual por Telegram.
+- Si salió en **al menos una cuenta**: `publicado.json` (con `pendientes` si faltó alguna) y movés la carpeta. Nunca reintentes al día siguiente.
+- Si **no salió en ninguna**: no la muevas. Escribí `bloqueado.md` en la carpeta con qué pasó y en qué cuenta. Si a la hora de `publicar_antes` sigue ahí, la Mac la marca `_vencida-…` y le manda a Mario el camino manual por Telegram.
 
 ## Modo en seco (para probar)
 
@@ -88,7 +101,7 @@ En todos esos casos no reintentes con otra estrategia ni con otra cuenta: anotá
 
 ## Lo que no hacés
 
-- No publicás nada que no esté en `1 · Por publicar` con fecha de hoy, ni más de una vez la misma carpeta.
+- No publicás nada que no esté en `1 · Por publicar` con fecha de hoy, ni en una carpeta que empiece con `_`, ni en una cuenta que no esté en `destino.json`, ni después de `publicar_antes`, ni más de una vez la misma carpeta.
 - No editás textos, archivos ni el orden; no agregás emojis, hashtags ni menciones.
 - No respondés comentarios ni mensajes directos; por ahora lo hace Mario.
 - No seguís cuentas, no das «me gusta» y no comentás en otras cuentas (el único comentario es el primero, propio, en la publicación del día).

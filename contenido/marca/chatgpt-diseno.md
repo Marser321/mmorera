@@ -1,10 +1,8 @@
-# Sistema de diseño para ChatGPT (versión B: la diapositiva entera)
+# Sistema de diseño para la versión B (la diapositiva entera)
 
-En la versión B, ChatGPT diseña cada diapositiva completa, texto incluido. Mario ve las dos versiones (A y B) y elige. Para que todas parezcan de la misma marca, cada conversación empieza así:
+En la versión B, la IA de imágenes (Codex con `~/bin/imagen`, por defecto; o ChatGPT en el navegador, hoy en pausa por D-016) diseña cada diapositiva completa, texto incluido. Mario ve las dos versiones (A y B) y elige.
 
-1. **Adjuntá las referencias** de `contenido/marca/referencias/` (las piezas que Mario aprobó) y decile: «Estas son piezas aprobadas de la marca: copiá su clima, su materia y su tipografía, no su texto».
-2. Pegá el bloque de abajo.
-3. Pegá los pedidos de cada diapositiva, que se generan solos en el bloque **ENTERA** de `piezas/<id>/chatgpt.md`:
+Los pedidos se generan solos en el bloque **ENTERA** de `piezas/<id>/chatgpt.md` (y en `pedidos.json`). **Cada pedido es autocontenido:** trae el bloque de abajo y lo propio de la diapositiva, así se pasa entero a Codex o a ChatGPT. Con ChatGPT, además, se adjuntan las referencias de `contenido/marca/referencias/` con la frase «Estas son piezas aprobadas de la marca: copiá su clima, su materia y su tipografía, no su texto».
 
 ```bash
 npx tsx scripts/chatgpt-prompts.ts <id>
@@ -91,4 +89,4 @@ El script ya incluye estas indicaciones en cada pedido; están acá como referen
 
 ## La firma del cierre
 
-ChatGPT deforma los logos, así que no dibuja el monograma. `contenido.ts importar` pega el vector oficial (con la textura de piedra y fundido hacia abajo) en el rincón que el pedido dejó vacío, igual que en la versión A.
+La IA deforma los logos, así que no dibuja el monograma. `contenido.ts importar` (descargas de ChatGPT) o `contenido.ts firmar <id>` (diapositivas de Codex, ya en `imagenes/`) pega el vector oficial, con la textura de piedra y fundido hacia abajo, en el rincón que el pedido dejó vacío. `firmar` no firma dos veces el mismo archivo.
