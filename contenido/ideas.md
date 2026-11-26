@@ -2,6 +2,18 @@
 
 Ideas que todavía no tienen fecha. Cuando una entra al calendario, se mueve allá. Anotá de dónde salió cada una: un comentario, una encuesta, algo que pasó en un proyecto.
 
+## Foco (Mario, 26/11/2026)
+
+En sus palabras: **«software propio, software personalizado, acompañamiento, curiosidades, contenido de valor»**, contado **por rubro**: gimnasios, clínicas y dentistas primero; otros rubros más adelante. Sin mostrar marcas, clientes ni los nombres de las demos.
+
+Solo con lo que Mario construyó de verdad en Oficio (ver `ventas/perfil.md` en central y la bitácora de `infra/README.md`):
+
+- **Gimnasios:** rutinas que arma el entrenador y el socio ve en su app; biblioteca de ejercicios en 3D (aislar un músculo, color por tipo de trabajo); app del entrenador con «Ver en 3D»; borrador de rutina con IA que el entrenador revisa; «Socios hoy».
+- **Clínicas:** presupuestos y planes de tratamiento, seguimiento de presupuestos por atender, página del presupuesto para el paciente, «Dónde actúa» cada tratamiento en rostro y cuerpo 3D.
+- **Dentistas:** plan dental por pieza (piezas numeradas), boca 3D con escenas, «Así funciona» cada tratamiento (limpieza, blanqueamiento, ortodoncia, implante, empaste, carillas, endodoncia) con antes, durante y después.
+
+Sin cifras de resultado ni porcentajes. Lo de cada rubro se cuenta como lo que el sistema hace por el negocio (software propio y a medida, acompañamiento), o como curiosidad y contenido de valor para ese rubro.
+
 ## Casos
 
 - **Truckers Choice:** el mismo sitio en dos idiomas, con rutas espejo (capítulo `bilingual`).
