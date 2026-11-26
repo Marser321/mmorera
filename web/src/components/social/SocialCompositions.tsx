@@ -4,7 +4,7 @@ import type { CarruselVideoProps, ImagenesProp, ReelCasoProps, ReelTextoProps, S
 import { frames, reelCasoBeats, reelTextoBeats, SLIDE_SECONDS, tonoDeDiapositiva, type Beat } from "@/data/social/timing";
 import { fondoDe, socialSafeArea, SOCIAL_FORMATS, type Diapositiva, type Formato, type Tono } from "@/data/social/types";
 import { EASE_IN_OUT, EASE_OUT, progress } from "../films/scenes/theme";
-import { Arco, Eco, ElementsLayer, FondoArte, Grain, PiedraEncima, SegmentedProgress, SOCIAL_COLORS, SOCIAL_FONTS, SocialFrame } from "./SocialKit";
+import { Arco, Eco, ElementsLayer, FondoArte, Grain, MosaicoLogo, PiedraEncima, SegmentedProgress, SOCIAL_COLORS, SOCIAL_FONTS, SocialFrame } from "./SocialKit";
 
 /**
  * Composiciones de las piezas de redes (las registra remotion/socialRoot.tsx).
@@ -18,7 +18,7 @@ import { Arco, Eco, ElementsLayer, FondoArte, Grain, PiedraEncima, SegmentedProg
 const sizesOf = (imagenes: ImagenesProp) => Object.fromEntries(Object.entries(imagenes).map(([slot, image]) => [slot, { w: image.w, h: image.h }]));
 
 /** Hilo continuo: cruza todas las diapositivas a la misma altura; el punto marca dónde estás. */
-function Hilo({ formato, pagina, tono }: { formato: Formato; pagina: { n: number; total: number }; tono: Tono }) {
+function Hilo({ formato, pagina, tono, luz }: { formato: Formato; pagina: { n: number; total: number }; tono: Tono; luz?: string }) {
   const frame = useCurrentFrame();
   const { width, height } = SOCIAL_FORMATS[formato];
   const c = SOCIAL_COLORS[tono];
@@ -31,7 +31,7 @@ function Hilo({ formato, pagina, tono }: { formato: Formato; pagina: { n: number
     <>
       <div style={{ position: "absolute", left: 0, top: y, width, height: 1, background: c.line }} />
       <div style={{ position: "absolute", left: 0, top: y, width: x * draw, height: 1, background: `rgb(${c.rgb} / 0.55)` }} />
-      <div style={{ position: "absolute", left: x - 5, top: y - 5, width: 11, height: 11, borderRadius: 11, background: c.fg, transform: `scale(${draw})` }} />
+      <div style={{ position: "absolute", left: x - 5, top: y - 5, width: 11, height: 11, borderRadius: 11, background: luz ?? c.fg, boxShadow: luz ? `0 0 16px ${luz}` : undefined, transform: `scale(${draw})` }} />
     </>
   );
 }
@@ -95,32 +95,35 @@ function Desliza({ formato, tono }: { formato: Formato; tono: Tono }) {
  * portada y en las frases (tarjeta, cita), el número en contorno en las de
  * contenido. El cierre lleva el monograma (en el layout).
  */
-function Recurso({ slide, formato, tono, pagina }: { slide: Diapositiva; formato: Formato; tono: Tono; pagina?: { n: number; total: number } }) {
+function Recurso({ slide, formato, tono, pagina, luz }: { slide: Diapositiva; formato: Formato; tono: Tono; pagina?: { n: number; total: number }; luz?: string }) {
   const { width, height } = SOCIAL_FORMATS[formato];
   if (slide.tipo === "portada")
     return (
       <>
-        <Arco cx={width * 1.0} cy={height * 0.0} r={width * 0.54} tono={tono} opacity={tono === "oscuro" ? 0.26 : 0.34} fundido="to bottom left" />
+        <Arco cx={width * 1.0} cy={height * 0.0} r={width * 0.54} tono={tono} opacity={tono === "oscuro" ? 0.26 : 0.34} fundido="to bottom left" luz={luz} />
       </>
     );
-  if (slide.tipo === "tarjeta" || slide.tipo === "cita") return <Arco cx={width * 0.98} cy={height * 0.02} r={width * 0.56} tono={tono} opacity={tono === "oscuro" ? 0.3 : 0.36} fundido="to bottom left" />;
+  if (slide.tipo === "tarjeta" || slide.tipo === "cita") return <Arco cx={width * 0.98} cy={height * 0.02} r={width * 0.56} tono={tono} opacity={tono === "oscuro" ? 0.3 : 0.36} fundido="to bottom left" luz={luz} />;
   if (slide.tipo === "cierre") return <Arco cx={width * 0.5} cy={height * 1.5} r={width * 0.84} tono={tono} opacity={0.13} fundido="to top" />;
   if (pagina) return <NumeroGigante n={numeroDeRotulo(slide) ?? pagina.n} tono={tono} formato={formato} />;
   return null;
 }
 
-function Slide({ formato, slide, pagina, tono, imagenes, exitAt }: SlideProps & { exitAt?: number }) {
+function Slide({ formato, slide, pagina, tono, imagenes, exitAt, luz: luzDePieza }: SlideProps & { exitAt?: number }) {
   const layout = slideLayout(formato, slide, pagina, sizesOf(imagenes));
   const slot = fondoDe(slide);
   const arte = slot ? imagenes[slot] : undefined;
   // Con arte de fondo la diapositiva va siempre sobre pared: el velo es oscuro.
-  const t = arte ? "oscuro" : pagina ? tonoDeDiapositiva(slide, pagina.n - 1, tono) : tono;
+  const mosaico = slide.tipo === "portada" && formato === "feed" ? slide.mosaico : undefined;
+  const t = arte || mosaico ? "oscuro" : pagina ? tonoDeDiapositiva(slide, pagina.n - 1, tono) : tono;
+  // La luz es un detalle sobre la pared: en la diapositiva marfil (la cita) no va.
+  const luz = t === "oscuro" ? luzDePieza : undefined;
   return (
     <SocialFrame tono={t}>
-      {arte ? <FondoArte imagen={arte} zona={layout.zona} height={SOCIAL_FORMATS[formato].height} /> : <Recurso slide={slide} formato={formato} tono={t} pagina={pagina} />}
-      <ElementsLayer elements={layout.elements} tono={t} imagenes={imagenes} exitAt={exitAt} sobreArte={Boolean(arte)} />
-      {pagina && pagina.total > 1 ? <Hilo formato={formato} pagina={pagina} tono={t} /> : null}
-      {slide.tipo === "portada" && pagina && pagina.total > 1 ? <Desliza formato={formato} tono={t} /> : null}
+      {mosaico ? <MosaicoLogo celda={mosaico.celda} /> : arte ? <FondoArte imagen={arte} zona={layout.zona} height={SOCIAL_FORMATS[formato].height} /> : <Recurso slide={slide} formato={formato} tono={t} pagina={pagina} luz={luz} />}
+      <ElementsLayer elements={layout.elements} tono={t} imagenes={imagenes} exitAt={exitAt} sobreArte={Boolean(arte)} luz={luz} />
+      {pagina && pagina.total > 1 && !mosaico ? <Hilo formato={formato} pagina={pagina} tono={t} luz={luz} /> : null}
+      {slide.tipo === "portada" && pagina && pagina.total > 1 && !mosaico ? <Desliza formato={formato} tono={t} /> : null}
       <PiedraEncima opacity={arte ? 0.3 : t === "oscuro" ? 0.22 : 0.16} />
       <Grain opacity={arte ? 0.42 : t === "oscuro" ? 0.36 : 0.26} />
     </SocialFrame>
@@ -133,14 +136,14 @@ export function SocialSlide(props: SlideProps) {
 }
 
 /** El carrusel como video (TikTok, Shorts o LinkedIn): una diapositiva por pulso, con golpe de entrada. */
-export function SocialCarruselVideo({ formato, diapositivas, tono, imagenes }: CarruselVideoProps) {
+export function SocialCarruselVideo({ formato, diapositivas, tono, imagenes, luz }: CarruselVideoProps) {
   const each = frames(SLIDE_SECONDS);
   return (
     <AbsoluteFill>
       {diapositivas.map((slide, index) => (
         <Sequence key={index} from={index * each} durationInFrames={each}>
           <Entrada transicion={index === 0 ? "zoom" : index % 2 ? "barrido" : "golpe"} index={index} duration={each}>
-            <Slide formato={formato} slide={slide} pagina={{ n: index + 1, total: diapositivas.length }} tono={tono} imagenes={imagenes} exitAt={index < diapositivas.length - 1 ? each - 8 : undefined} />
+            <Slide formato={formato} slide={slide} pagina={{ n: index + 1, total: diapositivas.length }} tono={tono} imagenes={imagenes} luz={luz} exitAt={index < diapositivas.length - 1 ? each - 8 : undefined} />
           </Entrada>
         </Sequence>
       ))}

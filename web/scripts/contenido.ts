@@ -33,7 +33,7 @@ import os from "node:os";
 import path from "node:path";
 import sharp from "sharp";
 import { SECCION_COPY, textosDeDiapositiva, validarPieza } from "../src/data/social/validate";
-import { archivosChatGPT, archivosDeVersion, archivosEsperados, formatoDe, type Version } from "../src/data/social/render";
+import { archivosChatGPT, archivosDeVersion, archivosEsperados, diapositivasChatGPT, formatoDe, type Version } from "../src/data/social/render";
 import { diapositivasDe, tonoDeDiapositiva } from "../src/data/social/timing";
 import { PLATAFORMAS, socialSafeArea, SOCIAL_FORMATS, type Estado, type Formato, type Pieza, type Plataforma, type Salida, type Tono } from "../src/data/social/types";
 import { carpetaDe, CONTENIDO, entornoDe, guardarPieza, leerPieza, listarPiezas, revisarPieza, seccionCopy } from "./lib/piezas";
@@ -352,8 +352,10 @@ switch (command) {
       for (const [index, candidata] of candidatas.entries()) {
         const destino = path.join(carpetaDe(id), "imagenes", destinos[index]);
         await sharp(candidata.file).resize(width, height, { fit: "cover", position: "centre" }).png().toFile(destino);
-        const slide = slides[index];
-        if (slide?.tipo === "cierre") await firmarCierre(destino, formato, slides.length > 1 ? tonoDeDiapositiva(slide, index, tono) : tono);
+        // La portada de mosaico no pasa por ChatGPT: la posición real de cada diapositiva sale de diapositivasChatGPT.
+        const item = diapositivasChatGPT(salida)[index];
+        const slide = item?.slide;
+        if (slide?.tipo === "cierre") await firmarCierre(destino, formato, slides.length > 1 ? tonoDeDiapositiva(slide, item.index, tono) : tono);
         console.log(`  ${path.basename(candidata.file)} → imagenes/${destinos[index]}${slide?.tipo === "cierre" ? " (firmado con el monograma)" : ""}`);
       }
       const errores = revisarPieza(id).problemas.filter((p) => p.nivel === "error" && p.donde.startsWith(`salidas.${salidaId}`));
@@ -377,7 +379,7 @@ switch (command) {
         const { width, height } = SOCIAL_FORMATS[formato];
         const slides = diapositivasDe(salida);
         const tono = ("tono" in salida && salida.tono) || "oscuro";
-        for (const [index, file] of archivosChatGPT(salida).entries()) {
+        for (const { index, slide, file } of diapositivasChatGPT(salida)) {
           const full = path.join(dir, file);
           if (!existsSync(full)) {
             console.log(`  · falta imagenes/${file}`);
@@ -385,8 +387,7 @@ switch (command) {
           }
           const meta = await sharp(full).metadata();
           if (meta.width !== width || meta.height !== height) writeFileSync(full, await sharp(full).resize(width, height, { fit: "cover", position: "centre" }).png().toBuffer());
-          const slide = slides[index];
-          if (slide?.tipo === "cierre" && firmadas[file] !== statSync(full).mtimeMs) {
+          if (slide.tipo === "cierre" && firmadas[file] !== statSync(full).mtimeMs) {
             await firmarCierre(full, formato, slides.length > 1 ? tonoDeDiapositiva(slide, index, tono) : tono);
             firmadas[file] = statSync(full).mtimeMs;
             console.log(`  imagenes/${file}: firmada con el monograma`);

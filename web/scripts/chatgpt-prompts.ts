@@ -23,7 +23,7 @@
 import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { FRANJA_TEXTO } from "../src/data/social/layout";
-import { archivosChatGPT, formatoDe, usaChatGPT } from "../src/data/social/render";
+import { archivosChatGPT, diapositivasChatGPT, formatoDe, luzDeSalida, usaChatGPT } from "../src/data/social/render";
 import { diapositivasDe, tonoDeDiapositiva } from "../src/data/social/timing";
 import { fondoDe, SOCIAL_FORMATS, type Diapositiva, type Formato, type Pieza, type Salida, type Tono } from "../src/data/social/types";
 import { carpetaDe, CONTENIDO, imagenDe, leerPieza, listarPiezas } from "./lib/piezas";
@@ -196,8 +196,9 @@ function pedidosEntera(pieza: Pieza, salida: Salida) {
   const slides = diapositivasDe(salida);
   const formato = formatoDe(salida);
   const tono = ("tono" in salida && salida.tono) || "oscuro";
-  const files = archivosChatGPT(salida);
-  return slides.map((slide, index) => {
+  const luz = luzDeSalida(pieza, salida);
+  // La portada de mosaico sale siempre del código: no se pide.
+  return diapositivasChatGPT(salida).map(({ slide, index, file }) => {
     const n = index + 1;
     const fondo = slides.length > 1 ? tonoDeDiapositiva(slide, index, tono) : tono;
     const pie =
@@ -208,9 +209,13 @@ function pedidosEntera(pieza: Pieza, salida: Salida) {
       `DIAPOSITIVA ${n} DE ${slides.length} · formato ${FORMATO[formato]} · ${FONDO[fondo]}`,
       ...cuerpo(slide, n, pieza, formato).filter(Boolean),
       pie,
+      // La luz solo va sobre pared; la diapositiva marfil (la cita) no lleva color.
+      luz && fondo === "oscuro"
+        ? `LUZ: el único color de la imagen es ${luz}, y solo como luz fina: un punto encendido delante del rótulo, el punto de la línea del pie y un filo finísimo en el borde del arco (si hay arco). Nada más lleva color: ni letras, ni fondos, ni bloques.`
+        : "LUZ: ninguna. Esta imagen no lleva ningún color: solo pared, marfil y grises cálidos.",
       `Texto exacto: copiá letra por letra lo que está entre comillas. No agregues ningún otro texto.`,
     ];
-    return { n, file: files[index], text: lines.join("\n") };
+    return { n, file, text: lines.join("\n") };
   });
 }
 
