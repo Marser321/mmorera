@@ -9,15 +9,19 @@
  *   npx tsx scripts/render-social.ts <id> --stills                   (solo PNG: diapositivas y portadas)
  *   npx tsx scripts/render-social.ts <id> --solo reel                (una salida de la pieza)
  *
+ * Voz en off y música de los reels de texto: si existen
+ * <pieza>/audio/<salida>/voz.json (lo escribe scripts/voz-social.ts) o
+ * <pieza>/audio/<salida>/musica.mp3, el reel los lleva.
+ *
  * Antes de renderizar valida la pieza (como check-pieza): si hay errores de
  * texto, geometría u honestidad, la saltea y los muestra.
  */
-import { cpSync, existsSync, mkdirSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, readFileSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { renderMedia, renderStill, selectComposition } from "@remotion/renderer";
 import { PROJECT_CASES } from "../src/data/projectCases";
-import { trabajosDe, type ImagenesProp } from "../src/data/social/render";
+import { trabajosDe, type AudioReel, type ImagenesProp } from "../src/data/social/render";
 import { binariesDirectory, browserExecutable as findBrowser, bundleRoot } from "./lib/remotionBundle";
 import { carpetaDe, imagenDe, listarPiezas, revisarPieza } from "./lib/piezas";
 
@@ -64,8 +68,28 @@ async function main() {
       cpSync(found.file, path.join(serveUrl, rel));
       imagenes[slot.slot] = { src: `/${rel}`, w: found.w, h: found.h };
     }
+    // El audio también viaja al bundle; los pulsos se estiran a lo que dura cada frase.
+    const audio = (salidaId: string): AudioReel | undefined => {
+      const dir = path.join(carpetaDe(id), "audio", salidaId);
+      const copiar = (archivo: string) => {
+        const rel = `contenido/${id}/audio/${salidaId}/${archivo}`;
+        mkdirSync(path.dirname(path.join(serveUrl!, rel)), { recursive: true });
+        cpSync(path.join(dir, archivo), path.join(serveUrl!, rel));
+        return `/${rel}`;
+      };
+      const voz: AudioReel["voz"] = {};
+      if (existsSync(path.join(dir, "voz.json"))) {
+        const datos = JSON.parse(readFileSync(path.join(dir, "voz.json"), "utf8")) as Record<string, { archivo: string; segundos: number }>;
+        for (const [beat, v] of Object.entries(datos)) if (existsSync(path.join(dir, v.archivo))) voz[beat] = { src: copiar(v.archivo), segundos: v.segundos };
+      }
+      const musica = existsSync(path.join(dir, "musica.mp3")) ? copiar("musica.mp3") : undefined;
+      if (!Object.keys(voz).length && !musica) return undefined;
+      console.log(`  ${salidaId}: ${Object.keys(voz).length} frases de voz${musica ? " y música" : ""}`);
+      return musica ? { voz, musica } : { voz };
+    };
     const trabajos = trabajosDe(pieza, {
       imagenes,
+      audio,
       nombreCaso: (slug) => PROJECT_CASES.find((item) => item.slug === slug)?.title.es ?? slug,
       placa: (slug, kind) => `/portfolio/films/${slug}/${kind}-es.jpg`,
     }).filter((trabajo) => (!solo || trabajo.archivo.startsWith(solo)) && (!stillsOnly || trabajo.tipo === "still"));

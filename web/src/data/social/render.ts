@@ -12,7 +12,17 @@ export type ImagenesProp = Record<string, ImagenProp>;
 
 export type SlideProps = { formato: Formato; slide: Diapositiva; pagina?: { n: number; total: number }; tono: Tono; imagenes: ImagenesProp };
 export type CarruselVideoProps = { formato: Formato; diapositivas: Diapositiva[]; tono: Tono; imagenes: ImagenesProp };
-export type ReelTextoProps = { salida: Extract<Salida, { plantilla: "reel-texto" }> };
+/** Voz en off y música de un reel de texto (audio/<salida>/ de la pieza). */
+export type AudioReel = {
+  /** Una frase dicha por pulso (id del pulso → archivo y duración). */
+  voz: Record<string, { src: string; segundos: number }>;
+  /** Cama de música, opcional: suena baja y se apaga al final. */
+  musica?: string;
+};
+export type ReelTextoProps = { salida: Extract<Salida, { plantilla: "reel-texto" }>; audio?: AudioReel };
+
+/** Segundos de voz por pulso, para el ritmo (timing.reelTextoBeats). */
+export const segundosDeVoz = (audio?: AudioReel): Record<string, number> => Object.fromEntries(Object.entries(audio?.voz ?? {}).map(([id, v]) => [id, v.segundos]));
 export type ReelCasoProps = { salida: Extract<Salida, { plantilla: "reel-caso" }>; nombre: string; placas: { og: string; hero: string } };
 
 export type Trabajo = {
@@ -34,6 +44,8 @@ export type Fuentes = {
   nombreCaso: (slug: string) => string;
   /** Cuadro `og` o `hero` del film del caso. */
   placa: (slug: string, kind: "og" | "hero") => string;
+  /** Voz en off y música de un reel de texto, si la pieza las tiene. */
+  audio?: (salidaId: string) => AudioReel | undefined;
 };
 
 const two = (n: number) => String(n).padStart(2, "0");
@@ -68,11 +80,13 @@ function trabajosDeSalida(salida: Salida, fuentes: Fuentes): Trabajo[] {
         },
       ];
     case "reel-texto": {
-      const gancho = reelTextoBeats(salida)[0];
+      const audio = fuentes.audio?.(salida.id);
+      const props: ReelTextoProps = audio ? { salida, audio } : { salida };
+      const gancho = reelTextoBeats(salida, segundosDeVoz(audio))[0];
       return [
-        { archivo: `${salida.id}.mp4`, composicion: REEL_TEXTO, props: { salida }, tipo: "video" },
+        { archivo: `${salida.id}.mp4`, composicion: REEL_TEXTO, props, tipo: "video" },
         // Portada del reel (Instagram y TikTok la piden): el gancho ya armado.
-        { archivo: `${salida.id}-portada.png`, composicion: REEL_TEXTO, props: { salida }, tipo: "still", frame: gancho.duration - 12 },
+        { archivo: `${salida.id}-portada.png`, composicion: REEL_TEXTO, props, tipo: "still", frame: gancho.duration - 12 },
       ];
     }
     case "reel-caso": {

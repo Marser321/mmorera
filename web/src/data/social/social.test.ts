@@ -6,9 +6,9 @@ import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { CONTENIDO, entornoDe, listarPiezas, revisarPieza } from "../../../scripts/lib/piezas";
 import { FRANJA_TEXTO, reelBeatLayout, reelCasoLayout, reelFirmaLayout, slideLayout } from "./layout";
-import { archivosDeVersion, archivosEsperados } from "./render";
-import { desafioDiapositivas, reelTextoBeats, videoSeconds } from "./timing";
-import { SOCIAL_FORMATS, type Diapositiva, type Formato, type Pieza } from "./types";
+import { archivosDeVersion, archivosEsperados, trabajosDe } from "./render";
+import { desafioDiapositivas, reelTextoBeats, totalFrames, videoSeconds, VOZ_AIRE_SECONDS } from "./timing";
+import { SOCIAL_FORMATS, SOCIAL_FPS, type Diapositiva, type Formato, type Pieza } from "./types";
 import { validarPieza, type Entorno } from "./validate";
 
 const FORMATOS: Formato[] = ["reel", "feed", "cuadrado"];
@@ -83,6 +83,25 @@ const PIEZA_OK: Pieza = {
     { id: "reel", plantilla: "reel-texto", para: ["instagram", "tiktok", "shorts"], gancho: "Un agente sin tests", pulsos: [{ texto: "Escribe rápido" }, { texto: "Se equivoca con *confianza*" }], remate: "Los tests son el jefe", cta: "Seguime para más" },
   ],
 };
+
+test("piezas de redes: voz en off en el reel de texto", () => {
+  const salida = { id: "r", plantilla: "reel-texto" as const, para: ["instagram" as const], gancho: "Gancho", pulsos: [{ texto: "Uno" }, { texto: "Dos" }], remate: "Remate", cta: "Seguime" };
+  const sin = reelTextoBeats(salida);
+  // Una frase larga estira solo su pulso; una corta no achica el ritmo de lectura.
+  const con = reelTextoBeats(salida, { "pulso-1": 4, gancho: 0.5 });
+  assert.equal(con[1].duration, Math.round((4 + VOZ_AIRE_SECONDS) * SOCIAL_FPS));
+  assert.equal(con[0].duration, sin[0].duration);
+  assert.equal(con[2].from, con[1].from + con[1].duration);
+  assert.ok(totalFrames(con) > totalFrames(sin));
+  assert.equal(videoSeconds(salida, "", { "pulso-1": 4, gancho: 0.5 }), totalFrames(con) / SOCIAL_FPS);
+  // El audio llega a las props del video y de la portada; sin audio, las props no cambian.
+  const pieza = { salidas: [salida] } as unknown as Pieza;
+  const vacio = { imagenes: {}, nombreCaso: () => "", placa: () => "" };
+  const audio = { voz: { "pulso-1": { src: "/a.mp3", segundos: 4 } } };
+  const trabajos = trabajosDe(pieza, { ...vacio, audio: () => audio });
+  assert.deepEqual(trabajos.map((t) => (t.props as { audio?: unknown }).audio), [audio, audio]);
+  assert.equal((trabajosDe(pieza, vacio)[0].props as { audio?: unknown }).audio, undefined);
+});
 
 test("piezas de redes: validador", async (t) => {
   await t.test("una pieza bien armada no tiene errores", () => {
