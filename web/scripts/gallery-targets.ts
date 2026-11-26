@@ -63,12 +63,13 @@ export const GALLERY_TARGETS: Record<string, GalleryView[]> = {
     view("propuesta", "/propuesta", "Propuesta para un piloto", "Pilot proposal"),
   ],
   // Panel de la demo de lavadero, como dueño. Datos sintéticos. Sin la portada: con sesión abierta muestra el panel.
+  // Cada pantalla tiene su dirección en español desde el 16/11 (Marser321/lava#610).
   oficio: [
-    view("operacion", "/?view=operation", "Operación del día", "Today's operation"),
-    view("conversaciones", "/?view=conversations", "Conversaciones", "Conversations"),
-    view("automatizaciones", "/?view=automations", "Automatizaciones", "Automations"),
-    view("caja", "/?view=cash", "Caja y cobros", "Cash and payments"),
-    view("equipo", "/?view=staff", "Equipo y comisiones", "Team and commissions"),
+    view("operacion", "/operacion", "Operación del día", "Today's operation"),
+    view("conversaciones", "/conversaciones", "Conversaciones", "Conversations"),
+    view("automatizaciones", "/automatizaciones", "Automatizaciones", "Automations"),
+    view("caja", "/caja", "Caja y cobros", "Cash and payments"),
+    view("equipo", "/equipo", "Equipo y comisiones", "Team and commissions"),
     view("web", "https://srv1803764.hstgr.cloud:8443/atlantico", "La web de reservas del negocio", "The business's booking site"),
   ],
   "ad-media-solution": [
