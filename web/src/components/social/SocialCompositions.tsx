@@ -1,6 +1,6 @@
-import { AbsoluteFill, Sequence, spring, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, Html5Audio, interpolate, Sequence, spring, useCurrentFrame, useVideoConfig } from "remotion";
 import { reelBeatLayout, reelCasoLayout, reelFirmaLayout, slideLayout } from "@/data/social/layout";
-import type { CarruselVideoProps, ImagenesProp, ReelCasoProps, ReelTextoProps, SlideProps } from "@/data/social/render";
+import { segundosDeVoz, type CarruselVideoProps, type ImagenesProp, type ReelCasoProps, type ReelTextoProps, type SlideProps } from "@/data/social/render";
 import { frames, reelCasoBeats, reelTextoBeats, SLIDE_SECONDS, tonoDeDiapositiva, type Beat } from "@/data/social/timing";
 import { fondoDe, socialSafeArea, SOCIAL_FORMATS, type Diapositiva, type Formato, type Tono } from "@/data/social/types";
 import { EASE_IN_OUT, EASE_OUT, progress } from "../films/scenes/theme";
@@ -213,10 +213,29 @@ function Progreso({ beats }: { beats: Beat[] }) {
   return <SegmentedProgress segments={segments} box={{ x: safe.x, y: safe.y - 48, w: safe.w, h: 5 }} />;
 }
 
-/** Reel de texto (9:16): gancho → pulsos → remate invertido → firma. */
-export function SocialReelTexto({ salida }: ReelTextoProps) {
-  const beats = reelTextoBeats(salida);
+/** Volumen de la cama de música bajo la voz (sin voz, un poco más arriba). */
+const MUSICA_BAJO_VOZ = 0.12;
+const MUSICA_SOLA = 0.3;
+
+/** Cama de música: entra en medio segundo y se apaga en el último segundo y medio. */
+function Musica({ src, conVoz }: { src: string; conVoz: boolean }) {
+  const { durationInFrames, fps } = useVideoConfig();
+  const tope = conVoz ? MUSICA_BAJO_VOZ : MUSICA_SOLA;
+  return (
+    <Html5Audio
+      src={src}
+      loop
+      loopVolumeCurveBehavior="extend"
+      volume={(f) => interpolate(f, [0, fps * 0.5, durationInFrames - fps * 1.5, durationInFrames], [0, tope, tope, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}
+    />
+  );
+}
+
+/** Reel de texto (9:16): gancho → pulsos → remate invertido → firma. Con voz en off, cada pulso se dice al entrar. */
+export function SocialReelTexto({ salida, audio }: ReelTextoProps) {
+  const beats = reelTextoBeats(salida, segundosDeVoz(audio));
   const count = beats.length - 1;
+  const voz = audio?.voz ?? {};
   return (
     <AbsoluteFill style={{ background: SOCIAL_COLORS[salida.tono ?? "oscuro"].bg }}>
       {beats.map((beat, index) => {
@@ -224,9 +243,11 @@ export function SocialReelTexto({ salida }: ReelTextoProps) {
         return (
           <Sequence key={beat.id} name={beat.id} from={beat.from} durationInFrames={beat.duration}>
             <BeatScene beat={beat} index={index} layout={layout} contador={beat.rol === "firma" ? undefined : `${two(index + 1)} / ${two(count)}`} />
+            {voz[beat.id] ? <Html5Audio src={voz[beat.id].src} /> : null}
           </Sequence>
         );
       })}
+      {audio?.musica ? <Musica src={audio.musica} conVoz={Object.keys(voz).length > 0} /> : null}
       <Progreso beats={beats} />
     </AbsoluteFill>
   );

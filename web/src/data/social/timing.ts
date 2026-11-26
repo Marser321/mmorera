@@ -78,15 +78,26 @@ function place(beats: Array<Omit<Beat, "from" | "duration" | "transicion" | "eco
   });
 }
 
-export function reelTextoBeats(salida: Extract<Salida, { plantilla: "reel-texto" }>): Beat[] {
+/** Aire después de cada frase dicha, antes del corte al pulso siguiente. */
+export const VOZ_AIRE_SECONDS = 0.35;
+
+/**
+ * Pulsos del reel de texto. Con voz en off (`voz`: segundos de audio por id de
+ * pulso, de audio/<salida>/voz.json), cada pulso dura al menos lo que tarda en
+ * decirse, más un respiro: la voz nunca queda cortada.
+ */
+export function reelTextoBeats(salida: Extract<Salida, { plantilla: "reel-texto" }>, voz: Record<string, number> = {}): Beat[] {
   const tono = salida.tono ?? "oscuro";
-  return place([
-    { id: "gancho", rol: "gancho", texto: salida.gancho, tono, seconds: beatSeconds(salida.gancho, 0.4) },
-    ...salida.pulsos.map((pulso, index) => ({ id: `pulso-${index + 1}`, rol: "pulso" as const, texto: pulso.texto, kicker: pulso.kicker, tono, seconds: beatSeconds(pulso.texto) })),
-    // El remate invierte el color: es el signo de puntuación del reel.
-    { id: "remate", rol: "remate", texto: salida.remate, tono: invert(tono), seconds: beatSeconds(salida.remate, 0.4) },
-    { id: "firma", rol: "firma", texto: salida.cta, tono, seconds: FIRMA_SECONDS },
-  ]);
+  const conVoz = (id: string, seconds: number) => (voz[id] ? Math.max(seconds, voz[id] + VOZ_AIRE_SECONDS) : seconds);
+  return place(
+    [
+      { id: "gancho", rol: "gancho" as const, texto: salida.gancho, tono, seconds: beatSeconds(salida.gancho, 0.4) },
+      ...salida.pulsos.map((pulso, index) => ({ id: `pulso-${index + 1}`, rol: "pulso" as const, texto: pulso.texto, kicker: pulso.kicker, tono, seconds: beatSeconds(pulso.texto) })),
+      // El remate invierte el color: es el signo de puntuación del reel.
+      { id: "remate", rol: "remate" as const, texto: salida.remate, tono: invert(tono), seconds: beatSeconds(salida.remate, 0.4) },
+      { id: "firma", rol: "firma" as const, texto: salida.cta, tono, seconds: FIRMA_SECONDS },
+    ].map((beat) => ({ ...beat, seconds: conVoz(beat.id, beat.seconds) })),
+  );
 }
 
 export function reelCasoBeats(salida: Extract<Salida, { plantilla: "reel-caso" }>, nombre: string): Beat[] {
@@ -135,8 +146,8 @@ export function diapositivasDe(salida: Salida): Diapositiva[] {
 }
 
 /** Duración en segundos de lo que se publica como video (0 si es solo imagen). */
-export function videoSeconds(salida: Salida, nombreCaso = ""): number {
-  if (salida.plantilla === "reel-texto") return totalFrames(reelTextoBeats(salida)) / SOCIAL_FPS;
+export function videoSeconds(salida: Salida, nombreCaso = "", voz: Record<string, number> = {}): number {
+  if (salida.plantilla === "reel-texto") return totalFrames(reelTextoBeats(salida, voz)) / SOCIAL_FPS;
   if (salida.plantilla === "reel-caso") return totalFrames(reelCasoBeats(salida, nombreCaso)) / SOCIAL_FPS;
   if (salida.plantilla === "carrusel" && salida.video) return carruselVideoFrames(salida.diapositivas) / SOCIAL_FPS;
   return 0;

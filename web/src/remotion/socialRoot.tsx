@@ -1,7 +1,7 @@
 import type { ComponentType } from "react";
 import { Composition, registerRoot } from "remotion";
 import { SocialCarruselVideo, SocialReelCaso, SocialReelTexto, SocialSlide } from "@/components/social/SocialCompositions";
-import { carruselComposition, REEL_CASO, REEL_TEXTO, slideComposition, type CarruselVideoProps, type ReelCasoProps, type ReelTextoProps, type SlideProps } from "@/data/social/render";
+import { carruselComposition, REEL_CASO, REEL_TEXTO, segundosDeVoz, slideComposition, type CarruselVideoProps, type ReelCasoProps, type ReelTextoProps, type SlideProps } from "@/data/social/render";
 import { carruselVideoFrames, reelCasoBeats, reelTextoBeats, SLIDE_STILL_FRAMES, totalFrames } from "@/data/social/timing";
 import { SOCIAL_FORMATS, SOCIAL_FPS, type Formato } from "@/data/social/types";
 import { FontGate } from "./FontGate";
@@ -71,7 +71,7 @@ export function SocialRoot() {
         id={REEL_TEXTO}
         component={ReelTexto}
         durationInFrames={totalFrames(reelTextoBeats(SAMPLE_REEL.salida))}
-        calculateMetadata={({ props }: { props: ReelTextoProps }) => ({ durationInFrames: totalFrames(reelTextoBeats(props.salida)) })}
+        calculateMetadata={({ props }: { props: ReelTextoProps }) => ({ durationInFrames: totalFrames(reelTextoBeats(props.salida, segundosDeVoz(props.audio))) })}
         fps={SOCIAL_FPS}
         width={SOCIAL_FORMATS.reel.width}
         height={SOCIAL_FORMATS.reel.height}
