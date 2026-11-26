@@ -85,7 +85,13 @@ async function main() {
           composition,
           serveUrl,
           codec: "h264",
-          crf: 18,
+          // Con el grano de la plantilla, crf 18 sin tope daba reels de ~90 MB (17 s). crf 22 + tope 12 Mb/s + «tune grain»
+          // los deja en ~25 MB sin alisar el grano (Telegram acepta hasta 50 MB; las redes recomprimen igual). Central #25.
+          crf: 22,
+          x264Preset: "medium",
+          encodingMaxRate: "12M",
+          encodingBufferSize: "24M",
+          ffmpegOverride: ({ type, args }) => (type === "stitcher" ? [...args.slice(0, -1), "-tune", "grain", args[args.length - 1]] : args),
           pixelFormat: "yuv420p",
           outputLocation: output,
           inputProps,
