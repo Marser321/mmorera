@@ -17,6 +17,11 @@
       "slot": "noche",
       "formato": "feed",
       "prompt": "Un escritorio vacío de noche, una sola lámpara encendida iluminando una silla de oficina vacía, el resto en negro."
+    },
+    {
+      "slot": "alerta",
+      "formato": "feed",
+      "prompt": "Un teléfono boca abajo sobre una mesa de luz, de noche, con un halo tenue de luz que se escapa por debajo; un reloj analógico sin números en penumbra."
     }
   ],
   "salidas": [
@@ -33,7 +38,8 @@
           "tipo": "portada",
           "kicker": "Así funciona",
           "titulo": "Qué pasa con un lead que llega a las *23:45*",
-          "bajada": "El mismo formulario, con y sin sistema."
+          "bajada": "El mismo formulario, con y sin sistema.",
+          "fondo": "alerta"
         },
         {
           "tipo": "imagen",

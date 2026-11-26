@@ -1,5 +1,5 @@
 import { diapositivasDe, reelCasoBeats, reelTextoBeats, SLIDE_STILL_FRAMES } from "./timing";
-import type { Diapositiva, Formato, Pieza, Salida, Tono } from "./types";
+import { fondoDe, type Diapositiva, type Formato, type Pieza, type Salida, type Tono } from "./types";
 
 /**
  * Qué archivo sale de cada salida de una pieza y con qué composición de
@@ -101,6 +101,35 @@ export function archivosChatGPT(salida: Salida): string[] {
   if (!usaChatGPT(salida)) return [];
   const total = diapositivasDe(salida).length;
   return Array.from({ length: total }, (_, index) => `gpt-${salida.id}-${two(index + 1)}.png`);
+}
+
+/** Formato de lo que sale de una salida (los reels son 9:16). */
+export function formatoDe(salida: Salida): Formato {
+  return salida.plantilla === "carrusel" || salida.plantilla === "desafio" || salida.plantilla === "imagen" ? salida.formato : "reel";
+}
+
+/** Slots de `Pieza.imagenes` que una salida usa de fondo (versión A). */
+export function fondosDeSalida(salida: Salida): string[] {
+  return [...new Set(diapositivasDe(salida).flatMap((slide) => fondoDe(slide) ?? []))];
+}
+
+/**
+ * Las dos versiones de una pieza (Mario elige una en Telegram):
+ * - "a": arte de ChatGPT sin letras + texto puesto por código (salida/, lo que deja render-social).
+ * - "b": ChatGPT diseña la diapositiva entera (imagenes/gpt-<salida>-NN.png).
+ * Los reels y el carrusel en video salen siempre del código, en las dos.
+ */
+export type Version = "a" | "b";
+
+/** Archivos de una salida en una versión, relativos a la carpeta de la pieza y en orden de publicación. */
+export function archivosDeVersion(salida: Salida, version: Version): string[] {
+  const vacio: Fuentes = { imagenes: {}, nombreCaso: () => "", placa: () => "" };
+  const codigo = trabajosDeSalida(salida, vacio)
+    // La portada del reel es para elegir la tapa, no un archivo a publicar aparte.
+    .filter((trabajo) => !trabajo.archivo.endsWith("-portada.png"))
+    .map((trabajo) => `salida/${trabajo.archivo}`);
+  if (version === "a" || !usaChatGPT(salida)) return codigo;
+  return [...archivosChatGPT(salida).map((file) => `imagenes/${file}`), ...codigo.filter((file) => file.endsWith(".mp4"))];
 }
 
 /** Archivos que deja el render de una pieza (para exigirlos cuando está "lista"). */

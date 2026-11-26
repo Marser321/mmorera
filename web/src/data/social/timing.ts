@@ -25,13 +25,12 @@ export const SLIDE_STILL_FRAMES = frames(3.2);
 export const invert = (tono: Tono): Tono => (tono === "oscuro" ? "claro" : "oscuro");
 
 /**
- * Ritmo del carrusel: la portada en el tono base y, desde ahí, cada
- * diapositiva alterna blanco y negro (el cierre también). Cada deslizada
- * cambia la luz.
+ * Luz del carrusel, como el sitio: todo sobre la pared (el tono base) y la
+ * frase clave invertida, como la banda marfil de cada página. La cita es esa
+ * frase. El cierre vuelve a la pared, donde firma el monograma.
  */
-export function tonoDeDiapositiva(slide: Diapositiva, index: number, tono: Tono): Tono {
-  if (slide.tipo === "portada") return tono;
-  return index % 2 === 1 ? invert(tono) : tono;
+export function tonoDeDiapositiva(slide: Diapositiva, _index: number, tono: Tono): Tono {
+  return slide.tipo === "cita" ? invert(tono) : tono;
 }
 
 

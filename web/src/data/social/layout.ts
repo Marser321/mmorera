@@ -1,6 +1,6 @@
 import type { Box } from "@/lib/filmLayout";
 import { countLines, GLYPH, textHeight, type LayoutBlock, type TextBlock } from "@/components/films/scenes/brand/layout/dataText";
-import { socialSafeArea, type Diapositiva, type Formato } from "./types";
+import { fondoDe, socialSafeArea, SOCIAL_FORMATS, type Diapositiva, type Formato } from "./types";
 
 /**
  * Geometría de las piezas de redes (pura, sin React). Cada diapositiva o
@@ -23,12 +23,26 @@ export type SlideElement =
   | { kind: "image"; box: Box; slot: string; order: number }
   | { kind: "logo"; box: Box; order: number };
 
-export type SlideLayout = { safe: Box; elements: SlideElement[]; blocks: LayoutBlock[] };
+/**
+ * `zona`: la caja que ocupa el texto principal (sin rótulo, contador ni
+ * marca). Con un arte de fondo, el velo se apoya ahí para que las letras se
+ * lean sin tapar la imagen entera.
+ */
+export type SlideLayout = { safe: Box; elements: SlideElement[]; blocks: LayoutBlock[]; zona?: Box };
 
 /** `*palabra*` marca el énfasis; para medir se quitan los asteriscos. */
 export const plain = (text: string) => text.replace(/\*/g, "");
 
-const LH = { display: 1.06, cuerpo: 1.3, mono: 1.25 } as const;
+/** Unbounded (display) lleva tildes altas en mayúscula: un poco más de interlineado que una grotesca. */
+const LH = { display: 1.1, cuerpo: 1.3, mono: 1.25 } as const;
+/**
+ * Unbounded es ancha: medida en Chromium da hasta un 8 % más que la tabla de
+ * anchos de dataText (las cifras, lo máximo). Se mide al 106 % del tamaño
+ * real: contra el corte real del navegador, en los 104 títulos de las piezas
+ * de octubre, nunca predice menos líneas de las que salen. El chequeo de
+ * layoutProblems, al 100 %, queda del lado seguro.
+ */
+const MEASURE_SCALE = { display: 1.06, cuerpo: 1, mono: 1 } as const;
 /** Ancho de glifo para medir: mono en mayúsculas con tracking 0,14 em; mono en minúsculas (enlaces). */
 const GLYPH_MONO_UPPER = GLYPH.upper;
 const GLYPH_MONO = GLYPH.digits;
@@ -46,7 +60,7 @@ function text(id: string, box: Box, value: string, size: number, lines: number, 
 /** Líneas y alto de un texto a un tamaño dado. */
 function measure(value: string, size: number, width: number, fuente: Fuente, upper = fuente === "mono") {
   const shown = upper ? plain(value).toUpperCase() : plain(value);
-  const lines = countLines(shown, size, width, glyphOf(fuente, upper));
+  const lines = countLines(shown, size * MEASURE_SCALE[fuente], width, glyphOf(fuente, upper));
   return { lines, h: textHeight(size, lines, LH[fuente]) };
 }
 
@@ -107,7 +121,8 @@ function frame(formato: Formato, kicker: string | undefined, pagina: Pagina | un
   if (kicker) {
     const k = text("kicker", { x: safe.x, y: safe.y, w: safe.w, h: textHeight(s.kicker, 1, LH.mono) }, kicker, s.kicker, 1, "mono");
     elements.push({ kind: "text", rol: "kicker", block: k, order: 0, reveal: "fade" });
-    elements.push({ kind: "rule", box: { x: safe.x, y: k.box.y + k.box.h + 18, w: 120, h: 2 }, order: 0 });
+    // Rótulo con su raya corta debajo, como el sitio y las portadas OG.
+    elements.push({ kind: "rule", box: { x: safe.x, y: k.box.y + k.box.h + 18, w: 56, h: 2 }, order: 0 });
     top = k.box.y + k.box.h + 18 + 2 + s.gap;
   }
   let bottom = safe.y + safe.h;
@@ -127,6 +142,38 @@ function frame(formato: Formato, kicker: string | undefined, pagina: Pagina | un
   return { safe, elements, body: { x: safe.x, y: top, w: safe.w, h: bottom - top } as Box };
 }
 
+/** Roles que no cuentan como texto principal (no mueven el velo). */
+const MARCO: Rol[] = ["kicker", "contador", "marca"];
+
+function zonaDe(elements: SlideElement[]): Box | undefined {
+  const boxes = elements.flatMap((element) => (element.kind === "text" && !MARCO.includes(element.rol) ? [element.block.box] : element.kind === "logo" ? [element.box] : []));
+  if (!boxes.length) return undefined;
+  const x = Math.min(...boxes.map((box) => box.x));
+  const y = Math.min(...boxes.map((box) => box.y));
+  const r = Math.max(...boxes.map((box) => box.x + box.w));
+  const b = Math.max(...boxes.map((box) => box.y + box.h));
+  return { x, y, w: r - x, h: b - y };
+}
+
+/**
+ * Con arte de fondo, ¿qué parte del alto (desde abajo) queda para el texto?
+ * El pedido de arte deja esa franja vacía; el layout apoya el texto ahí.
+ */
+export const FRANJA_TEXTO: Record<"portada" | "tarjeta" | "cita" | "cierre", number> = { portada: 0.5, tarjeta: 0.55, cita: 0.55, cierre: 0.6 };
+
+/**
+ * Con arte de fondo el texto vive en su franja de abajo: el área se recorta
+ * a esa franja y el texto se achica hasta entrar. Si ni al tamaño mínimo
+ * entra, usa el cuerpo entero (el velo lo cubre igual).
+ */
+function conFranja<T extends { ok: boolean }>(slide: Diapositiva, formato: Formato, body: Box, fit: (area: Box) => T): { area: Box; fit: T } {
+  if (!fondoDe(slide) || !(slide.tipo in FRANJA_TEXTO)) return { area: body, fit: fit(body) };
+  const top = Math.max(body.y, Math.round(SOCIAL_FORMATS[formato].height * (1 - FRANJA_TEXTO[slide.tipo as keyof typeof FRANJA_TEXTO])));
+  const area = { ...body, y: top, h: body.y + body.h - top };
+  const enFranja = fit(area);
+  return enFranja.ok ? { area, fit: enFranja } : { area: body, fit: fit(body) };
+}
+
 function result(safe: Box, elements: SlideElement[]): SlideLayout {
   const blocks: LayoutBlock[] = elements.flatMap((element): LayoutBlock[] => {
     if (element.kind === "text") return [element.block];
@@ -135,7 +182,7 @@ function result(safe: Box, elements: SlideElement[]): SlideLayout {
     if (element.kind === "logo") return [{ kind: "media", id: "logo", box: element.box }];
     return [];
   });
-  return { safe, elements, blocks };
+  return { safe, elements, blocks, zona: zonaDe(elements) };
 }
 
 /** Bloques de texto apilados, con su alto real, desde `y`. */
@@ -175,17 +222,19 @@ export function slideLayout(formato: Formato, slide: Diapositiva, pagina?: Pagin
 
   switch (slide.tipo) {
     case "portada": {
-      const fit = pickStep(9, (step) =>
-        stack(
-          [
-            { id: "titulo", rol: "titulo", value: slide.titulo, size: at(s.cover, step), fuente: "display", maxLines: MAX_LINES.cover[formato], gapAfter: s.gap, reveal: "words", order: 1 },
-            ...(slide.bajada ? [{ id: "bajada", rol: "cuerpo" as Rol, value: slide.bajada, size: at(s.body, step), fuente: "cuerpo" as Fuente, maxLines: 4, gapAfter: 0, reveal: "fade" as const, order: 2 }] : []),
-          ],
-          body,
+      const { area, fit } = conFranja(slide, formato, body, (zona) =>
+        pickStep(9, (step) =>
+          stack(
+            [
+              { id: "titulo", rol: "titulo", value: slide.titulo, size: at(s.cover, step), fuente: "display", maxLines: MAX_LINES.cover[formato], gapAfter: s.gap, reveal: "words", order: 1 },
+              ...(slide.bajada ? [{ id: "bajada", rol: "cuerpo" as Rol, value: slide.bajada, size: at(s.body, step), fuente: "cuerpo" as Fuente, maxLines: 4, gapAfter: 0, reveal: "fade" as const, order: 2 }] : []),
+            ],
+            zona,
+          ),
         ),
       );
       // Portada editorial: el bloque se apoya abajo.
-      shift(fit.placed, Math.max(0, body.h - fit.h));
+      shift(fit.placed, Math.max(0, area.h - fit.h));
       return result(safe, [...elements, ...fit.placed]);
     }
     case "texto": {
@@ -232,16 +281,19 @@ export function slideLayout(formato: Formato, slide: Diapositiva, pagina?: Pagin
     case "tarjeta": {
       const value = slide.tipo === "cita" ? slide.cita : slide.texto;
       const autor = slide.tipo === "cita" ? slide.autor : undefined;
-      const fit = pickStep(8, (step) =>
-        stack(
-          [
-            { id: "cita", rol: "cita", value, size: at(s.quote, step), fuente: "display", maxLines: MAX_LINES.quote[formato] + (slide.tipo === "tarjeta" ? 1 : 0), gapAfter: s.gap, reveal: "words", order: 1 },
-            ...(autor ? [{ id: "autor", rol: "autor" as Rol, value: autor, size: s.kicker, fuente: "mono" as Fuente, maxLines: 2, gapAfter: 0, reveal: "fade" as const, order: 2 }] : []),
-          ],
-          body,
+      const { area, fit } = conFranja(slide, formato, body, (zona) =>
+        pickStep(10, (step) =>
+          stack(
+            [
+              { id: "cita", rol: "cita", value, size: at(s.quote, step), fuente: "display", maxLines: MAX_LINES.quote[formato] + (slide.tipo === "tarjeta" ? 1 : 0), gapAfter: s.gap, reveal: "words", order: 1 },
+              ...(autor ? [{ id: "autor", rol: "autor" as Rol, value: autor, size: s.kicker, fuente: "mono" as Fuente, maxLines: 2, gapAfter: 0, reveal: "fade" as const, order: 2 }] : []),
+            ],
+            zona,
+          ),
         ),
       );
-      shift(fit.placed, Math.max(0, (body.h - fit.h) / 2));
+      // Como la portada: el texto se apoya abajo y arriba respira el arco (o el arte de fondo).
+      shift(fit.placed, Math.max(0, area.h - fit.h));
       return result(safe, [...elements, ...fit.placed]);
     }
     case "comparacion": {
@@ -297,20 +349,22 @@ export function slideLayout(formato: Formato, slide: Diapositiva, pagina?: Pagin
       return result(safe, [...elements, ...fit.placed]);
     }
     case "cierre": {
-      const logo = formato === "reel" ? 168 : 132;
-      const fit = pickStep(8, (step) => {
-        const texts = stack(
-          [
-            { id: "titulo", rol: "titulo", value: slide.titulo, size: at(s.title, step), fuente: "display", maxLines: 4, gapAfter: s.gap, reveal: "words", order: 2 },
-            { id: "cta", rol: "cuerpo", value: slide.cta, size: at(s.body, step), fuente: "cuerpo", maxLines: 4, gapAfter: slide.enlace ? s.gap : 0, reveal: "fade", order: 3 },
-            ...(slide.enlace ? [{ id: "enlace", rol: "enlace" as Rol, value: slide.enlace, size: linkSize(slide.enlace, body.w, s.kicker), fuente: "mono" as Fuente, maxLines: 1, gapAfter: 0, reveal: "fade" as const, order: 4 }] : []),
-          ],
-          { ...body, y: body.y + logo + s.gap, h: body.h - logo - s.gap },
-        );
-        return { placed: texts.placed, h: logo + s.gap + texts.h, ok: texts.ok };
-      });
-      const dy = Math.max(0, (body.h - fit.h) / 2);
-      const placed: SlideElement[] = [{ kind: "logo", box: { x: body.x, y: body.y + dy, w: logo, h: Math.round(logo * (1885.03 / 2239.69)) }, order: 1 }, ...fit.placed];
+      const logo = formato === "reel" ? 220 : formato === "feed" ? 190 : 170;
+      const { area, fit } = conFranja(slide, formato, body, (zona) =>
+        pickStep(8, (step) => {
+          const texts = stack(
+            [
+              { id: "titulo", rol: "titulo", value: slide.titulo, size: at(s.title, step), fuente: "display", maxLines: 4, gapAfter: s.gap, reveal: "words", order: 2 },
+              { id: "cta", rol: "cuerpo", value: slide.cta, size: at(s.body, step), fuente: "cuerpo", maxLines: 4, gapAfter: slide.enlace ? s.gap : 0, reveal: "fade", order: 3 },
+              ...(slide.enlace ? [{ id: "enlace", rol: "enlace" as Rol, value: slide.enlace, size: linkSize(slide.enlace, zona.w, s.kicker), fuente: "mono" as Fuente, maxLines: 1, gapAfter: 0, reveal: "fade" as const, order: 4 }] : []),
+            ],
+            { ...zona, y: zona.y + logo + s.gap, h: zona.h - logo - s.gap },
+          );
+          return { placed: texts.placed, h: logo + s.gap + texts.h, ok: texts.ok };
+        }),
+      );
+      const dy = Math.max(0, fondoDe(slide) ? area.h - fit.h : (area.h - fit.h) / 2);
+      const placed: SlideElement[] = [{ kind: "logo", box: { x: area.x, y: area.y + dy, w: logo, h: Math.round(logo * (1885.03 / 2239.69)) }, order: 1 }, ...fit.placed];
       shift(fit.placed, dy);
       return result(safe, [...elements, ...placed]);
     }

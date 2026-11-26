@@ -1,22 +1,21 @@
 import { AbsoluteFill, Sequence, spring, useCurrentFrame, useVideoConfig } from "remotion";
 import { reelBeatLayout, reelCasoLayout, reelFirmaLayout, slideLayout } from "@/data/social/layout";
 import type { CarruselVideoProps, ImagenesProp, ReelCasoProps, ReelTextoProps, SlideProps } from "@/data/social/render";
-import { ecoDe, frames, invert, reelCasoBeats, reelTextoBeats, SLIDE_SECONDS, tonoDeDiapositiva, type Beat } from "@/data/social/timing";
-import { socialSafeArea, SOCIAL_FORMATS, type Diapositiva, type Formato, type Tono } from "@/data/social/types";
-import { EASE_IN_OUT, EASE_OUT, FILM_FONTS, progress } from "../films/scenes/theme";
-import { Eco, ElementsLayer, Grain, SegmentedProgress, SOCIAL_COLORS, SocialFrame } from "./SocialKit";
+import { frames, reelCasoBeats, reelTextoBeats, SLIDE_SECONDS, tonoDeDiapositiva, type Beat } from "@/data/social/timing";
+import { fondoDe, socialSafeArea, SOCIAL_FORMATS, type Diapositiva, type Formato, type Tono } from "@/data/social/types";
+import { EASE_IN_OUT, EASE_OUT, progress } from "../films/scenes/theme";
+import { Arco, Eco, ElementsLayer, FondoArte, Grain, PiedraEncima, SegmentedProgress, SOCIAL_COLORS, SOCIAL_FONTS, SocialFrame } from "./SocialKit";
 
 /**
  * Composiciones de las piezas de redes (las registra remotion/socialRoot.tsx).
- * Blanco y negro con energía: la fuerza sale del movimiento (golpes de escala,
- * barridos, flashes), de la escala (ecos gigantes en contorno) y de la
- * textura (grano). La geometría del texto viene de data/social/layout.ts.
+ * «Pared y piedra», la estética del sitio: la fuerza sale de la tipografía
+ * (Unbounded), de la escala (ecos en contorno, el arco del anillo) y de la
+ * materia (piedra y grano sobre todo, también sobre las letras). En video se
+ * suma el movimiento (golpes, barridos, flashes). La geometría del texto viene
+ * de data/social/layout.ts.
  */
 
 const sizesOf = (imagenes: ImagenesProp) => Object.fromEntries(Object.entries(imagenes).map(([slot, image]) => [slot, { w: image.w, h: image.h }]));
-
-/** Palabra gigante de la portada: el énfasis o la palabra más larga del título. */
-const ecoDeDiapositiva = (slide: Diapositiva) => (slide.tipo === "portada" ? ecoDe(slide.titulo) : "");
 
 /** Hilo continuo: cruza todas las diapositivas a la misma altura; el punto marca dónde estás. */
 function Hilo({ formato, pagina, tono }: { formato: Formato; pagina: { n: number; total: number }; tono: Tono }) {
@@ -27,11 +26,12 @@ function Hilo({ formato, pagina, tono }: { formato: Formato; pagina: { n: number
   const y = Math.round((safe.y + safe.h + height) / 2);
   const x = (width * (pagina.n - 0.5)) / pagina.total;
   const draw = progress(frame, 2, 26, EASE_OUT);
+  // Como el pie de las portadas OG: una línea fina y el punto que marca dónde estás.
   return (
     <>
-      <div style={{ position: "absolute", left: 0, top: y, width, height: 2, background: c.line }} />
-      <div style={{ position: "absolute", left: 0, top: y, width: x * draw, height: 2, background: c.fg }} />
-      <div style={{ position: "absolute", left: x - 7, top: y - 6, width: 14, height: 14, borderRadius: 14, background: c.fg, transform: `scale(${draw})` }} />
+      <div style={{ position: "absolute", left: 0, top: y, width, height: 1, background: c.line }} />
+      <div style={{ position: "absolute", left: 0, top: y, width: x * draw, height: 1, background: `rgb(${c.rgb} / 0.55)` }} />
+      <div style={{ position: "absolute", left: x - 5, top: y - 5, width: 11, height: 11, borderRadius: 11, background: c.fg, transform: `scale(${draw})` }} />
     </>
   );
 }
@@ -47,22 +47,22 @@ function NumeroGigante({ n, tono, formato }: { n: number; tono: Tono; formato: F
   const frame = useCurrentFrame();
   const { width, height } = SOCIAL_FORMATS[formato];
   const c = SOCIAL_COLORS[tono];
-  const size = formato === "cuadrado" ? 560 : 680;
+  const size = formato === "cuadrado" ? 440 : 540;
   const show = progress(frame, 0, 22, EASE_OUT);
   return (
     <div
       style={{
         position: "absolute",
-        left: width - size * 0.92,
-        top: height - size * 0.98,
-        fontFamily: FILM_FONTS.body,
-        fontWeight: 600,
+        left: width - size * 1.08,
+        top: height - size * 0.96,
+        fontFamily: SOCIAL_FONTS.display,
+        fontWeight: 500,
         fontSize: size,
         lineHeight: 1,
         letterSpacing: "-0.06em",
         color: "transparent",
-        WebkitTextStroke: `2px ${c.fg}`,
-        opacity: 0.12 * show,
+        WebkitTextStroke: `1.5px ${c.fg}`,
+        opacity: 0.11 * show,
         transform: `translateY(${(1 - show) * 60}px)`,
       }}
     >
@@ -81,28 +81,48 @@ function Desliza({ formato, tono }: { formato: Formato; tono: Tono }) {
   const y = safe.y + safe.h - 30;
   const x = safe.x + safe.w / 2 - 110;
   return (
-    <div style={{ position: "absolute", left: x, top: y, display: "flex", alignItems: "center", gap: 14, opacity: show, color: c.fg, fontFamily: FILM_FONTS.mono, fontWeight: 700, fontSize: 20, letterSpacing: "0.14em" }}>
+    <div style={{ position: "absolute", left: x, top: y, display: "flex", alignItems: "center", gap: 14, opacity: show, color: c.muted, fontFamily: SOCIAL_FONTS.mono, fontWeight: 400, fontSize: 20, letterSpacing: "0.18em" }}>
       DESLIZÁ
-      <div style={{ position: "relative", width: 90, height: 2, background: c.fg, transform: `translateX(${nudge}px)` }}>
-        <div style={{ position: "absolute", right: -2, top: -6, width: 14, height: 14, borderTop: `2px solid ${c.fg}`, borderRight: `2px solid ${c.fg}`, transform: "rotate(45deg)" }} />
+      <div style={{ position: "relative", width: 90, height: 1.5, background: c.muted, transform: `translateX(${nudge}px)` }}>
+        <div style={{ position: "absolute", right: -1, top: -6, width: 13, height: 13, borderTop: `1.5px solid ${c.muted}`, borderRight: `1.5px solid ${c.muted}`, transform: "rotate(45deg)" }} />
       </div>
     </div>
   );
 }
 
+/**
+ * El recurso gráfico de cada diapositiva sin arte: el arco del anillo en la
+ * portada y en las frases (tarjeta, cita), el número en contorno en las de
+ * contenido. El cierre lleva el monograma (en el layout).
+ */
+function Recurso({ slide, formato, tono, pagina }: { slide: Diapositiva; formato: Formato; tono: Tono; pagina?: { n: number; total: number } }) {
+  const { width, height } = SOCIAL_FORMATS[formato];
+  if (slide.tipo === "portada")
+    return (
+      <>
+        <Arco cx={width * 1.0} cy={height * 0.0} r={width * 0.54} tono={tono} opacity={tono === "oscuro" ? 0.26 : 0.34} fundido="to bottom left" />
+      </>
+    );
+  if (slide.tipo === "tarjeta" || slide.tipo === "cita") return <Arco cx={width * 0.98} cy={height * 0.02} r={width * 0.56} tono={tono} opacity={tono === "oscuro" ? 0.3 : 0.36} fundido="to bottom left" />;
+  if (slide.tipo === "cierre") return <Arco cx={width * 0.5} cy={height * 1.5} r={width * 0.84} tono={tono} opacity={0.13} fundido="to top" />;
+  if (pagina) return <NumeroGigante n={numeroDeRotulo(slide) ?? pagina.n} tono={tono} formato={formato} />;
+  return null;
+}
+
 function Slide({ formato, slide, pagina, tono, imagenes, exitAt }: SlideProps & { exitAt?: number }) {
   const layout = slideLayout(formato, slide, pagina, sizesOf(imagenes));
-  const t = pagina ? tonoDeDiapositiva(slide, pagina.n - 1, tono) : slide.tipo === "cierre" ? invert(tono) : tono;
-  const safe = socialSafeArea(formato);
-  const contenido = pagina && slide.tipo !== "portada" && slide.tipo !== "cierre";
+  const slot = fondoDe(slide);
+  const arte = slot ? imagenes[slot] : undefined;
+  // Con arte de fondo la diapositiva va siempre sobre pared: el velo es oscuro.
+  const t = arte ? "oscuro" : pagina ? tonoDeDiapositiva(slide, pagina.n - 1, tono) : tono;
   return (
     <SocialFrame tono={t}>
-      {slide.tipo === "portada" ? <Eco text={ecoDeDiapositiva(slide)} tono={t} duration={frames(SLIDE_SECONDS)} top={safe.y + safe.h * 0.22} /> : null}
-      {contenido ? <NumeroGigante n={numeroDeRotulo(slide) ?? pagina.n} tono={t} formato={formato} /> : null}
-      <ElementsLayer elements={layout.elements} tono={t} imagenes={imagenes} exitAt={exitAt} />
+      {arte ? <FondoArte imagen={arte} zona={layout.zona} height={SOCIAL_FORMATS[formato].height} /> : <Recurso slide={slide} formato={formato} tono={t} pagina={pagina} />}
+      <ElementsLayer elements={layout.elements} tono={t} imagenes={imagenes} exitAt={exitAt} sobreArte={Boolean(arte)} />
       {pagina && pagina.total > 1 ? <Hilo formato={formato} pagina={pagina} tono={t} /> : null}
       {slide.tipo === "portada" && pagina && pagina.total > 1 ? <Desliza formato={formato} tono={t} /> : null}
-      <Grain opacity={t === "oscuro" ? 0.1 : 0.07} />
+      <PiedraEncima opacity={arte ? 0.3 : t === "oscuro" ? 0.22 : 0.16} />
+      <Grain opacity={arte ? 0.42 : t === "oscuro" ? 0.36 : 0.26} />
     </SocialFrame>
   );
 }
@@ -178,7 +198,8 @@ function BeatScene({ beat, index, layout, contador, imagenes = {} }: { beat: Bea
         <AbsoluteFill style={{ transform: `scale(${push})` }}>
           <ElementsLayer elements={layout.elements} tono={beat.tono} start={2} step={4} imagenes={imagenes} exitAt={exitAt} contador={contador} />
         </AbsoluteFill>
-        <Grain opacity={beat.tono === "oscuro" ? 0.11 : 0.08} />
+        <PiedraEncima opacity={beat.tono === "oscuro" ? 0.22 : 0.16} />
+        <Grain opacity={beat.tono === "oscuro" ? 0.36 : 0.26} />
       </SocialFrame>
     </Entrada>
   );

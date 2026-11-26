@@ -5,7 +5,8 @@
   "titulo": "Tarjeta de opinión (1:1)",
   "estado": "borrador",
   "postura": true,
+  "imagenes": [{ "slot": "telefono", "formato": "cuadrado", "prompt": "Un teléfono apagado sobre una mesa de piedra oscura, arriba a la derecha, con un reflejo tenue de luz sobre el vidrio." }],
   "salidas": [
-    { "id": "tarjeta", "plantilla": "imagen", "formato": "cuadrado", "para": ["linkedin", "x"], "diapositiva": { "tipo": "tarjeta", "kicker": "Criterio", "texto": "Dejá de pedir *una web*. Pedí un sistema que conteste a las 23:45." } }
+    { "id": "tarjeta", "plantilla": "imagen", "formato": "cuadrado", "para": ["linkedin", "x"], "diapositiva": { "tipo": "tarjeta", "kicker": "Criterio", "texto": "Dejá de pedir *una web*. Pedí un sistema que conteste a las 23:45.", "fondo": "telefono" } }
   ]
 }

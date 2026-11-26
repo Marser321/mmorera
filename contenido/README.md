@@ -1,11 +1,17 @@
 # Contenido · la fuente de las redes de Mario Morera
 
-Esta carpeta es de donde salen todas las publicaciones: LinkedIn, Instagram, TikTok, YouTube Shorts y X, en español y a diario. Todo lo que se publica nace acá, se valida acá y queda registrado acá.
+Esta carpeta es de donde salen todas las publicaciones: LinkedIn, Instagram, Facebook, TikTok, YouTube Shorts y X, en español y a diario. Todo lo que se publica nace acá, se valida acá y queda registrado acá.
+
+**Una sola identidad, la del sitio: «Pared y piedra»** (`marca/identidad.md`). Pared `#0B0B0A`, marfil `#ECE7DD`, títulos en Unbounded, piedra y grano. Cada pieza estática sale en **dos versiones** y Mario elige una en Telegram:
+
+- **A · arte + código:** ChatGPT pinta un fondo sin letras y el código pone el texto encima, integrado.
+- **B · ChatGPT entera:** ChatGPT diseña la diapositiva completa con el texto exacto.
 
 ## Cómo se conecta todo
 
 ```
 marca/        cómo se ve y cómo habla la marca (lo leen todos antes de crear)
+  referencias/  piezas aprobadas por Mario: se adjuntan en cada conversación con ChatGPT
    │
 ramas/        los cinco temas: casos · criterio · sistemas · oficio · comunidad
    │
@@ -14,8 +20,10 @@ calendario/   qué sale cada día: una pieza madre por día, con sus versiones p
 piezas/<AAAA-MM-DD>-<slug>/
    pieza.json   los datos que anima el código (textos, diapositivas, pulsos, imágenes)
    copy.md      el texto de cada plataforma, listo para pegar
-   chatgpt.md   los pedidos para que ChatGPT diseñe sus diapositivas (se genera solo)
-   imagenes/    lo que genera ChatGPT: diapositivas gpt-*.png y fotos sueltas (no va a git)
+   chatgpt.md   los pedidos a ChatGPT: bloque ARTE (versión A) y bloque ENTERA (versión B) (se genera solo)
+   imagenes/    lo que genera ChatGPT (no va a git):
+                  <slot>.png         arte sin letras (versión A), de fondo o en placa
+                  gpt-<salida>-NN.png diapositivas enteras (versión B)
    salida/      los PNG y MP4 renderizados (no va a git)
    │
 agentes/      el manual de cada agente: publicador, imágenes y Gemini
@@ -54,7 +62,16 @@ npx tsx scripts/contenido.ts revision          # escribe REVISION.md
 npx tsx scripts/contenido.ts aprobar <id>      # listo → aprobado (Mario)
 npx tsx scripts/contenido.ts hoy               # qué publicar hoy, plataforma por plataforma
 npx tsx scripts/contenido.ts publicado <id> <plataforma> <url>
+npx tsx scripts/contenido.ts paquete <id> --version a|b --dest <carpeta>   # lo que va a Drive para publicar
 ```
+
+`paquete` copia a `<carpeta>` los archivos finales de esa versión, numerados en orden (`01-…`, `02-…`), y escribe `publicar.md` (texto por red, primer comentario, texto alternativo y orden de los archivos) y `paquete.json`. Si falta la versión pedida, falla y dice qué falta. Opcional: `--redes linkedin,instagram,facebook` y `--fecha AAAA-MM-DD`. Facebook repite lo de Instagram (archivos, y el texto si `copy.md` no tiene `## Facebook`).
+
+En `copy.md`, además de una sección por plataforma, puede haber:
+- `## Primer comentario` (o `## Primer comentario · LinkedIn`, por red): lo deja el publicador apenas sale la pieza.
+- `## Facebook`: si falta, Facebook usa el texto de Instagram.
+
+El texto alternativo de cada imagen sale solo, del texto de su diapositiva.
 
 ## Plantillas animadas
 
@@ -68,15 +85,19 @@ Las plantillas están en `web/src/components/social/` y sus datos en `web/src/da
 | `desafio` | 4:5 | El "desafío del mes" de LinkedIn: contexto → problema → decisión → resultado → aprendizaje. |
 | `imagen` | cualquiera | Una sola diapositiva: tarjeta de opinión, encuesta, sorteo, etc. |
 
-**Las piezas estáticas** (carrusel, desafío, imagen) las diseña **ChatGPT** completas, con `marca/chatgpt-diseno.md`. El código genera siempre una versión de respaldo. Para trabajar con ellas:
+**Las piezas estáticas** (carrusel, desafío, imagen) salen en dos versiones:
+
+- **A:** el código (`web/src/components/social/`) con arte de fondo. En `pieza.json`, el arte se declara en `imagenes` (`slot`, `formato`, `prompt`) y una portada, tarjeta, cita o cierre lo usa con `"fondo": "<slot>"`. Sin arte, la versión A sale solo con código. El arte lo pinta ChatGPT (`marca/imagenes-chatgpt.md`) o, de respaldo, `~/bin/imagen`.
+- **B:** ChatGPT diseña cada diapositiva entera, con `marca/chatgpt-diseno.md`.
 
 ```bash
-npx tsx scripts/chatgpt-prompts.ts <id>                 # escribe los pedidos en piezas/<id>/chatgpt.md
-npx tsx scripts/contenido.ts chatgpt                    # qué falta
-npx tsx scripts/contenido.ts importar <id> <salida>     # trae las descargas, recorta y nombra
+npx tsx scripts/chatgpt-prompts.ts <id>                 # escribe los pedidos (ARTE y ENTERA) en piezas/<id>/chatgpt.md
+npx tsx scripts/contenido.ts chatgpt                    # qué diapositivas de la versión B faltan
+npx tsx scripts/contenido.ts arte <id> <slot> [archivo] # versión A: recorta el arte y lo guarda como imagenes/<slot>.png
+npx tsx scripts/contenido.ts importar <id> <salida>     # versión B: trae las descargas, recorta, nombra y firma el cierre
 ```
 
-Si la versión de ChatGPT está completa, el publicador usa esa; si no, la de código.
+Las fuentes del render están en archivos locales (`web/src/remotion/fuentes/`): no hace falta red para renderizar.
 
 ## Relación con `content-os/` (anterior)
 
@@ -89,13 +110,13 @@ Si la versión de ChatGPT está completa, el publicador usa esa; si no, la de c�
 ## Prompts listos para pegar
 
 - **Gemini:** `agentes/PROMPT-gemini.md` (producción de piezas y plantillas animadas nuevas).
-- **Agente del navegador:** `agentes/PROMPT-navegador.md`, con dos prompts: A, diseño en ChatGPT; B, publicación diaria.
+- **Agentes del navegador:** `agentes/PROMPT-navegador.md`, con dos prompts: A, diseño en ChatGPT (Mac mini: primero ARTE, después ENTERA); B, publicación diaria (notebook, desde `G:\Mi unidad\Redes\1 · Por publicar\`, con modo en seco).
 
 ## Quién hace qué
 
 - **Mario:** aprueba, ajusta su postura en las opiniones, confirma premios y bases de los sorteos.
 - **Claude:** construye y cuida las plantillas, escribe y revisa piezas, revisa lo que hace Gemini.
 - **Gemini:** produce piezas a partir del calendario con las plantillas, las valida y las renderiza (`agentes/gemini.md`).
-- **El agente del navegador:**
-  - diseña en ChatGPT los carruseles y piezas estáticas, y genera las fotos (`agentes/chatgpt.md`);
-  - publica lo aprobado (`agentes/publicador.md`).
+- **Los agentes del navegador:**
+  - en la Mac mini, pinta el arte y diseña las diapositivas en ChatGPT (`agentes/chatgpt.md`);
+  - en la notebook, publica lo aprobado que la Mac deja en Drive (`agentes/publicador.md`).
